@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_is_param_project_form">
+            <field name="name">view.is.param.project.form</field>
+            <field name="model">is.param.project</field>
+            <field name="arch" type="xml">
+                <form string="Paramétrage projet">
+                    <sheet>
+                        <group string="Identification" name="ppr_fr_identification">
+                            <field name="ppr_icon" string="Icône" nolabel="1" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;ppr_icon&quot;, &quot;size&quot;: [90, 90]}" />
+                            <div class="oe_title">
+                                <h1>
+                                </h1>
+                            </div>
+                            <field name="ppr_famille" string="Famille" required="1" />
+                            <field name="ppr_transformation_pdf" string="Transformation en PDF"/>
+                            <field name="ppr_dossier_fab" string="Famille du dossier de fabrication" />
+                            <field name="ppr_demande" string="Demande" required="1" />
+                            <field name="ppr_type_demande" string="Type de demande" required="1" />
+                            <field name="ppr_maj_amdec" string="Mise à jour de l’AMDEC" />
+                            <field name="ppr_responsable" string="Responsable du document" required="1" />
+                            <field name="ppr_revue_lancement" string="Revue de lancement" />
+                            <field name="ppr_moule_hors_auto" string="Famille pour moule hors automobile" />
+                        </group>
+                        <group string="Gestion des J" name="ppr_ar_gestion_j" col="4" colspan="4">
+                            <field name="array_ids" nolabel="1" colspan="4">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="ppp_j" string="J" readonly="1"/>
+                                    <field name="ppr_irv" string="Action"/>
+                                    <field name="ppr_bloquant" string="Point bloquant"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+       <record model="ir.ui.view" id="view_is_param_project_tree">
+            <field name="name">view.is.param.project.tree</field>
+            <field name="model">is.param.project</field>
+            <field name="arch" type="xml">
+                <tree string="Paramétrage projet">
+                    <field name="ppr_famille" string="Famille" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_is_param_project" model="ir.actions.act_window">
+            <field name="name">Paramétrage projet</field>
+            <field name="res_model">is.param.project</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_gestion_des_projets"  sequence="5"  name="Gestion des projets"/>
+
+        <record id="menu_is_paramétrage" model="ir.ui.menu" >
+            <field name="name">Paramétrage</field>
+            <field name="sequence">1</field>
+            <field name="parent_id" eval="ref('menu_gestion_des_projets')"/>
+        </record>
+        <menuitem id="menu_is_param_project" sequence="1" name="Paramétrage projet" parent="menu_is_paramétrage" action="action_is_param_project" />
+
+    </data>
+</odoo>
