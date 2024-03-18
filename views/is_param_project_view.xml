@@ -28,7 +28,7 @@
                         <group string="Gestion des J" name="ppr_ar_gestion_j" col="4" colspan="4">
                             <field name="array_ids" nolabel="1" colspan="4">
                                 <tree editable="bottom" create="0" delete="0">
-                                    <field name="ppp_j" string="J" />
+                                    <field name="ppp_j" string="J" readonly="1" force_save="1" />
                                     <field name="ppr_irv" string="Action"/>
                                     <field name="ppr_bloquant" string="Point bloquant"/>
                                 </tree>
