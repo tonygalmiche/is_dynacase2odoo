@@ -83,7 +83,7 @@
         <record id="menu_is_moules" model="ir.ui.menu" >
             <field name="name">Moules</field>
             <field name="sequence">1</field>
-            <field name="parent_id" eval="ref('is_param_projet.menu_gestion_des_projets')"/>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.menu_gestion_des_projets')"/>
         </record>
         <menuitem id="menu_is_doc_moule" sequence="1" name="Document moule" parent="menu_is_moules" action="action_is_doc_moule" />
 
