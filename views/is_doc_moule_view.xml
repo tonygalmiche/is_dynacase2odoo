@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_is_doc_moule_form">
+            <field name="name">view.is.doc.moule.form</field>
+            <field name="model">is.doc.moule</field>
+            <field name="arch" type="xml">
+                <form string="Document moule">
+                    <sheet>
+                        <group>
+                            <field name="ppr_icon" widget="image" nolabel="1" style="width:80%" class="oe_avatar" options="{'zoom': true, 'preview_image':'ppr_icon'}"/>
+                            <div class="oe_title">
+                                <h1>
+                                    <field name="param_project_id" readonly="1"/>
+                                </h1>
+                                <field name="ppr_color" readonly="1"/>
+                            </div>
+                        </group>
+                        <group>
+                            <group string="Caractéristiques" name="caracteristiques">
+                                <field name="param_project_id" />
+                                <field name="ppr_type_demande" />
+                                <field name="dynacase_id" />
+                                <field name="IDMOULE" />
+                                <field name="IDPROJECT" readonly="1"/>
+                                <field name="IDCP" readonly="1"/>
+                                <field name="IDRESP" />
+                            </group>
+                            <group string="Gestion des J" name="PLASFIL_FR_J">
+                                <field name="ACTUELLE" />
+                                <field name="DEMANDE" />
+                                <field name="ACTION" />
+                                <field name="BLOQUANT" />
+                                <field name="ETAT" />
+                                <field name="FIN_DEROGATION" />
+                                <field name="COEFFICIENT" />
+                                <field name="NOTE" />
+                                <field name="INDICATEUR" />
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Dates"  name="PLASFIL_FR_DATE">
+                                <field name="DATECREATE" />
+                                <field name="DATEEND" />
+                            </group>
+                            <group string="Réponse à la demande" name="PLASFIL_FR_ANNEX">
+                                <!--<separator string="Pièce-jointe de réponse à la demande" />-->
+                                <field name="array_ids" nolabel="1" colspan="2">
+                                    <tree editable="bottom">
+                                        <field name="ANNEX_PDF" invisible="1"/>
+                                        <field name="ANNEX" attrs="{'column_invisible': [('parent.ppr_type_demande', 'not in', ['PJ', 'PJ_TEXTE', 'PJ_DATE'])]}"/>
+                                        <field name="DEMANDMODIF" attrs="{'column_invisible': [('parent.ppr_type_demande', 'not in', ['TEXTE'])]}"/>
+                                        <field name="MAJ_AMDEC" invisible="1"/>
+                                        <field name="COMMENT" invisible="1"/>
+                                        <field name="RSP_DATE" attrs="{'column_invisible': [('parent.ppr_type_demande', 'not in', ['DATE', 'PJ_DATE'])]}"/>
+                                        <field name="RSP_TEXTE" attrs="{'column_invisible': [('parent.ppr_type_demande', 'not in', ['TEXTE'])]}"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+       <record model="ir.ui.view" id="view_is_doc_moule_tree">
+            <field name="name">view.is.doc.moule.tree</field>
+            <field name="model">is.doc.moule</field>
+            <field name="arch" type="xml">
+                <tree string="Document moule">
+                    <field name="param_project_id"  />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_is_doc_moule" model="ir.actions.act_window">
+            <field name="name">Document moule</field>
+            <field name="res_model">is.doc.moule</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="menu_is_moules" model="ir.ui.menu" >
+            <field name="name">Moules</field>
+            <field name="sequence">1</field>
+            <field name="parent_id" eval="ref('is_param_projet.menu_gestion_des_projets')"/>
+        </record>
+        <menuitem id="menu_is_doc_moule" sequence="1" name="Document moule" parent="menu_is_moules" action="action_is_doc_moule" />
+
+    </data>
+</odoo>
