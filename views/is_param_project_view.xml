@@ -59,7 +59,7 @@
 
         <record id="menu_is_paramétrage" model="ir.ui.menu" >
             <field name="name">Paramétrage</field>
-            <field name="sequence">1</field>
+            <field name="sequence">10</field>
             <field name="parent_id" eval="ref('menu_gestion_des_projets')"/>
         </record>
         <menuitem id="menu_is_param_project" sequence="1" name="Paramétrage projet" parent="menu_is_paramétrage" action="action_is_param_project" />

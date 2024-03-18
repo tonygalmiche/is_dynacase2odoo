@@ -8,56 +8,48 @@
             <field name="arch" type="xml">
                 <form string="Document moule">
                     <sheet>
-                        <group>
-                            <field name="ppr_icon" widget="image" nolabel="1" style="width:80%" class="oe_avatar" options="{'zoom': true, 'preview_image':'ppr_icon'}"/>
-                            <div class="oe_title">
-                                <h1>
-                                    <field name="param_project_id" readonly="1"/>
-                                </h1>
-                                <field name="ppr_color" readonly="1"/>
-                            </div>
-                        </group>
+                        <field name="project_prev" widget="html"/>
                         <group>
                             <group string="Caractéristiques" name="caracteristiques">
                                 <field name="param_project_id" />
                                 <field name="ppr_type_demande" />
-                                <field name="dynacase_id" />
-                                <field name="IDMOULE" />
-                                <field name="IDPROJECT" readonly="1"/>
-                                <field name="IDCP" readonly="1"/>
-                                <field name="IDRESP" />
+                                <field name="dynacase_id" readonly="1"/>
+                                <field name="idmoule" />
+                                <field name="idproject" readonly="1"/>
+                                <field name="idcp" readonly="1"/>
+                                <field name="idresp" />
                             </group>
                             <group string="Gestion des J" name="PLASFIL_FR_J">
-                                <field name="ACTUELLE" />
-                                <field name="DEMANDE" />
-                                <field name="ACTION" />
-                                <field name="BLOQUANT" />
-                                <field name="ETAT" />
-                                <field name="FIN_DEROGATION" />
-                                <field name="COEFFICIENT" />
-                                <field name="NOTE" />
-                                <field name="INDICATEUR" />
+                                <field name="actuelle" />
+                                <field name="demande" />
+                                <field name="action" />
+                                <field name="bloquant" />
+                                <field name="etat" />
+                                <field name="fin_derogation" />
+                                <field name="coefficient" />
+                                <field name="note" />
+                                <field name="indicateur" />
                             </group>
                         </group>
                         <group>
                             <group string="Dates"  name="PLASFIL_FR_DATE">
-                                <field name="DATECREATE" />
-                                <field name="DATEEND" />
+                                <field name="datecreate" />
+                                <field name="dateend" />
                             </group>
-                            <group string="Réponse à la demande" name="PLASFIL_FR_ANNEX">
-                                <!--<separator string="Pièce-jointe de réponse à la demande" />-->
-                                <field name="array_ids" nolabel="1" colspan="2">
-                                    <tree editable="bottom">
-                                        <field name="ANNEX_PDF" invisible="1"/>
-                                        <field name="ANNEX" attrs="{'column_invisible': [('parent.ppr_type_demande', 'not in', ['PJ', 'PJ_TEXTE', 'PJ_DATE'])]}"/>
-                                        <field name="DEMANDMODIF" attrs="{'column_invisible': [('parent.ppr_type_demande', 'not in', ['TEXTE'])]}"/>
-                                        <field name="MAJ_AMDEC" invisible="1"/>
-                                        <field name="COMMENT" invisible="1"/>
-                                        <field name="RSP_DATE" attrs="{'column_invisible': [('parent.ppr_type_demande', 'not in', ['DATE', 'PJ_DATE'])]}"/>
-                                        <field name="RSP_TEXTE" attrs="{'column_invisible': [('parent.ppr_type_demande', 'not in', ['TEXTE'])]}"/>
-                                    </tree>
-                                </field>
-                            </group>
+                        </group>
+                        <group string="Réponse à la demande" name="PLASFIL_FR_ANNEX">
+                            <!--<separator string="Pièce-jointe de réponse à la demande" />-->
+                            <field name="array_ids" nolabel="1" colspan="2">
+                                <tree editable="bottom">
+                                    <field name="annex_pdf" optional="hide" widget="many2many_binary"/>
+                                    <field name="annex" widget="many2many_binary" attrs="{'column_invisible': [('parent.ppr_type_demande', 'not in', ['PJ', 'PJ_TEXTE', 'PJ_DATE'])]}"/>
+                                    <field name="demandmodif" attrs="{'column_invisible': [('parent.ppr_type_demande', 'not in', ['TEXTE'])]}"/>
+                                    <field name="maj_amdec" optional="hide"/>
+                                    <field name="comment" optional="hide" widget="text"/>
+                                    <field name="rsp_date" attrs="{'column_invisible': [('parent.ppr_type_demande', 'not in', ['DATE', 'PJ_DATE'])]}"/>
+                                    <field name="rsp_texte" attrs="{'column_invisible': [('parent.ppr_type_demande', 'not in', ['TEXTE'])]}"/>
+                                </tree>
+                            </field>
                         </group>
                     </sheet>
                 </form>
