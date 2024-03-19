@@ -23,7 +23,7 @@ class IsDocMoule(models.Model):
 
     project_prev     = fields.Html(compute='_compute_project_prev', store=True)
     project_prev2 = fields.Html()
-    param_project_id = fields.Many2one("is.param.project", string="Project")
+    param_project_id = fields.Many2one("is.param.project", string="Famille de document")
     ppr_type_demande = fields.Selection(related="param_project_id.ppr_type_demande", selection=[
         ("PJ",       "Pièce-jointe"),
         ("DATE",     "Date"),

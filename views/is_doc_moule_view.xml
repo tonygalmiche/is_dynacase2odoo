@@ -61,8 +61,40 @@
             <field name="model">is.doc.moule</field>
             <field name="arch" type="xml">
                 <tree string="Document moule">
-                    <field name="param_project_id"  />
+                    <field name="param_project_id" optional="show"/>
+                    <field name="ppr_type_demande" optional="show"/>
+                    <field name="idmoule" optional="show"/>
+                    <field name="idproject" optional="show"/>
+                    <field name="idcp" optional="show"/>
+                    <field name="idresp" optional="show"/>
+                    <field name="actuelle" optional="show"/>
+                    <field name="demande" optional="show"/>
+                    <field name="action" optional="show"/>
+                    <field name="bloquant" optional="show"/>
+                    <field name="etat" optional="show"/>
+                    <field name="indicateur" optional="show"/>
                 </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_is_doc_moule_search">
+            <field name="name">view.is.doc.moule.search</field>
+            <field name="model">is.doc.moule</field>
+            <field name="arch" type="xml">
+                <search string="Document moule">
+                    <field name="param_project_id" />
+                    <field name="ppr_type_demande" />
+                    <field name="idmoule" />
+                    <field name="idproject" />
+                    <field name="idcp" />
+                    <field name="idresp" />
+                    <field name="actuelle" />
+                    <field name="demande" />
+                    <field name="action" />
+                    <field name="bloquant" />
+                    <field name="etat" />
+                    <field name="indicateur" />
+                </search>
             </field>
         </record>
 

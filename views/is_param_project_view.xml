@@ -23,7 +23,7 @@
                             <field name="ppr_responsable" string="Responsable du document" required="1" />
                             <field name="ppr_revue_lancement" string="Revue de lancement" />
                             <field name="ppr_moule_hors_auto" string="Famille pour moule hors automobile" />
-                            <field name="ppr_color" string="Color" />
+                            <field name="ppr_color" string="Color" widget="color"/>
                         </group>
                         <group string="Gestion des J" name="ppr_ar_gestion_j" col="4" colspan="4">
                             <field name="array_ids" nolabel="1" colspan="4">
@@ -44,8 +44,36 @@
             <field name="model">is.param.project</field>
             <field name="arch" type="xml">
                 <tree string="Paramétrage projet">
-                    <field name="ppr_famille" string="Famille" />
+                    <field name="ppr_famille" string="Famille" optional="show" />
+                    <field name="ppr_transformation_pdf" string="Transformation en PDF" optional="show"/>
+                    <field name="ppr_dossier_fab" string="Famille du dossier de fabrication" optional="show"/>
+                    <field name="ppr_demande" string="Demande" optional="show" />
+                    <field name="ppr_type_demande" string="Type de demande" optional="show" />
+                    <field name="ppr_maj_amdec" string="Mise à jour de l’AMDEC" optional="show"/>
+                    <field name="ppr_responsable" string="Responsable du document" optional="show" />
+                    <field name="ppr_revue_lancement" string="Revue de lancement" optional="show"/>
+                    <field name="ppr_moule_hors_auto" string="Famille pour moule hors automobile" optional="show"/>
+                    <field name="ppr_color" string="Color" optional="show"/>
                 </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_is_param_project_search">
+            <field name="name">view.is.param.project.search</field>
+            <field name="model">is.param.project</field>
+            <field name="arch" type="xml">
+                <search string="Paramétrage projet">
+                    <field name="ppr_famille" string="Famille" />
+                    <field name="ppr_transformation_pdf" string="Transformation en PDF"/>
+                    <field name="ppr_dossier_fab" string="Famille du dossier de fabrication"/>
+                    <field name="ppr_demande" string="Demande" />
+                    <field name="ppr_type_demande" string="Type de demande" />
+                    <field name="ppr_maj_amdec" string="Mise à jour de l’AMDEC"/>
+                    <field name="ppr_responsable" string="Responsable du document" />
+                    <field name="ppr_revue_lancement" string="Revue de lancement"/>
+                    <field name="ppr_moule_hors_auto" string="Famille pour moule hors automobile"/>
+                    <field name="ppr_color" string="Color"/>
+                </search>
             </field>
         </record>
 
