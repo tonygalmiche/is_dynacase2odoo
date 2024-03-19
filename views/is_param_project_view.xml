@@ -53,7 +53,7 @@
                     <field name="ppr_responsable" string="Responsable du document" optional="show" />
                     <field name="ppr_revue_lancement" string="Revue de lancement" optional="show"/>
                     <field name="ppr_moule_hors_auto" string="Famille pour moule hors automobile" optional="show"/>
-                    <field name="ppr_color" string="Color" optional="show"/>
+                    <field name="ppr_color" string="Color" optional="show" widget="color"/>
                 </tree>
             </field>
         </record>
