@@ -65,6 +65,7 @@ class IsDocMoule(models.Model):
     dateend          = fields.Date(string="Date de fin")
     array_ids        = fields.One2many("is.doc.moule.array", "is_doc_id", string="Pièce-jointe de réponse à la demande")
     dynacase_id      = fields.Integer(string="Id dans Dynacase")
+    duree            = fields.Float(string="Durée (H)", default=8)
 
 
     def lien_vers_dynacase_action(self):
