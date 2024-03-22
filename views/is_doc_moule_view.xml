@@ -137,6 +137,28 @@
                 </kanban>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="is_doc_moule_calendar_view" >
+            <field name="name">is_doc_moule_calendar_view</field>
+            <field name="model">is.doc.moule</field>
+            <field name="arch" type="xml">
+                <calendar 
+                    date_start="datecreate" 
+                    date_stop="dateend" 
+                    color="idresp" 
+                    hide_time="false" 
+                    event_limit="100"
+                    event_open_popup="false"
+                    quick_add="false"
+                >
+                <field name="idresp" filters="1" invisible="1"/>
+                    <field name="param_project_id"/> 
+                    <field name="indicateur"/> 
+                </calendar>
+            </field>
+        </record>
+
+
     
 <!-- 
         <record id="is_sale_order_colisage_composant_kanban_view" model="ir.ui.view">
@@ -214,7 +236,7 @@
         <record id="action_is_doc_moule" model="ir.actions.act_window">
             <field name="name">Document moule</field>
             <field name="res_model">is.doc.moule</field>
-            <field name="view_mode">tree,form,kanban,pivot,graph</field>
+            <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
         </record>
 
         <record id="menu_is_moules" model="ir.ui.menu" >
