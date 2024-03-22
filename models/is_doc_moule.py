@@ -69,13 +69,45 @@ class IsDocMoule(models.Model):
 
     def lien_vers_dynacase_action(self):
         for obj in self:
-            print(obj)
             url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
             return {
                 'type' : 'ir.actions.act_url',
                 'url': url,
                 'target': 'new',
             }
+
+
+    def list_doc(self,name,ids):
+        for obj in self:
+           return {
+                'name': name,
+                'view_mode': 'tree,form,pivot,graph',
+                'res_model': 'is.doc.moule',
+                'domain': [
+                    ('id','in',ids),
+                ],
+                'type': 'ir.actions.act_window',
+                'limit': 1000,
+            }
+
+
+    def doc_moule_action(self):
+        for obj in self:
+            docs=self.env['is.doc.moule'].search([ ('idmoule', '=', obj.idmoule.id) ])
+            ids=[]
+            for doc in docs:
+                ids.append(doc.id)
+            return obj.list_doc(obj.idmoule.name,ids)
+
+
+    def doc_projet_action(self):
+        for obj in self:
+            docs=self.env['is.doc.moule'].search([ ('idproject', '=', obj.idproject.id) ])
+            ids=[]
+            for doc in docs:
+                ids.append(doc.id)
+            return obj.list_doc(obj.idproject.name,ids)
+
 
 
 class IsDocMouleArray(models.Model):

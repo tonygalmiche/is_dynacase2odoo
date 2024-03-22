@@ -63,7 +63,9 @@
                 <tree string="Document moule">
                     <field name="param_project_id" optional="show"  widget="many2one_clickable"/>
                     <field name="ppr_type_demande" optional="show" />
+                    <button title="Documents du moule" name="doc_moule_action" type="object" icon="fa-list"/>
                     <field name="idmoule" optional="show"           widget="many2one_clickable"/>
+                    <button title="Documents du projet" name="doc_projet_action" type="object" icon="fa-list"/>
                     <field name="idproject" optional="show"         widget="many2one_clickable"/>
                     <field name="idcp" optional="show"/>
                     <field name="idresp" optional="show" />
@@ -78,13 +80,8 @@
                     <field name="indicateur"  optional="show"/>
                     <field name="datecreate" optional="show" />
                     <field name="dateend" optional="show" />
-                    <!-- <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-search-plus"/> -->
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
 
-
-                    <!-- <i class="far fa-file-pdf"></i> -->
-
-                    <!-- <i class="far fa-file-pdf"></i> -->
 
 
                     <field name="dynacase_id"  optional="hide"/>
