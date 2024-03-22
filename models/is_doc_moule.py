@@ -40,7 +40,6 @@ class IsDocMoule(models.Model):
     ], string="Type de demande", store=True)
     ppr_icon         = fields.Image(related="param_project_id.ppr_icon", string="Icône", store=True)
     ppr_color        = fields.Char(related="param_project_id.ppr_color", string="Color", store=True)
-    dynacase_id      = fields.Integer(string="Id dans Dynacase")
     idmoule          = fields.Many2one("is.mold", string="Moule")
     idproject        = fields.Many2one(related="idmoule.project", string="Projet")
     idcp             = fields.Many2one(related="idmoule.chef_projet_id", string="CP")
@@ -65,6 +64,18 @@ class IsDocMoule(models.Model):
     datecreate       = fields.Date(string="Date de création", default=fields.Date.context_today)
     dateend          = fields.Date(string="Date de fin")
     array_ids        = fields.One2many("is.doc.moule.array", "is_doc_id", string="Pièce-jointe de réponse à la demande")
+    dynacase_id      = fields.Integer(string="Id dans Dynacase")
+
+
+    def lien_vers_dynacase_action(self):
+        for obj in self:
+            print(obj)
+            url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
+            return {
+                'type' : 'ir.actions.act_url',
+                'url': url,
+                'target': 'new',
+            }
 
 
 class IsDocMouleArray(models.Model):
