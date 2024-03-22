@@ -81,7 +81,25 @@ class IsDocMoule(models.Model):
     def list_doc(self,name,ids):
         tree_id = self.env.ref('is_dynacase2odoo.is_doc_moule_edit_tree_view').id
         for obj in self:
-           return {
+           
+
+            ctx={
+                'default_idmoule': obj.idmoule.id,
+            }
+            # return {
+            #     "name": "Colis "+obj.name,
+            #     "view_mode": "tree,form",
+            #     "res_model": "is.purchase.order.line.colis",
+            #     "domain": [
+            #         ("line_id","=",obj.id),
+            #     ],
+            #     "type": "ir.actions.act_window",
+            #     "context": ctx,
+            # }
+
+
+
+            return {
                 'name': name,
                 'view_mode': 'tree,form,kanban,calendar,pivot,graph',
                 "views"    : [(tree_id, "tree"),(False, "form"),(False, "kanban"),(False, "calendar"),(False, "pivot"),(False, "graph")],
@@ -90,6 +108,7 @@ class IsDocMoule(models.Model):
                     ('id','in',ids),
                 ],
                 'type': 'ir.actions.act_window',
+                "context": ctx,
                 'limit': 1000,
             }
         
