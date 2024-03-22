@@ -61,22 +61,45 @@
             <field name="model">is.doc.moule</field>
             <field name="arch" type="xml">
                 <tree string="Document moule">
-                    <field name="param_project_id" optional="show"/>
-                    <field name="ppr_type_demande" optional="show"/>
-                    <field name="idmoule" optional="show"/>
+                    <field name="param_project_id" optional="show" />
+                    <field name="ppr_type_demande" optional="show" />
+                    <field name="dynacase_id" optional="show"/>
+                    <field name="idmoule" optional="show" />
                     <field name="idproject" optional="show"/>
                     <field name="idcp" optional="show"/>
-                    <field name="idresp" optional="show"/>
-                    <field name="actuelle" optional="show"/>
-                    <field name="demande" optional="show"/>
-                    <field name="action" optional="show"/>
+                    <field name="idresp" optional="show" />
+                    <field name="actuelle" optional="show" />
+                    <field name="demande" optional="show" />
+                    <field name="action"  optional="show"/>
                     <field name="bloquant" optional="show"/>
-                    <field name="etat" optional="show"/>
-                    <field name="indicateur" optional="show"/>
+                    <field name="etat" optional="show" />
+                    <field name="fin_derogation" optional="show" />
+                    <field name="coefficient"  optional="show"/>
+                    <field name="note"  optional="show"/>
+                    <field name="indicateur"  optional="show"/>
+                    <field name="datecreate" optional="show" />
+                    <field name="dateend" optional="show" />
                 </tree>
             </field>
         </record>
-
+        <record id="is_doc_moule_pivot_view" model="ir.ui.view">
+            <field name="name">is_doc_moule_pivot_view</field>
+            <field name="model">is.doc.moule</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="param_project_id" type="row"/>
+                </pivot>
+            </field>
+        </record>
+        <record id="is_doc_moule_graph_view" model="ir.ui.view">
+            <field name="name">is_doc_moule_graph_view</field>
+            <field name="model">is.doc.moule</field>
+            <field name="arch" type="xml">
+                <graph>
+                    <field name="param_project_id"/>
+                </graph>
+            </field>
+        </record>
         <record model="ir.ui.view" id="view_is_doc_moule_search">
             <field name="name">view.is.doc.moule.search</field>
             <field name="model">is.doc.moule</field>
@@ -97,11 +120,10 @@
                 </search>
             </field>
         </record>
-
         <record id="action_is_doc_moule" model="ir.actions.act_window">
             <field name="name">Document moule</field>
             <field name="res_model">is.doc.moule</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
         </record>
 
         <record id="menu_is_moules" model="ir.ui.menu" >
