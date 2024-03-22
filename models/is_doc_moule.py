@@ -10,7 +10,7 @@ class IsDocMoule(models.Model):
     _rec_name    = "param_project_id"
 
     @api.depends('param_project_id', 'param_project_id.ppr_color', 'param_project_id.ppr_icon')
-    def _compute_project_prev(self):
+    def compute_project_prev(self):
         for record in self:
             project_prev = ""
             if record.param_project_id:
@@ -21,7 +21,7 @@ class IsDocMoule(models.Model):
                 project_prev += str(new_add)
             record.project_prev = project_prev
 
-    project_prev     = fields.Html(compute='_compute_project_prev', store=True)
+    project_prev     = fields.Html(compute='compute_project_prev', store=True)
     project_prev2 = fields.Html()
     param_project_id = fields.Many2one("is.param.project", string="Famille de document")
     ppr_type_demande = fields.Selection(related="param_project_id.ppr_type_demande", selection=[
