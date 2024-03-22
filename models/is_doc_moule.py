@@ -81,7 +81,7 @@ class IsDocMoule(models.Model):
         for obj in self:
            return {
                 'name': name,
-                'view_mode': 'tree,form,pivot,graph',
+                'view_mode': 'tree,form,kanban,pivot,graph',
                 'res_model': 'is.doc.moule',
                 'domain': [
                     ('id','in',ids),
