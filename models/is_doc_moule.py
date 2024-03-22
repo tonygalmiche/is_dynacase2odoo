@@ -61,7 +61,7 @@ class IsDocMoule(models.Model):
     fin_derogation   = fields.Date(string="Date de fin de dérogation")
     coefficient      = fields.Integer(string="Coefficient")
     note             = fields.Integer(string="Note")
-    indicateur       = fields.Char(string="Indicateur")
+    indicateur       = fields.Html(string="Indicateur")
     datecreate       = fields.Date(string="Date de création", default=fields.Date.context_today)
     dateend          = fields.Date(string="Date de fin")
     array_ids        = fields.One2many("is.doc.moule.array", "is_doc_id", string="Pièce-jointe de réponse à la demande")
