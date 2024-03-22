@@ -79,10 +79,12 @@ class IsDocMoule(models.Model):
 
 
     def list_doc(self,name,ids):
+        tree_id = self.env.ref('is_dynacase2odoo.is_doc_moule_edit_tree_view').id
         for obj in self:
            return {
                 'name': name,
                 'view_mode': 'tree,form,kanban,calendar,pivot,graph',
+                "views"    : [(tree_id, "tree"),(False, "form"),(False, "kanban"),(False, "calendar"),(False, "pivot"),(False, "graph")],
                 'res_model': 'is.doc.moule',
                 'domain': [
                     ('id','in',ids),
@@ -90,7 +92,28 @@ class IsDocMoule(models.Model):
                 'type': 'ir.actions.act_window',
                 'limit': 1000,
             }
+        
+        # ValueError: External ID not found in the system: is_dynacase2odoo.is_doc_moule_edit_tree_view
 
+            # form_id = self.env.ref('is_clair_sarl.is_account_move_line_form_view').id
+            # return {
+            #     "name": "Lignes des factures ",
+            #     "view_mode": "tree,form",
+            #     "res_model": "account.move.line",
+            #     "domain": [
+            #         ("is_affaire_id","=",obj.affaire_id.id),
+            #         ("is_famille_id","=",obj.famille_id.id),
+            #         ("exclude_from_invoice_tab","=",False),
+            #         ("journal_id","=",2),
+            #         ("move_id.state","=","posted"),
+            #     ],
+            #     "type": "ir.actions.act_window",
+            #     "views"    : [[tree_id, "tree"],[form_id, "form"]],
+
+
+
+
+# is_doc_moule_edit_tree_view
 
     def doc_moule_action(self):
         for obj in self:

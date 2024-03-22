@@ -81,13 +81,30 @@
                     <field name="datecreate" optional="show" />
                     <field name="dateend" optional="show" />
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
-
-
-
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>
             </field>
         </record>
+
+
+        <record model="ir.ui.view" id="is_doc_moule_edit_tree_view">
+            <field name="name">is_doc_moule_edit_tree_view</field>
+            <field name="model">is.doc.moule</field>
+            <field name="priority" eval="90"/>
+            <field name="arch" type="xml">
+                <tree editable="top">
+                    <field name="param_project_id" widget="many2one_clickable"/>
+                    <field name="idmoule"   widget="many2one_clickable"/>
+                    <field name="idproject" widget="many2one_clickable"/>
+                    <field name="idresp"/>
+                    <field name="demande" />
+                    <field name="etat"/>
+                    <field name="dateend"/>
+                    <field name="duree"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="is_doc_moule_pivot_view" model="ir.ui.view">
             <field name="name">is_doc_moule_pivot_view</field>
             <field name="model">is.doc.moule</field>
