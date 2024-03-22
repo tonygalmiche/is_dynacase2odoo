@@ -13,27 +13,26 @@
                             <group string="Caractéristiques" name="caracteristiques">
                                 <field name="param_project_id" />
                                 <field name="ppr_type_demande" />
-                                <field name="dynacase_id"/>
                                 <field name="idmoule" />
                                 <field name="idproject" readonly="1"/>
                                 <field name="idcp" readonly="1"/>
                                 <field name="idresp" />
                             </group>
                             <group string="Gestion des J" name="PLASFIL_FR_J">
-                                <field name="actuelle" />
-                                <field name="demande" />
-                                <field name="action" />
-                                <field name="bloquant" />
-                                <field name="etat" />
-                                <field name="fin_derogation" />
-                                <field name="coefficient" />
-                                <field name="note" />
-                                <field name="indicateur" />
+                                <field name="actuelle" readonly="1"/>
+                                <field name="demande"  readonly="1"/>
+                                <field name="action"  readonly="1"/>
+                                <field name="bloquant"  readonly="1"/>
+                                <field name="etat"  readonly="1"/>
+                                <field name="fin_derogation"  readonly="1"/>
+                                <field name="coefficient"  readonly="1"/>
+                                <field name="note" readonly="1" />
+                                <field name="indicateur"  readonly="1"/>
                             </group>
                         </group>
                         <group>
                             <group string="Dates"  name="PLASFIL_FR_DATE">
-                                <field name="datecreate" />
+                                <field name="datecreate"  readonly="1"/>
                                 <field name="dateend" />
                                 <field name="duree" />
                             </group>
