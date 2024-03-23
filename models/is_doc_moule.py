@@ -35,6 +35,9 @@ class IsDocMoule(models.Model):
     ppr_icon         = fields.Image(related="param_project_id.ppr_icon", string="Icône", store=True)
     ppr_color        = fields.Char(related="param_project_id.ppr_color", string="Color", store=True)
     idmoule          = fields.Many2one("is.mold", string="Moule")
+
+    dossier_article_id = fields.Many2one("is.dossier.article", string="Dossier article")
+
     idproject        = fields.Many2one(related="idmoule.project", string="Projet")
     idcp             = fields.Many2one(related="idmoule.chef_projet_id", string="CP")
     idresp           = fields.Many2one("res.users", string="Responsable")

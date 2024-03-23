@@ -12,13 +12,14 @@
                             <group string="Caractéristiques" name="caracteristiques">
                                 <field name="param_project_id" />
                                 <field name="type_document" />
-                                <field name="ppr_type_demande" />
-                                <field name="idmoule" />
-                                <field name="idproject" readonly="1"/>
-                                <field name="idcp" readonly="1"/>
+                                <field name="idmoule" attrs="{'invisible': [('type_document', '!=', 'Moule')]}"/>
+                                <field name="dossier_article_id" attrs="{'invisible': [('type_document', '!=', 'Article')]}" />
+                                <field name="ppr_type_demande" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
+                                <field name="idproject" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
+                                <field name="idcp" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
                                 <field name="idresp" />
                             </group>
-                            <group string="Gestion des J" name="PLASFIL_FR_J">
+                            <group string="Gestion des J" name="PLASFIL_FR_J" attrs="{'invisible': [('type_document', '!=', 'Moule')]}">
                                 <field name="actuelle" readonly="1"/>
                                 <field name="demande"  readonly="1"/>
                                 <field name="action"  readonly="1"/>
@@ -64,7 +65,8 @@
                     <field name="type_document" optional="show"/>
                     <field name="ppr_type_demande" optional="show" />
                     <button title="Documents du moule" name="doc_moule_action" type="object" icon="fa-list"/>
-                    <field name="idmoule" optional="show"           widget="many2one_clickable"/>
+                    <field name="idmoule"               optional="show"           widget="many2one_clickable"/>
+                    <field name="dossier_article_id"    optional="show"           widget="many2one_clickable"/>
                     <button title="Documents du projet" name="doc_projet_action" type="object" icon="fa-list"/>
                     <field name="idproject" optional="show"         widget="many2one_clickable"/>
                     <field name="idcp" optional="show"/>
@@ -179,6 +181,7 @@
                     <field name="type_document" />
                     <field name="ppr_type_demande" />
                     <field name="idmoule" />
+                    <field name="dossier_article_id" />
                     <field name="idproject" />
                     <field name="idcp" />
                     <field name="idresp" />
