@@ -93,7 +93,7 @@
             <field name="arch" type="xml">
                 <tree editable="top">
                     <field name="param_project_id" widget="many2one_clickable"/>
-                    <field name="type_document" />
+                    <field name="type_document" optional="hide"/>
                     <field name="idmoule"   widget="many2one_clickable"/>
                     <field name="idproject" widget="many2one_clickable"/>
                     <field name="idresp"/>
