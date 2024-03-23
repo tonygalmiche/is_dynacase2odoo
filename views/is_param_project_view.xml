@@ -80,6 +80,7 @@
             <field name="name">Paramétrage projet</field>
             <field name="res_model">is.param.project</field>
             <field name="view_mode">tree,form</field>
+            <field name="limit">200</field>
         </record>
     </data>
 </odoo>
