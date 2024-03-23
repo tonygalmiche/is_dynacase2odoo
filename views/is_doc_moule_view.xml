@@ -240,7 +240,7 @@
             <field name="name">Documents moules</field>
             <field name="res_model">is.doc.moule</field>
             <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
-            <field name="domain">[('type_document','=','Moule')]</field>
+            <field name="domain">[('type_document','=','Moule'),('idmoule','!=',False)]</field>
             <field name="view_id" ref="is_doc_moule_moule_tree"/>
         </record>
 
@@ -266,7 +266,7 @@
             <field name="name">Documents articles</field>
             <field name="res_model">is.doc.moule</field>
             <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
-            <field name="domain">[('type_document','=','Article')]</field>
+            <field name="domain">[('type_document','=','Article'),('dossier_article_id','!=',False)]</field>
             <field name="view_id" ref="is_doc_moule_article_tree"/>
         </record>
     </data>
