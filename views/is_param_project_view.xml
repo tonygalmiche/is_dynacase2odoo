@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
         <record model="ir.ui.view" id="view_is_param_project_form">
             <field name="name">view.is.param.project.form</field>
             <field name="model">is.param.project</field>
@@ -38,8 +37,7 @@
                 </form>
             </field>
         </record>
-
-       <record model="ir.ui.view" id="view_is_param_project_tree">
+        <record model="ir.ui.view" id="view_is_param_project_tree">
             <field name="name">view.is.param.project.tree</field>
             <field name="model">is.param.project</field>
             <field name="arch" type="xml">
@@ -57,7 +55,6 @@
                 </tree>
             </field>
         </record>
-
         <record model="ir.ui.view" id="view_is_param_project_search">
             <field name="name">view.is.param.project.search</field>
             <field name="model">is.param.project</field>
@@ -76,21 +73,10 @@
                 </search>
             </field>
         </record>
-
         <record id="action_is_param_project" model="ir.actions.act_window">
             <field name="name">Paramétrage projet</field>
             <field name="res_model">is.param.project</field>
             <field name="view_mode">tree,form</field>
         </record>
-
-        <menuitem id="menu_gestion_des_projets"  sequence="5"  name="Gestion des projets"/>
-
-        <record id="menu_is_paramétrage" model="ir.ui.menu" >
-            <field name="name">Paramétrage</field>
-            <field name="sequence">10</field>
-            <field name="parent_id" eval="ref('menu_gestion_des_projets')"/>
-        </record>
-        <menuitem id="menu_is_param_project" sequence="1" name="Paramétrage projet" parent="menu_is_paramétrage" action="action_is_param_project" />
-
     </data>
 </odoo>

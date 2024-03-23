@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
         <record model="ir.ui.view" id="view_is_doc_moule_form">
             <field name="name">view.is.doc.moule.form</field>
             <field name="model">is.doc.moule</field>
@@ -55,7 +54,6 @@
                 </form>
             </field>
         </record>
-
        <record model="ir.ui.view" id="view_is_doc_moule_tree">
             <field name="name">view.is.doc.moule.tree</field>
             <field name="model">is.doc.moule</field>
@@ -85,8 +83,6 @@
                 </tree>
             </field>
         </record>
-
-
         <record model="ir.ui.view" id="is_doc_moule_edit_tree_view">
             <field name="name">is_doc_moule_edit_tree_view</field>
             <field name="model">is.doc.moule</field>
@@ -104,7 +100,6 @@
                 </tree>
             </field>
         </record>
-
         <record id="is_doc_moule_pivot_view" model="ir.ui.view">
             <field name="name">is_doc_moule_pivot_view</field>
             <field name="model">is.doc.moule</field>
@@ -123,8 +118,6 @@
                 </graph>
             </field>
         </record>
-
-  
         <record id="is_doc_moule_kanban_view" model="ir.ui.view">
             <field name="name">is_doc_moule_kanban_view</field>
             <field name="model">is.doc.moule</field>
@@ -154,7 +147,6 @@
                 </kanban>
             </field>
         </record>
-
         <record model="ir.ui.view" id="is_doc_moule_calendar_view" >
             <field name="name">is_doc_moule_calendar_view</field>
             <field name="model">is.doc.moule</field>
@@ -175,62 +167,6 @@
                 </calendar>
             </field>
         </record>
-
-
-    
-<!-- 
-        <record id="is_sale_order_colisage_composant_kanban_view" model="ir.ui.view">
-            <field name="name">is_sale_order_colisage_composant_kanban_view</field>
-            <field name="model">is.sale.order.colisage.composant</field>
-            <field name="arch" type="xml">
-                <kanban default_group_by="colis_id" create="0" quick_create="0">
-                    <field name="id"/>
-                    <field name="colis_id"/>
-                    <field name="product_id"/>
-                    <field name="composant_id"/>
-                    <field name="sale_line_id"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div class="oe_kanban_card oe_kanban_global_click">
-                                 <div class="oe_kanban_details">
-                                    <div class="o_kanban_record_top mb-0">
-                                        <div class="o_kanban_record_headings">
-                                            <strong class="o_kanban_record_title">
-                                                <field name="product_id"/>
-                                            </strong>
-                                        </div>
-                                    </div>
-                                    <div>Composant : <field name="composant_id"/></div>
-                                    <div>Quantité :  <field name="qty"/></div>
-    
-                                    <div>
-                                        <button 
-                                            title="Dupliquer" 
-                                            name="dupliquer_colis_action" 
-                                            type="object" 
-                                            icon="fa-copy" 
-                                        />
-                                        <button 
-                                            title="Colis" 
-                                            name="voir_colis_action" 
-                                            type="object" 
-                                            icon="fa-archive" 
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record> -->
-
-
-
-
-
-
-
         <record model="ir.ui.view" id="view_is_doc_moule_search">
             <field name="name">view.is.doc.moule.search</field>
             <field name="model">is.doc.moule</field>
@@ -256,13 +192,5 @@
             <field name="res_model">is.doc.moule</field>
             <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
         </record>
-
-        <record id="menu_is_moules" model="ir.ui.menu" >
-            <field name="name">Moules</field>
-            <field name="sequence">1</field>
-            <field name="parent_id" eval="ref('is_dynacase2odoo.menu_gestion_des_projets')"/>
-        </record>
-        <menuitem id="menu_is_doc_moule" sequence="1" name="Document moule" parent="menu_is_moules" action="action_is_doc_moule" />
-
     </data>
 </odoo>

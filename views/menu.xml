@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="gestion_des_projets_menu"  sequence="5"  name="Gestion des projets"/>
+        <menuitem 
+            id="is_doc_moule_menu" sequence="1" name="Doc" 
+            parent="gestion_des_projets_menu" action="action_is_doc_moule"
+        />
+        <menuitem 
+            id="is_mold_project_menu" sequence="10" name="Projet" 
+            parent="gestion_des_projets_menu" action="is_plastigray16.is_mold_project_action"
+        />
+        <menuitem 
+            id="is_dossierf_menu" sequence="20" name="Dossier F" 
+            parent="gestion_des_projets_menu" action="is_plastigray16.is_dossierf_action"
+        />
+        <menuitem 
+            id="is_mold_menu" sequence="30" name="Moule" 
+            parent="gestion_des_projets_menu" action="is_plastigray16.is_mold_action"
+        />
+
+        <!-- Paramétrage -->
+        <record id="is_parametrage_menu" model="ir.ui.menu" >
+            <field name="name">Paramétrage</field>
+            <field name="sequence">900</field>
+            <field name="parent_id" eval="ref('gestion_des_projets_menu')"/>
+        </record>
+        <menuitem 
+            id="is_param_project_menu" sequence="1" name="Paramétrage projet" 
+            parent="is_parametrage_menu" action="action_is_param_project"
+        />
+    </data>
+</odoo>
