@@ -18,6 +18,11 @@
             id="is_mold_menu" sequence="30" name="Moule" 
             parent="gestion_des_projets_menu" action="is_plastigray16.is_mold_action"
         />
+        <menuitem 
+            id="is_mold_menu" sequence="40" name="Dossier article" 
+            parent="gestion_des_projets_menu" action="is_plastigray16.is_dossier_article_action"
+        />
+
 
         <!-- Paramétrage -->
         <record id="is_parametrage_menu" model="ir.ui.menu" >
