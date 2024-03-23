@@ -4,7 +4,23 @@
         <menuitem id="gestion_des_projets_menu"  sequence="5"  name="Gestion des projets"/>
         <menuitem 
             id="is_doc_moule_menu" sequence="1" name="Doc" 
-            parent="gestion_des_projets_menu" action="action_is_doc_moule"
+            parent="gestion_des_projets_menu" action="is_doc_moule_action"
+        />
+        <menuitem 
+            id="is_doc_moule_main_menu" sequence="1" name="Doc" 
+            parent="gestion_des_projets_menu"
+        />
+        <menuitem 
+            id="is_doc_moule_moule_menu" sequence="10" name="Documents Moules" 
+            parent="is_doc_moule_main_menu" action="is_doc_moule_moule_action"
+        />
+        <menuitem 
+            id="is_doc_moule_article_menu" sequence="20" name="Documents Articles" 
+            parent="is_doc_moule_main_menu" action="is_doc_moule_article_action"
+        />
+        <menuitem 
+            id="is_doc_moule_menu" sequence="30" name="Tous les documents" 
+            parent="is_doc_moule_main_menu" action="is_doc_moule_action"
         />
         <menuitem 
             id="is_mold_project_menu" sequence="10" name="Projet" 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record model="ir.ui.view" id="view_is_doc_moule_form">
-            <field name="name">view.is.doc.moule.form</field>
+        <record model="ir.ui.view" id="is_doc_moule_form">
+            <field name="name">is_doc_moule_form</field>
             <field name="model">is.doc.moule</field>
             <field name="arch" type="xml">
                 <form string="Document moule">
@@ -39,7 +39,6 @@
                             </group>
                         </group>
                         <group string="Réponse à la demande" name="PLASFIL_FR_ANNEX">
-                            <!--<separator string="Pièce-jointe de réponse à la demande" />-->
                             <field name="array_ids" nolabel="1" colspan="2">
                                 <tree editable="bottom">
                                     <field name="annex_pdf" optional="hide" widget="many2many_binary"/>
@@ -56,8 +55,8 @@
                 </form>
             </field>
         </record>
-       <record model="ir.ui.view" id="view_is_doc_moule_tree">
-            <field name="name">view.is.doc.moule.tree</field>
+       <record model="ir.ui.view" id="is_doc_moule_tree">
+            <field name="name">is_doc_moule_tree</field>
             <field name="model">is.doc.moule</field>
             <field name="arch" type="xml">
                 <tree string="Document moule">
@@ -194,10 +193,81 @@
                 </search>
             </field>
         </record>
-        <record id="action_is_doc_moule" model="ir.actions.act_window">
-            <field name="name">Document moule</field>
+        <record id="is_doc_moule_action" model="ir.actions.act_window">
+            <field name="name">Tous les documents</field>
             <field name="res_model">is.doc.moule</field>
             <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
+            <field name="view_id" ref="is_doc_moule_tree"/>
+        </record>
+
+
+
+
+
+
+
+        <record model="ir.ui.view" id="is_doc_moule_moule_tree">
+            <field name="name">is_doc_moule_moule_tree</field>
+            <field name="model">is.doc.moule</field>
+            <field name="arch" type="xml">
+                <tree string="Document moule">
+                    <field name="param_project_id" optional="show"  widget="many2one_clickable"/>
+                    <field name="type_document" optional="hide"/>
+                    <field name="ppr_type_demande" optional="show" />
+                    <button title="Documents du moule" name="doc_moule_action" type="object" icon="fa-list"/>
+                    <field name="idmoule"               optional="show"           widget="many2one_clickable"/>
+                    <button title="Documents du projet" name="doc_projet_action" type="object" icon="fa-list"/>
+                    <field name="idproject" optional="show"         widget="many2one_clickable"/>
+                    <field name="idcp" optional="show"/>
+                    <field name="idresp" optional="show" />
+                    <field name="actuelle" optional="show" />
+                    <field name="demande" optional="show" />
+                    <field name="action"  optional="show"/>
+                    <field name="bloquant" optional="show"/>
+                    <field name="etat" optional="show" />
+                    <field name="fin_derogation" optional="show" />
+                    <field name="coefficient"  optional="show"/>
+                    <field name="note"  optional="show"/>
+                    <field name="indicateur"  optional="show"/>
+                    <field name="datecreate" optional="show" />
+                    <field name="dateend" optional="show" />
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
+                    <field name="dynacase_id"  optional="hide"/>
+                </tree>
+            </field>
+        </record>
+        <record id="is_doc_moule_moule_action" model="ir.actions.act_window">
+            <field name="name">Documents moules</field>
+            <field name="res_model">is.doc.moule</field>
+            <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
+            <field name="domain">[('type_document','=','Moule')]</field>
+            <field name="view_id" ref="is_doc_moule_moule_tree"/>
+        </record>
+
+
+
+        <record model="ir.ui.view" id="is_doc_moule_article_tree">
+            <field name="name">is_doc_moule_article_tree</field>
+            <field name="model">is.doc.moule</field>
+            <field name="arch" type="xml">
+                <tree string="Document moule">
+                    <field name="param_project_id"   optional="show"  widget="many2one_clickable"/>
+                    <field name="type_document"      optional="hide"/>
+                    <field name="ppr_type_demande"   optional="hide" />
+                    <field name="dossier_article_id" optional="show"  widget="many2one_clickable"/>
+                    <field name="idresp"             optional="show" />
+                    <field name="dateend"            optional="show" />
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
+                    <field name="dynacase_id" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+        <record id="is_doc_moule_article_action" model="ir.actions.act_window">
+            <field name="name">Documents articles</field>
+            <field name="res_model">is.doc.moule</field>
+            <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
+            <field name="domain">[('type_document','=','Article')]</field>
+            <field name="view_id" ref="is_doc_moule_article_tree"/>
         </record>
     </data>
 </odoo>
