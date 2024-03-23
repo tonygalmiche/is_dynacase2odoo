@@ -24,12 +24,13 @@ class IsParamProject(models.Model):
         })
         return res
 
-    ppr_icon               = fields.Image()
-    ppr_famille            = fields.Char()
-    ppr_transformation_pdf = fields.Boolean()
-    ppr_dossier_fab        = fields.Boolean()
-    ppr_demande            = fields.Char()
-    ppr_type_demande       = fields.Selection([
+    ppr_icon                = fields.Image()
+    ppr_famille             = fields.Char()
+    ppr_transformation_pdf  = fields.Boolean()
+    fiche_technique_article = fields.Boolean(string="Famille Fiche Technique Article")
+    ppr_dossier_fab         = fields.Boolean()
+    ppr_demande             = fields.Char()
+    ppr_type_demande        = fields.Selection([
         ("PJ",       "Pièce-jointe"),
         ("DATE",     "Date"),
         ("TEXTE",    "Texte"),
