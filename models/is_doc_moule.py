@@ -28,17 +28,10 @@ class IsDocMoule(models.Model):
             record.project_prev = project_prev
 
     project_prev     = fields.Html(compute='_compute_project_prev', store=True)
-    project_prev2 = fields.Html()
+    project_prev2    = fields.Html()
     param_project_id = fields.Many2one("is.param.project", string="Famille de document")
     ppr_type_demande = fields.Selection(related="param_project_id.ppr_type_demande")
-    # , selection=[
-    #     ("PJ",       "Pièce-jointe"),
-    #     ("DATE",     "Date"),
-    #     ("TEXTE",    "Texte"),
-    #     ("PJ_TEXTE", "Pièce-jointe et texte"),
-    #     ("PJ_DATE",  "Pièce-jointe et date"),
-    #     ("AUTO",     "Automatique"),
-    # ], string="Type de demande", store=True)
+    type_document    = fields.Selection(related="param_project_id.type_document")
     ppr_icon         = fields.Image(related="param_project_id.ppr_icon", string="Icône", store=True)
     ppr_color        = fields.Char(related="param_project_id.ppr_color", string="Color", store=True)
     idmoule          = fields.Many2one("is.mold", string="Moule")

@@ -11,6 +11,7 @@
                         <group>
                             <group string="Caractéristiques" name="caracteristiques">
                                 <field name="param_project_id" />
+                                <field name="type_document" />
                                 <field name="ppr_type_demande" />
                                 <field name="idmoule" />
                                 <field name="idproject" readonly="1"/>
@@ -60,6 +61,7 @@
             <field name="arch" type="xml">
                 <tree string="Document moule">
                     <field name="param_project_id" optional="show"  widget="many2one_clickable"/>
+                    <field name="type_document" optional="show"/>
                     <field name="ppr_type_demande" optional="show" />
                     <button title="Documents du moule" name="doc_moule_action" type="object" icon="fa-list"/>
                     <field name="idmoule" optional="show"           widget="many2one_clickable"/>
@@ -90,6 +92,7 @@
             <field name="arch" type="xml">
                 <tree editable="top">
                     <field name="param_project_id" widget="many2one_clickable"/>
+                    <field name="type_document" />
                     <field name="idmoule"   widget="many2one_clickable"/>
                     <field name="idproject" widget="many2one_clickable"/>
                     <field name="idresp"/>
@@ -173,6 +176,7 @@
             <field name="arch" type="xml">
                 <search string="Document moule">
                     <field name="param_project_id" />
+                    <field name="type_document" />
                     <field name="ppr_type_demande" />
                     <field name="idmoule" />
                     <field name="idproject" />
