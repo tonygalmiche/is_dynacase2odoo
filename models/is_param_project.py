@@ -27,7 +27,12 @@ class IsParamProject(models.Model):
     ppr_icon                = fields.Image()
     ppr_famille             = fields.Char()
     ppr_transformation_pdf  = fields.Boolean()
-    fiche_technique_article = fields.Boolean(string="Famille Fiche Technique Article")
+
+    type_document = fields.Selection([
+        ("Moule",       "Moule"),
+        ("Article",     "Article"),
+    ],string="Type de document", default="Moule")
+
     ppr_dossier_fab         = fields.Boolean()
     ppr_demande             = fields.Char()
     ppr_type_demande        = fields.Selection([

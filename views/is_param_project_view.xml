@@ -14,9 +14,9 @@
                                 </h1>
                             </div>
                             <field name="ppr_famille" string="Famille" required="1" />
+                            <field name="type_document"/>
                             <field name="ppr_transformation_pdf" string="Transformation en PDF"/>
                             <field name="ppr_dossier_fab" string="Famille du dossier de fabrication" />
-                            <field name="fiche_technique_article"/>
                             <field name="ppr_demande" string="Demande" required="1" />
                             <field name="ppr_type_demande" string="Type de demande" required="1" />
                             <field name="ppr_maj_amdec" string="Mise à jour de l’AMDEC" />
@@ -44,9 +44,9 @@
             <field name="arch" type="xml">
                 <tree string="Paramétrage projet">
                     <field name="ppr_famille" string="Famille" optional="show" />
+                    <field name="type_document" optional="show"/>
                     <field name="ppr_transformation_pdf" string="Transformation en PDF" optional="show"/>
                     <field name="ppr_dossier_fab" string="Famille du dossier de fabrication" optional="show"/>
-                    <field name="fiche_technique_article" optional="show"/>
                     <field name="ppr_demande" string="Demande" optional="show" />
                     <field name="ppr_type_demande" string="Type de demande" optional="show" />
                     <field name="ppr_maj_amdec" string="Mise à jour de l’AMDEC" optional="show"/>
@@ -63,9 +63,9 @@
             <field name="arch" type="xml">
                 <search string="Paramétrage projet">
                     <field name="ppr_famille" string="Famille" />
+                    <field name="type_document"/>
                     <field name="ppr_transformation_pdf" string="Transformation en PDF"/>
                     <field name="ppr_dossier_fab" string="Famille du dossier de fabrication"/>
-                    <field name="fiche_technique_article"/>
                     <field name="ppr_demande" string="Demande" />
                     <field name="ppr_type_demande" string="Type de demande" />
                     <field name="ppr_maj_amdec" string="Mise à jour de l’AMDEC"/>
