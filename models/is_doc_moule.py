@@ -116,6 +116,49 @@ class IsDocMoule(models.Model):
             return obj.list_doc(obj.idproject.name,ids)
 
 
+    @api.model
+    def get_gantt_documents(self,domain=[]):
+        print("## get_gantt_documents",self,domain)
+        my_dict={}
+
+
+        docs=self.env['is.doc.moule'].search(domain,limit=10)
+        for doc in docs:
+            key="%s-%s"%(doc.dateend,doc.id)
+            print(key)
+
+            vals={
+                "key"    : key,
+                "id"     : doc.id,
+                "name"   : doc.param_project_id.ppr_famille,
+                "dateend": doc.dateend,
+                "duree"  : doc.duree,
+            }
+            my_dict[key]=vals
+
+
+
+
+        #my_dict[key]=vals
+        
+        
+        sorted_dict = dict(sorted(my_dict.items()))
+
+        print(sorted_dict)
+
+
+        return {
+            "dict"           : sorted_dict,
+            # "mois"           : mois,
+            # "semaines"       : semaines,
+            # "nb_semaines"    : nb_semaines,
+            # "decale_planning": decale_planning,
+        }
+
+
+
+
+
 
 class IsDocMouleArray(models.Model):
     _name        = "is.doc.moule.array"
