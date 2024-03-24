@@ -34,7 +34,11 @@ const DhtmlxganttProjectView = BasicView.extend({
         this.controllerParams.searchViewId = search_view_id ? search_view_id[0] : false;
         this.loadParams.type = 'list';
         // limit makes no sense in this view as we display all records having activities
-        this.loadParams.limit = false;
+        //this.loadParams.limit = false;
+        this.loadParams.limit = 2;
+
+
+
 
         this.rendererParams.templates = _.findWhere(this.arch.children, { 'tag': 'templates' });
         this.controllerParams.title = this.arch.attrs.string;
