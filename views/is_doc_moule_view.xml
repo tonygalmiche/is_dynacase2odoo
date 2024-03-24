@@ -193,6 +193,8 @@
                 </search>
             </field>
         </record>
+
+        <!-- Tous les documents -->
         <record id="is_doc_moule_action" model="ir.actions.act_window">
             <field name="name">Tous les documents</field>
             <field name="res_model">is.doc.moule</field>
@@ -200,12 +202,7 @@
             <field name="view_id" ref="is_doc_moule_tree"/>
         </record>
 
-
-
-
-
-
-
+        <!-- Documents moules -->
         <record model="ir.ui.view" id="is_doc_moule_moule_tree">
             <field name="name">is_doc_moule_moule_tree</field>
             <field name="model">is.doc.moule</field>
@@ -239,13 +236,12 @@
         <record id="is_doc_moule_moule_action" model="ir.actions.act_window">
             <field name="name">Documents moules</field>
             <field name="res_model">is.doc.moule</field>
-            <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
+            <field name="view_mode">tree,form,kanban,calendar,pivot,graph,dhtmlxgantt_project</field>
             <field name="domain">[('type_document','=','Moule'),('idmoule','!=',False)]</field>
             <field name="view_id" ref="is_doc_moule_moule_tree"/>
         </record>
 
-
-
+        <!-- Documents articles -->
         <record model="ir.ui.view" id="is_doc_moule_article_tree">
             <field name="name">is_doc_moule_article_tree</field>
             <field name="model">is.doc.moule</field>
@@ -268,6 +264,26 @@
             <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
             <field name="domain">[('type_document','=','Article'),('dossier_article_id','!=',False)]</field>
             <field name="view_id" ref="is_doc_moule_article_tree"/>
+        </record>
+
+
+        <!-- dhtmlxgantt_project -->
+        <record id="is_doc_moule_moule_dhtmlxgantt_project_view" model="ir.ui.view">
+            <field name="name">is_doc_moule_moule_dhtmlxgantt_project_view</field>
+            <field name="model">is.doc.moule</field>
+            <field name="arch" type="xml">
+                <dhtmlxgantt_project>
+                    <templates>
+                    </templates>
+                </dhtmlxgantt_project>
+            </field>
+        </record>
+        <record id="is_dhtmlxgantt_project_action" model="ir.actions.act_window">
+            <field name="name">Gantt des projets</field>
+            <field name="res_model">is.doc.moule</field>
+            <field name="view_mode">dhtmlxgantt_project,tree,form</field>
+            <field name="domain">[('type_document','=','Moule'),('idmoule','!=',False)]</field>
+            <field name="view_id" ref="is_doc_moule_moule_dhtmlxgantt_project_view"/>
         </record>
     </data>
 </odoo>

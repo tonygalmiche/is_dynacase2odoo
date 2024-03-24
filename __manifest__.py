@@ -21,6 +21,11 @@ Module Odoo 16 pour Plastigray pour migrer les développements de Dynacase dans 
     ], 
     "qweb": [
     ],
+    "assets": {
+        'web.assets_backend': [
+            'is_plastigray16/static/src/dhtmlxgantt_project/*',
+         ],
+    },
     "installable": True,
     "application": True,
     "license": "LGPL-3",

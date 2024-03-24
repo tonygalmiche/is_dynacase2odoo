@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from odoo import models, fields, api, _
 from odoo.tools import format_date, formatLang, frozendict
 
@@ -83,18 +82,7 @@ class IsDocMoule(models.Model):
             ctx={
                 'default_idmoule': obj.idmoule.id,
             }
-            # return {
-            #     "name": "Colis "+obj.name,
-            #     "view_mode": "tree,form",
-            #     "res_model": "is.purchase.order.line.colis",
-            #     "domain": [
-            #         ("line_id","=",obj.id),
-            #     ],
-            #     "type": "ir.actions.act_window",
-            #     "context": ctx,
-            # }
-
-
+        
 
             return {
                 'name': name,
@@ -109,28 +97,7 @@ class IsDocMoule(models.Model):
                 'limit': 1000,
             }
         
-        # ValueError: External ID not found in the system: is_dynacase2odoo.is_doc_moule_edit_tree_view
-
-            # form_id = self.env.ref('is_clair_sarl.is_account_move_line_form_view').id
-            # return {
-            #     "name": "Lignes des factures ",
-            #     "view_mode": "tree,form",
-            #     "res_model": "account.move.line",
-            #     "domain": [
-            #         ("is_affaire_id","=",obj.affaire_id.id),
-            #         ("is_famille_id","=",obj.famille_id.id),
-            #         ("exclude_from_invoice_tab","=",False),
-            #         ("journal_id","=",2),
-            #         ("move_id.state","=","posted"),
-            #     ],
-            #     "type": "ir.actions.act_window",
-            #     "views"    : [[tree_id, "tree"],[form_id, "form"]],
-
-
-
-
-# is_doc_moule_edit_tree_view
-
+     
     def doc_moule_action(self):
         for obj in self:
             docs=self.env['is.doc.moule'].search([ ('idmoule', '=', obj.idmoule.id) ])

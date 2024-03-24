@@ -1,0 +1,70 @@
+.dhtmlxgantt_project{
+    margin:5pt;
+}
+.dhtmlxgantt_project .btn{
+    margin-right:5pt;
+    margin-top:5pt;
+    margin-bottom:5pt;
+}
+.dhtmlxgantt_project .unselectable {
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.dhtmlxgantt_project h2{
+    margin-top:10pt;
+}
+.dhtmlxgantt_project table {
+    border-collapse: collapse;
+    border: 1px solid black;
+    border-top: 1px solid black;
+    width: 98%;
+    display: block;
+    overflow-y: scroll;
+    background-color:none;
+}
+.dhtmlxgantt_project thead {
+    position: sticky;
+    top: 0;
+    background-color:none;
+}
+.dhtmlxgantt_project tr {
+    background-color:none;
+}
+.dhtmlxgantt_project td {
+    border:none;
+    border-top: 1px solid gray;
+    padding:0;
+}
+.dhtmlxgantt_project th {
+    text-align: center;
+    border: 1px solid white;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    padding: 0;
+    margin: 0;
+    color:white;
+}
+.dhtmlxgantt_project th div {
+    background-color:black;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+.dhtmlxgantt_project .buttons table{
+    border: 0;
+}
+.dhtmlxgantt_project .buttons td{
+    border: 0;
+}
+.dhtmlxgantt_project .alerte{
+    cursor: pointer;
+    font-size:14pt;
+}
+.dhtmlxgantt_project .link{
+    cursor:pointer;
+}
+
+

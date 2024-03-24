@@ -2,13 +2,20 @@
 <odoo>
     <data>
         <menuitem id="gestion_des_projets_menu"  sequence="5"  name="Gestion des projets"/>
-        <menuitem 
+        <!-- <menuitem 
             id="is_doc_moule_menu" sequence="1" name="Doc" 
             parent="gestion_des_projets_menu" action="is_doc_moule_action"
+        /> -->
+
+
+        <!-- Doc -->
+        <menuitem 
+            id="is_doc_moule_main_menu" sequence="10" name="Doc" 
+            parent="gestion_des_projets_menu"
         />
         <menuitem 
-            id="is_doc_moule_main_menu" sequence="1" name="Doc" 
-            parent="gestion_des_projets_menu"
+            id="is_dhtmlxgantt_project_menu" sequence="1" name="Gantt des projets" 
+            parent="is_doc_moule_main_menu" action="is_dhtmlxgantt_project_action"
         />
         <menuitem 
             id="is_doc_moule_moule_menu" sequence="10" name="Documents Moules" 
@@ -22,20 +29,22 @@
             id="is_doc_moule_menu" sequence="30" name="Tous les documents" 
             parent="is_doc_moule_main_menu" action="is_doc_moule_action"
         />
+
+        <!-- Autre -->
         <menuitem 
-            id="is_mold_project_menu" sequence="10" name="Projet" 
+            id="is_mold_project_menu" sequence="20" name="Projet" 
             parent="gestion_des_projets_menu" action="is_plastigray16.is_mold_project_action"
         />
         <menuitem 
-            id="is_dossierf_menu" sequence="20" name="Dossier F" 
+            id="is_dossierf_menu" sequence="30" name="Dossier F" 
             parent="gestion_des_projets_menu" action="is_plastigray16.is_dossierf_action"
         />
         <menuitem 
-            id="is_mold_menu" sequence="30" name="Moule" 
+            id="is_mold_menu" sequence="40" name="Moule" 
             parent="gestion_des_projets_menu" action="is_plastigray16.is_mold_action"
         />
         <menuitem 
-            id="is_mold_menu" sequence="40" name="Dossier article" 
+            id="is_mold_menu" sequence="50" name="Dossier article" 
             parent="gestion_des_projets_menu" action="is_plastigray16.is_dossier_article_action"
         />
 
