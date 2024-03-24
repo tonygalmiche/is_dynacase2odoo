@@ -1,6 +1,11 @@
 /** @odoo-module **/
 import KanbanRecord from 'web.KanbanRecord';
 
+
+console.log('DhtmlxganttProjectRecord');
+
+
+
 var DhtmlxganttProjectRecord = KanbanRecord.extend({
     /**
      * @override

@@ -4,6 +4,9 @@ import core from 'web.core';
 
 var _t = core._t;
 
+
+console.log('DhtmlxganttProjectController');
+
 var DhtmlxganttProjectController = BasicController.extend({
     //--------------------------------------------------------------------------
     // Public

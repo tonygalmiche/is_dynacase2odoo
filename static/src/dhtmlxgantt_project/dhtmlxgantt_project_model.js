@@ -2,6 +2,8 @@
 import BasicModel from 'web.BasicModel';
 import session from 'web.session';
 
+console.log('DhtmlxganttProjectModel');
+
 
 const DhtmlxganttProjectModel = BasicModel.extend({
 
