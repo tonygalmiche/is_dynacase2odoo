@@ -14,8 +14,8 @@
             parent="gestion_des_projets_menu"
         />
         <menuitem 
-            id="is_dhtmlxgantt_project_menu" sequence="1" name="Gantt des projets" 
-            parent="is_doc_moule_main_menu" action="is_dhtmlxgantt_project_action"
+            id="is_dhtmlxgantt_project_menu" sequence="900" name="Gantt des projets" 
+            parent="base.menu_custom" action="is_dhtmlxgantt_project_action"
         />
         <menuitem 
             id="is_doc_moule_moule_menu" sequence="10" name="Documents Moules" 

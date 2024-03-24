@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <div t-name="is_dynacase2odoo.DhtmlxganttProjectTemplate" class="dhtmlxgantt_project" owl="1" style="100vh;background-color:white">
-
-        Vue Gantt en cours de développement
-
-        <h1>test <span t-esc="state.test"/></h1>
-
         <div class="buttons">
             <table>
                 <tr>
                     <td><button class="btn btn-primary" t-on-click="PrecedentClick" title="Semaine précédente">&lt;</button></td>
                     <td><button class="btn btn-primary" t-on-click="OKButtonClick">Aujourd'hui</button></td>
                     <td><button class="btn btn-primary" t-on-click="SuivantClick" title="Semaine suivante">&gt;</button></td>
-                    <!-- <td>Nb semaines :</td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="gantt_here" style='width:100%; height:100vh;'></div>
+
+
+
+
+
+<!--         
+        <div class="buttons">
+            <table>
+                <tr>
+                    <td><button class="btn btn-primary" t-on-click="PrecedentClick" title="Semaine précédente">&lt;</button></td>
+                    <td><button class="btn btn-primary" t-on-click="OKButtonClick">Aujourd'hui</button></td>
+                    <td><button class="btn btn-primary" t-on-click="SuivantClick" title="Semaine suivante">&gt;</button></td>
+                    <td>Nb semaines :</td>
                     <td>
                         <input 
                             name="nb_semaines" 
@@ -47,13 +59,13 @@
                     <td style="width:100px"><t t-esc="state.jour"/></td>
                     <td style="width:100px"><t t-esc="state.color"/></td>
                     <td style="width:100px"><t t-esc="state.action"/></td>
-                    <td style="width:100px"><t t-esc="state.debut"/></td> -->
+                    <td style="width:100px"><t t-esc="state.debut"/></td>
                 </tr>
             </table> 
         </div>
         <table class="unselectable" style="height:500pt;width:100%">
             <thead>
-                <!-- <tr>
+                <tr>
                     <th colspan="4" style="height:15pt"><div>Planning</div></th>
                     <t t-foreach="Object.values(state.mois or {})" t-as="mois" t-key="mois.key">
                         <th style="height:15pt;font-size: 8pt;" t-att-colspan="mois.colspan">
@@ -68,7 +80,7 @@
                             <div t-esc="semaine.semaine"/>
                         </th>
                     </t>
-                </tr> -->
+                </tr>
                 <tr>
                     <th style="height:15pt"><div>id</div></th>
                     <th style="height:15pt"><div>name</div></th>
@@ -85,7 +97,6 @@
                 </t>
             </tbody>
         </table> 
-
-
+ -->
     </div>
 </templates>
