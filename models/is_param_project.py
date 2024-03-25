@@ -24,17 +24,15 @@ class IsParamProject(models.Model):
         })
         return res
 
-    ppr_icon                = fields.Image()
-    ppr_famille             = fields.Char()
-    ppr_transformation_pdf  = fields.Boolean()
-
+    ppr_icon                = fields.Image(string="Icône")
+    ppr_famille             = fields.Char(string="Famille")
+    ppr_transformation_pdf  = fields.Boolean(string="Transformation en PDF")
     type_document = fields.Selection([
         ("Moule",       "Moule"),
         ("Article",     "Article"),
     ],string="Type de document", default="Moule")
-
-    ppr_dossier_fab         = fields.Boolean()
-    ppr_demande             = fields.Char()
+    ppr_dossier_fab         = fields.Boolean(string="Famille du dossier de fabrication")
+    ppr_demande             = fields.Char(string="Demande")
     ppr_type_demande        = fields.Selection([
         ("PJ",       "Pièce-jointe"),
         ("DATE",     "Date"),
@@ -42,11 +40,11 @@ class IsParamProject(models.Model):
         ("PJ_TEXTE", "Pièce-jointe et texte"),
         ("PJ_DATE",  "Pièce-jointe et date"),
         ("AUTO",     "Automatique"),
-    ])
+    ], string="Type de demande")
     ppr_maj_amdec          = fields.Selection([
         ("Oui", "Oui"),
         ("Non", "Non"),
-    ])
+    ], string="Mise à jour de l’AMDEC")
     ppr_responsable        = fields.Selection([
         ("1",  "1-Commercial"),
         ("2",  "2-Chef de projet"),
@@ -60,7 +58,7 @@ class IsParamProject(models.Model):
         ("10", "10-Logistique Usine"),
         ("11", "11-Achats"),
         ("12", "12-Responsable projets"),
-    ])
+    ], string="Responsable du document")
     ppr_revue_lancement    = fields.Selection([
         ("rl_be01",  "BE01a : Nouveau moule - Moule transféré"),
         ("rl_be01b", "BE01b : Grainage"),
@@ -79,8 +77,8 @@ class IsParamProject(models.Model):
         ("rl_be15",  "BE15 : Achat matière"),
         ("rl_be16",  "BE16 : Achat composants"),
         ("rl_be17",  "BE17 : Essai injection"),
-    ])
-    ppr_moule_hors_auto    = fields.Boolean()
+    ], string="Revue de lancement")
+    ppr_moule_hors_auto    = fields.Boolean(string="Famille pour moule hors automobile")
     array_ids              = fields.One2many('is.param.project.array', 'param_project_id')
     ppr_project_colors     = fields.Serialized()
     ppr_color              = fields.Char("Color", sparse="ppr_project_colors")
@@ -91,11 +89,11 @@ class IsParamProjectArray(models.Model):
     _description = "Paramétrage projet array"
     _rec_name    = "ppp_j"
 
-    ppp_j            = fields.Char()
+    ppp_j            = fields.Char(string="J")
     ppr_irv          = fields.Selection([
         ("I", "Initialisation"),
         ("R", "Révision"),
         ("V", "Validation"),
     ])
-    ppr_bloquant     = fields.Boolean()
-    param_project_id = fields.Many2one("is.param.project")
+    ppr_bloquant     = fields.Boolean(string="Action")
+    param_project_id = fields.Many2one("is.param.project", string="Point bloquant")
