@@ -236,7 +236,7 @@
         <record id="is_doc_moule_moule_action" model="ir.actions.act_window">
             <field name="name">Documents moules</field>
             <field name="res_model">is.doc.moule</field>
-            <field name="view_mode">tree,form,kanban,calendar,pivot,graph,dhtmlxgantt_project</field>
+            <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
             <field name="domain">[('type_document','=','Moule'),('idmoule','!=',False)]</field>
             <field name="view_id" ref="is_doc_moule_moule_tree"/>
         </record>
