@@ -63,7 +63,7 @@
                                 <label for="rc_nb_pce_p_jal" colspana="4" string="Commentaire spécifique (essais supplémentaire)"/>
                                 <field name="rc_nb_pce_p_jal" colspan="4" nolabel="1"/>
                             </page>
-                            <page name="rc_donnees_economiques_tab" string="Données économiques">
+                            <page name="rc_donnees_economiques_tab" string="Données économiques et de febrication">
                                 <group name="rc_donnees_economiques_tab" string="Décomposition prix" col="4" colspan="4">
                                     <field name="decomposition_prix_ids" nolabel="1" colspan="4">
                                         <form>
@@ -138,6 +138,97 @@
                                         </tree>
                                     </field>
                                 </group>
+                                <group name="rc_donnees_fabrication_fr" string="Données de fabrication">
+                                    <field name="rc_site_fabrication" />
+                                    <field name="rc_site_fabrication_autre" />
+                                    <field name="rc_process_fabrication" />
+                                    <field name="rc_nb_empreintes_moule" />
+                                    <field name="rc_moulage_sur" />
+                                    <field name="rc_tonnage_presse_vendu" />
+                                    <field name="rc_stock_securite" />
+                                    <field name="rc_stock_securite_commentaire" />
+                                </group>
+                                <group name="rc_df_d_injection" string="Dossier injection">
+                                    <field name="rc_dfi_process_fab" />
+                                    <field name="rc_dfi_schema_lieu_fab" />
+                                    <field name="rc_dfi_classe_comrc" />
+                                </group>
+                                <group name="rc_ar_version" string="Versions" col="4" colspan="4">
+                                    <field name="version_ids" nolabel="1" colspan="4">
+                                        <form>
+                                            <group col="3">
+                                                <group>
+                                                    <field name="rc_dfi_version" />
+                                                    <field name="rc_dfi_article" />
+                                                    <field name="rc_dfi_cycle" />
+                                                    <field name="rc_dfi_nb_emp" />
+                                                    <field name="rc_dfi_mod" />
+                                                    <field name="rc_dfi_taux_rebut" />
+                                                    <field name="rc_dfi_poids_piece" />
+                                                    <field name="rc_dfi_poids_carotte" />
+                                                    <field name="rc_dfi_car_reb" />
+                                                    <field name="rc_dfi_car_reb_pourcentage" />
+                                                </group>
+                                                <group>
+                                                    <field name="rc_dfi_matiere" />
+                                                    <field name="rc_dfi_mat_prix_vendu" />
+                                                    <field name="rc_dfi_comp" />
+                                                    <field name="rc_dfi_comp_prix_vendu" />
+                                                    <field name="rc_dfi_sous_traitance" />
+                                                    <field name="rc_dfi_sous_traitance_prix" />
+                                                </group>
+                                                <group>
+                                                    <field name="rc_dfi_desc_emb" />
+                                                    <field name="rc_dfi_qte_carton" />
+                                                    <field name="rc_dfi_qte_palette" />
+                                                    <field name="rc_dfi_lot_liv" />
+                                                    <field name="rc_dfi_multiple_liv" />
+                                                    <field name="rc_dfi_lot_fab" />
+                                                </group>
+                                            </group>
+                                        </form>
+                                        <tree>
+                                            <field name="rc_dfi_version" optional="show"/>
+                                            <field name="rc_dfi_article" optional="show"/>
+                                            <field name="rc_dfi_cycle" optional="show"/>
+                                            <field name="rc_dfi_nb_emp" optional="show"/>
+                                            <field name="rc_dfi_mod" optional="show"/>
+                                            <field name="rc_dfi_taux_rebut" optional="hide"/>
+                                            <field name="rc_dfi_poids_piece" optional="hide"/>
+                                            <field name="rc_dfi_poids_carotte" optional="hide"/>
+                                            <field name="rc_dfi_car_reb" optional="hide"/>
+                                            <field name="rc_dfi_car_reb_pourcentage" optional="hide"/>
+                                            <field name="rc_dfi_matiere" optional="hide"/>
+                                            <field name="rc_dfi_mat_prix_vendu" optional="hide"/>
+                                            <field name="rc_dfi_comp" optional="hide"/>
+                                            <field name="rc_dfi_comp_prix_vendu" optional="hide"/>
+                                            <field name="rc_dfi_sous_traitance" optional="hide"/>
+                                            <field name="rc_dfi_sous_traitance_prix" optional="hide"/>
+                                            <field name="rc_dfi_desc_emb" optional="hide"/>
+                                            <field name="rc_dfi_qte_carton" optional="hide"/>
+                                            <field name="rc_dfi_qte_palette" optional="hide"/>
+                                            <field name="rc_dfi_lot_liv" optional="hide"/>
+                                            <field name="rc_dfi_multiple_liv" optional="hide"/>
+                                            <field name="rc_dfi_lot_fab" optional="hide"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group>
+                                    <field name="rc_dfi_temp_occ_pm" />
+                                </group>
+                                <group name="rc_df_d_emballage" string="Dossier assemblage">
+                                    <field name="rc_dfe_desc_proc" />
+                                    <field name="rc_dfe_sch_lieu_fab" />
+                                </group>
+                                <group name="rc_df_fr_pieces_jointes" string="Pièces jointes">
+                                    <field name="rc_df_engagement_faisabilite" widget="many2many_binary"/>
+                                </group>
+                                <group name="rc_df_engagement_faisabilite_autre_ar" string="Engagement de faisabilité (Autres)">
+                                    <field name="rc_df_engagement_faisabilite_autre" widget="many2many_binary"/>
+                                </group>
+                                <group>
+                                    <field name="rc_df_fiche_capacitaire" widget="many2many_binary"/>
+                                </group>
                                 <group name="rc_eiv_fr" string="Enveloppe investissement vendue" col="6" >
                                     <group>
                                         <field name="rc_eiv_moule" />
@@ -165,8 +256,46 @@
                                         <field name="rc_eiv_amort_cmt" nolabel="1" colspan="10"/>
                                     </group>
                                 </group>
+                                <group name="rc_ar_dfe_version" string="Versions" col="4" colspan="4">
+                                    <field name="dfe_version_ids" nolabel="1" colspan="4">
+                                        <form>
+                                            <group>
+                                                <field name="rc_dfe_version" />
+                                                <field name="rc_dfe_comp" />
+                                                <field name="rc_dfe_comp_pri_vendu" />
+                                                <field name="rc_dfe_cycle" />
+                                                <field name="rc_dfe_mod" />
+                                                <field name="rc_dfe_taux_rebut" />
+                                                <field name="rc_dfe_desc_emaballage" />
+                                                <field name="rc_dfe_sous_traitance" />
+                                                <field name="rc_dfe_sous_traitance_prix" />
+                                                <field name="rc_dfe_qte_carton" />
+                                                <field name="rc_dfe_qte_palette" />
+                                                <field name="rc_dfe_lot_livraison" />
+                                                <field name="rc_dfe_multiple_liv" />
+                                                <field name="rc_dfe_lot_fab" />
+                                            </group>
+                                        </form>
+                                        <tree>
+                                            <field name="rc_dfe_version" optional="show"/>
+                                            <field name="rc_dfe_comp" optional="show"/>
+                                            <field name="rc_dfe_comp_pri_vendu" optional="show"/>
+                                            <field name="rc_dfe_cycle" optional="show"/>
+                                            <field name="rc_dfe_mod" optional="show"/>
+                                            <field name="rc_dfe_taux_rebut" optional="hide"/>
+                                            <field name="rc_dfe_desc_emaballage" optional="hide"/>
+                                            <field name="rc_dfe_sous_traitance" optional="hide"/>
+                                            <field name="rc_dfe_sous_traitance_prix" optional="hide"/>
+                                            <field name="rc_dfe_qte_carton" optional="hide"/>
+                                            <field name="rc_dfe_qte_palette" optional="hide"/>
+                                            <field name="rc_dfe_lot_livraison" optional="hide"/>
+                                            <field name="rc_dfe_multiple_liv" optional="hide"/>
+                                            <field name="rc_dfe_lot_fab" optional="hide"/>
+                                        </tree>
+                                    </field>
+                                </group>
                             </page>
-                            <page name="rc_specificites_tab" string="Spécificités">
+                            <page name="rc_specificites_tab" string="Spécificités et Éléments qualités">
                                 <group name="rc_specificites_tab" string="Spécificités">
                                     <group>
                                         <field name="rc_sp_type_piece" widget="radio" />
@@ -176,7 +305,7 @@
                                     <group>
                                     </group>
                                 </group>
-                                <group>
+                                <!--<group>
                                     <group>
                                         <field name="rc_sp_piece_reglem" />
                                     </group>
@@ -231,30 +360,66 @@
                                     <group>
                                         <field name="rc_sp_mat_con_pg_cmt" placeholder="Désignation matière connue à PG" nolabel="1" colspan="2" />
                                     </group>
+                                </group>-->
+                                <group>
+                                    <label for="rc_sp_piece_reglem" />
+                                    <div>
+                                        <field name="rc_sp_piece_reglem" class="oe_no_button" style="width: 20%"/>
+                                        <field name="rc_sp_piece_reglem_cmt" class="oe_no_button" style="width: 80%" widget="char"/>
+                                    </div>
+                                    <label for="rc_sp_piece_sec" />
+                                    <div>
+                                        <field name="rc_sp_piece_sec" class="oe_no_button" style="width: 20%"/>
+                                        <field name="rc_sp_piece_sec_cmt" class="oe_no_button" style="width: 80%" widget="char"/>
+                                    </div>
+                                    <label for="rc_sp_piece_sec2" />
+                                    <div>
+                                        <field name="rc_sp_piece_sec2" class="oe_no_button" style="width: 20%"/>
+                                        <field name="rc_sp_piece_sec2_cmt" class="oe_no_button" style="width: 80%" widget="char"/>
+                                    </div>
+                                    <label for="rc_sp_com_exig_part" />
+                                    <div>
+                                        <field name="rc_sp_com_exig_part" class="oe_no_button" style="width: 20%"/>
+                                        <field name="rc_sp_com_exig_part_cmt" class="oe_no_button" style="width: 80%" widget="char"/>
+                                    </div>
+                                    <label for="rc_sp_crs" />
+                                    <div>
+                                        <field name="rc_sp_crs" class="oe_no_button" style="width: 20%"/>
+                                        <field name="rc_sp_crs_cmt" class="oe_no_button" style="width: 80%" widget="char"/>
+                                    </div>
+                                    <label for="rc_sp_carac_spec" />
+                                    <div>
+                                        <field name="rc_sp_carac_spec" class="oe_no_button" style="width: 20%"/>
+                                        <field name="rc_sp_carac_spec_cmt" class="oe_no_button" style="width: 80%" widget="char"/>
+                                    </div>
+                                    <label for="rc_sp_mat_con_pg" />
+                                    <div>
+                                        <field name="rc_sp_mat_con_pg" class="oe_no_button" style="width: 20%"/>
+                                        <field name="rc_sp_mat_con_pg_cmt" class="oe_no_button" style="width: 80%" widget="char"/>
+                                    </div>
                                 </group>
-                                <!--<group col="6">
+                                <!--<group >
                                     <group>
-                                        <field name="rc_sp_piece_reglem" colspan="2"/>
-                                        <field name="rc_sp_piece_sec" colspan="2"/>
-                                        <field name="rc_sp_piece_sec2" colspan="2"/>
-                                        <field name="rc_sp_com_exig_part" colspan="2"/>
-                                        <field name="rc_sp_crs" colspan="2"/>
-                                        <field name="rc_sp_carac_spec" colspan="2"/>
-                                        <field name="rc_sp_mat_con_pg" colspan="2"/>
+                                        <field name="rc_sp_piece_reglem" />
+                                        <field name="rc_sp_piece_sec" />
+                                        <field name="rc_sp_piece_sec2" />
+                                        <field name="rc_sp_com_exig_part" />
+                                        <field name="rc_sp_crs" />
+                                        <field name="rc_sp_carac_spec" />
+                                        <field name="rc_sp_mat_con_pg" />
                                     </group>
-                                    <group col="1"></group>
                                     <group>
-                                        <field name="rc_sp_piece_reglem_cmt" nolabel="1" colspan="4"/>
-                                        <field name="rc_sp_piece_sec_cmt" nolabel="1" colspan="4"/>
-                                        <field name="rc_sp_piece_sec2_cmt" nolabel="1" colspan="4"/>
-                                        <field name="rc_sp_com_exig_part_cmt" nolabel="1" colspan="4"/>
-                                        <field name="rc_sp_crs_cmt" nolabel="1" colspan="4"/>
-                                        <field name="rc_sp_carac_spec_cmt" nolabel="1" colspan="4"/>
-                                        <field name="rc_sp_mat_con_pg_cmt" nolabel="1" colspan="4"/>
+                                        <field name="rc_sp_piece_reglem_cmt" nolabel="1" widget="char"/>
+                                        <field name="rc_sp_piece_sec_cmt" nolabel="1" widget="char"/>
+                                        <field name="rc_sp_piece_sec2_cmt" nolabel="1" widget="char"/>
+                                        <field name="rc_sp_com_exig_part_cmt" nolabel="1" widget="char"/>
+                                        <field name="rc_sp_crs_cmt" nolabel="1" widget="char"/>
+                                        <field name="rc_sp_carac_spec_cmt" nolabel="1" widget="char"/>
+                                        <field name="rc_sp_mat_con_pg_cmt" nolabel="1" widget="char"/>
                                     </group>
                                 </group>-->
-                            </page>
-                            <page name="rc_elemements_qualités_tab" string="Éléments qualités">
+                            <!--</page>
+                            <page name="rc_elemements_qualités_tab" string="Éléments qualités">-->
                                 <group>
                                     <group name="rc_edl_at_fr" string="Liste modele auto">
                                         <field name="rc_edl_at_n_ppm" />
@@ -304,131 +469,6 @@
                                         <separator string="Insertion de pièces jointes" />
                                         <field name="rc_eqs_pj" widget="many2many_binary"/>
                                     </group>
-                                </group>
-                            </page>
-                            <page name="rc_donnees_fabrication" string="Données de fabrication">
-                                <group name="rc_donnees_fabrication_fr" string="Données de fabrication">
-                                    <field name="rc_site_fabrication" />
-                                    <field name="rc_site_fabrication_autre" />
-                                    <field name="rc_process_fabrication" />
-                                    <field name="rc_nb_empreintes_moule" />
-                                    <field name="rc_moulage_sur" />
-                                    <field name="rc_tonnage_presse_vendu" />
-                                    <field name="rc_stock_securite" />
-                                    <field name="rc_stock_securite_commentaire" />
-                                </group>
-                                <group name="rc_df_d_injection" string="Dossier injection">
-                                    <field name="rc_dfi_process_fab" />
-                                    <field name="rc_dfi_schema_lieu_fab" />
-                                    <field name="rc_dfi_classe_comrc" />
-                                </group>
-                                <group name="rc_ar_version" string="Versions" col="4" colspan="4">
-                                    <field name="version_ids" nolabel="1" colspan="4">
-                                        <form>
-                                            <group>
-                                                <field name="rc_dfi_version" />
-                                                <field name="rc_dfi_article" />
-                                                <field name="rc_dfi_cycle" />
-                                                <field name="rc_dfi_nb_emp" />
-                                                <field name="rc_dfi_mod" />
-                                                <field name="rc_dfi_taux_rebut" />
-                                                <field name="rc_dfi_poids_piece" />
-                                                <field name="rc_dfi_poids_carotte" />
-                                                <field name="rc_dfi_car_reb" />
-                                                <field name="rc_dfi_car_reb_pourcentage" />
-                                                <field name="rc_dfi_matiere" />
-                                                <field name="rc_dfi_mat_prix_vendu" />
-                                                <field name="rc_dfi_comp" />
-                                                <field name="rc_dfi_comp_prix_vendu" />
-                                                <field name="rc_dfi_sous_traitance" />
-                                                <field name="rc_dfi_sous_traitance_prix" />
-                                                <field name="rc_dfi_desc_emb" />
-                                                <field name="rc_dfi_qte_carton" />
-                                                <field name="rc_dfi_qte_palette" />
-                                                <field name="rc_dfi_lot_liv" />
-                                                <field name="rc_dfi_multiple_liv" />
-                                                <field name="rc_dfi_lot_fab" />
-                                            </group>
-                                        </form>
-                                        <tree>
-                                            <field name="rc_dfi_version" optional="show"/>
-                                            <field name="rc_dfi_article" optional="show"/>
-                                            <field name="rc_dfi_cycle" optional="show"/>
-                                            <field name="rc_dfi_nb_emp" optional="show"/>
-                                            <field name="rc_dfi_mod" optional="show"/>
-                                            <field name="rc_dfi_taux_rebut" optional="hide"/>
-                                            <field name="rc_dfi_poids_piece" optional="hide"/>
-                                            <field name="rc_dfi_poids_carotte" optional="hide"/>
-                                            <field name="rc_dfi_car_reb" optional="hide"/>
-                                            <field name="rc_dfi_car_reb_pourcentage" optional="hide"/>
-                                            <field name="rc_dfi_matiere" optional="hide"/>
-                                            <field name="rc_dfi_mat_prix_vendu" optional="hide"/>
-                                            <field name="rc_dfi_comp" optional="hide"/>
-                                            <field name="rc_dfi_comp_prix_vendu" optional="hide"/>
-                                            <field name="rc_dfi_sous_traitance" optional="hide"/>
-                                            <field name="rc_dfi_sous_traitance_prix" optional="hide"/>
-                                            <field name="rc_dfi_desc_emb" optional="hide"/>
-                                            <field name="rc_dfi_qte_carton" optional="hide"/>
-                                            <field name="rc_dfi_qte_palette" optional="hide"/>
-                                            <field name="rc_dfi_lot_liv" optional="hide"/>
-                                            <field name="rc_dfi_multiple_liv" optional="hide"/>
-                                            <field name="rc_dfi_lot_fab" optional="hide"/>
-                                        </tree>
-                                    </field>
-                                </group>
-                                <group>
-                                    <field name="rc_dfi_temp_occ_pm" />
-                                </group>
-                                <group name="rc_df_d_emballage" string="Dossier assemblage">
-                                    <field name="rc_dfe_desc_proc" />
-                                    <field name="rc_dfe_sch_lieu_fab" />
-                                </group>
-                                <group name="rc_df_fr_pieces_jointes" string="Pièces jointes">
-                                    <field name="rc_df_engagement_faisabilite" widget="many2many_binary"/>
-                                </group>
-                                <group name="rc_df_engagement_faisabilite_autre_ar" string="Engagement de faisabilité (Autres)">
-                                    <field name="rc_df_engagement_faisabilite_autre" widget="many2many_binary"/>
-                                </group>
-                                <group>
-                                    <field name="rc_df_fiche_capacitaire" widget="many2many_binary"/>
-                                </group>
-                                <group name="rc_ar_dfe_version" string="Versions" col="4" colspan="4">
-                                    <field name="dfe_version_ids" nolabel="1" colspan="4">
-                                        <form>
-                                            <group>
-                                                <field name="rc_dfe_version" />
-                                                <field name="rc_dfe_comp" />
-                                                <field name="rc_dfe_comp_pri_vendu" />
-                                                <field name="rc_dfe_cycle" />
-                                                <field name="rc_dfe_mod" />
-                                                <field name="rc_dfe_taux_rebut" />
-                                                <field name="rc_dfe_desc_emaballage" />
-                                                <field name="rc_dfe_sous_traitance" />
-                                                <field name="rc_dfe_sous_traitance_prix" />
-                                                <field name="rc_dfe_qte_carton" />
-                                                <field name="rc_dfe_qte_palette" />
-                                                <field name="rc_dfe_lot_livraison" />
-                                                <field name="rc_dfe_multiple_liv" />
-                                                <field name="rc_dfe_lot_fab" />
-                                            </group>
-                                        </form>
-                                        <tree>
-                                            <field name="rc_dfe_version" optional="show"/>
-                                            <field name="rc_dfe_comp" optional="show"/>
-                                            <field name="rc_dfe_comp_pri_vendu" optional="show"/>
-                                            <field name="rc_dfe_cycle" optional="show"/>
-                                            <field name="rc_dfe_mod" optional="show"/>
-                                            <field name="rc_dfe_taux_rebut" optional="hide"/>
-                                            <field name="rc_dfe_desc_emaballage" optional="hide"/>
-                                            <field name="rc_dfe_sous_traitance" optional="hide"/>
-                                            <field name="rc_dfe_sous_traitance_prix" optional="hide"/>
-                                            <field name="rc_dfe_qte_carton" optional="hide"/>
-                                            <field name="rc_dfe_qte_palette" optional="hide"/>
-                                            <field name="rc_dfe_lot_livraison" optional="hide"/>
-                                            <field name="rc_dfe_multiple_liv" optional="hide"/>
-                                            <field name="rc_dfe_lot_fab" optional="hide"/>
-                                        </tree>
-                                    </field>
                                 </group>
                             </page>
                         </notebook>
