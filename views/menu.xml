@@ -59,5 +59,16 @@
             id="is_param_project_menu" sequence="1" name="Paramétrage projet" 
             parent="is_parametrage_menu" action="action_is_param_project"
         />
+
+        <!-- Gestion commerciale -->
+        <menuitem id="menu_main_gestion_commerciale"  sequence="4"  name="Gestion commerciale"/>
+
+        <record id="menu_parent_is_revue_de_contrat" model="ir.ui.menu" >
+            <field name="name">Revue de contrat</field>
+            <field name="sequence">1</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.menu_main_gestion_commerciale')"/>
+        </record>
+        <menuitem id="menu_is_revue_de_contrat" sequence="1" name="Revue de contrat" parent="menu_parent_is_revue_de_contrat" action="action_is_revue_de_contrat" />
+
     </data>
 </odoo>
