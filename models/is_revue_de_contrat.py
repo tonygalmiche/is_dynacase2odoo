@@ -61,9 +61,9 @@ class is_revue_de_contrat(models.Model):
     rc_eop_date_semaine                = fields.Integer(string="Semaine EOP")
     rc_eop_date_nb                     = fields.Char(string="Nombre de pièces vendues")
     rc_nb_pce_p_jal                    = fields.Text(string="Commentaire spécifique (essais supplémentaire)")
-    decomposition_prix_ids             = fields.One2many("decomposition.prix", "is_revue_id")
-    productivite_ids                   = fields.One2many("decomposition.productivite", "is_revue_id")
-    previsions_ids                     = fields.One2many("decomposition.previsions", "is_revue_id")
+    decomposition_prix_ids             = fields.One2many("is.revue.de.contrat.decomposition.prix", "is_revue_id")
+    productivite_ids                   = fields.One2many("is.revue.de.contrat.decomposition.productivite", "is_revue_id")
+    previsions_ids                     = fields.One2many("is.revue.de.contrat.decomposition.previsions", "is_revue_id")
     rc_eiv_moule                       = fields.Float(string="Moule")
     rc_eiv_moule_cmt                   = fields.Char(string="Commentaire")
     rc_eiv_etude                       = fields.Float(string="Étude")
@@ -199,14 +199,14 @@ class is_revue_de_contrat(models.Model):
         ("Classe 5", "Classe 5 : 600T - 700T"),
         ("Classe 6", "Classe 6 : 800T - 1000T"),
     ], string="Classe commerciale")
-    version_ids                        = fields.One2many("is.revue.version", "is_revue_id")
+    version_ids                        = fields.One2many("is.revue.de.contrat.version", "is_revue_id")
     rc_dfi_temp_occ_pm                 = fields.Float(string="Temps occupation presse mensuelle")
     rc_dfe_desc_proc                   = fields.Text(string="Descriptif du process et site de fabrication vendu")
     rc_dfe_sch_lieu_fab                = fields.Text(string="Schéma de flux vendu (Logistique)")
     rc_df_engagement_faisabilite       = fields.Many2many("ir.attachment", "is_revue_engagement_faisabilite_rel", "revu_id", "att_id", string="Engagement de faisabilité")
     rc_df_engagement_faisabilite_autre = fields.Many2many("ir.attachment", "is_revue_engagement_autre_faisabilite_rel", "revu_id", "att_id", string="Pièce jointe")
     rc_df_fiche_capacitaire            = fields.Many2many("ir.attachment", "is_revue_rc_df_fiche_capacitaire_rel", "revu_id", "att_id", string="Fiche capacitaire")
-    dfe_version_ids                    = fields.One2many("is.revue.dfe.version", "is_revue_id")
+    dfe_version_ids                    = fields.One2many("is.revue.de.contrat.dfe.version", "is_revue_id")
 
 
 class is_revue_de_contrat_decomposition_prix(models.Model):
