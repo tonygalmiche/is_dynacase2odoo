@@ -209,9 +209,9 @@ class is_revue_de_contrat(models.Model):
     dfe_version_ids                    = fields.One2many("is.revue.dfe.version", "is_revue_id")
 
 
-class decomposition_prix(models.Model):
-    _name        = "decomposition.prix"
-    _description = "Décomposition prix"
+class is_revue_de_contrat_decomposition_prix(models.Model):
+    _name        = "is.revue.de.contrat.decomposition.prix"
+    _description = "Revue de contrat Décomposition prix"
     _rec_name    = "rc_price_comp_article"
 
     rc_price_comp_article           = fields.Char(string="Désignation pièce")
@@ -237,9 +237,9 @@ class decomposition_prix(models.Model):
     is_revue_id = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
 
 
-class decomposition_productivite(models.Model):
-    _name        = "decomposition.productivite"
-    _description = "Productivité"
+class is_revue_de_contrat_decomposition_productivite(models.Model):
+    _name        = "is.revue.de.contrat.decomposition.productivite"
+    _description = "Revue de contrat Productivité"
     _rec_name    = "rc_productivite_article"
 
     rc_productivite_article      = fields.Char(string="Article")
@@ -248,9 +248,9 @@ class decomposition_productivite(models.Model):
     is_revue_id                  = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
 
 
-class decomposition_previsions(models.Model):
-    _name        = "decomposition.previsions"
-    _description = "Prévisions"
+class is_revue_de_contrat_decomposition_previsions(models.Model):
+    _name        = "is.revue.de.contrat.decomposition.previsions"
+    _description = "Revue de contrat Prévisions"
     _rec_name    = "rc_previsions_article"
 
     rc_previsions_article      = fields.Char(string="Article")
@@ -259,9 +259,9 @@ class decomposition_previsions(models.Model):
     is_revue_id                = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
 
 
-class is_revue_version(models.Model):
-    _name        = "is.revue.version"
-    _description = "Versions"
+class is_revue_de_contrat_version(models.Model):
+    _name        = "is.revue.de.contrat.version"
+    _description = "Revue de contrat Versions"
     _rec_name    = "rc_dfi_article"
 
     rc_dfi_version             = fields.Selection([
@@ -302,9 +302,9 @@ class is_revue_version(models.Model):
     is_revue_id                = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
 
 
-class is_revue_dfe_version(models.Model):
-    _name        = "is.revue.dfe.version"
-    _description = "Versions"
+class is_revue_de_contrat_dfe_version(models.Model):
+    _name        = "is.revue.de.contrat.dfe.version"
+    _description = "Revue de contrat Versions"
     _rec_name    = "rc_dfe_comp"
 
     rc_dfe_version             = fields.Selection([
