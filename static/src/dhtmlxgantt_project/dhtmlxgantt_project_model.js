@@ -45,7 +45,7 @@ const DhtmlxganttProjectModel = BasicModel.extend({
      * @returns {Promise}
      */
     _fetchData: function () {
-        console.log("DhtmlxganttProjectModel : _fetchData : this.domain=",this.domain,this.modelName); 
+        //console.log("DhtmlxganttProjectModel : _fetchData : this.domain=",this.domain,this.modelName); 
     },
 });
 export default DhtmlxganttProjectModel;

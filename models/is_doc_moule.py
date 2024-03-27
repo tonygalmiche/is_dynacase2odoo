@@ -142,6 +142,7 @@ class IsDocMoule(models.Model):
 
     @api.model
     def get_dhtmlx(self, domain=[]):
+        print(domain)
         lines=self.env['is.doc.moule'].search(domain, order="dateend", limit=500)
 
         # #** Ajout des moules ************************************************
@@ -151,7 +152,7 @@ class IsDocMoule(models.Model):
             if line.idmoule not in moules:
                 moules.append(line.idmoule)
         for moule in moules:
-            text=moule.name
+            text="%s (%s)"%(moule.name,moule.project.name)
             infobulle_list=[]
             infobulle_list.append("<b>Moule</b>: %s"%(moule.name))
             vals={
@@ -171,9 +172,17 @@ class IsDocMoule(models.Model):
 
         #** Ajout des documents des moules **************************************
         for line in lines:
+            print(line.param_project_id.ppr_famille,line.dateend)
             if line.dateend:
                 priority = round(2*random()) # Nombre aléatoire entre 0 et 2
-                name = line.param_project_id.ppr_famille
+                famille=line.param_project_id.ppr_famille
+                name=famille
+                if famille=='Autre':
+                    name="%s (Autre)"%line.demande
+                else:
+                    name=famille
+                if line.param_project_id.ppr_revue_lancement:
+                    name="%s [%s]"%(name,line.param_project_id.ppr_revue_lancement)
                 duration = 14
                 infobulle_list=[]
                 infobulle_list.append("<b>Document</b>           : %s"%name)

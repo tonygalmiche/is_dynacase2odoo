@@ -19,10 +19,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         super.setup(...arguments);
         this.qweb = new QWeb(this.env.isDebug(), {_s: session.origin});
         this.qweb.add_template(utils.json_node_to_xml(this.props.templates));
-
         //this.orm = useService("orm");
-
-
         this.state = useState({
             dict: {},
             test:'toto et tutu',
@@ -30,22 +27,24 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             //resIds: []
         });
         this.events=[];
-
-
-
-        // this.widgetComponents = {
-        //     ActivityRecord,
-        //     KanbanActivity,
-        //     KanbanColumnProgressBar,
-        // };
-
+        this.ActivePatched=true;
         onMounted(() => this._mounted());
         onPatched(() => this._patched());
         //onWillUnmount(() => this._willUnmount());
-
-
-
     }
+
+
+    // setup
+    // willStart
+    // willRender
+    // rendered
+    // mounted
+    // willUpdateProps
+    // willPatch
+    // patched
+    // willUnmount
+    // willDestroy
+    // onError
 
 
 
@@ -53,7 +52,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
 
 
     _mounted() {
-        console.log('_mounted');
+        console.log('mounted',this.state.items)
 
 
         this.gantt = gantt;
@@ -176,10 +175,10 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         this.gantt.ext.zoom.init(zoomConfig);
 
 
-        this.gantt.message({
-            text: "Ceci est un message" ,
-            expire: 2000
-        });
+        // this.gantt.message({
+        //     text: "Ceci est un message" ,
+        //     expire: 2000
+        // });
 
 
         this.gantt.config.sort = true;
@@ -234,19 +233,22 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                     cl= "low";
                     break;
             }
-
-            console.log("task_class=",task,task.priority,cl);
-
             return cl;
         };
         this.gantt.init("gantt_here");
-        this.renderDhtmlxGantt();
+        this.GetDocuments();
     }
 
 
     _patched() {
-        console.log('_patched');
-        this.renderDhtmlxGantt();
+        console.log('_patched : this.ActivePatched=',this.ActivePatched);
+        if (this.ActivePatched==true) {
+            this.ActivePatched=false;
+            this.GetDocuments();
+        } else {
+            this.ActivePatched=true;
+        }
+        //this.renderDhtmlxGantt();
         //this.GetDocuments();
     }
 
@@ -268,7 +270,6 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
 
         for (var x in this.state.items) {
             item = this.state.items[x];
-            console.log(x,item);
             marker_id = item.id
             //Doc : https://docs.dhtmlx.com/gantt/desktop__task_properties.html
             vals={
@@ -294,10 +295,10 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             data : data,
             links: links,
         });
-        this.gantt.message({
-            text: "Ceci est un autre message" ,
-            expire: 2000
-        });
+        // this.gantt.message({
+        //     text: "Ceci est un autre message" ,
+        //     expire: 2000
+        // });
 
 
         //Positionner un marker sur une task pour pouvoir ensuite se déplacer dessus avec le bouton OKclickMarker
@@ -358,7 +359,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
     }
 
     async GetDocuments(s){
-        console.log('GetDocuments')
+        console.log('GetDocuments : this.ActivePatched=',this.ActivePatched)
         var self=this;
         rpc.query({
             model: 'is.doc.moule',
@@ -367,7 +368,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                 domain: this.props.domain,
             }
         }).then(function (result) {
-            console.log(result,self.state,self.test);
+            console.log('result=',result);
             self.state.items = result.items;
             self.state.links = result.links;
             self.renderDhtmlxGantt();
