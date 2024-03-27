@@ -2,19 +2,14 @@
 import BasicModel from 'web.BasicModel';
 import session from 'web.session';
 
-console.log('DhtmlxganttProjectModel');
-
 
 const DhtmlxganttProjectModel = BasicModel.extend({
-
     /**
      * @override
      * @param {Array[]} params.domain
      */
     __load: function (params) {
-        console.log("DhtmlxganttProjectModel : __load : params=",params); 
         this.originalDomain = _.extend([], params.domain);
-        //params.domain.push(['id', '=', false]);
         this.domain = params.domain;
         this.modelName = params.modelName;
         params.groupedBy = [];
@@ -28,7 +23,6 @@ const DhtmlxganttProjectModel = BasicModel.extend({
      * @param {Array[]} [params.domain]
      */
     __reload: function (handle, params) {
-        console.log("DhtmlxganttProjectModel : __reload : params=",params); 
         if (params && 'domain' in params) {
             this.originalDomain = _.extend([], params.domain);
             //params.domain.push(['id', '=', false]);
@@ -51,8 +45,7 @@ const DhtmlxganttProjectModel = BasicModel.extend({
      * @returns {Promise}
      */
     _fetchData: function () {
-        console.log("DhtmlxganttProjectModel : this.domain=",this.domain); 
+        console.log("DhtmlxganttProjectModel : _fetchData : this.domain=",this.domain,this.modelName); 
     },
 });
-
 export default DhtmlxganttProjectModel;

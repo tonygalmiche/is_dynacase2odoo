@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
 from odoo.tools import format_date, formatLang, frozendict
-
+from random import *
 
 class IsDocMoule(models.Model):
     _name        = "is.doc.moule"
@@ -77,13 +77,9 @@ class IsDocMoule(models.Model):
     def list_doc(self,name,ids):
         tree_id = self.env.ref('is_dynacase2odoo.is_doc_moule_edit_tree_view').id
         for obj in self:
-           
-
             ctx={
                 'default_idmoule': obj.idmoule.id,
             }
-        
-
             return {
                 'name': name,
                 'view_mode': 'tree,form,kanban,calendar,pivot,graph',
@@ -116,45 +112,210 @@ class IsDocMoule(models.Model):
             return obj.list_doc(obj.idproject.name,ids)
 
 
+    # @api.model
+    # def get_dhtmlx(self, domain=[]):
+    #     print("## TEST get_dhtmlx : domain=",domain)
+    #     lines=self.env['is.doc.moule'].search(domain,limit=100, order="dateend")
+    #     print("get_dhtmlx=",lines)
+    #     res=[]
+
+
+    #     for line in lines:
+    #         priority = round(2*random()) # Nombre aléatoire entre 0 et 2
+    #         if line.dateend:
+    #             text = line.param_project_id.ppr_famille
+    #             vals={
+    #                 "id": line.id+100000,
+    #                 "text": text,
+    #                 "start_date": str(line.dateend)+' 02:00:00"',
+    #                 #"end_date": str(line.dateend)+' 22:00:00"',
+    #                 "duration": 32, # TODO a calculer !!
+    #                 "parent": 0,
+    #                 "progress": 0,
+    #                 "open": True,
+    #                 #"assigned": project.user_id.name,
+    #                 "priority": priority,
+    #                 "infobulle": "test"
+    #             }
+    #             res.append(vals)
+
+
     @api.model
-    def get_gantt_documents(self,domain=[]):
-        print("## get_gantt_documents",self,domain)
-        my_dict={}
+    def get_dhtmlx(self, domain=[]):
+        lines=self.env['is.doc.moule'].search(domain, order="dateend", limit=500)
 
-
-        docs=self.env['is.doc.moule'].search(domain,limit=10)
-        for doc in docs:
-            key="%s-%s"%(doc.dateend,doc.id)
-            print(key)
-
+        # #** Ajout des moules ************************************************
+        res=[]
+        moules=[]
+        for line in lines:
+            if line.idmoule not in moules:
+                moules.append(line.idmoule)
+        for moule in moules:
+            text=moule.name
+            infobulle_list=[]
+            infobulle_list.append("<b>Moule</b>: %s"%(moule.name))
             vals={
-                "key"    : key,
-                "id"     : doc.id,
-                "name"   : doc.param_project_id.ppr_famille,
-                "dateend": doc.dateend,
-                "duree"  : doc.duree,
+                "id": moule.id+100000,
+                "text": text,
+                "start_date": False,
+                "duration": False,
+                "parent": 0,
+                "progress": 0,
+                "open": True,
+                #"assigned": project.user_id.name,
+                "priority": 2,
+                "infobulle": "<br>\n".join(infobulle_list)
             }
-            my_dict[key]=vals
+            res.append(vals)
+        # #**********************************************************************
+
+        #** Ajout des documents des moules **************************************
+        for line in lines:
+            if line.dateend:
+                priority = round(2*random()) # Nombre aléatoire entre 0 et 2
+                name = line.param_project_id.ppr_famille
+                duration = 14
+                infobulle_list=[]
+                infobulle_list.append("<b>Document</b>           : %s"%name)
+                vals={
+                    "id": line.id,
+                    "text": name,
+                    "end_date": str(line.dateend)+' 02:00:00"',
+                    "duration": duration,
+                    "parent": line.idmoule.id+100000,
+                    #"assigned": line.user_id.name,
+                    #"progress": line.progress/100,
+                    "priority": priority,
+                    "infobulle": "<br>\n".join(infobulle_list)
+                }
+                res.append(vals)
+        #**********************************************************************
+
+
+        #** Ajout des dependances *********************************************
+        links=[]
+        ct=1
+        mem_line=False
+        mem_moule=False
+        for line in lines:
+            if mem_moule!=line.idmoule:
+                mem_line=False
+            if mem_line:
+                vals={
+                    "id":ct,
+                    "source": mem_line.id,
+                    "target": line.id,
+                    "type":0,
+                }
+                links.append(vals)
+                ct+=1
+            mem_line = line
+            mem_moule = line.idmoule
+        #**********************************************************************
+
+        return {"items":res, "links": links}
 
 
 
 
-        #my_dict[key]=vals
-        
-        
-        sorted_dict = dict(sorted(my_dict.items()))
-
-        print(sorted_dict)
 
 
-        return {
-            "dict"           : sorted_dict,
-            # "mois"           : mois,
-            # "semaines"       : semaines,
-            # "nb_semaines"    : nb_semaines,
-            # "decale_planning": decale_planning,
-        }
 
+
+        # LOCAL = tz.gettz('Europe/Paris')
+        # UTC   = tz.gettz('UTC')
+        # res=[]
+        # ids=[]
+        # for line in lines:
+        #     if line.production_id.id not in ids:
+        #         ids.append(line.production_id.id)
+        # filtre=[
+        #     ('id','in', ids),
+        #     ('state', 'not in', ['done', 'cancel']),
+        #     ('is_ordre_travail_id', '!=', False),
+        # ]
+        # productions=self.env['mrp.production'].search(filtre, order="is_date_planifiee,name")
+        # for production in productions:
+        #     text="%s : %s"%(production.name,(production.is_client_order_ref or '?'))
+
+        #     infobulle_list=[]
+        #     infobulle_list.append("<b>Ordre de fabrication</b>: %s"%(production.name))
+        #     infobulle_list.append("<b>Article</b>             : %s"%(production.product_id.name))
+        #     infobulle_list.append("<b>Commande</b>            : %s"%(production.is_sale_order_id.name))
+        #     infobulle_list.append("<b>Référence client</b>    : %s"%(production.is_client_order_ref))
+        #     if production.is_date_prevue:
+        #         infobulle_list.append("<b>Date client</b>         : %s"%(production.is_date_prevue.strftime('%d/%m/%y')))
+        #     infobulle_list.append("<b>Date planifiée début</b>: %s"%(production.is_date_planifiee.strftime('%d/%m/%y')))
+        #     infobulle_list.append("<b>Date planifiée fin</b>  : %s"%(production.is_date_planifiee_fin.strftime('%d/%m/%y')))
+
+        #     #start_date_utc   = production.date_planned_start
+        #     start_date_utc   = production.is_date_planifiee
+        #     end_date_utc     = production.is_date_planifiee_fin
+
+        #     start_date_local = start_date_utc.replace(tzinfo=UTC)
+        #     end_date_local   = end_date_utc.replace(tzinfo=UTC)
+
+        #     vals={
+        #         "id": production.id+100000,
+        #         "text": text,
+        #         "start_date": start_date_local,
+        #         "end_date": end_date_local,
+        #         #"duration": 8, # TODO a calculer !!
+        #         "parent": 0,
+        #         "progress": 0,
+        #         "open": True,
+        #         #"assigned": project.user_id.name,
+        #         "priority": 2,
+        #         "infobulle": "<br>\n".join(infobulle_list)
+        #     }
+        #     res.append(vals)
+        # # #**********************************************************************
+
+        links=[]
+        return {"items":res, "links": links}
+
+
+
+
+    # @api.model
+    # def get_gantt_documents(self,domain=[]):
+    #     print("## get_gantt_documents",self,domain)
+    #     my_dict={}
+
+
+    #     docs=self.env['is.doc.moule'].search(domain,limit=10)
+    #     for doc in docs:
+    #         key="%s-%s"%(doc.dateend,doc.id)
+
+    #         print(key)
+
+    #         vals={
+    #             "key"    : key,
+    #             "name"   : doc.param_project_id.ppr_famille,
+    #             "dateend": doc.dateend,
+    #             "duree"  : doc.duree,
+
+    #             "id"        : doc.id,
+    #             "text"      : "xxx",
+    #             "start_date": start_date,
+    #             "duration"  : duration,
+    #             "assigned"  : assigned,
+    #             "priority"  : priority,
+    #             #"parent"    : parent,
+    #         }
+    #         my_dict[key]=vals        
+    #     sorted_dict = dict(sorted(my_dict.items()))
+
+    #     print(sorted_dict)
+
+
+    #     return {
+    #         "dict"           : sorted_dict,
+    #         # "mois"           : mois,
+    #         # "semaines"       : semaines,
+    #         # "nb_semaines"    : nb_semaines,
+    #         # "decale_planning": decale_planning,
+    #     }
 
 
 

@@ -5,7 +5,10 @@ import session from 'web.session';
 import utils from 'web.utils';
 //import { useService } from "@web/core/utils/hooks";
 
-const { useState } = owl;
+const { useState, onMounted, onPatched, onWillUnmount } = owl;
+
+
+
 //const _t = core._t;
 //const KanbanActivity = field_registry.get('kanban_activity');
 
@@ -26,54 +29,321 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             //activityTypeId: null,
             //resIds: []
         });
+        this.events=[];
+
+
+
         // this.widgetComponents = {
         //     ActivityRecord,
         //     KanbanActivity,
         //     KanbanColumnProgressBar,
         // };
+
+        onMounted(() => this._mounted());
+        onPatched(() => this._patched());
+        //onWillUnmount(() => this._willUnmount());
+
+
+
     }
 
 
 
-    getGantt() {
-        console.log('## mounted ##');
 
+
+
+    _mounted() {
+        console.log('_mounted');
+
+
+        this.gantt = gantt;
         // Je n'ai pas trouvé d'autre solution que d'intégrer l'objet owl dans l'objet gantt pour pouvoir 
         //l'utiliser dans les évènements du Gantt
         gantt.owl = this; 
 
-        gantt.i18n.setLocale("fr");
-
-        gantt.config.duration_unit = "hour";//an hour
-        //gantt.config.duration_unit = "minute";//an hour
-        gantt.config.duration_step = 1; //so if task.duration = 2 and step=3, the task will long 6 hours
-
-
-        gantt.config.xml_date = "%Y-%m-%d %H:%i";
-        gantt.scales = [
+        this.gantt.i18n.setLocale("fr");
+        this.gantt.config.xml_date = "%Y-%m-%d %H:%i";
+        this.gantt.scales = [
             { unit: "year", step: 1, format: "%Y" }
         ];
 
-        gantt.config.date_format = "%Y-%m-%d %H:%i";
-        gantt.init("gantt_here");
-        gantt.parse({
-          data: [
-            {id: 1, text: "Project #1", start_date: null, duration: null, parent:0, progress: 0, open: true},
-            {id: 2, text: "Task #1", start_date: "2019-08-01 00:00", duration:5, parent:1, progress: 1},
-            {id: 3, text: "Task #2", start_date: "2019-08-06 00:00", duration:2, parent:1, progress: 0.5},
-            {id: 4, text: "Task #3", start_date: null, duration: null, parent:1, progress: 0.8, open: true},
-            {id: 5, text: "Task #3.1", start_date: "2019-08-09 00:00", duration:2, parent:4, progress: 0.2},
-            {id: 6, text: "Task #3.2", start_date: "2019-08-11 00:00", duration:1, parent:4, progress: 0}
-          ],
-          links:[
-            {id:1, source:2, target:3, type:"0"},
-            {id:2, source:3, target:4, type:"0"},
-            {id:3, source:5, target:6, type:"0"}
-          ]
+        this.gantt.config.lightbox.sections = [
+            {name: "description", height: 70, map_to: "text", type: "textarea", focus: true},
+            {name: "time", type: "duration", map_to: "auto"}
+        ];
+    
+        // this.gantt.config.scale_height = 50;
+    
+        // this.gantt.config.scales = [
+        //     {unit: "month", format: "%F, %Y"},
+        //     {unit: "day", step: 1, format: "%D %j"}
+        //     //{unit: "day", step: 1, format: "%j, %D"}
+        // ];
+
+        // this.gantt.attachEvent("onLightboxSave", function (id, task, is_new) {
+        //     task.unscheduled = !task.start_date;
+        //     return true;
+        // });
+
+        this.gantt.plugins({
+            keyboard_navigation: true,
+            undo: true,
+            tooltip: true, /* Infobulle sur les taches => Cela fonctionne */
+            marker: true,
         });
 
 
+        this.gantt.attachEvent("onGanttReady", function(){
+            var tooltips = gantt.ext.tooltips;
+            tooltips.tooltip.setViewport(gantt.$task_data);
+        });
+
+
+
+        this.gantt.config.grid_width = 620;
+        this.gantt.config.add_column = false;
+        this.gantt.templates.grid_row_class = function (start_date, end_date, item) {
+            if (item.progress == 0) return "red";
+            if (item.progress >= 1) return "green";
+        };
+        this.gantt.templates.task_row_class = function (start_date, end_date, item) {
+            if (item.progress == 0) return "red";
+            if (item.progress >= 1) return "green";
+        };
+
+        //** Configuration des colonnes des tâches
+        this.gantt.config.columns = [
+            {name: "text", label: "Tâche", tree: true, width: 260},
+            {name: "start_date", label: "Début", tree: true, width: 160},
+            {
+                name: "progress", label: "%", width: 80, align: "center",
+                template: function (item) {
+                    // if (item.progress >= 0.5)
+                    //     return "Complete";
+                    // if (item.progress == 0)
+                    //     return "Not started";
+                    return Math.round(item.progress * 100) + "%";
+                }
+            },
+            // {
+            //     name: "assigned", label: "Assigné à", align: "center", width: 160,
+            //     // template: function (item) {
+            //     //     if (!item.users) return "Nobody";
+            //     //     return item.users.join(", ");
+            //     // }
+            // },
+            {name: "duration", label: "Durée", tree: true, width: 120},
+        ];
+
+
+        /* ZOOM */
+        var zoomConfig = {
+            levels: [
+                {
+                    name:"week",
+                    scale_height: 45,
+                    min_column_width:25,
+                    scales:[
+                        {unit: "week", format: "%F %Y S%W"},
+                        {unit: "day", format: "%d"},
+                    ]
+                },
+                {
+                    name:"month",
+                    scale_height: 45,
+                    min_column_width:30,
+                    scales:[
+                        {unit: "month", format: "%F %Y"},
+                        {unit: "week", format: "S%W"},
+                    ]
+                },
+                {
+                    name:"year",
+                    scale_height: 45,
+                    min_column_width: 35,
+                    scales:[
+                        {unit: "year" , step: 1, format: "%Y"},
+                        {unit: "month", step: 1, format: "%M"},
+                    ]
+                }
+            ],
+            useKey: "ctrlKey",
+            trigger: "wheel",
+            element: function(){
+                return gantt.$root.querySelector(".gantt_task");
+            }
+        };
+        this.gantt.ext.zoom.init(zoomConfig);
+
+
+        this.gantt.message({
+            text: "Ceci est un message" ,
+            expire: 2000
+        });
+
+
+        this.gantt.config.sort = true;
+        this.gantt.config.row_height = 25;
+
+
+        /* Text à gauche de la task => https://docs.dhtmlx.com/gantt/desktop__timeline_templates.html */
+        // const formatter = gantt.ext.formatters.durationFormatter({
+        //     format: ["day"]
+        // });
+        // this.gantt.templates.leftside_text = function(start, end, task){
+        //     return formatter.format(task.duration);
+        // };
+
+        /* Text à droite de la task */
+        // this.gantt.templates.rightside_text = function(start, end, task){
+        //     return "ID: #" + task.id;
+        // };
+
+        /* Text de progression de la task */
+        // this.gantt.templates.progress_text=function(start, end, task){
+        //     return Math.round(task.progress*100);
+        // };
+        /* Text de la task */
+        gantt.templates.task_text=function(start, end, task){
+            return "";
+        };
+
+
+
+        /* Text de l'infobulle de la task */
+        this.gantt.templates.tooltip_text = function(start,end,task){
+            return "<b>Task:</b> "+task.text+"<br/><b>Start date:</b> " + 
+            gantt.templates.tooltip_date_format(start)+ 
+            "<br/><b>End date:</b> "+gantt.templates.tooltip_date_format(end)+
+            "<br/><b>Progress:</b> "+task.progress+
+            "<br/>Durée: "+task.duration+
+            "<br/><div style='color:red'>Autre: "+task.champ_perso+"</div>";
+        };
+
+        //Met une couleur sur les task en fonction de la priority
+        this.gantt.templates.task_class = function (start, end, task) {
+            var cl="";
+            switch (task.priority) {
+                case 0:
+                    cl = "high";
+                    break;
+                case 1:
+                    cl = "medium";
+                    break;
+                case 2:
+                    cl= "low";
+                    break;
+            }
+
+            console.log("task_class=",task,task.priority,cl);
+
+            return cl;
+        };
+        this.gantt.init("gantt_here");
+        this.renderDhtmlxGantt();
     }
+
+
+    _patched() {
+        console.log('_patched');
+        this.renderDhtmlxGantt();
+        //this.GetDocuments();
+    }
+
+
+    rnd() {
+        //var x = Math.floor(Math.random()*100)/10;
+        var x = Math.random();
+        return x
+    }
+
+
+    renderDhtmlxGantt() {
+        console.log('renderDhtmlxGantt : this.state.items=',this.state.items);
+        var data=[];
+        var links=[];
+        var item={};
+        var vals={};
+        var marker_id=0;
+
+        for (var x in this.state.items) {
+            item = this.state.items[x];
+            console.log(x,item);
+            marker_id = item.id
+            //Doc : https://docs.dhtmlx.com/gantt/desktop__task_properties.html
+            vals={
+                id:item.id,
+                text:item.text,
+                //start_date:item.date_assign,
+                //start_date:item.start_date,
+                end_date:item.end_date,
+                //duration:  Math.round(this.rnd()*100)+1,
+                duration   : item.duration,
+                progress   : this.rnd(),
+                assigned   : item.assigned,
+                priority   : item.priority,
+                champ_perso: "Champ perso à mettre dans l'infobulle",
+                parent     : item.parent,
+            }
+            data.push(vals);
+        }
+        links = this.state.links;
+
+        this.gantt.clearAll(); 
+        this.gantt.parse({
+            data : data,
+            links: links,
+        });
+        this.gantt.message({
+            text: "Ceci est un autre message" ,
+            expire: 2000
+        });
+
+
+        //Positionner un marker sur une task pour pouvoir ensuite se déplacer dessus avec le bouton OKclickMarker
+        if (marker_id>0){
+            var current_time = this.gantt.getTask(marker_id).start_date;
+            var text =  this.gantt.getTask(marker_id).text
+            this.todayMarker = this.gantt.addMarker({ 
+                start_date: current_time, 
+                css: "today", 
+                text: "Marqueur pour "+text,
+            });
+        }
+    
+        // detach all saved events
+        while (this.events.length)
+            this.gantt.detachEvent(this.events.pop());
+            //En cliqant sur une task, cela affiche la liste des clients d'Odoo
+            this.gantt.attachEvent("onTaskClick", function(id,e){
+            if (e.target.className=="gantt_task_content"){
+                gantt.owl.env.bus.trigger('do-action', {
+                    action: {
+                        type: 'ir.actions.act_window',
+                        res_model: 'project.task',
+                        res_id: parseInt(id),
+                        view_mode: 'form,list',
+                        views: [[false, 'form'],[false, 'list']],
+                        //target: 'current'
+                        //target: 'new',
+                    },
+                });
+            }
+            return true;
+        });
+
+
+        this.events.push(this.gantt.attachEvent("onAfterTaskUpdate", function(id,item){
+            console.log('onAfterTaskUpdate',id,item)
+            //this.owl.WriteTask(id, item.end_date, item.duration);
+        }));
+    }
+
+
+
+
+
+
 
 
     PrecedentClick(ev) {
@@ -92,197 +362,18 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         var self=this;
         rpc.query({
             model: 'is.doc.moule',
-            method: 'get_gantt_documents',
+            method: 'get_dhtmlx',
             kwargs: {
-                domain         : this.props.domain,
-                //decale_planning: this.state.decale_planning,
-                //nb_semaines    : this.state.nb_semaines,
+                domain: this.props.domain,
             }
         }).then(function (result) {
             console.log(result,self.state,self.test);
-            self.state.dict = result.dict;
-
-            self.getGantt();
-
-
-            // self.state.mois     = result.mois;
-            // self.state.semaines = result.semaines;
-            // self.state.nb_semaines     = result.nb_semaines;
-            // self.state.decale_planning = result.decale_planning;
+            self.state.items = result.items;
+            self.state.links = result.links;
+            self.renderDhtmlxGantt();
         });
-
-
-
     }
-
-
-
-
-    // var mailDef = rpc.query({
-    //     model: 'mail.mail',
-    //     method: 'search_count',
-    //     args: [[
-    //         ['email_to', '=', 'test@test.test'],
-    //         ['body_html', 'like', 'A useless message'],
-    //         ['body_html', 'like', 'Service : Development Service'],
-    //         ['body_html', 'like', 'State : 44 - UK'],
-    //         ['body_html', 'like', 'Products : Xperia,Wiko Stairway']
-    //     ]],
-    // });
-
-
-
-
-    // OKButtonClick(ev) {
-    //     this.state.decale_planning = 0;
-    //     this.GetChantiers(this.state.decale_planning, this.state.nb_semaines);
-    // }
-    // async GetChantiers(s){
-    //     var self=this;
-    //     rpc.query({
-    //         model: 'is.chantier',
-    //         method: 'get_chantiers',
-    //         kwargs: {
-    //             domain         : this.props.domain,
-    //             decale_planning: this.state.decale_planning,
-    //             nb_semaines    : this.state.nb_semaines,
-    //         }
-    //     }).then(function (result) {
-    //         self.state.dict     = result.dict;
-    //         self.state.mois     = result.mois;
-    //         self.state.semaines = result.semaines;
-    //         self.state.nb_semaines     = result.nb_semaines;
-    //         self.state.decale_planning = result.decale_planning;
-    //     });
-    // }
-
-
-
-    // OKButtonClick(ev) {
-    //     this.state.decale_planning = 0;
-    //     this.GetChantiers(this.state.decale_planning, this.state.nb_semaines);
-    // }
-    // async GetChantiers(s){
-    //     var self=this;
-    // }
-
-
-
-
 }
-
-// DhtmlxganttProjectRenderer.components = {
-//     ActivityRecordAdapter,
-//     ActivityCellAdapter,
-//     KanbanColumnProgressBarAdapter,
-// };
 DhtmlxganttProjectRenderer.template = 'is_dynacase2odoo.DhtmlxganttProjectTemplate';
-
 export default DhtmlxganttProjectRenderer;
 
-
-
-
-
-
-
-
-// var res = await this.orm.call("product.product", 'get_analyse_cbn', [false],params);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import AbstractRendererOwl from 'web.AbstractRendererOwl';
-// import core  from 'web.core';
-// import QWeb from 'web.QWeb';
-// import session from 'web.session';
-// import utils from 'web.utils';
-
-// const _t = core._t;
-// const { Component, useSubEnv, useState, onWillStart } = owl;
-
-
-
-// var rpc = require('web.rpc');
-
-
-// console.log('DhtmlxganttProjectRenderer');
-
-
-
-
-// class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
-//     constructor(parent, props) {
-//         super(...arguments);
-//         this.qweb = new QWeb(this.env.isDebug(), {_s: session.origin});
-//         this.qweb.add_template(utils.json_node_to_xml(props.templates));
- 
-//         this.state = useState({
-//             dict:{},
-//         });
-//     }
-
-//     mounted() {
-//         this.GetDocuments();
-//     }
-
-//     TrMouseLeave(ev) {
-//         const click=ev.target.attributes.click.value;
-//         if (click!="1"){
-//             const memstyle = ev.target.attributes.memstyle.value;
-//             ev.target.style=memstyle;
-//         }
-//     }
-//     TrMouseEnter(ev) {
-//         const click=ev.target.attributes.click.value;
-//         if (click!="1"){
-//             ev.target.style="background-color:#FFFF00;opacity: 0.5;";
-//         }
-//     }
-//     TrClick(ev) {
-//         var click=ev.target.parentElement.attributes.click;
-//         if (click!==undefined){
-//             click.value=-click.value
-//             if (click.value==1){
-//                 ev.target.parentElement.style="background-color:rgb(204, 255, 204);opacity: 0.5;";
-//             } else {
-//                 const memstyle = ev.target.parentElement.attributes.memstyle.value;
-//                 ev.target.parentElement.style=memstyle;
-//             }
-//             ev.target.parentElement.attributes.click.value=click.value;
-//         }
-//     }
-
-
-//     PrecedentClick(ev) {
-//         console.log('PrecedentClick')
-//     }
-//     SuivantClick(ev) {
-//         console.log('SuivantClick')
-//     }
-//     OKButtonClick(ev) {
-//         console.log('OKButtonClick')
-//         this.GetDocuments();
-//     }
-
-//     async GetDocuments(s){
-//         console.log('GetDocuments')
-//     }
-// }
-
-// DhtmlxganttProjectRenderer.components = {};
-// DhtmlxganttProjectRenderer.template = 'is_dynacase2odoo.DhtmlxganttProjectTemplate';
-// export default DhtmlxganttProjectRenderer;
