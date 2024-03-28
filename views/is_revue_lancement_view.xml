@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="is_revue_lancement_form">
+            <field name="name">view.is.revue.lancement.form</field>
+            <field name="model">is.revue.lancement</field>
+            <field name="arch" type="xml">
+                <form string="Revue de lancement">
+                    <header>
+                        <button name="action_vers_diffuse" string="Vers Diffusé" type="object" class="btn-primary" attrs="{'invisible': [('state', 'in', ['diffuse',None,False])]}" />
+                        <button name="action_vers_brouillon" string="Vers Brouillon" type="object" class="btn-primary" attrs="{'invisible': [('state', '=', 'brouillon')]}" />
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <notebook>
+                            <page name="rl_initial_tab" string="Données d'entrée">
+                                <group>
+                                    <field name="rl_title" />
+                                    <field name="rl_indice" />
+                                    <field name="rl_num_rcid" />
+                                    <field name="rl_designation_rc" />
+                                    <field name="rl_client_rcid" />
+                                    <field name="rl_projet_rcid" />
+                                    <field name="rl_commercial_rcid" />
+                                </group>
+                            </page>
+                            <page name="rl_choix_industriel_tab" string="Choix industriel">
+                                <group name="rl_choix_industriel_fr" string="Choix industriel">
+                                    <field name="rl_lieu_production" />
+                                    <field name="rl_nom_soutraitant" />
+                                    <field name="rl_affectation_presse" />
+                                    <field name="rl_choix_industriel" />
+                                    <field name="rl_validation_capacitaire" />
+                                    <field name="rl_validation_capacitaire_comment" />
+                                </group>
+                            </page>
+                            <page name="rl_eq_projet_tab" string="Gestion projet">
+                                <group>
+                                    <group name="rl_eq_projet_fr" string="Equipe projet">
+                                        <field name="rl_chef_projetid" />
+                                        <field name="rl_expert_injectionid" />
+                                        <field name="rl_methode_injectionid" />
+                                        <field name="rl_methode_assemblageid" />
+                                        <field name="rl_qualite_devid" />
+                                        <field name="rl_qualite_usineid" />
+                                        <field name="rl_achatsid" />
+                                        <field name="rl_logistiqueid" />
+                                        <field name="rl_logistique_usineid" />
+                                        <field name="rl_commercial2id" />
+                                        <field name="rl_responsable_outillageid" />
+                                        <field name="rl_responsable_projetid" />
+                                        <field name="rl_directeur_siteid" />
+                                        <field name="rl_directeur_techniqueid" />
+                                    </group>
+                                    <group name="rl_fr_date_jalon" string="Dates des jalons">
+                                        <field name="rl_date_j0" />
+                                        <field name="rl_date_j1" />
+                                        <field name="rl_date_j2" />
+                                        <field name="rl_date_j3" />
+                                        <field name="rl_date_j4" />
+                                        <field name="rl_date_j5" />
+                                    </group>
+                                </group>
+                            </page>
+                            <page name="rl_investissement_tab" string="Investissement">
+                                <group name="rl_investissement_pgrc_fr" string="Données moule" col="4">
+                                    <group string="Designation - Montant">
+                                        <field name="rl_pgrc_moule_mnt" />
+                                        <field name="rl_pgrc_etude_mnt" />
+                                        <field name="rl_pgrc_main_prehension_mnt" />
+                                        <field name="rl_pgrc_barre_chaude_mnt" />
+                                        <field name="rl_pgrc_gabarit_controle_mnt" />
+                                        <field name="rl_pgrc_machine_speciale_mnt" />
+                                        <field name="rl_pgrc_plan_validation_mnt" />
+                                        <field name="rl_pgrc_mise_point_mnt" />
+                                        <field name="rl_pgrc_packaging_mnt" />
+                                        <field name="rl_pgrc_amort_mnt" />
+                                        <field name="rl_pgrc_total" />
+                                    </group>
+                                    <group string="Commentaire">
+                                        <field name="rl_pgrc_moule_cmt" nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_etude_cmt" nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_main_prehension_cmt" nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_barre_chaude_cmt" nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_gabarit_controle_cmt" nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_machine_speciale_cmt" nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_plan_validation_cmt" nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_mise_point_cmt" nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_packaging_cmt" nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_amort_cmt" nolabel="1" colspan="6"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group name="rl_investissement_pgrl_fr" string="Données revue de lancement">
+                                        <field name="rl_be01" />
+                                        <field name="rl_be01b" />
+                                        <field name="rl_be01c" />
+                                        <field name="rl_be02" />
+                                        <field name="rl_be03" />
+                                        <field name="rl_be04" />
+                                        <field name="rl_be05" />
+                                        <field name="rl_be06" />
+                                        <field name="rl_be07" />
+                                        <field name="rl_be09" />
+                                        <field name="rl_be10" />
+                                        <field name="rl_be11" />
+                                        <field name="rl_be12" />
+                                        <field name="rl_be13" />
+                                        <field name="rl_be14" />
+                                        <field name="rl_be15" />
+                                        <field name="rl_be16" />
+                                        <field name="rl_be17" />
+                                        <field name="rl_be_total" />
+                                        <field name="rl_annee_inv" />
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" />
+                            <field name="activity_ids" />
+                            <field name="message_ids" />
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="is_revue_lancement_tree">
+            <field name="name">view.is.revue.lancement.tree</field>
+            <field name="model">is.revue.lancement</field>
+            <field name="arch" type="xml">
+                <tree string="Revue de lancement">
+                    <field name="rl_title" optional="show"/>
+                    <field name="rl_indice" optional="show"/>
+                    <field name="rl_num_rcid" optional="show"/>
+                    <field name="rl_designation_rc" optional="show"/>
+                    <field name="rl_client_rcid" optional="show"/>
+                    <field name="rl_projet_rcid" optional="show"/>
+                    <field name="rl_commercial_rcid" optional="show"/>
+                    <field name="rl_lieu_production" optional="hide"/>
+                    <field name="rl_nom_soutraitant" optional="hide"/>
+                    <field name="rl_affectation_presse" optional="hide"/>
+                    <field name="rl_choix_industriel" optional="hide"/>
+                    <field name="rl_validation_capacitaire" optional="hide"/>
+                    <field name="rl_validation_capacitaire_comment" optional="hide"/>
+                    <field name="rl_chef_projetid" optional="hide"/>
+                    <field name="rl_expert_injectionid" optional="hide"/>
+                    <field name="rl_methode_injectionid" optional="hide"/>
+                    <field name="rl_methode_assemblageid" optional="hide"/>
+                    <field name="rl_qualite_devid" optional="hide"/>
+                    <field name="rl_qualite_usineid" optional="hide"/>
+                    <field name="rl_achatsid" optional="hide"/>
+                    <field name="rl_logistiqueid" optional="hide"/>
+                    <field name="rl_logistique_usineid" optional="hide"/>
+                    <field name="rl_commercial2id" optional="hide"/>
+                    <field name="rl_responsable_outillageid" optional="hide"/>
+                    <field name="rl_responsable_projetid" optional="hide"/>
+                    <field name="rl_directeur_siteid" optional="hide"/>
+                    <field name="rl_directeur_techniqueid" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="is_revue_lancement_search">
+            <field name="name">view.is.revue.lancement.search</field>
+            <field name="model">is.revue.lancement</field>
+            <field name="arch" type="xml">
+                <search string="Revue de lancement">
+                    <field name="rl_title" />
+                    <field name="rl_num_rcid" />
+                    <field name="rl_designation_rc" />
+                    <field name="rl_client_rcid" />
+                    <field name="rl_projet_rcid" />
+                    <field name="rl_commercial_rcid" />
+                    <field name="rl_lieu_production" />
+                    <field name="rl_nom_soutraitant" />
+                    <field name="rl_affectation_presse" />
+                    <field name="rl_choix_industriel" />
+                    <field name="rl_validation_capacitaire" />
+                    <field name="rl_validation_capacitaire_comment" />
+                    <field name="rl_chef_projetid" />
+                    <field name="rl_expert_injectionid" />
+                    <field name="rl_methode_injectionid" />
+                    <field name="rl_methode_assemblageid" />
+                    <field name="rl_qualite_devid" />
+                    <field name="rl_qualite_usineid" />
+                    <field name="rl_achatsid" />
+                    <field name="rl_logistiqueid" />
+                    <field name="rl_logistique_usineid" />
+                    <field name="rl_commercial2id" />
+                    <field name="rl_responsable_outillageid" />
+                    <field name="rl_responsable_projetid" />
+                    <field name="rl_directeur_siteid" />
+                    <field name="rl_directeur_techniqueid" />
+                </search>
+            </field>
+        </record>
+
+        <record id="is_revue_lancement_action" model="ir.actions.act_window">
+            <field name="name">Revue de lancement</field>
+            <field name="res_model">is.revue.lancement</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

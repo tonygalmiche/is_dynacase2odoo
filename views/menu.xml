@@ -70,5 +70,15 @@
         </record>
         <menuitem id="menu_is_revue_de_contrat" sequence="1" name="Revue de contrat" parent="menu_parent_is_revue_de_contrat" action="action_is_revue_de_contrat" />
 
+        <!-- Revue de lancement -->
+        <menuitem
+            id="is_revue_lancement_main_menu" sequence="11" name="Revue de lancement"
+            parent="gestion_des_projets_menu"
+        />
+        <menuitem
+            id="is_revue_lancement_menu" sequence="10" name="Revue de lancement"
+            parent="is_revue_lancement_main_menu" action="is_revue_lancement_action"
+        />
+
     </data>
 </odoo>
