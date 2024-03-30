@@ -121,6 +121,7 @@ class is_revue_lancement(models.Model):
         ("brouillon", "Brouillon"),
         ("diffuse",    "Diffusé"),
     ], string="État")
+    dynacase_id = fields.Integer(string="Id Dynacase")
 
 
 

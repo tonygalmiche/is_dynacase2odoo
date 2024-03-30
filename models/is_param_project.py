@@ -78,10 +78,11 @@ class IsParamProject(models.Model):
         ("rl_be16",  "BE16 : Achat composants"),
         ("rl_be17",  "BE17 : Essai injection"),
     ], string="Revue de lancement")
-    ppr_moule_hors_auto    = fields.Boolean(string="Famille pour moule hors automobile")
-    array_ids              = fields.One2many('is.param.project.array', 'param_project_id')
-    ppr_project_colors     = fields.Serialized()
-    ppr_color              = fields.Char("Color", sparse="ppr_project_colors")
+    ppr_moule_hors_auto = fields.Boolean(string="Famille pour moule hors automobile")
+    array_ids           = fields.One2many('is.param.project.array', 'param_project_id')
+    ppr_project_colors  = fields.Serialized()
+    ppr_color           = fields.Char("Color", sparse="ppr_project_colors")
+    dynacase_id         = fields.Integer(string="Id Dynacase")
 
 
 class IsParamProjectArray(models.Model):
