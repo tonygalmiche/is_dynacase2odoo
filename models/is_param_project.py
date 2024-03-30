@@ -25,12 +25,12 @@ class IsParamProject(models.Model):
         return res
 
     ppr_icon                = fields.Image(string="Icône")
-    ppr_famille             = fields.Char(string="Famille")
+    ppr_famille             = fields.Char(string="Famille", required=True)
     ppr_transformation_pdf  = fields.Boolean(string="Transformation en PDF")
     type_document = fields.Selection([
         ("Moule",       "Moule"),
         ("Article",     "Article"),
-    ],string="Type de document", default="Moule")
+    ],string="Type de document", default="Moule", required=True)
     ppr_dossier_fab         = fields.Boolean(string="Famille du dossier de fabrication")
     ppr_demande             = fields.Char(string="Demande")
     ppr_type_demande        = fields.Selection([
@@ -40,7 +40,7 @@ class IsParamProject(models.Model):
         ("PJ_TEXTE", "Pièce-jointe et texte"),
         ("PJ_DATE",  "Pièce-jointe et date"),
         ("AUTO",     "Automatique"),
-    ], string="Type de demande")
+    ], string="Type de demande", required=True, default='PJ')
     ppr_maj_amdec          = fields.Selection([
         ("Oui", "Oui"),
         ("Non", "Non"),
@@ -81,7 +81,7 @@ class IsParamProject(models.Model):
     ppr_moule_hors_auto = fields.Boolean(string="Famille pour moule hors automobile")
     array_ids           = fields.One2many('is.param.project.array', 'param_project_id')
     ppr_project_colors  = fields.Serialized()
-    ppr_color           = fields.Char("Color", sparse="ppr_project_colors")
+    ppr_color           = fields.Char("Color", sparse="ppr_project_colors", default='#EDEEEB')
     dynacase_id         = fields.Integer(string="Id Dynacase")
 
 
