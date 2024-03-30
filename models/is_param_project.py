@@ -81,7 +81,7 @@ class IsParamProject(models.Model):
     ppr_moule_hors_auto = fields.Boolean(string="Famille pour moule hors automobile")
     array_ids           = fields.One2many('is.param.project.array', 'param_project_id')
     ppr_project_colors  = fields.Serialized()
-    ppr_color           = fields.Char("Color", sparse="ppr_project_colors", default='#EDEEEB')
+    ppr_color           = fields.Char("Color", sparse="ppr_project_colors")
     dynacase_id         = fields.Integer(string="Id Dynacase")
 
 
