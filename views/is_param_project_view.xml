@@ -54,6 +54,7 @@
                     <field name="ppr_revue_lancement" optional="show"/>
                     <field name="ppr_moule_hors_auto" optional="show"/>
                     <field name="ppr_color" optional="show" widget="color"/>
+                    <field name="dynacase_id" optional="hide"/>
                 </tree>
             </field>
         </record>

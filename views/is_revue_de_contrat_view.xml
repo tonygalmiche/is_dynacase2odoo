@@ -485,6 +485,7 @@
                     <field name="rc_mouleid" optional="show"/>
                     <field name="rc_dossierfid" optional="show"/>
                     <field name="rc_indice" optional="show"/>
+                    <field name="dynacase_id" optional="hide"/>
                 </tree>
             </field>
         </record>

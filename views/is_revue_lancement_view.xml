@@ -159,6 +159,7 @@
                     <field name="rl_responsable_projetid" optional="hide"/>
                     <field name="rl_directeur_siteid" optional="hide"/>
                     <field name="rl_directeur_techniqueid" optional="hide"/>
+                    <field name="dynacase_id" optional="hide"/>
                 </tree>
             </field>
         </record>
