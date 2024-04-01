@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 
 class is_revue_lancement(models.Model):
@@ -34,6 +35,19 @@ class is_revue_lancement(models.Model):
         for record in self:
             record.state = "brouillon"
 
+    @api.constrains("rl_be_total", "rl_pgrc_total", "rl_annee_inv")
+    def _check_vals(self):
+        if self.rl_pgrc_total != self.rl_be_total:
+            raise ValidationError(_("Données moule and revue de lancement total must be same!"))
+        if self.rl_annee_inv:
+            try:
+                rl_annee_inv = int(self.rl_annee_inv)
+                if len(str(rl_annee_inv)) != 4:
+                    raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
+                if rl_annee_inv < 2000 or rl_annee_inv > 2099:
+                    raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
+            except Exception as e:
+                raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
 
     rl_title                          = fields.Char(string="Revue de lancement")
     rl_indice                         = fields.Integer(string="Indice")
@@ -96,7 +110,7 @@ class is_revue_lancement(models.Model):
     rl_pgrc_packaging_cmt             = fields.Char(string="Commentaire 8")
     rl_pgrc_amort_mnt                 = fields.Float(string="Amortissement")
     rl_pgrc_amort_cmt                 = fields.Char(string="Commentaire 9")
-    rl_pgrc_total                     = fields.Float(string="Total ", compute="get_rl_pgrc_total")
+    rl_pgrc_total                     = fields.Float(string="Total ", compute="get_rl_pgrc_total", store=True)
     rl_be01                           = fields.Float(string="BE01a : Nouveau moule/ Moule transféré")
     rl_be01b                          = fields.Float(string="BE01b : Grainage")
     rl_be01c                          = fields.Float(string="BE01c : Barre chaude")
@@ -115,13 +129,13 @@ class is_revue_lancement(models.Model):
     rl_be15                           = fields.Float(string="BE15 : Achat matière ")
     rl_be16                           = fields.Float(string="BE16 : Achat composants ")
     rl_be17                           = fields.Float(string="BE17 : Essai injection ")
-    rl_be_total                       = fields.Float(string="Total", compute="get_rl_be_total")
-    rl_annee_inv                      = fields.Char(string="Année d'enregistrement des investissements")
+    rl_be_total                       = fields.Float(string="Total", compute="get_rl_be_total", store=True)
+    rl_annee_inv                      = fields.Char(string="Année d'enregistrement des investissements", size=4)
     state                             = fields.Selection([
         ("brouillon", "Brouillon"),
         ("diffuse",    "Diffusé"),
     ], string="État")
-    dynacase_id = fields.Integer(string="Id Dynacase")
+    dynacase_id                       = fields.Integer(string="Id Dynacase")
 
 
 
