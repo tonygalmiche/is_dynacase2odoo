@@ -135,7 +135,7 @@ class is_revue_lancement(models.Model):
     state                             = fields.Selection([
         ("brouillon", "Brouillon"),
         ("diffuse",    "Diffusé"),
-    ], string="État")
+    ], string="État", tracking=True)
     dynacase_id                       = fields.Integer(string="Id Dynacase")
 
 
