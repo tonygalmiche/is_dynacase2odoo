@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="is_dossier_modif_variante_form">
+            <field name="name">view.is.dossier.modif.variante.form</field>
+            <field name="model">is.dossier.modif.variante</field>
+            <field name="arch" type="xml">
+                <form string="Dossier modif/variante">
+                    <header>
+                        <field name="vers_analyse_vsb" invisible="1" />
+                        <button
+                            name="vers_analyse_action"
+                            string="Analysé"
+                            attrs="{'invisible': [('vers_analyse_vsb', '!=', True)]}"
+                            type="object"
+                        />
+                        <field name="vers_transmis_be_vsb" invisible="1"/>
+                        <button
+                            name="vers_transmis_be_action"
+                            string="Transmis BE"
+                            attrs="{'invisible': [('vers_transmis_be_vsb', '!=', True)]}"
+                            type="object"
+                        />
+                        <field name="vers_analyse_be_vsb" invisible="1"/>
+                        <button
+                            name="vers_vers_analyse_be_vsb_action"
+                            string="Analyse BE"
+                            attrs="{'invisible': [('vers_analyse_be_vsb', '!=', True)]}"
+                            type="object"
+                        />
+                        <field name="vers_vali_de_be_vsb" invisible="1"/>
+                        <button
+                            name="vers_vali_de_be_vsb_action"
+                            string="Vali de BE"
+                            attrs="{'invisible': [('vers_vali_de_be_vsb', '!=', True)]}"
+                            type="object"
+                        />
+                        <field name="vers_vali_de_commercial_vsb" invisible="1"/>
+                        <button
+                            name="vers_vali_de_commercial_vsb_action"
+                            string="Vali de Commercial"
+                            attrs="{'invisible': [('vers_vali_de_commercial_vsb', '!=', True)]}"
+                            type="object"
+                        />
+                        <field name="vers_diffuse_client_vsb" invisible="1"/>
+                        <button
+                            name="vers_diffuse_client_vsb_action"
+                            string="Diffuse Client"
+                            attrs="{'invisible': [('vers_diffuse_client_vsb', '!=', True)]}"
+                            type="object"
+                        />
+                        <field name="vers_relance_client_vsb" invisible="1"/>
+                        <button
+                            name="vers_relance_client_vsb_action"
+                            string="Relance Client"
+                            attrs="{'invisible': [('vers_relance_client_vsb', '!=', True)]}"
+                            type="object"
+                        />
+                        <field name="vers_perdu_vsb" invisible="1"/>
+                        <button
+                            name="vers_perdu_vsb_action"
+                            string="Perdu"
+                            attrs="{'invisible': [('vers_perdu_vsb', '!=', True)]}"
+                            type="object"
+                        />
+                        <field name="vers_gagne_vsb" invisible="1"/>
+                        <button
+                            name="vers_gagne_vsb_action"
+                            string="Gagne"
+                            attrs="{'invisible': [('vers_gagne_vsb', '!=', True)]}"
+                            type="object"
+                        />
+                        <field name="vers_annule_vsb" invisible="1"/>
+                        <button
+                            name="vers_annule_vsb_action"
+                            string="Annule"
+                            attrs="{'invisible': [('vers_annule_vsb', '!=', True)]}"
+                            type="object"
+                        />
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <group string="Caractéristiques">
+                            <field name="demao_type" />
+                            <field name="demao_num" />
+                            <field name="demao_dao" />
+                            <field name="demao_date" />
+                            <field name="demao_idclient" />
+                            <field name="demao_idcommercial" />
+                            <field name="demao_idmoule" />
+                            <field name="demao_desig" />
+                            <field name="demao_nature" />
+                            <field name="demao_ref" />
+                            <field name="demao_daterep" />
+                            <field name="demao_datelance" />
+                            <field name="demao_pxvente" />
+                            <field name="demao_numcmd" />
+                            <field name="demao_obs" />
+                        </group>
+                        <group string="Motif de la non validation">
+                            <field name="demao_motif" />
+                        </group>
+                        <group string="BE">
+                            <field name="demao_idbe" />
+                        </group>
+                        <group string="Commercial">
+                            <field name="demao_annexcom" widget="many2many_binary"/>
+                        </group>
+                        <group string="BE">
+                            <field name="demao_annex" widget="many2many_binary"/>
+                        </group>
+                        <group string="Commandes BE">
+                            <field name="demao_cde_be" widget="many2many_binary"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" />
+                        <field name="activity_ids" />
+                        <field name="message_ids" />
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_dossier_modif_variante_tree">
+            <field name="name">view.is.dossier.modif.variante.tree</field>
+            <field name="model">is.dossier.modif.variante</field>
+            <field name="arch" type="xml">
+                <tree string="Dossier modif/variante">
+                    <field name="demao_type" optional="show"/>
+                    <field name="demao_num" optional="hide"/>
+                    <field name="demao_dao" optional="hide"/>
+                    <field name="demao_idclient" optional="show"/>
+                    <field name="demao_idcommercial" optional="show"/>
+                    <field name="demao_idmoule" optional="show"/>
+                    <field name="demao_desig" optional="show"/>
+                    <field name="demao_nature" optional="show"/>
+                    <field name="demao_ref" optional="show"/>
+                    <field name="demao_pxvente" optional="hide"/>
+                    <field name="demao_numcmd" optional="hide"/>
+                    <field name="demao_obs" optional="hide"/>
+                    <field name="demao_motif" optional="show"/>
+                    <field name="demao_idbe" optional="show"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_dossier_modif_variante_search">
+            <field name="name">view.is.dossier.modif.variante.search</field>
+            <field name="model">is.dossier.modif.variante</field>
+            <field name="arch" type="xml">
+                <search string="Dossier modif/variante">
+                    <field name="demao_type" />
+                    <field name="demao_num" />
+                    <field name="demao_dao" />
+                    <field name="demao_idclient" />
+                    <field name="demao_idcommercial" />
+                    <field name="demao_idmoule" />
+                    <field name="demao_desig" />
+                    <field name="demao_nature" />
+                    <field name="demao_ref" />
+                    <field name="demao_pxvente" />
+                    <field name="demao_numcmd" />
+                    <field name="demao_obs" />
+                    <field name="demao_motif" />
+                    <field name="demao_idbe" />
+                </search>
+            </field>
+        </record>
+
+        <record id="is_dossier_modif_variante_action" model="ir.actions.act_window">
+            <field name="name">Dossier modif/variante</field>
+            <field name="res_model">is.dossier.modif.variante</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>
