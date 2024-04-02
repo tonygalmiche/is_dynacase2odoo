@@ -37,17 +37,18 @@ class is_revue_lancement(models.Model):
 
     @api.constrains("rl_be_total", "rl_pgrc_total", "rl_annee_inv")
     def _check_vals(self):
-        if self.rl_pgrc_total != self.rl_be_total:
-            raise ValidationError(_("Données moule and revue de lancement total must be same!"))
-        if self.rl_annee_inv:
-            try:
-                rl_annee_inv = int(self.rl_annee_inv)
-                if len(str(rl_annee_inv)) != 4:
+        for obj in self:
+            if obj.rl_pgrc_total != obj.rl_be_total:
+                raise ValidationError(_("Données moule and revue de lancement total must be same!"))
+            if obj.rl_annee_inv:
+                try:
+                    rl_annee_inv = int(obj.rl_annee_inv)
+                    if len(str(rl_annee_inv)) != 4:
+                        raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
+                    if rl_annee_inv < 2000 or rl_annee_inv > 2099:
+                        raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
+                except Exception as e:
                     raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
-                if rl_annee_inv < 2000 or rl_annee_inv > 2099:
-                    raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
-            except Exception as e:
-                raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
 
     rl_title                          = fields.Char(string="Revue de lancement")
     rl_indice                         = fields.Integer(string="Indice")
