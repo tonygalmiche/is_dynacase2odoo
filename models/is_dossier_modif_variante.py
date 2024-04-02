@@ -94,15 +94,15 @@ class is_dossier_modif_variante(models.Model):
     demao_type                  = fields.Selection([
         ("modification", "Modification"),
         ("variante",     "Variante"),
-    ], string="Type")
-    demao_num                   = fields.Char(string="N° ordre")
+    ], string="Type", required=True)
+    demao_num                   = fields.Char(string="N° ordre", required=True)
     demao_dao                   = fields.Char(string="Dossier AO")
-    demao_date                  = fields.Date(string="Date", default=fields.Date.context_today)
-    demao_idclient              = fields.Many2one("res.partner", string="Client")
-    demao_idcommercial          = fields.Many2one("res.users", string="Commercial", default=lambda self: self.env.user)
+    demao_date                  = fields.Date(string="Date", default=fields.Date.context_today, required=True)
+    demao_idclient              = fields.Many2one("res.partner", string="Client", required=True, domain=[("is_company","=",True), ("customer","=",True)])
+    demao_idcommercial          = fields.Many2one("res.users", string="Commercial", default=lambda self: self.env.user, required=True)
     demao_idmoule               = fields.Many2one("is.mold", string="Moule")
-    demao_desig                 = fields.Char(string="Désignation pièce")
-    demao_nature                = fields.Char(string="Nature")
+    demao_desig                 = fields.Char(string="Désignation pièce", required=True)
+    demao_nature                = fields.Char(string="Nature", required=True)
     demao_ref                   = fields.Char(string="Référence")
     demao_daterep               = fields.Date(string="Date réponse")
     demao_datelance             = fields.Date(string="Date lancement")
