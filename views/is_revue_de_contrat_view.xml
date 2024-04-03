@@ -482,9 +482,23 @@
             <field name="model">is.revue.de.contrat</field>
             <field name="arch" type="xml">
                 <tree string="Revue de contrat">
-                    <field name="rc_mouleid" optional="show"/>
-                    <field name="rc_dossierfid" optional="show"/>
-                    <field name="rc_indice" optional="show"/>
+                    <field name="rc_mouleid"  optional="show"/>
+                    <field name="rc_dossierfid"  optional="show"/>
+                    <field name="rc_indice"  optional="show"/>
+                    <field name="rc_doc_moule_assemblage"  optional="show"/>
+                    <field name="rc_type_automobile"  optional="show"/>
+                    <field name="rc_projetid"  optional="show"/>
+                    <field name="rc_revue_contrat_assid"  optional="show"/>
+                    <field name="rc_ass_mouleid" optional="show"/>
+                    <field name="rc_client"  optional="show"/>
+                    <field name="rc_designation"  optional="show"/>
+                    <field name="rc_num_outillageid" optional="show" />
+                    <field name="rc_dao"  optional="show"/>
+                    <field name="rc_commercial"  optional="show"/>
+                    <field name="rc_duration"  optional="show"/>
+                    <field name="rc_product_dest"  optional="show"/>
+                    <field name="rc_cust_wait"  optional="show"/>
+                    <field name="rc_done_study" optional="show" />
                     <field name="dynacase_id" optional="hide"/>
                 </tree>
             </field>
