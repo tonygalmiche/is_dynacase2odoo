@@ -92,7 +92,7 @@
 
         <!-- Compte-rendu revue de projet jalon -->
         <menuitem
-            id="is_revue_projet_jalon_main_menu" sequence="9" name="CR revue projet jalon"
+            id="is_revue_projet_jalon_main_menu" sequence="10" name="CR revue projet jalon"
             parent="gestion_des_projets_menu"
         />
         <menuitem
