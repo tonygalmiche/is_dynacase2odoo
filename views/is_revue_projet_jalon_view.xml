@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="is_revue_projet_jalon_form">
+            <field name="name">view.is.revue.projet.jalon.form</field>
+            <field name="model">is.revue.projet.jalon</field>
+            <field name="arch" type="xml">
+                <form string="Compte-rendu revue de projet jalon">
+                    <header>
+                        <field name="vers_brouillon_vsb" invisible="1" />
+                        <button
+                            name="vers_brouillon_action"
+                            string="Brouillon"
+                            attrs="{'invisible': [('vers_brouillon_vsb', '!=', True)]}"
+                            type="object"
+                        />
+                        <field name="vers_directeur_technique_vsb" invisible="1" />
+                        <button
+                            name="vers_directeur_technique_action"
+                            string="Directeur Technique"
+                            attrs="{'invisible': [('vers_directeur_technique_vsb', '!=', True)]}"
+                            type="object"
+                        />
+                        <field name="vers_direceeur_de_site_vsb" invisible="1" />
+                        <button
+                            name="vers_direceeur_de_site_action"
+                            string="Direceeur de Site"
+                            attrs="{'invisible': [('vers_direceeur_de_site_vsb', '!=', True)]}"
+                            type="object"
+                        />
+                        <field name="vers_pour_information_vsb" invisible="1" />
+                        <button
+                            name="vers_pour_information_action"
+                            string="Pour Information"
+                            attrs="{'invisible': [('vers_pour_information_vsb', '!=', True)]}"
+                            type="object"
+                        />
+                        <field name="vers_valide_vsb" invisible="1" />
+                        <button
+                            name="vers_valide_action"
+                            string="Validé"
+                            attrs="{'invisible': [('vers_valide_vsb', '!=', True)]}"
+                            type="object"
+                        />
+                        <field name="vers_refuse_vsb" invisible="1" />
+                        <button
+                            name="vers_refuse_action"
+                            string="Refusé"
+                            attrs="{'invisible': [('vers_refuse_vsb', '!=', True)]}"
+                            type="object"
+                        />
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group name="rpj_fr_identification" string="Identification">
+                                <field name="rpj_chrono" />
+                                <field name="rpj_mouleid" />
+                                <field name="rpj_j" />
+                                <field name="rpj_date_planning_j" />
+                                <field name="rpj_indice" />
+                                <field name="rpj_date_creation" />
+                                <field name="rpj_plan_action" />
+                                <field name="rpj_niveau_ppm" />
+                                <field name="rpj_commentaire" />
+                                <field name="rpj_motif_refus" />
+                                <separator string="Lieu de production" />
+                                <field name="rpj_lieu_production" />
+                                <field name="rpj_affectation_presse" />
+                                <field name="rpj_lieu_production2" />
+                                <field name="rpj_affectation_presse2" />
+                                <separator string="Liens" />
+                                <field name="rpj_clientid" />
+                                <field name="rpj_rcid" />
+                                <field name="rpj_indice" />
+                                <field name="rpj_rlid" />
+                                <field name="rpj_rp" />
+                                <separator string="Revue des risques" />
+                                <field name="rpj_rr" />
+                                <field name="bilan_ids" nolabel="1" colspan="2">
+                                    <tree editable="bottom">
+                                        <field name="rpj_bilan_risque_j" optional="show" />
+                                        <field name="rpj_bilan_risque_design" optional="show" />
+                                        <field name="rpj_bilan_risque_supply_chain" optional="show" />
+                                        <field name="rpj_bilan_risque_qualite" optional="show" />
+                                        <field name="rpj_bilan_risque_leadership" optional="show" />
+                                    </tree>
+                                </field>
+                                <separator string="Pièces jointes" />
+                                <field name="rpj_piece_jointe" widget="many2many_binary"/>
+                            </group>
+                            <group string="">
+                                <field name="rpj_photo" widget="image"/>
+                                <separator string="Équipe projet" />
+                                <field name="equipe_projet_ids" nolabel="1" colspan="2">
+                                    <tree editable="bottom">
+                                        <field name="rpj_equipe_projet_fonction" optional="show" />
+                                        <field name="rpj_equipe_projet_nomid" optional="show" />
+                                        <field name="rpj_equipe_projet_presence" optional="show" />
+                                    </tree>
+                                </field>
+                                <separator string="Équipe projet (Pour gestion des droits et des mails)" />
+                                <field name="rpj_chef_projetid" />
+                                <field name="rpj_expert_injectionid" />
+                                <field name="rpj_methode_injectionid" />
+                                <field name="rpj_methode_assemblageid" />
+                                <field name="rpj_qualite_devid" />
+                                <field name="rpj_qualite_usineid" />
+                                <field name="rpj_achatsid" />
+                                <field name="rpj_logistiqueid" />
+                                <field name="rpj_logistique_usineid" />
+                                <field name="rpj_commercial2id" />
+                                <field name="rpj_responsable_outillageid" />
+                                <field name="rpj_responsable_projetid" />
+                                <field name="rpj_directeur_siteid" />
+                                <field name="rpj_directeur_techniqueid" />
+                                <separator string="Critères à risque" />
+                                <field name="rpj_critere_a_risque" />
+                            </group>
+                        </group>
+                        <group col="3">
+                            <group name="rpj_planning" string="Planning">
+                                <field name="rpj_date_j0" />
+                                <field name="rpj_date_j1" />
+                                <field name="rpj_date_j2" />
+                                <field name="rpj_date_j3" />
+                                <field name="rpj_date_j4" />
+                                <field name="rpj_date_j5" />
+                            </group>
+                            <group name="rpj_fr_avancement_jalon" string="État d'avancement des jalons (en %)">
+                                <field name="rpj_avancement_j0" />
+                                <field name="rpj_avancement_j1" />
+                                <field name="rpj_avancement_j2" />
+                                <field name="rpj_avancement_j3" />
+                                <field name="rpj_avancement_j4" />
+                                <field name="rpj_avancement_j5" />
+                            </group>
+                            <group name="rpj_date_validation" string="Date de validation">
+                                <field name="rpj_date_valide_j0" />
+                                <field name="rpj_date_valide_j1" />
+                                <field name="rpj_date_valide_j2" />
+                                <field name="rpj_date_valide_j3" />
+                                <field name="rpj_date_valide_j4" />
+                                <field name="rpj_date_valide_j5" />
+                            </group>
+                        </group>
+                        <group name="rpj_fr_documents" string="Documents">
+                            <field name="documents_ids" nolabel="1" colspan="2">
+                                <tree editable="bottom">
+                                    <field name="rpj_doc_documentid" optional="show" />
+                                    <field name="rpj_doc_action" optional="show" />
+                                    <field name="rpj_doc_bloquant" optional="show" />
+                                    <field name="rpj_doc_respid" optional="show" />
+                                    <field name="rpj_doc_etat" optional="show" />
+                                    <field name="rpj_doc_coeff" optional="show" />
+                                    <field name="rpj_doc_note" optional="show" />
+                                </tree>
+                            </field>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="rpj_point_bloquant" />
+                                <field name="rpj_note" />
+                            </group>
+                            <group>
+                                <field name="rpj_point_bloquant_liste" />
+                            </group>
+                        </group>
+                        <group name="rpj_fr_donnees_economiques" string="Suivi des données économique">
+                            <separator string="Revue de contrat" style="width:15%" />
+                            <field name="revue_de_contrat_ids" nolabel="1" colspan="2">
+                                <tree editable="bottom">
+                                    <field name="rpj_de1_article" optional="show" />
+                                    <field name="rpj_de1_cycle" optional="show" />
+                                    <field name="rpj_de1_nb_emp" optional="show" />
+                                    <field name="rpj_de1_mod" optional="show" />
+                                    <field name="rpj_de1_taux_rebut" optional="show" />
+                                    <field name="rpj_de1_poids_piece" optional="show" />
+                                    <field name="rpj_de1_poids_carotte" optional="show" />
+                                </tree>
+                            </field>
+                            <separator string="Revue de projet jalon" style="width:15%" />
+                            <field name="revue_de_projet_jalon_ids" nolabel="1" colspan="2">
+                                <tree editable="bottom">
+                                    <field name="rpj_de2_article" optional="show" />
+                                    <field name="rpj_de2_cycle" optional="show" />
+                                    <field name="rpj_de2_nb_emp" optional="show" />
+                                    <field name="rpj_de2_mod" optional="show" />
+                                    <field name="rpj_de2_taux_rebut" optional="show" />
+                                    <field name="rpj_de2_poids_piece" optional="show" />
+                                    <field name="rpj_de2_poids_carotte" optional="show" />
+                                </tree>
+                            </field>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="rpj_total_vente_moule" />
+                                <field name="rpj_total_achat_moule" />
+                                <field name="rp_marge_brute_moule" />
+                            </group>
+                            <group></group>
+                        </group>
+                        <group name="rpj_fr_decomposition_prix" string="Décomposition prix">
+                            <field name="decomposition_prix_ids" nolabel="1" colspan="2">
+                                <tree editable="bottom">
+                                    <field name="rpj_dp_article" optional="show" />
+                                    <field name="rpj_dp_qt_annuelle" optional="show" />
+                                    <field name="rpj_dp_part_matiere" optional="show" />
+                                    <field name="rpj_dp_part_composant" optional="show" />
+                                    <field name="rpj_dp_part_emballage" optional="show" />
+                                    <field name="rpj_dp_va_injection" optional="show" />
+                                    <field name="rpj_dp_va_assemblage" optional="show" />
+                                    <field name="rpj_dp_frais_port" optional="show" />
+                                    <field name="rpj_dp_logistique" optional="show" />
+                                    <field name="rpj_dp_amt_moule" optional="show" />
+                                    <field name="rpj_dp_prix_piece" optional="show" />
+                                </tree>
+                            </field>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="rpj_dp_ca_annuel" />
+                                <field name="rpj_dp_vac" />
+                                <field name="rpj_dp_eiv_total" />
+                                <field name="rpj_dp_schema_flux_vendu" />
+                            </group>
+                            <group></group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" />
+                        <field name="activity_ids" />
+                        <field name="message_ids" />
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_revue_projet_jalon_tree">
+            <field name="name">view.is.revue.projet.jalon.tree</field>
+            <field name="model">is.revue.projet.jalon</field>
+            <field name="arch" type="xml">
+                <tree string="Compte-rendu revue de projet jalon">
+                    <field name="rpj_chrono" optional="show" />
+                    <field name="rpj_mouleid" optional="show" />
+                    <field name="rpj_j" optional="show" />
+                    <field name="rpj_indice" optional="show" />
+                    <field name="rpj_plan_action" optional="show" />
+                    <field name="rpj_niveau_ppm" optional="show" />
+                    <field name="rpj_commentaire" optional="show" />
+                    <field name="rpj_motif_refus" optional="show" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_revue_projet_jalon_search">
+            <field name="name">view.is.revue.projet.jalon.search</field>
+            <field name="model">is.revue.projet.jalon</field>
+            <field name="arch" type="xml">
+                <search string="Compte-rendu revue de projet jalon">
+                    <field name="rpj_chrono" />
+                    <field name="rpj_mouleid" />
+                    <field name="rpj_j" />
+                    <field name="rpj_indice" />
+                    <field name="rpj_plan_action" />
+                    <field name="rpj_niveau_ppm" />
+                    <field name="rpj_commentaire" />
+                    <field name="rpj_motif_refus" />
+                </search>
+            </field>
+        </record>
+
+        <record id="is_revue_projet_jalon_action" model="ir.actions.act_window">
+            <field name="name">Compte-rendu revue de projet jalon</field>
+            <field name="res_model">is.revue.projet.jalon</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>
