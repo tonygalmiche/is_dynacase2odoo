@@ -92,15 +92,18 @@
             <field name="priority" eval="90"/>
             <field name="arch" type="xml">
                 <tree editable="top">
-                    <field name="param_project_id" widget="many2one_clickable"/>
-                    <field name="type_document" optional="hide"/>
-                    <field name="idmoule"   widget="many2one_clickable"/>
-                    <field name="idproject" widget="many2one_clickable"/>
-                    <field name="idresp"/>
-                    <field name="demande" />
-                    <field name="etat"/>
-                    <field name="dateend"/>
-                    <field name="duree"/>
+                    <field name="param_project_id" required="1" widget="many2one_clickable"/>
+                    <field name="type_document"    optional="hide"/>
+                    <field name="idmoule"          required="1" widget="many2one_clickable"/>
+                    <field name="idproject"                     widget="many2one_clickable"/>
+                    <field name="idresp"           required="1"/>
+                    <field name="demande"          required="1"/>
+                    <field name="etat"             required="1"/>
+                    <field name="dateend"          required="1"/>
+                    <field name="duree"            required="1"/>
+                    <field name="indicateur"       optional="hide"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
+                    <field name="dynacase_id"  optional="hide"/>
                 </tree>
             </field>
         </record>
@@ -285,5 +288,36 @@
             <field name="domain">[('type_document','=','Moule'),('idmoule','!=',False)]</field>
             <field name="view_id" ref="is_doc_moule_moule_dhtmlxgantt_project_view"/>
         </record>
+
+
+
+
+
+        <record id="is_mold_form_view" model="ir.ui.view">
+            <field name="name">is_mold_form_view</field>
+            <field name="model">is.mold</field>
+            <field name="inherit_id" ref="is_plastigray16.is_mold_form_view"/>
+            <field name="arch" type="xml">
+                <sheet position="before">
+                    <header>
+                        <button 
+                            name="doc_moule_action"
+                            string="Documents du moule"
+                            type="object"
+                        />
+                    </header>
+                </sheet>
+            </field>
+        </record>
+
+
+
+
+
+
+
+
+
+
     </data>
 </odoo>
