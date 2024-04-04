@@ -270,7 +270,7 @@
         </record>
 
         <record id="is_revue_projet_jalon_action" model="ir.actions.act_window">
-            <field name="name">Compte-rendu revue de projet jalon</field>
+            <field name="name">CR revue projet jalon</field>
             <field name="res_model">is.revue.projet.jalon</field>
             <field name="view_mode">tree,form</field>
         </record>
