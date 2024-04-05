@@ -152,7 +152,7 @@ class is_revue_projet_jalon(models.Model):
     state = fields.Selection([
         ("brouillon",           "Brouillon"),
         ("directeur_technique", "Directeur Technique"),
-        ("direceeur_de_site",   "Direceeur de Site"),
+        ("direceeur_de_site",   "DIRECTEUR de Site"),
         ("pour_information",    "Pour Information"),
         ("valide",              "Validé"),
         ("refuse",              "Refusé"),
@@ -266,8 +266,8 @@ class is_revue_projet_jalon_decomposition_prix(models.Model):
     _description = "Compte-rendu revue de projet jalon Bilan - Décomposition prix"
     _rec_name    = "rpj_dp_article"
 
-    rpj_dp_article            = fields.Float(string="Article")
-    rpj_dp_qt_annuelle        = fields.Float(string="Quantité annuelle")
+    rpj_dp_article            = fields.Char(string="Article")
+    rpj_dp_qt_annuelle        = fields.Integer(string="Quantité annuelle")
     rpj_dp_part_matiere       = fields.Float(string="Part matière")
     rpj_dp_part_composant     = fields.Float(string="Part composant")
     rpj_dp_part_emballage     = fields.Float(string="Part emballage")

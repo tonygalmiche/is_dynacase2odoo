@@ -80,11 +80,11 @@
                                 <field name="rpj_rr" />
                                 <field name="bilan_ids" nolabel="1" colspan="2">
                                     <tree editable="bottom">
-                                        <field name="rpj_bilan_risque_j" optional="show" />
-                                        <field name="rpj_bilan_risque_design" optional="show" />
-                                        <field name="rpj_bilan_risque_supply_chain" optional="show" />
-                                        <field name="rpj_bilan_risque_qualite" optional="show" />
-                                        <field name="rpj_bilan_risque_leadership" optional="show" />
+                                        <field name="rpj_bilan_risque_j" optional="show" width="11%"/>
+                                        <field name="rpj_bilan_risque_design" optional="show" width="25%"/>
+                                        <field name="rpj_bilan_risque_supply_chain" optional="show" width="25%"/>
+                                        <field name="rpj_bilan_risque_qualite" optional="show" width="14%"/>
+                                        <field name="rpj_bilan_risque_leadership" optional="show" width="25%"/>
                                     </tree>
                                 </field>
                                 <separator string="Pièces jointes" />
