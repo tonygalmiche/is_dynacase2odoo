@@ -179,10 +179,10 @@ class is_revue_projet_jalon_bilan(models.Model):
         ("J5", "Préparation J5"),
         ("J6", "J5 validé"),
     ], string="Jalon")
-    rpj_bilan_risque_design       = fields.Integer(string="DESIGN / INDUSTRIALISATION ")
-    rpj_bilan_risque_supply_chain = fields.Integer(string="SUPPLY CHAIN / ACHAT")
-    rpj_bilan_risque_qualite      = fields.Integer(string="QUALITE")
-    rpj_bilan_risque_leadership   = fields.Integer(string="LEADERSHIP / FINANCES")
+    rpj_bilan_risque_design       = fields.Integer(string="Design/Industrialisation ")
+    rpj_bilan_risque_supply_chain = fields.Integer(string="Supply chain/Achat")
+    rpj_bilan_risque_qualite      = fields.Integer(string="Qualite")
+    rpj_bilan_risque_leadership   = fields.Integer(string="Leadership/Finances")
     is_revue_project_jalon_id     = fields.Many2one("is.revue.projet.jalon")
 
 
