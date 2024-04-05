@@ -83,7 +83,7 @@
                                         <field name="rpj_bilan_risque_j" optional="show" width="15%"/>
                                         <field name="rpj_bilan_risque_design" optional="show" width="20%"/>
                                         <field name="rpj_bilan_risque_supply_chain" optional="show" width="25%"/>
-                                        <field name="rpj_bilan_risque_qualite" optional="show" min-width="15%" width="88px;"/>
+                                        <field name="rpj_bilan_risque_qualite" optional="show" min-width="15%" />
                                         <field name="rpj_bilan_risque_leadership" optional="show" width="25%"/>
                                     </tree>
                                 </field>
