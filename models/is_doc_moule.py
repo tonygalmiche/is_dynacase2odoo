@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
 from odoo.tools import format_date, formatLang, frozendict
+from datetime import datetime
 from random import *
 
 class IsDocMoule(models.Model):
@@ -74,24 +75,28 @@ class IsDocMoule(models.Model):
             }
 
 
-    def list_doc(self,name,ids):
+    def list_doc(self,obj,ids):
         tree_id = self.env.ref('is_dynacase2odoo.is_doc_moule_edit_tree_view').id
-        for obj in self:
+        ctx={}
+        if obj._name=='is.mold':
             ctx={
-                'default_idmoule': obj.idmoule.id,
+                'default_idmoule': obj.id,
+                'default_etat'   :'AF',
+                'default_dateend': datetime.today(),
+                'default_idresp' : self._uid,
             }
-            return {
-                'name': name,
-                'view_mode': 'tree,form,kanban,calendar,pivot,graph',
-                "views"    : [(tree_id, "tree"),(False, "form"),(False, "kanban"),(False, "calendar"),(False, "pivot"),(False, "graph")],
-                'res_model': 'is.doc.moule',
-                'domain': [
-                    ('id','in',ids),
-                ],
-                'type': 'ir.actions.act_window',
-                "context": ctx,
-                'limit': 1000,
-            }
+        return {
+            'name': obj.name,
+            'view_mode': 'tree,form,kanban,calendar,pivot,graph',
+            "views"    : [(tree_id, "tree"),(False, "form"),(False, "kanban"),(False, "calendar"),(False, "pivot"),(False, "graph")],
+            'res_model': 'is.doc.moule',
+            'domain': [
+                ('id','in',ids),
+            ],
+            'type': 'ir.actions.act_window',
+            "context": ctx,
+            'limit': 1000,
+        }
         
      
     def doc_moule_action(self):
@@ -100,7 +105,7 @@ class IsDocMoule(models.Model):
             ids=[]
             for doc in docs:
                 ids.append(doc.id)
-            return obj.list_doc(obj.idmoule.name,ids)
+            return obj.list_doc(obj.idmoule,ids)
 
 
     def doc_projet_action(self):
@@ -109,7 +114,7 @@ class IsDocMoule(models.Model):
             ids=[]
             for doc in docs:
                 ids.append(doc.id)
-            return obj.list_doc(obj.idproject.name,ids)
+            return obj.list_doc(obj.idproject,ids)
 
 
     # @api.model
@@ -342,3 +347,27 @@ class IsDocMouleArray(models.Model):
     rsp_date    = fields.Date(string="Date")
     rsp_texte   = fields.Char(string="Réponse à la demande")
     is_doc_id   = fields.Many2one("is.doc.moule")
+
+
+
+
+
+class is_mold(models.Model):
+    _inherit = 'is.mold'
+
+    def doc_moule_action(self):
+        for obj in self:
+            print(obj)
+
+            docs=self.env['is.doc.moule'].search([ ('idmoule', '=', obj.id) ])
+
+            print(docs)
+
+            ids=[]
+            for doc in docs:
+                ids.append(doc.id)
+
+            print(ids)
+
+            return self.env['is.doc.moule'].list_doc(obj,ids)
+
