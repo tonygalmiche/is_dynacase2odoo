@@ -7,6 +7,7 @@ class IsParamProject(models.Model):
     _name        = "is.param.project"
     _description = "Paramétrage projet"
     _rec_name    = "ppr_famille"
+    _order = 'sequence, ppr_famille'
 
     @api.model
     def default_get(self, fields):
@@ -23,6 +24,8 @@ class IsParamProject(models.Model):
             'array_ids': array_vals,
         })
         return res
+
+    sequence = fields.Integer(string="Ordre")
 
     ppr_icon                = fields.Image(string="Icône")
     ppr_famille             = fields.Char(string="Famille", required=True)
@@ -83,6 +86,9 @@ class IsParamProject(models.Model):
     ppr_project_colors  = fields.Serialized()
     ppr_color           = fields.Char("Color", sparse="ppr_project_colors")
     dynacase_id         = fields.Integer(string="Id Dynacase")
+    duree               = fields.Integer("Durée par défaut (J)"   , help="Utilisée dans le Gantt")
+    duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
+    dependance_id       = fields.Many2one("is.param.project", string="Dépendance")
 
 
 class IsParamProjectArray(models.Model):

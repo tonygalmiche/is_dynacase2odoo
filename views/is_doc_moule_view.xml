@@ -11,6 +11,7 @@
                         <group>
                             <group string="Caractéristiques" name="caracteristiques">
                                 <field name="param_project_id" />
+                                <field name="sequence" />
                                 <field name="type_document" />
                                 <field name="idmoule" attrs="{'invisible': [('type_document', '!=', 'Moule')]}"/>
                                 <field name="dossier_article_id" attrs="{'invisible': [('type_document', '!=', 'Article')]}" />
@@ -34,8 +35,14 @@
                         <group>
                             <group string="Dates"  name="PLASFIL_FR_DATE">
                                 <field name="datecreate"  readonly="1"/>
-                                <field name="dateend" />
-                                <field name="duree" />
+                                <field name="dateend"/>
+                            </group>
+                            <group string="Gantt">
+                                <field name="duree"/>
+                                <field name="duree_attente_avant"/>
+                                <field name="date_debut_gantt"/>
+                                <field name="date_fin_gantt"/>
+                                <field name="dependance_id" domain="[('idmoule','=',idmoule)]"/>
                             </group>
                         </group>
                         <group string="Réponse à la demande" name="PLASFIL_FR_ANNEX">
@@ -52,6 +59,10 @@
                             </field>
                         </group>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -81,6 +92,9 @@
                     <field name="indicateur"  optional="show"/>
                     <field name="datecreate" optional="show" />
                     <field name="dateend" optional="show" />
+                    <field name="duree"               optional="hide" />
+                    <field name="duree_attente_avant" optional="hide" />
+                    <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>
@@ -92,6 +106,7 @@
             <field name="priority" eval="90"/>
             <field name="arch" type="xml">
                 <tree editable="top">
+                    <field name='sequence' widget='handle'/>
                     <field name="param_project_id" required="1" widget="many2one_clickable"/>
                     <field name="type_document"    optional="hide"/>
                     <field name="idmoule"          required="1" widget="many2one_clickable"/>
@@ -101,7 +116,9 @@
                     <field name="etat"             required="1"/>
                     <field name="dateend"          required="1"/>
                     <field name="duree"            required="1"/>
-                    <field name="indicateur"       optional="hide"/>
+                    <field name="duree_attente_avant" optional="hide"/>
+                    <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
+                    <field name="indicateur"          optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>
@@ -231,6 +248,9 @@
                     <field name="indicateur"  optional="show"/>
                     <field name="datecreate" optional="show" />
                     <field name="dateend" optional="show" />
+                    <field name="duree"               optional="hide" />
+                    <field name="duree_attente_avant" optional="hide" />
+                    <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>
@@ -281,18 +301,18 @@
                 </dhtmlxgantt_project>
             </field>
         </record>
-        <record id="is_dhtmlxgantt_project_action" model="ir.actions.act_window">
+        <!-- <record id="is_dhtmlxgantt_project_action" model="ir.actions.act_window">
             <field name="name">Gantt des projets</field>
             <field name="res_model">is.doc.moule</field>
             <field name="view_mode">dhtmlxgantt_project,tree,form</field>
             <field name="domain">[('type_document','=','Moule'),('idmoule','!=',False)]</field>
             <field name="view_id" ref="is_doc_moule_moule_dhtmlxgantt_project_view"/>
-        </record>
+        </record> -->
 
 
 
 
-
+        <!-- is.mold -->
         <record id="is_mold_form_view" model="ir.ui.view">
             <field name="name">is_mold_form_view</field>
             <field name="model">is.mold</field>
@@ -305,19 +325,14 @@
                             string="Documents du moule"
                             type="object"
                         />
+                        <button 
+                            name="gantt_moule_action"
+                            string="Gantt du moule"
+                            type="object"
+                        />
                     </header>
                 </sheet>
             </field>
         </record>
-
-
-
-
-
-
-
-
-
-
     </data>
 </odoo>

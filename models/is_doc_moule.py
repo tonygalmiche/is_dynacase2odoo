@@ -6,8 +6,10 @@ from random import *
 
 class IsDocMoule(models.Model):
     _name        = "is.doc.moule"
+    _inherit=['mail.thread']
     _description = "Document moule"
     _rec_name    = "param_project_id"
+    _order = 'sequence, param_project_id'
 
 
     def compute_project_prev(self):
@@ -27,6 +29,7 @@ class IsDocMoule(models.Model):
                 project_prev += str(new_add)
             record.project_prev = project_prev
 
+    sequence = fields.Integer(string="Ordre")
     project_prev     = fields.Html(compute='_compute_project_prev', store=True)
     project_prev2    = fields.Html()
     param_project_id = fields.Many2one("is.param.project", string="Famille de document")
@@ -62,7 +65,11 @@ class IsDocMoule(models.Model):
     dateend          = fields.Date(string="Date de fin")
     array_ids        = fields.One2many("is.doc.moule.array", "is_doc_id", string="Pièce-jointe de réponse à la demande")
     dynacase_id      = fields.Integer(string="Id Dynacase")
-    duree            = fields.Float(string="Durée (H)", default=8)
+    duree               = fields.Integer(string="Durée (J)", default=1)
+    duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
+    date_debut_gantt    = fields.Date(string="Date début Gantt")
+    date_fin_gantt      = fields.Date(string="Date fin Gantt")
+    dependance_id       = fields.Many2one("is.doc.moule", string="Dépendance")
 
 
     def lien_vers_dynacase_action(self):
@@ -75,8 +82,15 @@ class IsDocMoule(models.Model):
             }
 
 
-    def list_doc(self,obj,ids):
-        tree_id = self.env.ref('is_dynacase2odoo.is_doc_moule_edit_tree_view').id
+    def list_doc(self,obj,ids, view_mode=False):
+        if not view_mode:
+            return False
+        
+
+        print(view_mode)
+
+        tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_edit_tree_view').id
+        gantt_id = self.env.ref('is_dynacase2odoo.is_doc_moule_moule_dhtmlxgantt_project_view').id
         ctx={}
         if obj._name=='is.mold':
             ctx={
@@ -87,8 +101,11 @@ class IsDocMoule(models.Model):
             }
         return {
             'name': obj.name,
-            'view_mode': 'tree,form,kanban,calendar,pivot,graph',
-            "views"    : [(tree_id, "tree"),(False, "form"),(False, "kanban"),(False, "calendar"),(False, "pivot"),(False, "graph")],
+            'view_mode': view_mode,
+            "views"    : [
+                (gantt_id, "dhtmlxgantt_project"),
+                (tree_id, "tree"),
+                (False, "form"),(False, "kanban"),(False, "calendar"),(False, "pivot"),(False, "graph")],
             'res_model': 'is.doc.moule',
             'domain': [
                 ('id','in',ids),
@@ -105,7 +122,12 @@ class IsDocMoule(models.Model):
             ids=[]
             for doc in docs:
                 ids.append(doc.id)
-            return obj.list_doc(obj.idmoule,ids)
+            view_mode = 'tree,form,dhtmlxgantt_project,kanban,calendar,pivot,graph'
+            return obj.list_doc(obj.idmoule,ids,view_mode=view_mode)
+
+
+
+
 
 
     def doc_projet_action(self):
@@ -357,17 +379,29 @@ class is_mold(models.Model):
 
     def doc_moule_action(self):
         for obj in self:
-            print(obj)
-
             docs=self.env['is.doc.moule'].search([ ('idmoule', '=', obj.id) ])
-
-            print(docs)
-
             ids=[]
             for doc in docs:
                 ids.append(doc.id)
+            view_mode = 'tree,dhtmlxgantt_project,form,kanban,calendar,pivot,graph'
+            return self.env['is.doc.moule'].list_doc(obj,ids,view_mode=view_mode)
 
-            print(ids)
 
-            return self.env['is.doc.moule'].list_doc(obj,ids)
+    def gantt_moule_action(self):
+        for obj in self:
+            docs=self.env['is.doc.moule'].search([ ('idmoule', '=', obj.id) ])
+            ids=[]
+            for doc in docs:
+                ids.append(doc.id)
+            view_mode = 'dhtmlxgantt_project,tree,form,kanban,calendar,pivot,graph'
+            return self.env['is.doc.moule'].list_doc(obj,ids,view_mode=view_mode)
 
+
+    # def gantt_moule_action(self):
+    #     for obj in self:
+    #         docs=self.env['is.doc.moule'].search([ ('idmoule', '=', obj.idmoule.id) ])
+    #         ids=[]
+    #         for doc in docs:
+    #             ids.append(doc.id)
+    #         view_mode = 'dhtmlxgantt_project,tree,form,kanban,calendar,pivot,graph'
+    #         return obj.list_doc(obj.idmoule,ids,view_mode=view_mode)
