@@ -31,8 +31,10 @@ class IsParamProject(models.Model):
     ppr_famille             = fields.Char(string="Famille", required=True)
     ppr_transformation_pdf  = fields.Boolean(string="Transformation en PDF")
     type_document = fields.Selection([
-        ("Moule",       "Moule"),
-        ("Article",     "Article"),
+        ("Moule"                 , "Moule"),
+        ("Dossier F"             , "Dossier F"),
+        ("Article"               , "Article"),
+        ("Dossier Modif Variante", "Dossier Modif Variante"),
     ],string="Type de document", default="Moule", required=True)
     ppr_dossier_fab         = fields.Boolean(string="Famille du dossier de fabrication")
     ppr_demande             = fields.Char(string="Demande")

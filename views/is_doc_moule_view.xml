@@ -10,11 +10,13 @@
                         <field name="project_prev" widget="html"/>
                         <group>
                             <group string="Caractéristiques" name="caracteristiques">
+                                <field name="type_document" />
+                                <field name="idmoule"                   attrs="{'invisible': [('type_document', '!=', 'Moule')]                 , 'required': [('type_document', '=', 'Moule')]}"/>
+                                <field name="dossierf_id"               attrs="{'invisible': [('type_document', '!=', 'Dossier F')]             , 'required': [('type_document', '=', 'Dossier F')]}"/>
+                                <field name="dossier_article_id"        attrs="{'invisible': [('type_document', '!=', 'Article')]               , 'required': [('type_document', '=', 'Article')]}" />
+                                <field name="dossier_modif_variante_id" attrs="{'invisible': [('type_document', '!=', 'Dossier Modif Variante')], 'required': [('type_document', '=', 'Dossier Modif Variante')]}"/>
                                 <field name="param_project_id" />
                                 <field name="sequence" />
-                                <field name="type_document" />
-                                <field name="idmoule" attrs="{'invisible': [('type_document', '!=', 'Moule')]}"/>
-                                <field name="dossier_article_id" attrs="{'invisible': [('type_document', '!=', 'Article')]}" />
                                 <field name="ppr_type_demande" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="idproject" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
                                 <field name="idcp" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>

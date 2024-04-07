@@ -22,24 +22,39 @@ class IsDocMoule(models.Model):
         for record in self:
             project_prev = ""
             if record.param_project_id:
-                img_src = ""
+                img = ""
                 if record.param_project_id.ppr_icon:
-                    img_src = "<img class ='img-fluid' src='data:image/gif;base64," + str(record.param_project_id.ppr_icon,'utf-8') + "' height='60' width='60' />"
-                new_add = "<div height='60px' width='100%' style='padding: 10px;margin-bottom:20px;font-size:18px;background-color: " + str(record.param_project_id.ppr_color or '') + ";'> " + img_src + " " + str(record.param_project_id.ppr_famille or '') + "</div>"
+                    img = "<img class ='img-fluid' src='data:image/gif;base64," + str(record.param_project_id.ppr_icon,'utf-8') + "' style='max-height:30px' />"
+                title = str(record.param_project_id.ppr_famille or '')
+                color = str(record.param_project_id.ppr_color or '')
+                new_add = """
+                    <div height='60px' width='100%' style='padding: 10px;margin-bottom:20px;font-size:18px;background-color:"""+color+"""'>
+                        """+img+"""<span style='margin-left:5px;background-color:white'>"""+title+"""</span>
+                    </div>
+                """
                 project_prev += str(new_add)
             record.project_prev = project_prev
+
+
+    type_document = fields.Selection([
+        ("Moule"                 , "Moule"),
+        ("Dossier F"             , "Dossier F"),
+        ("Article"               , "Article"),
+        ("Dossier Modif Variante", "Dossier Modif Variante"),
+    ],string="Type de document", default="Moule", required=True)
 
     sequence = fields.Integer(string="Ordre")
     project_prev     = fields.Html(compute='_compute_project_prev', store=True)
     project_prev2    = fields.Html()
     param_project_id = fields.Many2one("is.param.project", string="Famille de document")
     ppr_type_demande = fields.Selection(related="param_project_id.ppr_type_demande")
-    type_document    = fields.Selection(related="param_project_id.type_document")
     ppr_icon         = fields.Image(related="param_project_id.ppr_icon", string="Icône", store=True)
     ppr_color        = fields.Char(related="param_project_id.ppr_color", string="Color", store=True)
-    idmoule          = fields.Many2one("is.mold", string="Moule")
 
-    dossier_article_id = fields.Many2one("is.dossier.article", string="Dossier article")
+    idmoule                   = fields.Many2one("is.mold"                  , string="Moule")
+    dossierf_id               = fields.Many2one("is.dossierf"              , string="Dossier F")
+    dossier_modif_variante_id = fields.Many2one("is.dossier.modif.variante", string="Dossier Modif / Variante")
+    dossier_article_id        = fields.Many2one("is.dossier.article"       , string="Dossier article")
 
     idproject        = fields.Many2one(related="idmoule.project", string="Projet")
     idcp             = fields.Many2one(related="idmoule.chef_projet_id", string="CP")
@@ -139,34 +154,6 @@ class IsDocMoule(models.Model):
             return obj.list_doc(obj.idproject,ids)
 
 
-    # @api.model
-    # def get_dhtmlx(self, domain=[]):
-    #     print("## TEST get_dhtmlx : domain=",domain)
-    #     lines=self.env['is.doc.moule'].search(domain,limit=100, order="dateend")
-    #     print("get_dhtmlx=",lines)
-    #     res=[]
-
-
-    #     for line in lines:
-    #         priority = round(2*random()) # Nombre aléatoire entre 0 et 2
-    #         if line.dateend:
-    #             text = line.param_project_id.ppr_famille
-    #             vals={
-    #                 "id": line.id+100000,
-    #                 "text": text,
-    #                 "start_date": str(line.dateend)+' 02:00:00"',
-    #                 #"end_date": str(line.dateend)+' 22:00:00"',
-    #                 "duration": 32, # TODO a calculer !!
-    #                 "parent": 0,
-    #                 "progress": 0,
-    #                 "open": True,
-    #                 #"assigned": project.user_id.name,
-    #                 "priority": priority,
-    #                 "infobulle": "test"
-    #             }
-    #             res.append(vals)
-
-
     @api.model
     def get_dhtmlx(self, domain=[]):
         print(domain)
@@ -252,106 +239,6 @@ class IsDocMoule(models.Model):
         return {"items":res, "links": links}
 
 
-
-
-
-
-
-
-        # LOCAL = tz.gettz('Europe/Paris')
-        # UTC   = tz.gettz('UTC')
-        # res=[]
-        # ids=[]
-        # for line in lines:
-        #     if line.production_id.id not in ids:
-        #         ids.append(line.production_id.id)
-        # filtre=[
-        #     ('id','in', ids),
-        #     ('state', 'not in', ['done', 'cancel']),
-        #     ('is_ordre_travail_id', '!=', False),
-        # ]
-        # productions=self.env['mrp.production'].search(filtre, order="is_date_planifiee,name")
-        # for production in productions:
-        #     text="%s : %s"%(production.name,(production.is_client_order_ref or '?'))
-
-        #     infobulle_list=[]
-        #     infobulle_list.append("<b>Ordre de fabrication</b>: %s"%(production.name))
-        #     infobulle_list.append("<b>Article</b>             : %s"%(production.product_id.name))
-        #     infobulle_list.append("<b>Commande</b>            : %s"%(production.is_sale_order_id.name))
-        #     infobulle_list.append("<b>Référence client</b>    : %s"%(production.is_client_order_ref))
-        #     if production.is_date_prevue:
-        #         infobulle_list.append("<b>Date client</b>         : %s"%(production.is_date_prevue.strftime('%d/%m/%y')))
-        #     infobulle_list.append("<b>Date planifiée début</b>: %s"%(production.is_date_planifiee.strftime('%d/%m/%y')))
-        #     infobulle_list.append("<b>Date planifiée fin</b>  : %s"%(production.is_date_planifiee_fin.strftime('%d/%m/%y')))
-
-        #     #start_date_utc   = production.date_planned_start
-        #     start_date_utc   = production.is_date_planifiee
-        #     end_date_utc     = production.is_date_planifiee_fin
-
-        #     start_date_local = start_date_utc.replace(tzinfo=UTC)
-        #     end_date_local   = end_date_utc.replace(tzinfo=UTC)
-
-        #     vals={
-        #         "id": production.id+100000,
-        #         "text": text,
-        #         "start_date": start_date_local,
-        #         "end_date": end_date_local,
-        #         #"duration": 8, # TODO a calculer !!
-        #         "parent": 0,
-        #         "progress": 0,
-        #         "open": True,
-        #         #"assigned": project.user_id.name,
-        #         "priority": 2,
-        #         "infobulle": "<br>\n".join(infobulle_list)
-        #     }
-        #     res.append(vals)
-        # # #**********************************************************************
-
-        links=[]
-        return {"items":res, "links": links}
-
-
-
-
-    # @api.model
-    # def get_gantt_documents(self,domain=[]):
-    #     print("## get_gantt_documents",self,domain)
-    #     my_dict={}
-
-
-    #     docs=self.env['is.doc.moule'].search(domain,limit=10)
-    #     for doc in docs:
-    #         key="%s-%s"%(doc.dateend,doc.id)
-
-    #         print(key)
-
-    #         vals={
-    #             "key"    : key,
-    #             "name"   : doc.param_project_id.ppr_famille,
-    #             "dateend": doc.dateend,
-    #             "duree"  : doc.duree,
-
-    #             "id"        : doc.id,
-    #             "text"      : "xxx",
-    #             "start_date": start_date,
-    #             "duration"  : duration,
-    #             "assigned"  : assigned,
-    #             "priority"  : priority,
-    #             #"parent"    : parent,
-    #         }
-    #         my_dict[key]=vals        
-    #     sorted_dict = dict(sorted(my_dict.items()))
-
-    #     print(sorted_dict)
-
-
-    #     return {
-    #         "dict"           : sorted_dict,
-    #         # "mois"           : mois,
-    #         # "semaines"       : semaines,
-    #         # "nb_semaines"    : nb_semaines,
-    #         # "decale_planning": decale_planning,
-    #     }
 
 
 
