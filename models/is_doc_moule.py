@@ -157,18 +157,26 @@ class IsDocMoule(models.Model):
     @api.model
     def get_dhtmlx(self, domain=[]):
         print(domain)
-        lines=self.env['is.doc.moule'].search(domain, order="dateend", limit=500)
+        lines=self.env['is.doc.moule'].search(domain, limit=500) #, order="dateend"
+        print(lines)
 
         # #** Ajout des moules ************************************************
         res=[]
         moules=[]
         for line in lines:
             if line.idmoule not in moules:
-                moules.append(line.idmoule)
+                moules.append(line.idmoule or line.dossierf_id or line.dossier_modif_variante_id)
         for moule in moules:
-            text="%s (%s)"%(moule.name,moule.project.name)
+            if hasattr(moule, 'name'):
+                name=moule.name
+                project=moule.project.name
+            else:
+                name=moule.demao_num
+                project='?'
+
+            text="%s (%s)"%(name,project)
             infobulle_list=[]
-            infobulle_list.append("<b>Moule</b>: %s"%(moule.name))
+            infobulle_list.append("<b>Moule</b>: %s"%(name))
             vals={
                 "id": moule.id+100000,
                 "text": text,
@@ -184,6 +192,10 @@ class IsDocMoule(models.Model):
             res.append(vals)
         # #**********************************************************************
 
+
+        print(res)
+
+
         #** Ajout des documents des moules **************************************
         for line in lines:
             print(line.param_project_id.ppr_famille,line.dateend)
@@ -197,7 +209,7 @@ class IsDocMoule(models.Model):
                     name=famille
                 if line.param_project_id.ppr_revue_lancement:
                     name="%s [%s]"%(name,line.param_project_id.ppr_revue_lancement)
-                duration = 14
+                duration = line.duree or 1
                 infobulle_list=[]
                 infobulle_list.append("<b>Document</b>           : %s"%name)
                 vals={
@@ -205,7 +217,7 @@ class IsDocMoule(models.Model):
                     "text": name,
                     "end_date": str(line.dateend)+' 02:00:00"',
                     "duration": duration,
-                    "parent": line.idmoule.id+100000,
+                    "parent": (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+100000,
                     #"assigned": line.user_id.name,
                     #"progress": line.progress/100,
                     "priority": priority,
@@ -264,17 +276,7 @@ class IsDocMouleArray(models.Model):
 class is_mold(models.Model):
     _inherit = 'is.mold'
 
-    def doc_moule_action(self):
-        for obj in self:
-            docs=self.env['is.doc.moule'].search([ ('idmoule', '=', obj.id) ])
-            ids=[]
-            for doc in docs:
-                ids.append(doc.id)
-            view_mode = 'tree,dhtmlxgantt_project,form,kanban,calendar,pivot,graph'
-            return self.env['is.doc.moule'].list_doc(obj,ids,view_mode=view_mode)
-
-
-    def gantt_moule_action(self):
+    def gantt_action(self):
         for obj in self:
             docs=self.env['is.doc.moule'].search([ ('idmoule', '=', obj.id) ])
             ids=[]
@@ -284,11 +286,38 @@ class is_mold(models.Model):
             return self.env['is.doc.moule'].list_doc(obj,ids,view_mode=view_mode)
 
 
-    # def gantt_moule_action(self):
-    #     for obj in self:
-    #         docs=self.env['is.doc.moule'].search([ ('idmoule', '=', obj.idmoule.id) ])
-    #         ids=[]
-    #         for doc in docs:
-    #             ids.append(doc.id)
-    #         view_mode = 'dhtmlxgantt_project,tree,form,kanban,calendar,pivot,graph'
-    #         return obj.list_doc(obj.idmoule,ids,view_mode=view_mode)
+
+class is_dossierf(models.Model):
+    _inherit = 'is.dossierf'
+
+    def gantt_action(self):
+        for obj in self:
+            docs=self.env['is.doc.moule'].search([ ('dossierf_id', '=', obj.id) ])
+            ids=[]
+            for doc in docs:
+                ids.append(doc.id)
+            tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_dossierf_edit_tree_view').id
+            gantt_id = self.env.ref('is_dynacase2odoo.is_doc_moule_moule_dhtmlxgantt_project_view').id
+            ctx={
+                'default_type_document': 'Dossier F',
+                'default_dossierf_id'  : obj.id,
+                'default_etat'         :'AF',
+                'default_dateend'      : datetime.today(),
+                'default_idresp'       : self._uid,
+            }
+            return {
+                'name': obj.name,
+                'view_mode': 'dhtmlxgantt_project,tree,form,kanban,calendar,pivot,graph',
+                "views"    : [
+                    (gantt_id, "dhtmlxgantt_project"),
+                    (tree_id, "tree"),
+                    (False, "form"),(False, "kanban"),(False, "calendar"),(False, "pivot"),(False, "graph")],
+                'res_model': 'is.doc.moule',
+                'domain': [
+                    ('id','in',ids),
+                ],
+                'type': 'ir.actions.act_window',
+                "context": ctx,
+                'limit': 1000,
+            }
+        

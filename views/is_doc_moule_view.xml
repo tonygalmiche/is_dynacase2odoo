@@ -114,7 +114,7 @@
                     <field name="idmoule"          required="1" widget="many2one_clickable"/>
                     <field name="idproject"                     widget="many2one_clickable"/>
                     <field name="idresp"           required="1"/>
-                    <field name="demande"          required="1"/>
+                    <field name="demande"/>
                     <field name="etat"             required="1"/>
                     <field name="dateend"          required="1"/>
                     <field name="duree"            required="1"/>
@@ -303,13 +303,65 @@
                 </dhtmlxgantt_project>
             </field>
         </record>
-        <!-- <record id="is_dhtmlxgantt_project_action" model="ir.actions.act_window">
-            <field name="name">Gantt des projets</field>
-            <field name="res_model">is.doc.moule</field>
-            <field name="view_mode">dhtmlxgantt_project,tree,form</field>
-            <field name="domain">[('type_document','=','Moule'),('idmoule','!=',False)]</field>
-            <field name="view_id" ref="is_doc_moule_moule_dhtmlxgantt_project_view"/>
-        </record> -->
+
+
+
+        <!-- Documents Dossier F -->
+        <record id="is_doc_moule_dossierf_edit_tree_view" model="ir.ui.view" >
+            <field name="name">is_doc_moule_dossierf_edit_tree_view</field>
+            <field name="model">is.doc.moule</field>
+            <field name="priority" eval="90"/>
+            <field name="arch" type="xml">
+                <tree editable="top">
+                    <field name='sequence' widget='handle'/>
+                    <field name="param_project_id" required="1" widget="many2one_clickable"/>
+                    <field name="type_document"    optional="hide"/>
+                    <field name="idmoule"          optional="hide" widget="many2one_clickable"/>
+                    <field name="dossierf_id"      required="1"    widget="many2one_clickable"/>
+                    <field name="idproject"                        widget="many2one_clickable"/>
+                    <field name="idresp"           required="1"/>
+                    <field name="demande"/>
+                    <field name="etat"             required="1"/>
+                    <field name="dateend"          required="1"/>
+                    <field name="duree"            required="1"/>
+                    <field name="duree_attente_avant" optional="hide"/>
+                    <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
+                    <field name="indicateur"          optional="hide"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
+                    <field name="dynacase_id"  optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+
+
+        <!-- Dossier Modif Variante -->
+        <record id="is_doc_moule_dossier_modif_variante_edit_tree_view" model="ir.ui.view" >
+            <field name="name">is_doc_moule_dossier_modif_variante_edit_tree_view</field>
+            <field name="model">is.doc.moule</field>
+            <field name="priority" eval="90"/>
+            <field name="arch" type="xml">
+                <tree editable="top">
+                    <field name='sequence' widget='handle'/>
+                    <field name="param_project_id" required="1" widget="many2one_clickable"/>
+                    <field name="type_document"    optional="hide"/>
+                    <field name="idmoule"          optional="hide"       widget="many2one_clickable"/>
+                    <field name="dossierf_id"      optional="hide"       widget="many2one_clickable"/>
+                    <field name="dossier_modif_variante_id" required="1" widget="many2one_clickable"/>
+                    <field name="idproject"                              widget="many2one_clickable"/>
+                    <field name="idresp"           required="1"/>
+                    <field name="demande"/>
+                    <field name="etat"             required="1"/>
+                    <field name="dateend"          required="1"/>
+                    <field name="duree"            required="1"/>
+                    <field name="duree_attente_avant" optional="hide"/>
+                    <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
+                    <field name="indicateur"          optional="hide"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
+                    <field name="dynacase_id"  optional="hide"/>
+                </tree>
+            </field>
+        </record>
 
 
 
@@ -322,19 +374,31 @@
             <field name="arch" type="xml">
                 <sheet position="before">
                     <header>
-                        <button 
-                            name="doc_moule_action"
-                            string="Documents du moule"
-                            type="object"
-                        />
-                        <button 
-                            name="gantt_moule_action"
-                            string="Gantt du moule"
-                            type="object"
-                        />
+                         <button name="gantt_action" string="Gantt" type="object" class="btn-success"/>
                     </header>
                 </sheet>
             </field>
         </record>
+
+        <!-- is.dossierf -->
+        <record id="is_dossierf_form_view" model="ir.ui.view">
+            <field name="name">is_dossierf_form_view</field>
+            <field name="model">is.dossierf</field>
+            <field name="inherit_id" ref="is_plastigray16.is_dossierf_form_view"/>
+            <field name="arch" type="xml">
+                <sheet position="before">
+                    <header>
+                        <button name="gantt_action" string="Gantt" type="object" class="btn-success"/>
+                    </header>
+                </sheet>
+            </field>
+        </record>
+
+
+
+        
+
+
+
     </data>
 </odoo>

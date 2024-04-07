@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
+from datetime import datetime
+
 
 class is_dossier_modif_variante(models.Model):
     _name        = "is.dossier.modif.variante"
@@ -146,3 +148,37 @@ class is_dossier_modif_variante(models.Model):
     vers_gagne_vsb              = fields.Boolean(string="Gagne", compute='_compute_vsb', readonly=True, store=False)
     vers_annule_vsb             = fields.Boolean(string="Annule", compute='_compute_vsb', readonly=True, store=False)
     dynacase_id                 = fields.Integer(string="Id Dynacase")
+
+
+
+    def gantt_action(self):
+        for obj in self:
+            docs=self.env['is.doc.moule'].search([ ('dossier_modif_variante_id', '=', obj.id) ])
+            ids=[]
+            for doc in docs:
+                ids.append(doc.id)
+            tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_dossier_modif_variante_edit_tree_view').id
+            gantt_id = self.env.ref('is_dynacase2odoo.is_doc_moule_moule_dhtmlxgantt_project_view').id
+            ctx={
+                'default_type_document': 'Dossier Modif Variante',
+                'default_dossier_modif_variante_id'  : obj.id,
+                'default_etat'         :'AF',
+                'default_dateend'      : datetime.today(),
+                'default_idresp'       : self._uid,
+            }
+            return {
+                'name': obj.demao_num,
+                'view_mode': 'dhtmlxgantt_project,tree,form,kanban,calendar,pivot,graph',
+                "views"    : [
+                    (gantt_id, "dhtmlxgantt_project"),
+                    (tree_id, "tree"),
+                    (False, "form"),(False, "kanban"),(False, "calendar"),(False, "pivot"),(False, "graph")],
+                'res_model': 'is.doc.moule',
+                'domain': [
+                    ('id','in',ids),
+                ],
+                'type': 'ir.actions.act_window',
+                "context": ctx,
+                'limit': 1000,
+            }
+        

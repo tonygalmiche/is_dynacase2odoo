@@ -78,6 +78,12 @@
                             attrs="{'invisible': [('vers_annule_vsb', '!=', True)]}"
                             type="object"
                         />
+                        <button 
+                            name="gantt_action"
+                            string="Gantt"
+                            type="object"
+                            class="btn-success"
+                        />
                         <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
