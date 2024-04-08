@@ -36,6 +36,13 @@ class IsDocMoule(models.Model):
             record.project_prev = project_prev
 
 
+    @api.depends('idmoule', 'dossierf_id')
+    def _compute_idproject(self):
+        for obj in self:
+            idproject = obj.idmoule.project.id or obj.dossierf_id.project.id
+            obj.idproject = idproject
+
+
     type_document = fields.Selection([
         ("Moule"                 , "Moule"),
         ("Dossier F"             , "Dossier F"),
@@ -56,7 +63,7 @@ class IsDocMoule(models.Model):
     dossier_modif_variante_id = fields.Many2one("is.dossier.modif.variante", string="Dossier Modif / Variante")
     dossier_article_id        = fields.Many2one("is.dossier.article"       , string="Dossier article")
 
-    idproject        = fields.Many2one(related="idmoule.project", string="Projet")
+    idproject        = fields.Many2one(string="Projet",compute='_compute_idproject',store=True, readonly=True)
     idcp             = fields.Many2one(related="idmoule.chef_projet_id", string="CP")
     idresp           = fields.Many2one("res.users", string="Responsable")
     actuelle         = fields.Char(string="J Actuelle")
