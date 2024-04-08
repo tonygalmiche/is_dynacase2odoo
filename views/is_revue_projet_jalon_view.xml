@@ -244,6 +244,13 @@
                     <field name="rpj_chrono" optional="show" />
                     <field name="rpj_mouleid" optional="show" />
                     <field name="rpj_j" optional="show" />
+                    <field name="rpj_date_planning_j" optional="show" />
+                    <field name="rpj_indice" optional="show" />
+                    <field name="rpj_date_creation" optional="show" />
+                    <field name="rpj_plan_action" optional="hide" />
+                    <field name="rpj_niveau_ppm" optional="show" />
+                    <field name="rpj_commentaire" optional="hide" />
+                    <field name="rpj_motif_refus" optional="hide" />
                     <field name="rpj_indice" optional="show" />
                     <field name="rpj_plan_action" optional="hide" />
                     <field name="rpj_niveau_ppm" optional="hide" />
