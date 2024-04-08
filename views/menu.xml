@@ -16,11 +16,15 @@
             parent="is_doc_moule_main_menu" action="is_doc_moule_moule_action"
         />
         <menuitem 
-            id="is_doc_moule_article_menu" sequence="20" name="Documents Articles" 
+            id="is_doc_moule_dossierf_menu" sequence="20" name="Documents Dossier F" 
+            parent="is_doc_moule_main_menu" action="is_doc_moule_dossierf_action"
+        />
+        <menuitem 
+            id="is_doc_moule_article_menu" sequence="30" name="Documents Articles" 
             parent="is_doc_moule_main_menu" action="is_doc_moule_article_action"
         />
         <menuitem 
-            id="is_doc_moule_menu" sequence="30" name="Tous les documents" 
+            id="is_doc_moule_menu" sequence="90" name="Tous les documents" 
             parent="is_doc_moule_main_menu" action="is_doc_moule_action"
         />
 

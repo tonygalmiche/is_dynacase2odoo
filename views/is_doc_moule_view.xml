@@ -268,6 +268,65 @@
             <field name="view_id" ref="is_doc_moule_moule_tree"/>
         </record>
 
+
+
+
+
+
+
+        <!-- Documents Dossier F -->
+        <record model="ir.ui.view" id="is_doc_moule_dossierf_tree">
+            <field name="name">is_doc_moule_dossierf_tree</field>
+            <field name="model">is.doc.moule</field>
+            <field name="arch" type="xml">
+                <tree string="Document Dossier F">
+                    <field name="param_project_id" optional="show"  widget="many2one_clickable"/>
+                    <field name="type_document" optional="hide"/>
+                    <field name="ppr_type_demande" optional="show" />
+                    <button title="Documents du moule" name="doc_moule_action" type="object" icon="fa-list"/>
+                    <field name="dossierf_id"               optional="show"           widget="many2one_clickable"/>
+                    <button title="Documents du projet" name="doc_projet_action" type="object" icon="fa-list"/>
+                    <field name="idproject" optional="show"         widget="many2one_clickable"/>
+                    <field name="idcp" optional="show"/>
+                    <field name="idresp" optional="show" />
+                    <field name="actuelle" optional="show" />
+                    <field name="demande" optional="show" />
+                    <field name="action"  optional="show"/>
+                    <field name="bloquant" optional="show"/>
+                    <field name="etat" optional="show" />
+                    <field name="fin_derogation" optional="show" />
+                    <field name="coefficient"  optional="show"/>
+                    <field name="note"  optional="show"/>
+                    <field name="indicateur"  optional="show"/>
+                    <field name="datecreate" optional="show" />
+                    <field name="dateend" optional="show" />
+                    <field name="duree"               optional="hide" />
+                    <field name="duree_attente_avant" optional="hide" />
+                    <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
+                    <field name="dynacase_id"  optional="hide"/>
+                </tree>
+            </field>
+        </record>
+        <record id="is_doc_moule_dossierf_action" model="ir.actions.act_window">
+            <field name="name">Documents Dossier F</field>
+            <field name="res_model">is.doc.moule</field>
+            <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
+            <field name="domain">[('type_document','=','Dossier F'),('dossierf_id','!=',False)]</field>
+            <field name="view_id" ref="is_doc_moule_moule_tree"/>
+        </record>
+
+
+
+
+
+
+
+
+
+
+
+
         <!-- Documents articles -->
         <record model="ir.ui.view" id="is_doc_moule_article_tree">
             <field name="name">is_doc_moule_article_tree</field>
