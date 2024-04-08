@@ -63,7 +63,7 @@ class IsDocMoule(models.Model):
     dossier_modif_variante_id = fields.Many2one("is.dossier.modif.variante", string="Dossier Modif / Variante")
     dossier_article_id        = fields.Many2one("is.dossier.article"       , string="Dossier article")
 
-    idproject        = fields.Many2one(string="Projet",compute='_compute_idproject',store=True, readonly=True)
+    idproject        = fields.Many2one("is.mold.project", string="Projet",compute='_compute_idproject',store=True, readonly=True)
     idcp             = fields.Many2one(related="idmoule.chef_projet_id", string="CP")
     idresp           = fields.Many2one("res.users", string="Responsable")
     actuelle         = fields.Char(string="J Actuelle")
