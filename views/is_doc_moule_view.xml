@@ -313,7 +313,7 @@
             <field name="res_model">is.doc.moule</field>
             <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
             <field name="domain">[('type_document','=','Dossier F'),('dossierf_id','!=',False)]</field>
-            <field name="view_id" ref="is_doc_moule_moule_tree"/>
+            <field name="view_id" ref="is_doc_moule_dossierf_tree"/>
         </record>
 
 
