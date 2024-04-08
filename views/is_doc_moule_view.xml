@@ -77,8 +77,10 @@
                     <field name="type_document" optional="show"/>
                     <field name="ppr_type_demande" optional="show" />
                     <button title="Documents du moule" name="doc_moule_action" type="object" icon="fa-list"/>
-                    <field name="idmoule"               optional="show"           widget="many2one_clickable"/>
-                    <field name="dossier_article_id"    optional="show"           widget="many2one_clickable"/>
+                    <field name="idmoule"                   optional="show"           widget="many2one_clickable"/>
+                    <field name="dossierf_id"               optional="show"           widget="many2one_clickable"/>
+                    <field name="dossier_modif_variante_id" optional="show"           widget="many2one_clickable"/>
+                    <field name="dossier_article_id"        optional="show"           widget="many2one_clickable"/>
                     <button title="Documents du projet" name="doc_projet_action" type="object" icon="fa-list"/>
                     <field name="idproject" optional="show"         widget="many2one_clickable"/>
                     <field name="idcp" optional="show"/>
