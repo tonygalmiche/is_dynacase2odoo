@@ -242,7 +242,7 @@
             <field name="arch" type="xml">
                 <tree string="Compte-rendu revue de projet jalon">
                     <field name="rpj_chrono" optional="show" />
-                    <field name="rpj_mouleid" optional="show" />
+                    <field name="rpj_mouleid" optional="show" widget="many2one_clickable"/>
                     <field name="rpj_j" optional="show" />
                     <field name="rpj_date_planning_j" optional="show" />
                     <field name="rpj_date_creation" optional="show" />
