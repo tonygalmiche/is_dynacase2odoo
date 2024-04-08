@@ -111,10 +111,12 @@
             <field name="arch" type="xml">
                 <tree editable="top">
                     <field name='sequence' widget='handle'/>
+                    <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
                     <field name="param_project_id" required="1" widget="many2one_clickable"/>
                     <field name="type_document"    optional="hide"/>
-                    <field name="idmoule"          required="1" widget="many2one_clickable"/>
-                    <field name="idproject"                     widget="many2one_clickable"/>
+                    <field name="idmoule"          required="1"    widget="many2one_clickable"/>
+                    <field name="dossierf_id"      optional="show" widget="many2one_clickable"/>
+                    <field name="idproject"                        widget="many2one_clickable"/>
                     <field name="idresp"           required="1"/>
                     <field name="demande"/>
                     <field name="etat"             required="1"/>
@@ -456,10 +458,19 @@
         </record>
 
 
-
-        
-
-
+        <!-- is.mold.project -->
+        <record id="is_mold_project_form_view" model="ir.ui.view">
+            <field name="name">is_mold_project_form_view</field>
+            <field name="model">is.mold.project</field>
+            <field name="inherit_id" ref="is_plastigray16.is_mold_project_form_view"/>
+            <field name="arch" type="xml">
+                <sheet position="before">
+                    <header>
+                        <button name="gantt_action" string="Gantt" type="object" class="btn-success"/>
+                    </header>
+                </sheet>
+            </field>
+        </record>
 
     </data>
 </odoo>
