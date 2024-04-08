@@ -245,10 +245,16 @@
                     <field name="rpj_mouleid" optional="show" />
                     <field name="rpj_j" optional="show" />
                     <field name="rpj_indice" optional="show" />
-                    <field name="rpj_plan_action" optional="show" />
-                    <field name="rpj_niveau_ppm" optional="show" />
-                    <field name="rpj_commentaire" optional="show" />
-                    <field name="rpj_motif_refus" optional="show" />
+                    <field name="rpj_plan_action" optional="hide" />
+                    <field name="rpj_niveau_ppm" optional="hide" />
+                    <field name="rpj_commentaire" optional="hide" />
+                    <field name="rpj_motif_refus" optional="hide" />
+                    <field name="rpj_date_j0" optional="show" />
+                    <field name="rpj_date_j1" optional="show" />
+                    <field name="rpj_date_j2" optional="show" />
+                    <field name="rpj_date_j3" optional="show" />
+                    <field name="rpj_date_j4" optional="show" />
+                    <field name="rpj_date_j5" optional="show" />
                 </tree>
             </field>
         </record>
