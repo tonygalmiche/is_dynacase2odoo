@@ -15,6 +15,7 @@ class IsDocMoule(models.Model):
     def compute_project_prev(self):
         "for xml-rpc"
         self._compute_project_prev()
+        self._compute_idproject()
         return True
 
     @api.depends('param_project_id', 'param_project_id.ppr_color', 'param_project_id.ppr_icon')
