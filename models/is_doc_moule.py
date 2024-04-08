@@ -182,18 +182,14 @@ class IsDocMoule(models.Model):
             return obj.list_doc(obj.idmoule,ids,view_mode=view_mode)
 
 
-
-
-
-
     def doc_projet_action(self):
         for obj in self:
             return obj.idproject.gantt_action()
-            # docs=self.env['is.doc.moule'].search([ ('idproject', '=', obj.idproject.id) ])
-            # ids=[]
-            # for doc in docs:
-            #     ids.append(doc.id)
-            # return obj.list_doc(obj.idproject,ids)
+
+
+    def doc_dossierf_action(self):
+        for obj in self:
+            return obj.dossierf_id.gantt_action()
 
 
     @api.model
