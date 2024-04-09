@@ -107,8 +107,6 @@ class IsDocMoule(models.Model):
 
     def acceder_doc_action(self):
         for obj in self:
-            print(obj)
-
             res= {
                 'name': 'Doc',
                 'view_mode': 'form',
@@ -118,23 +116,6 @@ class IsDocMoule(models.Model):
                 'type': 'ir.actions.act_window',
             }
             return res
-
-
-            # return {
-            #         'name': obj.name,
-            #         'view_mode': 'form,tree',
-            #         "views"    : [
-            #             (gantt_id, "dhtmlxgantt_project"),
-            #             (tree_id, "tree"),
-            #             (False, "form"),(False, "kanban"),(False, "calendar"),(False, "pivot"),(False, "graph")],
-            #         'res_model': 'is.doc.moule',
-            #         'domain': [
-            #             ('id','in',ids),
-            #         ],
-            #         'type': 'ir.actions.act_window',
-            #         "context": ctx,
-            #         'limit': 1000,
-            #     }
 
 
     def list_doc(self,obj,ids, view_mode=False,initial_date=False):
@@ -174,7 +155,7 @@ class IsDocMoule(models.Model):
             ids=[]
             initial_date=str(datetime.today())
             for doc in docs:
-                if str(doc.dateend)<initial_date:
+                if doc.dateend and str(doc.dateend)<initial_date:
                     initial_date=str(doc.dateend)
                 ids.append(doc.id)
             view_mode = 'tree,form,dhtmlxgantt_project,kanban,calendar,pivot,graph'
