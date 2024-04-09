@@ -137,14 +137,9 @@ class IsDocMoule(models.Model):
             #     }
 
 
-
-    def list_doc(self,obj,ids, view_mode=False):
+    def list_doc(self,obj,ids, view_mode=False,initial_date=False):
         if not view_mode:
             return False
-        
-
-        print(view_mode)
-
         tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_edit_tree_view').id
         gantt_id = self.env.ref('is_dynacase2odoo.is_doc_moule_moule_dhtmlxgantt_project_view').id
         ctx={}
@@ -154,6 +149,7 @@ class IsDocMoule(models.Model):
                 'default_etat'   :'AF',
                 'default_dateend': datetime.today(),
                 'default_idresp' : self._uid,
+                'initial_date'   : initial_date,
             }
         return {
             'name': obj.name,
@@ -170,16 +166,19 @@ class IsDocMoule(models.Model):
             "context": ctx,
             'limit': 1000,
         }
-        
-     
+             
+
     def doc_moule_action(self):
         for obj in self:
             docs=self.env['is.doc.moule'].search([ ('idmoule', '=', obj.idmoule.id) ])
             ids=[]
+            initial_date=str(datetime.today())
             for doc in docs:
+                if str(doc.dateend)<initial_date:
+                    initial_date=str(doc.dateend)
                 ids.append(doc.id)
             view_mode = 'tree,form,dhtmlxgantt_project,kanban,calendar,pivot,graph'
-            return obj.list_doc(obj.idmoule,ids,view_mode=view_mode)
+            return obj.list_doc(obj.idmoule,ids,view_mode=view_mode,initial_date=initial_date)
 
 
     def doc_projet_action(self):
@@ -332,7 +331,10 @@ class is_dossierf(models.Model):
         for obj in self:
             docs=self.env['is.doc.moule'].search([ ('dossierf_id', '=', obj.id) ])
             ids=[]
+            initial_date=str(datetime.today())
             for doc in docs:
+                if str(doc.dateend)<initial_date:
+                    initial_date=str(doc.dateend)
                 ids.append(doc.id)
             tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_dossierf_edit_tree_view').id
             gantt_id = self.env.ref('is_dynacase2odoo.is_doc_moule_moule_dhtmlxgantt_project_view').id
@@ -342,6 +344,7 @@ class is_dossierf(models.Model):
                 'default_etat'         :'AF',
                 'default_dateend'      : datetime.today(),
                 'default_idresp'       : self._uid,
+                'initial_date'         : initial_date,
             }
             return {
                 'name': obj.name,
@@ -368,7 +371,10 @@ class is_mold_project(models.Model):
         for obj in self:
             docs=self.env['is.doc.moule'].search([ ('idproject', '=', obj.id) ])
             ids=[]
+            initial_date=str(datetime.today())
             for doc in docs:
+                if str(doc.dateend)<initial_date:
+                    initial_date=str(doc.dateend)
                 ids.append(doc.id)
             tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_edit_tree_view').id
             gantt_id = self.env.ref('is_dynacase2odoo.is_doc_moule_moule_dhtmlxgantt_project_view').id
@@ -378,6 +384,7 @@ class is_mold_project(models.Model):
                 'default_etat'         :'AF',
                 'default_dateend'      : datetime.today(),
                 'default_idresp'       : self._uid,
+                'initial_date'         : initial_date,
             }
             return {
                 'name': obj.name,
