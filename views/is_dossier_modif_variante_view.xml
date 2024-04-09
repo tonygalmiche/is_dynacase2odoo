@@ -136,9 +136,9 @@
                     <field name="demao_type" optional="show"/>
                     <field name="demao_num" optional="hide"/>
                     <field name="demao_dao" optional="hide"/>
-                    <field name="demao_idclient" optional="show"/>
+                    <field name="demao_idclient" optional="show" widget="many2one_clickable"/>
                     <field name="demao_idcommercial" optional="show"/>
-                    <field name="demao_idmoule" optional="show"/>
+                    <field name="demao_idmoule" optional="show" widget="many2one_clickable"/>
                     <field name="demao_desig" optional="show"/>
                     <field name="demao_nature" optional="show"/>
                     <field name="demao_ref" optional="show"/>

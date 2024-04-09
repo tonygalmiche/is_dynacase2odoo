@@ -134,10 +134,10 @@
                 <tree string="Revue de lancement">
                     <field name="rl_title" optional="show"/>
                     <field name="rl_indice" optional="show"/>
-                    <field name="rl_num_rcid" optional="show"/>
+                    <field name="rl_num_rcid" optional="show" widget="many2one_clickable"/>
                     <field name="rl_designation_rc" optional="show"/>
-                    <field name="rl_client_rcid" optional="show"/>
-                    <field name="rl_projet_rcid" optional="show"/>
+                    <field name="rl_client_rcid" optional="show" widget="many2one_clickable"/>
+                    <field name="rl_projet_rcid" optional="show" widget="many2one_clickable"/>
                     <field name="rl_commercial_rcid" optional="show"/>
                     <field name="rl_lieu_production" optional="hide"/>
                     <field name="rl_nom_soutraitant" optional="hide"/>
