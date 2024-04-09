@@ -305,62 +305,6 @@
                                     <group>
                                     </group>
                                 </group>
-                                <!--<group>
-                                    <group>
-                                        <field name="rc_sp_piece_reglem" />
-                                    </group>
-                                    <group>
-                                        <field name="rc_sp_piece_reglem_cmt" placeholder="Commentaire Pièce soumise à réglementation" nolabel="1" colspan="2"/>
-                                    </group>
-                                </group>
-                                <group>
-                                    <group>
-                                        <field name="rc_sp_piece_sec" />
-                                    </group>
-                                    <group>
-                                        <field name="rc_sp_piece_sec_cmt" placeholder="Commentaire Sécurité du produit" nolabel="1" colspan="2"/>
-                                    </group>
-                                </group>
-                                <group>
-                                    <group>
-                                        <field name="rc_sp_piece_sec2" />
-                                    </group>
-                                    <group>
-                                        <field name="rc_sp_piece_sec2_cmt" placeholder="Commentaire pièce de sécurité" nolabel="1" colspan="2"/>
-                                    </group>
-                                </group>
-                                <group>
-                                    <group>
-                                        <field name="rc_sp_com_exig_part" />
-                                    </group>
-                                    <group>
-                                        <field name="rc_sp_com_exig_part_cmt" placeholder="Définition exigences particulières" nolabel="1" colspan="2"/>
-                                    </group>
-                                </group>
-                                <group>
-                                    <group>
-                                        <field name="rc_sp_crs" />
-                                    </group>
-                                    <group>
-                                        <field name="rc_sp_crs_cmt" placeholder="Commentaire CSR ou Exigences spécifiques du client" nolabel="1" colspan="2"/>
-                                    </group>
-                                </group>
-                                <group>
-                                    <group>
-                                        <field name="rc_sp_carac_spec" />
-                                    </group>
-                                    <group>
-                                        <field name="rc_sp_carac_spec_cmt" placeholder="Définition caractéristiques spéciales" nolabel="1" colspan="2"/>
-                                    </group>
-                                </group>
-                                <group>
-                                    <group>
-                                        <field name="rc_sp_mat_con_pg" />
-                                    </group>
-                                    <group>
-                                        <field name="rc_sp_mat_con_pg_cmt" placeholder="Désignation matière connue à PG" nolabel="1" colspan="2" />
-                                    </group>
-                                </group>-->
                                 <group>
                                     <label for="rc_sp_piece_reglem" />
                                     <div>
@@ -398,28 +342,6 @@
                                         <field name="rc_sp_mat_con_pg_cmt" class="oe_no_button" style="width: 80%" widget="char"/>
                                     </div>
                                 </group>
-                                <!--<group >
-                                    <group>
-                                        <field name="rc_sp_piece_reglem" />
-                                        <field name="rc_sp_piece_sec" />
-                                        <field name="rc_sp_piece_sec2" />
-                                        <field name="rc_sp_com_exig_part" />
-                                        <field name="rc_sp_crs" />
-                                        <field name="rc_sp_carac_spec" />
-                                        <field name="rc_sp_mat_con_pg" />
-                                    </group>
-                                    <group>
-                                        <field name="rc_sp_piece_reglem_cmt" nolabel="1" widget="char"/>
-                                        <field name="rc_sp_piece_sec_cmt" nolabel="1" widget="char"/>
-                                        <field name="rc_sp_piece_sec2_cmt" nolabel="1" widget="char"/>
-                                        <field name="rc_sp_com_exig_part_cmt" nolabel="1" widget="char"/>
-                                        <field name="rc_sp_crs_cmt" nolabel="1" widget="char"/>
-                                        <field name="rc_sp_carac_spec_cmt" nolabel="1" widget="char"/>
-                                        <field name="rc_sp_mat_con_pg_cmt" nolabel="1" widget="char"/>
-                                    </group>
-                                </group>-->
-                            <!--</page>
-                            <page name="rc_elemements_qualités_tab" string="Éléments qualités">-->
                                 <group>
                                     <group name="rc_edl_at_fr" string="Liste modele auto">
                                         <field name="rc_edl_at_n_ppm" />
@@ -492,13 +414,19 @@
                     <field name="rc_ass_mouleid" optional="show" widget="many2one_clickable"/>
                     <field name="rc_client"  optional="show" widget="many2one_clickable"/>
                     <field name="rc_designation"  optional="show"/>
-                    <field name="rc_num_outillageid" optional="show"  widget="many2one_clickable"/>
-                    <field name="rc_dao"  optional="show"/>
-                    <field name="rc_commercial"  optional="show"/>
-                    <field name="rc_duration"  optional="show"/>
-                    <field name="rc_product_dest"  optional="show"/>
-                    <field name="rc_cust_wait"  optional="show"/>
-                    <field name="rc_done_study" optional="show" />
+                    <field name="rc_num_outillageid" optional="hide"  widget="many2one_clickable"/>
+                    <field name="rc_dao"  optional="hide"/>
+                    <field name="rc_commercial"  optional="hide"/>
+                    <field name="rc_duration"  optional="hide"/>
+                    <field name="rc_product_dest"  optional="hide"/>
+                    <field name="rc_cust_wait"  optional="hide"/>
+                    <field name="rc_done_study" optional="hide" />
+                    <field name="rc_dates_fr"  optional="show"/>
+                    <field name="rc_dfn_ro_date"  optional="show"/>
+                    <field name="rc_first_m_try"  optional="show"/>
+                    <field name="rc_ei_pres"  optional="show"/>
+                    <field name="rc_dms_date"  optional="show"/>
+                    <field name="rc_eop_date"  optional="show"/>
                     <field name="dynacase_id" optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                 </tree>
