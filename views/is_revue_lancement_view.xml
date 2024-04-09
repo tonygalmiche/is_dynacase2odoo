@@ -160,6 +160,7 @@
                     <field name="rl_directeur_siteid" optional="hide"/>
                     <field name="rl_directeur_techniqueid" optional="hide"/>
                     <field name="dynacase_id" optional="hide"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                 </tree>
             </field>
         </record>

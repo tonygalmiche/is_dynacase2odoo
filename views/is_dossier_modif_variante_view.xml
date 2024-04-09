@@ -147,6 +147,7 @@
                     <field name="demao_obs" optional="hide"/>
                     <field name="demao_motif" optional="show"/>
                     <field name="demao_idbe" optional="show"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                 </tree>
             </field>
         </record>

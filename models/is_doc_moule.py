@@ -147,7 +147,7 @@ class IsDocMoule(models.Model):
             "context": ctx,
             'limit': 1000,
         }
-             
+           
 
     def doc_moule_action(self):
         for obj in self:

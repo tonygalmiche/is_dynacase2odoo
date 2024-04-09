@@ -500,6 +500,7 @@
                     <field name="rc_cust_wait"  optional="show"/>
                     <field name="rc_done_study" optional="show" />
                     <field name="dynacase_id" optional="hide"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                 </tree>
             </field>
         </record>

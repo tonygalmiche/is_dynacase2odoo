@@ -164,7 +164,16 @@ class is_revue_projet_jalon(models.Model):
     vers_valide_vsb              = fields.Boolean(string="Validé", compute='_compute_vsb', readonly=True, store=False)
     vers_refuse_vsb              = fields.Boolean(string="Refusé", compute='_compute_vsb', readonly=True, store=False)
 
-
+    def lien_vers_dynacase_action(self):
+        for obj in self:
+            url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
+            return {
+                'type' : 'ir.actions.act_url',
+                'url': url,
+                'target': 'new',
+            }
+            
+            
 class is_revue_projet_jalon_bilan(models.Model):
     _name        = "is.revue.projet.jalon.bilan"
     _description = "Compte-rendu revue de projet jalon - Bilan"

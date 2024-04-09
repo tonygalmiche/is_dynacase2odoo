@@ -261,6 +261,7 @@
                     <field name="rpj_date_j4" optional="show" />
                     <field name="rpj_date_j5" optional="show" />
                     <field name="rpj_indice" optional="hide" />
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                 </tree>
             </field>
         </record>
