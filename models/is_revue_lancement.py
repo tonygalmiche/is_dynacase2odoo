@@ -133,8 +133,8 @@ class is_revue_lancement(models.Model):
     rl_be_total                       = fields.Float(string="Total", compute="get_rl_be_total", store=True)
     rl_annee_inv                      = fields.Char(string="Année d'enregistrement des investissements", size=4)
     state                             = fields.Selection([
-        ("brouillon", "Brouillon"),
-        ("diffuse",    "Diffusé"),
+        ("rl_brouillon",  "Brouillon"),
+        ("rl_diffuse",    "Diffusé"),
     ], string="État", tracking=True)
     dynacase_id                       = fields.Integer(string="Id Dynacase")
 
