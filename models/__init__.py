@@ -6,3 +6,4 @@ from . import is_revue_de_contrat
 from . import is_revue_lancement
 from . import is_dossier_modif_variante
 from . import is_revue_projet_jalon
+from . import is_revue_risque

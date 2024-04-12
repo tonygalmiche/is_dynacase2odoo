@@ -29,11 +29,11 @@ class is_revue_lancement(models.Model):
 
     def action_vers_diffuse(self):
         for record in self:
-            record.state = "diffuse"
+            record.state = "rl_diffuse"
 
     def action_vers_brouillon(self):
         for record in self:
-            record.state = "brouillon"
+            record.state = "rl_brouillon"
 
     @api.constrains("rl_be_total", "rl_pgrc_total", "rl_annee_inv")
     def _check_vals(self):

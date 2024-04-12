@@ -8,8 +8,8 @@
             <field name="arch" type="xml">
                 <form string="Revue de lancement">
                     <header>
-                        <button name="action_vers_diffuse" string="Vers Diffusé" type="object" class="btn-primary" attrs="{'invisible': [('state', 'in', ['diffuse',None,False])]}" />
-                        <button name="action_vers_brouillon" string="Vers Brouillon" type="object" class="btn-primary" attrs="{'invisible': [('state', '=', 'brouillon')]}" />
+                        <button name="action_vers_diffuse" string="Vers Diffusé" type="object" class="btn-primary" attrs="{'invisible': [('state', 'in', ['rl_diffuse',None,False])]}" />
+                        <button name="action_vers_brouillon" string="Vers Brouillon" type="object" class="btn-primary" attrs="{'invisible': [('state', '=', 'rl_brouillon')]}" />
                         <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
