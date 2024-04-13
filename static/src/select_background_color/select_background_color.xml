@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+
+    <t t-name="is_dynacase2odoo.SelectBackgroundColor" owl="1">
+
+        <t t-if="props.readonly">
+            <span t-esc="string" t-att-raw-value="value" />
+        </t>
+        <t t-else="">
+            toto et tutu
+        </t>
+
+
+        <!-- toto et tutu
+        <span t-if="props.value" class="badge rounded-pill" t-att-class="classFromDecoration" t-esc="formattedValue" /> -->
+    </t>
+
+
+
+
+</templates>
