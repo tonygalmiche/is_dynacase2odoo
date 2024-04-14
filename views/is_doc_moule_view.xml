@@ -10,13 +10,16 @@
                         <field name="project_prev" widget="html"/>
                         <group>
                             <group string="Caractéristiques" name="caracteristiques">
-                                <field name="type_document" />
+                                <field name="type_document" is_widget="background_color" options="[{'value':'Moule','color':'red'},{'value':'Article','color':'green'},{'value':'Dossier F','color':'orange'}]"/>
                                 <field name="idmoule"                   attrs="{'invisible': [('type_document', '!=', 'Moule')]                 , 'required': [('type_document', '=', 'Moule')]}"/>
                                 <field name="dossierf_id"               attrs="{'invisible': [('type_document', '!=', 'Dossier F')]             , 'required': [('type_document', '=', 'Dossier F')]}"/>
                                 <field name="dossier_article_id"        attrs="{'invisible': [('type_document', '!=', 'Article')]               , 'required': [('type_document', '=', 'Article')]}" />
                                 <field name="dossier_modif_variante_id" attrs="{'invisible': [('type_document', '!=', 'Dossier Modif Variante')], 'required': [('type_document', '=', 'Dossier Modif Variante')]}"/>
                                 <field name="param_project_id" />
+
+                                <!-- <field name="sequence"/> -->
                                 <field name="sequence"/>
+
                                 <field name="ppr_type_demande" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="idproject" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
                                 <field name="idcp" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
@@ -24,10 +27,10 @@
                             </group>
                             <group string="Gestion des J" name="PLASFIL_FR_J" attrs="{'invisible': [('type_document', '!=', 'Moule')]}">
                                 <field name="actuelle" readonly="1"/>
-                                <field name="demande"  readonly="1"/>
-                                <field name="action"  readonly="1"/>
+                                <field name="demande"/>
+                                <field name="action" is_widget="background_color"/>
                                 <field name="bloquant"  readonly="1"/>
-                                <field name="etat"  readonly="1"/>
+                                <field name="etat" is_widget="background_color" options="[{'value':'AF','color':'red'},{'value':'F','color':'green'},{'value':'D','color':'orange'}]"/>
                                 <field name="fin_derogation"  readonly="1"/>
                                 <field name="coefficient"  readonly="1"/>
                                 <field name="note" readonly="1" />
