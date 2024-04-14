@@ -54,88 +54,85 @@
                         </div>
                         <group name="rr_design_fr" string="DESIGN / INDUSTRIALISATION ">
                             <group>
-                                <field name="rr_retour_experience" attrs="{'invisible': [('rr_retour_experience','in',['0','1','2'])]}"/>
-                                <field name="rr_retour_experience" style="background-color: green;" attrs="{'invisible': [('rr_retour_experience','!=','0')]}"/>
-                                <field name="rr_retour_experience" style="background-color: yellow;" attrs="{'invisible': [('rr_retour_experience','!=','1')]}"/>
-                                <field name="rr_retour_experience" style="background-color: red;" attrs="{'invisible': [('rr_retour_experience','!=','2')]}"/>
-                                <field name="rr_exigence_specifique" />
-                                <field name="rr_planning_previsionnel" />
-                                <field name="rr_plan_piece" />
-                                <field name="rr_norme_applicable" />
-                                <field name="rr_conception_piece" />
-                                <field name="rr_injection" />
-                                <field name="rr_design_moule" />
-                                <field name="rr_methode_mesure" />
-                                <field name="rr_composant" />
-                                <field name="rr_machine_speciale" />
-                                <field name="rr_decoration" />
-                                <field name="rr_parachevement" />
+                                <field name="rr_retour_experience"     is_widget="is_revue_risque"/>
+                                <field name="rr_exigence_specifique"   is_widget="is_revue_risque"/>
+                                <field name="rr_planning_previsionnel" is_widget="is_revue_risque"/>
+                                <field name="rr_plan_piece"            is_widget="is_revue_risque"/>
+                                <field name="rr_norme_applicable"      is_widget="is_revue_risque"/>
+                                <field name="rr_conception_piece"      is_widget="is_revue_risque"/>
+                                <field name="rr_injection"             is_widget="is_revue_risque" />
+                                <field name="rr_design_moule"          is_widget="is_revue_risque"/>
+                                <field name="rr_methode_mesure"        is_widget="is_revue_risque"/>
+                                <field name="rr_composant"             is_widget="is_revue_risque"/>
+                                <field name="rr_machine_speciale"      is_widget="is_revue_risque"/>
+                                <field name="rr_decoration"            is_widget="is_revue_risque"/>
+                                <field name="rr_parachevement"         is_widget="is_revue_risque"/>
                             </group>
                             <group>
-                                <field name="rr_retour_experience_comment" decoration-danger="rr_retour_experience == '0'" nolabel="1" colspan="2" placeholder="Retour d’expérience - Process similaire"/>
-                                <field name="rr_exigence_specifique_comment" nolabel="1" colspan="2" placeholder="Exigences spécifiques liées à la matière / mélange maître" />
+                                <field name="rr_retour_experience_comment"     nolabel="1" colspan="2" placeholder="Retour d’expérience - Process similaire"/>
+                                <field name="rr_exigence_specifique_comment"   nolabel="1" colspan="2" placeholder="Exigences spécifiques liées à la matière / mélange maître" />
                                 <field name="rr_planning_previsionnel_comment" nolabel="1" colspan="2" placeholder="Planning prévisionnel" />
-                                <field name="rr_plan_piece_comment" nolabel="1" colspan="2" placeholder="Plan pièce / CS produit-Process" />
-                                <field name="rr_norme_applicable_comment" nolabel="1" colspan="2" placeholder="Normes applicables" />
-                                <field name="rr_conception_piece_comment" nolabel="1" colspan="2" placeholder="Conception pièce" />
-                                <field name="rr_injection_comment" nolabel="1" colspan="2" placeholder="Injection (paramètres / passage en process 4.0)" />
-                                <field name="rr_design_moule_comment" nolabel="1" colspan="2" placeholder="Moule" />
-                                <field name="rr_methode_mesure_comment" nolabel="1" colspan="2" placeholder="Méthode de mesure / Gabarit de contrôle" />
-                                <field name="rr_composant_comment" nolabel="1" colspan="2" placeholder="Composants + Intégration de nouveaux produits chimiques" />
-                                <field name="rr_machine_speciale_comment" nolabel="1" colspan="2" placeholder="Machine Spéciale / Poka-Yoké" />
-                                <field name="rr_decoration_comment" nolabel="1" colspan="2" placeholder="Décoration (tampographie / Laser / Peinture)" />
-                                <field name="rr_parachevement_comment" nolabel="1" colspan="2" placeholder="Parachèvement (soudure / collage / Peinture ...)" />
+                                <field name="rr_plan_piece_comment"            nolabel="1" colspan="2" placeholder="Plan pièce / CS produit-Process" />
+                                <field name="rr_norme_applicable_comment"      nolabel="1" colspan="2" placeholder="Normes applicables" />
+                                <field name="rr_conception_piece_comment"      nolabel="1" colspan="2" placeholder="Conception pièce" />
+                                <field name="rr_injection_comment"             nolabel="1" colspan="2" placeholder="Injection (paramètres / passage en process 4.0)" />
+                                <field name="rr_design_moule_comment"          nolabel="1" colspan="2" placeholder="Moule" />
+                                <field name="rr_methode_mesure_comment"        nolabel="1" colspan="2" placeholder="Méthode de mesure / Gabarit de contrôle" />
+                                <field name="rr_composant_comment"             nolabel="1" colspan="2" placeholder="Composants + Intégration de nouveaux produits chimiques" />
+                                <field name="rr_machine_speciale_comment"      nolabel="1" colspan="2" placeholder="Machine Spéciale / Poka-Yoké" />
+                                <field name="rr_decoration_comment"            nolabel="1" colspan="2" placeholder="Décoration (tampographie / Laser / Peinture)" />
+                                <field name="rr_parachevement_comment"         nolabel="1" colspan="2" placeholder="Parachèvement (soudure / collage / Peinture ...)" />
                             </group>
                         </group>
                         <group name="rr_supply_chain_fr" string="SUPPLY CHAIN / ACHAT">
                             <group>
-                                <field name="rr_capacitaire" />
-                                <field name="rr_conditionnement" />
-                                <field name="rr_identification_tracabilite" />
-                                <field name="rr_validation_fournisseur" />
-                                <field name="rr_capacitaire_fournisseur" />
-                                <field name="rr_presse_substitution" />
+                                <field name="rr_capacitaire"                 is_widget="is_revue_risque"/>
+                                <field name="rr_conditionnement"             is_widget="is_revue_risque"/>
+                                <field name="rr_identification_tracabilite"  is_widget="is_revue_risque"/>
+                                <field name="rr_validation_fournisseur"      is_widget="is_revue_risque"/>
+                                <field name="rr_capacitaire_fournisseur"     is_widget="is_revue_risque"/>
+                                <field name="rr_presse_substitution"         is_widget="is_revue_risque"/>
                             </group>
                             <group>
-                                <field name="rr_capacitaire_comment" nolabel="1" colspan="2" placeholder="Capacitaire et montée en cadence"/>
-                                <field name="rr_conditionnement_comment" nolabel="1" colspan="2" placeholder="Conditionnement et transport"/>
+                                <field name="rr_capacitaire_comment"                nolabel="1" colspan="2" placeholder="Capacitaire et montée en cadence"/>
+                                <field name="rr_conditionnement_comment"            nolabel="1" colspan="2" placeholder="Conditionnement et transport"/>
                                 <field name="rr_identification_tracabilite_comment" nolabel="1" colspan="2" placeholder="Identification et traçabilité"/>
-                                <field name="rr_validation_fournisseur_comment" nolabel="1" colspan="2" placeholder="Validation fournisseur"/>
-                                <field name="rr_capacitaire_fournisseur_comment" nolabel="1" colspan="2" placeholder="Capacitaires et montée en cadence fournisseurs"/>
-                                <field name="rr_presse_substitution_comment" nolabel="1" colspan="2" placeholder="Presse de substitution"/>
+                                <field name="rr_validation_fournisseur_comment"     nolabel="1" colspan="2" placeholder="Validation fournisseur"/>
+                                <field name="rr_capacitaire_fournisseur_comment"    nolabel="1" colspan="2" placeholder="Capacitaires et montée en cadence fournisseurs"/>
+                                <field name="rr_presse_substitution_comment"        nolabel="1" colspan="2" placeholder="Presse de substitution"/>
                             </group>
                         </group>
                         <group name="rr_qualite_fr" string="QUALITE">
                             <group>
-                                <field name="rr_modification_csr" />
-                                <field name="rr_critere_acceptation" />
-                                <field name="rr_exigence_reglementaire" />
-                                <field name="rr_engagement_qualite" />
-                                <field name="rr_securite_produit" />
+                                <field name="rr_modification_csr"        is_widget="is_revue_risque"/>
+                                <field name="rr_critere_acceptation"     is_widget="is_revue_risque"/>
+                                <field name="rr_exigence_reglementaire"  is_widget="is_revue_risque"/>
+                                <field name="rr_engagement_qualite"      is_widget="is_revue_risque" />
+                                <field name="rr_securite_produit"        is_widget="is_revue_risque"/>
                             </group>
                             <group>
-                                <field name="rr_modification_csr_comment" nolabel="1" colspan="2" placeholder="Revue des CSR client par rapport aux exigences propres au projet"/>
-                                <field name="rr_critere_acceptation_comment" nolabel="1" colspan="2" placeholder="Critères d'acceptation sur le produit "/>
+                                <field name="rr_modification_csr_comment"       nolabel="1" colspan="2" placeholder="Revue des CSR client par rapport aux exigences propres au projet"/>
+                                <field name="rr_critere_acceptation_comment"    nolabel="1" colspan="2" placeholder="Critères d'acceptation sur le produit "/>
                                 <field name="rr_exigence_reglementaire_comment" nolabel="1" colspan="2" placeholder="Exigences réglementaires et légales sur le produit"/>
-                                <field name="rr_engagement_qualite_comment" nolabel="1" colspan="2" placeholder="Engagement qualité (PPM)"/>
-                                <field name="rr_securite_produit_comment" nolabel="1" colspan="2" placeholder="Sécurité du produit (protection de l'utilisateur final) + information au PSR"/>
+                                <field name="rr_engagement_qualite_comment"     nolabel="1" colspan="2" placeholder="Engagement qualité (PPM)"/>
+                                <field name="rr_securite_produit_comment"       nolabel="1" colspan="2" placeholder="Sécurité du produit (protection de l'utilisateur final) + information au PSR"/>
                             </group>
                         </group>
                         <group name="rr_leadership_fr" string="LEADERSHIP / FINANCES">
                             <group>
-                                <field name="rr_rentabilite" />
-                                <field name="rr_investissement_necessaire" />
-                                <field name="rr_competence_effectif" />
+                                <field name="rr_rentabilite"                is_widget="is_revue_risque"/>
+                                <field name="rr_investissement_necessaire"  is_widget="is_revue_risque"/>
+                                <field name="rr_competence_effectif"        is_widget="is_revue_risque"/>
                             </group>
                             <group>
-                                <field name="rr_rentabilite_comment" nolabel="1" colspan="2" placeholder="Rentabilité"/>
+                                <field name="rr_rentabilite_comment"               nolabel="1" colspan="2" placeholder="Rentabilité"/>
                                 <field name="rr_investissement_necessaire_comment" nolabel="1" colspan="2" placeholder="Investissements nécessaires"/>
-                                <field name="rr_competence_effectif_comment" nolabel="1" colspan="2" placeholder="Compétences et effectifs / Formation"/>
+                                <field name="rr_competence_effectif_comment"       nolabel="1" colspan="2" placeholder="Compétences et effectifs / Formation"/>
                             </group>
                         </group>
                         <group name="rr_validation_fr" string="Validation">
                             <group>
-                                <field name="rr_validation_revue_risque" />
+                                <field name="rr_validation_revue_risque" is_widget="background_color" options="[{'value':'ok','color':'GreenYellow'},{'value':'nok','color':'red'}]" />
                             </group>
                             <group></group>
                         </group>

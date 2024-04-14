@@ -50,6 +50,20 @@ patch(SelectionField.prototype, 'SelectionFieldWidget', {
 						}
 					}
 				}
+				if (field.rawAttrs.is_widget=='is_revue_risque'){
+					var bdom = this.__owl__.bdom;
+					if(bdom){
+						if (bdom.parentEl){
+							$(bdom.parentEl).css('background-color', 'transparent');
+							if (this.props.value==='0')  $(bdom.parentEl).css('background-color', 'GreenYellow');
+							if (this.props.value==='1')  $(bdom.parentEl).css('background-color', 'orange');
+							if (this.props.value==='2')  $(bdom.parentEl).css('background-color', 'red');
+							if (this.props.value==='na') $(bdom.parentEl).css('background-color', 'Gainsboro');
+						}
+					}
+				}
+
+
 			}
 		}
 	},
