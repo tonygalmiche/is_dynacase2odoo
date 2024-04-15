@@ -99,20 +99,20 @@
                                 <field name="rr_machine_speciale_comment"      nolabel="1" colspan="2" placeholder="Machine Spéciale / Poka-Yoké" />
                                 <field name="rr_decoration_comment"            nolabel="1" colspan="2" placeholder="Décoration (tampographie / Laser / Peinture)" />
                                 <field name="rr_parachevement_comment"         nolabel="1" colspan="2" placeholder="Parachèvement (soudure / collage / Peinture ...)" />
-                                <separator string="&amp;" style="color:transparent;"/>
+                                <separator string="&amp;" style="color:white;"/>
                                 <field name="rr_capacitaire_comment"                nolabel="1" colspan="2" placeholder="Capacitaire et montée en cadence"/>
                                 <field name="rr_conditionnement_comment"            nolabel="1" colspan="2" placeholder="Conditionnement et transport"/>
                                 <field name="rr_identification_tracabilite_comment" nolabel="1" colspan="2" placeholder="Identification et traçabilité"/>
                                 <field name="rr_validation_fournisseur_comment"     nolabel="1" colspan="2" placeholder="Validation fournisseur"/>
                                 <field name="rr_capacitaire_fournisseur_comment"    nolabel="1" colspan="2" placeholder="Capacitaires et montée en cadence fournisseurs"/>
                                 <field name="rr_presse_substitution_comment"        nolabel="1" colspan="2" placeholder="Presse de substitution"/>
-                                <separator string="&amp;" style="color:transparent;"/>
+                                <separator string="&amp;" style="color:white;"/>
                                 <field name="rr_modification_csr_comment"       nolabel="1" colspan="2" placeholder="Revue des CSR client par rapport aux exigences propres au projet"/>
                                 <field name="rr_critere_acceptation_comment"    nolabel="1" colspan="2" placeholder="Critères d'acceptation sur le produit "/>
                                 <field name="rr_exigence_reglementaire_comment" nolabel="1" colspan="2" placeholder="Exigences réglementaires et légales sur le produit"/>
                                 <field name="rr_engagement_qualite_comment"     nolabel="1" colspan="2" placeholder="Engagement qualité (PPM)"/>
                                 <field name="rr_securite_produit_comment"       nolabel="1" colspan="2" placeholder="Sécurité du produit (protection de l'utilisateur final) + information au PSR"/>
-                                <separator string="&amp;" style="color:transparent;"/>
+                                <separator string="&amp;" style="color:white;"/>
                                 <field name="rr_rentabilite_comment"               nolabel="1" colspan="2" placeholder="Rentabilité"/>
                                 <field name="rr_investissement_necessaire_comment" nolabel="1" colspan="2" placeholder="Investissements nécessaires"/>
                                 <field name="rr_competence_effectif_comment"       nolabel="1" colspan="2" placeholder="Compétences et effectifs / Formation"/>
