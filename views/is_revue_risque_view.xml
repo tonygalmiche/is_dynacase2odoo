@@ -17,7 +17,7 @@
                             <group name="rr_identification_fr" string="Identification">
                                 <field name="rr_title" />
                                 <field name="rr_indice" />
-                                <field name="rr_j_actuelle" />
+                                <field name="rr_j_actuelle" required="1"/>
                                 <field name="rr_mouleid" />
                                 <field name="rr_revue_lancementid" />
                                 <field name="rr_clientid" />

@@ -101,8 +101,8 @@ class is_revue_risque(models.Model):
     rr_competence_effectif                = fields.Selection(_SELECT_RISQUE, string="Compétences et effectifs / Formation")
     rr_competence_effectif_comment        = fields.Char(string="Compétences et effectifs / Formation")
     rr_validation_revue_risque            = fields.Selection([
-        ("ok", "OK"),
-        ("nok", "non OK"),
+        ("OK",  "OK"),
+        ("nOK", "non OK"),
     ], string="Validation de cette revue des risques")
     dynacase_id                           = fields.Integer(string="Id Dynacase")
     state                                 = fields.Selection([
