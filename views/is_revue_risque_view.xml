@@ -167,7 +167,7 @@
                         -->
                         <group name="rr_validation_fr" string="Validation">
                             <group>
-                                <field name="rr_validation_revue_risque" is_widget="background_color" options="[{'value':'ok','color':'GreenYellow'},{'value':'nok','color':'red'}]" />
+                                <field name="rr_validation_revue_risque" is_widget="background_color" options="[{'value':'OK','color':'GreenYellow'},{'value':'nOK','color':'red'}]" />
                             </group>
                             <group></group>
                         </group>
