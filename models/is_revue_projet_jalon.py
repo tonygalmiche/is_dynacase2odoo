@@ -203,10 +203,10 @@ class is_revue_projet_jalon_equipe_projet(models.Model):
     rpj_equipe_projet_fonction = fields.Char(string="Fonction")
     rpj_equipe_projet_nomid    = fields.Many2one("res.users", string="Nom")
     rpj_equipe_projet_presence = fields.Selection([
-        ("a", "Absent"),
-        ("p", "Présent"),
-        ("e", "Excusé"),
-        ("n", "Non convoqué"),
+        ("A", "Absent"),
+        ("P", "Présent"),
+        ("E", "Excusé"),
+        ("N", "Non convoqué"),
     ], string="Présence")
     is_revue_project_jalon_id  = fields.Many2one("is.revue.projet.jalon")
 
@@ -235,11 +235,11 @@ class is_revue_projet_jalon_revue_de_contrat(models.Model):
     rpj_de1_cycle             = fields.Char(string="Cycle par pièce")
     rpj_de1_nb_emp            = fields.Char(string="Nb empreintes")
     rpj_de1_mod               = fields.Selection([
-        ("0_25", "0.25"),
-        ("0_5",  "0.5"),
-        ("0_75", "0.75"),
+        ("0.25", "0.25"),
+        ("0.5",  "0.5"),
+        ("0.75", "0.75"),
         ("1",    "1"),
-        ("1_5",  "1.5"),
+        ("1.5",  "1.5"),
         ("2",    "2"),
     ], string="MOD")
     rpj_de1_taux_rebut        = fields.Char(string="Tx rebut vendu")
@@ -257,11 +257,11 @@ class is_revue_projet_jalon_revue_de_projet_jalon(models.Model):
     rpj_de2_cycle = fields.Char(string="Cycle par pièce")
     rpj_de2_nb_emp = fields.Char(string="Nb empreintes")
     rpj_de2_mod = fields.Selection([
-        ("0_25", "0.25"),
-        ("0_5", "0.5"),
-        ("0_75", "0.75"),
+        ("0.25", "0.25"),
+        ("0.5", "0.5"),
+        ("0.75", "0.75"),
         ("1", "1"),
-        ("1_5", "1.5"),
+        ("1.5", "1.5"),
         ("2", "2"),
     ], string="MOD")
     rpj_de2_taux_rebut        = fields.Char(string="Tx rebut vendu")
