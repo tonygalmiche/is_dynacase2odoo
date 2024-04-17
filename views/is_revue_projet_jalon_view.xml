@@ -73,7 +73,7 @@
                                 <separator string="Liens" />
                                 <field name="rpj_clientid" />
                                 <field name="rpj_rcid" />
-                                <field name="rpj_indice" />
+                                <!--<field name="rpj_indice" />-->
                                 <field name="rpj_rlid" />
                                 <field name="rpj_rp" />
                                 <separator string="Revue des risques" />

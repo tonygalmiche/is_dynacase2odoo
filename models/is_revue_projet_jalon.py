@@ -94,7 +94,7 @@ class is_revue_projet_jalon(models.Model):
     rpj_affectation_presse2      = fields.Char(string="Affectation presse actuelle")
     rpj_clientid                 = fields.Many2one("res.partner", string="Client", domain=[("is_company","=",True), ("customer","=",True)])
     rpj_rcid                     = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
-    rpj_indice                   = fields.Integer(string="Indice")
+    # rpj_indice                   = fields.Integer(string="Indice")
     rpj_rlid                     = fields.Many2one("is.revue.lancement", string="Revue de lancement")
     rpj_rp                       = fields.Char(string="Revue de projet")
     rpj_rr                       = fields.Char(string="Revue des risques")
