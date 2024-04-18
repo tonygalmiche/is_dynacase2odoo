@@ -150,12 +150,12 @@ class is_revue_projet_jalon(models.Model):
     rpj_dp_schema_flux_vendu     = fields.Char(string="Schéma de flux vendu")
     dynacase_id                  = fields.Integer(string="Id Dynacase")
     state = fields.Selection([
-        ("brouillon",           "Brouillon"),
-        ("directeur_technique", "Directeur Technique"),
-        ("direceeur_de_site",   "DIRECTEUR de Site"),
-        ("pour_information",    "Pour Information"),
-        ("valide",              "Validé"),
-        ("refuse",              "Refusé"),
+        ("rpj_brouillon",           "Brouillon"),
+        ("rpj_directeur_technique", "Directeur Technique"),
+        ("rpj_directeur_site",      "DIRECTEUR de Site"),
+        ("rpj_pour_information",    "Pour Information"),
+        ("rpj_valide",              "Validé"),
+        ("rpj_refus",               "Refusé"),
     ], default="brouillon", string="State", tracking=True)
     vers_brouillon_vsb           = fields.Boolean(string="Brouillon", compute='_compute_vsb', readonly=True, store=False)
     vers_directeur_technique_vsb = fields.Boolean(string="Directeur Technique", compute='_compute_vsb', readonly=True, store=False)
