@@ -36,7 +36,7 @@
                                 </group>
                                 <group col="3" name="rc_presentation_tab" string="Principales dates">
                                     <group name="rc_presentation_tab_date" string="Date">
-                                        <field name="rc_dates_fr" />
+                                        <field name="rc_cmd_date" />
                                         <field name="rc_dfn_ro_date" />
                                         <field name="rc_first_m_try" />
                                         <field name="rc_ei_pres" />
@@ -421,7 +421,7 @@
                     <field name="rc_product_dest"  optional="hide"/>
                     <field name="rc_cust_wait"  optional="hide"/>
                     <field name="rc_done_study" optional="hide" />
-                    <field name="rc_dates_fr"  optional="show"/>
+                    <field name="rc_cmd_date"  optional="show"/>
                     <field name="rc_dfn_ro_date"  optional="show"/>
                     <field name="rc_first_m_try"  optional="show"/>
                     <field name="rc_ei_pres"  optional="show"/>

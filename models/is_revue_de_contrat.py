@@ -42,7 +42,7 @@ class is_revue_de_contrat(models.Model):
         ("Oui", "Oui"),
         ("Non", "Non"),
     ], string="Étude pièce faite par PG")
-    rc_dates_fr                        = fields.Date(string="Date de la commande")
+    rc_cmd_date                        = fields.Date(string="Date de la commande")
     rc_cmd_date_semaine                = fields.Integer(string="Semaine de la commande")
     rc_cmd_date_nb                     = fields.Char(string="Nombre de pièces vendues")
     rc_dfn_ro_date                     = fields.Date(string="Date de la DFN RO")
