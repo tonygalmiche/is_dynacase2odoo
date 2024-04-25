@@ -287,11 +287,11 @@ class is_revue_de_contrat_version(models.Model):
     rc_dfi_cycle               = fields.Char(string="Cycle par pièce")
     rc_dfi_nb_emp              = fields.Char(string="Nb empreintes par référence")
     rc_dfi_mod                 = fields.Selection([
-        ("0_25", "0.25"),
-        ("0_5", "0.5"),
-        ("0_75", "0.75"),
+        ("0.25", "0.25"),
+        ("0.5", "0.5"),
+        ("0.75", "0.75"),
         ("1", "1"),
-        ("1_5", "1.5"),
+        ("1.5", "1.5"),
         ("2", "2"),
     ], string="MOD totale pour le poste")
     rc_dfi_taux_rebut          = fields.Char(string="Tx rebut vendu")
