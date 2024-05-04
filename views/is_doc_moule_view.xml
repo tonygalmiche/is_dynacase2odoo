@@ -16,13 +16,11 @@
                                 <field name="dossier_article_id"        attrs="{'invisible': [('type_document', '!=', 'Article')]               , 'required': [('type_document', '=', 'Article')]}" />
                                 <field name="dossier_modif_variante_id" attrs="{'invisible': [('type_document', '!=', 'Dossier Modif Variante')], 'required': [('type_document', '=', 'Dossier Modif Variante')]}"/>
                                 <field name="param_project_id" />
-
-                                <!-- <field name="sequence"/> -->
                                 <field name="sequence"/>
-
                                 <field name="ppr_type_demande" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="idproject" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
-                                <field name="idcp" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
+                                <field name="client_id" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
+                                <field name="idcp"      attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
                                 <field name="idresp" />
                             </group>
                             <group string="Gestion des J" name="PLASFIL_FR_J" attrs="{'invisible': [('type_document', '!=', 'Moule')]}">
@@ -87,6 +85,7 @@
                     <field name="dossier_article_id"        optional="show"           widget="many2one_clickable"/>
                     <button title="Gantt du projet" name="doc_projet_action" type="object" icon="fa-indent" attrs="{'invisible': [('idproject', '=', False)]}"/>
                     <field name="idproject" optional="show"         widget="many2one_clickable"/>
+                    <field name="client_id" optional="show"         widget="many2one_clickable"/>
                     <field name="idcp" optional="show"/>
                     <field name="idresp" optional="show" />
                     <field name="actuelle" optional="show" />
@@ -121,6 +120,7 @@
                     <field name="idmoule"          required="1"    widget="many2one_clickable"/>
                     <field name="dossierf_id"      optional="show" widget="many2one_clickable"/>
                     <field name="idproject"                        widget="many2one_clickable"/>
+                    <field name="client_id"        optional="show" widget="many2one_clickable"/>
                     <field name="idresp"           required="1"/>
                     <field name="demande"/>
                     <field name="etat"             required="1"/>
@@ -212,6 +212,7 @@
                     <field name="idmoule" />
                     <field name="dossier_article_id" />
                     <field name="idproject" />
+                    <field name="client_id" />
                     <field name="idcp" />
                     <field name="idresp" />
                     <field name="actuelle" />
@@ -238,26 +239,28 @@
             <field name="model">is.doc.moule</field>
             <field name="arch" type="xml">
                 <tree string="Document moule">
-                    <field name="param_project_id" optional="show"  widget="many2one_clickable"/>
-                    <field name="type_document" optional="hide"/>
-                    <field name="ppr_type_demande" optional="show" />
+                    <field name="param_project_id"    optional="show"  widget="many2one_clickable"/>
+                    <field name="type_document"       optional="hide"/>
+                    <field name="ppr_type_demande"    optional="show" />
                     <button title="Gantt du moule" name="doc_moule_action" type="object" icon="fa-indent"/>
-                    <field name="idmoule"               optional="show"           widget="many2one_clickable"/>
+                    <field name="idmoule"             optional="show"           widget="many2one_clickable"/>
                     <button title="Gantt du projet" name="doc_projet_action" type="object" icon="fa-indent"/>
-                    <field name="idproject" optional="show"         widget="many2one_clickable"/>
-                    <field name="idcp" optional="show"/>
-                    <field name="idresp" optional="show" />
-                    <field name="actuelle" optional="show" />
-                    <field name="demande" optional="show" />
-                    <field name="action"  optional="show"/>
-                    <field name="bloquant" optional="show"/>
-                    <field name="etat" optional="show" />
-                    <field name="fin_derogation" optional="show" />
-                    <field name="coefficient"  optional="show"/>
-                    <field name="note"  optional="show"/>
-                    <field name="indicateur"  optional="show"/>
-                    <field name="datecreate" optional="show" />
-                    <field name="dateend" optional="show" />
+                    <field name="idproject"           optional="show"         widget="many2one_clickable"/>
+                    <button title="Gantt du client" name="doc_client_action" type="object" icon="fa-indent"/>
+                    <field name="client_id"           optional="show"         widget="many2one_clickable"/>
+                    <field name="idcp"                optional="show"/>
+                    <field name="idresp"              optional="show" />
+                    <field name="actuelle"            optional="show" />
+                    <field name="demande"             optional="show" />
+                    <field name="action"              optional="show"/>
+                    <field name="bloquant"            optional="show"/>
+                    <field name="etat"                optional="show" />
+                    <field name="fin_derogation"      optional="show" />
+                    <field name="coefficient"         optional="show"/>
+                    <field name="note"                optional="show"/>
+                    <field name="indicateur"          optional="show"/>
+                    <field name="datecreate"          optional="show" />
+                    <field name="dateend"             optional="show" />
                     <field name="duree"               optional="hide" />
                     <field name="duree_attente_avant" optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
@@ -293,6 +296,7 @@
                     <field name="dossierf_id"               optional="show"           widget="many2one_clickable"/>
                     <button title="Gantt du projet" name="doc_projet_action" type="object" icon="fa-indent"/>
                     <field name="idproject" optional="show"         widget="many2one_clickable"/>
+                    <field name="client_id" optional="show"         widget="many2one_clickable"/>
                     <field name="idcp" optional="show"/>
                     <field name="idresp" optional="show" />
                     <field name="actuelle" optional="show" />
@@ -386,6 +390,7 @@
                     <field name="idmoule"          optional="hide" widget="many2one_clickable"/>
                     <field name="dossierf_id"      required="1"    widget="many2one_clickable"/>
                     <field name="idproject"                        widget="many2one_clickable"/>
+                    <field name="client_id" optional="show"        widget="many2one_clickable"/>
                     <field name="idresp"           required="1"/>
                     <field name="demande"/>
                     <field name="etat"             required="1"/>
@@ -416,6 +421,7 @@
                     <field name="dossierf_id"      optional="hide"       widget="many2one_clickable"/>
                     <field name="dossier_modif_variante_id" required="1" widget="many2one_clickable"/>
                     <field name="idproject"                              widget="many2one_clickable"/>
+                    <field name="client_id" optional="show"              widget="many2one_clickable"/>
                     <field name="idresp"           required="1"/>
                     <field name="demande"/>
                     <field name="etat"             required="1"/>

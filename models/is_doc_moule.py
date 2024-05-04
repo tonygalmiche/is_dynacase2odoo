@@ -58,13 +58,12 @@ class IsDocMoule(models.Model):
     ppr_type_demande = fields.Selection(related="param_project_id.ppr_type_demande")
     ppr_icon         = fields.Image(related="param_project_id.ppr_icon", string="Icône", store=True)
     ppr_color        = fields.Char(related="param_project_id.ppr_color", string="Color", store=True)
-
     idmoule                   = fields.Many2one("is.mold"                  , string="Moule")
     dossierf_id               = fields.Many2one("is.dossierf"              , string="Dossier F")
     dossier_modif_variante_id = fields.Many2one("is.dossier.modif.variante", string="Dossier Modif / Variante")
     dossier_article_id        = fields.Many2one("is.dossier.article"       , string="Dossier article")
-
     idproject        = fields.Many2one("is.mold.project", string="Projet",compute='_compute_idproject',store=True, readonly=True)
+    client_id        = fields.Many2one(related="idproject.client_id")
     idcp             = fields.Many2one(related="idmoule.chef_projet_id", string="CP")
     idresp           = fields.Many2one("res.users", string="Responsable")
     actuelle         = fields.Char(string="J Actuelle")
@@ -172,18 +171,46 @@ class IsDocMoule(models.Model):
             return obj.dossierf_id.gantt_action()
 
 
+    def doc_client_action(self):
+        for obj in self:
+            return obj.client_id.gantt_action()
+
+
     @api.model
     def get_dhtmlx(self, domain=[]):
-        print(domain)
-        lines=self.env['is.doc.moule'].search(domain, limit=500) #, order="dateend"
-        print(lines)
+        #print(domain)
+        lines=self.env['is.doc.moule'].search(domain, limit=10000) #, order="dateend"
+
+        # #** Ajout des projets ***********************************************
+        res=[]
+        projets=[]
+        for line in lines:
+            if line.idproject not in projets:
+                projets.append(line.idproject)
+        for projet in projets:
+            text="%s (%s)"%(projet.name,projet.client_id.name)
+            vals={
+                "id": projet.id+10000000,
+                "text": text,
+                "start_date": False,
+                "duration": False,
+                "parent": 0,
+                "progress": 0,
+                "open": True,
+                "priority": 2,
+            }
+            res.append(vals)
+        # #**********************************************************************
+
 
         # #** Ajout des moules ************************************************
-        res=[]
         moules=[]
         for line in lines:
             if line.idmoule not in moules:
                 moules.append(line.idmoule or line.dossierf_id or line.dossier_modif_variante_id)
+
+
+        #test_ids=[]
         for moule in moules:
             if hasattr(moule, 'name'):
                 name=moule.name
@@ -191,33 +218,56 @@ class IsDocMoule(models.Model):
             else:
                 name=moule.demao_num
                 project='?'
-
             text="%s (%s)"%(name,project)
             infobulle_list=[]
             infobulle_list.append("<b>Moule</b>: %s"%(name))
+            #test_ids.append(moule.id+20000000)
             vals={
-                "id": moule.id+100000,
+                "id": moule.id+20000000,
                 "text": text,
                 "start_date": False,
                 "duration": False,
-                "parent": 0,
+                "parent": (moule.project.id)+10000000,
                 "progress": 0,
                 "open": True,
-                #"assigned": project.user_id.name,
                 "priority": 2,
-                "infobulle": "<br>\n".join(infobulle_list)
+                "infobulle": "<br>\n".join(infobulle_list),
             }
             res.append(vals)
         # #**********************************************************************
 
 
-        print(res)
+        # # #** Ajout des responsables ********************************************
+        # keys=[]
+        # for line in lines:
+        #     parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000
+        #     responsable_id = line.idresp.id + 30000000
+        #     id = parent+responsable_id
+        #     key = "%s-%s-%s-%s"%(id,parent,responsable_id,line.idresp.name)
+        #     if key not in keys:
+        #         keys.append(key)
+        # for key in keys:
+        #     tab=key.split("-")
+        #     parent=int(tab[1]) 
+        #     if parent in test_ids:
+        #         text="%s-%s"%(tab[0],tab[3])
+        #         vals={
+        #             "id": int(tab[0]),
+        #             "text": text,
+        #             "start_date": False,
+        #             "duration": False,
+        #             "parent": test_ids[0],
+        #             "progress": 0,
+        #             "open": True,
+        #             "priority": 2,
+        #         }
+        #         res.append(vals)
+        # # #**********************************************************************
 
 
         #** Ajout des documents des moules **************************************
         for line in lines:
-            print(line.param_project_id.ppr_famille,line.dateend)
-            if line.dateend:
+            if line.dateend and line.idresp:
                 priority = round(2*random()) # Nombre aléatoire entre 0 et 2
                 famille=line.param_project_id.ppr_famille
                 name=famille
@@ -230,40 +280,44 @@ class IsDocMoule(models.Model):
                 duration = line.duree or 1
                 infobulle_list=[]
                 infobulle_list.append("<b>Document</b>           : %s"%name)
+                #parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000 + line.idresp.id + 30000000
+                #print(parent)
                 vals={
                     "id": line.id,
                     "text": name,
                     "end_date": str(line.dateend)+' 02:00:00"',
                     "duration": duration,
-                    "parent": (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+100000,
+                    #"parent": parent,
+                    "parent": (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000,
                     #"assigned": line.user_id.name,
                     #"progress": line.progress/100,
                     "priority": priority,
                     "infobulle": "<br>\n".join(infobulle_list)
                 }
+                #print(line.id,line.dateend,priority,duration,parent)
                 res.append(vals)
         #**********************************************************************
 
 
         #** Ajout des dependances *********************************************
         links=[]
-        ct=1
-        mem_line=False
-        mem_moule=False
-        for line in lines:
-            if mem_moule!=line.idmoule:
-                mem_line=False
-            if mem_line:
-                vals={
-                    "id":ct,
-                    "source": mem_line.id,
-                    "target": line.id,
-                    "type":0,
-                }
-                links.append(vals)
-                ct+=1
-            mem_line = line
-            mem_moule = line.idmoule
+        # ct=1
+        # mem_line=False
+        # mem_moule=False
+        # for line in lines:
+        #     if mem_moule!=line.idmoule:
+        #         mem_line=False
+        #     if mem_line:
+        #         vals={
+        #             "id":ct,
+        #             "source": mem_line.id,
+        #             "target": line.id,
+        #             "type":0,
+        #         }
+        #         links.append(vals)
+        #         ct+=1
+        #     mem_line = line
+        #     mem_moule = line.idmoule
         #**********************************************************************
 
         return {"items":res, "links": links}
@@ -362,6 +416,44 @@ class is_mold_project(models.Model):
             ctx={
                 #'default_type_document': 'Moule',
                 #'default_dossierf_id'  : obj.id,
+                'default_etat'         :'AF',
+                'default_dateend'      : datetime.today(),
+                'default_idresp'       : self._uid,
+                'initial_date'         : initial_date,
+            }
+            return {
+                'name': obj.name,
+                'view_mode': 'dhtmlxgantt_project,tree,form,kanban,calendar,pivot,graph',
+                "views"    : [
+                    (gantt_id, "dhtmlxgantt_project"),
+                    (tree_id, "tree"),
+                    (False, "form"),(False, "kanban"),(False, "calendar"),(False, "pivot"),(False, "graph")],
+                'res_model': 'is.doc.moule',
+                'domain': [
+                    ('id','in',ids),
+                ],
+                'type': 'ir.actions.act_window',
+                "context": ctx,
+                'limit': 1000,
+            }
+        
+
+
+class res_partner(models.Model):
+    _inherit = 'res.partner'
+
+    def gantt_action(self):
+        for obj in self:
+            docs=self.env['is.doc.moule'].search([ ('client_id', '=', obj.id) ])
+            ids=[]
+            initial_date=str(datetime.today())
+            for doc in docs:
+                if str(doc.dateend)<initial_date:
+                    initial_date=str(doc.dateend)
+                ids.append(doc.id)
+            tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_edit_tree_view').id
+            gantt_id = self.env.ref('is_dynacase2odoo.is_doc_moule_moule_dhtmlxgantt_project_view').id
+            ctx={
                 'default_etat'         :'AF',
                 'default_dateend'      : datetime.today(),
                 'default_idresp'       : self._uid,
