@@ -210,7 +210,7 @@ class IsDocMoule(models.Model):
                 moules.append(line.idmoule or line.dossierf_id or line.dossier_modif_variante_id)
 
 
-        #test_ids=[]
+        test_ids=[]
         for moule in moules:
             if hasattr(moule, 'name'):
                 name=moule.name
@@ -221,7 +221,7 @@ class IsDocMoule(models.Model):
             text="%s (%s)"%(name,project)
             infobulle_list=[]
             infobulle_list.append("<b>Moule</b>: %s"%(name))
-            #test_ids.append(moule.id+20000000)
+            test_ids.append(moule.id+20000000)
             vals={
                 "id": moule.id+20000000,
                 "text": text,
@@ -237,32 +237,30 @@ class IsDocMoule(models.Model):
         # #**********************************************************************
 
 
-        # # #** Ajout des responsables ********************************************
-        # keys=[]
-        # for line in lines:
-        #     parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000
-        #     responsable_id = line.idresp.id + 30000000
-        #     id = parent+responsable_id
-        #     key = "%s-%s-%s-%s"%(id,parent,responsable_id,line.idresp.name)
-        #     if key not in keys:
-        #         keys.append(key)
-        # for key in keys:
-        #     tab=key.split("-")
-        #     parent=int(tab[1]) 
-        #     if parent in test_ids:
-        #         text="%s-%s"%(tab[0],tab[3])
-        #         vals={
-        #             "id": int(tab[0]),
-        #             "text": text,
-        #             "start_date": False,
-        #             "duration": False,
-        #             "parent": test_ids[0],
-        #             "progress": 0,
-        #             "open": True,
-        #             "priority": 2,
-        #         }
-        #         res.append(vals)
-        # # #**********************************************************************
+        # #** Ajout des responsables ********************************************
+        my_dict={}
+        for line in lines:
+            parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000
+            responsable_id = line.idresp.id + 30000000
+            id = parent+responsable_id
+            key = "%s-%s-%s-%s"%(id,parent,responsable_id,line.idresp.name)
+            my_dict[id]=key
+        for id in my_dict:
+            tab=my_dict[id].split("-")
+            parent=int(tab[1]) 
+            text="%s"%(tab[3])
+            vals={
+                "id": id,
+                "text": text,
+                "start_date": False,
+                "duration": False,
+                "parent": parent,
+                "progress": 0,
+                "open": True,
+                "priority": 2,
+            }
+            res.append(vals)
+        # #**********************************************************************
 
 
         #** Ajout des documents des moules **************************************
@@ -280,19 +278,20 @@ class IsDocMoule(models.Model):
                 duration = line.duree or 1
                 infobulle_list=[]
                 infobulle_list.append("<b>Document</b>           : %s"%name)
-                #parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000 + line.idresp.id + 30000000
+                parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000 + line.idresp.id + 30000000
                 #print(parent)
                 vals={
                     "id": line.id,
                     "text": name,
                     "end_date": str(line.dateend)+' 02:00:00"',
                     "duration": duration,
-                    #"parent": parent,
-                    "parent": (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000,
+                    "parent": parent,
+                    #"parent": (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000,
                     #"assigned": line.user_id.name,
                     #"progress": line.progress/100,
                     "priority": priority,
-                    "infobulle": "<br>\n".join(infobulle_list)
+                    "infobulle": "<br>\n".join(infobulle_list),
+                    "color_class": 'is_param_projet_%s'%line.param_project_id.id,
                 }
                 #print(line.id,line.dateend,priority,duration,parent)
                 res.append(vals)

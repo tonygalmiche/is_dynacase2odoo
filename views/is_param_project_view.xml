@@ -6,6 +6,16 @@
             <field name="model">is.param.project</field>
             <field name="arch" type="xml">
                 <form string="Paramétrage projet">
+
+                    <header>
+                        <button
+                            name="creer_css_action"
+                            string="Créer le fichier CSS"
+                            type="object"
+                        />
+                    </header>
+
+
                     <sheet>
                         <group string="Identification">
                             <group name="ppr_fr_identification">

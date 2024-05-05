@@ -6,6 +6,9 @@
             <field name="model">is.doc.moule</field>
             <field name="arch" type="xml">
                 <form string="Document moule">
+
+                
+
                     <sheet>
                         <field name="project_prev" widget="html"/>
                         <group>

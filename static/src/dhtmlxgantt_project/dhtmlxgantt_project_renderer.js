@@ -101,14 +101,14 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
 
         this.gantt.config.grid_width = 620;
         this.gantt.config.add_column = false;
-        this.gantt.templates.grid_row_class = function (start_date, end_date, item) {
-            if (item.progress == 0) return "red";
-            if (item.progress >= 1) return "green";
-        };
-        this.gantt.templates.task_row_class = function (start_date, end_date, item) {
-            if (item.progress == 0) return "red";
-            if (item.progress >= 1) return "green";
-        };
+        // this.gantt.templates.grid_row_class = function (start_date, end_date, item) {
+        //     if (item.progress == 0) return "red";
+        //     if (item.progress >= 1) return "green";
+        // };
+        // this.gantt.templates.task_row_class = function (start_date, end_date, item) {
+        //     //if (item.progress == 0) return "red";
+        //     //if (item.progress >= 1) return "green";
+        // };
 
         //** Configuration des colonnes des tâches
         this.gantt.config.columns = [
@@ -219,21 +219,26 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             "<br/><div style='color:red'>Autre: "+task.champ_perso+"</div>";
         };
 
-        //Met une couleur sur les task en fonction de la priority
+        //Met une couleur sur les task en fonction de la priority ou de la couleur de la famille
         this.gantt.templates.task_class = function (start, end, task) {
-            var cl="";
-            switch (task.priority) {
-                case 0:
-                    cl = "high";
-                    break;
-                case 1:
-                    cl = "medium";
-                    break;
-                case 2:
-                    cl= "low";
-                    break;
-            }
-            return cl;
+            //var color_class = 'is_param_projet_10100';
+            var color_class = task.color_class;
+            console.log(task,color_class);
+            return color_class;
+
+            // var cl="";
+            // switch (task.priority) {
+            //     case 0:
+            //         cl = "high";
+            //         break;
+            //     case 1:
+            //         cl = "medium";
+            //         break;
+            //     case 2:
+            //         cl= "low";
+            //         break;
+            // }
+            // return cl;
         };
         this.gantt.init("gantt_here");
         this.GetDocuments();
@@ -270,6 +275,10 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
 
         for (var x in this.state.items) {
             item = this.state.items[x];
+
+            console.log('item=',item);
+
+
             marker_id = item.id
             //Doc : https://docs.dhtmlx.com/gantt/desktop__task_properties.html
             vals={
@@ -285,6 +294,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                 priority   : item.priority,
                 champ_perso: "Champ perso à mettre dans l'infobulle",
                 parent     : item.parent,
+                color_class: item.color_class,
             }
             data.push(vals);
         }
