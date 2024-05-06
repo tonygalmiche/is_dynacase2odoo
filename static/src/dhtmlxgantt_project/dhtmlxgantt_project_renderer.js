@@ -22,39 +22,14 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         //this.orm = useService("orm");
         this.state = useState({
             dict: {},
-            test:'toto et tutu',
-            //activityTypeId: null,
-            //resIds: []
         });
         this.events=[];
         this.ActivePatched=true;
         onMounted(() => this._mounted());
         onPatched(() => this._patched());
-        //onWillUnmount(() => this._willUnmount());
     }
 
-
-    // setup
-    // willStart
-    // willRender
-    // rendered
-    // mounted
-    // willUpdateProps
-    // willPatch
-    // patched
-    // willUnmount
-    // willDestroy
-    // onError
-
-
-
-
-
-
     _mounted() {
-        console.log('mounted',this.state.items)
-
-
         this.gantt = gantt;
         // Je n'ai pas trouvé d'autre solution que d'intégrer l'objet owl dans l'objet gantt pour pouvoir 
         //l'utiliser dans les évènements du Gantt
@@ -223,7 +198,6 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         this.gantt.templates.task_class = function (start, end, task) {
             //var color_class = 'is_param_projet_10100';
             var color_class = task.color_class;
-            console.log(task,color_class);
             return color_class;
 
             // var cl="";
@@ -246,7 +220,6 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
 
 
     _patched() {
-        console.log('_patched : this.ActivePatched=',this.ActivePatched);
         if (this.ActivePatched==true) {
             this.ActivePatched=false;
             this.GetDocuments();
@@ -266,7 +239,6 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
 
 
     renderDhtmlxGantt() {
-        console.log('renderDhtmlxGantt : this.state.items=',this.state.items);
         var data=[];
         var links=[];
         var item={};
@@ -275,14 +247,12 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
 
         for (var x in this.state.items) {
             item = this.state.items[x];
-
-            console.log('item=',item);
-
-
             marker_id = item.id
             //Doc : https://docs.dhtmlx.com/gantt/desktop__task_properties.html
             vals={
                 id:item.id,
+                model:item.model,
+                res_id:item.res_id,
                 text:item.text,
                 //start_date:item.date_assign,
                 //start_date:item.start_date,
@@ -326,17 +296,26 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         while (this.events.length)
             this.gantt.detachEvent(this.events.pop());
             //En cliqant sur une task, cela affiche la liste des clients d'Odoo
+
+
+            
+
+
             this.gantt.attachEvent("onTaskClick", function(id,e){
             if (e.target.className=="gantt_task_content"){
+                //console.log(gantt.getTaskCount());      // Nombre de tasks
+                //console.log(gantt.getTaskByTime());     // Retourne toutes les tasks
+                const task = gantt.getTaskBy("id", [id])[0]; // Recherche de la task avec son id
+                console.log(id,task.res_id,task.model);
                 gantt.owl.env.bus.trigger('do-action', {
                     action: {
                         type: 'ir.actions.act_window',
-                        res_model: 'project.task',
-                        res_id: parseInt(id),
+                        res_model: task.model,
+                        res_id: parseInt(task.res_id),
                         view_mode: 'form,list',
                         views: [[false, 'form'],[false, 'list']],
-                        //target: 'current'
-                        //target: 'new',
+                        //target: 'current',
+                        target: 'new',
                     },
                 });
             }
@@ -369,7 +348,6 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
     }
 
     async GetDocuments(s){
-        console.log('GetDocuments : this.ActivePatched=',this.ActivePatched)
         var self=this;
         rpc.query({
             model: 'is.doc.moule',
@@ -378,7 +356,6 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                 domain: this.props.domain,
             }
         }).then(function (result) {
-            console.log('result=',result);
             self.state.items = result.items;
             self.state.links = result.links;
             self.renderDhtmlxGantt();

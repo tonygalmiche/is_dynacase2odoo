@@ -190,7 +190,9 @@ class IsDocMoule(models.Model):
         for projet in projets:
             text="%s (%s)"%(projet.name,projet.client_id.name)
             vals={
-                "id": projet.id+10000000,
+                "id": '%s-%s'%(projet._name,projet.id),
+                "model": projet._name,
+                "res_id": projet.id,
                 "text": text,
                 "start_date": False,
                 "duration": False,
@@ -203,36 +205,47 @@ class IsDocMoule(models.Model):
         # #**********************************************************************
 
 
-        # #** Ajout des moules ************************************************
-        moules=[]
+        # #** Ajout des moules, dossierf ou dossier modif **********************
+        dossiers=[]
         for line in lines:
-            if line.idmoule not in moules:
-                moules.append(line.idmoule or line.dossierf_id or line.dossier_modif_variante_id)
-
-
-        test_ids=[]
-        for moule in moules:
-            if hasattr(moule, 'name'):
-                name=moule.name
-                project=moule.project.name
+            doc=False
+            #model=False
+            doc=(line.idmoule or line.dossierf_id or line.dossier_modif_variante_id)
+            # if line.idmoule:
+            #     doc=line.idmoule
+            #     #model='is.mold'
+            # if line.dossierf_id:
+            #     doc=line.dossierf_id
+            #     #model='is.mold'
+            # if line.dossier_modif_variante_id:
+            #     doc=line.dossier_modif_variante_id
+            #     #model='is.dossier.modif.variante'
+            if doc not in dossiers:
+                dossiers.append(doc)
+        for dossier in dossiers:
+            if hasattr(dossier, 'name'):
+                name=dossier.name
+                project=dossier.project.name
             else:
-                name=moule.demao_num
+                name=dossier.demao_num
                 project='?'
             text="%s (%s)"%(name,project)
             infobulle_list=[]
             infobulle_list.append("<b>Moule</b>: %s"%(name))
-            test_ids.append(moule.id+20000000)
             vals={
-                "id": moule.id+20000000,
+                "id": "%s-%s"%(dossier._name,dossier.id),
+                "model": dossier._name,
+                "res_id": dossier.id,
                 "text": text,
                 "start_date": False,
                 "duration": False,
-                "parent": (moule.project.id)+10000000,
+                "parent": 'is.mold.project-%s'%dossier.project.id,
                 "progress": 0,
                 "open": True,
                 "priority": 2,
                 "infobulle": "<br>\n".join(infobulle_list),
             }
+            print(vals)
             res.append(vals)
         # #**********************************************************************
 
@@ -240,26 +253,36 @@ class IsDocMoule(models.Model):
         # #** Ajout des responsables ********************************************
         my_dict={}
         for line in lines:
-            parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000
+            dossier = (line.idmoule or line.dossierf_id or line.dossier_modif_variante_id)
+
+            print(dossier, dossier.id, dossier._name)
+
+            parent="%s-%s"%(dossier._name,dossier.id)
+            #parent=dossier.id+20000000
             responsable_id = line.idresp.id + 30000000
-            id = parent+responsable_id
-            key = "%s-%s-%s-%s"%(id,parent,responsable_id,line.idresp.name)
+            #id = parent+responsable_id
+            id=dossier.id+20000000 + responsable_id
+            key = "%s|%s|%s"%(id,parent,line.idresp.name)
             my_dict[id]=key
         for id in my_dict:
-            tab=my_dict[id].split("-")
-            parent=int(tab[1]) 
-            text="%s"%(tab[3])
+            #print(my_dict[id])
+            tab=my_dict[id].split("|")
+            print(tab)
+            parent=tab[1] 
+            text="%s"%(tab[2])
             vals={
                 "id": id,
                 "text": text,
                 "start_date": False,
                 "duration": False,
                 "parent": parent,
+                #"parent": "%s-%s"%(dossier._name,dossier.id),
                 "progress": 0,
                 "open": True,
                 "priority": 2,
             }
             res.append(vals)
+            #print(id,parent)
         # #**********************************************************************
 
 
@@ -281,7 +304,10 @@ class IsDocMoule(models.Model):
                 parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000 + line.idresp.id + 30000000
                 #print(parent)
                 vals={
-                    "id": line.id,
+                    #"id": line.id,
+                    "id": "%s-%s"%(line._name,line.id),
+                    "model": line._name,
+                    "res_id": line.id,
                     "text": name,
                     "end_date": str(line.dateend)+' 02:00:00"',
                     "duration": duration,
