@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
 from odoo.tools import format_date, formatLang, frozendict
-from datetime import datetime
+from datetime import datetime, timedelta
 from random import *
 
 class IsDocMoule(models.Model):
@@ -178,7 +178,6 @@ class IsDocMoule(models.Model):
 
     @api.model
     def get_dhtmlx(self, domain=[]):
-        #print(domain)
         lines=self.env['is.doc.moule'].search(domain, limit=10000) #, order="dateend"
 
         # #** Ajout des projets ***********************************************
@@ -245,7 +244,6 @@ class IsDocMoule(models.Model):
                 "priority": 2,
                 "infobulle": "<br>\n".join(infobulle_list),
             }
-            print(vals)
             res.append(vals)
         # #**********************************************************************
 
@@ -254,9 +252,6 @@ class IsDocMoule(models.Model):
         my_dict={}
         for line in lines:
             dossier = (line.idmoule or line.dossierf_id or line.dossier_modif_variante_id)
-
-            print(dossier, dossier.id, dossier._name)
-
             parent="%s-%s"%(dossier._name,dossier.id)
             #parent=dossier.id+20000000
             responsable_id = line.idresp.id + 30000000
@@ -265,9 +260,7 @@ class IsDocMoule(models.Model):
             key = "%s|%s|%s"%(id,parent,line.idresp.name)
             my_dict[id]=key
         for id in my_dict:
-            #print(my_dict[id])
             tab=my_dict[id].split("|")
-            print(tab)
             parent=tab[1] 
             text="%s"%(tab[2])
             vals={
@@ -282,7 +275,6 @@ class IsDocMoule(models.Model):
                 "priority": 2,
             }
             res.append(vals)
-            #print(id,parent)
         # #**********************************************************************
 
 
@@ -302,14 +294,18 @@ class IsDocMoule(models.Model):
                 infobulle_list=[]
                 infobulle_list.append("<b>Document</b>           : %s"%name)
                 parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000 + line.idresp.id + 30000000
-                #print(parent)
+
+
+                end_date = str(line.date_fin_gantt or line.dateend)+' 00:00:00"'
+                print('end_date=',end_date)
+
                 vals={
                     #"id": line.id,
                     "id": "%s-%s"%(line._name,line.id),
                     "model": line._name,
                     "res_id": line.id,
                     "text": name,
-                    "end_date": str(line.dateend)+' 02:00:00"',
+                    "end_date": end_date,
                     "duration": duration,
                     "parent": parent,
                     #"parent": (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000,
@@ -319,7 +315,6 @@ class IsDocMoule(models.Model):
                     "infobulle": "<br>\n".join(infobulle_list),
                     "color_class": 'is_param_projet_%s'%line.param_project_id.id,
                 }
-                #print(line.id,line.dateend,priority,duration,parent)
                 res.append(vals)
         #**********************************************************************
 
@@ -348,8 +343,21 @@ class IsDocMoule(models.Model):
         return {"items":res, "links": links}
 
 
-
-
+    def write_task(self,end_date=False,duration=False):
+        end_date = end_date[0:10]
+        try:
+            date_fin_gantt = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(days=1)
+        except ValueError:
+            date_fin_gantt = False
+        if date_fin_gantt:
+            for obj in self:
+                if duration>0:
+                    obj.duree = duration
+                    obj.date_fin_gantt   = date_fin_gantt
+                    obj.date_debut_gantt = date_fin_gantt - timedelta(days=duration)
+        msg="%s : %s : %s => %s : %s"%(self.id,end_date,duration,obj.date_debut_gantt,obj.date_fin_gantt )
+        print(msg)
+        return msg
 
 
 

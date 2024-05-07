@@ -5,7 +5,7 @@ import session from 'web.session';
 import utils from 'web.utils';
 //import { useService } from "@web/core/utils/hooks";
 
-const { useState, onMounted, onPatched, onWillUnmount } = owl;
+const { useState, onRendered, onMounted, onPatched, onWillUnmount } = owl;
 
 
 
@@ -25,11 +25,22 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         });
         this.events=[];
         this.ActivePatched=true;
+        //onRendered(() => this._mounted());
         onMounted(() => this._mounted());
         onPatched(() => this._patched());
+        onWillUnmount(() => this._unmount());
     }
 
+
+    _unmount(){
+        console.log('_unmount);')
+        this.gantt.clearAll(); 
+        this.gantt.detachAllEvents();
+    }
+
+
     _mounted() {
+        console.log('_mounted');
         this.gantt = gantt;
         // Je n'ai pas trouvé d'autre solution que d'intégrer l'objet owl dans l'objet gantt pour pouvoir 
         //l'utiliser dans les évènements du Gantt
@@ -215,6 +226,44 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             // return cl;
         };
         this.gantt.init("gantt_here");
+
+
+
+        // detach all saved events
+        // while (this.events.length){
+        //     var event_id = this.events.pop();
+        //     console.log('event_id=',event_id);
+        //     this.gantt.detachEvent(event_id);
+        // }
+        this.events.push(this.gantt.attachEvent("onTaskClick", function(id,e){
+            if (e.target.className=="gantt_task_content"){
+                const task = gantt.getTaskBy("id", [id])[0]; // Recherche de la task avec son id
+                if (task.model !== undefined){
+                    //console.log(gantt.getTaskCount());      // Nombre de tasks
+                    //console.log(gantt.getTaskByTime());     // Retourne toutes les tasks
+                    console.log(id,task.res_id,task.model);
+                    gantt.owl.env.bus.trigger('do-action', {
+                        action: {
+                            type: 'ir.actions.act_window',
+                            res_model: task.model,
+                            res_id: parseInt(task.res_id),
+                            view_mode: 'form,list',
+                            views: [[false, 'form'],[false, 'list']],
+                            //target: 'current',
+                            target: 'new',
+                        },
+                    });
+                }
+            }
+            return true;
+        }));
+        this.events.push(this.gantt.attachEvent("onAfterTaskUpdate", function(id,item){
+            console.log('attachEvent',this);
+            this.owl.WriteTask(id, item);
+        }));
+        // this.events.push(this.gantt.attachEvent("onClear", function(){
+        //     console.log('onClear',this);
+        // }));
         this.GetDocuments();
     }
 
@@ -292,44 +341,45 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             });
         }
     
-        // detach all saved events
-        while (this.events.length)
-            this.gantt.detachEvent(this.events.pop());
-            //En cliqant sur une task, cela affiche la liste des clients d'Odoo
 
 
-            
+        // // detach all saved events
+        // while (this.events.length){
+        //     var event_id = this.events.pop();
+        //     console.log('event_id=',event_id);
+        //     this.gantt.detachEvent(event_id);
+        // }
+        // this.events.push(this.gantt.attachEvent("onTaskClick", function(id,e){
+        //     if (e.target.className=="gantt_task_content"){
+        //         const task = gantt.getTaskBy("id", [id])[0]; // Recherche de la task avec son id
+        //         if (task.model !== undefined){
+        //             //console.log(gantt.getTaskCount());      // Nombre de tasks
+        //             //console.log(gantt.getTaskByTime());     // Retourne toutes les tasks
+        //             console.log(id,task.res_id,task.model);
+        //             gantt.owl.env.bus.trigger('do-action', {
+        //                 action: {
+        //                     type: 'ir.actions.act_window',
+        //                     res_model: task.model,
+        //                     res_id: parseInt(task.res_id),
+        //                     view_mode: 'form,list',
+        //                     views: [[false, 'form'],[false, 'list']],
+        //                     //target: 'current',
+        //                     target: 'new',
+        //                 },
+        //             });
+        //         }
+        //     }
+        //     return true;
+        // }));
+        // this.events.push(this.gantt.attachEvent("onAfterTaskUpdate", function(id,item){
+        //     console.log('attachEvent',this);
+        //     this.owl.WriteTask(id, item);
+        // }));
+        // console.log('events=',this.events);
 
 
-            this.gantt.attachEvent("onTaskClick", function(id,e){
-            if (e.target.className=="gantt_task_content"){
-                //console.log(gantt.getTaskCount());      // Nombre de tasks
-                //console.log(gantt.getTaskByTime());     // Retourne toutes les tasks
-                const task = gantt.getTaskBy("id", [id])[0]; // Recherche de la task avec son id
-                console.log(id,task.res_id,task.model);
-                gantt.owl.env.bus.trigger('do-action', {
-                    action: {
-                        type: 'ir.actions.act_window',
-                        res_model: task.model,
-                        res_id: parseInt(task.res_id),
-                        view_mode: 'form,list',
-                        views: [[false, 'form'],[false, 'list']],
-                        //target: 'current',
-                        target: 'new',
-                    },
-                });
-            }
-            return true;
-        });
 
-
-        this.events.push(this.gantt.attachEvent("onAfterTaskUpdate", function(id,item){
-            console.log('onAfterTaskUpdate',id,item)
-            //this.owl.WriteTask(id, item.end_date, item.duration);
-        }));
     }
-
-
 
 
 
@@ -343,7 +393,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         console.log('SuivantClick')
     }
     OKButtonClick(ev) {
-        console.log('OKButtonClick')
+        //console.log('OKButtonClick')
         this.GetDocuments();
     }
 
@@ -361,6 +411,36 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             self.renderDhtmlxGantt();
         });
     }
+
+    async WriteTask(id,item){
+        //console.log('WriteTask',id,item);
+        rpc.query({
+            model: 'is.doc.moule',
+            method: 'write_task',
+            args: [[parseInt(item.res_id)], item.end_date, item.duration]
+        }).then(function (result) {
+            console.log('WriteTask : result=',result);
+        });
+        // var utc_date = gantt.date.convert_to_utc(date_deadline);
+        // var formatFunc = gantt.date.date_to_str("%Y-%m-%d %H:%i:%s");
+        // var heure_fin = formatFunc(utc_date);
+        // var vals={
+        //     "heure_fin": heure_fin,
+        //     "reste": planned_hours,
+        // }
+        // console.log(vals);
+        // var prom = rpc.query({
+        //     model: 'is.ordre.travail.line',
+        //     method: 'write',
+        //     args: [[id], vals],
+        // });
+    }
+
+
+
+
+
+
 }
 DhtmlxganttProjectRenderer.template = 'is_dynacase2odoo.DhtmlxganttProjectTemplate';
 export default DhtmlxganttProjectRenderer;
