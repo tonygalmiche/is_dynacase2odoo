@@ -294,11 +294,7 @@ class IsDocMoule(models.Model):
                 infobulle_list=[]
                 infobulle_list.append("<b>Document</b>           : %s"%name)
                 parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000 + line.idresp.id + 30000000
-
-
                 end_date = str(line.date_fin_gantt or line.dateend)+' 00:00:00"'
-                print('end_date=',end_date)
-
                 vals={
                     #"id": line.id,
                     "id": "%s-%s"%(line._name,line.id),
@@ -358,6 +354,28 @@ class IsDocMoule(models.Model):
         msg="%s : %s : %s => %s : %s"%(self.id,end_date,duration,obj.date_debut_gantt,obj.date_fin_gantt )
         print(msg)
         return msg
+
+
+
+    def link_add_task(self,source=False,target=False):
+        msg="%s : %s"%(source,target)
+
+
+        src=source.split("-")
+        dst=target.split("-")
+
+        doc_src = self.env[src[0]].browse(src[1])
+        doc_dst = self.env[dst[0]].browse(dst[1])
+
+        #param_project_id.ppr_famille
+
+        print(doc_src.param_project_id.ppr_famille, doc_dst.param_project_id.ppr_famille)
+
+        msg="%s : %s"%(doc_src,doc_dst)
+        return msg
+
+
+
 
 
 

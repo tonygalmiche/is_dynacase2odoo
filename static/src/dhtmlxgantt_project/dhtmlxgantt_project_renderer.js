@@ -3,15 +3,8 @@ import AbstractRendererOwl from 'web.AbstractRendererOwl';
 import QWeb from 'web.QWeb';
 import session from 'web.session';
 import utils from 'web.utils';
-//import { useService } from "@web/core/utils/hooks";
 
-const { useState, onRendered, onMounted, onPatched, onWillUnmount } = owl;
-
-
-
-//const _t = core._t;
-//const KanbanActivity = field_registry.get('kanban_activity');
-
+const { useState, onMounted, onPatched, onWillUnmount } = owl;
 var rpc = require('web.rpc');
 
 class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
@@ -23,9 +16,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         this.state = useState({
             dict: {},
         });
-        this.events=[];
         this.ActivePatched=true;
-        //onRendered(() => this._mounted());
         onMounted(() => this._mounted());
         onPatched(() => this._patched());
         onWillUnmount(() => this._unmount());
@@ -43,7 +34,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         console.log('_mounted');
         this.gantt = gantt;
         // Je n'ai pas trouvé d'autre solution que d'intégrer l'objet owl dans l'objet gantt pour pouvoir 
-        //l'utiliser dans les évènements du Gantt
+        // l'utiliser dans les évènements du Gantt
         gantt.owl = this; 
 
         this.gantt.i18n.setLocale("fr");
@@ -229,13 +220,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
 
 
 
-        // detach all saved events
-        // while (this.events.length){
-        //     var event_id = this.events.pop();
-        //     console.log('event_id=',event_id);
-        //     this.gantt.detachEvent(event_id);
-        // }
-        this.events.push(this.gantt.attachEvent("onTaskClick", function(id,e){
+        this.gantt.attachEvent("onTaskClick", function(id,e){
             if (e.target.className=="gantt_task_content"){
                 const task = gantt.getTaskBy("id", [id])[0]; // Recherche de la task avec son id
                 if (task.model !== undefined){
@@ -256,14 +241,20 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                 }
             }
             return true;
-        }));
-        this.events.push(this.gantt.attachEvent("onAfterTaskUpdate", function(id,item){
-            console.log('attachEvent',this);
+        });
+        this.gantt.attachEvent("onAfterTaskUpdate", function(id,item){
+            console.log('onAfterTaskUpdate',this);
             this.owl.WriteTask(id, item);
-        }));
-        // this.events.push(this.gantt.attachEvent("onClear", function(){
-        //     console.log('onClear',this);
-        // }));
+        });
+ 
+        this.gantt.attachEvent("onAfterLinkAdd", function(id,item){
+            //console.log('onAfterLinkAdd : self=',self);
+            console.log('onAfterLinkAdd : id,item=',id,item);
+            this.owl.LinkAddTask(id, item);
+        });
+
+
+
         this.GetDocuments();
     }
 
@@ -340,45 +331,6 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                 text: "Marqueur pour "+text,
             });
         }
-    
-
-
-        // // detach all saved events
-        // while (this.events.length){
-        //     var event_id = this.events.pop();
-        //     console.log('event_id=',event_id);
-        //     this.gantt.detachEvent(event_id);
-        // }
-        // this.events.push(this.gantt.attachEvent("onTaskClick", function(id,e){
-        //     if (e.target.className=="gantt_task_content"){
-        //         const task = gantt.getTaskBy("id", [id])[0]; // Recherche de la task avec son id
-        //         if (task.model !== undefined){
-        //             //console.log(gantt.getTaskCount());      // Nombre de tasks
-        //             //console.log(gantt.getTaskByTime());     // Retourne toutes les tasks
-        //             console.log(id,task.res_id,task.model);
-        //             gantt.owl.env.bus.trigger('do-action', {
-        //                 action: {
-        //                     type: 'ir.actions.act_window',
-        //                     res_model: task.model,
-        //                     res_id: parseInt(task.res_id),
-        //                     view_mode: 'form,list',
-        //                     views: [[false, 'form'],[false, 'list']],
-        //                     //target: 'current',
-        //                     target: 'new',
-        //                 },
-        //             });
-        //         }
-        //     }
-        //     return true;
-        // }));
-        // this.events.push(this.gantt.attachEvent("onAfterTaskUpdate", function(id,item){
-        //     console.log('attachEvent',this);
-        //     this.owl.WriteTask(id, item);
-        // }));
-        // console.log('events=',this.events);
-
-
-
     }
 
 
@@ -413,7 +365,6 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
     }
 
     async WriteTask(id,item){
-        //console.log('WriteTask',id,item);
         rpc.query({
             model: 'is.doc.moule',
             method: 'write_task',
@@ -421,20 +372,19 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         }).then(function (result) {
             console.log('WriteTask : result=',result);
         });
-        // var utc_date = gantt.date.convert_to_utc(date_deadline);
-        // var formatFunc = gantt.date.date_to_str("%Y-%m-%d %H:%i:%s");
-        // var heure_fin = formatFunc(utc_date);
-        // var vals={
-        //     "heure_fin": heure_fin,
-        //     "reste": planned_hours,
-        // }
-        // console.log(vals);
-        // var prom = rpc.query({
-        //     model: 'is.ordre.travail.line',
-        //     method: 'write',
-        //     args: [[id], vals],
-        // });
     }
+
+
+    async LinkAddTask(id,item){
+        rpc.query({
+            model: 'is.doc.moule',
+            method: 'link_add_task',
+            args: [[false], item.source, item.target]
+        }).then(function (result) {
+            console.log('LinkAddTask : result=',result);
+        });
+    }
+
 
 
 
