@@ -4,15 +4,15 @@
         <div class="buttons">
             <table>
                 <tr>
-                    <td><button class="btn btn-primary" t-on-click="PrecedentClick" title="Semaine précédente">&lt;</button></td>
-                    <td><button class="btn btn-primary" t-on-click="OKButtonClick">Aujourd'hui</button></td>
-                    <td><button class="btn btn-primary" t-on-click="SuivantClick" title="Semaine suivante">&gt;</button></td>
+                    <td><button class="btn btn-info" t-on-click="RafraichirClick"  title="Rafraichir"><i class="fa fa-refresh"/>      </button></td>        
+                    <td><button class="btn btn-info" t-on-click="AnneeClick"   title="Rafraichir">Année</button></td>
+                    <td><button class="btn btn-info" t-on-click="MoisClick"    title="Rafraichir">Mois</button></td>
+                    <td><button class="btn btn-info" t-on-click="SemaineClick" title="Rafraichir">Semaine</button></td>
                 </tr>
             </table>
         </div>
 
         <div id="gantt_here" style='width:100%; height:60vh;'></div>
-
 
 
 

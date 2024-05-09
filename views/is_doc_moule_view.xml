@@ -103,6 +103,8 @@
                     <field name="datecreate" optional="show" />
                     <field name="dateend" optional="show" />
                     <field name="duree"               optional="hide" />
+                    <field name="date_debut_gantt"    optional="hide" />
+                    <field name="date_fin_gantt"      optional="hide" />
                     <field name="duree_attente_avant" optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
@@ -127,8 +129,10 @@
                     <field name="idresp"           required="1"/>
                     <field name="demande"/>
                     <field name="etat"             required="1"/>
-                    <field name="dateend"          required="1"/>
+                    <field name="dateend"          optional="hide"/>
                     <field name="duree"            required="1"/>
+                    <field name="date_debut_gantt" required="1" />
+                    <field name="date_fin_gantt"   required="1" />
                     <field name="duree_attente_avant" optional="hide"/>
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="indicateur"          optional="hide"/>
@@ -264,7 +268,9 @@
                     <field name="indicateur"          optional="show"/>
                     <field name="datecreate"          optional="show" />
                     <field name="dateend"             optional="show" />
-                    <field name="duree"               optional="hide" />
+                    <field name="duree"               optional="hide"/>
+                    <field name="date_debut_gantt"    optional="hide"/>
+                    <field name="date_fin_gantt"      optional="hide"/>
                     <field name="duree_attente_avant" optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
@@ -313,7 +319,9 @@
                     <field name="indicateur"  optional="show"/>
                     <field name="datecreate" optional="show" />
                     <field name="dateend" optional="show" />
-                    <field name="duree"               optional="hide" />
+                    <field name="duree"               optional="hide"/>
+                    <field name="date_debut_gantt"    optional="hide"/>
+                    <field name="date_fin_gantt"      optional="hide"/>
                     <field name="duree_attente_avant" optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
@@ -352,6 +360,9 @@
                     <field name="dossier_article_id" optional="show"  widget="many2one_clickable"/>
                     <field name="idresp"             optional="show" />
                     <field name="dateend"            optional="show" />
+                    <field name="duree"               optional="hide"/>
+                    <field name="date_debut_gantt"    optional="hide"/>
+                    <field name="date_fin_gantt"      optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                     <field name="dynacase_id" optional="hide"/>
                 </tree>
@@ -397,8 +408,10 @@
                     <field name="idresp"           required="1"/>
                     <field name="demande"/>
                     <field name="etat"             required="1"/>
-                    <field name="dateend"          required="1"/>
+                    <field name="dateend"          optional="hide"/>
                     <field name="duree"            required="1"/>
+                    <field name="date_debut_gantt" required="1" />
+                    <field name="date_fin_gantt"   required="1" />
                     <field name="duree_attente_avant" optional="hide"/>
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="indicateur"          optional="hide"/>
@@ -428,8 +441,10 @@
                     <field name="idresp"           required="1"/>
                     <field name="demande"/>
                     <field name="etat"             required="1"/>
-                    <field name="dateend"          required="1"/>
+                    <field name="dateend"          optional="hide"/>
                     <field name="duree"            required="1"/>
+                    <field name="date_debut_gantt" required="1" />
+                    <field name="date_fin_gantt"   required="1" />
                     <field name="duree_attente_avant" optional="hide"/>
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="indicateur"          optional="hide"/>

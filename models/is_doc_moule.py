@@ -89,9 +89,28 @@ class IsDocMoule(models.Model):
     dynacase_id      = fields.Integer(string="Id Dynacase")
     duree               = fields.Integer(string="Durée (J)", default=1)
     duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
-    date_debut_gantt    = fields.Date(string="Date début Gantt")
+    date_debut_gantt    = fields.Date(string="Date début Gantt", default=fields.Date.context_today)
     date_fin_gantt      = fields.Date(string="Date fin Gantt")
     dependance_id       = fields.Many2one("is.doc.moule", string="Dépendance")
+
+
+    @api.onchange('date_debut_gantt')
+    def onchange_date_debut(self):
+        for obj in self:
+            if obj.date_debut_gantt and obj.duree:
+                obj.date_fin_gantt = obj.date_debut_gantt + timedelta(days=obj.duree)
+
+    @api.onchange('duree')
+    def onchange_duree(self):
+        for obj in self:
+            if obj.date_debut_gantt and obj.duree>=0:
+                obj.date_fin_gantt = obj.date_debut_gantt + timedelta(days=obj.duree)
+
+    @api.onchange('date_fin_gantt')
+    def onchange_date_fin(self):
+        for obj in self:
+            if obj.date_fin_gantt and obj.duree:
+                obj.date_debut_gantt = obj.date_fin_gantt - timedelta(days=obj.duree)
 
 
     def lien_vers_dynacase_action(self):
@@ -317,23 +336,22 @@ class IsDocMoule(models.Model):
 
         #** Ajout des dependances *********************************************
         links=[]
-        # ct=1
-        # mem_line=False
-        # mem_moule=False
-        # for line in lines:
-        #     if mem_moule!=line.idmoule:
-        #         mem_line=False
-        #     if mem_line:
-        #         vals={
-        #             "id":ct,
-        #             "source": mem_line.id,
-        #             "target": line.id,
-        #             "type":0,
-        #         }
-        #         links.append(vals)
-        #         ct+=1
-        #     mem_line = line
-        #     mem_moule = line.idmoule
+        for line in lines:
+            if line.dependance_id:
+                id="%s-%s"%(line.id,line.dependance_id.id)
+
+
+                source = "%s-%s"%(line._name,line.dependance_id.id),
+                target = "%s-%s"%(line._name,line.id),
+
+
+                vals={
+                    "id":id,
+                    "source": source,
+                    "target": target,
+                    "type":0,
+                }
+                links.append(vals)
         #**********************************************************************
 
         return {"items":res, "links": links}
@@ -352,31 +370,27 @@ class IsDocMoule(models.Model):
                     obj.date_fin_gantt   = date_fin_gantt
                     obj.date_debut_gantt = date_fin_gantt - timedelta(days=duration)
         msg="%s : %s : %s => %s : %s"%(self.id,end_date,duration,obj.date_debut_gantt,obj.date_fin_gantt )
-        print(msg)
         return msg
 
 
-
-    def link_add_task(self,source=False,target=False):
-        msg="%s : %s"%(source,target)
-
-
+    def link_add(self,source=False,target=False):
         src=source.split("-")
         dst=target.split("-")
-
-        doc_src = self.env[src[0]].browse(src[1])
-        doc_dst = self.env[dst[0]].browse(dst[1])
-
-        #param_project_id.ppr_famille
-
-        print(doc_src.param_project_id.ppr_famille, doc_dst.param_project_id.ppr_famille)
-
-        msg="%s : %s"%(doc_src,doc_dst)
+        doc_src = self.env[src[0]].browse(int(src[1]))
+        doc_dst = self.env[dst[0]].browse(int(dst[1]))
+        doc_dst.dependance_id = doc_src.id
+        msg="link_add : %s : %s"%(doc_src,doc_dst)
         return msg
 
-
-
-
+  
+    def link_delete(self,source=False,target=False):
+        msg="link_delete : %s : %s"%(source,target)
+        src=source[0].split("-")
+        dst=target[0].split("-")
+        doc_src = self.env[src[0]].browse(int(src[1]))
+        doc_dst = self.env[dst[0]].browse(int(dst[1]))
+        doc_dst.dependance_id = False
+        return msg
 
 
 class IsDocMouleArray(models.Model):

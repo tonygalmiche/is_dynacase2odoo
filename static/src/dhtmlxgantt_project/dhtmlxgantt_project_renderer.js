@@ -121,7 +121,17 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                     min_column_width:25,
                     scales:[
                         {unit: "week", format: "%F %Y S%W"},
-                        {unit: "day", format: "%d"},
+                        {
+                            unit: "day", 
+                            format: "%d", 
+                            css: function (date) {
+                                var cl="jour_ouvert";
+                                if(date.getDay()==0||date.getDay()==6){
+                                    cl = "jour_ferme";
+                                }
+                                return cl;
+                            }     
+                        },
                     ]
                 },
                 {
@@ -150,6 +160,16 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             }
         };
         this.gantt.ext.zoom.init(zoomConfig);
+
+
+        // gantt.config.scales = [
+        //     { unit: "month", step: 1, date: "%F" },
+        //     { unit: "week", step: 1, date: "%W" },
+        //     {
+        //         unit: "day", step: 1, date: "%d", css: function (date) {             if (!gantt.isWorkTime({ date: date })) {                 return "weekend";             }         }     },
+        // ];
+
+
 
 
         // this.gantt.message({
@@ -184,6 +204,15 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             return "";
         };
 
+
+
+        this.gantt.templates.timeline_cell_class = function(task,date){
+            if(date.getDay()==0||date.getDay()==6){
+                return "jour_ferme";
+            }
+        };
+
+     
 
 
         /* Text de l'infobulle de la task */
@@ -243,17 +272,18 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             return true;
         });
         this.gantt.attachEvent("onAfterTaskUpdate", function(id,item){
-            console.log('onAfterTaskUpdate',this);
             this.owl.WriteTask(id, item);
         });
  
         this.gantt.attachEvent("onAfterLinkAdd", function(id,item){
-            //console.log('onAfterLinkAdd : self=',self);
             console.log('onAfterLinkAdd : id,item=',id,item);
-            this.owl.LinkAddTask(id, item);
+            this.owl.LinkAction('link_add', item);
         });
 
-
+         this.gantt.attachEvent("onAfterLinkDelete", function(id,item){
+            console.log('onAfterLinkDelete : id,item=',id,item);
+            this.owl.LinkAction('link_delete', item);
+        });
 
         this.GetDocuments();
     }
@@ -266,8 +296,6 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         } else {
             this.ActivePatched=true;
         }
-        //this.renderDhtmlxGantt();
-        //this.GetDocuments();
     }
 
 
@@ -334,20 +362,22 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
     }
 
 
-
-
-
-
-    PrecedentClick(ev) {
-        console.log('PrecedentClick')
-    }
-    SuivantClick(ev) {
-        console.log('SuivantClick')
-    }
-    OKButtonClick(ev) {
-        //console.log('OKButtonClick')
+    RafraichirClick(ev) {
         this.GetDocuments();
     }
+    AnneeClick(ev) {
+        console.log('AnneeClick')
+        this.gantt.ext.zoom.setLevel("year");
+    }
+    MoisClick(ev) {
+        console.log('MoisClick')
+        this.gantt.ext.zoom.setLevel("month");
+    }
+    SemaineClick(ev) {
+        console.log('SemaineClick')
+        this.gantt.ext.zoom.setLevel("week");
+    }
+ 
 
     async GetDocuments(s){
         var self=this;
@@ -375,21 +405,15 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
     }
 
 
-    async LinkAddTask(id,item){
+    async LinkAction(method,item){
         rpc.query({
             model: 'is.doc.moule',
-            method: 'link_add_task',
+            method: method,
             args: [[false], item.source, item.target]
         }).then(function (result) {
-            console.log('LinkAddTask : result=',result);
+            console.log('LinkAction : result=',result);
         });
     }
-
-
-
-
-
-
 
 }
 DhtmlxganttProjectRenderer.template = 'is_dynacase2odoo.DhtmlxganttProjectTemplate';
