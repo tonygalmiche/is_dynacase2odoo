@@ -4,16 +4,31 @@
         <div class="buttons">
             <table>
                 <tr>
-                    <td><button class="btn btn-info" t-on-click="RafraichirClick"  title="Rafraichir"><i class="fa fa-refresh"/>      </button></td>        
-                    <td><button class="btn btn-info" t-on-click="AnneeClick"   title="Rafraichir">Année</button></td>
-                    <td><button class="btn btn-info" t-on-click="MoisClick"    title="Rafraichir">Mois</button></td>
-                    <td><button class="btn btn-info" t-on-click="SemaineClick" title="Rafraichir">Semaine</button></td>
+                    <td><button class="btn btn-info" t-on-click="RafraichirClick"  title="Rafraichir">        <i class="fa fa-refresh"/></button></td>        
+                    <td><button class="btn btn-info" t-on-click="FullscreenClick"  title="Plein écran">       <i class="fa fa-arrows-alt"/></button></td>        
+                    <td><button class="btn btn-info" t-on-click="OpenTreeClick"    title="Ouvrir les niveaux"><i class="fa fa-expand"/></button></td>        
+                    <td><button class="btn btn-info" t-on-click="CloseTreeClick"   title="Fermer les niveaux"><i class="fa fa-compress"/></button></td>        
+                    <td><button class="btn btn-info" t-on-click="UndoClick"        title="Annuler">           <i class="fa fa-undo"/></button></td>        
+                    <td><button class="btn btn-info" t-on-click="RedoClick"        title="Refaire">           <i class="fa fa-repeat"/></button></td>        
+                    <td><button class="btn btn-info" t-on-click="AnneeClick"       title="Année">Année</button></td>
+                    <td><button class="btn btn-info" t-on-click="MoisClick"        title="Mois">Mois</button></td>
+                    <td><button class="btn btn-info" t-on-click="SemaineClick"     title="Semaine">Semaine</button></td>
+
+                    <td><button class="btn btn-info" t-on-click="toggle_chart">Toggle chart</button></td>
+                    <td><button class="btn btn-info" t-on-click="recreate_marker">Re-create marker</button></td>
+                    <td><button class="btn btn-info" t-on-click="gantt_init">Reinitialize Gantt</button></td>
+                    <td></td>
                 </tr>
             </table>
         </div>
-
         <div id="gantt_here" style='width:100%; height:60vh;'></div>
-
+        <i>INFO: 
+            Clique sur une tâche dans le tableau pour déplacer les dates vers celle-ci
+            Double-clique sur une tâche pour afficher le détail, 
+            Double-clique sur un lien pour le supprimer,
+            CTRL+ pour sélectionner plusieurs tâches en même temps pour les déplacer,
+            Cliquer-glisser dans le gantt pour se déplacer dans tous les sens
+        </i>
 
 
 
