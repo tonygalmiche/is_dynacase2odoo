@@ -13,11 +13,6 @@
                     <td><button class="btn btn-info" t-on-click="AnneeClick"       title="Année">Année</button></td>
                     <td><button class="btn btn-info" t-on-click="MoisClick"        title="Mois">Mois</button></td>
                     <td><button class="btn btn-info" t-on-click="SemaineClick"     title="Semaine">Semaine</button></td>
-
-                    <td><button class="btn btn-info" t-on-click="toggle_chart">Toggle chart</button></td>
-                    <td><button class="btn btn-info" t-on-click="recreate_marker">Re-create marker</button></td>
-                    <td><button class="btn btn-info" t-on-click="gantt_init">Reinitialize Gantt</button></td>
-                    <td></td>
                 </tr>
             </table>
         </div>
@@ -29,56 +24,5 @@
             CTRL+ pour sélectionner plusieurs tâches en même temps pour les déplacer,
             Cliquer-glisser dans le gantt pour se déplacer dans tous les sens
         </i>
-
-
-
-<!--         
-        <div class="buttons">
-            <table>
-                <tr>
-                    <td><button class="btn btn-primary" t-on-click="PrecedentClick" title="Semaine précédente">&lt;</button></td>
-                    <td><button class="btn btn-primary" t-on-click="OKButtonClick">Aujourd'hui</button></td>
-                    <td><button class="btn btn-primary" t-on-click="SuivantClick" title="Semaine suivante">&gt;</button></td>
-                    <td>Nb semaines :</td>
-                    <td>
-                        <input 
-                            name="nb_semaines" 
-                            t-att-value="state.nb_semaines" 
-                            t-on-change="onChangeNbSemaines" 
-                            type="text" 
-                            class="form-control"
-                            style="width:40px" 
-                        />
-                     </td>
-                     <td>Décalage :</td>
-                     <td>
-                         <input 
-                             name="decale_planning" 
-                             t-att-value="state.decale_planning" 
-                             t-on-change="onChangeNbSemaines" 
-                             type="text" 
-                             class="form-control"
-                             style="width:40px" 
-                         />
-                    </td>
-                    <td>
-                        <img 
-                            src="/is_clair_sarl/static/src/img/pdf.svg" 
-                            style="max-height:2em;margin-left:0.5em;margin-right:0.5em"
-                            title="Télécharger le planning PDF"
-                            class="link"
-                            t-on-click="PDFClick"
-                        />
-                    </td>
-                    <td style="width:100px"><t t-esc="state.chantierid"/></td>
-                    <td style="width:100px"><t t-esc="state.jour"/></td>
-                    <td style="width:100px"><t t-esc="state.color"/></td>
-                    <td style="width:100px"><t t-esc="state.action"/></td>
-                    <td style="width:100px"><t t-esc="state.debut"/></td>
-                </tr>
-            </table> 
-        </div>
-       
- -->
     </div>
 </templates>

@@ -24,25 +24,20 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
 
 
     _unmount(){
-        console.log('_unmount);')
-        this.gantt.clearAll(); 
-        this.gantt.detachAllEvents();
-
-
-        console.log(this.state.markers)
-        for (var k in this.state.markers) {
-            var marker = this.state.markers[k];
-            console.log(marker.id)
-            this.gantt.deleteMarker(marker.id);
+        while (this.gantt.events.length) {
+            this.gantt.detachEvent(this.gantt.events.pop());
         }
-
-
     }
 
 
     _mounted() {
-        console.log('_mounted');
         this.gantt = gantt;
+
+        //Stocker la liste des events pour pouvoir les désactiver avec le _unmount
+        if (typeof this.gantt.events === 'undefined') {
+            this.gantt.events=[];
+        }
+
         // Je n'ai pas trouvé d'autre solution que d'intégrer l'objet owl dans l'objet gantt pour pouvoir 
         // l'utiliser dans les évènements du Gantt
         gantt.owl = this; 
@@ -58,19 +53,6 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             {name: "time", type: "duration", map_to: "auto"}
         ];
     
-        // this.gantt.config.scale_height = 50;
-    
-        // this.gantt.config.scales = [
-        //     {unit: "month", format: "%F, %Y"},
-        //     {unit: "day", step: 1, format: "%D %j"}
-        //     //{unit: "day", step: 1, format: "%j, %D"}
-        // ];
-
-        // this.gantt.attachEvent("onLightboxSave", function (id, task, is_new) {
-        //     task.unscheduled = !task.start_date;
-        //     return true;
-        // });
-
         this.gantt.plugins({
             keyboard_navigation: true,
             undo: true,
@@ -81,13 +63,10 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             multiselect: true,
         });
 
-
-        this.gantt.attachEvent("onGanttReady", function(){
+        this.gantt.events.push(this.gantt.attachEvent("onGanttReady", function(){
             var tooltips = gantt.ext.tooltips;
             tooltips.tooltip.setViewport(gantt.$task_data);
-        });
-
-
+        }));
 
         this.gantt.config.grid_width = 620;
         this.gantt.config.add_column = false;
@@ -273,13 +252,10 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
     
         this.gantt.init("gantt_here");
 
-        this.gantt.attachEvent("onTaskDblClick", function(id,e){
+        this.gantt.events.push(this.gantt.attachEvent("onTaskDblClick", function(id,e){
             if (e.target.className=="gantt_task_content"){
                 const task = gantt.getTaskBy("id", [id])[0]; // Recherche de la task avec son id
                 if (task.model !== undefined){
-                    //console.log(gantt.getTaskCount());      // Nombre de tasks
-                    //console.log(gantt.getTaskByTime());     // Retourne toutes les tasks
-                    console.log(id,task.res_id,task.model);
                     gantt.owl.env.bus.trigger('do-action', {
                         action: {
                             type: 'ir.actions.act_window',
@@ -287,33 +263,27 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                             res_id: parseInt(task.res_id),
                             view_mode: 'form,list',
                             views: [[false, 'form'],[false, 'list']],
-                            //target: 'current',
                             target: 'new',
                         },
                     });
                 }
             }
             return true;
-        });
+        }));
 
         //Désactiver l'affichage de la boite de dialogue en double cliquant sur une task
-        this.gantt.attachEvent("onBeforeLightbox", function(id) {
+        this.gantt.events.push(this.gantt.attachEvent("onBeforeLightbox", function(id) {
             return false;
-        });
-
-        this.gantt.attachEvent("onAfterTaskUpdate", function(id,item){
+        }));
+        this.gantt.events.push(this.gantt.attachEvent("onAfterTaskUpdate", function(id,item){
             this.owl.WriteTask(id, item);
-        });
- 
-        this.gantt.attachEvent("onAfterLinkAdd", function(id,item){
-            console.log('onAfterLinkAdd : id,item=',id,item);
+        }));
+        this.gantt.events.push(this.gantt.attachEvent("onAfterLinkAdd", function(id,item){
             this.owl.LinkAction('link_add', item);
-        });
-
-         this.gantt.attachEvent("onAfterLinkDelete", function(id,item){
-            console.log('onAfterLinkDelete : id,item=',id,item);
+        }));
+        this.gantt.events.push(this.gantt.attachEvent("onAfterLinkDelete", function(id,item){
             this.owl.LinkAction('link_delete', item);
-        });
+        }));
 
         this.GetDocuments();
     }
@@ -339,24 +309,18 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
     renderDhtmlxGantt() {
         var data=[];
         var links=[];
-        var markers=[];
         var item={};
         var vals={};
-        //var marker_id=0;
 
         for (var x in this.state.items) {
             item = this.state.items[x];
-            //marker_id = item.id
             //Doc : https://docs.dhtmlx.com/gantt/desktop__task_properties.html
             vals={
                 id:item.id,
                 model:item.model,
                 res_id:item.res_id,
                 text:item.text,
-                //start_date:item.date_assign,
-                //start_date:item.start_date,
                 end_date:item.end_date,
-                //duration:  Math.round(this.rnd()*100)+1,
                 duration   : item.duration,
                 progress   : this.rnd(),
                 assigned   : item.assigned,
@@ -368,62 +332,32 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             data.push(vals);
         }
         links   = this.state.links;
-        markers = this.state.markers;
-        console.log(markers);
-
         this.gantt.clearAll(); 
-
-
-
-
         this.gantt.parse({
             data : data,
             links: links,
         });
-        // this.gantt.message({
-        //     text: "Ceci est un autre message" ,
-        //     expire: 2000
-        // });
 
-
-        //Positionner un marker sur une task pour pouvoir ensuite se déplacer dessus avec le bouton OKclickMarker
-        // if (marker_id>0){
-        //     var current_time = this.gantt.getTask(marker_id).start_date;
-        //     var text =  this.gantt.getTask(marker_id).text
-        //     this.todayMarker = this.gantt.addMarker({ 
-        //         start_date: current_time, 
-        //         css: "today", 
-        //         text: "Marqueur pour "+text,
-        //     });
-        // }
-
-
-
-
+        
+        //markers *************************************************************
         this.gantt.todayMarker = this.gantt.addMarker({
             start_date:  new Date(),
             css: "today",
             text: 'Now',
         });
-        
-        //var marker = document.getElementsByClassName("gantt_marker")[0]
-
-
-        //TODO : L'affichage des marqueurs ne fonctionne que la premiere fois. Après il faut rafraichir le navigateur
         for (var k in this.state.markers) {
             var marker = this.state.markers[k];
             var start_date = this.gantt.date.parseDate(marker.start_date,"%Y-%m-%d %H:%i:%s");
-            console.log(k, marker.id, marker.start_date, marker.text,start_date);
-            var res=this.gantt.addMarker({ 
+            this.gantt.addMarker({ 
                 id        : marker.id, 
                 start_date: start_date, 
                 css       : marker.css, 
                 text      : marker.text, 
             });
-            console.log('res=',res);
         }
         this.gantt.renderMarkers();
         this.gantt.config.show_markers = true;
+        //********************************************************************* */
     }
 
 
@@ -456,62 +390,15 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         this.gantt.redo();
     }
     AnneeClick(ev) {
-        console.log('AnneeClick')
         this.gantt.ext.zoom.setLevel("year");
     }
     MoisClick(ev) {
-        console.log('MoisClick')
         this.gantt.ext.zoom.setLevel("month");
     }
     SemaineClick(ev) {
-        console.log('SemaineClick')
         this.gantt.ext.zoom.setLevel("week");
     }
  
-
-
-    
-    toggle_chart(ev){
-        this.gantt.config.show_chart = !this.gantt.config.show_chart;
-        this.gantt.render();
-        //this.gantt.init("gantt_here");
-    }
-    
-    recreate_marker(ev){
-      //gantt.init("gantt_here");
-
-      //var current_time = this.gantt.getTask(1).start_date;
-      this.gantt.deleteMarker(this.gantt.todayMarker);
-      this.gantt.todayMarker = this.gantt.addMarker({
-        start_date: new Date(), 
-        css: "today",
-        text: 'Now 2',
-      });
-      console.log(this.gantt.todayMarker, "todayMarker");
-
-      this.gantt.render();
-      this.gantt.renderMarkers();
-      this.gantt.config.show_markers = true;
-
-
-      this.gantt.message("Re-created marker")
-    }
-
-    gantt_init(ev){
-        this.gantt.init("gantt_here");
-    }
-    
-
-
-
-
-
-
-
-
-
-
-
 
     async GetDocuments(s){
         var self=this;
@@ -525,10 +412,6 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             self.state.items   = result.items;
             self.state.links   = result.links;
             self.state.markers = result.markers;
-
-            console.log('markers=',self.state.markers);
-
-
             self.renderDhtmlxGantt();
         });
     }

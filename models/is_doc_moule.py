@@ -362,13 +362,10 @@ class IsDocMoule(models.Model):
             moule=line.idmoule
             if moule not in moules:
                 moules.append(moule)
-        print(moules)
-
         js=('j0','j1','j2','j3','j4','j5')
         for moule in moules:
             rpjs=self.env['is.revue.projet.jalon'].search([ ('rpj_mouleid', '=', moule.id)],limit=1,order="id desc")
             for rpj in rpjs:
-                print(rpj)
                 for j in js:
                     name = "rpj_date_%s"%j
                     date_j = getattr(rpj, name)
@@ -382,10 +379,6 @@ class IsDocMoule(models.Model):
                     }
                     markers.append(vals)
         #**********************************************************************
-        print(markers)
-
-
-
 
         return {"items":res, "links": links, "markers":markers}
 
@@ -403,7 +396,6 @@ class IsDocMoule(models.Model):
                     obj.date_fin_gantt   = date_fin_gantt
                     obj.date_debut_gantt = date_fin_gantt - timedelta(days=duration)
         msg="%s : %s : %s => %s : %s"%(self.id,end_date,duration,obj.date_debut_gantt,obj.date_fin_gantt )
-        print(msg)
         return msg
 
 
