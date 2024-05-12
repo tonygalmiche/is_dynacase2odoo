@@ -369,15 +369,16 @@ class IsDocMoule(models.Model):
                 for j in js:
                     name = "rpj_date_%s"%j
                     date_j = getattr(rpj, name)
-                    id = "%s-%s"%(moule.name,j)
-                    start_date = str(date_j)+' 00:00:00"'
-                    vals={
-                        "id"        : id,
-                        "start_date": start_date,
-                        "css"       : "today",
-                        "text"      : "%s : %s"%(moule.name,j),
-                    }
-                    markers.append(vals)
+                    if date_j:
+                        id = "%s-%s"%(moule.name,j)
+                        start_date = str(date_j)+' 00:00:00"'
+                        vals={
+                            "id"        : id,
+                            "start_date": start_date,
+                            "css"       : "today",
+                            "text"      : "%s : %s"%(moule.name,j),
+                        }
+                        markers.append(vals)
         #**********************************************************************
 
         return {"items":res, "links": links, "markers":markers}
