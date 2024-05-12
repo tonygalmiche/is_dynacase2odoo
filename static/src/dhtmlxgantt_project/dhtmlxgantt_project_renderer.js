@@ -37,6 +37,9 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         if (typeof this.gantt.events === 'undefined') {
             this.gantt.events=[];
         }
+        if (typeof this.gantt.markers === 'undefined') {
+            this.gantt.markers=[];
+        }
 
         // Je n'ai pas trouvé d'autre solution que d'intégrer l'objet owl dans l'objet gantt pour pouvoir 
         // l'utiliser dans les évènements du Gantt
@@ -354,7 +357,12 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                 css       : marker.css, 
                 text      : marker.text, 
             });
+            this.gantt.markers[marker.j] = marker.id;
         }
+
+
+        console.log('markers=',this.gantt.markers);
+
         this.gantt.renderMarkers();
         this.gantt.config.show_markers = true;
         //********************************************************************* */
@@ -398,7 +406,32 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
     SemaineClick(ev) {
         this.gantt.ext.zoom.setLevel("week");
     }
- 
+    GotoJ0Click(ev) {
+        this.GotoJClick(ev,'j0');
+    }
+    GotoJ1Click(ev) {
+        this.GotoJClick(ev,'j1');
+    }
+    GotoJ2Click(ev) {
+        this.GotoJClick(ev,'j2');
+    }
+    GotoJ3Click(ev) {
+        this.GotoJClick(ev,'j3');
+    }
+    GotoJ4Click(ev) {
+        this.GotoJClick(ev,'j4');
+    }
+    GotoJ5Click(ev) {
+        this.GotoJClick(ev,'j5');
+    }
+    GotoJClick(ev,j) {
+        if (typeof this.gantt.getMarker(this.gantt.markers[j]) !== 'undefined') {
+            var marker = this.gantt.getMarker(this.gantt.markers[j]);
+            var marker_date = marker.start_date;
+            this.gantt.showDate(marker_date)
+        }
+    }
+
 
     async GetDocuments(s){
         var self=this;

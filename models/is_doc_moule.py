@@ -377,9 +377,9 @@ class IsDocMoule(models.Model):
                             "start_date": start_date,
                             "css"       : "today",
                             "text"      : "%s : %s"%(moule.name,j),
+                            "j"         : j,
                         }
                         markers.append(vals)
-                        print(moule.name,start_date)
         #**********************************************************************
 
         return {"items":res, "links": links, "markers":markers}
