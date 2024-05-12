@@ -28,8 +28,8 @@
             Double-clique sur une tâche pour afficher le détail, 
             Double-clique sur un lien pour le supprimer,
             CTRL+ pour sélectionner plusieurs tâches en même temps pour les déplacer,
-            Cliquer-glisser dans le gantt pour se déplacer dans tous les sens</br>
-            CTRL+ Molette = Zoom + ou Zomm - sur la zone pointée
+            Cliquer-glisser dans le gantt pour se déplacer dans tous les sens<br />
+            CTRL+ Molette = Zoom + ou Zoom - sur la zone pointée
         </i>
     </div>
 </templates>
