@@ -32,6 +32,8 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
 
     _mounted() {
         this.gantt = gantt;
+        this.gantt.lier = false;
+        this.gantt.active_task_id = false;
 
         //Stocker la liste des events pour pouvoir les désactiver avec le _unmount
         if (typeof this.gantt.events === 'undefined') {
@@ -226,23 +228,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
 
         //Met une couleur sur les task en fonction de la priority ou de la couleur de la famille
         this.gantt.templates.task_class = function (start, end, task) {
-            //var color_class = 'is_param_projet_10100';
-            var color_class = task.color_class;
-            return color_class;
-
-            // var cl="";
-            // switch (task.priority) {
-            //     case 0:
-            //         cl = "high";
-            //         break;
-            //     case 1:
-            //         cl = "medium";
-            //         break;
-            //     case 2:
-            //         cl= "low";
-            //         break;
-            // }
-            // return cl;
+            return task.color_class;
         };
 
         /*
@@ -278,7 +264,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         this.gantt.events.push(this.gantt.attachEvent("onBeforeLightbox", function(id) {
             return false;
         }));
-        this.gantt.events.push(this.gantt.attachEvent("onAfterTaskUpdate", function(id,item){
+        this.gantt.events.push(this.gantt.attachEvent("onAfterTaskUpdate", function(id,item,){
             this.owl.WriteTask(id, item);
         }));
         this.gantt.events.push(this.gantt.attachEvent("onAfterLinkAdd", function(id,item){
@@ -287,6 +273,13 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         this.gantt.events.push(this.gantt.attachEvent("onAfterLinkDelete", function(id,item){
             this.owl.LinkAction('link_delete', item);
         }));
+
+        this.gantt.events.push(this.gantt.attachEvent("onTaskRowClick", function(id,row){
+            console.log('onTaskRowClick',id)
+            gantt.active_task_id = id;
+        }));
+
+
 
         this.GetDocuments();
     }
@@ -359,13 +352,19 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             });
             this.gantt.markers[marker.j] = marker.id;
         }
-
-
-        console.log('markers=',this.gantt.markers);
-
         this.gantt.renderMarkers();
         this.gantt.config.show_markers = true;
         //********************************************************************* */
+
+        //** Positionner le gantt au même endroit après le rafrachissement ****
+        var active_task_id = this.gantt.active_task_id;
+        if (active_task_id!==false){
+            var task = this.gantt.getTask(active_task_id)
+            var pos = this.gantt.posFromDate(task.start_date);
+            this.gantt.scrollTo(pos, null);
+            this.gantt.selectTask(active_task_id);
+        }
+        //*********************************************************************
     }
 
 
@@ -431,8 +430,13 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             this.gantt.showDate(marker_date)
         }
     }
+    LierClick(ev){
+        const lier=$(ev.target.checked);
+        this.gantt.lier=false;
+        if (typeof lier[0] !== 'undefined') this.gantt.lier=true;
+    }
 
-
+    
     async GetDocuments(s){
         var self=this;
         rpc.query({
@@ -450,12 +454,16 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
     }
 
     async WriteTask(id,item){
+        self.this = this;
         rpc.query({
             model: 'is.doc.moule',
             method: 'write_task',
-            args: [[parseInt(item.res_id)], item.end_date, item.duration]
+            args: [[parseInt(item.res_id)], item.end_date, item.duration,this.gantt.lier]
         }).then(function (result) {
-            console.log('WriteTask : result=',result);
+            if (self.this.gantt.lier) {
+                //console.log('WriteTask lier');
+                self.this.GetDocuments();
+            }
         });
     }
 

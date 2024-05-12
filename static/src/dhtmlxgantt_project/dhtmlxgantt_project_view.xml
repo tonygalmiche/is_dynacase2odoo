@@ -19,6 +19,7 @@
                     <td><button class="btn btn-info" t-on-click="GotoJ3Click" >J3</button></td>
                     <td><button class="btn btn-info" t-on-click="GotoJ4Click" >J4</button></td>
                     <td><button class="btn btn-info" t-on-click="GotoJ5Click" >J5</button></td>
+                    <td>Lier : <input class="form-check-input" type="checkbox" value="lier" id="flexCheckChecked" t-on-change="LierClick"/></td>
                 </tr>
             </table>
         </div>

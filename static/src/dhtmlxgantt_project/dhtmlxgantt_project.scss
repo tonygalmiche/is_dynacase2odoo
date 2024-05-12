@@ -68,14 +68,26 @@
 }
 
 
-.jour_ouvert{ 
+.dhtmlxgantt_project .jour_ouvert{ 
     background: #d4fca0 !important;
 }
 
 
-.jour_ferme{ 
+.dhtmlxgantt_project .jour_ferme{ 
     background: #fdeab6 !important;
 }
+
+
+
+.dhtmlxgantt_project .etat_a_faire{
+    border-left: 10pt solid red;
+}
+
+
+.dhtmlxgantt_project .etat_fait{
+    border-left: 10pt solid green;
+}
+
 
 
 

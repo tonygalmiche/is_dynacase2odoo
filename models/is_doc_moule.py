@@ -91,7 +91,7 @@ class IsDocMoule(models.Model):
     duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
     date_debut_gantt    = fields.Date(string="Date début Gantt", default=fields.Date.context_today)
     date_fin_gantt      = fields.Date(string="Date fin Gantt")
-    dependance_id       = fields.Many2one("is.doc.moule", string="Dépendance")
+    dependance_id       = fields.Many2one("is.doc.moule", string="Dépendance",index=True)
 
 
     @api.onchange('date_debut_gantt')
@@ -313,6 +313,12 @@ class IsDocMoule(models.Model):
                 infobulle_list=[]
                 infobulle_list.append("<b>Document</b>           : %s"%name)
                 parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000 + line.idresp.id + 30000000
+
+                etat_class='etat_a_faire'
+                if line.etat=='F':
+                    etat_class='etat_fait'
+                color_class = '%s is_param_projet_%s'%(etat_class,line.param_project_id.id)
+
                 end_date = str(line.date_fin_gantt or line.dateend)+' 00:00:00"'
                 vals={
                     #"id": line.id,
@@ -328,7 +334,7 @@ class IsDocMoule(models.Model):
                     #"progress": line.progress/100,
                     "priority": priority,
                     "infobulle": "<br>\n".join(infobulle_list),
-                    "color_class": 'is_param_projet_%s'%line.param_project_id.id,
+                    "color_class": color_class,
                 }
                 res.append(vals)
         #**********************************************************************
@@ -385,7 +391,7 @@ class IsDocMoule(models.Model):
         return {"items":res, "links": links, "markers":markers}
 
 
-    def write_task(self,end_date=False,duration=False):
+    def write_task(self,end_date=False,duration=False,lier=False):
         end_date = end_date[0:10]
         try:
             date_fin_gantt = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(days=1)
@@ -394,11 +400,24 @@ class IsDocMoule(models.Model):
         if date_fin_gantt:
             for obj in self:
                 if duration>0:
+                    delta = (date_fin_gantt.date() - obj.date_fin_gantt).days
                     obj.duree = duration
                     obj.date_fin_gantt   = date_fin_gantt
                     obj.date_debut_gantt = date_fin_gantt - timedelta(days=duration)
+                    if lier and delta!=0:
+                        obj.move_task_lier(delta)
         msg="%s : %s : %s => %s : %s"%(self.id,end_date,duration,obj.date_debut_gantt,obj.date_fin_gantt )
         return msg
+
+
+    def move_task_lier(self,delta):
+        for obj in self:
+            docs=self.env['is.doc.moule'].search([ ('dependance_id', '=', obj.id) ])
+            for doc in docs:
+                date_debut_gantt = doc.date_debut_gantt +  timedelta(days=delta)
+                doc.date_debut_gantt = date_debut_gantt
+                doc.onchange_date_debut()
+                doc.move_task_lier(delta)
 
 
     def link_add(self,source=False,target=False):
