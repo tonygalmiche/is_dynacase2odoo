@@ -318,7 +318,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                 text:item.text,
                 end_date:item.end_date,
                 duration   : item.duration,
-                progress   : this.rnd(),
+                progress   : 0, //this.rnd(),
                 assigned   : item.assigned,
                 priority   : item.priority,
                 champ_perso: "Champ perso à mettre dans l'infobulle",
