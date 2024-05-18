@@ -41,7 +41,7 @@
         />
         <menuitem 
             name="Dossier appels d'offres"  id="is_dossier_appel_offre_menu" sequence="20"
-            parent="is_gestion_commerciale_menu" action="is_plastigray16.is_dossier_appel_offre_action"
+            parent="is_gestion_commerciale_menu" action="is_dossier_appel_offre_action"
         />
         <menuitem
             name="Dossier modif/variante" id="is_dossier_modif_variante_menu" sequence="30" 
