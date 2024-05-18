@@ -207,7 +207,7 @@ class is_revue_de_contrat(models.Model):
     rc_df_engagement_faisabilite_autre = fields.Many2many("ir.attachment", "is_revue_engagement_autre_faisabilite_rel", "revu_id", "att_id", string="Pièce jointe ")
     rc_df_fiche_capacitaire            = fields.Many2many("ir.attachment", "is_revue_rc_df_fiche_capacitaire_rel", "revu_id", "att_id", string="Fiche capacitaire ")
     dfe_version_ids                    = fields.One2many("is.revue.de.contrat.dfe.version", "is_revue_id")
-    dynacase_id = fields.Integer(string="Id Dynacase")
+    dynacase_id = fields.Integer(string="Id Dynacase",index=True)
 
 
     def lien_vers_dynacase_action(self):

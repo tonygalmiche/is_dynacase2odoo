@@ -73,4 +73,4 @@ class is_dossier_appel_offre(models.Model):
     dao_motif        = fields.Selection(_DAO_MOTIF, "Motif")
     dao_avancement   = fields.Selection(_DAO_AVANCEMENT, "Avancement")
     state            = fields.Selection(_STATE, "Etat")
-    dynacase_id      = fields.Integer("id Dynacase")
+    dynacase_id      = fields.Integer("id Dynacase",index=True)

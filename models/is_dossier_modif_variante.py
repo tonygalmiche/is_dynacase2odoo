@@ -147,7 +147,7 @@ class is_dossier_modif_variante(models.Model):
     vers_perdu_vsb              = fields.Boolean(string="Perdu", compute='_compute_vsb', readonly=True, store=False)
     vers_gagne_vsb              = fields.Boolean(string="Gagne", compute='_compute_vsb', readonly=True, store=False)
     vers_annule_vsb             = fields.Boolean(string="Annule", compute='_compute_vsb', readonly=True, store=False)
-    dynacase_id                 = fields.Integer(string="Id Dynacase")
+    dynacase_id                 = fields.Integer(string="Id Dynacase",index=True)
 
 
 

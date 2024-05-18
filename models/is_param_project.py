@@ -86,7 +86,7 @@ class IsParamProject(models.Model):
     array_ids           = fields.One2many('is.param.project.array', 'param_project_id')
     ppr_project_colors  = fields.Serialized()
     ppr_color           = fields.Char("Color", sparse="ppr_project_colors")
-    dynacase_id         = fields.Integer(string="Id Dynacase")
+    dynacase_id         = fields.Integer(string="Id Dynacase",index=True)
     duree               = fields.Integer("Durée par défaut (J)"   , help="Utilisée dans le Gantt")
     duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
     dependance_id       = fields.Many2one("is.param.project", string="Dépendance")

@@ -86,7 +86,7 @@ class IsDocMoule(models.Model):
     datecreate       = fields.Date(string="Date de création", default=fields.Date.context_today)
     dateend          = fields.Date(string="Date de fin")
     array_ids        = fields.One2many("is.doc.moule.array", "is_doc_id", string="Pièce-jointe de réponse à la demande")
-    dynacase_id      = fields.Integer(string="Id Dynacase")
+    dynacase_id      = fields.Integer(string="Id Dynacase",index=True)
     duree               = fields.Integer(string="Durée (J)", default=1)
     duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
     date_debut_gantt    = fields.Date(string="Date début Gantt", default=fields.Date.context_today)
