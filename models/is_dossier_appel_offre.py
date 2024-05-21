@@ -3,8 +3,8 @@ from odoo import models,fields,api
 
 
 _DAO_RSPLAST=([
-    ('A', u'A=Acceptée'),
-    ('D', u'D=Déclinée'),
+    ('A', 'A=Acceptée'),
+    ('D', 'D=Déclinée'),
 ])
 
 
@@ -24,22 +24,22 @@ _DAO_MOTIF=([
 
 
 _DAO_AVANCEMENT=([
-    (u'Développement', u'Développement'),
-    (u'Série'        , u'Série'),
+    ('Développement', 'Développement'),
+    ('Série'        , 'Série'),
 ])
 
 
 _STATE=([
-    (u'plascreate'     , u'créé'),
-    (u'plasanalysed'   , u'analysé'),
-    (u'plastransbe'    , u'transmis BE'),
-    (u'plasvalidbe'    , u'validé BE'),
-    (u'plasvalidcom'   , u'validé commercial'),
-    (u'plasdiffusedcli', u'diffusé client'),
-    (u'plasrelancecli' , u'relance client'),
-    (u'plaswinned'     , u'gagné'),
-    (u'plasloosed'     , u'perdu'),
-    (u'plascancelled'  , u'annulé'),
+    ('plascreate'     , 'créé'),
+    ('plasanalysed'   , 'analysé'),
+    ('plastransbe'    , 'transmis BE'),
+    ('plasvalidbe'    , 'validé BE'),
+    ('plasvalidcom'   , 'validé commercial'),
+    ('plasdiffusedcli', 'diffusé client'),
+    ('plasrelancecli' , 'relance client'),
+    ('plaswinned'     , 'gagné'),
+    ('plasloosed'     , 'perdu'),
+    ('plascancelled'  , 'annulé'),
 ])
 
 
@@ -67,10 +67,17 @@ class is_dossier_appel_offre(models.Model):
     dao_dirbe        = fields.Char("Directeur technique")
     dao_daterepbe    = fields.Date("Date réponse BE")
     dao_daterepplast = fields.Date("Date réponse Plastigray")
-    dao_rsplast      = fields.Selection(_DAO_RSPLAST, "Rsp Plastigray")
     dao_daterepcli   = fields.Date("Date réponse client")
     dao_comment      = fields.Char("Commentaire")
+    dynacase_id      = fields.Integer("id Dynacase",index=True)
+
+    dao_rsplast      = fields.Selection(_DAO_RSPLAST, "Rsp Plastigray")
     dao_motif        = fields.Selection(_DAO_MOTIF, "Motif")
     dao_avancement   = fields.Selection(_DAO_AVANCEMENT, "Avancement")
     state            = fields.Selection(_STATE, "Etat")
-    dynacase_id      = fields.Integer("id Dynacase",index=True)
+
+    # dao_rsplast      = fields.Char("Rsp Plastigray")
+    # dao_motif        = fields.Char("Motif")
+    # dao_avancement   = fields.Char("Avancement")
+    # state            = fields.Char("Etat")
+

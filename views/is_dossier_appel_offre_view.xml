@@ -40,6 +40,15 @@
                                 <field name="dao_avancement"/>
                                 <field name="dynacase_id"/>
                             </group>
+
+
+                            <!-- # dao_rsplast      = fields.Char("Rsp Plastigray")
+                            # dao_motif        = fields.Char("Motif")
+                            # dao_avancement   = fields.Char("Avancement")
+                            # state            = fields.Char("Etat") -->
+                        
+
+
                         </group>
                     </sheet>
                 </form>

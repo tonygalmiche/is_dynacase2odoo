@@ -195,6 +195,8 @@
                     <field name="rr_rpjid" optional="show"/>
                     <field name="state" widget="badge" optional="show"/>
                     <field name="rr_validation_revue_risque" optional="show"/>
+                    <field name="id"          optional="hide"/>
+                    <field name="dynacase_id" optional="hide"/>
                 </tree>
             </field>
         </record>
