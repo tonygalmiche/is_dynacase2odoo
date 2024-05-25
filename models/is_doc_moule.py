@@ -353,8 +353,7 @@ class IsDocMoule(models.Model):
             rpjs=self.env['is.revue.projet.jalon'].search([ ('rpj_mouleid', '=', moule.id)],limit=1,order="id desc")
             for rpj in rpjs:
                 for j in js:
-                    name = "rpj_date_%s"%j
-                    date_j = getattr(rpj, name)
+                    date_j = getattr(rpj, "rpj_date_valide_%s"%j) or getattr(rpj, "rpj_date_%s"%j)
                     if date_j:
                         id = "%s-%s"%(moule.name,j)
                         start_date = str(date_j)+' 00:00:00"'
