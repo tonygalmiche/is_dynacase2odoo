@@ -23,13 +23,13 @@
                 </tr>
             </table>
         </div>
-        <div id="gantt_here" style='width:100%; height:60vh;'></div>
+        <div id="gantt_here" style='width:100%; height:75vh;'></div>
         <i>INFO: 
             Clique sur une tâche dans le tableau pour déplacer les dates vers celle-ci
             Double-clique sur une tâche pour afficher le détail, 
             Double-clique sur un lien pour le supprimer,
             CTRL+ pour sélectionner plusieurs tâches en même temps pour les déplacer,
-            Cliquer-glisser dans le gantt pour se déplacer dans tous les sens<br />
+            Cliquer-glisser dans le gantt pour se déplacer dans tous les sens - 
             CTRL+ Molette = Zoom + ou Zoom - sur la zone pointée
         </i>
     </div>

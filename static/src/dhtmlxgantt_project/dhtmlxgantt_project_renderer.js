@@ -49,6 +49,8 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
 
         this.gantt.i18n.setLocale("fr");
         this.gantt.config.xml_date = "%Y-%m-%d %H:%i";
+        //this.gantt.config.date_format = "%d/%m/%Y";
+        this.gantt.config.date_grid = "%d/%m/%Y";
         this.gantt.scales = [
             { unit: "year", step: 1, format: "%Y" }
         ];
@@ -73,8 +75,9 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             tooltips.tooltip.setViewport(gantt.$task_data);
         }));
 
-        this.gantt.config.grid_width = 620;
+        this.gantt.config.grid_width = 450;
         this.gantt.config.add_column = false;
+        this.gantt.config.drag_progress = false;
         this.gantt.config.scroll_size = 30;
         this.gantt.config.open_tree_initially = true; //Développer tous les niveaux par défaut
 
@@ -88,20 +91,30 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         //     //if (item.progress >= 1) return "green";
         // };
 
+        // gantt.config.columns = [
+        //     {name:"text",       label:"Task name",  width:"*", tree:true },
+        //     {name:"start_date", label:"Start time", align:"center" },
+        //     {name:"duration",   label:"Duration",   align:"center" },
+        //     {name:"add",        label:"",           width:44 }
+        // ];
+
+
         //** Configuration des colonnes des tâches
         this.gantt.config.columns = [
-            {name: "text", label: "Tâche", tree: true, width: 260},
-            {name: "start_date", label: "Début", tree: true, width: 160},
-            {
-                name: "progress", label: "%", width: 80, align: "center",
-                template: function (item) {
-                    // if (item.progress >= 0.5)
-                    //     return "Complete";
-                    // if (item.progress == 0)
-                    //     return "Not started";
-                    return Math.round(item.progress * 100) + "%";
-                }
-            },
+            {name: "text"      , label: "Tâche", tree: true , width: "*"},
+            {name: "start_date", label: "Début", tree: false, width: 80, align:"center" },
+            {name: "duration"  , label: "Durée", tree: false, width: 50, align:"center" },
+            // {name: "start_date", label: "Début", tree: true, width: 160},
+            // {
+            //     name: "progress", label: "%", width: 80, align: "center",
+            //     template: function (item) {
+            //         // if (item.progress >= 0.5)
+            //         //     return "Complete";
+            //         // if (item.progress == 0)
+            //         //     return "Not started";
+            //         return Math.round(item.progress * 100) + "%";
+            //     }
+            // },
             // {
             //     name: "assigned", label: "Assigné à", align: "center", width: 160,
             //     // template: function (item) {
@@ -109,7 +122,6 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             //     //     return item.users.join(", ");
             //     // }
             // },
-            {name: "duration", label: "Durée", tree: true, width: 120},
         ];
 
 
@@ -213,17 +225,24 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             }
         };
 
-     
+        this.gantt.templates.tooltip_date_format=function (date){
+            var formatFunc = gantt.date.date_to_str("%d/%m/%Y");
+            return formatFunc(date);
+        };
 
 
         /* Text de l'infobulle de la task */
         this.gantt.templates.tooltip_text = function(start,end,task){
-            return "<b>Task:</b> "+task.text+"<br/><b>Start date:</b> " + 
-            gantt.templates.tooltip_date_format(start)+ 
-            "<br/><b>End date:</b> "+gantt.templates.tooltip_date_format(end)+
-            "<br/><b>Progress:</b> "+task.progress+
-            "<br/>Durée: "+task.duration+
-            "<br/><div style='color:red'>Autre: "+task.champ_perso+"</div>";
+            var html=""+
+                "<table>"+
+                    "<tr style='background:#e5e8e8'><th style='text-align:right;font-weight: bold;'>Tâche      : </th><td>"+task.text+"</td></tr>"+
+                    "<tr>                           <th style='text-align:right;font-weight: bold;'>Section    : </th><td>"+task.section+ "</td></tr>"+
+                    "<tr>                           <th style='text-align:right;font-weight: bold;'>Responsable: </th><td>"+task.responsable+ "</td></tr>"+
+                    "<tr>                           <th style='text-align:right;font-weight: bold;'>Date début : </th><td>"+gantt.templates.tooltip_date_format(start)+ "</td></tr>"+
+                    "<tr>                           <th style='text-align:right;font-weight: bold;'>Date fin   : </th><td>"+gantt.templates.tooltip_date_format(end)+"</td></tr>"+
+                    "<tr>                           <th style='text-align:right;font-weight: bold;'>Durée      : </th><td>"+task.duration+"</td></tr>"+
+                "</table>";
+            return html
         };
 
         //Met une couleur sur les task en fonction de la priority ou de la couleur de la famille
@@ -324,6 +343,8 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                 champ_perso: "Champ perso à mettre dans l'infobulle",
                 parent     : item.parent,
                 color_class: item.color_class,
+                section    : item.section,
+                responsable: item.responsable,
             }
             data.push(vals);
         }

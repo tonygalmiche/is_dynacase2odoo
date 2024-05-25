@@ -319,6 +319,8 @@ class IsDocMoule(models.Model):
                     "priority": priority,
                     "infobulle": "<br>\n".join(infobulle_list),
                     "color_class": color_class,
+                    "section": line.section_id.name,
+                    "responsable": line.idresp.name,
                 }
                 res.append(vals)
         #**********************************************************************
