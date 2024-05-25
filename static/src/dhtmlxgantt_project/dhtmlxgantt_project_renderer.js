@@ -458,12 +458,9 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         rpc.query({
             model: 'is.doc.moule',
             method: 'write_task',
-            args: [[parseInt(item.res_id)], item.end_date, item.duration,this.gantt.lier]
+            args: [[parseInt(item.res_id)], item.start_date, item.duration,this.gantt.lier]
         }).then(function (result) {
-            if (self.this.gantt.lier) {
-                //console.log('WriteTask lier');
-                self.this.GetDocuments();
-            }
+            self.this.GetDocuments();
         });
     }
 

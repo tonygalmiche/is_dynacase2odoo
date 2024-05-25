@@ -42,10 +42,11 @@
                                 <field name="dateend"/>
                             </group>
                             <group string="Gantt">
-                                <field name="duree"/>
                                 <field name="duree_attente_avant"/>
                                 <field name="date_debut_gantt"/>
-                                <field name="date_fin_gantt"/>
+                                <field name="duree"/>
+                                <field name="duree_gantt"    force_save="1"/>
+                                <field name="date_fin_gantt" force_save="1"/>
                                 <field name="dependance_id" domain="[('idmoule','=',idmoule)]"/>
                             </group>
                         </group>

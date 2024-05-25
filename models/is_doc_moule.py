@@ -87,32 +87,32 @@ class IsDocMoule(models.Model):
     dateend          = fields.Date(string="Date de fin")
     array_ids        = fields.One2many("is.doc.moule.array", "is_doc_id", string="Pièce-jointe de réponse à la demande")
     dynacase_id      = fields.Integer(string="Id Dynacase",index=True)
-    duree               = fields.Integer(string="Durée (J)", default=1)
+    duree               = fields.Integer(string="Durée (J)"      , help="Durée en jours ouvrés"         , default=1)
+    duree_gantt         = fields.Integer(string="Durée Gantt (J)", help="Durée calendaire pour le Gantt", default=1, readonly=True)
     duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
     date_debut_gantt    = fields.Date(string="Date début Gantt", default=fields.Date.context_today)
-    date_fin_gantt      = fields.Date(string="Date fin Gantt")
+    date_fin_gantt      = fields.Date(string="Date fin Gantt", readonly=True)
     dependance_id       = fields.Many2one("is.doc.moule", string="Dépendance",index=True)
     section_id          = fields.Many2one("is.section.gantt", string="Section Gantt",index=True)
 
 
-
-    @api.onchange('date_debut_gantt')
-    def onchange_date_debut(self):
+    @api.onchange('date_debut_gantt','duree')
+    def set_fin_gantt(self):
         for obj in self:
             if obj.date_debut_gantt and obj.duree:
-                obj.date_fin_gantt = obj.date_debut_gantt + timedelta(days=obj.duree)
-
-    @api.onchange('duree')
-    def onchange_duree(self):
-        for obj in self:
-            if obj.date_debut_gantt and obj.duree>=0:
-                obj.date_fin_gantt = obj.date_debut_gantt + timedelta(days=obj.duree)
-
-    @api.onchange('date_fin_gantt')
-    def onchange_date_fin(self):
-        for obj in self:
-            if obj.date_fin_gantt and obj.duree:
-                obj.date_debut_gantt = obj.date_fin_gantt - timedelta(days=obj.duree)
+                duree_gantt = obj.duree
+                new_date = date_debut = date_fin = obj.date_debut_gantt
+                while True:
+                    if not(new_date.weekday() in [5,6]):
+                        duree_gantt=duree_gantt-1
+                    if duree_gantt<=0:
+                        date_fin=new_date  + timedelta(days=1)
+                        break
+                    new_date = new_date + timedelta(days=1)
+                duree_gantt = (date_fin - date_debut).days
+                date_fin_gantt = obj.date_debut_gantt + timedelta(days=duree_gantt)
+                obj.duree_gantt = duree_gantt
+                obj.date_fin_gantt = date_fin_gantt
 
 
     def lien_vers_dynacase_action(self):
@@ -132,7 +132,6 @@ class IsDocMoule(models.Model):
                 'view_mode': 'form',
                 'res_model': 'is.doc.moule',
                 'res_id': obj.id,
-                #'view_id': view_id.id,
                 'type': 'ir.actions.act_window',
             }
             return res
@@ -229,17 +228,7 @@ class IsDocMoule(models.Model):
         dossiers=[]
         for line in lines:
             doc=False
-            #model=False
             doc=(line.idmoule or line.dossierf_id or line.dossier_modif_variante_id)
-            # if line.idmoule:
-            #     doc=line.idmoule
-            #     #model='is.mold'
-            # if line.dossierf_id:
-            #     doc=line.dossierf_id
-            #     #model='is.mold'
-            # if line.dossier_modif_variante_id:
-            #     doc=line.dossier_modif_variante_id
-            #     #model='is.dossier.modif.variante'
             if doc not in dossiers:
                 dossiers.append(doc)
         for dossier in dossiers:
@@ -267,34 +256,6 @@ class IsDocMoule(models.Model):
             }
             res.append(vals)
         # #**********************************************************************
-
-
-        # # #** Ajout des responsables ********************************************
-        # my_dict={}
-        # for line in lines:
-        #     dossier = (line.idmoule or line.dossierf_id or line.dossier_modif_variante_id)
-        #     parent="%s-%s"%(dossier._name,dossier.id)
-        #     responsable_id = line.idresp.id + 30000000
-        #     id=dossier.id+20000000 + responsable_id
-        #     key = "%s|%s|%s"%(id,parent,line.idresp.name)
-        #     my_dict[id]=key
-        # for id in my_dict:
-        #     tab=my_dict[id].split("|")
-        #     parent=tab[1] 
-        #     text="%s"%(tab[2])
-        #     vals={
-        #         "id": id,
-        #         "text": text,
-        #         "start_date": False,
-        #         "duration": False,
-        #         "parent": parent,
-        #         "progress": 0,
-        #         "open": True,
-        #         "priority": 2,
-        #     }
-        #     res.append(vals)
-        # # #**********************************************************************
-
 
 
         # #** Ajout des sections **********************************************
@@ -336,7 +297,7 @@ class IsDocMoule(models.Model):
                     name=famille
                 if line.param_project_id.ppr_revue_lancement:
                     name="%s [%s]"%(name,line.param_project_id.ppr_revue_lancement)
-                duration = line.duree or 1
+                duration = line.duree_gantt or 1
                 infobulle_list=[]
                 infobulle_list.append("<b>Document</b>           : %s"%name)
                 parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000 + line.section_id.id + 30000000
@@ -348,7 +309,6 @@ class IsDocMoule(models.Model):
 
                 end_date = str(line.date_fin_gantt or line.dateend)+' 00:00:00"'
                 vals={
-                    #"id": line.id,
                     "id": "%s-%s"%(line._name,line.id),
                     "model": line._name,
                     "res_id": line.id,
@@ -356,9 +316,6 @@ class IsDocMoule(models.Model):
                     "end_date": end_date,
                     "duration": duration,
                     "parent": parent,
-                    #"parent": (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000,
-                    #"assigned": line.user_id.name,
-                    #"progress": line.progress/100,
                     "priority": priority,
                     "infobulle": "<br>\n".join(infobulle_list),
                     "color_class": color_class,
@@ -372,12 +329,8 @@ class IsDocMoule(models.Model):
         for line in lines:
             if line.dependance_id:
                 id="%s-%s"%(line.id,line.dependance_id.id)
-
-
                 source = "%s-%s"%(line._name,line.dependance_id.id),
                 target = "%s-%s"%(line._name,line.id),
-
-
                 vals={
                     "id":id,
                     "source": source,
@@ -418,22 +371,28 @@ class IsDocMoule(models.Model):
         return {"items":res, "links": links, "markers":markers}
 
 
-    def write_task(self,end_date=False,duration=False,lier=False):
-        end_date = end_date[0:10]
+    def write_task(self,start_date=False,duration=False,lier=False):
+        start_date = start_date[0:10]
         try:
-            date_fin_gantt = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(days=1)
+            date_debut_gantt = datetime.strptime(start_date, '%Y-%m-%d') + timedelta(days=1)
         except ValueError:
-            date_fin_gantt = False
-        if date_fin_gantt:
+            date_debut_gantt = False
+        if date_debut_gantt:
             for obj in self:
+                mem_date_fin = obj.date_fin_gantt
                 if duration>0:
-                    delta = (date_fin_gantt.date() - obj.date_fin_gantt).days
-                    obj.duree = duration
-                    obj.date_fin_gantt   = date_fin_gantt
-                    obj.date_debut_gantt = date_fin_gantt - timedelta(days=duration)
-                    if lier and delta!=0:
+                    delta = duration - obj.duree_gantt 
+                    duree = obj.duree + delta
+                    if duree<1:
+                        duree=1
+                    obj.date_debut_gantt = date_debut_gantt
+                    obj.set_fin_gantt()
+                    obj.duree = duree
+                    obj.set_fin_gantt()
+                    delta = (obj.date_fin_gantt - mem_date_fin).days
+                    if lier and delta:
                         obj.move_task_lier(delta)
-        msg="%s : %s : %s => %s : %s"%(self.id,end_date,duration,obj.date_debut_gantt,obj.date_fin_gantt )
+        msg="%s : %s : %s => %s : %s"%(self.id,start_date,duration,obj.date_debut_gantt,obj.date_fin_gantt )
         return msg
 
 
@@ -442,8 +401,10 @@ class IsDocMoule(models.Model):
             docs=self.env['is.doc.moule'].search([ ('dependance_id', '=', obj.id) ])
             for doc in docs:
                 date_debut_gantt = doc.date_debut_gantt +  timedelta(days=delta)
+                mem_date_fin = doc.date_fin_gantt
                 doc.date_debut_gantt = date_debut_gantt
-                doc.onchange_date_debut()
+                doc.set_fin_gantt()
+                delta = (doc.date_fin_gantt - mem_date_fin).days
                 doc.move_task_lier(delta)
 
 
@@ -481,9 +442,6 @@ class IsDocMouleArray(models.Model):
     is_doc_id   = fields.Many2one("is.doc.moule")
 
 
-
-
-
 class is_mold(models.Model):
     _inherit = 'is.mold'
 
@@ -495,7 +453,6 @@ class is_mold(models.Model):
                 ids.append(doc.id)
             view_mode = 'dhtmlxgantt_project,tree,form,kanban,calendar,pivot,graph'
             return self.env['is.doc.moule'].list_doc(obj,ids,view_mode=view_mode)
-
 
 
 class is_dossierf(models.Model):
@@ -537,7 +494,6 @@ class is_dossierf(models.Model):
             }
         
 
-
 class is_mold_project(models.Model):
     _inherit = 'is.mold.project'
 
@@ -553,8 +509,6 @@ class is_mold_project(models.Model):
             tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_edit_tree_view').id
             gantt_id = self.env.ref('is_dynacase2odoo.is_doc_moule_moule_dhtmlxgantt_project_view').id
             ctx={
-                #'default_type_document': 'Moule',
-                #'default_dossierf_id'  : obj.id,
                 'default_etat'         :'AF',
                 'default_dateend'      : datetime.today(),
                 'default_idresp'       : self._uid,
@@ -576,7 +530,6 @@ class is_mold_project(models.Model):
                 'limit': 1000,
             }
         
-
 
 class res_partner(models.Model):
     _inherit = 'res.partner'
