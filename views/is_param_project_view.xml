@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!-- is.param.project -->
         <record model="ir.ui.view" id="view_is_param_project_form">
             <field name="name">view.is.param.project.form</field>
             <field name="model">is.param.project</field>
             <field name="arch" type="xml">
                 <form string="Paramétrage projet">
-
                     <header>
                         <button
                             name="creer_css_action"
@@ -14,8 +14,6 @@
                             type="object"
                         />
                     </header>
-
-
                     <sheet>
                         <group string="Identification">
                             <group name="ppr_fr_identification">
@@ -34,9 +32,9 @@
                             <group>
                                 <field name="ppr_icon" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;ppr_icon&quot;, &quot;size&quot;: [90, 90]}" />
                                 <field name="ppr_color" widget="color"/>
-                                <field name="duree"/>
+                                <!-- <field name="duree"/>
                                 <field name="duree_attente_avant"/>
-                                <field name="dependance_id"/>
+                                <field name="dependance_id"/> -->
                             </group>
                         </group>
                         <group string="Gestion des J" col="4" colspan="4" attrs="{'invisible': [('type_document', '!=', 'Moule')]}">
@@ -99,6 +97,46 @@
         <record id="action_is_param_project" model="ir.actions.act_window">
             <field name="name">Paramétrage projet</field>
             <field name="res_model">is.param.project</field>
+            <field name="view_mode">tree,form</field>
+            <field name="limit">200</field>
+        </record>
+        <record model="ir.ui.view" id="is_section_gantt_form">
+            <field name="name">is_section_gantt_form</field>
+            <field name="model">is.section.gantt</field>
+            <field name="arch" type="xml">
+                <form string="Paramétrage projet">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="color" widget="color"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_section_gantt_tree">
+            <field name="name">is_section_gantt_tree</field>
+            <field name="model">is.section.gantt</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name='sequence' widget='handle'/>
+                    <field name="name"/>
+                    <field name="color" widget="color"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_section_gantt_search">
+            <field name="name">is_section_gantt_search</field>
+            <field name="model">is.section.gantt</field>
+            <field name="arch" type="xml">
+                <search string="Paramétrage projet">
+                    <field name="name" />
+                </search>
+            </field>
+        </record>
+        <record id="is_section_gantt_action" model="ir.actions.act_window">
+            <field name="name">Section Gantt</field>
+            <field name="res_model">is.section.gantt</field>
             <field name="view_mode">tree,form</field>
             <field name="limit">200</field>
         </record>

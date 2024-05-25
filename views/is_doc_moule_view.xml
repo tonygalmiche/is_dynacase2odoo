@@ -6,13 +6,11 @@
             <field name="model">is.doc.moule</field>
             <field name="arch" type="xml">
                 <form string="Document moule">
-
-                
-
                     <sheet>
                         <field name="project_prev" widget="html"/>
                         <group>
                             <group string="Caractéristiques" name="caracteristiques">
+                                <field name="section_id"/>
                                 <field name="type_document" is_widget="background_color" options="[{'value':'Moule','color':'red'},{'value':'Article','color':'green'},{'value':'Dossier F','color':'orange'}]"/>
                                 <field name="idmoule"                   attrs="{'invisible': [('type_document', '!=', 'Moule')]                 , 'required': [('type_document', '=', 'Moule')]}"/>
                                 <field name="dossierf_id"               attrs="{'invisible': [('type_document', '!=', 'Dossier F')]             , 'required': [('type_document', '=', 'Dossier F')]}"/>
@@ -119,9 +117,11 @@
             <field name="arch" type="xml">
                 <tree editable="top">
                     <field name='sequence' widget='handle'/>
+                    <field name="section_id"       optional="show" required="1"/>
                     <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
                     <field name="param_project_id" required="1" widget="many2one_clickable"/>
                     <field name="type_document"    optional="hide"/>
+                    <field name="actuelle"         optional="show"/>
                     <field name="idmoule"          required="1"    widget="many2one_clickable"/>
                     <field name="dossierf_id"      optional="show" widget="many2one_clickable"/>
                     <field name="idproject"                        widget="many2one_clickable"/>
@@ -213,6 +213,7 @@
             <field name="model">is.doc.moule</field>
             <field name="arch" type="xml">
                 <search string="Document moule">
+                    <field name="section_id"/>
                     <field name="param_project_id" />
                     <field name="type_document" />
                     <field name="ppr_type_demande" />
@@ -246,31 +247,31 @@
             <field name="model">is.doc.moule</field>
             <field name="arch" type="xml">
                 <tree string="Document moule">
+                    <field name="section_id"          optional="show"/>
                     <field name="param_project_id"    optional="show"  widget="many2one_clickable"/>
                     <field name="type_document"       optional="hide"/>
-                    <field name="ppr_type_demande"    optional="show" />
+                    <field name="ppr_type_demande"    optional="hide" />
                     <button title="Gantt du moule" name="doc_moule_action" type="object" icon="fa-indent"/>
                     <field name="idmoule"             optional="show"           widget="many2one_clickable"/>
                     <button title="Gantt du projet" name="doc_projet_action" type="object" icon="fa-indent"/>
                     <field name="idproject"           optional="show"         widget="many2one_clickable"/>
-                    <button title="Gantt du client" name="doc_client_action" type="object" icon="fa-indent"/>
                     <field name="client_id"           optional="show"         widget="many2one_clickable"/>
-                    <field name="idcp"                optional="show"/>
+                    <field name="idcp"                optional="hide"/>
                     <field name="idresp"              optional="show" />
-                    <field name="actuelle"            optional="show" />
+                    <field name="actuelle"            optional="hide" />
                     <field name="demande"             optional="show" />
                     <field name="action"              optional="show"/>
-                    <field name="bloquant"            optional="show"/>
+                    <field name="bloquant"            optional="hide"/>
                     <field name="etat"                optional="show" />
-                    <field name="fin_derogation"      optional="show" />
-                    <field name="coefficient"         optional="show"/>
-                    <field name="note"                optional="show"/>
-                    <field name="indicateur"          optional="show"/>
-                    <field name="datecreate"          optional="show" />
+                    <field name="fin_derogation"      optional="hide" />
+                    <field name="coefficient"         optional="hide"/>
+                    <field name="note"                optional="hide"/>
+                    <field name="indicateur"          optional="hide"/>
+                    <field name="datecreate"          optional="hide" />
                     <field name="dateend"             optional="show" />
-                    <field name="duree"               optional="hide"/>
-                    <field name="date_debut_gantt"    optional="hide"/>
-                    <field name="date_fin_gantt"      optional="hide"/>
+                    <field name="duree"               optional="show"/>
+                    <field name="date_debut_gantt"    optional="show"/>
+                    <field name="date_fin_gantt"      optional="show"/>
                     <field name="duree_attente_avant" optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
@@ -298,6 +299,7 @@
             <field name="model">is.doc.moule</field>
             <field name="arch" type="xml">
                 <tree string="Document Dossier F">
+                    <field name="section_id" optional="show"/>
                     <field name="param_project_id" optional="show"  widget="many2one_clickable"/>
                     <field name="type_document" optional="hide"/>
                     <field name="ppr_type_demande" optional="show" />
@@ -399,6 +401,7 @@
             <field name="arch" type="xml">
                 <tree editable="top">
                     <field name='sequence' widget='handle'/>
+                    <field name="section_id" optional="show"/>
                     <field name="param_project_id" required="1" widget="many2one_clickable"/>
                     <field name="type_document"    optional="hide"/>
                     <field name="idmoule"          optional="hide" widget="many2one_clickable"/>
@@ -431,6 +434,7 @@
             <field name="arch" type="xml">
                 <tree editable="top">
                     <field name='sequence' widget='handle'/>
+                    <field name="section_id" optional="show"/>
                     <field name="param_project_id" required="1" widget="many2one_clickable"/>
                     <field name="type_document"    optional="hide"/>
                     <field name="idmoule"          optional="hide"       widget="many2one_clickable"/>

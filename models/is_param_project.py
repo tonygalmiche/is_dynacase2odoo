@@ -2,6 +2,16 @@
 from odoo import models, fields, api, tools
 
 
+class IsSectionGantt(models.Model):
+    _name        = "is.section.gantt"
+    _description = "Sections du Gantt"
+    _order = 'sequence, id'
+
+    sequence = fields.Integer(string="Ordre",index=True)
+    name     = fields.Char("Section",required=True,index=True)
+    color    = fields.Char("Color")
+
+
 class IsParamProject(models.Model):
     _name        = "is.param.project"
     _description = "Paramétrage projet"

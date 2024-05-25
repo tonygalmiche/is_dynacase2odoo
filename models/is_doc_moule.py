@@ -9,7 +9,7 @@ class IsDocMoule(models.Model):
     _inherit=['mail.thread']
     _description = "Document moule"
     _rec_name    = "param_project_id"
-    _order = 'sequence, param_project_id'
+    _order = 'sequence,section_id,param_project_id'
 
 
     def compute_project_prev(self):
@@ -92,6 +92,8 @@ class IsDocMoule(models.Model):
     date_debut_gantt    = fields.Date(string="Date début Gantt", default=fields.Date.context_today)
     date_fin_gantt      = fields.Date(string="Date fin Gantt")
     dependance_id       = fields.Many2one("is.doc.moule", string="Dépendance",index=True)
+    section_id          = fields.Many2one("is.section.gantt", string="Section Gantt",index=True)
+
 
 
     @api.onchange('date_debut_gantt')
@@ -267,16 +269,42 @@ class IsDocMoule(models.Model):
         # #**********************************************************************
 
 
-        # #** Ajout des responsables ********************************************
+        # # #** Ajout des responsables ********************************************
+        # my_dict={}
+        # for line in lines:
+        #     dossier = (line.idmoule or line.dossierf_id or line.dossier_modif_variante_id)
+        #     parent="%s-%s"%(dossier._name,dossier.id)
+        #     responsable_id = line.idresp.id + 30000000
+        #     id=dossier.id+20000000 + responsable_id
+        #     key = "%s|%s|%s"%(id,parent,line.idresp.name)
+        #     my_dict[id]=key
+        # for id in my_dict:
+        #     tab=my_dict[id].split("|")
+        #     parent=tab[1] 
+        #     text="%s"%(tab[2])
+        #     vals={
+        #         "id": id,
+        #         "text": text,
+        #         "start_date": False,
+        #         "duration": False,
+        #         "parent": parent,
+        #         "progress": 0,
+        #         "open": True,
+        #         "priority": 2,
+        #     }
+        #     res.append(vals)
+        # # #**********************************************************************
+
+
+
+        # #** Ajout des sections **********************************************
         my_dict={}
         for line in lines:
             dossier = (line.idmoule or line.dossierf_id or line.dossier_modif_variante_id)
             parent="%s-%s"%(dossier._name,dossier.id)
-            #parent=dossier.id+20000000
-            responsable_id = line.idresp.id + 30000000
-            #id = parent+responsable_id
-            id=dossier.id+20000000 + responsable_id
-            key = "%s|%s|%s"%(id,parent,line.idresp.name)
+            section_id = line.section_id.id + 30000000
+            id=dossier.id+20000000 + section_id
+            key = "%s|%s|%s"%(id,parent,line.section_id.name)
             my_dict[id]=key
         for id in my_dict:
             tab=my_dict[id].split("|")
@@ -288,7 +316,6 @@ class IsDocMoule(models.Model):
                 "start_date": False,
                 "duration": False,
                 "parent": parent,
-                #"parent": "%s-%s"%(dossier._name,dossier.id),
                 "progress": 0,
                 "open": True,
                 "priority": 2,
@@ -312,7 +339,7 @@ class IsDocMoule(models.Model):
                 duration = line.duree or 1
                 infobulle_list=[]
                 infobulle_list.append("<b>Document</b>           : %s"%name)
-                parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000 + line.idresp.id + 30000000
+                parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000 + line.section_id.id + 30000000
 
                 etat_class='etat_a_faire'
                 if line.etat=='F':

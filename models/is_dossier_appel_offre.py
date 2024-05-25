@@ -75,9 +75,3 @@ class is_dossier_appel_offre(models.Model):
     dao_motif        = fields.Selection(_DAO_MOTIF, "Motif")
     dao_avancement   = fields.Selection(_DAO_AVANCEMENT, "Avancement")
     state            = fields.Selection(_STATE, "Etat")
-
-    # dao_rsplast      = fields.Char("Rsp Plastigray")
-    # dao_motif        = fields.Char("Motif")
-    # dao_avancement   = fields.Char("Avancement")
-    # state            = fields.Char("Etat")
-
