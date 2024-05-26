@@ -80,13 +80,19 @@
 
 
 .dhtmlxgantt_project .etat_a_faire{
-    border-left: 10pt solid red;
+    border-left: 6pt solid red;
 }
-
-
 .dhtmlxgantt_project .etat_fait{
-    border-left: 10pt solid green;
+    border-left: 6pt solid green;
 }
+.dhtmlxgantt_project .retard_j{
+    border-left: 10pt solid black;
+}
+
+
+
+
+
 
 
 // .dhtmlxgantt_project .infobulle table{

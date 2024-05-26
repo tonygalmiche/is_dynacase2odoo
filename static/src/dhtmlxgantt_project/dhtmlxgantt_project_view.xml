@@ -8,11 +8,10 @@
                     <td><button class="btn btn-info" t-on-click="FullscreenClick"  title="Plein écran">       <i class="fa fa-arrows-alt"/></button></td>        
                     <td><button class="btn btn-info" t-on-click="OpenTreeClick"    title="Ouvrir les niveaux"><i class="fa fa-expand"/></button></td>        
                     <td><button class="btn btn-info" t-on-click="CloseTreeClick"   title="Fermer les niveaux"><i class="fa fa-compress"/></button></td>        
-                    <td><button class="btn btn-info" t-on-click="UndoClick"        title="Annuler">           <i class="fa fa-undo"/></button></td>        
-                    <td><button class="btn btn-info" t-on-click="RedoClick"        title="Refaire">           <i class="fa fa-repeat"/></button></td>        
                     <td><button class="btn btn-info" t-on-click="AnneeClick"  >Année</button></td>
                     <td><button class="btn btn-info" t-on-click="MoisClick"   >Mois</button></td>
                     <td><button class="btn btn-info" t-on-click="SemaineClick">Semaine</button></td>
+                    <td><button class="btn btn-info" t-on-click="GotoNowClick">Now</button></td>
                     <td><button class="btn btn-info" t-on-click="GotoJ0Click" >J0</button></td>
                     <td><button class="btn btn-info" t-on-click="GotoJ1Click" >J1</button></td>
                     <td><button class="btn btn-info" t-on-click="GotoJ2Click" >J2</button></td>

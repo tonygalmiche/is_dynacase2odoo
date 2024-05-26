@@ -4,6 +4,8 @@ from odoo.tools import format_date, formatLang, frozendict
 from datetime import datetime, timedelta
 from random import *
 
+from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J
+
 class IsDocMoule(models.Model):
     _name        = "is.doc.moule"
     _inherit=['mail.thread']
@@ -66,7 +68,8 @@ class IsDocMoule(models.Model):
     client_id        = fields.Many2one(related="idproject.client_id")
     idcp             = fields.Many2one(related="idmoule.chef_projet_id", string="CP")
     idresp           = fields.Many2one("res.users", string="Responsable")
-    actuelle         = fields.Char(string="J Actuelle")
+    j_prevue         = fields.Selection(GESTION_J, string="J Prévue")
+    actuelle         = fields.Selection(GESTION_J, string="J Actuelle")
     demande          = fields.Char(string="Demande")
     action           = fields.Selection([
         ("I", "Initialisation"),
@@ -200,8 +203,38 @@ class IsDocMoule(models.Model):
     def get_dhtmlx(self, domain=[]):
         lines=self.env['is.doc.moule'].search(domain, limit=10000) #, order="dateend"
 
-        # #** Ajout des projets ***********************************************
+
+        #** Ajout des markers (J des moules) **********************************
         res=[]
+        markers=[]
+        moules=[]
+        dates_j={}
+        for line in lines:
+            moule=line.idmoule
+            if moule not in moules:
+                moules.append(moule)
+        js=('J0','J1','J2','J3','J4','J5')
+        for moule in moules:
+            rpjs=self.env['is.revue.projet.jalon'].search([ ('rpj_mouleid', '=', moule.id)],limit=1,order="id desc")
+            for rpj in rpjs:
+                for j in js:
+                    date_j = getattr(rpj, "rpj_date_valide_%s"%j.lower()) or getattr(rpj, "rpj_date_%s"%j.lower())
+                    if date_j:
+                        dates_j[j] = date_j
+                        id = "%s-%s"%(moule.name,j)
+                        start_date = str(date_j)+' 00:00:00"'
+                        vals={
+                            "id"        : id,
+                            "start_date": start_date,
+                            "css"       : "today",
+                            "text"      : "%s : %s"%(moule.name,j),
+                            "j"         : j,
+                        }
+                        markers.append(vals)
+        #**********************************************************************
+
+
+        # #** Ajout des projets ***********************************************
         projets=[]
         for line in lines:
             if line.idproject not in projets:
@@ -239,8 +272,8 @@ class IsDocMoule(models.Model):
                 name=dossier.demao_num
                 project='?'
             text="%s (%s)"%(name,project)
-            infobulle_list=[]
-            infobulle_list.append("<b>Moule</b>: %s"%(name))
+            #infobulle_list=[]
+            #infobulle_list.append("<b>Moule</b>: %s"%(name))
             vals={
                 "id": "%s-%s"%(dossier._name,dossier.id),
                 "model": dossier._name,
@@ -252,7 +285,7 @@ class IsDocMoule(models.Model):
                 "progress": 0,
                 "open": True,
                 "priority": 2,
-                "infobulle": "<br>\n".join(infobulle_list),
+                #"infobulle": "<br>\n".join(infobulle_list),
             }
             res.append(vals)
         # #**********************************************************************
@@ -298,29 +331,39 @@ class IsDocMoule(models.Model):
                 if line.param_project_id.ppr_revue_lancement:
                     name="%s [%s]"%(name,line.param_project_id.ppr_revue_lancement)
                 duration = line.duree_gantt or 1
-                infobulle_list=[]
-                infobulle_list.append("<b>Document</b>           : %s"%name)
                 parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000 + line.section_id.id + 30000000
-
+                
+                #** Bordure gauche de la tâche (Fait, A Faire ou en retard) ***
                 etat_class='etat_a_faire'
                 if line.etat=='F':
                     etat_class='etat_fait'
+                if line.j_prevue and line.date_fin_gantt:
+                    date_j = dates_j.get(line.j_prevue)
+                    if dates_j:
+                        if line.date_fin_gantt>date_j:
+                            etat_class = "retard_j"
+                #**************************************************************
+
                 color_class = '%s is_param_projet_%s'%(etat_class,line.param_project_id.id)
 
                 end_date = str(line.date_fin_gantt or line.dateend)+' 00:00:00"'
+
+
+                j_prevue = dict(GESTION_J).get(line.j_prevue,"?")
+
                 vals={
-                    "id": "%s-%s"%(line._name,line.id),
-                    "model": line._name,
-                    "res_id": line.id,
-                    "text": name,
-                    "end_date": end_date,
-                    "duration": duration,
-                    "parent": parent,
-                    "priority": priority,
-                    "infobulle": "<br>\n".join(infobulle_list),
+                    "id"         : "%s-%s"%(line._name,line.id),
+                    "model"      : line._name,
+                    "res_id"     : line.id,
+                    "text"       : name,
+                    "end_date"   : end_date,
+                    "duration"   : duration,
+                    "parent"     : parent,
+                    "priority"   : priority,
                     "color_class": color_class,
-                    "section": line.section_id.name,
+                    "section"    : line.section_id.name,
                     "responsable": line.idresp.name,
+                    "j_prevue"   : j_prevue,
                 }
                 res.append(vals)
         #**********************************************************************
@@ -343,31 +386,6 @@ class IsDocMoule(models.Model):
         #**********************************************************************
 
 
-        #** Ajout des markers (J des moules) **********************************
-        markers=[]
-        moules=[]
-        for line in lines:
-            moule=line.idmoule
-            if moule not in moules:
-                moules.append(moule)
-        js=('j0','j1','j2','j3','j4','j5')
-        for moule in moules:
-            rpjs=self.env['is.revue.projet.jalon'].search([ ('rpj_mouleid', '=', moule.id)],limit=1,order="id desc")
-            for rpj in rpjs:
-                for j in js:
-                    date_j = getattr(rpj, "rpj_date_valide_%s"%j) or getattr(rpj, "rpj_date_%s"%j)
-                    if date_j:
-                        id = "%s-%s"%(moule.name,j)
-                        start_date = str(date_j)+' 00:00:00"'
-                        vals={
-                            "id"        : id,
-                            "start_date": start_date,
-                            "css"       : "today",
-                            "text"      : "%s : %s"%(moule.name,j),
-                            "j"         : j,
-                        }
-                        markers.append(vals)
-        #**********************************************************************
 
         return {"items":res, "links": links, "markers":markers}
 

@@ -2,6 +2,17 @@
 from odoo import models, fields, api, tools
 
 
+GESTION_J=[
+    ("J0", "Préparation J0"),
+    ("J1", "Préparation J1"),
+    ("J2", "Préparation J2"),
+    ("J3", "Préparation J3"),
+    ("J4", "Préparation J4"),
+    ("J5", "Préparation J5"),
+    ("J6", "J5 validé"),
+]
+
+
 class IsSectionGantt(models.Model):
     _name        = "is.section.gantt"
     _description = "Sections du Gantt"
@@ -130,8 +141,8 @@ class IsParamProjectArray(models.Model):
     _description = "Paramétrage projet array"
     _rec_name    = "ppp_j"
 
-    ppp_j            = fields.Char(string="J")
-    ppr_irv          = fields.Selection([
+    ppp_j   = fields.Selection(GESTION_J, string="J")
+    ppr_irv = fields.Selection([
         ("I", "Initialisation"),
         ("R", "Révision"),
         ("V", "Validation"),

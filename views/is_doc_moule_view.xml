@@ -25,6 +25,7 @@
                                 <field name="idresp" />
                             </group>
                             <group string="Gestion des J" name="PLASFIL_FR_J" attrs="{'invisible': [('type_document', '!=', 'Moule')]}">
+                                <field name="j_prevue"/>
                                 <field name="actuelle" readonly="1"/>
                                 <field name="demande"/>
                                 <field name="action" is_widget="background_color"/>
@@ -122,7 +123,7 @@
                     <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
                     <field name="param_project_id" required="1" widget="many2one_clickable"/>
                     <field name="type_document"    optional="hide"/>
-                    <field name="actuelle"         optional="show"/>
+                    <field name="j_prevue"         optional="show"/>
                     <field name="idmoule"          required="1"    widget="many2one_clickable"/>
                     <field name="dossierf_id"      optional="show" widget="many2one_clickable"/>
                     <field name="idproject"                        widget="many2one_clickable"/>

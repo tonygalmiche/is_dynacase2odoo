@@ -34,6 +34,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         this.gantt = gantt;
         this.gantt.lier = false;
         this.gantt.active_task_id = false;
+        this.gantt.scroll=false;
 
         //Stocker la liste des events pour pouvoir les désactiver avec le _unmount
         if (typeof this.gantt.events === 'undefined') {
@@ -237,6 +238,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                 "<table>"+
                     "<tr style='background:#e5e8e8'><th style='text-align:right;font-weight: bold;'>Tâche      : </th><td>"+task.text+"</td></tr>"+
                     "<tr>                           <th style='text-align:right;font-weight: bold;'>Section    : </th><td>"+task.section+ "</td></tr>"+
+                    "<tr>                           <th style='text-align:right;font-weight: bold;'>J prévue   : </th><td>"+task.j_prevue+ "</td></tr>"+
                     "<tr>                           <th style='text-align:right;font-weight: bold;'>Responsable: </th><td>"+task.responsable+ "</td></tr>"+
                     "<tr>                           <th style='text-align:right;font-weight: bold;'>Date début : </th><td>"+gantt.templates.tooltip_date_format(start)+ "</td></tr>"+
                     "<tr>                           <th style='text-align:right;font-weight: bold;'>Date fin   : </th><td>"+gantt.templates.tooltip_date_format(end)+"</td></tr>"+
@@ -292,17 +294,11 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         this.gantt.events.push(this.gantt.attachEvent("onAfterLinkDelete", function(id,item){
             this.owl.LinkAction('link_delete', item);
         }));
-
         this.gantt.events.push(this.gantt.attachEvent("onTaskRowClick", function(id,row){
-            console.log('onTaskRowClick',id)
             gantt.active_task_id = id;
         }));
-
-
-
         this.GetDocuments();
     }
-
 
     _patched() {
         if (this.ActivePatched==true) {
@@ -337,14 +333,13 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                 text:item.text,
                 end_date:item.end_date,
                 duration   : item.duration,
-                progress   : 0, //this.rnd(),
                 assigned   : item.assigned,
                 priority   : item.priority,
-                champ_perso: "Champ perso à mettre dans l'infobulle",
                 parent     : item.parent,
                 color_class: item.color_class,
                 section    : item.section,
                 responsable: item.responsable,
+                j_prevue   : item.j_prevue,
             }
             data.push(vals);
         }
@@ -358,10 +353,12 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         
         //markers *************************************************************
         this.gantt.todayMarker = this.gantt.addMarker({
+            id        : 'Now',
             start_date:  new Date(),
-            css: "today",
-            text: 'Now',
+            css       : "today",
+            text      : 'Now',
         });
+        this.gantt.markers['Now'] = 'Now';
         for (var k in this.state.markers) {
             var marker = this.state.markers[k];
             var start_date = this.gantt.date.parseDate(marker.start_date,"%Y-%m-%d %H:%i:%s");
@@ -375,21 +372,20 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         }
         this.gantt.renderMarkers();
         this.gantt.config.show_markers = true;
-        //********************************************************************* */
+        //*********************************************************************
 
         //** Positionner le gantt au même endroit après le rafrachissement ****
-        var active_task_id = this.gantt.active_task_id;
-        if (active_task_id!==false){
-            var task = this.gantt.getTask(active_task_id)
-            var pos = this.gantt.posFromDate(task.start_date);
-            this.gantt.scrollTo(pos, null);
-            this.gantt.selectTask(active_task_id);
+        var scroll = this.gantt.scroll;
+        if (scroll!==false){
+            this.gantt.scrollTo(scroll.x, scroll.y);
+            //this.gantt.selectTask(this.gantt.active_task_id;);
         }
         //*********************************************************************
     }
 
 
     RafraichirClick(ev) {
+        this.gantt.scroll = this.gantt.getScrollState();
         this.GetDocuments();
     }
     FullscreenClick(ev) {
@@ -411,12 +407,12 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         });
         this.gantt.render();
     }
-    UndoClick(ev) {
-        this.gantt.undo();
-    }
-    RedoClick(ev) {
-        this.gantt.redo();
-    }
+    // UndoClick(ev) {
+    //     this.gantt.undo();
+    // }
+    // RedoClick(ev) {
+    //     this.gantt.redo();
+    // }
     AnneeClick(ev) {
         this.gantt.ext.zoom.setLevel("year");
     }
@@ -426,23 +422,26 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
     SemaineClick(ev) {
         this.gantt.ext.zoom.setLevel("week");
     }
+    GotoNowClick(ev) {
+        this.GotoJClick(ev,'Now');
+    }
     GotoJ0Click(ev) {
-        this.GotoJClick(ev,'j0');
+        this.GotoJClick(ev,'J0');
     }
     GotoJ1Click(ev) {
-        this.GotoJClick(ev,'j1');
+        this.GotoJClick(ev,'J1');
     }
     GotoJ2Click(ev) {
-        this.GotoJClick(ev,'j2');
+        this.GotoJClick(ev,'J2');
     }
     GotoJ3Click(ev) {
-        this.GotoJClick(ev,'j3');
+        this.GotoJClick(ev,'J3');
     }
     GotoJ4Click(ev) {
-        this.GotoJClick(ev,'j4');
+        this.GotoJClick(ev,'J4');
     }
     GotoJ5Click(ev) {
-        this.GotoJClick(ev,'j5');
+        this.GotoJClick(ev,'J5');
     }
     GotoJClick(ev,j) {
         if (typeof this.gantt.getMarker(this.gantt.markers[j]) !== 'undefined') {
@@ -475,6 +474,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
     }
 
     async WriteTask(id,item){
+        this.gantt.scroll = this.gantt.getScrollState();
         self.this = this;
         rpc.query({
             model: 'is.doc.moule',
