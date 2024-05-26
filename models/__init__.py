@@ -8,3 +8,5 @@ from . import is_dossier_modif_variante
 from . import is_revue_projet_jalon
 from . import is_revue_risque
 from . import is_dossier_appel_offre
+from . import is_fermeture_gantt
+from . import is_mold_project

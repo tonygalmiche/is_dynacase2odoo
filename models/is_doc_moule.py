@@ -234,7 +234,7 @@ class IsDocMoule(models.Model):
         #**********************************************************************
 
 
-        # #** Ajout des projets ***********************************************
+        #** Ajout des projets *************************************************
         projets=[]
         for line in lines:
             if line.idproject not in projets:
@@ -254,8 +254,25 @@ class IsDocMoule(models.Model):
                 "priority": 2,
             }
             res.append(vals)
-        # #**********************************************************************
+        #**********************************************************************
 
+        #** Ajout des jours de fermeture des projets **************************
+        jour_fermeture_ids=[]
+        for projet in projets:
+            for line in projet.fermeture_id.jour_ids:
+                if line.date_fin:
+                    if line.date_fin>=line.date_debut:
+                        ladate=line.date_debut
+                        while True:
+                            if ladate>line.date_fin:
+                                break                             
+                            if ladate not in jour_fermeture_ids:
+                                jour_fermeture_ids.append(str(ladate))
+                            ladate+=timedelta(days=1)
+                else:
+                    if line.date_debut not in jour_fermeture_ids:
+                        jour_fermeture_ids.append(str(line.date_debut))
+        #**********************************************************************
 
         # #** Ajout des moules, dossierf ou dossier modif **********************
         dossiers=[]
@@ -368,7 +385,6 @@ class IsDocMoule(models.Model):
                 res.append(vals)
         #**********************************************************************
 
-
         #** Ajout des dependances *********************************************
         links=[]
         for line in lines:
@@ -385,10 +401,13 @@ class IsDocMoule(models.Model):
                 links.append(vals)
         #**********************************************************************
 
-
-
-        return {"items":res, "links": links, "markers":markers}
-
+        return {
+            "items"             : res, 
+            "links"             : links, 
+            "markers"           : markers, 
+            "jour_fermeture_ids": jour_fermeture_ids
+        }
+    
 
     def write_task(self,start_date=False,duration=False,lier=False):
         start_date = start_date[0:10]
@@ -491,43 +510,6 @@ class is_dossierf(models.Model):
             ctx={
                 'default_type_document': 'Dossier F',
                 'default_dossierf_id'  : obj.id,
-                'default_etat'         :'AF',
-                'default_dateend'      : datetime.today(),
-                'default_idresp'       : self._uid,
-                'initial_date'         : initial_date,
-            }
-            return {
-                'name': obj.name,
-                'view_mode': 'dhtmlxgantt_project,tree,form,kanban,calendar,pivot,graph',
-                "views"    : [
-                    (gantt_id, "dhtmlxgantt_project"),
-                    (tree_id, "tree"),
-                    (False, "form"),(False, "kanban"),(False, "calendar"),(False, "pivot"),(False, "graph")],
-                'res_model': 'is.doc.moule',
-                'domain': [
-                    ('id','in',ids),
-                ],
-                'type': 'ir.actions.act_window',
-                "context": ctx,
-                'limit': 1000,
-            }
-        
-
-class is_mold_project(models.Model):
-    _inherit = 'is.mold.project'
-
-    def gantt_action(self):
-        for obj in self:
-            docs=self.env['is.doc.moule'].search([ ('idproject', '=', obj.id) ])
-            ids=[]
-            initial_date=str(datetime.today())
-            for doc in docs:
-                if str(doc.dateend)<initial_date:
-                    initial_date=str(doc.dateend)
-                ids.append(doc.id)
-            tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_edit_tree_view').id
-            gantt_id = self.env.ref('is_dynacase2odoo.is_doc_moule_moule_dhtmlxgantt_project_view').id
-            ctx={
                 'default_etat'         :'AF',
                 'default_dateend'      : datetime.today(),
                 'default_idresp'       : self._uid,

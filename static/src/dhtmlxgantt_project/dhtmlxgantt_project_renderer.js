@@ -219,11 +219,18 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         };
 
 
-
         this.gantt.templates.timeline_cell_class = function(task,date){
             if(date.getDay()==0||date.getDay()==6){
-                return "jour_ferme";
+                return "jour_weekend";
             }
+            if (typeof gantt.owl.state.jour_fermeture_ids !== 'undefined') {
+                const jour_fermeture_ids = gantt.owl.state.jour_fermeture_ids;
+                var formatFunc = gantt.date.date_to_str("%Y-%m-%d");
+                var date_str = formatFunc(date); 
+                if(jour_fermeture_ids.indexOf(date_str)>=0){
+                    return "jour_fermeture";
+                }
+             }
         };
 
         this.gantt.templates.tooltip_date_format=function (date){
@@ -466,9 +473,10 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                 domain: this.props.domain,
             }
         }).then(function (result) {
-            self.state.items   = result.items;
-            self.state.links   = result.links;
-            self.state.markers = result.markers;
+            self.state.items              = result.items;
+            self.state.links              = result.links;
+            self.state.markers            = result.markers;
+            self.state.jour_fermeture_ids = result.jour_fermeture_ids;
             self.renderDhtmlxGantt();
         });
     }

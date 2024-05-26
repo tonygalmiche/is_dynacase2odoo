@@ -220,10 +220,6 @@ class is_revue_de_contrat(models.Model):
             }
             
             
-
-
-
-
 class is_revue_de_contrat_decomposition_prix(models.Model):
     _name        = "is.revue.de.contrat.decomposition.prix"
     _description = "Revue de contrat Décomposition prix"

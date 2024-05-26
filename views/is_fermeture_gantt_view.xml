@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- is.fermeture.gantt -->
+        <record model="ir.ui.view" id="is_fermeture_gantt_form">
+            <field name="name">is_fermeture_gantt_form</field>
+            <field name="model">is.fermeture.gantt</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>  
+                        </group>
+                        <group>
+                            <field name="jour_ids" nolabel="1" colspan="2">
+                                <tree editable="bottom">
+                                    <field name="date_debut"/>
+                                    <field name="date_fin" />
+                                </tree>
+                            </field>
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_fermeture_gantt_tree">
+            <field name="name">is_fermeture_gantt_tree</field>
+            <field name="model">is.fermeture.gantt</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name='name'/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_fermeture_gantt_search">
+            <field name="name">is_fermeture_gantt_search</field>
+            <field name="model">is.fermeture.gantt</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" />
+                </search>
+            </field>
+        </record>
+        <record id="is_fermeture_gantt_action" model="ir.actions.act_window">
+            <field name="name">Fermetures du Gantt</field>
+            <field name="res_model">is.fermeture.gantt</field>
+            <field name="view_mode">tree,form</field>
+            <field name="limit">200</field>
+        </record>       
+    </data>
+</odoo>

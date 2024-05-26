@@ -122,9 +122,15 @@
             <field name="parent_id" eval="ref('is_parametrage_menu')"/>
             <field name="action"    ref="is_section_gantt_action"/>
         </record>
+        <record id="is_fermeture_gantt_menu" model="ir.ui.menu" >
+            <field name="name">Fermeture du Gantt</field>
+            <field name="sequence">30</field>
+            <field name="parent_id" eval="ref('is_parametrage_menu')"/>
+            <field name="action"    ref="is_fermeture_gantt_action"/>
+        </record>
         <record id="is_head_model_form_menu" model="ir.ui.menu" >
             <field name="name">Entête des modèles</field>
-            <field name="sequence">30</field>
+            <field name="sequence">40</field>
             <field name="parent_id" eval="ref('is_parametrage_menu')"/>
             <field name="action"    ref="is_plastigray16.action_is_head_model_form"/>
         </record>
