@@ -118,7 +118,7 @@
             <field name="priority" eval="90"/>
             <field name="arch" type="xml">
                 <tree editable="top">
-                    <field name='sequence' widget='handle'/>
+                    <field name='sequence'/>
                     <field name="section_id"       optional="show" required="1"/>
                     <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
                     <field name="param_project_id" required="1" widget="many2one_clickable"/>
@@ -134,7 +134,7 @@
                     <field name="dateend"          optional="hide"/>
                     <field name="duree"            required="1"/>
                     <field name="date_debut_gantt" required="1" />
-                    <field name="date_fin_gantt"   required="1" />
+                    <field name="date_fin_gantt"   force_save="1"/>
                     <field name="duree_attente_avant" optional="hide"/>
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="indicateur"          optional="hide"/>
@@ -402,7 +402,7 @@
             <field name="priority" eval="90"/>
             <field name="arch" type="xml">
                 <tree editable="top">
-                    <field name='sequence' widget='handle'/>
+                    <field name='sequence'/>
                     <field name="section_id" optional="show"/>
                     <field name="param_project_id" required="1" widget="many2one_clickable"/>
                     <field name="type_document"    optional="hide"/>
@@ -416,7 +416,7 @@
                     <field name="dateend"          optional="hide"/>
                     <field name="duree"            required="1"/>
                     <field name="date_debut_gantt" required="1" />
-                    <field name="date_fin_gantt"   required="1" />
+                    <field name="date_fin_gantt"   force_save="1" />
                     <field name="duree_attente_avant" optional="hide"/>
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="indicateur"          optional="hide"/>
@@ -435,7 +435,7 @@
             <field name="priority" eval="90"/>
             <field name="arch" type="xml">
                 <tree editable="top">
-                    <field name='sequence' widget='handle'/>
+                    <field name='sequence'/>
                     <field name="section_id" optional="show"/>
                     <field name="param_project_id" required="1" widget="many2one_clickable"/>
                     <field name="type_document"    optional="hide"/>
@@ -450,7 +450,7 @@
                     <field name="dateend"          optional="hide"/>
                     <field name="duree"            required="1"/>
                     <field name="date_debut_gantt" required="1" />
-                    <field name="date_fin_gantt"   required="1" />
+                    <field name="date_fin_gantt"    force_save="1"/>
                     <field name="duree_attente_avant" optional="hide"/>
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="indicateur"          optional="hide"/>

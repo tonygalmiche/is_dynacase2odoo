@@ -11,7 +11,7 @@ class IsDocMoule(models.Model):
     _inherit=['mail.thread']
     _description = "Document moule"
     _rec_name    = "param_project_id"
-    _order = 'sequence,section_id,param_project_id'
+    _order = 'section_id,sequence,section_id,param_project_id'
 
 
     def compute_project_prev(self):

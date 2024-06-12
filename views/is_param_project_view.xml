@@ -32,11 +32,9 @@
                             <group>
                                 <field name="ppr_icon" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;ppr_icon&quot;, &quot;size&quot;: [90, 90]}" />
                                 <field name="ppr_color" widget="color"/>
-                                <!-- <field name="duree"/>
-                                <field name="duree_attente_avant"/>
-                                <field name="dependance_id"/> -->
                             </group>
                         </group>
+                        <!-- 
                         <group string="Gestion des J" col="4" colspan="4" attrs="{'invisible': [('type_document', '!=', 'Moule')]}">
                             <field name="array_ids" nolabel="1" colspan="4">
                                 <tree editable="bottom" create="0" delete="0">
@@ -46,6 +44,7 @@
                                 </tree>
                             </field>
                         </group>
+                        -->
                     </sheet>
                 </form>
             </field>
@@ -55,7 +54,7 @@
             <field name="model">is.param.project</field>
             <field name="arch" type="xml">
                 <tree string="Paramétrage projet">
-                    <field name='sequence' widget='handle'/>
+                    <field name='sequence'/>
                     <field name="ppr_famille" optional="show" />
                     <field name="type_document" optional="show"/>
                     <field name="ppr_transformation_pdf" optional="show"/>
@@ -108,6 +107,7 @@
                     <sheet>
                         <group>
                             <field name="name"/>
+                            <field name='sequence'/>
                             <field name="color" widget="color"/>
                         </group>
                     </sheet>
@@ -119,7 +119,7 @@
             <field name="model">is.section.gantt</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name='sequence' widget='handle'/>
+                    <field name='sequence'/>
                     <field name="name"/>
                     <field name="color" widget="color"/>
                 </tree>
