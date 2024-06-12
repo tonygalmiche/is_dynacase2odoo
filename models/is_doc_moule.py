@@ -3,8 +3,8 @@ from odoo import models, fields, api, _
 from odoo.tools import format_date, formatLang, frozendict
 from datetime import datetime, timedelta
 from random import *
+from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J, TYPE_DOCUMENT
 
-from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J
 
 class IsDocMoule(models.Model):
     _name        = "is.doc.moule"
@@ -46,14 +46,7 @@ class IsDocMoule(models.Model):
             obj.idproject = idproject
 
 
-    type_document = fields.Selection([
-        ("Moule"                 , "Moule"),
-        ("Dossier F"             , "Dossier F"),
-        ("Article"               , "Article"),
-        ("Dossier Modif Variante", "Dossier Modif Variante"),
-        ("dossier_appel_offre"   , "Dossier appel d'offre"),
-    ],string="Type de document", default="Moule", required=True)
-
+    type_document = fields.Selection(TYPE_DOCUMENT,string="Type de document", default="Moule", required=True)
     sequence = fields.Integer(string="Ordre")
     project_prev     = fields.Html(compute='_compute_project_prev', store=True)
     project_prev2    = fields.Html()
@@ -244,10 +237,6 @@ class IsDocMoule(models.Model):
                     projets.append(line.idproject)
         for projet in projets:
             text="%s (%s)"%(projet.name,projet.client_id.name)
-
-
-            print(text)
-
             vals={
                 "id": '%s-%s'%(projet._name,projet.id),
                 "model": projet._name,
@@ -262,10 +251,6 @@ class IsDocMoule(models.Model):
             }
             res.append(vals)
         #**********************************************************************
-
-
-
-
 
 
         #** Ajout des jours de fermeture des projets **************************
@@ -372,14 +357,14 @@ class IsDocMoule(models.Model):
                     etat_class='etat_fait'
                 if line.j_prevue and line.date_fin_gantt:
                     date_j = dates_j.get(line.j_prevue)
-                    if dates_j:
+                    if date_j and line.date_fin_gantt:
                         if line.date_fin_gantt>date_j:
                             etat_class = "retard_j"
                 #**************************************************************
 
                 color_class = '%s is_param_projet_%s'%(etat_class,line.param_project_id.id)
 
-                end_date = str(line.date_fin_gantt or line.dateend)+' 00:00:00"'
+                end_date = str(line.date_fin_gantt or line.dateend)+' 00:00:00'
 
 
                 j_prevue = dict(GESTION_J).get(line.j_prevue,"?")

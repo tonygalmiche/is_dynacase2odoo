@@ -33,3 +33,5 @@ access_is_section_gantt_manager,access_is_section_gantt_manager,model_is_section
 access_is_fermeture_gantt,access_is_fermeture_gantt,model_is_fermeture_gantt,base.group_user,1,0,0,0
 access_is_fermeture_gantt_manager,access_is_fermeture_gantt_manager,model_is_fermeture_gantt,is_plastigray16.is_chef_projet_group,1,1,1,1
 access_is_fermeture_gantt_jour,access_is_fermeture_gantt_jour,model_is_fermeture_gantt_jour,base.group_user,1,1,1,1
+
+access_is_gantt_pdf,access_is_gantt_pdf,model_is_gantt_pdf,base.group_user,1,1,1,1

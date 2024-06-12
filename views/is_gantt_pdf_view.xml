@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- is.gantt.pdf -->
+        <record model="ir.ui.view" id="is_gantt_pdf_form">
+            <field name="name">is_gantt_pdf_form</field>
+            <field name="model">is.gantt.pdf</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button
+                            name="generer_pdf_action"
+                            string="Générer le PDF"
+                            type="object"
+                        />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="type_document"/>
+                                <field name="moule_id"                  attrs="{'invisible': [('type_document', '!=', 'Moule')]                 , 'required': [('type_document', '=', 'Moule')]}"/>
+                                <field name="dossierf_id"               attrs="{'invisible': [('type_document', '!=', 'Dossier F')]             , 'required': [('type_document', '=', 'Dossier F')]}"/>
+                                <field name="dossier_article_id"        attrs="{'invisible': [('type_document', '!=', 'Article')]               , 'required': [('type_document', '=', 'Article')]}" />
+                                <field name="dossier_modif_variante_id" attrs="{'invisible': [('type_document', '!=', 'Dossier Modif Variante')], 'required': [('type_document', '=', 'Dossier Modif Variante')]}"/>
+                                <field name="dossier_appel_offre_id"    attrs="{'invisible': [('type_document', '!=', 'dossier_appel_offre')]   , 'required': [('type_document', '=', 'dossier_appel_offre')]}"/>
+                                <field name="format_fichier"/>
+                            </group>
+                            <group>
+                                <field name="date_debut"/>  
+                                <field name="date_fin"/>  
+                            </group>
+                        </group>
+                     </sheet>
+                     <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_gantt_pdf_tree">
+            <field name="name">is_gantt_pdf_tree</field>
+            <field name="model">is.gantt.pdf</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name='type_document'/>
+                    <field name='name'/>
+                    <field name='date_debut'/>
+                    <field name='date_fin'/>
+                    <field name="format_fichier"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_gantt_pdf_search">
+            <field name="name">is_gantt_pdf_search</field>
+            <field name="model">is.gantt.pdf</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="type_document" />
+                    <field name="name" />
+                </search>
+            </field>
+        </record>
+        <record id="is_gantt_pdf_action" model="ir.actions.act_window">
+            <field name="name">Gantt PDF</field>
+            <field name="res_model">is.gantt.pdf</field>
+            <field name="view_mode">tree,form</field>
+            <field name="limit">200</field>
+        </record>       
+    </data>
+</odoo>

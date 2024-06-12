@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, tools
 
+TYPE_DOCUMENT=[
+    ("Moule"                 , "Moule"),
+    ("Dossier F"             , "Dossier F"),
+    ("Article"               , "Article"),
+    ("Dossier Modif Variante", "Dossier Modif Variante"),
+    ("dossier_appel_offre"   , "Dossier appel d'offre"),
+]
 
 GESTION_J=[
     ("J0", "Préparation J0"),
@@ -50,12 +57,7 @@ class IsParamProject(models.Model):
     ppr_icon                = fields.Image(string="Icône")
     ppr_famille             = fields.Char(string="Famille", required=True)
     ppr_transformation_pdf  = fields.Boolean(string="Transformation en PDF")
-    type_document = fields.Selection([
-        ("Moule"                 , "Moule"),
-        ("Dossier F"             , "Dossier F"),
-        ("Article"               , "Article"),
-        ("Dossier Modif Variante", "Dossier Modif Variante"),
-    ],string="Type de document", default="Moule", required=True)
+    type_document           = fields.Selection(TYPE_DOCUMENT,string="Type de document", default="Moule", required=True)
     ppr_dossier_fab         = fields.Boolean(string="Famille du dossier de fabrication")
     ppr_demande             = fields.Char(string="Demande")
     ppr_type_demande        = fields.Selection([
