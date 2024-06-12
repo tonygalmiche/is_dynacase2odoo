@@ -17,6 +17,7 @@
                                 <field name="dossierf_id"               attrs="{'invisible': [('type_document', '!=', 'Dossier F')]             , 'required': [('type_document', '=', 'Dossier F')]}"/>
                                 <field name="dossier_article_id"        attrs="{'invisible': [('type_document', '!=', 'Article')]               , 'required': [('type_document', '=', 'Article')]}" />
                                 <field name="dossier_modif_variante_id" attrs="{'invisible': [('type_document', '!=', 'Dossier Modif Variante')], 'required': [('type_document', '=', 'Dossier Modif Variante')]}"/>
+                                <field name="dossier_appel_offre_id"    attrs="{'invisible': [('type_document', '!=', 'dossier_appel_offre')]   , 'required': [('type_document', '=', 'dossier_appel_offre')]}"/>
                                 <field name="param_project_id" />
                                 <field name="ppr_type_demande" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="idproject" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
@@ -83,9 +84,10 @@
                     <button title="Gantt du moule" name="doc_moule_action" type="object" icon="fa-indent" attrs="{'invisible': [('idmoule', '=', False)]}"/>
                     <field name="idmoule"                   optional="show"           widget="many2one_clickable"/>
                     <button title="Gantt du Dossier F" name="doc_dossierf_action" type="object" icon="fa-indent" attrs="{'invisible': [('dossierf_id', '=', False)]}"/>
-                    <field name="dossierf_id"               optional="show"           widget="many2one_clickable"/>
-                    <field name="dossier_modif_variante_id" optional="show"           widget="many2one_clickable"/>
-                    <field name="dossier_article_id"        optional="show"           widget="many2one_clickable"/>
+                    <field name="dossier_appel_offre_id"    optional="hide"           widget="many2one_clickable"/>
+                    <field name="dossierf_id"               optional="hide"           widget="many2one_clickable"/>
+                    <field name="dossier_modif_variante_id" optional="hide"           widget="many2one_clickable"/>
+                    <field name="dossier_article_id"        optional="hide"           widget="many2one_clickable"/>
                     <button title="Gantt du projet" name="doc_projet_action" type="object" icon="fa-indent" attrs="{'invisible': [('idproject', '=', False)]}"/>
                     <field name="idproject" optional="show"         widget="many2one_clickable"/>
                     <field name="client_id" optional="show"         widget="many2one_clickable"/>
@@ -460,6 +462,44 @@
                 </tree>
             </field>
         </record>
+
+
+
+
+
+
+
+        <!-- Dossier appel d'offre -->
+        <record id="is_doc_moule_dossier_appel_offre_edit_tree_view" model="ir.ui.view" >
+            <field name="name">is_doc_moule_dossier_appel_offre_edit_tree_view</field>
+            <field name="model">is.doc.moule</field>
+            <field name="priority" eval="90"/>
+            <field name="arch" type="xml">
+                <tree editable="top">
+                    <field name="section_id" optional="show"/>
+                    <field name='sequence'/>
+                    <field name="param_project_id" required="1" widget="many2one_clickable"/>
+                    <field name="type_document"          optional="hide"/>
+                    <field name="dossier_appel_offre_id"      optional="hide"       widget="many2one_clickable"/>
+                    <field name="idresp"           required="1"/>
+                    <field name="demande"/>
+                    <field name="etat"             required="1"/>
+                    <field name="dateend"          optional="hide"/>
+                    <field name="duree"            required="1"/>
+                    <field name="date_debut_gantt" required="1" />
+                    <field name="date_fin_gantt"    force_save="1"/>
+                    <field name="duree_attente_avant" optional="hide"/>
+                    <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
+                    <field name="indicateur"          optional="hide"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
+                    <field name="dynacase_id"  optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+
+
+
 
 
 

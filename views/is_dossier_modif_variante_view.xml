@@ -134,19 +134,19 @@
             <field name="arch" type="xml">
                 <tree string="Dossier modif/variante">
                     <field name="demao_type" optional="show"/>
-                    <field name="demao_num" optional="hide"/>
-                    <field name="demao_dao" optional="hide"/>
+                    <field name="demao_num" optional="show"/>
+                    <field name="demao_dao" optional="show"/>
                     <field name="demao_idclient" optional="show" widget="many2one_clickable"/>
                     <field name="demao_idcommercial" optional="show"/>
                     <field name="demao_idmoule" optional="show" widget="many2one_clickable"/>
                     <field name="demao_desig" optional="show"/>
-                    <field name="demao_nature" optional="show"/>
-                    <field name="demao_ref" optional="show"/>
+                    <field name="demao_nature" optional="hide"/>
+                    <field name="demao_ref" optional="hide"/>
                     <field name="demao_pxvente" optional="hide"/>
                     <field name="demao_numcmd" optional="hide"/>
                     <field name="demao_obs" optional="hide"/>
-                    <field name="demao_motif" optional="show"/>
-                    <field name="demao_idbe" optional="show"/>
+                    <field name="demao_motif" optional="hide"/>
+                    <field name="demao_idbe" optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                 </tree>
             </field>

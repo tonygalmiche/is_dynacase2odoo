@@ -51,6 +51,7 @@ class IsDocMoule(models.Model):
         ("Dossier F"             , "Dossier F"),
         ("Article"               , "Article"),
         ("Dossier Modif Variante", "Dossier Modif Variante"),
+        ("dossier_appel_offre"   , "Dossier appel d'offre"),
     ],string="Type de document", default="Moule", required=True)
 
     sequence = fields.Integer(string="Ordre")
@@ -64,6 +65,7 @@ class IsDocMoule(models.Model):
     dossierf_id               = fields.Many2one("is.dossierf"              , string="Dossier F")
     dossier_modif_variante_id = fields.Many2one("is.dossier.modif.variante", string="Dossier Modif / Variante")
     dossier_article_id        = fields.Many2one("is.dossier.article"       , string="Dossier article")
+    dossier_appel_offre_id    = fields.Many2one("is.dossier.appel.offre"   , string="Dossier appel d'offre")
     idproject        = fields.Many2one("is.mold.project", string="Projet",compute='_compute_idproject',store=True, readonly=True)
     client_id        = fields.Many2one(related="idproject.client_id")
     idcp             = fields.Many2one(related="idmoule.chef_projet_id", string="CP")
@@ -238,9 +240,14 @@ class IsDocMoule(models.Model):
         projets=[]
         for line in lines:
             if line.idproject not in projets:
-                projets.append(line.idproject)
+                if line.idproject:
+                    projets.append(line.idproject)
         for projet in projets:
             text="%s (%s)"%(projet.name,projet.client_id.name)
+
+
+            print(text)
+
             vals={
                 "id": '%s-%s'%(projet._name,projet.id),
                 "model": projet._name,
@@ -255,6 +262,11 @@ class IsDocMoule(models.Model):
             }
             res.append(vals)
         #**********************************************************************
+
+
+
+
+
 
         #** Ajout des jours de fermeture des projets **************************
         jour_fermeture_ids=[]
@@ -278,19 +290,23 @@ class IsDocMoule(models.Model):
         dossiers=[]
         for line in lines:
             doc=False
-            doc=(line.idmoule or line.dossierf_id or line.dossier_modif_variante_id)
+            doc=(line.idmoule or line.dossierf_id or line.dossier_modif_variante_id or line.dossier_appel_offre_id)
             if doc not in dossiers:
                 dossiers.append(doc)
         for dossier in dossiers:
+            name=""
+            project=""
             if hasattr(dossier, 'name'):
                 name=dossier.name
                 project=dossier.project.name
-            else:
+            if hasattr(dossier, 'demao_num'):
                 name=dossier.demao_num
-                project='?'
+            if hasattr(dossier, 'dao_num'):
+                name=dossier.dao_num
             text="%s (%s)"%(name,project)
-            #infobulle_list=[]
-            #infobulle_list.append("<b>Moule</b>: %s"%(name))
+            parent=False
+            if hasattr(dossier, 'project'):
+                parent = 'is.mold.project-%s'%dossier.project.id,
             vals={
                 "id": "%s-%s"%(dossier._name,dossier.id),
                 "model": dossier._name,
@@ -298,7 +314,7 @@ class IsDocMoule(models.Model):
                 "text": text,
                 "start_date": False,
                 "duration": False,
-                "parent": 'is.mold.project-%s'%dossier.project.id,
+                "parent": parent,
                 "progress": 0,
                 "open": True,
                 "priority": 2,
@@ -311,7 +327,7 @@ class IsDocMoule(models.Model):
         # #** Ajout des sections **********************************************
         my_dict={}
         for line in lines:
-            dossier = (line.idmoule or line.dossierf_id or line.dossier_modif_variante_id)
+            dossier = (line.idmoule or line.dossierf_id or line.dossier_modif_variante_id or line.dossier_appel_offre_id)
             parent="%s-%s"%(dossier._name,dossier.id)
             section_id = line.section_id.id + 30000000
             id=dossier.id+20000000 + section_id
@@ -337,18 +353,18 @@ class IsDocMoule(models.Model):
 
         #** Ajout des documents des moules **************************************
         for line in lines:
-            if line.dateend and line.idresp:
+            if (line.dateend or line.date_fin_gantt) and line.idresp:
                 priority = round(2*random()) # Nombre aléatoire entre 0 et 2
                 famille=line.param_project_id.ppr_famille
                 name=famille
                 if famille=='Autre':
-                    name="%s (Autre)"%line.demande
+                    name="%s (Autre)"%(line.demande or '')
                 else:
                     name=famille
                 if line.param_project_id.ppr_revue_lancement:
                     name="%s [%s]"%(name,line.param_project_id.ppr_revue_lancement)
                 duration = line.duree_gantt or 1
-                parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id)+20000000 + line.section_id.id + 30000000
+                parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id or line.dossier_appel_offre_id.id)+20000000 + line.section_id.id + 30000000
                 
                 #** Bordure gauche de la tâche (Fait, A Faire ou en retard) ***
                 etat_class='etat_a_faire'

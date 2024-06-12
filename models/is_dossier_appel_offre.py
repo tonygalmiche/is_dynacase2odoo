@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models,fields,api
+from datetime import datetime, timedelta
 
 
 _DAO_RSPLAST=([
@@ -75,3 +76,35 @@ class is_dossier_appel_offre(models.Model):
     dao_motif        = fields.Selection(_DAO_MOTIF, "Motif")
     dao_avancement   = fields.Selection(_DAO_AVANCEMENT, "Avancement")
     state            = fields.Selection(_STATE, "Etat")
+
+
+    def gantt_action(self):
+        for obj in self:
+            docs=self.env['is.doc.moule'].search([ ('dossier_appel_offre_id', '=', obj.id) ])
+            ids=[]
+            for doc in docs:
+                ids.append(doc.id)
+            tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_dossier_appel_offre_edit_tree_view').id
+            gantt_id = self.env.ref('is_dynacase2odoo.is_doc_moule_moule_dhtmlxgantt_project_view').id
+            ctx={
+                'default_type_document': 'dossier_appel_offre',
+                'default_dossier_appel_offre_id'  : obj.id,
+                'default_etat'         :'AF',
+                'default_dateend'      : datetime.today(),
+                'default_idresp'       : self._uid,
+            }
+            return {
+                'name': obj.dao_num,
+                'view_mode': 'dhtmlxgantt_project,tree,form,kanban,calendar,pivot,graph',
+                "views"    : [
+                    (gantt_id, "dhtmlxgantt_project"),
+                    (tree_id, "tree"),
+                    (False, "form"),(False, "kanban"),(False, "calendar"),(False, "pivot"),(False, "graph")],
+                'res_model': 'is.doc.moule',
+                'domain': [
+                    ('id','in',ids),
+                ],
+                'type': 'ir.actions.act_window',
+                "context": ctx,
+                'limit': 1000,
+            }

@@ -8,6 +8,12 @@
             <field name="arch" type="xml">
                 <form string="Form" create="1">
                     <header>
+                        <button 
+                            name="gantt_action"
+                            string="Gantt"
+                            type="object"
+                            class="btn-success"
+                        />
                         <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet>
