@@ -11,13 +11,13 @@
                         <group>
                             <group string="Caractéristiques" name="caracteristiques">
                                 <field name="section_id"/>
+                                <field name="sequence"/>
                                 <field name="type_document" is_widget="background_color" options="[{'value':'Moule','color':'red'},{'value':'Article','color':'green'},{'value':'Dossier F','color':'orange'}]"/>
                                 <field name="idmoule"                   attrs="{'invisible': [('type_document', '!=', 'Moule')]                 , 'required': [('type_document', '=', 'Moule')]}"/>
                                 <field name="dossierf_id"               attrs="{'invisible': [('type_document', '!=', 'Dossier F')]             , 'required': [('type_document', '=', 'Dossier F')]}"/>
                                 <field name="dossier_article_id"        attrs="{'invisible': [('type_document', '!=', 'Article')]               , 'required': [('type_document', '=', 'Article')]}" />
                                 <field name="dossier_modif_variante_id" attrs="{'invisible': [('type_document', '!=', 'Dossier Modif Variante')], 'required': [('type_document', '=', 'Dossier Modif Variante')]}"/>
                                 <field name="param_project_id" />
-                                <field name="sequence"/>
                                 <field name="ppr_type_demande" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="idproject" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
                                 <field name="client_id" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
@@ -118,8 +118,8 @@
             <field name="priority" eval="90"/>
             <field name="arch" type="xml">
                 <tree editable="top">
-                    <field name='sequence'/>
                     <field name="section_id"       optional="show" required="1"/>
+                    <field name='sequence'/>
                     <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
                     <field name="param_project_id" required="1" widget="many2one_clickable"/>
                     <field name="type_document"    optional="hide"/>
@@ -250,6 +250,7 @@
             <field name="arch" type="xml">
                 <tree string="Document moule">
                     <field name="section_id"          optional="show"/>
+                    <field name="sequence"            optional="show"/>
                     <field name="param_project_id"    optional="show"  widget="many2one_clickable"/>
                     <field name="type_document"       optional="hide"/>
                     <field name="ppr_type_demande"    optional="hide" />
@@ -402,8 +403,8 @@
             <field name="priority" eval="90"/>
             <field name="arch" type="xml">
                 <tree editable="top">
-                    <field name='sequence'/>
                     <field name="section_id" optional="show"/>
+                    <field name='sequence'   optional="show"/>
                     <field name="param_project_id" required="1" widget="many2one_clickable"/>
                     <field name="type_document"    optional="hide"/>
                     <field name="idmoule"          optional="hide" widget="many2one_clickable"/>
@@ -435,8 +436,8 @@
             <field name="priority" eval="90"/>
             <field name="arch" type="xml">
                 <tree editable="top">
-                    <field name='sequence'/>
                     <field name="section_id" optional="show"/>
+                    <field name='sequence'/>
                     <field name="param_project_id" required="1" widget="many2one_clickable"/>
                     <field name="type_document"    optional="hide"/>
                     <field name="idmoule"          optional="hide"       widget="many2one_clickable"/>
