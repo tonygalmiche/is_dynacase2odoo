@@ -194,7 +194,7 @@
                     <field name="rr_projetid" optional="show"/>
                     <field name="rr_rpjid" optional="show"/>
                     <field name="state" widget="badge" optional="show"/>
-                    <field name="rr_validation_revue_risque" optional="show"/>
+                    <field name="rr_validation_revue_risque" optional="show" widget="is_revue_risque"/>
                     <field name="id"          optional="hide"/>
                     <field name="dynacase_id" optional="hide"/>
                 </tree>

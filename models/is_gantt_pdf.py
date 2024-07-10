@@ -60,6 +60,12 @@ class IsGanttPdf(models.Model):
                 domain=[
                     ('dossier_appel_offre_id','=',obj.dossier_appel_offre_id.id)
                 ]
+            if obj.type_document=="Dossier Modif Variante":
+                domain=[
+                    ('dossier_modif_variante_id','=',obj.dossier_modif_variante_id.id)
+                ]
+            if domain==[]:
+                return
             res=self.env['is.doc.moule'].get_dhtmlx(domain=domain)
             items = res['items']
             #******************************************************************
@@ -85,7 +91,6 @@ class IsGanttPdf(models.Model):
                         date_fin = end_date
             delta = (date_fin-date_debut).days
             #******************************************************************
-
 
             #** Paramètres du Gannt *******************************************
             file_extension = obj.format_fichier  # svg, png ou pdf
@@ -125,6 +130,7 @@ class IsGanttPdf(models.Model):
                 
 
             def cairo_show_text(ctx,x,y,font_rgb=(0,0,0),font_size=12,txt=""):
+                txt=txt or ''
                 ctx.set_source_rgb(font_rgb[0],font_rgb[1],font_rgb[2])
                 ctx.set_font_size(font_size)
                 ctx.select_font_face("Arial",cairo.FONT_SLANT_NORMAL,cairo.FONT_WEIGHT_NORMAL)
