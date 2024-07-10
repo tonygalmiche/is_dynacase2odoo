@@ -81,6 +81,11 @@
                     <field name="dao_motif" optional="show"/>
                     <field name="dao_avancement" optional="show"/>
                     <field name="state" optional="show"/>
+
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
+                    <field name="dynacase_id"  optional="hide"/>
+
+
                 </tree>
             </field>
         </record>
