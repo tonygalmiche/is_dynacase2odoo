@@ -6,6 +6,7 @@ import base64
 import cairo
 import time
 import os
+from matplotlib.colors import to_rgb
 
 
 class IsGanttPdf(models.Model):
@@ -70,15 +71,96 @@ class IsGanttPdf(models.Model):
             items = res['items']
             #******************************************************************
 
-            # {'id': 'is.doc.moule-106837', 'model': 'is.doc.moule', 'res_id': 106837, 'text': 'tata (Autre)', 'end_date': '2024-06-18 00:00:00"', 'duration': 1, 'parent': 50019539, 'priority': 0, 'color_class': 'etat_a_faire is_param_projet_189', 'section': 'Section 2', 'responsable': 'Administrator', 'j_prevue': '?'}
+            #** Calcul start_date *********************************************
+            for item in items:
+                end_date = item.get('end_date')
+                duration =  item.get('duration')
+                if end_date and  duration:
+                    end_date   = datetime.strptime(end_date, '%Y-%m-%d 00:00:00')
+                    start_date = end_date - timedelta(days=duration)
+                    item['start_date'] = start_date
+                    item['end_date']   = end_date
+                    #print("id=%s : end_date=%s : duration=%s : start_date=%s"%(item['id'],item.get('end_date'),item.get('duration'),start_date))
+            #******************************************************************
+
+            #** Recherche des enfants de chaque niveau ************************
+            def get_enfants(items,parent,niveau):
+                "Recherche des enfants du parent indiqué"
+                for item in items:
+                    if item.get('parent')==parent:
+                        item['niveau'] = niveau
+                        enfants.append(item)
+                        get_enfants(items, item['id'], niveau+1)
+                return
+            enfants=[]
+            get_enfants(items,False,0)
+            #******************************************************************
+ 
+            #** Calcul date de debut et de fin des parents ********************
+            fin=False
+            while fin==False:
+                fin=True
+                for enfant in enfants:
+                    end_date = enfant.get('end_date')
+                    if end_date:
+                        for enfant2 in enfants:
+                            if enfant2['id']==enfant.get('parent'):
+                                if 'end_date' not in enfant2:
+                                    enfant2['end_date']=end_date
+                                    fin=False
+                                if enfant2['end_date']<end_date:
+                                    enfant2['end_date']=end_date
+                                    fin=False
+                    start_date = enfant.get('start_date')
+                    if start_date:
+                        for enfant2 in enfants:
+                            if enfant2['id']==enfant.get('parent'):
+                                if 'start_date' not in enfant2 or enfant2['start_date']==False:
+                                    enfant2['start_date']=start_date
+                                    fin=False
+                                if enfant2['start_date']>start_date:
+                                    enfant2['start_date']=start_date
+                                    fin=False
+            #******************************************************************
+
+            #** Ajout des durations pour les parents **************************
+            for enfant in enfants:
+                if 'duration' not in enfant or enfant['duration']==False:
+                    enfant['duration'] = (enfant['end_date'] - enfant['start_date']).days
+            #******************************************************************
+
+            #** Ajout de la couleur de la section **************************
+            for enfant in enfants:
+                model  = enfant.get('model')
+                res_id = int(enfant.get('res_id') or 0)
+                color = "#1b81e8"
+                o = self.env[model].browse(res_id)
+                if o:
+                    if model=='is.doc.moule' and o.section_id:
+                        color = o.section_id.color
+                    if model=='is.section.gantt':
+                        color = o.color
+
+                print(o, color)
+                enfant['color'] = color
+            #******************************************************************
+
+            #** Resultat ******************************************************            
+            #for enfant in enfants:
+            #    print(enfant)
+            #   #print(enfant['niveau'],enfant['id'],enfant.get('start_date'),enfant.get('duration'),enfant.get('end_date'))
+            #******************************************************************
+
 
             #** Recherche du nombre de jours **********************************
             def get_date(end_date,duration):
                 start_date = False
                 if end_date:
-                    start_date = datetime.strptime(end_date, '%Y-%m-%d 00:00:00') - timedelta(days=duration)
+                    start_date = end_date - timedelta(days=duration)
+                    #start_date = datetime.strptime(end_date, '%Y-%m-%d 00:00:00') - timedelta(days=duration)
                 return start_date
             date_debut = date_fin = False
+            items = enfants
             for item in items:
                 duration   = item.get('duration')
                 end_date   = get_date(item.get('end_date'),0)
@@ -169,7 +251,7 @@ class IsGanttPdf(models.Model):
             for item in items:
                 #if item.get('model')=='is.doc.moule':
                 cairo_rectangle(ctx,0,entete_height + entete_table_height + y*tache_height,grille_width,tache_height,line_rgb=(0.8, 0.8, 0.8))
-                txt = item.get('text')
+                txt = '%s %s'%('- '*item.get('niveau'),item.get('text'))
                 cairo_show_text(ctx,5,entete_height + entete_table_height + (y+1)*tache_height-1,txt=txt)
                 for x in range(0,jour_nb):
                     cairo_rectangle(ctx,x*jour_width+grille_width,entete_height + entete_table_height + y*tache_height,jour_width,tache_height,line_rgb=(0.8, 0.8, 0.8))
@@ -184,8 +266,13 @@ class IsGanttPdf(models.Model):
                 decal = 0
                 if start_date:
                     decal = (start_date - date_debut).days
-                fill_rgb=(random(),random(),random())
-                cairo_rectangle(ctx,decal*jour_width+grille_width,entete_height + entete_table_height + y*tache_height,duration*jour_width,tache_height,fill_rgb=fill_rgb)
+                #fill_rgb=(random(),random(),random())
+                fill_rgb = to_rgb(item.get('color'))
+
+                #def cairo_rectangle(ctx,x,y,width,height,line_width=1,line_rgb=False,fill_rgb=False):
+
+
+                cairo_rectangle(ctx,decal*jour_width+grille_width, entete_height + entete_table_height + y*tache_height+3 ,duration*jour_width,tache_height-6,fill_rgb=fill_rgb)
                 y+=1
 
             #** Enregistrement du fichier ************************************* 

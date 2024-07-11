@@ -291,7 +291,7 @@ class IsDocMoule(models.Model):
             text="%s (%s)"%(name,project)
             parent=False
             if hasattr(dossier, 'project'):
-                parent = 'is.mold.project-%s'%dossier.project.id,
+                parent = 'is.mold.project-%s'%dossier.project.id
             vals={
                 "id": "%s-%s"%(dossier._name,dossier.id),
                 "model": dossier._name,
@@ -316,14 +316,17 @@ class IsDocMoule(models.Model):
             parent="%s-%s"%(dossier._name,dossier.id)
             section_id = line.section_id.id + 30000000
             id=dossier.id+20000000 + section_id
-            key = "%s|%s|%s"%(id,parent,line.section_id.name)
+            key = "%s|%s|%s|%s"%(id,parent,line.section_id.name,(line.section_id.id or 0))
             my_dict[id]=key
         for id in my_dict:
             tab=my_dict[id].split("|")
             parent=tab[1] 
             text="%s"%(tab[2])
+            res_id=tab[3] 
             vals={
                 "id": id,
+                "model": 'is.section.gantt',
+                "res_id": res_id,
                 "text": text,
                 "start_date": False,
                 "duration": False,
@@ -362,7 +365,11 @@ class IsDocMoule(models.Model):
                             etat_class = "retard_j"
                 #**************************************************************
 
-                color_class = '%s is_param_projet_%s'%(etat_class,line.param_project_id.id)
+                #color_class = '%s is_param_projet_%s'%(etat_class,line.param_project_id.id)
+                color_class = '%s is_section_gantt_%s'%(etat_class,line.section_id.id)
+
+
+
 
                 end_date = str(line.date_fin_gantt or line.dateend)+' 00:00:00'
 

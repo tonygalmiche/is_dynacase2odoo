@@ -250,6 +250,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                     "<tr>                           <th style='text-align:right;font-weight: bold;'>Date début : </th><td>"+gantt.templates.tooltip_date_format(start)+ "</td></tr>"+
                     "<tr>                           <th style='text-align:right;font-weight: bold;'>Date fin   : </th><td>"+gantt.templates.tooltip_date_format(end)+"</td></tr>"+
                     "<tr>                           <th style='text-align:right;font-weight: bold;'>Durée      : </th><td>"+task.duration+"</td></tr>"+
+                    "<tr>                           <th style='text-align:right;font-weight: bold;'>id         : </th><td>"+task.id+"</td></tr>"+
                 "</table>";
             return html
         };

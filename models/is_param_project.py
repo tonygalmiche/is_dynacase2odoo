@@ -123,18 +123,12 @@ class IsParamProject(models.Model):
             f.write("/*Ne pas modifier ce fichier, car il est généré automatiquement par l'action creer_css_action pour dhtmlxgantt_project*/\n\n")
             lines=self.env['is.param.project'].search([])
             for line in lines:
-                #color = line.ppr_color
-                #h = color.lstrip('#')
-                #rgb = tuple(str(int(h[i:i+2], 16)) for i in (0, 2, 4))
-                #f.write("/* %s */\n"%(line.ppr_famille))
-                #rgba="rgba(%s,1)"%(','.join(rgb))
-                #f.write(".dhtmlxgantt_project .is_param_projet_%s{\n    background:%s;\n}\n"%(line.id,rgba))
-                #rgba="rgba(%s,0.5)"%(','.join(rgb))
-                #f.write(".dhtmlxgantt_project .is_param_projet_%s .gantt_task_progress{\n    background:%s;\n}\n\n"%(line.id,rgba))
-                #f.write(".dhtmlxgantt_project .is_param_projet_%s{\n    background:%s;\n    opacity: 1;\n}\n"%(line.id,line.ppr_color))
-                #f.write(".dhtmlxgantt_project .is_param_projet_%s .gantt_task_progress{\n    background:%s;\n    opacity: 0.5;\n}\n\n"%(line.id,line.ppr_color))
                 f.write(".dhtmlxgantt_project .is_param_projet_%s{\n    background:%s;\n}\n"%(line.id,line.ppr_color))
                 f.write(".dhtmlxgantt_project .is_param_projet_%s .gantt_task_progress{\n    opacity: 0.5;\n}\n\n"%(line.id))
+            lines=self.env['is.section.gantt'].search([])
+            for line in lines:
+                f.write(".dhtmlxgantt_project .is_section_gantt_%s{\n    background:%s;\n}\n"%(line.id,line.color))
+                f.write(".dhtmlxgantt_project .is_section_gantt_%s .gantt_task_progress{\n    opacity: 0.5;\n}\n\n"%(line.id))
             f.close()
 
 
