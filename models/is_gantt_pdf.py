@@ -1,12 +1,15 @@
 from odoo import models, fields, api, _
 from odoo.addons.is_dynacase2odoo.models.is_param_project import TYPE_DOCUMENT
 from datetime import datetime, timedelta
+import calendar
 from random import *
 import base64
 import cairo
+from PIL import Image
 import time
 import os
 from matplotlib.colors import to_rgb
+import codecs
 
 
 class IsGanttPdf(models.Model):
@@ -51,20 +54,27 @@ class IsGanttPdf(models.Model):
 
     def generer_pdf_action(self):
         for obj in self:
+
+
+
             #** Recherche des tâches ******************************************
             domain=[]
+            titre="?"
             if obj.type_document=="Moule":
                 domain=[
                     ('idmoule','=',obj.moule_id.id)
                 ]
+                titre="%s - %s"%(obj.moule_id.name,obj.moule_id.designation)
             if obj.type_document=="dossier_appel_offre":
                 domain=[
                     ('dossier_appel_offre_id','=',obj.dossier_appel_offre_id.id)
                 ]
+                titre=obj.dossier_appel_offre_id.dao_num
             if obj.type_document=="Dossier Modif Variante":
                 domain=[
                     ('dossier_modif_variante_id','=',obj.dossier_modif_variante_id.id)
                 ]
+                titre=obj.dossier_modif_variante_id.demao_num
             if domain==[]:
                 return
             res=self.env['is.doc.moule'].get_dhtmlx(domain=domain)
@@ -140,8 +150,6 @@ class IsGanttPdf(models.Model):
                         color = o.section_id.color
                     if model=='is.section.gantt':
                         color = o.color
-
-                print(o, color)
                 enfant['color'] = color
             #******************************************************************
 
@@ -207,7 +215,7 @@ class IsGanttPdf(models.Model):
                     ctx.fill()
                 if line_rgb:
                     ctx.set_source_rgb(line_rgb[0],line_rgb[1],line_rgb[2])
-                    ctx.set_line_width(1) 
+                    ctx.set_line_width(0.2) 
                     ctx.stroke() 
                 
 
@@ -226,10 +234,39 @@ class IsGanttPdf(models.Model):
 
             #** Entete du Gantt ***********************************************
             cairo_rectangle(ctx,0,0,WIDTH,entete_height,line_rgb=(0.8, 0.8, 0.8))
+            cairo_show_text(ctx,110,entete_height,font_size=24,txt=titre)
+
+
 
             #** Entete du tableau *********************************************
             cairo_rectangle(ctx,0,entete_height,WIDTH,tache_height,line_rgb=(0.8, 0.8, 0.8))
-            cairo_rectangle(ctx,0,entete_height+tache_height,WIDTH,tache_height,line_rgb=(0.8, 0.8, 0.8))
+            #cairo_rectangle(ctx,0,entete_height+tache_height,WIDTH,tache_height,line_rgb=(0.8, 0.8, 0.8))
+
+            #** Mois **********************************************************
+            ladate = date_debut
+            lesmois=[]
+            for x in range(0,int(jour_nb)):
+                txt = ladate.strftime("%m/%Y")
+                if x==0 or ladate.day==1:
+                    cemois=calendar.monthrange(ladate.year,ladate.month)
+                    premier_du_mois=ladate.day
+                    dernier_du_mois=cemois[1]
+                    fin_mois = ladate + timedelta(days=dernier_du_mois)
+                    delta = (fin_mois - date_fin).days
+                    if delta>0:
+                        dernier_du_mois = dernier_du_mois - delta
+                    lesmois.append((txt,premier_du_mois,dernier_du_mois))
+                ladate += timedelta(days=1)
+            decal=0
+            for mois in lesmois:
+                nb_jours_mois = mois[2]-mois[1]+1 #dernier_du_mois - premier_du_mois
+                x      = grille_width+decal*jour_width
+                y      = entete_height
+                width  = nb_jours_mois *  jour_width
+                height = tache_height
+                cairo_rectangle(ctx,x,y,width,height,line_rgb=(0.8, 0.8, 0.8))
+                cairo_show_text(ctx,x+2,y+tache_height,txt=mois[0])
+                decal+=nb_jours_mois
 
             #** Semaines ******************************************************
             ladate = date_debut
@@ -243,7 +280,8 @@ class IsGanttPdf(models.Model):
             ladate = date_debut
             for x in range(0,jour_nb):
                 if ladate.weekday() in (5,6):
-                    cairo_rectangle(ctx,grille_width+x*jour_width,entete_height+tache_height*2,jour_width,jour_nb*tache_height,fill_rgb=(0.7, 0.7, 0.7))
+                    fill_rgb=to_rgb("#fadcb8")
+                    cairo_rectangle(ctx,grille_width+x*jour_width,entete_height+tache_height*1,jour_width,(jour_nb+1)*tache_height,fill_rgb=fill_rgb)
                 ladate += timedelta(days=1)
 
             #** Création des rectangles des lignes pour les tâches ************
@@ -266,14 +304,62 @@ class IsGanttPdf(models.Model):
                 decal = 0
                 if start_date:
                     decal = (start_date - date_debut).days
-                #fill_rgb=(random(),random(),random())
                 fill_rgb = to_rgb(item.get('color'))
-
-                #def cairo_rectangle(ctx,x,y,width,height,line_width=1,line_rgb=False,fill_rgb=False):
-
-
                 cairo_rectangle(ctx,decal*jour_width+grille_width, entete_height + entete_table_height + y*tache_height+3 ,duration*jour_width,tache_height-6,fill_rgb=fill_rgb)
                 y+=1
+
+
+            #Ajouter le logo sauf pour le SVG ou cela ne fonctionne pas ***********
+            if file_extension!="svg":
+                #** Convertir la surface au format PIL pour ajouter le logo *******
+                def surface_to_pil(surface: cairo.ImageSurface) -> Image:
+                    format = surface.get_format()
+                    size = (surface.get_width(), surface.get_height())
+                    stride = surface.get_stride()
+                    with surface.get_data() as memory:
+                        if format == cairo.Format.RGB24:
+                            return Image.frombuffer(
+                                "RGB", size, memory.tobytes(),
+                                'raw', "BGRX", stride)
+                        elif format == cairo.Format.ARGB32:
+                            return Image.frombuffer(
+                                "RGBA", size, memory.tobytes(),
+                                'raw', "BGRa", stride)
+                        else:
+                            raise NotImplementedError(repr(format))
+
+                def pil_to_surface(image):
+                    return cairo.ImageSurface.create_for_data(
+                        bytearray(image.tobytes('raw', 'BGRa')),
+                        cairo.FORMAT_ARGB32,
+                        image.width,
+                        image.height,
+                        )
+
+                #** Logo au format PIL et redimmensionnement **********************
+                logo_path="/tmp/logo-gantt-pdf.png"
+                company = self.env.user.company_id
+                f = open(logo_path,'wb')
+                f.write(base64.b64decode(company.logo))
+                f.close()
+                image_logo = Image.open(logo_path)  
+                width, height = image_logo.size 
+                max_height = entete_height
+                ratio = height/max_height
+                new_width = int(width/ratio)
+                image_logo_resize = image_logo.resize((new_width, max_height))
+
+                #** Combiner le logo et le gantt **********************************
+                result_pil = Image.new(
+                    mode = 'RGBA',
+                    size = (surface.get_width(), surface.get_height()),
+                    color = (0, 0, 0, 0),
+                    )
+                surface_pil = surface_to_pil(surface) # Convertir le Gantt au format 'surface' au format PIL
+                result_pil.paste(surface_pil)         # Ajout du Gantt au format PIL
+                result_pil.paste(image_logo_resize)   # Ajout du logo au format PIL
+                surface = pil_to_surface(result_pil)  # Convertir le format PIL en format 'surface'
+
 
             #** Enregistrement du fichier ************************************* 
             if file_extension=="png":

@@ -10,7 +10,7 @@
                     <header>
                         <button
                             name="generer_pdf_action"
-                            string="Générer le PDF"
+                            string="Générer le document"
                             type="object"
                         />
                     </header>
