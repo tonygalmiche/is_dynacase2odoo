@@ -10,6 +10,8 @@ import time
 import os
 from matplotlib.colors import to_rgb
 import codecs
+import xml.etree.ElementTree as ET
+#from lxml import etree
 
 
 class IsGanttPdf(models.Model):
@@ -28,7 +30,8 @@ class IsGanttPdf(models.Model):
     dossier_appel_offre_id    = fields.Many2one("is.dossier.appel.offre"   , string="Dossier appel d'offre")
     date_debut                = fields.Date("Date début")
     date_fin                  = fields.Date("Date fin")
-    format_fichier           = fields.Selection([
+    bordure_jour              = fields.Boolean("Bordure jour", default=False)
+    format_fichier            = fields.Selection([
         ("png", "PNG"),
         ("pdf", "PDF"),
         ("svg", "SVG"),
@@ -90,7 +93,6 @@ class IsGanttPdf(models.Model):
                     start_date = end_date - timedelta(days=duration)
                     item['start_date'] = start_date
                     item['end_date']   = end_date
-                    #print("id=%s : end_date=%s : duration=%s : start_date=%s"%(item['id'],item.get('end_date'),item.get('duration'),start_date))
             #******************************************************************
 
             #** Recherche des enfants de chaque niveau ************************
@@ -153,13 +155,6 @@ class IsGanttPdf(models.Model):
                 enfant['color'] = color
             #******************************************************************
 
-            #** Resultat ******************************************************            
-            #for enfant in enfants:
-            #    print(enfant)
-            #   #print(enfant['niveau'],enfant['id'],enfant.get('start_date'),enfant.get('duration'),enfant.get('end_date'))
-            #******************************************************************
-
-
             #** Recherche du nombre de jours **********************************
             def get_date(end_date,duration):
                 start_date = False
@@ -179,27 +174,43 @@ class IsGanttPdf(models.Model):
                 if end_date:
                     if not date_fin or date_fin<end_date:
                         date_fin = end_date
-            delta = (date_fin-date_debut).days
+
+            if obj.date_debut:
+                date_debut=datetime.fromisoformat(obj.date_debut.isoformat()) 
+            if obj.date_fin:
+                date_fin=datetime.fromisoformat(obj.date_fin.isoformat()) 
+            jour_nb = (date_fin-date_debut).days
             #******************************************************************
+
+            #** Calcul du nombre de taches à afficher *************************
+            nb_taches=0
+            for item in items:
+                duration   = item.get('duration')
+                end_date   = get_date(item.get('end_date'),0)
+                start_date = get_date(item.get('end_date'),duration)
+                decal = 0
+                if start_date:
+                    decal = (start_date - date_debut).days
+                if decal<0:
+                    duration+=decal
+                    decal=0
+                if duration>0 and decal<jour_nb:
+                    nb_taches+=1
 
             #** Paramètres du Gannt *******************************************
             file_extension = obj.format_fichier  # svg, png ou pdf
             file_name = obj.name
             file_name_with_extension = "%s.%s"%(file_name,file_extension)
             path = "/tmp/%s"%file_name_with_extension 
-
-            tache_nb            = len(items)
             tache_height        = 20
-            jour_nb             = delta
             jour_width          = 13
             grille_width        = 30*jour_width
-            entete_height       = 2*tache_height # Entête pour placer le logo et un titre (ex : le moule)
+            entete_height       = 4*tache_height # Entête pour placer le logo et un titre (ex : le moule)
             entete_table_height = 2*tache_height # Entête du tableau pour mettre les jours et les semaines
 
             WIDTH = grille_width + jour_nb*jour_width
-            HEIGHT = entete_height + entete_table_height + tache_nb*tache_height
+            HEIGHT = entete_height + entete_table_height + nb_taches*tache_height
             #******************************************************************
-
 
             if file_extension=="svg":
                 surface = cairo.SVGSurface(path, WIDTH, HEIGHT)
@@ -207,18 +218,17 @@ class IsGanttPdf(models.Model):
                 surface = cairo.ImageSurface(cairo.FORMAT_RGB24,WIDTH,HEIGHT)
             ctx = cairo.Context(surface)
 
-
-            def cairo_rectangle(ctx,x,y,width,height,line_width=1,line_rgb=False,fill_rgb=False):
+            def cairo_rectangle(ctx,x,y,width,height,line_width=0,line_rgb=(0,0,0),fill_rgb=False):
                 ctx.rectangle(x, y, width, height)
                 if fill_rgb:
                     ctx.set_source_rgb(fill_rgb[0],fill_rgb[1],fill_rgb[2])
                     ctx.fill()
-                if line_rgb:
+                if line_width>0:
+                    ctx.rectangle(x, y, width, height)
                     ctx.set_source_rgb(line_rgb[0],line_rgb[1],line_rgb[2])
-                    ctx.set_line_width(0.2) 
+                    ctx.set_line_width(line_width) 
                     ctx.stroke() 
                 
-
             def cairo_show_text(ctx,x,y,font_rgb=(0,0,0),font_size=12,txt=""):
                 txt=txt or ''
                 ctx.set_source_rgb(font_rgb[0],font_rgb[1],font_rgb[2])
@@ -234,9 +244,7 @@ class IsGanttPdf(models.Model):
 
             #** Entete du Gantt ***********************************************
             cairo_rectangle(ctx,0,0,WIDTH,entete_height,line_rgb=(0.8, 0.8, 0.8))
-            cairo_show_text(ctx,110,entete_height,font_size=24,txt=titre)
-
-
+            cairo_show_text(ctx,220,entete_height-tache_height,font_size=36,txt=titre)
 
             #** Entete du tableau *********************************************
             cairo_rectangle(ctx,0,entete_height,WIDTH,tache_height,line_rgb=(0.8, 0.8, 0.8))
@@ -264,39 +272,39 @@ class IsGanttPdf(models.Model):
                 y      = entete_height
                 width  = nb_jours_mois *  jour_width
                 height = tache_height
-                cairo_rectangle(ctx,x,y,width,height,line_rgb=(0.8, 0.8, 0.8))
+                cairo_rectangle(ctx,x,y,width,height,line_rgb=(0.8, 0.8, 0.8),line_width=0.2)
                 cairo_show_text(ctx,x+2,y+tache_height,txt=mois[0])
                 decal+=nb_jours_mois
 
             #** Semaines ******************************************************
             ladate = date_debut
-            for x in range(0,int(jour_nb/7)):
-                cairo_rectangle(ctx,grille_width+x*jour_width*7,entete_height+tache_height,jour_width*7,tache_height,line_rgb=(0.8, 0.8, 0.8))
+            semaines=[]
+            for x in range(0,int(jour_nb)):
                 txt = ladate.strftime("S%W")
-                cairo_show_text(ctx,grille_width+x*jour_width*7+2,entete_height + entete_table_height-1,txt=txt)
-                ladate += timedelta(days=7)
-            
-            #** weekend en couleur ********************************************
-            ladate = date_debut
-            for x in range(0,jour_nb):
-                if ladate.weekday() in (5,6):
-                    fill_rgb=to_rgb("#fadcb8")
-                    cairo_rectangle(ctx,grille_width+x*jour_width,entete_height+tache_height*1,jour_width,(jour_nb+1)*tache_height,fill_rgb=fill_rgb)
+                jour_semaine = ladate.isoweekday()
+                if x==0 or jour_semaine==1:
+                    nb_jours_semaine = 7 - jour_semaine
+                    debut_semaine = ladate.isoweekday()
+                    fin_semaine   = 7
+                    date_fin_semaine = ladate + timedelta(days=nb_jours_semaine)
+                    delta = (date_fin_semaine - date_fin).days
+                    if delta>0:
+                        fin_semaine = fin_semaine - delta
+                    semaines.append((txt,debut_semaine,fin_semaine))
                 ladate += timedelta(days=1)
+            decal=0
+            for semaine in semaines:
+                nb_jours_semaine = semaine[2]-semaine[1]+1
+                x      = grille_width+decal*jour_width
+                y      = entete_height+tache_height
+                width  = nb_jours_semaine *  jour_width
+                height = tache_height
+                cairo_rectangle(ctx,x,y,width,height,line_rgb=(0.8, 0.8, 0.8),line_width=0.2)
+                cairo_show_text(ctx,x+2,y+tache_height,txt=semaine[0])
+                decal+=nb_jours_semaine
 
-            #** Création des rectangles des lignes pour les tâches ************
-            y=0
-            for item in items:
-                #if item.get('model')=='is.doc.moule':
-                cairo_rectangle(ctx,0,entete_height + entete_table_height + y*tache_height,grille_width,tache_height,line_rgb=(0.8, 0.8, 0.8))
-                txt = '%s %s'%('- '*item.get('niveau'),item.get('text'))
-                cairo_show_text(ctx,5,entete_height + entete_table_height + (y+1)*tache_height-1,txt=txt)
-                for x in range(0,jour_nb):
-                    cairo_rectangle(ctx,x*jour_width+grille_width,entete_height + entete_table_height + y*tache_height,jour_width,tache_height,line_rgb=(0.8, 0.8, 0.8))
-                y+=1
-
-            #** Ajout des tâches **********************************************
-            y=0
+            #** Ajout du tableau des tâches et de l'alternance des couleurs ***
+            nb=0
             for item in items:
                 duration   = item.get('duration')
                 end_date   = get_date(item.get('end_date'),0)
@@ -304,10 +312,67 @@ class IsGanttPdf(models.Model):
                 decal = 0
                 if start_date:
                     decal = (start_date - date_debut).days
-                fill_rgb = to_rgb(item.get('color'))
-                cairo_rectangle(ctx,decal*jour_width+grille_width, entete_height + entete_table_height + y*tache_height+3 ,duration*jour_width,tache_height-6,fill_rgb=fill_rgb)
-                y+=1
+                if decal<0:
+                    duration+=decal
+                    decal=0
+                if duration>0 and decal<jour_nb:
+                    x      = decal*jour_width+grille_width
+                    y      = entete_height + entete_table_height + nb*tache_height
+                    width  = duration*jour_width
+                    height = tache_height
+                    if nb%2:
+                        fill_rgb=(227/255, 237/255, 252/255)
+                        cairo_rectangle(ctx,0,y,WIDTH,tache_height,fill_rgb=fill_rgb,line_rgb=(0.8, 0.8, 0.8),line_width=0.2) # 1 ligne bleu toutes les 2 lignes
+                    else:
+                        cairo_rectangle(ctx,0,y,WIDTH,tache_height,line_rgb=(0.8, 0.8, 0.8),line_width=0.2)                   # 1 ligne blanche toutes les 2 lignes
+                    nb+=1
 
+            #** weekend en couleur ********************************************
+            ladate = date_debut
+            for ct in range(0,jour_nb):
+                if ladate.weekday() in (5,6):
+                    fill_rgb=to_rgb("#fadcb8")
+                    x      = grille_width+ct*jour_width
+                    y      = entete_height+tache_height*1
+                    height = nb_taches*tache_height+tache_height
+                    cairo_rectangle(ctx,x,y,jour_width,height,fill_rgb=fill_rgb)
+                ladate += timedelta(days=1)
+
+            #** Ajout des tâches **********************************************
+            nb=0
+            for item in items:
+                duration   = item.get('duration')
+                end_date   = get_date(item.get('end_date'),0)
+                start_date = get_date(item.get('end_date'),duration)
+                decal = 0
+                if start_date:
+                    decal = (start_date - date_debut).days
+                if decal<0:
+                    duration+=decal
+                    decal=0
+                if duration>0 and decal<jour_nb:
+                    x      = decal*jour_width+grille_width
+                    y      = entete_height + entete_table_height + nb*tache_height
+                    width  = duration*jour_width
+                    height = tache_height
+                    txt = '%s %s'%('- '*item.get('niveau'),item.get('text'))
+                    cairo_show_text(ctx,5,y+tache_height-1,txt=txt) # Nom de la tache à gauche
+                    if obj.bordure_jour:
+                        for ct in range(0,jour_nb):
+                            cairo_rectangle(ctx,ct*jour_width+grille_width,y,jour_width,tache_height,line_rgb=(0.8, 0.8, 0.8),line_width=0.2) # Bordure des jours
+                    else:
+                        cairo_rectangle(ctx,0,y,grille_width,tache_height,line_rgb=(0.8, 0.8, 0.8),line_width=0.2) # Bordure du tableau des taches
+                    fill_rgb = to_rgb(item.get('color'))
+                    cairo_rectangle(ctx,x,y+3,width,height-6,fill_rgb=fill_rgb,line_rgb=(0, 0, 0),line_width=0.5) # Tache
+                    fill_rgb=(0, 0, 0)
+                    etat_class = item.get('etat_class')
+                    if etat_class=='etat_a_faire':
+                        fill_rgb=(1, 0, 0)
+                    if etat_class=='etat_fait':
+                        fill_rgb=(0, 1, 0)
+                    cairo_rectangle(ctx,x,y+3,tache_height/2,height-6,fill_rgb=fill_rgb)    # Rectangle Fait/Pas fait
+                    cairo_show_text(ctx,x+tache_height,y+tache_height,txt=item.get('text')) # Nom de la tache sur le rectangle de la tache
+                    nb+=1
 
             #Ajouter le logo sauf pour le SVG ou cela ne fonctionne pas ***********
             if file_extension!="svg":
@@ -387,6 +452,82 @@ class IsGanttPdf(models.Model):
             if file_extension=="svg":
                 surface.finish()
                 surface.flush()
+
+
+ 
+
+
+                # <?xml version="1.0" encoding="UTF-8"?>
+                # <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="884pt" height="220pt" viewBox="0 0 884 220" version="1.1">
+                # <defs>
+                # <g>
+                # <symbol o
+                # {http://www.w3.org/2000/svg}svg {'width': '884pt', 'height': '220pt', 'viewBox': '0 0 884 220', 'version': '1.1'} 
+                # {http://www.w3.org/2000/svg}defs {} 
+                # {http://www.w3.org/2000/svg}g {} 
+                # {http://www.w3.org/2000/svg}symbol {'overflow': 'visible', 'id': 'glyph0-0'} 
+
+                #Source : https://docs.python.org/3/library/xml.etree.elementtree.html
+                #Source : https://developer.mozilla.org/en-US/docs/Web/SVG/Element/circle
+                ET.register_namespace("","http://www.w3.org/2000/svg")
+                tree = ET.parse(path)
+                # for elem in tree.iter():
+                #     if elem.tag=="{http://www.w3.org/2000/svg}symbol":
+                #        print(elem.attrib)
+
+                root = tree.getroot()
+
+                #doc = ET.SubElement(root, "doc")
+
+                ET.SubElement(root, "circle", cx="50", cy="50", r="100")
+                #ET.SubElement(doc, "field2", name="asdfasd").text = "some vlaue2"
+
+                #   <circle cx="50" cy="50" r="50" />
+                tree = ET.ElementTree(root)
+                tree.write(path)
+
+
+
+# root = ET.Element("root")
+# doc = ET.SubElement(root, "doc")
+
+# ET.SubElement(doc, "field1", name="blah").text = "some value1"
+# ET.SubElement(doc, "field2", name="asdfasd").text = "some vlaue2"
+
+# tree = ET.ElementTree(root)
+# tree.write("filename.xml")
+
+
+
+
+# tree = ET.parse(fin)
+# root = tree.getroot()
+
+# hstep=float(root.attrib['width'])/hsplit
+# vstep=float(root.attrib['height'])/vsplit
+
+# root.attrib['width']=str(hstep)
+# root.attrib['height']=str(vstep)
+
+# for i in range(hsplit):
+#     for j in range(vsplit):
+#         root.attrib['viewBox']='%.4f %.4f %.4f %.4f' % (i*hstep, j*vstep, hstep, vstep)
+#         tree.write('cell_%i-%i_%s' % (i,j,os.path.basename(fin)))
+
+
+                # hstep=float(root.attrib['width'])/hsplit
+                # vstep=float(root.attrib['height'])/vsplit
+
+                # root.attrib['width']=str(hstep)
+                # root.attrib['height']=str(vstep)
+
+                # for i in range(hsplit):
+                #     for j in range(vsplit):
+                #         root.attrib['viewBox']='%.4f %.4f %.4f %.4f' % (i*hstep, j*vstep, hstep, vstep)
+                #         tree.write('cell_%i-%i_%s' % (i,j,os.path.basename(fin)))
+
+# <symbol overflow="visible" id="glyph0-0">
+
 
             # ** Creation ou modification de la pièce jointe ******************
             attachment_obj = self.env['ir.attachment']

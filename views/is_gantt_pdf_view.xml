@@ -28,6 +28,7 @@
                             <group>
                                 <field name="date_debut"/>  
                                 <field name="date_fin"/>  
+                                <field name="bordure_jour"/>  
                             </group>
                         </group>
                      </sheet>

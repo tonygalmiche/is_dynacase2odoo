@@ -385,6 +385,7 @@ class IsDocMoule(models.Model):
                     "duration"   : duration,
                     "parent"     : parent,
                     "priority"   : priority,
+                    "etat_class" : etat_class,
                     "color_class": color_class,
                     "section"    : line.section_id.name,
                     "responsable": line.idresp.name,
