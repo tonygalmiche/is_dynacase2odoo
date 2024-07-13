@@ -6,18 +6,27 @@ from random import *
 import base64
 import cairo
 from PIL import Image
+from io import BytesIO
 import time
 import os
 from matplotlib.colors import to_rgb
 import codecs
 import xml.etree.ElementTree as ET
-#from lxml import etree
+
+
+class IsGanttPdfSection(models.Model):
+    _name        = "is.gantt.pdf.section"
+    _description = "Sections du Gantt PDF"
+
+    gantt_pdf_id = fields.Many2one('is.gantt.pdf', 'Gantt PDF', required=True, ondelete='cascade')
+    section_id   = fields.Many2one("is.section.gantt", string="Section", required=True)
+    afficher     = fields.Boolean("Afficher", default=True)
 
 
 class IsGanttPdf(models.Model):
     _name        = "is.gantt.pdf"
     _inherit=['mail.thread']
-    _description = "PDF du Gantt"
+    _description = "Gantt PDF"
     _order = "name"
 
 
@@ -31,11 +40,35 @@ class IsGanttPdf(models.Model):
     date_debut                = fields.Date("Date début")
     date_fin                  = fields.Date("Date fin")
     bordure_jour              = fields.Boolean("Bordure jour", default=False)
+    logo_droite               = fields.Image(string="Logo de droite")
     format_fichier            = fields.Selection([
         ("png", "PNG"),
         ("pdf", "PDF"),
         ("svg", "SVG"),
     ], string="Format fichier", default="png")
+    section_ids = fields.One2many('is.gantt.pdf.section', 'gantt_pdf_id')
+
+
+
+
+    @api.onchange('type_document','moule_id','dossierf_id','dossier_modif_variante_id','dossier_article_id','dossier_appel_offre_id')
+    def onchange_moule(self):
+        for obj in self:
+            items,titre = obj.get_taches()
+            lines=[]
+            ids=[]
+            for item in items:
+                model  = item.get('model')
+                res_id = int(item.get('res_id'))
+                if model=='is.section.gantt' and res_id>0:
+                    if res_id not in ids:
+                        ids.append(res_id)
+            for id in ids:
+                vals={'section_id':id}
+                lines.append([0,0,vals])
+            obj.section_ids = False
+            obj.section_ids = lines
+
 
 
     @api.depends('type_document', 'moule_id', 'dossierf_id', 'dossier_modif_variante_id', 'dossier_article_id', 'dossier_appel_offre_id')
@@ -55,34 +88,67 @@ class IsGanttPdf(models.Model):
             obj.name = name
 
 
+    def get_taches(self, section_ids=False):
+        "Recherche des tâches en fonction des pramètres"
+        for obj in self:
+            items=[]
+            domain=[]
+            if section_ids:
+                domain=[('section_id','in',section_ids)]
+
+
+            titre="?"
+            if obj.type_document=="Moule" and obj.moule_id:
+                domain.append(('idmoule','=',obj.moule_id.id))
+                titre="%s - %s"%(obj.moule_id.name,obj.moule_id.designation)
+            if obj.type_document=="dossier_appel_offre" and obj.dossier_appel_offre_id:
+                domain.append(('dossier_appel_offre_id','=',obj.dossier_appel_offre_id.id))
+                titre=obj.dossier_appel_offre_id.dao_num
+            if obj.type_document=="Dossier Modif Variante" and obj.dossier_modif_variante_id:
+                domain.append(('dossier_modif_variante_id','=',obj.dossier_modif_variante_id.id))
+                titre=obj.dossier_modif_variante_id.demao_num
+
+
+            print('domain=',domain)
+
+
+            if domain!=[]:
+                res=self.env['is.doc.moule'].get_dhtmlx(domain=domain)
+                items = res['items']
+
+
+
+            return items,titre
+
+
+    def get_sections(self):
+        ids=[]
+        for obj in self:
+            for line in obj.section_ids:
+                if line.afficher:
+                    ids.append(line.section_id.id)
+        return ids
+
+
+
     def generer_pdf_action(self):
         for obj in self:
+            section_ids=obj.get_sections()
+            items,titre = obj.get_taches(section_ids=section_ids)
+            print('section_ids=',section_ids)
+
+
+            # new_items=[]
+            # for item in items:
+            #     print(item)
+            #     #if item.section_id in section_ids:
+            #     #    new_items.append(item)
+
+
+            # print(new_items)
 
 
 
-            #** Recherche des tâches ******************************************
-            domain=[]
-            titre="?"
-            if obj.type_document=="Moule":
-                domain=[
-                    ('idmoule','=',obj.moule_id.id)
-                ]
-                titre="%s - %s"%(obj.moule_id.name,obj.moule_id.designation)
-            if obj.type_document=="dossier_appel_offre":
-                domain=[
-                    ('dossier_appel_offre_id','=',obj.dossier_appel_offre_id.id)
-                ]
-                titre=obj.dossier_appel_offre_id.dao_num
-            if obj.type_document=="Dossier Modif Variante":
-                domain=[
-                    ('dossier_modif_variante_id','=',obj.dossier_modif_variante_id.id)
-                ]
-                titre=obj.dossier_modif_variante_id.demao_num
-            if domain==[]:
-                return
-            res=self.env['is.doc.moule'].get_dhtmlx(domain=domain)
-            items = res['items']
-            #******************************************************************
 
             #** Calcul start_date *********************************************
             for item in items:
@@ -238,13 +304,12 @@ class IsGanttPdf(models.Model):
                 ctx.move_to(x, y-txt_height/2)
                 ctx.show_text(txt)
 
-
             #** Fond gris clair pour toute la surface *************************
             cairo_rectangle(ctx,0,0,WIDTH,HEIGHT,fill_rgb=(0.95, 0.95, 0.95))
 
             #** Entete du Gantt ***********************************************
-            cairo_rectangle(ctx,0,0,WIDTH,entete_height,line_rgb=(0.8, 0.8, 0.8))
-            cairo_show_text(ctx,220,entete_height-tache_height,font_size=36,txt=titre)
+            cairo_rectangle(ctx,0,0,WIDTH,entete_height,fill_rgb=(1, 1, 1))
+            cairo_show_text(ctx,220,entete_height-tache_height,font_size=32,txt=titre)
 
             #** Entete du tableau *********************************************
             cairo_rectangle(ctx,0,entete_height,WIDTH,tache_height,line_rgb=(0.8, 0.8, 0.8))
@@ -374,7 +439,33 @@ class IsGanttPdf(models.Model):
                     cairo_show_text(ctx,x+tache_height,y+tache_height,txt=item.get('text')) # Nom de la tache sur le rectangle de la tache
                     nb+=1
 
-            #Ajouter le logo sauf pour le SVG ou cela ne fonctionne pas ***********
+            #** Logo au format PIL et redimmensionnement **********************
+            logo_path="/tmp/logo-gantt-pdf.png"
+            company = self.env.user.company_id
+            f = open(logo_path,'wb')
+            f.write(base64.b64decode(company.logo))
+            f.close()
+            image_logo = Image.open(logo_path)  
+            width, height = image_logo.size 
+            max_height = entete_height
+            ratio = height/max_height
+            new_width = int(width/ratio)
+            image_logo_resize = image_logo.resize((new_width, max_height))
+
+            if obj.logo_droite:
+                logo_path="/tmp/logo-droite.png"
+                f = open(logo_path,'wb')
+                f.write(base64.b64decode(obj.logo_droite))
+                f.close()
+                image_logo = Image.open(logo_path)  
+                width, height = image_logo.size 
+                max_height = entete_height
+                ratio = height/max_height
+                new_width = int(width/ratio)
+                logo_droite_resize = image_logo.resize((new_width, max_height))
+                logo_droite_width  = new_width
+
+            #Ajouter le logo sauf pour le SVG qui est fait differement ************
             if file_extension!="svg":
                 #** Convertir la surface au format PIL pour ajouter le logo *******
                 def surface_to_pil(surface: cairo.ImageSurface) -> Image:
@@ -401,29 +492,19 @@ class IsGanttPdf(models.Model):
                         image.height,
                         )
 
-                #** Logo au format PIL et redimmensionnement **********************
-                logo_path="/tmp/logo-gantt-pdf.png"
-                company = self.env.user.company_id
-                f = open(logo_path,'wb')
-                f.write(base64.b64decode(company.logo))
-                f.close()
-                image_logo = Image.open(logo_path)  
-                width, height = image_logo.size 
-                max_height = entete_height
-                ratio = height/max_height
-                new_width = int(width/ratio)
-                image_logo_resize = image_logo.resize((new_width, max_height))
-
                 #** Combiner le logo et le gantt **********************************
                 result_pil = Image.new(
                     mode = 'RGBA',
                     size = (surface.get_width(), surface.get_height()),
                     color = (0, 0, 0, 0),
                     )
-                surface_pil = surface_to_pil(surface) # Convertir le Gantt au format 'surface' au format PIL
-                result_pil.paste(surface_pil)         # Ajout du Gantt au format PIL
-                result_pil.paste(image_logo_resize)   # Ajout du logo au format PIL
-                surface = pil_to_surface(result_pil)  # Convertir le format PIL en format 'surface'
+                surface_pil = surface_to_pil(surface)    # Convertir le Gantt au format 'surface' au format PIL
+                result_pil.paste(surface_pil)            # Ajout du Gantt au format PIL
+                result_pil.paste(image_logo_resize)      # Ajout du logo au format PIL
+                if obj.logo_droite:
+                    x = WIDTH - logo_droite_width
+                    result_pil.paste(logo_droite_resize, (x, 0)) # Ajout du logo_droite au format PIL
+                surface = pil_to_surface(result_pil)     # Convertir le format PIL en format 'surface'
 
 
             #** Enregistrement du fichier ************************************* 
@@ -447,86 +528,51 @@ class IsGanttPdf(models.Model):
                 pdf_surface.finish()
                 pdf_surface.flush()
 
-
-
             if file_extension=="svg":
                 surface.finish()
                 surface.flush()
 
+                #** PIL => base64 pour intégrer dans SVG **************************
+                buff = BytesIO()
+                image_logo_resize.save(buff, format="PNG")
+                image_logo_base64 = base64.b64encode(buff.getvalue()).decode("utf-8")
 
- 
-
-
-                # <?xml version="1.0" encoding="UTF-8"?>
-                # <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="884pt" height="220pt" viewBox="0 0 884 220" version="1.1">
-                # <defs>
-                # <g>
-                # <symbol o
-                # {http://www.w3.org/2000/svg}svg {'width': '884pt', 'height': '220pt', 'viewBox': '0 0 884 220', 'version': '1.1'} 
-                # {http://www.w3.org/2000/svg}defs {} 
-                # {http://www.w3.org/2000/svg}g {} 
-                # {http://www.w3.org/2000/svg}symbol {'overflow': 'visible', 'id': 'glyph0-0'} 
-
+                #** Ajout du logo dans le code SVG (XML) **********************
                 #Source : https://docs.python.org/3/library/xml.etree.elementtree.html
                 #Source : https://developer.mozilla.org/en-US/docs/Web/SVG/Element/circle
                 ET.register_namespace("","http://www.w3.org/2000/svg")
                 tree = ET.parse(path)
-                # for elem in tree.iter():
-                #     if elem.tag=="{http://www.w3.org/2000/svg}symbol":
-                #        print(elem.attrib)
-
                 root = tree.getroot()
-
-                #doc = ET.SubElement(root, "doc")
-
-                ET.SubElement(root, "circle", cx="50", cy="50", r="100")
-                #ET.SubElement(doc, "field2", name="asdfasd").text = "some vlaue2"
-
-                #   <circle cx="50" cy="50" r="50" />
+                #ET.SubElement(root, "circle", cx="50", cy="50", r="100")
+                href="data:image/png;base64,%s"%image_logo_base64
+                ET.SubElement(root, "image", x="0", cy=str(entete_height), href=href)
                 tree = ET.ElementTree(root)
                 tree.write(path)
 
+                #** Ajout du logo_droite dans le code SVG (XML) ***************
+                if obj.logo_droite:
+                    buff = BytesIO()
+                    logo_droite_resize.save(buff, format="PNG")
+                    image_logo_base64 = base64.b64encode(buff.getvalue()).decode("utf-8")
+                    ET.register_namespace("","http://www.w3.org/2000/svg")
+                    tree = ET.parse(path)
+                    root = tree.getroot()
+                    href="data:image/png;base64,%s"%image_logo_base64
+
+                    x = WIDTH - logo_droite_width
+                    ET.SubElement(root, "image", x=str(x), cy=str(entete_height), href=href)
+                    tree = ET.ElementTree(root)
+                    tree.write(path)
 
 
-# root = ET.Element("root")
-# doc = ET.SubElement(root, "doc")
-
-# ET.SubElement(doc, "field1", name="blah").text = "some value1"
-# ET.SubElement(doc, "field2", name="asdfasd").text = "some vlaue2"
-
-# tree = ET.ElementTree(root)
-# tree.write("filename.xml")
 
 
 
 
-# tree = ET.parse(fin)
-# root = tree.getroot()
-
-# hstep=float(root.attrib['width'])/hsplit
-# vstep=float(root.attrib['height'])/vsplit
-
-# root.attrib['width']=str(hstep)
-# root.attrib['height']=str(vstep)
-
-# for i in range(hsplit):
-#     for j in range(vsplit):
-#         root.attrib['viewBox']='%.4f %.4f %.4f %.4f' % (i*hstep, j*vstep, hstep, vstep)
-#         tree.write('cell_%i-%i_%s' % (i,j,os.path.basename(fin)))
 
 
-                # hstep=float(root.attrib['width'])/hsplit
-                # vstep=float(root.attrib['height'])/vsplit
 
-                # root.attrib['width']=str(hstep)
-                # root.attrib['height']=str(vstep)
 
-                # for i in range(hsplit):
-                #     for j in range(vsplit):
-                #         root.attrib['viewBox']='%.4f %.4f %.4f %.4f' % (i*hstep, j*vstep, hstep, vstep)
-                #         tree.write('cell_%i-%i_%s' % (i,j,os.path.basename(fin)))
-
-# <symbol overflow="visible" id="glyph0-0">
 
 
             # ** Creation ou modification de la pièce jointe ******************
