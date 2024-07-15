@@ -11,20 +11,24 @@ class is_mold_project(models.Model):
 
     def gantt_action(self):
         for obj in self:
-            docs=self.env['is.doc.moule'].search([ ('idproject', '=', obj.id) ])
-            ids=[]
-            initial_date=str(datetime.today())
-            for doc in docs:
-                if str(doc.dateend)<initial_date:
-                    initial_date=str(doc.dateend)
-                ids.append(doc.id)
+            # docs=self.env['is.doc.moule'].search([ ('idproject', '=', obj.id) ])
+            # ids=[]
+            # initial_date=str(datetime.today())
+            # for doc in docs:
+            #     if str(doc.dateend)<initial_date:
+            #         initial_date=str(doc.dateend)
+            #     ids.append(doc.id)
+
+            domain=[ ('idproject', '=', obj.id) ]
+
+
             tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_edit_tree_view').id
             gantt_id = self.env.ref('is_dynacase2odoo.is_doc_moule_moule_dhtmlxgantt_project_view').id
             ctx={
                 'default_etat'         :'AF',
                 'default_dateend'      : datetime.today(),
                 'default_idresp'       : self._uid,
-                'initial_date'         : initial_date,
+                #'initial_date'         : initial_date,
             }
             return {
                 'name': obj.name,
@@ -34,9 +38,10 @@ class is_mold_project(models.Model):
                     (tree_id, "tree"),
                     (False, "form"),(False, "kanban"),(False, "calendar"),(False, "pivot"),(False, "graph")],
                 'res_model': 'is.doc.moule',
-                'domain': [
-                    ('id','in',ids),
-                ],
+                # 'domain': [
+                #     ('id','in',ids),
+                # ],
+                'domain': domain,
                 'type': 'ir.actions.act_window',
                 "context": ctx,
                 'limit': 1000,

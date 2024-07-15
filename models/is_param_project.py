@@ -25,9 +25,10 @@ class IsSectionGantt(models.Model):
     _description = "Sections du Gantt"
     _order = 'sequence, id'
 
-    sequence = fields.Integer(string="Ordre",index=True)
-    name     = fields.Char("Section",required=True,index=True)
-    color    = fields.Char("Color")
+    sequence  = fields.Integer(string="Ordre",index=True)
+    name      = fields.Char("Section",required=True,index=True)
+    gantt_pdf = fields.Boolean("Gantt PDF", default=True, help="Afficher dans Gantt PDF")
+    color     = fields.Char("Color")
 
 
 class IsParamProject(models.Model):
@@ -113,6 +114,7 @@ class IsParamProject(models.Model):
     duree               = fields.Integer("Durée par défaut (J)"   , help="Utilisée dans le Gantt")
     duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
     dependance_id       = fields.Many2one("is.param.project", string="Dépendance")
+    gantt_pdf           = fields.Boolean("Gantt PDF", default=True, help="Afficher dans Gantt PDF")
 
 
     def creer_css_action(self):

@@ -50,6 +50,7 @@
                                 <field name="duree_gantt"    force_save="1"/>
                                 <field name="date_fin_gantt" force_save="1"/>
                                 <field name="dependance_id" domain="[('idmoule','=',idmoule)]"/>
+                                <field name="gantt_pdf"/>
                             </group>
                         </group>
                         <group string="Réponse à la demande" name="PLASFIL_FR_ANNEX">
@@ -109,6 +110,7 @@
                     <field name="date_fin_gantt"      optional="hide" />
                     <field name="duree_attente_avant" optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
+                    <field name="gantt_pdf"           optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>
@@ -128,18 +130,20 @@
                     <field name="j_prevue"         optional="show"/>
                     <field name="idmoule"          required="1"    widget="many2one_clickable"/>
                     <field name="dossierf_id"      optional="show" widget="many2one_clickable"/>
-                    <field name="idproject"                        widget="many2one_clickable"/>
+                    <field name="idproject"        optional="show" widget="many2one_clickable"/>
                     <field name="client_id"        optional="show" widget="many2one_clickable"/>
                     <field name="idresp"           required="1"/>
                     <field name="demande"/>
-                    <field name="etat"             required="1"/>
-                    <field name="dateend"          optional="hide"/>
-                    <field name="duree"            required="1"/>
-                    <field name="date_debut_gantt" required="1" />
-                    <field name="date_fin_gantt"   force_save="1"/>
+                    <field name="etat"                required="1"/>
+                    <field name="dateend"             optional="hide"/>
                     <field name="duree_attente_avant" optional="hide"/>
+                    <field name="duree"               required="1"/>
+                    <field name="duree_gantt"         optional="hide" force_save="1"/>
+                    <field name="date_debut_gantt"    required="1" />
+                    <field name="date_fin_gantt"                      force_save="1"/>
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="indicateur"          optional="hide"/>
+                    <field name="gantt_pdf"           optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>
@@ -218,11 +222,15 @@
             <field name="arch" type="xml">
                 <search string="Document moule">
                     <field name="section_id"/>
+                    <field name="sequence"/>
                     <field name="param_project_id" />
                     <field name="type_document" />
                     <field name="ppr_type_demande" />
                     <field name="idmoule" />
+                    <field name="dossierf_id" />
                     <field name="dossier_article_id" />
+                    <field name="dossier_appel_offre_id" />
+                    <field name="dossier_modif_variante_id" />
                     <field name="idproject" />
                     <field name="client_id" />
                     <field name="idcp" />
@@ -279,6 +287,7 @@
                     <field name="date_fin_gantt"      optional="show"/>
                     <field name="duree_attente_avant" optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
+                    <field name="gantt_pdf"           optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>
@@ -331,6 +340,7 @@
                     <field name="date_fin_gantt"      optional="hide"/>
                     <field name="duree_attente_avant" optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
+                    <field name="gantt_pdf"           optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>
@@ -370,6 +380,7 @@
                     <field name="duree"               optional="hide"/>
                     <field name="date_debut_gantt"    optional="hide"/>
                     <field name="date_fin_gantt"      optional="hide"/>
+                    <field name="gantt_pdf"           optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                     <field name="dynacase_id" optional="hide"/>
                 </tree>
@@ -423,6 +434,7 @@
                     <field name="duree_attente_avant" optional="hide"/>
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="indicateur"          optional="hide"/>
+                    <field name="gantt_pdf"           optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>
@@ -457,6 +469,7 @@
                     <field name="duree_attente_avant" optional="hide"/>
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="indicateur"          optional="hide"/>
+                    <field name="gantt_pdf"           optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>
@@ -491,6 +504,7 @@
                     <field name="duree_attente_avant" optional="hide"/>
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="indicateur"          optional="hide"/>
+                    <field name="gantt_pdf"           optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>

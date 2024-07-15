@@ -32,6 +32,7 @@
                             <group>
                                 <field name="ppr_icon" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;ppr_icon&quot;, &quot;size&quot;: [90, 90]}" />
                                 <field name="ppr_color" widget="color"/>
+                                <field name='gantt_pdf'/>
                             </group>
                         </group>
                         <!-- 
@@ -70,6 +71,7 @@
                     <field name="duree" optional="hide"/>
                     <field name="duree_attente_avant" optional="hide"/>
                     <field name="dependance_id" optional="hide" widget="many2one_clickable"/>
+                    <field name='gantt_pdf' optional="show"/>
                     <field name="dynacase_id" optional="hide"/>
                 </tree>
             </field>
@@ -89,6 +91,7 @@
                     <field name="ppr_responsable" />
                     <field name="ppr_revue_lancement" />
                     <field name="ppr_moule_hors_auto" />
+                    <field name="gantt_pdf" />
                     <field name="ppr_color" />
                 </search>
             </field>
@@ -99,6 +102,8 @@
             <field name="view_mode">tree,form</field>
             <field name="limit">200</field>
         </record>
+
+        <!-- is.section.gantt -->
         <record model="ir.ui.view" id="is_section_gantt_form">
             <field name="name">is_section_gantt_form</field>
             <field name="model">is.section.gantt</field>
@@ -108,6 +113,7 @@
                         <group>
                             <field name="name"/>
                             <field name='sequence'/>
+                            <field name='gantt_pdf'/>
                             <field name="color" widget="color"/>
                         </group>
                     </sheet>
@@ -121,6 +127,7 @@
                 <tree>
                     <field name='sequence'/>
                     <field name="name"/>
+                    <field name='gantt_pdf'/>
                     <field name="color" widget="color"/>
                 </tree>
             </field>
@@ -131,6 +138,7 @@
             <field name="arch" type="xml">
                 <search string="Paramétrage projet">
                     <field name="name" />
+                    <field name='gantt_pdf'/>
                 </search>
             </field>
         </record>

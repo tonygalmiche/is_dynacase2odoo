@@ -64,8 +64,13 @@ class IsGanttPdf(models.Model):
                     if res_id not in ids:
                         ids.append(res_id)
             for id in ids:
-                vals={'section_id':id}
-                lines.append([0,0,vals])
+                section = self.env['is.section.gantt'].browse(id)
+                if section:
+                    vals={
+                        'section_id': id,
+                        'afficher'  : section.gantt_pdf,
+                    }
+                    lines.append([0,0,vals])
             obj.section_ids = False
             obj.section_ids = lines
 
@@ -88,15 +93,15 @@ class IsGanttPdf(models.Model):
             obj.name = name
 
 
-    def get_taches(self, section_ids=False):
-        "Recherche des tâches en fonction des pramètres"
+    def get_taches(self, section_ids=False,gantt_pdf=False):
+        "Recherche des tâches en fonction des paramètres"
         for obj in self:
             items=[]
             domain=[]
+            if gantt_pdf:
+                domain.append(('gantt_pdf','=',True))
             if section_ids:
-                domain=[('section_id','in',section_ids)]
-
-
+                domain.append(('section_id','in',section_ids))
             titre="?"
             if obj.type_document=="Moule" and obj.moule_id:
                 domain.append(('idmoule','=',obj.moule_id.id))
@@ -107,17 +112,9 @@ class IsGanttPdf(models.Model):
             if obj.type_document=="Dossier Modif Variante" and obj.dossier_modif_variante_id:
                 domain.append(('dossier_modif_variante_id','=',obj.dossier_modif_variante_id.id))
                 titre=obj.dossier_modif_variante_id.demao_num
-
-
-            print('domain=',domain)
-
-
             if domain!=[]:
                 res=self.env['is.doc.moule'].get_dhtmlx(domain=domain)
                 items = res['items']
-
-
-
             return items,titre
 
 
@@ -130,24 +127,10 @@ class IsGanttPdf(models.Model):
         return ids
 
 
-
     def generer_pdf_action(self):
         for obj in self:
             section_ids=obj.get_sections()
-            items,titre = obj.get_taches(section_ids=section_ids)
-            print('section_ids=',section_ids)
-
-
-            # new_items=[]
-            # for item in items:
-            #     print(item)
-            #     #if item.section_id in section_ids:
-            #     #    new_items.append(item)
-
-
-            # print(new_items)
-
-
+            items,titre = obj.get_taches(section_ids=section_ids, gantt_pdf=True)
 
 
             #** Calcul start_date *********************************************

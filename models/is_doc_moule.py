@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
 from odoo.tools import format_date, formatLang, frozendict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from random import *
 from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J, TYPE_DOCUMENT
 
@@ -88,10 +88,29 @@ class IsDocMoule(models.Model):
     duree               = fields.Integer(string="Durée (J)"      , help="Durée en jours ouvrés"         , default=1)
     duree_gantt         = fields.Integer(string="Durée Gantt (J)", help="Durée calendaire pour le Gantt", default=1, readonly=True)
     duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
-    date_debut_gantt    = fields.Date(string="Date début Gantt", default=fields.Date.context_today)
+    date_debut_gantt    = fields.Date(string="Date début Gantt", default=lambda self: self._date_debut_gantt())
     date_fin_gantt      = fields.Date(string="Date fin Gantt", readonly=True)
     dependance_id       = fields.Many2one("is.doc.moule", string="Dépendance",index=True)
     section_id          = fields.Many2one("is.section.gantt", string="Section Gantt",index=True)
+    gantt_pdf           = fields.Boolean("Gantt PDF", default=True, help="Afficher dans Gantt PDF")
+
+
+
+
+    def _date_debut_gantt(self):
+        now  = date.today()              # Ce jour
+        d    = now
+        while True:
+            d = d - timedelta(days=1)   # Jour précédent tant que ce n'est pas sur un weekend
+            if not(d.weekday() in [5,6]):
+                break
+        return d
+
+
+    @api.onchange('param_project_id')
+    def onchange_param_project_id(self):
+        for obj in self:
+            obj.gantt_pdf = obj.param_project_id.gantt_pdf
 
 
     @api.onchange('date_debut_gantt','duree')
@@ -107,7 +126,7 @@ class IsDocMoule(models.Model):
                         date_fin=new_date  + timedelta(days=1)
                         break
                     new_date = new_date + timedelta(days=1)
-                duree_gantt = (date_fin - date_debut).days
+                duree_gantt = (date_fin - date_debut).days 
                 date_fin_gantt = obj.date_debut_gantt + timedelta(days=duree_gantt)
                 obj.duree_gantt = duree_gantt
                 obj.date_fin_gantt = date_fin_gantt
@@ -135,8 +154,9 @@ class IsDocMoule(models.Model):
             return res
 
 
-    def list_doc(self,obj,ids, view_mode=False,initial_date=False):
-        if not view_mode:
+    #def list_doc(self,obj,ids, view_mode=False,initial_date=False):
+    def list_doc(self,obj,domain=False, view_mode=False):
+        if not view_mode or not domain:
             return False
         tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_edit_tree_view').id
         gantt_id = self.env.ref('is_dynacase2odoo.is_doc_moule_moule_dhtmlxgantt_project_view').id
@@ -147,7 +167,7 @@ class IsDocMoule(models.Model):
                 'default_etat'   :'AF',
                 'default_dateend': datetime.today(),
                 'default_idresp' : self._uid,
-                'initial_date'   : initial_date,
+                #'initial_date'   : initial_date,
             }
         return {
             'name': obj.name,
@@ -157,26 +177,35 @@ class IsDocMoule(models.Model):
                 (tree_id, "tree"),
                 (False, "form"),(False, "kanban"),(False, "calendar"),(False, "pivot"),(False, "graph")],
             'res_model': 'is.doc.moule',
-            'domain': [
-                ('id','in',ids),
-            ],
+            'domain': domain,
             'type': 'ir.actions.act_window',
             "context": ctx,
             'limit': 1000,
         }
            
 
+    # def doc_moule_action(self):
+    #     for obj in self:
+    #         docs=self.env['is.doc.moule'].search([ ('idmoule', '=', obj.idmoule.id) ])
+    #         ids=[]
+    #         initial_date=str(datetime.today())
+    #         for doc in docs:
+    #             if doc.dateend and str(doc.dateend)<initial_date:
+    #                 initial_date=str(doc.dateend)
+    #             ids.append(doc.id)
+    #         view_mode = 'tree,form,dhtmlxgantt_project,kanban,calendar,pivot,graph'
+    #         return obj.list_doc(obj.idmoule,ids,view_mode=view_mode,initial_date=initial_date)
+
+
     def doc_moule_action(self):
         for obj in self:
-            docs=self.env['is.doc.moule'].search([ ('idmoule', '=', obj.idmoule.id) ])
-            ids=[]
-            initial_date=str(datetime.today())
-            for doc in docs:
-                if doc.dateend and str(doc.dateend)<initial_date:
-                    initial_date=str(doc.dateend)
-                ids.append(doc.id)
+            domain=[('idmoule', '=', obj.idmoule.id)]
             view_mode = 'tree,form,dhtmlxgantt_project,kanban,calendar,pivot,graph'
-            return obj.list_doc(obj.idmoule,ids,view_mode=view_mode,initial_date=initial_date)
+            return obj.list_doc(obj.idmoule,domain,view_mode=view_mode)
+
+
+
+
 
 
     def doc_projet_action(self):
@@ -345,10 +374,18 @@ class IsDocMoule(models.Model):
                 priority = round(2*random()) # Nombre aléatoire entre 0 et 2
                 famille=line.param_project_id.ppr_famille
                 name=famille
-                if famille=='Autre':
-                    name="%s (Autre)"%(line.demande or '')
+                #if famille=='Autre':
+                #    name="%s (Autre)"%(line.demande or '')
+                #else:
+                #    name=famille
+
+                if line.demande:
+                   name="%s (%s)"%(line.demande,famille)
                 else:
-                    name=famille
+                   name=famille
+
+
+
                 if line.param_project_id.ppr_revue_lancement:
                     name="%s [%s]"%(name,line.param_project_id.ppr_revue_lancement)
                 duration = line.duree_gantt or 1
@@ -492,14 +529,23 @@ class IsDocMouleArray(models.Model):
 class is_mold(models.Model):
     _inherit = 'is.mold'
 
+    # def gantt_action(self):
+    #     for obj in self:
+    #         docs=self.env['is.doc.moule'].search([ ('idmoule', '=', obj.id) ])
+    #         ids=[]
+    #         for doc in docs:
+    #             ids.append(doc.id)
+    #         view_mode = 'dhtmlxgantt_project,tree,form,kanban,calendar,pivot,graph'
+    #         return self.env['is.doc.moule'].list_doc(obj,ids,view_mode=view_mode)
+
+
     def gantt_action(self):
         for obj in self:
-            docs=self.env['is.doc.moule'].search([ ('idmoule', '=', obj.id) ])
-            ids=[]
-            for doc in docs:
-                ids.append(doc.id)
+            domain=[('idmoule', '=', obj.id)]
             view_mode = 'dhtmlxgantt_project,tree,form,kanban,calendar,pivot,graph'
-            return self.env['is.doc.moule'].list_doc(obj,ids,view_mode=view_mode)
+            return self.env['is.doc.moule'].list_doc(obj,domain,view_mode=view_mode)
+
+
 
 
 class is_dossierf(models.Model):
@@ -507,13 +553,16 @@ class is_dossierf(models.Model):
 
     def gantt_action(self):
         for obj in self:
-            docs=self.env['is.doc.moule'].search([ ('dossierf_id', '=', obj.id) ])
-            ids=[]
-            initial_date=str(datetime.today())
-            for doc in docs:
-                if str(doc.dateend)<initial_date:
-                    initial_date=str(doc.dateend)
-                ids.append(doc.id)
+            # docs=self.env['is.doc.moule'].search([ ('dossierf_id', '=', obj.id) ])
+            # ids=[]
+            # initial_date=str(datetime.today())
+            # for doc in docs:
+            #     if str(doc.dateend)<initial_date:
+            #         initial_date=str(doc.dateend)
+            #     ids.append(doc.id)
+
+            domain=[ ('dossierf_id', '=', obj.id) ]
+
             tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_dossierf_edit_tree_view').id
             gantt_id = self.env.ref('is_dynacase2odoo.is_doc_moule_moule_dhtmlxgantt_project_view').id
             ctx={
@@ -522,7 +571,7 @@ class is_dossierf(models.Model):
                 'default_etat'         :'AF',
                 'default_dateend'      : datetime.today(),
                 'default_idresp'       : self._uid,
-                'initial_date'         : initial_date,
+                #'initial_date'         : initial_date,
             }
             return {
                 'name': obj.name,
@@ -532,9 +581,10 @@ class is_dossierf(models.Model):
                     (tree_id, "tree"),
                     (False, "form"),(False, "kanban"),(False, "calendar"),(False, "pivot"),(False, "graph")],
                 'res_model': 'is.doc.moule',
-                'domain': [
-                    ('id','in',ids),
-                ],
+                # 'domain': [
+                #     ('id','in',ids),
+                # ],
+               'domain': domain,
                 'type': 'ir.actions.act_window',
                 "context": ctx,
                 'limit': 1000,

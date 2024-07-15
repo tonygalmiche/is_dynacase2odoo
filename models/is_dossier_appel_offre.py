@@ -80,10 +80,11 @@ class is_dossier_appel_offre(models.Model):
 
     def gantt_action(self):
         for obj in self:
-            docs=self.env['is.doc.moule'].search([ ('dossier_appel_offre_id', '=', obj.id) ])
-            ids=[]
-            for doc in docs:
-                ids.append(doc.id)
+            # docs=self.env['is.doc.moule'].search([ ('dossier_appel_offre_id', '=', obj.id) ])
+            # ids=[]
+            # for doc in docs:
+            #     ids.append(doc.id)
+            domain = [('dossier_appel_offre_id', '=', obj.id)]
             tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_dossier_appel_offre_edit_tree_view').id
             gantt_id = self.env.ref('is_dynacase2odoo.is_doc_moule_moule_dhtmlxgantt_project_view').id
             ctx={
@@ -101,9 +102,10 @@ class is_dossier_appel_offre(models.Model):
                     (tree_id, "tree"),
                     (False, "form"),(False, "kanban"),(False, "calendar"),(False, "pivot"),(False, "graph")],
                 'res_model': 'is.doc.moule',
-                'domain': [
-                    ('id','in',ids),
-                ],
+                # 'domain': [
+                #     ('id','in',ids),
+                # ],
+                'domain': domain,
                 'type': 'ir.actions.act_window',
                 "context": ctx,
                 'limit': 1000,
