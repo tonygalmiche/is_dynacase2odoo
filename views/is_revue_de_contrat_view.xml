@@ -140,7 +140,6 @@
                                 </group>
                                 <group name="rc_donnees_fabrication_fr" string="Données de fabrication">
                                     <field name="rc_site_fabrication" />
-                                    <field name="rc_site_fabrication_autre" />
                                     <field name="rc_process_fabrication" />
                                     <field name="rc_nb_empreintes_moule" />
                                     <field name="rc_moulage_sur" />
