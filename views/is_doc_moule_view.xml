@@ -47,7 +47,7 @@
                                 <field name="duree_attente_avant"/>
                                 <field name="date_debut_gantt"/>
                                 <field name="duree"/>
-                                <field name="duree_gantt"    force_save="1"/>
+                                <field name="duree_gantt"/>
                                 <field name="date_fin_gantt" force_save="1"/>
                                 <field name="dependance_id" domain="[('idmoule','=',idmoule)]"/>
                                 <field name="gantt_pdf"/>
@@ -106,6 +106,7 @@
                     <field name="datecreate" optional="show" />
                     <field name="dateend" optional="show" />
                     <field name="duree"               optional="hide" />
+                    <field name="duree_gantt"         optional="hide"/>
                     <field name="date_debut_gantt"    optional="hide" />
                     <field name="date_fin_gantt"      optional="hide" />
                     <field name="duree_attente_avant" optional="hide" />
