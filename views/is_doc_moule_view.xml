@@ -283,6 +283,7 @@
                     <field name="datecreate"          optional="hide" />
                     <field name="dateend"             optional="show" />
                     <field name="duree"               optional="show"/>
+                    <field name="duree_gantt"         optional="hide"/>
                     <field name="date_debut_gantt"    optional="show"/>
                     <field name="date_fin_gantt"      optional="show"/>
                     <field name="duree_attente_avant" optional="hide" />
@@ -336,6 +337,7 @@
                     <field name="datecreate" optional="show" />
                     <field name="dateend" optional="show" />
                     <field name="duree"               optional="hide"/>
+                    <field name="duree_gantt"         optional="hide"/>
                     <field name="date_debut_gantt"    optional="hide"/>
                     <field name="date_fin_gantt"      optional="hide"/>
                     <field name="duree_attente_avant" optional="hide" />
@@ -371,13 +373,14 @@
             <field name="model">is.doc.moule</field>
             <field name="arch" type="xml">
                 <tree string="Document moule">
-                    <field name="param_project_id"   optional="show"  widget="many2one_clickable"/>
-                    <field name="type_document"      optional="hide"/>
-                    <field name="ppr_type_demande"   optional="hide" />
-                    <field name="dossier_article_id" optional="show"  widget="many2one_clickable"/>
-                    <field name="idresp"             optional="show" />
-                    <field name="dateend"            optional="show" />
+                    <field name="param_project_id"    optional="show"  widget="many2one_clickable"/>
+                    <field name="type_document"       optional="hide"/>
+                    <field name="ppr_type_demande"    optional="hide" />
+                    <field name="dossier_article_id"  optional="show"  widget="many2one_clickable"/>
+                    <field name="idresp"              optional="show" />
+                    <field name="dateend"             optional="show" />
                     <field name="duree"               optional="hide"/>
+                    <field name="duree_gantt"         optional="hide"/>
                     <field name="date_debut_gantt"    optional="hide"/>
                     <field name="date_fin_gantt"      optional="hide"/>
                     <field name="gantt_pdf"           optional="hide"/>
@@ -429,6 +432,7 @@
                     <field name="etat"             required="1"/>
                     <field name="dateend"          optional="hide"/>
                     <field name="duree"            required="1"/>
+                    <field name="duree_gantt"      optional="hide" force_save="1"/>
                     <field name="date_debut_gantt" required="1" />
                     <field name="date_fin_gantt"   force_save="1" />
                     <field name="duree_attente_avant" optional="hide"/>
@@ -464,8 +468,9 @@
                     <field name="etat"             required="1"/>
                     <field name="dateend"          optional="hide"/>
                     <field name="duree"            required="1"/>
-                    <field name="date_debut_gantt" required="1" />
-                    <field name="date_fin_gantt"    force_save="1"/>
+                    <field name="duree_gantt"         optional="hide" force_save="1"/>
+                    <field name="date_debut_gantt"    required="1" />
+                    <field name="date_fin_gantt"      force_save="1"/>
                     <field name="duree_attente_avant" optional="hide"/>
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="indicateur"          optional="hide"/>
@@ -499,6 +504,7 @@
                     <field name="etat"             required="1"/>
                     <field name="dateend"          optional="hide"/>
                     <field name="duree"            required="1"/>
+                    <field name="duree_gantt"      optional="hide" force_save="1"/>
                     <field name="date_debut_gantt" required="1" />
                     <field name="date_fin_gantt"    force_save="1"/>
                     <field name="duree_attente_avant" optional="hide"/>
