@@ -6,7 +6,7 @@ from odoo import models, fields, api, _
 class is_revue_de_contrat(models.Model):
     _name        = "is.revue.de.contrat"
     _description = "Revue de contrat"
-    _rec_name    = "rc_mouleid"
+    #_rec_name    = "rc_mouleid"
 
     @api.depends("rc_eiv_moule", "rc_eiv_etude", "rc_eiv_main_prehension", "rc_eiv_barre_chaude" , "rc_eiv_gab_controle", "rc_eiv_mach_spec", "rc_eiv_plan_valid", "rc_eiv_mis_point" ,"rc_eiv_pack", "rc_eiv_amort")
     def get_rc_eiv_total(self):
@@ -208,6 +208,18 @@ class is_revue_de_contrat(models.Model):
     rc_df_fiche_capacitaire            = fields.Many2many("ir.attachment", "is_revue_rc_df_fiche_capacitaire_rel", "revu_id", "att_id", string="Fiche capacitaire ")
     dfe_version_ids                    = fields.One2many("is.revue.de.contrat.dfe.version", "is_revue_id")
     dynacase_id = fields.Integer(string="Id Dynacase",index=True)
+
+
+    def name_get(self):
+        result = []
+        for obj in self:
+            name=""
+            if obj.rc_mouleid:
+                name = obj.rc_mouleid.name
+            if obj.rc_dossierfid:
+                name = obj.rc_dossierfid.name
+            result.append((obj.id, name))
+        return result
 
 
     def lien_vers_dynacase_action(self):
