@@ -99,7 +99,7 @@
                             <field name="demao_nature" />
                             <field name="demao_ref" />
                             <field name="demao_daterep" />
-                            <field name="demao_datelance" />
+                            <field name="demao_datelanc" />
                             <field name="demao_pxvente" />
                             <field name="demao_numcmd" />
                             <field name="demao_obs" />
