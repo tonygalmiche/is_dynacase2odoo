@@ -128,14 +128,14 @@ class is_dossier_modif_variante(models.Model):
         ("plascreate",      "Créé"),
         ("plasanalysed",    "Analysé"),
         ("plastransbe",     "Transmis BE"),
-        ("Analyse_BE",      "Analyse BE"),
-        ("plasvalidbe",     "Vali de BE"),
-        ("plasvalidcom",    "Valide Commercial"),
-        ("plasdiffusedcli", "Diffuse Client"),
+        ("Analyse_BE",      "Analysé BE"),
+        ("plasvalidbe",     "Validé BE"),
+        ("plasvalidcom",    "Validé Commercial"),
+        ("plasdiffusedcli", "Diffusé Client"),
         ("plasrelancecli",  "Relance Client"),
         ("plasloosed",      "Perdu"),
-        ("plaswinned",      "Gagne"),
-        ("plascancelled",   "Annule"),
+        ("plaswinned",      "Gagné"),
+        ("plascancelled",   "Annulé"),
     ], string="Etat", default="plascreate", tracking=True)
     vers_analyse_vsb            = fields.Boolean(string="Vers Cree", compute='_compute_vsb', readonly=True, store=False)
     vers_transmis_be_vsb        = fields.Boolean(string="Vers Transmis BE", compute='_compute_vsb', readonly=True, store=False)

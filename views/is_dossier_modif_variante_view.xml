@@ -134,8 +134,9 @@
             <field name="arch" type="xml">
                 <tree string="Dossier modif/variante">
                     <field name="demao_type" optional="show"/>
-                    <field name="demao_num" optional="show"/>
-                    <field name="demao_dao" optional="show"/>
+                    <field name="demao_num"  optional="show"/>
+                    <field name="demao_dao"  optional="show"/>
+                    <field name="demao_date" optional="show"/>
                     <field name="demao_idclient" optional="show" widget="many2one_clickable"/>
                     <field name="demao_idcommercial" optional="show"/>
                     <field name="demao_idmoule" optional="show" widget="many2one_clickable"/>
