@@ -125,17 +125,17 @@ class is_dossier_modif_variante(models.Model):
     demao_annex                 = fields.Many2many("ir.attachment", "is_dmv_annex_rel", "annex_id", "att_id", string="Fichiers BE")
     demao_cde_be                = fields.Many2many("ir.attachment", "is_dmv_cde_be_rel", "cde_be_id", "att_id", string="Commandes BE")
     state                       = fields.Selection([
-        ("cree",               "Créé"),
-        ("analyse",            "Analysé"),
-        ("transmis_be",        "Transmis BE"),
-        ("analyse_be",         "Analyse BE"),
-        ("vali_de_be",         "Vali de BE"),
-        ("vali_de_commercial", "Vali de Commercial"),
-        ("diffuse_client",     "Diffuse Client"),
-        ("relance_client",     "Relance Client"),
-        ("perdu",              "Perdu"),
-        ("gagne",              "Gagne"),
-        ("annule",             "Annule"),
+        ("plascreate",      "Créé"),
+        ("plasanalysed",    "Analysé"),
+        ("plastransbe",     "Transmis BE"),
+        ("Analyse_BE",      "Analyse BE"),
+        ("plasvalidbe",     "Vali de BE"),
+        ("plasvalidcom",    "Valide Commercial"),
+        ("plasdiffusedcli", "Diffuse Client"),
+        ("plasrelancecli",  "Relance Client"),
+        ("plasloosed",      "Perdu"),
+        ("plaswinned",      "Gagne"),
+        ("plascancelled",   "Annule"),
     ], string="State", default="cree", tracking=True)
     vers_analyse_vsb            = fields.Boolean(string="Vers Cree", compute='_compute_vsb', readonly=True, store=False)
     vers_transmis_be_vsb        = fields.Boolean(string="Vers Transmis BE", compute='_compute_vsb', readonly=True, store=False)
