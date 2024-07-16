@@ -104,9 +104,9 @@
                             <field name="demao_numcmd" />
                             <field name="demao_obs" />
                         </group>
-                        <group string="Motif de la non validation">
+                        <!-- <group string="Motif de la non validation">
                             <field name="demao_motif" />
-                        </group>
+                        </group> -->
                         <group string="BE">
                             <field name="demao_idbe" />
                         </group>
@@ -147,6 +147,8 @@
                     <field name="demao_obs" optional="hide"/>
                     <field name="demao_motif" optional="hide"/>
                     <field name="demao_idbe" optional="hide"/>
+                    <field name="state" optional="show"/>
+                    <field name="dynacase_id" optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                 </tree>
             </field>

@@ -136,7 +136,7 @@ class is_dossier_modif_variante(models.Model):
         ("plasloosed",      "Perdu"),
         ("plaswinned",      "Gagne"),
         ("plascancelled",   "Annule"),
-    ], string="State", default="cree", tracking=True)
+    ], string="Etat", default="plascreate", tracking=True)
     vers_analyse_vsb            = fields.Boolean(string="Vers Cree", compute='_compute_vsb', readonly=True, store=False)
     vers_transmis_be_vsb        = fields.Boolean(string="Vers Transmis BE", compute='_compute_vsb', readonly=True, store=False)
     vers_analyse_be_vsb         = fields.Boolean(string="Vers Analyse BE", compute='_compute_vsb', readonly=True, store=False)
