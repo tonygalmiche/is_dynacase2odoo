@@ -15,8 +15,12 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         //this.orm = useService("orm");
         this.state = useState({
             dict: {},
+            lier: false,
         });
         this.ActivePatched=true;
+
+
+
         onMounted(() => this._mounted());
         onPatched(() => this._patched());
         onWillUnmount(() => this._unmount());
@@ -32,7 +36,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
 
     _mounted() {
         this.gantt = gantt;
-        this.gantt.lier = false;
+        this.gantt.lier = this.state.lier;
         this.gantt.active_task_id = false;
         this.gantt.scroll=false;
 
@@ -293,9 +297,22 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         this.gantt.events.push(this.gantt.attachEvent("onBeforeLightbox", function(id) {
             return false;
         }));
-        this.gantt.events.push(this.gantt.attachEvent("onAfterTaskUpdate", function(id,item,){
-            this.owl.WriteTask(id, item);
+
+
+        // this.gantt.events.push(this.gantt.attachEvent("onAfterTaskUpdate", function(id,item,){
+        //     this.owl.WriteTask(id, item);
+        // }));
+        
+        
+
+        // void onAfterTaskDrag(string|number id,string mode,Event e);
+        this.gantt.events.push(this.gantt.attachEvent("onAfterTaskDrag", function(id, mode, e){
+            const task = gantt.getTaskBy("id", [id])[0]; // Recherche de la task avec son id
+            this.owl.WriteTask(id, task, mode);
         }));
+        
+
+        
         this.gantt.events.push(this.gantt.attachEvent("onAfterLinkAdd", function(id,item){
             this.owl.LinkAction('link_add', item);
         }));
@@ -459,9 +476,14 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         }
     }
     LierClick(ev){
-        const lier=$(ev.target.checked);
-        this.gantt.lier=false;
-        if (typeof lier[0] !== 'undefined') this.gantt.lier=true;
+        if (ev.target.checked==true){
+            this.state.lier=true;
+        } else {
+            this.state.lier=false;
+        }
+        //const lier=$(ev.target.checked);
+        //this.gantt.lier=false;
+        //if (typeof lier[0] !== 'undefined') this.gantt.lier=true;
     }
 
     
@@ -482,13 +504,13 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         });
     }
 
-    async WriteTask(id,item){
+    async WriteTask(id,item,mode){
         this.gantt.scroll = this.gantt.getScrollState();
         self.this = this;
         rpc.query({
             model: 'is.doc.moule',
             method: 'write_task',
-            args: [[parseInt(item.res_id)], item.start_date, item.duration,this.gantt.lier]
+            args: [[parseInt(item.res_id)], item.start_date, item.duration,this.state.lier,mode]
         }).then(function (result) {
             self.this.GetDocuments();
         });

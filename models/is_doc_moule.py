@@ -455,7 +455,7 @@ class IsDocMoule(models.Model):
         }
     
 
-    def write_task(self,start_date=False,duration=False,lier=False):
+    def write_task(self,start_date=False,duration=False,lier=False,mode=False):
         start_date = start_date[0:10]
         try:
             date_debut_gantt = datetime.strptime(start_date, '%Y-%m-%d') + timedelta(days=1)
@@ -465,17 +465,37 @@ class IsDocMoule(models.Model):
             for obj in self:
                 mem_date_fin = obj.date_fin_gantt
                 if duration>0:
-                    delta = duration - obj.duree_gantt 
-                    duree = obj.duree + delta
-                    if duree<1:
-                        duree=1
-                    obj.date_debut_gantt = date_debut_gantt
-                    obj.set_fin_gantt()
-                    obj.duree = duree
-                    obj.set_fin_gantt()
+                    if mode and mode=='resize':
+                        delta = duration - obj.duree_gantt 
+                        date_fin_avant = date_debut_gantt + timedelta(days=obj.duree_gantt)
+                        date_fin_apres = date_fin_avant + timedelta(days=delta)
+                        # Nombre de jours ouverts entre ces dates *************
+                        new_date = date_debut_gantt
+                        jours_ouvres = 0
+                        while True:
+                            if new_date==date_fin_apres:
+                                break
+                            if not(new_date.weekday() in [5,6]):
+                                jours_ouvres+=1
+                            new_date += timedelta(days=1)
+                        #******************************************************
+                        obj.duree          = jours_ouvres
+                        obj.duree_gantt    = duration
+                        obj.date_fin_gantt = date_fin_apres
+                    else:
+                        delta = duration - obj.duree_gantt 
+                        duree = obj.duree + delta
+                        if duree<1:
+                            duree=1
+                        obj.date_debut_gantt = date_debut_gantt
+                        obj.set_fin_gantt()
+                        obj.duree = duree
+                        obj.set_fin_gantt()
+
                     delta = (obj.date_fin_gantt - mem_date_fin).days
                     if lier and delta:
                         obj.move_task_lier(delta)
+
         msg="%s : %s : %s => %s : %s"%(self.id,start_date,duration,obj.date_debut_gantt,obj.date_fin_gantt )
         return msg
 

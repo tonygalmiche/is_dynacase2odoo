@@ -96,6 +96,9 @@
 
 
 
+.gantt_task_drag[data-bind-property="start_date"] {
+    display: none !important;
+}
 
 
 
