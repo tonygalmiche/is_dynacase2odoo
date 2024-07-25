@@ -278,16 +278,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             if (e.target.className=="gantt_task_content"){
                 const task = gantt.getTaskBy("id", [id])[0]; // Recherche de la task avec son id
                 if (task.model !== undefined){
-                    gantt.owl.env.bus.trigger('do-action', {
-                        action: {
-                            type: 'ir.actions.act_window',
-                            res_model: task.model,
-                            res_id: parseInt(task.res_id),
-                            view_mode: 'form,list',
-                            views: [[false, 'form'],[false, 'list']],
-                            target: 'new',
-                        },
-                    });
+                    gantt.owl.GetFormId(task);
                 }
             }
             return true;
@@ -480,13 +471,34 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             this.state.lier=true;
         } else {
             this.state.lier=false;
-        }
-        //const lier=$(ev.target.checked);
-        //this.gantt.lier=false;
-        //if (typeof lier[0] !== 'undefined') this.gantt.lier=true;
+        }       
     }
 
     
+    async GetFormId(task){
+        var self=this;
+        console.log(task);
+        rpc.query({
+            model: 'is.doc.moule',
+            method: 'get_form_view_id',
+            args: [[task.res_id]],
+        }).then(function (result) {
+            console.log('result=',result);
+            const form_id=result;
+            self.env.bus.trigger('do-action', {
+                action: {
+                    type: 'ir.actions.act_window',
+                    res_model: task.model,
+                    res_id: parseInt(task.res_id),
+                    view_mode: 'form,list',
+                    views: [[form_id, 'form'],[false, 'list']],
+                    target: 'new',
+                },
+            });
+        });
+    }
+
+
     async GetDocuments(s){
         var self=this;
         rpc.query({

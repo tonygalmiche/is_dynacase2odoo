@@ -90,12 +90,42 @@ class IsDocMoule(models.Model):
     duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
     date_debut_gantt    = fields.Date(string="Date début Gantt", default=lambda self: self._date_debut_gantt())
     date_fin_gantt      = fields.Date(string="Date fin Gantt", readonly=True)
-    dependance_id       = fields.Many2one("is.doc.moule", string="Dépendance",index=True)
     section_id          = fields.Many2one("is.section.gantt", string="Section Gantt",index=True)
     gantt_pdf           = fields.Boolean("Gantt PDF", default=True, help="Afficher dans Gantt PDF")
 
+    dependance_id                        = fields.Many2one("is.doc.moule", string="Dépendance",index=True)
 
 
+    # dependance_idmoule                   = fields.Many2one("is.doc.moule", string="Dépendance Moule")
+    # dependance_dossierf_id               = fields.Many2one("is.doc.moule", string="Dépendance Dossier F")
+    # dependance_dossier_article_id        = fields.Many2one("is.doc.moule", string="Dépendance Article")
+    # dependance_dossier_modif_variante_id = fields.Many2one("is.doc.moule", string="Dépendance Dossier Modif Variante")
+    # dependance_dossier_appel_offre_id    = fields.Many2one("is.doc.moule", string="Dépendance Dossier appel d'offre")
+
+    # @api.onchange('dependance_idmoule')
+    # def onchange_dependance_idmoule(self):
+    #     for obj in self:
+    #         obj.dependance_id = obj.dependance_idmoule.id
+
+    # @api.onchange('dependance_dossierf_id')
+    # def onchange_dependance_dossierf_id(self):
+    #     for obj in self:
+    #         obj.dependance_id = obj.dependance_dossierf_id.id
+
+    # @api.onchange('dependance_dossier_article_id')
+    # def onchange_dependance_dossier_article_id(self):
+    #     for obj in self:
+    #         obj.dependance_id = obj.dependance_dossier_article_id.id
+
+    # @api.onchange('dependance_dossier_modif_variante_id')
+    # def onchange_dependance_dossier_modif_variante_idd(self):
+    #     for obj in self:
+    #         obj.dependance_id = obj.dependance_dossier_modif_variante_id.id
+
+    # @api.onchange('dependance_dossier_appel_offre_id')
+    # def onchange_dependance_dossier_appel_offre_idd(self):
+    #     for obj in self:
+    #         obj.dependance_id = obj.dependance_dossier_appel_offre_id.id
 
     def _date_debut_gantt(self):
         now  = date.today()              # Ce jour
@@ -142,11 +172,32 @@ class IsDocMoule(models.Model):
             }
 
 
+    def get_form_view_id(self):
+        for obj in self:
+            form_id = False
+            if obj.type_document=='Moule':
+                form_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_idmoule_form').id
+            if obj.type_document=='Dossier F':
+                form_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_dossierf_id_form').id
+            if obj.type_document=='Article':
+                form_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_dossier_article_id_form').id
+            if obj.type_document=='Dossier Modif Variante':
+                form_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_dossier_modif_variante_id_form').id
+            if obj.type_document=='dossier_appel_offre':
+                form_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_dossier_appel_offre_id_form').id
+            return form_id
+
+
+
     def acceder_doc_action(self):
         for obj in self:
+            form_id = obj.get_form_view_id()
             res= {
                 'name': 'Doc',
                 'view_mode': 'form',
+                "views"    : [
+                    (form_id, "form")
+                ],
                 'res_model': 'is.doc.moule',
                 'res_id': obj.id,
                 'type': 'ir.actions.act_window',

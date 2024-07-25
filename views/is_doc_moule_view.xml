@@ -4,6 +4,7 @@
         <record model="ir.ui.view" id="is_doc_moule_form">
             <field name="name">is_doc_moule_form</field>
             <field name="model">is.doc.moule</field>
+            <field name="priority" eval="1" />
             <field name="arch" type="xml">
                 <form string="Document moule">
                     <sheet>
@@ -49,7 +50,14 @@
                                 <field name="duree"/>
                                 <field name="duree_gantt"/>
                                 <field name="date_fin_gantt" force_save="1"/>
-                                <field name="dependance_id" domain="[('idmoule','=',idmoule)]"/>
+                                <!-- 
+                                <field name="dependance_idmoule"                   domain="[('idmoule','=',idmoule)]"                                     attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
+                                <field name="dependance_dossierf_id"               domain="[('dossierf_id','=',dossierf_id)]"                             attrs="{'invisible': [('type_document', '!=', 'Dossier F')]}" />
+                                <field name="dependance_dossier_article_id"        domain="[('dossier_article_id','=',dossier_article_id)]"               attrs="{'invisible': [('type_document', '!=', 'Article')]}" />
+                                <field name="dependance_dossier_modif_variante_id" domain="[('dossier_modif_variante_id','=',dossier_modif_variante_id)]" attrs="{'invisible': [('type_document', '!=', 'Dossier Modif Variante')]}" />
+                                <field name="dependance_dossier_appel_offre_id"    domain="[('dossier_appel_offre_id','=',dossier_appel_offre_id)]"       attrs="{'invisible': [('type_document', '!=', 'dossier_appel_offre')]}" /> 
+                                <field name="dependance_id" readonly="1" force_save="1"/> 
+                                -->
                                 <field name="gantt_pdf"/>
                             </group>
                         </group>
@@ -74,11 +82,82 @@
                 </form>
             </field>
         </record>
+        <record id="is_doc_moule_idmoule_form" model="ir.ui.view">
+            <field name="name">is_doc_moule_idmoule_form</field>
+            <field name="model">is.doc.moule</field>
+            <field name="inherit_id" ref="is_dynacase2odoo.is_doc_moule_form"/>
+            <field name="priority" eval="900" />
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="date_fin_gantt" position="after">
+                    <field name="dependance_id" string="Dépendance Moule" domain="[('idmoule','=',idmoule)]"/>
+                </field>
+            </field>
+        </record>
+        <record id="is_doc_moule_dossierf_id_form" model="ir.ui.view">
+            <field name="name">is_doc_moule_dossierf_id_form</field>
+            <field name="model">is.doc.moule</field>
+            <field name="inherit_id" ref="is_dynacase2odoo.is_doc_moule_form"/>
+            <field name="priority" eval="900" />
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="date_fin_gantt" position="after">
+                    <field name="dependance_id" string="Dépendance Dossier F" domain="[('dossierf_id','=',dossierf_id)]"/>
+                </field>
+            </field>
+        </record>
+        <record id="is_doc_moule_dossier_article_id_form" model="ir.ui.view">
+            <field name="name">is_doc_moule_dossier_article_id_form</field>
+            <field name="model">is.doc.moule</field>
+            <field name="inherit_id" ref="is_dynacase2odoo.is_doc_moule_form"/>
+            <field name="priority" eval="900" />
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="date_fin_gantt" position="after">
+                    <field name="dependance_id" string="Dépendance Article" domain="[('dossier_article_id','=',dossier_article_id)]"/>
+                </field>
+            </field>
+        </record>
+        <record id="is_doc_moule_dossier_modif_variante_id_form" model="ir.ui.view">
+            <field name="name">is_doc_moule_dossier_modif_variante_id_form</field>
+            <field name="model">is.doc.moule</field>
+            <field name="inherit_id" ref="is_dynacase2odoo.is_doc_moule_form"/>
+            <field name="priority" eval="900" />
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="date_fin_gantt" position="after">
+                    <field name="dependance_id" string="Dépendance Dossier Modif Variante" domain="[('dossier_modif_variante_id','=',dossier_modif_variante_id)]"/>
+                </field>
+            </field>
+        </record>
+        <record id="is_doc_moule_dossier_appel_offre_id_form" model="ir.ui.view">
+            <field name="name">is_doc_moule_dossier_appel_offre_id_form</field>
+            <field name="model">is.doc.moule</field>
+            <field name="inherit_id" ref="is_dynacase2odoo.is_doc_moule_form"/>
+            <field name="priority" eval="900" />
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="date_fin_gantt" position="after">
+                    <field name="dependance_id" string="Dépendance Dossier appel d'offre" domain="[('dossier_appel_offre_id','=',dossier_appel_offre_id)]"/>
+                </field>
+            </field>
+        </record>
+
+
+
+
+
+
+
+
        <record model="ir.ui.view" id="is_doc_moule_tree">
             <field name="name">is_doc_moule_tree</field>
             <field name="model">is.doc.moule</field>
             <field name="arch" type="xml">
                 <tree string="Document moule">
+                    <field name="section_id"       optional="show" required="1"/>
+                    <field name='sequence'/>
+                    <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
                     <field name="param_project_id" optional="show"  widget="many2one_clickable"/>
                     <field name="type_document" optional="show"/>
                     <field name="ppr_type_demande" optional="show" />
@@ -126,7 +205,7 @@
                     <field name="section_id"       optional="show" required="1"/>
                     <field name='sequence'/>
                     <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
-                    <field name="param_project_id" required="1" widget="many2one_clickable"/>
+                    <field name="param_project_id" required="1" domain="[('type_document','=',type_document)]" />
                     <field name="type_document"    optional="hide"/>
                     <field name="j_prevue"         optional="show"/>
                     <field name="idmoule"          required="1"    widget="many2one_clickable"/>
@@ -142,7 +221,7 @@
                     <field name="duree_gantt"         optional="hide" force_save="1"/>
                     <field name="date_debut_gantt"    required="1" />
                     <field name="date_fin_gantt"                      force_save="1"/>
-                    <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
+                    <field name="dependance_id"       optional="hide" domain="[('idmoule','=',idmoule)]"/>
                     <field name="indicateur"          optional="hide"/>
                     <field name="gantt_pdf"           optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
@@ -262,6 +341,7 @@
                 <tree string="Document moule">
                     <field name="section_id"          optional="show"/>
                     <field name="sequence"            optional="show"/>
+                    <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
                     <field name="param_project_id"    optional="show"  widget="many2one_clickable"/>
                     <field name="type_document"       optional="hide"/>
                     <field name="ppr_type_demande"    optional="hide" />
@@ -316,6 +396,7 @@
             <field name="arch" type="xml">
                 <tree string="Document Dossier F">
                     <field name="section_id" optional="show"/>
+                    <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
                     <field name="param_project_id" optional="show"  widget="many2one_clickable"/>
                     <field name="type_document" optional="hide"/>
                     <field name="ppr_type_demande" optional="show" />
@@ -374,6 +455,9 @@
             <field name="model">is.doc.moule</field>
             <field name="arch" type="xml">
                 <tree string="Document moule">
+                    <field name="section_id" optional="show" required="1"/>
+                    <field name='sequence'   optional="show"/>
+                    <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
                     <field name="param_project_id"    optional="show"  widget="many2one_clickable"/>
                     <field name="type_document"       optional="hide"/>
                     <field name="ppr_type_demande"    optional="hide" />
@@ -420,24 +504,24 @@
             <field name="priority" eval="90"/>
             <field name="arch" type="xml">
                 <tree editable="top">
-                    <field name="section_id" optional="show"/>
+                    <field name="section_id" optional="show" required="1"/>
                     <field name='sequence'   optional="show"/>
-                    <field name="param_project_id" required="1" widget="many2one_clickable"/>
+                    <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
+                    <field name="param_project_id" required="1" domain="[('type_document','=',type_document)]" />
                     <field name="type_document"    optional="hide"/>
-                    <field name="idmoule"          optional="hide" widget="many2one_clickable"/>
                     <field name="dossierf_id"      required="1"    widget="many2one_clickable"/>
-                    <field name="idproject"                        widget="many2one_clickable"/>
-                    <field name="client_id" optional="show"        widget="many2one_clickable"/>
+                    <field name="idproject"        optional="show" widget="many2one_clickable"/>
+                    <field name="client_id"        optional="show" widget="many2one_clickable"/>
                     <field name="idresp"           required="1"/>
-                    <field name="demande"/>
+                    <field name="demande"         optional="show"/>
                     <field name="etat"             required="1"/>
                     <field name="dateend"          optional="hide"/>
                     <field name="duree"            required="1"/>
                     <field name="duree_gantt"      optional="hide" force_save="1"/>
                     <field name="date_debut_gantt" required="1" />
-                    <field name="date_fin_gantt"   force_save="1" />
+                    <field name="date_fin_gantt"      optional="show" force_save="1" />
                     <field name="duree_attente_avant" optional="hide"/>
-                    <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
+                    <field name="dependance_id"       optional="hide" domain="[('dossierf_id','=',dossierf_id)]"/>
                     <field name="indicateur"          optional="hide"/>
                     <field name="gantt_pdf"           optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
@@ -455,14 +539,12 @@
             <field name="priority" eval="90"/>
             <field name="arch" type="xml">
                 <tree editable="top">
-                    <field name="section_id" optional="show"/>
+                    <field name="section_id" optional="show" required="1"/>
                     <field name='sequence'/>
-                    <field name="param_project_id" required="1" widget="many2one_clickable"/>
+                    <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
+                    <field name="param_project_id" required="1" domain="[('type_document','=',type_document)]" />
                     <field name="type_document"    optional="hide"/>
-                    <field name="idmoule"          optional="hide"       widget="many2one_clickable"/>
-                    <field name="dossierf_id"      optional="hide"       widget="many2one_clickable"/>
                     <field name="dossier_modif_variante_id" required="1" widget="many2one_clickable"/>
-                    <field name="idproject"                              widget="many2one_clickable"/>
                     <field name="client_id" optional="show"              widget="many2one_clickable"/>
                     <field name="idresp"           required="1"/>
                     <field name="demande"/>
@@ -473,7 +555,7 @@
                     <field name="date_debut_gantt"    required="1" />
                     <field name="date_fin_gantt"      force_save="1"/>
                     <field name="duree_attente_avant" optional="hide"/>
-                    <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
+                    <field name="dependance_id"       optional="hide" domain="[('dossier_modif_variante_id','=',dossier_modif_variante_id)]"/>
                     <field name="indicateur"          optional="hide"/>
                     <field name="gantt_pdf"           optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
@@ -495,11 +577,12 @@
             <field name="priority" eval="90"/>
             <field name="arch" type="xml">
                 <tree editable="top">
-                    <field name="section_id" optional="show"/>
+                    <field name="section_id" optional="show" required="1"/>
                     <field name='sequence'/>
-                    <field name="param_project_id" required="1" widget="many2one_clickable"/>
+                    <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
+                    <field name="param_project_id" required="1" domain="[('type_document','=',type_document)]" />
                     <field name="type_document"          optional="hide"/>
-                    <field name="dossier_appel_offre_id"      optional="hide"       widget="many2one_clickable"/>
+                    <field name="dossier_appel_offre_id"      optional="hide" widget="many2one_clickable"/>
                     <field name="idresp"           required="1"/>
                     <field name="demande"/>
                     <field name="etat"             required="1"/>
@@ -509,7 +592,7 @@
                     <field name="date_debut_gantt" required="1" />
                     <field name="date_fin_gantt"    force_save="1"/>
                     <field name="duree_attente_avant" optional="hide"/>
-                    <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
+                    <field name="dependance_id"       optional="hide" domain="[('dossier_appel_offre_id','=',dossier_appel_offre_id)]"/>
                     <field name="indicateur"          optional="hide"/>
                     <field name="gantt_pdf"           optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
