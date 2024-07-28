@@ -559,7 +559,9 @@
                     <field name="indicateur"          optional="hide"/>
                     <field name="gantt_pdf"           optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
-                    <field name="dynacase_id"  optional="hide"/>
+                    <field name="dynacase_id"      optional="hide"/>
+                    <field name="origine_copie_id" optional="hide"/>
+                    <field name="id"               optional="hide"/>
                 </tree>
             </field>
         </record>

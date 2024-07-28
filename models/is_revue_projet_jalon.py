@@ -148,7 +148,7 @@ class is_revue_projet_jalon(models.Model):
     rpj_dp_vac                   = fields.Float(string="VAC")
     rpj_dp_eiv_total             = fields.Float(string="Total investissement")
     rpj_dp_schema_flux_vendu     = fields.Char(string="Schéma de flux vendu")
-    dynacase_id                  = fields.Integer(string="Id Dynacase",index=True)
+    dynacase_id                  = fields.Integer(string="Id Dynacase",index=True,copy=False)
     state = fields.Selection([
         ("rpj_brouillon",           "Brouillon"),
         ("rpj_directeur_technique", "Directeur Technique"),

@@ -29,6 +29,12 @@
             <field name="parent_id" eval="ref('is_doc_moule_main_menu')"/>
             <field name="action"    ref="is_gantt_pdf_action"/>
         </record>
+        <record id="is_gantt_copie_menu" model="ir.ui.menu" >
+            <field name="name">Copie du Gantt d'un Dossier</field>
+            <field name="sequence">100</field>
+            <field name="parent_id" eval="ref('is_doc_moule_main_menu')"/>
+            <field name="action"    ref="is_gantt_copie_action"/>
+        </record>
 
 
         <!-- Gestion commcerciale -->

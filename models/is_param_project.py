@@ -9,6 +9,16 @@ TYPE_DOCUMENT=[
     ("dossier_appel_offre"   , "Dossier appel d'offre"),
 ]
 
+
+TYPE_TO_FIELD={
+    "Moule"                 : "idmoule",
+    "Dossier F"             : "dossierf_id",
+    "Article"               : "dossier_article_id",
+    "Dossier Modif Variante": "dossier_modif_variante_id",
+    "dossier_appel_offre"   : "dossier_appel_offre_id",
+}
+
+
 GESTION_J=[
     ("J0", "Préparation J0"),
     ("J1", "Préparation J1"),
@@ -110,7 +120,7 @@ class IsParamProject(models.Model):
     array_ids           = fields.One2many('is.param.project.array', 'param_project_id')
     ppr_project_colors  = fields.Serialized()
     ppr_color           = fields.Char("Color", sparse="ppr_project_colors")
-    dynacase_id         = fields.Integer(string="Id Dynacase",index=True)
+    dynacase_id         = fields.Integer(string="Id Dynacase",index=True,copy=False)
     duree               = fields.Integer("Durée par défaut (J)"   , help="Utilisée dans le Gantt")
     duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
     dependance_id       = fields.Many2one("is.param.project", string="Dépendance")

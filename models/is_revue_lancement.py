@@ -136,7 +136,7 @@ class is_revue_lancement(models.Model):
         ("rl_brouillon",  "Brouillon"),
         ("rl_diffuse",    "Diffusé"),
     ], string="État", tracking=True)
-    dynacase_id                       = fields.Integer(string="Id Dynacase",index=True)
+    dynacase_id                       = fields.Integer(string="Id Dynacase",index=True,copy=False)
 
 
     def lien_vers_dynacase_action(self):

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- is.gantt.copie -->
+        <record model="ir.ui.view" id="is_gantt_copie_form">
+            <field name="name">is_gantt_copie_form</field>
+            <field name="model">is.gantt.copie</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button
+                            name="generer_copie_action"
+                            string="Lancer la copie"
+                            type="object"
+                        />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="type_document"/>
+                                <field name="src_idmoule"                   attrs="{'invisible': [('type_document', '!=', 'Moule')]                 , 'required': [('type_document', '=', 'Moule')]}"/>
+                                <field name="src_dossierf_id"               attrs="{'invisible': [('type_document', '!=', 'Dossier F')]             , 'required': [('type_document', '=', 'Dossier F')]}"/>
+                                <field name="src_dossier_article_id"        attrs="{'invisible': [('type_document', '!=', 'Article')]               , 'required': [('type_document', '=', 'Article')]}" />
+                                <field name="src_dossier_modif_variante_id" attrs="{'invisible': [('type_document', '!=', 'Dossier Modif Variante')], 'required': [('type_document', '=', 'Dossier Modif Variante')]}"/>
+                                <field name="src_dossier_appel_offre_id"    attrs="{'invisible': [('type_document', '!=', 'dossier_appel_offre')]   , 'required': [('type_document', '=', 'dossier_appel_offre')]}"/>
+                                <field name="dst_idmoule"                   attrs="{'invisible': [('type_document', '!=', 'Moule')]                 , 'required': [('type_document', '=', 'Moule')]}"/>
+                                <field name="dst_dossierf_id"               attrs="{'invisible': [('type_document', '!=', 'Dossier F')]             , 'required': [('type_document', '=', 'Dossier F')]}"/>
+                                <field name="dst_dossier_article_id"        attrs="{'invisible': [('type_document', '!=', 'Article')]               , 'required': [('type_document', '=', 'Article')]}" />
+                                <field name="dst_dossier_modif_variante_id" attrs="{'invisible': [('type_document', '!=', 'Dossier Modif Variante')], 'required': [('type_document', '=', 'Dossier Modif Variante')]}"/>
+                                <field name="dst_dossier_appel_offre_id"    attrs="{'invisible': [('type_document', '!=', 'dossier_appel_offre')]   , 'required': [('type_document', '=', 'dossier_appel_offre')]}"/>
+                            </group>
+                            <group>
+                                <field name="date_debut"/>  
+                                <field name="src_nb_taches"/>  
+                                <field name="dst_nb_taches"/>  
+                            </group>
+                        </group>
+                        <group string="Sections">
+                            <field name="section_ids" nolabel="1" colspan="2">
+                                <tree  create="false" edit="false">
+                                    <field name="section_id" readonly="1" force_save="1"/>
+                                    <field name="copier" widget="boolean_toggle"/>
+                                </tree>
+                            </field>
+                        </group>
+                     </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_gantt_copie_tree">
+            <field name="name">is_gantt_copie_tree</field>
+            <field name="model">is.gantt.copie</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name='type_document'/>
+                    <field name='name'/>
+                    <field name='date_debut'/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_gantt_copie_search">
+            <field name="name">is_gantt_copie_search</field>
+            <field name="model">is.gantt.copie</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="type_document" />
+                    <field name="name" />
+                </search>
+            </field>
+        </record>
+        <record id="is_gantt_copie_action" model="ir.actions.act_window">
+            <field name="name">Copie du Gantt d'un Dossier</field>
+            <field name="res_model">is.gantt.copie</field>
+            <field name="view_mode">tree,form</field>
+            <field name="limit">200</field>
+        </record>       
+    </data>
+</odoo>

@@ -10,7 +10,7 @@ class IsDocMoule(models.Model):
     _name        = "is.doc.moule"
     _inherit=['mail.thread']
     _description = "Document moule"
-    _rec_name    = "param_project_id"
+    #_rec_name    = "param_project_id"
     _order = 'section_id,sequence,section_id,param_project_id'
 
 
@@ -84,7 +84,7 @@ class IsDocMoule(models.Model):
     datecreate       = fields.Date(string="Date de création", default=fields.Date.context_today)
     dateend          = fields.Date(string="Date de fin")
     array_ids        = fields.One2many("is.doc.moule.array", "is_doc_id", string="Pièce-jointe de réponse à la demande")
-    dynacase_id      = fields.Integer(string="Id Dynacase",index=True)
+    dynacase_id      = fields.Integer(string="Id Dynacase",index=True,copy=False)
     duree               = fields.Integer(string="Durée (J)"      , help="Durée en jours ouvrés"         , default=1)
     duree_gantt         = fields.Integer(string="Durée Gantt (J)", help="Durée calendaire pour le Gantt", default=1, readonly=True)
     duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
@@ -92,40 +92,20 @@ class IsDocMoule(models.Model):
     date_fin_gantt      = fields.Date(string="Date fin Gantt", readonly=True)
     section_id          = fields.Many2one("is.section.gantt", string="Section Gantt",index=True)
     gantt_pdf           = fields.Boolean("Gantt PDF", default=True, help="Afficher dans Gantt PDF")
+    dependance_id       = fields.Many2one("is.doc.moule", string="Dépendance",index=True)
+    origine_copie_id    = fields.Many2one("is.doc.moule", string="Origine de la copie",index=True)
 
-    dependance_id                        = fields.Many2one("is.doc.moule", string="Dépendance",index=True)
+
+    def name_get(self):
+        result = []
+        for obj in self:
+            name="[%s]%s"%(obj.id,obj.param_project_id.ppr_famille)
+            print(name)
+            result.append((obj.id, name))
+        return result
 
 
-    # dependance_idmoule                   = fields.Many2one("is.doc.moule", string="Dépendance Moule")
-    # dependance_dossierf_id               = fields.Many2one("is.doc.moule", string="Dépendance Dossier F")
-    # dependance_dossier_article_id        = fields.Many2one("is.doc.moule", string="Dépendance Article")
-    # dependance_dossier_modif_variante_id = fields.Many2one("is.doc.moule", string="Dépendance Dossier Modif Variante")
-    # dependance_dossier_appel_offre_id    = fields.Many2one("is.doc.moule", string="Dépendance Dossier appel d'offre")
 
-    # @api.onchange('dependance_idmoule')
-    # def onchange_dependance_idmoule(self):
-    #     for obj in self:
-    #         obj.dependance_id = obj.dependance_idmoule.id
-
-    # @api.onchange('dependance_dossierf_id')
-    # def onchange_dependance_dossierf_id(self):
-    #     for obj in self:
-    #         obj.dependance_id = obj.dependance_dossierf_id.id
-
-    # @api.onchange('dependance_dossier_article_id')
-    # def onchange_dependance_dossier_article_id(self):
-    #     for obj in self:
-    #         obj.dependance_id = obj.dependance_dossier_article_id.id
-
-    # @api.onchange('dependance_dossier_modif_variante_id')
-    # def onchange_dependance_dossier_modif_variante_idd(self):
-    #     for obj in self:
-    #         obj.dependance_id = obj.dependance_dossier_modif_variante_id.id
-
-    # @api.onchange('dependance_dossier_appel_offre_id')
-    # def onchange_dependance_dossier_appel_offre_idd(self):
-    #     for obj in self:
-    #         obj.dependance_id = obj.dependance_dossier_appel_offre_id.id
 
     def _date_debut_gantt(self):
         now  = date.today()              # Ce jour
@@ -555,6 +535,7 @@ class IsDocMoule(models.Model):
         for obj in self:
             docs=self.env['is.doc.moule'].search([ ('dependance_id', '=', obj.id) ])
             for doc in docs:
+                print(doc)
                 date_debut_gantt = doc.date_debut_gantt +  timedelta(days=delta)
                 mem_date_fin = doc.date_fin_gantt
                 doc.date_debut_gantt = date_debut_gantt

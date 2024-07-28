@@ -11,4 +11,5 @@ from . import is_dossier_appel_offre
 from . import is_fermeture_gantt
 from . import is_mold_project
 from . import is_gantt_pdf
+from . import is_gantt_copie
 from . import ir_attachment

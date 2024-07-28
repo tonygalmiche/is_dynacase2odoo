@@ -70,7 +70,7 @@ class is_dossier_appel_offre(models.Model):
     dao_daterepplast = fields.Date("Date réponse Plastigray")
     dao_daterepcli   = fields.Date("Date réponse client")
     dao_comment      = fields.Char("Commentaire")
-    dynacase_id      = fields.Integer("id Dynacase",index=True)
+    dynacase_id      = fields.Integer("id Dynacase",index=True,copy=False)
 
     dao_rsplast      = fields.Selection(_DAO_RSPLAST, "Rsp Plastigray")
     dao_motif        = fields.Selection(_DAO_MOTIF, "Motif")

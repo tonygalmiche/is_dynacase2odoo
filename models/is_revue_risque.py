@@ -105,7 +105,7 @@ class is_revue_risque(models.Model):
         ("OK",  "OK"),
         ("nOK", "non OK"),
     ], string="Validation de cette revue des risques")
-    dynacase_id                           = fields.Integer(string="Id Dynacase",index=True)
+    dynacase_id                           = fields.Integer(string="Id Dynacase",index=True,copy=False)
     state                                 = fields.Selection([
         ("rr_brouillon", "Brouillon"),
         ("rr_diffuse",   "Diffusé"),
