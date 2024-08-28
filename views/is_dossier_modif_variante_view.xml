@@ -88,35 +88,39 @@
                     </header>
                     <sheet>
                         <group string="Caractéristiques">
-                            <field name="demao_type" />
-                            <field name="demao_num" />
-                            <field name="demao_dao" />
-                            <field name="demao_date" />
-                            <field name="demao_idclient" />
-                            <field name="demao_idcommercial" />
-                            <field name="demao_idmoule" />
-                            <field name="demao_desig" />
-                            <field name="demao_nature" />
-                            <field name="demao_ref" />
-                            <field name="demao_daterep" />
-                            <field name="demao_datelanc" />
-                            <field name="demao_pxvente" />
-                            <field name="demao_numcmd" />
-                            <field name="demao_obs" />
-                        </group>
-                        <!-- <group string="Motif de la non validation">
-                            <field name="demao_motif" />
-                        </group> -->
-                        <group string="BE">
-                            <field name="demao_idbe" />
-                        </group>
-                        <group string="Commercial">
-                            <field name="demao_annexcom" widget="many2many_binary"/>
-                        </group>
-                        <group string="BE">
-                            <field name="demao_annex" widget="many2many_binary"/>
-                        </group>
-                        <group string="Commandes BE">
+                            <group>
+                                <field name="demao_type" />
+                                <field name="demao_num" />
+                                <field name="demao_dao" />
+                                <field name="demao_date" />
+                                <field name="demao_idclient" />
+                                <field name="demao_idcommercial" />
+                                <field name="demao_idmoule" />
+                                <field name="demao_desig" />
+                            </group>
+                            <group>
+                                <field name="site_id" />
+                                <field name="demao_nature" />
+                                <field name="demao_ref" />
+                                <field name="demao_daterep" />
+                                <field name="demao_datelanc" />
+                                <field name="demao_pxvente" />
+                                <field name="demao_numcmd" />
+                                <field name="demao_obs" />    
+                                <field name="solde" />    
+                            </group>
+                         </group>
+                         <group>
+                            <group string="BE">
+                                <field name="demao_idbe" />
+                                <field name="demao_annex" widget="many2many_binary"/>
+                            </group>
+                            <group string="Commercial">
+                                <field name="demao_annexcom" widget="many2many_binary"/>
+                            </group>
+
+                         </group>
+                         <group string="Commandes BE">
                             <field name="demao_cde_be" widget="many2many_binary"/>
                         </group>
                     </sheet>
@@ -133,6 +137,7 @@
             <field name="model">is.dossier.modif.variante</field>
             <field name="arch" type="xml">
                 <tree string="Dossier modif/variante">
+                    <field name="site_id" optional="show"/>
                     <field name="demao_type" optional="show"/>
                     <field name="demao_num"  optional="show"/>
                     <field name="demao_dao"  optional="show"/>
@@ -150,6 +155,7 @@
                     <field name="demao_obs" optional="hide"/>
                     <field name="demao_motif" optional="hide"/>
                     <field name="demao_idbe" optional="hide"/>
+                    <field name="solde" optional="show"/>
                     <field name="state" optional="show"/>
                     <field name="dynacase_id" optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
@@ -161,6 +167,7 @@
             <field name="model">is.dossier.modif.variante</field>
             <field name="arch" type="xml">
                 <search string="Dossier modif/variante">
+                    <field name="site_id" />
                     <field name="demao_type" />
                     <field name="demao_num" />
                     <field name="demao_dao" />

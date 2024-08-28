@@ -103,6 +103,7 @@ class is_dossier_modif_variante(models.Model):
     demao_idclient              = fields.Many2one("res.partner", string="Client", required=False, domain=[("is_company","=",True), ("customer","=",True)])
     demao_idcommercial          = fields.Many2one("res.users", string="Commercial", default=lambda self: self.env.user, required=False)
     demao_idmoule               = fields.Many2one("is.mold", string="Moule")
+    site_id                     = fields.Many2one(related="demao_idmoule.is_database_id")
     demao_desig                 = fields.Char(string="Désignation pièce", required=False)
     demao_nature                = fields.Char(string="Nature", required=False)
     demao_ref                   = fields.Char(string="Référence")
@@ -148,7 +149,7 @@ class is_dossier_modif_variante(models.Model):
     vers_gagne_vsb              = fields.Boolean(string="Gagne", compute='_compute_vsb', readonly=True, store=False)
     vers_annule_vsb             = fields.Boolean(string="Annule", compute='_compute_vsb', readonly=True, store=False)
     dynacase_id                 = fields.Integer(string="Id Dynacase",index=True,copy=False)
-
+    solde                       = fields.Boolean(string="Soldé", default=False, copy=False)
 
 
     def gantt_action(self):
