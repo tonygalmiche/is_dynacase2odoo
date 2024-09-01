@@ -576,7 +576,7 @@ class IsDocMouleArray(models.Model):
     rsp_date    = fields.Date(string="Date")
     rsp_texte   = fields.Char(string="Réponse à la demande")
     is_doc_id   = fields.Many2one("is.doc.moule")
-    dynacase_id = fields.Integer(string="Id Dynacase",index=True,copy=False)
+    lig         = fields.Integer(string="Lig",index=True,copy=False,readonly=True, help="Permet de faire le lien avec la ligne du tableau dans Dynacase")
 
 
 class is_mold(models.Model):
