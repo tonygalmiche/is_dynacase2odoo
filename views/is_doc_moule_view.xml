@@ -71,6 +71,7 @@
                                     <field name="comment" optional="hide" widget="text"/>
                                     <field name="rsp_date" attrs="{'column_invisible': [('parent.ppr_type_demande', 'not in', ['DATE', 'PJ_DATE'])]}"/>
                                     <field name="rsp_texte" attrs="{'column_invisible': [('parent.ppr_type_demande', 'not in', ['TEXTE'])]}"/>
+                                    <field name="dynacase_id" optional="hide"/>
                                 </tree>
                             </field>
                         </group>
