@@ -93,6 +93,18 @@ class is_dossier_modif_variante(models.Model):
         for obj in self:
             obj.sudo().state = "annule"
 
+
+    @api.depends('demao_idmoule.is_database_id', 'dossierf_id.is_database_id')
+    def _compute_site_id(self):
+        for obj in self:
+            site_id = False
+            if obj.demao_idmoule.is_database_id:
+                site_id = obj.demao_idmoule.is_database_id.id
+            if obj.dossierf_id.is_database_id:
+                site_id = obj.dossierf_id.is_database_id.id
+            obj.site_id = site_id
+
+
     demao_type                  = fields.Selection([
         ("modification", "Modification"),
         ("variante",     "Variante"),
@@ -103,7 +115,9 @@ class is_dossier_modif_variante(models.Model):
     demao_idclient              = fields.Many2one("res.partner", string="Client", required=False, domain=[("is_company","=",True), ("customer","=",True)])
     demao_idcommercial          = fields.Many2one("res.users", string="Commercial", default=lambda self: self.env.user, required=False)
     demao_idmoule               = fields.Many2one("is.mold", string="Moule")
-    site_id                     = fields.Many2one(related="demao_idmoule.is_database_id")
+    dossierf_id                 = fields.Many2one("is.dossierf", string="Dossier F")
+    #site_id                    = fields.Many2one(related="demao_idmoule.is_database_id")
+    site_id                     = fields.Many2one('is.database', "Site", compute='_compute_site_id', readonly=True, store=True)
     demao_desig                 = fields.Char(string="Désignation pièce", required=False)
     demao_nature                = fields.Char(string="Nature", required=False)
     demao_ref                   = fields.Char(string="Référence")

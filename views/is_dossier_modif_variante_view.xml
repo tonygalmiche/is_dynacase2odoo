@@ -96,6 +96,7 @@
                                 <field name="demao_idclient" />
                                 <field name="demao_idcommercial" />
                                 <field name="demao_idmoule" />
+                                <field name="dossierf_id" />
                                 <field name="demao_desig" />
                             </group>
                             <group>
@@ -145,6 +146,7 @@
                     <field name="demao_idclient" optional="show" widget="many2one_clickable"/>
                     <field name="demao_idcommercial" optional="show"/>
                     <field name="demao_idmoule" optional="show" widget="many2one_clickable"/>
+                    <field name="dossierf_id" optional="show" widget="many2one_clickable"/>
                     <field name="demao_desig" optional="show"/>
                     <field name="demao_nature" optional="hide"/>
                     <field name="demao_ref" optional="hide"/>
@@ -174,6 +176,7 @@
                     <field name="demao_idclient" />
                     <field name="demao_idcommercial" />
                     <field name="demao_idmoule" />
+                    <field name="dossierf_id" />
                     <field name="demao_desig" />
                     <field name="demao_nature" />
                     <field name="demao_ref" />
