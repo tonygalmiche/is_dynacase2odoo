@@ -568,8 +568,8 @@ class IsDocMouleArray(models.Model):
     _name        = "is.doc.moule.array"
     _description = "Document moule array"
 
-    annex_pdf   = fields.Many2many("ir.attachment", "attach_annex_pdf_rel", "annex_pdf_id", "att_id", string="Fichiers PDF")
-    annex       = fields.Many2many("ir.attachment", "attach_annex_rel", "annex_id", "attachment_id", string="Fichiers")
+    annex_pdf   = fields.Many2many("ir.attachment", "attach_annex_pdf_rel", "annex_pdf_id", "attachment_id", string="Fichiers PDF")
+    annex       = fields.Many2many("ir.attachment", "attach_annex_rel"    , "annex_id"    , "attachment_id", string="Fichiers")
     demandmodif = fields.Char(string="Demande de modification")
     maj_amdec   = fields.Boolean(string="Mise à jour de l’AMDEC")
     comment     = fields.Text(string="Commentaire")
