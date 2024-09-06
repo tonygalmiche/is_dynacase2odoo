@@ -77,6 +77,14 @@ class is_dossier_appel_offre(models.Model):
     dao_avancement   = fields.Selection(_DAO_AVANCEMENT, "Avancement")
     state            = fields.Selection(_STATE, "Etat")
 
+    dao_consult_initial   = fields.Many2many("ir.attachment", "is_dao_consult_initial_rel"  , "consult_initial_id"  , "att_id", string="Consultation initiale client")
+    dao_annexcom          = fields.Many2many("ir.attachment", "is_dao_annexcom_rel"         , "annexcom_id"         , "att_id", string="Fichiers commercial")
+    dao_annex             = fields.Many2many("ir.attachment", "is_dao_annex_rel"            , "annex_id"            , "att_id", string="Fiche de devis du be")
+    dao_offre_validee     = fields.Many2many("ir.attachment", "is_dao_offre_validee_rel"    , "offre_validee_id"    , "att_id", string="Dernière offre validée par le client")
+    dao_commande_client   = fields.Many2many("ir.attachment", "is_dao_commande_client_rel"  , "commande_client_id"  , "att_id", string="Commande client")
+    dao_lettre_nomination = fields.Many2many("ir.attachment", "is_dao_lettre_nomination_rel", "lettre_nomination_id", "att_id", string="Lettre de nomination et contrats")
+    dao_devis_achat       = fields.Many2many("ir.attachment", "is_dao_devis_achat_rel"      , "devis_achat_id"      , "att_id", string="Fichier de devis des achats")
+
 
     def gantt_action(self):
         for obj in self:

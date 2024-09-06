@@ -47,6 +47,15 @@
                                 <field name="dynacase_id"/>
                             </group>
                         </group>
+                        <group>
+                            <field name="dao_consult_initial"   widget="many2many_binary"/>
+                            <field name="dao_annexcom"          widget="many2many_binary"/>
+                            <field name="dao_annex"             widget="many2many_binary"/>
+                            <field name="dao_offre_validee"     widget="many2many_binary"/>
+                            <field name="dao_commande_client"   widget="many2many_binary"/>
+                            <field name="dao_lettre_nomination" widget="many2many_binary"/>
+                            <field name="dao_devis_achat"       widget="many2many_binary"/>
+                         </group>
                     </sheet>
                 </form>
             </field>
