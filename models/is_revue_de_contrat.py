@@ -156,7 +156,6 @@ class is_revue_de_contrat(models.Model):
     rc_num_dfn                         = fields.Char(string="N°DFN")
     rc_num_cdc                         = fields.Char(string="N°CDC")
     rc_eqs_comment                     = fields.Text(string="Commentaire libre")
-    rc_eqs_pj                          = fields.Many2many("ir.attachment", "is_revue_rc_eqs_pj_rel", "revu_id", "att_id", string="Pièce jointe")
     rc_site_fabrication                = fields.Selection([
         ("1",      "1-Gray"),
         ("3",     "3-Plasti-ka"),
@@ -203,11 +202,19 @@ class is_revue_de_contrat(models.Model):
     rc_dfi_temp_occ_pm                 = fields.Float(string="Temps occupation presse mensuelle")
     rc_dfe_desc_proc                   = fields.Text(string="Descriptif du process et site de fabrication vendu")
     rc_dfe_sch_lieu_fab                = fields.Text(string="Schéma de flux vendu (Logistique) ")
-    rc_df_engagement_faisabilite       = fields.Many2many("ir.attachment", "is_revue_engagement_faisabilite_rel", "revu_id", "att_id", string="Engagement de faisabilité ")
-    rc_df_engagement_faisabilite_autre = fields.Many2many("ir.attachment", "is_revue_engagement_autre_faisabilite_rel", "revu_id", "att_id", string="Pièce jointe ")
-    rc_df_fiche_capacitaire            = fields.Many2many("ir.attachment", "is_revue_rc_df_fiche_capacitaire_rel", "revu_id", "att_id", string="Fiche capacitaire ")
+
+    rc_eqs_pj                          = fields.Many2many("ir.attachment", "is_rc_eqs_pj_rel"                         , "rc_eqs_pj"                         , "att_id", string="Pièce jointe")
+    rc_df_engagement_faisabilite       = fields.Many2many("ir.attachment", "is_rc_df_engagement_faisabilite_rel"      , "rc_df_engagement_faisabilite"      , "att_id", string="Engagement de faisabilité")
+    rc_df_engagement_faisabilite_autre = fields.Many2many("ir.attachment", "is_rc_df_engagement_faisabilite_autre_rel", "rc_df_engagement_faisabilite_autre", "att_id", string="Engagement de faisabilité (autres)")
+    rc_df_fiche_capacitaire            = fields.Many2many("ir.attachment", "is_rc_df_fiche_capacitaire_rel"           , "rc_df_fiche_capacitaire"           , "att_id", string="Fiche capacitaire")
+
     dfe_version_ids                    = fields.One2many("is.revue.de.contrat.dfe.version", "is_revue_id")
     dynacase_id = fields.Integer(string="Id Dynacase",index=True,copy=False)
+
+
+
+
+
 
 
     def name_get(self):
