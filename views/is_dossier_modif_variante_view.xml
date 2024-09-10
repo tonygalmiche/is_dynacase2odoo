@@ -108,7 +108,8 @@
                                 <field name="demao_pxvente" />
                                 <field name="demao_numcmd" />
                                 <field name="demao_obs" />    
-                                <field name="solde" />    
+                                <field name="fermeture_id"/>    
+                                <field name="solde"/>    
                             </group>
                          </group>
                          <group>

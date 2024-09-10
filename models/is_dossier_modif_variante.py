@@ -164,6 +164,7 @@ class is_dossier_modif_variante(models.Model):
     vers_annule_vsb             = fields.Boolean(string="Annule", compute='_compute_vsb', readonly=True, store=False)
     dynacase_id                 = fields.Integer(string="Id Dynacase",index=True,copy=False)
     solde                       = fields.Boolean(string="Soldé", default=False, copy=False)
+    fermeture_id                = fields.Many2one("is.fermeture.gantt", string="Fermeture du Gantt")
 
 
     def gantt_action(self):

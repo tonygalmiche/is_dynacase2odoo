@@ -100,7 +100,6 @@ class IsDocMoule(models.Model):
         result = []
         for obj in self:
             name="[%s]%s"%(obj.id,obj.param_project_id.ppr_famille)
-            print(name)
             result.append((obj.id, name))
         return result
 
@@ -313,10 +312,41 @@ class IsDocMoule(models.Model):
         #**********************************************************************
 
 
+        # #** Ajout des jours de fermeture des projets **************************
+        # jour_fermeture_ids=[]
+        # for projet in projets:
+        #     for line in projet.fermeture_id.jour_ids:
+        #         if line.date_fin:
+        #             if line.date_fin>=line.date_debut:
+        #                 ladate=line.date_debut
+        #                 while True:
+        #                     if ladate>line.date_fin:
+        #                         break                             
+        #                     if ladate not in jour_fermeture_ids:
+        #                         jour_fermeture_ids.append(str(ladate))
+        #                     ladate+=timedelta(days=1)
+        #         else:
+        #             if line.date_debut not in jour_fermeture_ids:
+        #                 jour_fermeture_ids.append(str(line.date_debut))
+        # #**********************************************************************
+
+
+
+
+
+        # #** Ajout des moules, dossierf ou dossier modif **********************
+        dossiers=[]
+        for line in lines:
+            doc=False
+            doc=(line.idmoule or line.dossierf_id or line.dossier_modif_variante_id or line.dossier_appel_offre_id)
+            if doc not in dossiers:
+                dossiers.append(doc)
+
+
         #** Ajout des jours de fermeture des projets **************************
-        jour_fermeture_ids=[]
-        for projet in projets:
-            for line in projet.fermeture_id.jour_ids:
+        def get_jour_fermeture_ids(fermeture_id):
+            jour_fermeture_ids=[]
+            for line in fermeture_id.jour_ids:
                 if line.date_fin:
                     if line.date_fin>=line.date_debut:
                         ladate=line.date_debut
@@ -329,15 +359,15 @@ class IsDocMoule(models.Model):
                 else:
                     if line.date_debut not in jour_fermeture_ids:
                         jour_fermeture_ids.append(str(line.date_debut))
+            return jour_fermeture_ids
+        jour_fermeture_ids=[]
+        for projet in projets:
+            jour_fermeture_ids=get_jour_fermeture_ids(projet.fermeture_id)
+        for dossier in dossiers:
+            if hasattr(dossier, 'demao_num'):
+                jour_fermeture_ids=get_jour_fermeture_ids(dossier.fermeture_id)
         #**********************************************************************
 
-        # #** Ajout des moules, dossierf ou dossier modif **********************
-        dossiers=[]
-        for line in lines:
-            doc=False
-            doc=(line.idmoule or line.dossierf_id or line.dossier_modif_variante_id or line.dossier_appel_offre_id)
-            if doc not in dossiers:
-                dossiers.append(doc)
         for dossier in dossiers:
             name=""
             project=""
@@ -535,7 +565,6 @@ class IsDocMoule(models.Model):
         for obj in self:
             docs=self.env['is.doc.moule'].search([ ('dependance_id', '=', obj.id) ])
             for doc in docs:
-                print(doc)
                 date_debut_gantt = doc.date_debut_gantt +  timedelta(days=delta)
                 mem_date_fin = doc.date_fin_gantt
                 doc.date_debut_gantt = date_debut_gantt
