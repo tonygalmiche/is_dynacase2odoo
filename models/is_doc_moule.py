@@ -582,6 +582,11 @@ class IsDocMouleArray(models.Model):
 class is_mold(models.Model):
     _inherit = 'is.mold'
 
+
+    image = fields.Binary('Image')
+
+
+
     # def gantt_action(self):
     #     for obj in self:
     #         docs=self.env['is.doc.moule'].search([ ('idmoule', '=', obj.id) ])

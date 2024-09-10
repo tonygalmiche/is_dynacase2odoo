@@ -608,7 +608,16 @@
 
 
 
-
+        <!-- <form>
+            <style>
+                .o_form_label{
+                    white-space: nowrap;
+                }
+            </style>
+            <sheet>
+                <group>
+                    <group>
+                        <field name="name"/> -->
 
 
         <!-- is.mold -->
@@ -622,6 +631,11 @@
                          <button name="gantt_action" string="Gantt" type="object" class="btn-success"/>
                     </header>
                 </sheet>
+                <xpath expr="//group/field[@name='name']/.." position="after">
+                    <group>
+                        <field name="image" widget="image" style="max-width:600px" nolabel="1" colspan="2"/>
+                    </group>
+                </xpath>
             </field>
         </record>
 
