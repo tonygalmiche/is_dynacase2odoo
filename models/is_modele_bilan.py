@@ -27,10 +27,10 @@ class IsModeleBilanLine(models.Model):
 
     modele_bilan_id = fields.Many2one("is.modele.bilan", string="Modèle bilan", required=True, ondelete='cascade')
     lig             = fields.Integer(string="Lig",index=True,copy=False,readonly=True, help="Permet de faire le lien avec la ligne du tableau dans Dynacase")
-    mb_document     = fields.Char(string="Documents du bilan",required=True)
+    mb_document     = fields.Char(string="Documents du bilan")
     mb_documentid   = fields.Integer(string="Documents du bilan id")
     mb_champ        = fields.Char(string="Champ")
-    mb_champid      = fields.Integer(string="Champ id")
+    mb_champid      = fields.Char(string="Champ id")
 
 
 	
