@@ -67,6 +67,7 @@ class IsParamProject(models.Model):
 
     ppr_icon                = fields.Image(string="Icône")
     ppr_famille             = fields.Char(string="Famille", required=True)
+    ppr_familleid           = fields.Integer(string="Famille Id")
     ppr_transformation_pdf  = fields.Boolean(string="Transformation en PDF")
     type_document           = fields.Selection(TYPE_DOCUMENT,string="Type de document", default="Moule", required=True)
     ppr_dossier_fab         = fields.Boolean(string="Famille du dossier de fabrication")

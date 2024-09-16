@@ -20,11 +20,13 @@
                         </group>
                         <field name="line_ids" nolabel="1" colspan="2">
                             <tree editable="bottom">
-                                <field name="lig"           optional="hide"/>
-                                <field name="mb_document"   optional="show"/>
-                                <field name="mb_documentid" optional="show"/>
-                                <field name="mb_champ"      optional="show"/>
-                                <field name="mb_champid"    optional="show"/>
+                                <field name="sequence"         widget="handle"/>
+                                <field name="lig"              optional="hide"/>
+                                <field name="mb_document"      optional="hide"/>
+                                <field name="mb_documentid"    optional="hide"/>
+                                <field name="param_project_id" optional="show"/>
+                                <field name="mb_champ"         optional="show"/>
+                                <field name="mb_champid"       optional="hide"/>
                             </tree>
                         </field>
                     </sheet>

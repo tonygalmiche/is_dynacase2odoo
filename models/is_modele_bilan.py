@@ -23,14 +23,16 @@ class IsModeleBilanLine(models.Model):
     _name        = "is.modele.bilan.line"
     _description = "Lignes modèle bilan projet"
     _rec_name    = "mb_document"
-    _order       = 'lig'
+    _order       = 'sequence,lig'
 
-    modele_bilan_id = fields.Many2one("is.modele.bilan", string="Modèle bilan", required=True, ondelete='cascade')
-    lig             = fields.Integer(string="Lig",index=True,copy=False,readonly=True, help="Permet de faire le lien avec la ligne du tableau dans Dynacase")
-    mb_document     = fields.Char(string="Documents du bilan")
-    mb_documentid   = fields.Integer(string="Documents du bilan id")
-    mb_champ        = fields.Char(string="Champ")
-    mb_champid      = fields.Char(string="Champ id")
+    modele_bilan_id  = fields.Many2one("is.modele.bilan", string="Modèle bilan", required=True, ondelete='cascade')
+    sequence         = fields.Integer(string="Ordre")
+    lig              = fields.Integer(string="Lig",index=True,copy=False,readonly=True, help="Permet de faire le lien avec la ligne du tableau dans Dynacase")
+    mb_document      = fields.Char(string="Documents du bilan")
+    mb_documentid    = fields.Integer(string="Documents du bilan id")
+    param_project_id = fields.Many2one("is.param.project", string="Famille")
+    mb_champ         = fields.Char(string="Champ")
+    mb_champid       = fields.Char(string="Champ id")
 
 
 	
