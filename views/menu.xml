@@ -37,6 +37,24 @@
         </record>
 
 
+
+        <record model="ir.actions.client" id="suivi_projet_actions_client">
+            <field name="name">Suivi des projets</field>
+            <field name="tag">is_dynacase2odoo.suivi_projet_registry</field>
+        </record>
+        <record id="suivi_projet_menu" model="ir.ui.menu" >
+            <field name="name">Suivi des projets</field>
+            <field name="sequence">110</field>
+            <field name="parent_id" eval="ref('is_doc_moule_main_menu')"/>
+            <field name="action"    ref="suivi_projet_actions_client"/>
+         </record>
+    
+    
+    
+
+
+
+
         <!-- Gestion commcerciale -->
         <menuitem 
             name="Gestion commerciale"  id="is_gestion_commerciale_menu" sequence="15" 
@@ -111,8 +129,7 @@
             <field name="action"    ref="is_revue_projet_jalon_action"/>
         </record>
 
-
-
+        
         <!-- Paramétrage -->
         <record id="is_parametrage_menu" model="ir.ui.menu" >
             <field name="name">Paramétrage</field>
@@ -123,6 +140,12 @@
             id="is_param_project_menu" sequence="10" name="Paramétrage projet" 
             parent="is_parametrage_menu" action="action_is_param_project"
         />
+        <record id="is_modele_bilan_menu" model="ir.ui.menu" >
+            <field name="name">Modèle bilan</field>
+            <field name="sequence">15</field>
+            <field name="parent_id" eval="ref('is_parametrage_menu')"/>
+            <field name="action"    ref="is_modele_bilan_action"/>
+        </record>
         <record id="is_section_gantt_menu" model="ir.ui.menu" >
             <field name="name">Section du Gantt</field>
             <field name="sequence">20</field>

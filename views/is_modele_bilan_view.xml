@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- is.modele.bilan -->
+        <record model="ir.ui.view" id="is_modele_bilan_form">
+            <field name="name">is_modele_bilan_form</field>
+            <field name="model">is.modele.bilan</field>
+            <field name="arch" type="xml">
+                <form string="Paramétrage projet">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="mb_titre"/>
+                                <field name='mb_type'/>
+                            </group>
+                            <group>
+                                <field name='mb_cp'/>
+                                <field name='mb_cpid'/>
+                            </group>
+                        </group>
+                        <field name="line_ids" nolabel="1" colspan="2">
+                            <tree editable="bottom">
+                                <field name="lig"           optional="hide"/>
+                                <field name="mb_document"   optional="show"/>
+                                <field name="mb_documentid" optional="show"/>
+                                <field name="mb_champ"      optional="show"/>
+                                <field name="mb_champid"    optional="show"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_modele_bilan_tree">
+            <field name="name">is_modele_bilan_tree</field>
+            <field name="model">is.modele.bilan</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name='mb_titre'    optional="show"/>
+                    <field name='mb_type'     optional="show"/>
+                    <field name='mb_cp'       optional="show"/>
+                    <field name='mb_cpid'     optional="show"/>
+                    <field name='dynacase_id' optional="show"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_modele_bilan_search">
+            <field name="name">is_modele_bilan_search</field>
+            <field name="model">is.modele.bilan</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name='mb_titre'/>
+                    <field name='mb_type'/>
+                </search>
+            </field>
+        </record>
+        <record id="is_modele_bilan_action" model="ir.actions.act_window">
+            <field name="name">Modèle bilan</field>
+            <field name="res_model">is.modele.bilan</field>
+            <field name="view_mode">tree,form</field>
+            <field name="limit">200</field>
+        </record>
+    </data>
+</odoo>

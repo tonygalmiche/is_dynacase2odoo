@@ -13,3 +13,5 @@ from . import is_mold_project
 from . import is_gantt_pdf
 from . import is_gantt_copie
 from . import ir_attachment
+from . import is_modele_bilan
+from . import suivi_projet
