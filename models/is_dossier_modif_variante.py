@@ -95,7 +95,7 @@ class is_dossier_modif_variante(models.Model):
 
 
     @api.depends('demao_idmoule.is_database_id', 'dossierf_id.is_database_id')
-    def compute_site_id(self):
+    def _compute_site_id(self):
         for obj in self:
             site_id = False
             if obj.demao_idmoule.is_database_id:
@@ -103,6 +103,12 @@ class is_dossier_modif_variante(models.Model):
             if obj.dossierf_id.is_database_id:
                 site_id = obj.dossierf_id.is_database_id.id
             obj.site_id = site_id
+
+
+    def compute_site_id(self):
+        "for xml-rpc"
+        self._compute_site_id()
+        return True
 
 
     demao_type                  = fields.Selection([
@@ -116,7 +122,7 @@ class is_dossier_modif_variante(models.Model):
     demao_idcommercial          = fields.Many2one("res.users", string="Commercial", default=lambda self: self.env.user, required=False)
     demao_idmoule               = fields.Many2one("is.mold", string="Moule")
     dossierf_id                 = fields.Many2one("is.dossierf", string="Dossier F")
-    site_id                     = fields.Many2one('is.database', "Site", compute='compute_site_id', readonly=True, store=True)
+    site_id                     = fields.Many2one('is.database', "Site", compute='_compute_site_id', readonly=True, store=True)
     demao_desig                 = fields.Char(string="Désignation pièce", required=False)
     demao_nature                = fields.Char(string="Nature", required=False)
     demao_ref                   = fields.Char(string="Référence")
