@@ -172,6 +172,14 @@ class is_dossier_modif_variante(models.Model):
     fermeture_id                = fields.Many2one("is.fermeture.gantt", string="Fermeture du Gantt")
 
 
+    def update_client_action(self):
+        for obj in self:
+            idclient = obj.demao_idmoule.client_id.id or obj.dossierf_id.client_id.id
+            if idclient:
+                obj.demao_idclient=idclient
+        return
+
+
     def gantt_action(self):
         for obj in self:
             # docs=self.env['is.doc.moule'].search([ ('dossier_modif_variante_id', '=', obj.id) ])
