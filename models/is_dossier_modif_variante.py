@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
 from datetime import datetime
+import logging
+_logger = logging.getLogger(__name__)
+
 
 
 class is_dossier_modif_variante(models.Model):
@@ -173,10 +176,14 @@ class is_dossier_modif_variante(models.Model):
 
 
     def update_client_action(self):
+        nb=len(self)
+        ct=1
         for obj in self:
+            _logger.info("update_client_action : %s/%s : %s"%(ct,nb,obj.demao_num))
             idclient = obj.demao_idmoule.client_id.id or obj.dossierf_id.client_id.id
             if idclient:
                 obj.demao_idclient=idclient
+            ct+=1
         return
 
 
