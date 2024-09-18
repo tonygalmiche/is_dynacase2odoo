@@ -17,7 +17,7 @@ class IsDocMoule(models.Model):
     def compute_project_prev(self):
         "for xml-rpc"
         self._compute_project_prev()
-        self._compute_idproject()
+        self._compute_idproject_moule_dossierf()
         return True
 
     @api.depends('param_project_id', 'param_project_id.ppr_color', 'param_project_id.ppr_icon')
@@ -39,11 +39,15 @@ class IsDocMoule(models.Model):
             record.project_prev = project_prev
 
 
-    @api.depends('idmoule', 'dossierf_id')
-    def _compute_idproject(self):
+    @api.depends('idmoule', 'dossierf_id', 'dossier_modif_variante_id.demao_idmoule', 'dossier_modif_variante_id.dossierf_id', 'dossier_modif_variante_id.demao_idclient')
+    def _compute_idproject_moule_dossierf(self):
         for obj in self:
-            idproject = obj.idmoule.project.id or obj.dossierf_id.project.id
-            obj.idproject = idproject
+            idproject      = obj.idmoule.project.id or obj.dossierf_id.project.id
+            moule_dossierf = obj.idmoule.name or obj.dossierf_id.name or obj.dossier_modif_variante_id.demao_idmoule.name or obj.dossier_modif_variante_id.dossierf_id.name
+            client_id      = obj.idmoule.project.client_id.id or obj.dossierf_id.project.client_id.id or obj.dossier_modif_variante_id.demao_idclient.id
+            obj.idproject      = idproject
+            obj.moule_dossierf = moule_dossierf
+            obj.client_id      = client_id
 
 
     type_document = fields.Selection(TYPE_DOCUMENT,string="Type de document", default="Moule", required=True)
@@ -54,13 +58,14 @@ class IsDocMoule(models.Model):
     ppr_type_demande = fields.Selection(related="param_project_id.ppr_type_demande")
     ppr_icon         = fields.Image(related="param_project_id.ppr_icon", string="Icône", store=True)
     ppr_color        = fields.Char(related="param_project_id.ppr_color", string="Color", store=True)
-    idmoule                   = fields.Many2one("is.mold"                  , string="Moule")
-    dossierf_id               = fields.Many2one("is.dossierf"              , string="Dossier F")
+    idmoule          = fields.Many2one("is.mold"                  , string="Moule")
+    dossierf_id      = fields.Many2one("is.dossierf"              , string="Dossier F")
     dossier_modif_variante_id = fields.Many2one("is.dossier.modif.variante", string="Dossier Modif / Variante")
     dossier_article_id        = fields.Many2one("is.dossier.article"       , string="Dossier article")
     dossier_appel_offre_id    = fields.Many2one("is.dossier.appel.offre"   , string="Dossier appel d'offre")
-    idproject        = fields.Many2one("is.mold.project", string="Projet",compute='_compute_idproject',store=True, readonly=True)
-    client_id        = fields.Many2one(related="idproject.client_id")
+    moule_dossierf   = fields.Char("Moule / Dossier F"                   , compute='_compute_idproject_moule_dossierf',store=True, readonly=True)
+    idproject        = fields.Many2one("is.mold.project", string="Projet", compute='_compute_idproject_moule_dossierf',store=True, readonly=True)
+    client_id        = fields.Many2one("res.partner", string="Client"    , compute='_compute_idproject_moule_dossierf',store=True, readonly=True)
     idcp             = fields.Many2one(related="idmoule.chef_projet_id", string="CP")
     idresp           = fields.Many2one("res.users", string="Responsable")
     j_prevue         = fields.Selection(GESTION_J, string="J Prévue")
@@ -99,11 +104,9 @@ class IsDocMoule(models.Model):
     def name_get(self):
         result = []
         for obj in self:
-            name="[%s]%s"%(obj.id,obj.param_project_id.ppr_famille)
+            name="[%s]%s"%(obj.moule_dossierf,obj.param_project_id.ppr_famille)
             result.append((obj.id, name))
         return result
-
-
 
 
     def _date_debut_gantt(self):

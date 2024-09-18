@@ -7,6 +7,13 @@
             <field name="priority" eval="1" />
             <field name="arch" type="xml">
                 <form string="Document moule">
+                    <header>
+                        <field name="dynacase_id" />
+                        <button 
+                            string="Dynacase" name="lien_vers_dynacase_action" type="object" class="btn btn-info"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                        />
+                    </header>
                     <sheet>
                         <field name="project_prev" widget="html"/>
                         <group>
@@ -19,6 +26,7 @@
                                 <field name="dossier_article_id"        attrs="{'invisible': [('type_document', '!=', 'Article')]               , 'required': [('type_document', '=', 'Article')]}" />
                                 <field name="dossier_modif_variante_id" attrs="{'invisible': [('type_document', '!=', 'Dossier Modif Variante')], 'required': [('type_document', '=', 'Dossier Modif Variante')]}"/>
                                 <field name="dossier_appel_offre_id"    attrs="{'invisible': [('type_document', '!=', 'dossier_appel_offre')]   , 'required': [('type_document', '=', 'dossier_appel_offre')]}"/>
+                                <field name="moule_dossierf"  attrs="{'invisible': [('moule_dossierf', '=', False)]}" />
                                 <field name="param_project_id" />
                                 <field name="ppr_type_demande" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="idproject" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
@@ -26,7 +34,7 @@
                                 <field name="idcp"      attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
                                 <field name="idresp" />
                             </group>
-                            <group string="Gestion des J" name="PLASFIL_FR_J" attrs="{'invisible': [('type_document', '!=', 'Moule')]}">
+                            <group string="Gestion des J" name="PLASFIL_FR_J">
                                 <field name="j_prevue"/>
                                 <field name="actuelle" readonly="1"/>
                                 <field name="demande"/>
@@ -169,6 +177,7 @@
                     <field name="dossierf_id"               optional="hide"           widget="many2one_clickable"/>
                     <field name="dossier_modif_variante_id" optional="hide"           widget="many2one_clickable"/>
                     <field name="dossier_article_id"        optional="hide"           widget="many2one_clickable"/>
+                    <field name="moule_dossierf"            optional="hide" />
                     <button title="Gantt du projet" name="doc_projet_action" type="object" icon="fa-indent" attrs="{'invisible': [('idproject', '=', False)]}"/>
                     <field name="idproject" optional="show"         widget="many2one_clickable"/>
                     <field name="client_id" optional="show"         widget="many2one_clickable"/>
@@ -192,7 +201,7 @@
                     <field name="duree_attente_avant" optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="gantt_pdf"           optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>
             </field>
@@ -211,6 +220,7 @@
                     <field name="j_prevue"         optional="show"/>
                     <field name="idmoule"          required="1"    widget="many2one_clickable"/>
                     <field name="dossierf_id"      optional="show" widget="many2one_clickable"/>
+                    <field name="moule_dossierf"   optional="hide" />
                     <field name="idproject"        optional="show" widget="many2one_clickable"/>
                     <field name="client_id"        optional="show" widget="many2one_clickable"/>
                     <field name="idresp"           required="1"/>
@@ -225,7 +235,7 @@
                     <field name="dependance_id"       optional="hide" domain="[('idmoule','=',idmoule)]"/>
                     <field name="indicateur"          optional="hide"/>
                     <field name="gantt_pdf"           optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}" />
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>
             </field>
@@ -260,14 +270,21 @@
                                  <div class="oe_kanban_details">
                                     <div class="o_kanban_record_top mb-0">
                                         <div class="o_kanban_record_headings">
-                                            <field name="param_project_id" /><br />
-                                            <field name="idmoule" /><br />
-                                            <field name="idproject"/><br />
-                                            <field name="idresp" /><br />
+                                            <div style="background-color:Cornsilk"><field name="param_project_id" /></div>
+                                            <field name="client_id" /><br />
+                                            <div  attrs="{'invisible': [('dossier_modif_variante_id', '=', False)]}"><field name="dossier_modif_variante_id" /></div>
+                                            <div  attrs="{'invisible': [('moule_dossierf', '=', False)]}">           <field name="moule_dossierf" /></div>
+                                            <div  attrs="{'invisible': [('idproject', '=', False)]}">                <field name="idproject" /></div>
+                                            <div  attrs="{'invisible': [('idresp', '=', False)]}">                   <field name="idresp" /></div>
                                             <field name="etat" /><br />
-                                            <field name="indicateur" /><br />
+                                            <div  attrs="{'indicateur': [('idresp', '=', False)]}">                  <field name="indicateur" /></div>
                                             <field name="datecreate" /><br />
                                             <field name="dateend" /><br />
+                                            <field name="dynacase_id" invisible="1" />
+                                            <button 
+                                                string="Dynacase" name="lien_vers_dynacase_action" type="object" class="btn btn-info"
+                                                attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -277,6 +294,7 @@
                 </kanban>
             </field>
         </record>
+
         <record model="ir.ui.view" id="is_doc_moule_calendar_view" >
             <field name="name">is_doc_moule_calendar_view</field>
             <field name="model">is.doc.moule</field>
@@ -371,7 +389,7 @@
                     <field name="duree_attente_avant" optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="gantt_pdf"           optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>
             </field>
@@ -426,7 +444,7 @@
                     <field name="duree_attente_avant" optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="gantt_pdf"           optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>
             </field>
@@ -470,7 +488,7 @@
                     <field name="date_debut_gantt"    optional="hide"/>
                     <field name="date_fin_gantt"      optional="hide"/>
                     <field name="gantt_pdf"           optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
                     <field name="dynacase_id" optional="hide"/>
                 </tree>
             </field>
@@ -525,7 +543,7 @@
                     <field name="dependance_id"       optional="hide" domain="[('dossierf_id','=',dossierf_id)]"/>
                     <field name="indicateur"          optional="hide"/>
                     <field name="gantt_pdf"           optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>
             </field>
@@ -559,7 +577,7 @@
                     <field name="dependance_id"       optional="hide" domain="[('dossier_modif_variante_id','=',dossier_modif_variante_id)]"/>
                     <field name="indicateur"          optional="hide"/>
                     <field name="gantt_pdf"           optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
                     <field name="dynacase_id"      optional="hide"/>
                     <field name="origine_copie_id" optional="hide"/>
                     <field name="id"               optional="hide"/>
@@ -598,7 +616,7 @@
                     <field name="dependance_id"       optional="hide" domain="[('dossier_appel_offre_id','=',dossier_appel_offre_id)]"/>
                     <field name="indicateur"          optional="hide"/>
                     <field name="gantt_pdf"           optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>
             </field>
