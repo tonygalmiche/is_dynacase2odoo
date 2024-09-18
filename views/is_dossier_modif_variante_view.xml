@@ -91,9 +91,15 @@
                             name="gantt_action"
                             string="Gantt"
                             type="object"
-                            class="btn-success"
+                        />
+                        <button 
+                            name="lien_vers_dynacase_action"
+                            string="Dynacase"
+                            type="object"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                         />
                         <field name="state" widget="statusbar" />
+                        <field name="dynacase_id" invisible="1"/>
                     </header>
                     <sheet>
                         <group string="Caractéristiques">
@@ -170,7 +176,7 @@
                     <field name="solde" optional="show"/>
                     <field name="state" optional="show"/>
                     <field name="dynacase_id" optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
                 </tree>
             </field>
         </record>
