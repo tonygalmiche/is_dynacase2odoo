@@ -184,7 +184,7 @@ class is_dossier_modif_variante(models.Model):
             if idclient:
                 obj.demao_idclient=idclient
             ct+=1
-        return
+        return True
 
 
     def gantt_action(self):
