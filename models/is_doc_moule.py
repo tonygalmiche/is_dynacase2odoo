@@ -99,6 +99,7 @@ class IsDocMoule(models.Model):
     gantt_pdf           = fields.Boolean("Gantt PDF", default=True, help="Afficher dans Gantt PDF")
     dependance_id       = fields.Many2one("is.doc.moule", string="Dépendance",index=True)
     origine_copie_id    = fields.Many2one("is.doc.moule", string="Origine de la copie",index=True)
+    active              = fields.Boolean('Actif', default=True)
 
 
     def name_get(self):
