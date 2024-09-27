@@ -139,6 +139,7 @@ class IsGanttCopie(models.Model):
                             #** Création du doc si non trouvé avant ***************
                             if not copie:
                                 copie=src_doc.copy()
+                                copie.idresp = src_doc.idresp.id
                                 dst_name_field =  'dst_%s'%name_field
                                 dst_dossier_id = getattr(obj,dst_name_field).id
                                 setattr(copie, name_field, dst_dossier_id)
@@ -149,7 +150,7 @@ class IsGanttCopie(models.Model):
                                 'sequence'        : src_doc.sequence,
                                 'param_project_id': src_doc.param_project_id.id,
                                 'type_document'   : src_doc.type_document,
-                                'idresp'          : src_doc.idresp,
+                                #'idresp'          : src_doc.idresp, Pour les doc venant de Dynacase ne pas changer le responsable
                                 'demande'         : src_doc.demande,
                                 'dateend'         : src_doc.dateend,
                                 'duree'           : src_doc.duree,

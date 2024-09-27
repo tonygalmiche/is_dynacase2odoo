@@ -8,6 +8,11 @@
             <field name="arch" type="xml">
                 <form string="Paramétrage projet">
                     <header>
+                        <field name="param_project_dynacase_id" />
+                        <button 
+                            string="Dynacase" name="lien_vers_dynacase_action" type="object" class="btn btn-info"
+                            attrs="{'invisible': [('param_project_dynacase_id', '=', 0)]}" 
+                        />
                         <button
                             name="creer_css_action"
                             string="Créer le fichier CSS"
@@ -56,24 +61,26 @@
             <field name="arch" type="xml">
                 <tree string="Paramétrage projet">
                     <field name='sequence'/>
-                    <field name="ppr_famille"            optional="show" />
-                    <field name="ppr_familleid"          optional="hide" />
-                    <field name="type_document"          optional="show"/>
-                    <field name="ppr_transformation_pdf" optional="show"/>
-                    <field name="ppr_dossier_fab"        optional="show"/>
-                    <field name="ppr_demande"            optional="show" />
-                    <field name="ppr_type_demande"       optional="show" />
-                    <field name="ppr_maj_amdec"          optional="show"/>
-                    <field name="ppr_responsable"        optional="show" />
-                    <field name="ppr_revue_lancement"    optional="show"/>
-                    <field name="ppr_moule_hors_auto"    optional="show"/>
-                    <field name="duree_attente_avant"    optional="hide"/>
-                    <field name="ppr_color"              optional="show" widget="color"/>
-                    <field name="duree"                  optional="hide"/>
-                    <field name="duree_attente_avant"    optional="hide"/>
-                    <field name="dependance_id"          optional="hide" widget="many2one_clickable"/>
-                    <field name='gantt_pdf'              optional="show"/>
-                    <field name="dynacase_id"            optional="hide"/>
+                    <field name="ppr_famille"               optional="show" />
+                    <field name="ppr_familleid"             optional="hide" />
+                    <field name="type_document"             optional="show"/>
+                    <field name="ppr_transformation_pdf"    optional="show"/>
+                    <field name="ppr_dossier_fab"           optional="show"/>
+                    <field name="ppr_demande"               optional="show" />
+                    <field name="ppr_type_demande"          optional="show" />
+                    <field name="ppr_maj_amdec"             optional="show"/>
+                    <field name="ppr_responsable"           optional="show" />
+                    <field name="ppr_revue_lancement"       optional="show"/>
+                    <field name="ppr_moule_hors_auto"       optional="show"/>
+                    <field name="duree_attente_avant"       optional="hide"/>
+                    <field name="ppr_color"                 optional="show" widget="color"/>
+                    <field name="duree"                     optional="hide"/>
+                    <field name="duree_attente_avant"       optional="hide"/>
+                    <field name="dependance_id"             optional="hide" widget="many2one_clickable"/>
+                    <field name='gantt_pdf'                 optional="show"/>
+                    <field name="dynacase_id"               optional="hide"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('param_project_dynacase_id', '=', 0)]}" />
+                    <field name="param_project_dynacase_id" optional="hide"/>
                 </tree>
             </field>
         </record>
@@ -98,7 +105,7 @@
             </field>
         </record>
         <record id="action_is_param_project" model="ir.actions.act_window">
-            <field name="name">Paramétrage projet</field>
+            <field name="name">Paramétrage projet (Familles)</field>
             <field name="res_model">is.param.project</field>
             <field name="view_mode">tree,form</field>
             <field name="limit">200</field>

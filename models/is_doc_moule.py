@@ -50,56 +50,56 @@ class IsDocMoule(models.Model):
             obj.client_id      = client_id
 
 
-    type_document = fields.Selection(TYPE_DOCUMENT,string="Type de document", default="Moule", required=True)
-    sequence = fields.Integer(string="Ordre")
+    type_document = fields.Selection(TYPE_DOCUMENT,string="Type de document", default="Moule", required=True, tracking=True)
+    sequence = fields.Integer(string="Ordre", tracking=True)
     project_prev     = fields.Html(compute='_compute_project_prev', store=True)
     project_prev2    = fields.Html()
-    param_project_id = fields.Many2one("is.param.project", string="Famille de document")
+    param_project_id = fields.Many2one("is.param.project", string="Famille de document", tracking=True)
     ppr_type_demande = fields.Selection(related="param_project_id.ppr_type_demande")
     ppr_icon         = fields.Image(related="param_project_id.ppr_icon", string="Icône", store=True)
     ppr_color        = fields.Char(related="param_project_id.ppr_color", string="Color", store=True)
-    idmoule          = fields.Many2one("is.mold"                  , string="Moule")
-    dossierf_id      = fields.Many2one("is.dossierf"              , string="Dossier F")
-    dossier_modif_variante_id = fields.Many2one("is.dossier.modif.variante", string="Dossier Modif / Variante")
-    dossier_article_id        = fields.Many2one("is.dossier.article"       , string="Dossier article")
-    dossier_appel_offre_id    = fields.Many2one("is.dossier.appel.offre"   , string="Dossier appel d'offre")
+    idmoule          = fields.Many2one("is.mold"                  , string="Moule", tracking=True)
+    dossierf_id      = fields.Many2one("is.dossierf"              , string="Dossier F", tracking=True)
+    dossier_modif_variante_id = fields.Many2one("is.dossier.modif.variante", string="Dossier Modif / Variante", tracking=True)
+    dossier_article_id        = fields.Many2one("is.dossier.article"       , string="Dossier article", tracking=True)
+    dossier_appel_offre_id    = fields.Many2one("is.dossier.appel.offre"   , string="Dossier appel d'offre", tracking=True)
     moule_dossierf   = fields.Char("Moule / Dossier F"                   , compute='_compute_idproject_moule_dossierf',store=True, readonly=True)
     idproject        = fields.Many2one("is.mold.project", string="Projet", compute='_compute_idproject_moule_dossierf',store=True, readonly=True)
     client_id        = fields.Many2one("res.partner", string="Client"    , compute='_compute_idproject_moule_dossierf',store=True, readonly=True)
-    idcp             = fields.Many2one(related="idmoule.chef_projet_id", string="CP")
-    idresp           = fields.Many2one("res.users", string="Responsable")
-    j_prevue         = fields.Selection(GESTION_J, string="J Prévue")
-    actuelle         = fields.Selection(GESTION_J, string="J Actuelle")
-    demande          = fields.Char(string="Demande")
+    idcp             = fields.Many2one(related="idmoule.chef_projet_id", string="CP", tracking=True)
+    idresp           = fields.Many2one("res.users", string="Responsable", tracking=True)
+    j_prevue         = fields.Selection(GESTION_J, string="J Prévue", tracking=True)
+    actuelle         = fields.Selection(GESTION_J, string="J Actuelle", tracking=True)
+    demande          = fields.Char(string="Demande", tracking=True)
     action           = fields.Selection([
         ("I", "Initialisation"),
         ("R", "Révision"),
         ("V", "Validation"),
-    ], string="Action")
-    bloquant         = fields.Boolean(string="Point Bloquant")
+    ], string="Action", tracking=True)
+    bloquant         = fields.Boolean(string="Point Bloquant", tracking=True)
     etat             = fields.Selection([
         ("AF", "A Faire"),
         ("F", "Fait"),
         ("D", "Dérogé"),
-    ], string="État")
+    ], string="État", tracking=True)
     fin_derogation   = fields.Date(string="Date de fin de dérogation")
     coefficient      = fields.Integer(string="Coefficient")
-    note             = fields.Integer(string="Note")
+    note             = fields.Integer(string="Note", tracking=True)
     indicateur       = fields.Html(string="Indicateur")
     datecreate       = fields.Date(string="Date de création", default=fields.Date.context_today)
-    dateend          = fields.Date(string="Date de fin")
+    dateend          = fields.Date(string="Date de fin", tracking=True)
     array_ids        = fields.One2many("is.doc.moule.array", "is_doc_id", string="Pièce-jointe de réponse à la demande")
     dynacase_id      = fields.Integer(string="Id Dynacase",index=True,copy=False)
-    duree               = fields.Integer(string="Durée (J)"      , help="Durée en jours ouvrés"         , default=1)
-    duree_gantt         = fields.Integer(string="Durée Gantt (J)", help="Durée calendaire pour le Gantt", default=1, readonly=True)
+    duree               = fields.Integer(string="Durée (J)"      , help="Durée en jours ouvrés"         , default=1, tracking=True)
+    duree_gantt         = fields.Integer(string="Durée Gantt (J)", help="Durée calendaire pour le Gantt", default=1, tracking=True, readonly=True)
     duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
-    date_debut_gantt    = fields.Date(string="Date début Gantt", default=lambda self: self._date_debut_gantt())
-    date_fin_gantt      = fields.Date(string="Date fin Gantt", readonly=True)
-    section_id          = fields.Many2one("is.section.gantt", string="Section Gantt",index=True)
+    date_debut_gantt    = fields.Date(string="Date début Gantt", default=lambda self: self._date_debut_gantt(), tracking=True)
+    date_fin_gantt      = fields.Date(string="Date fin Gantt", readonly=True, tracking=True)
+    section_id          = fields.Many2one("is.section.gantt", string="Section Gantt",index=True, tracking=True)
     gantt_pdf           = fields.Boolean("Gantt PDF", default=True, help="Afficher dans Gantt PDF")
-    dependance_id       = fields.Many2one("is.doc.moule", string="Dépendance",index=True)
+    dependance_id       = fields.Many2one("is.doc.moule", string="Dépendance",index=True, tracking=True)
     origine_copie_id    = fields.Many2one("is.doc.moule", string="Origine de la copie",index=True)
-    active              = fields.Boolean('Actif', default=True)
+    active              = fields.Boolean('Actif', default=True, tracking=True)
 
 
     def name_get(self):
@@ -261,8 +261,37 @@ class IsDocMoule(models.Model):
     def get_dhtmlx(self, domain=[]):
         lines=self.env['is.doc.moule'].search(domain, limit=10000) #, order="dateend"
 
+        # #** Ajout des markers (J des moules) depuis is.revue.projet.jalon *****
+        # res=[]
+        # markers=[]
+        # moules=[]
+        # dates_j={}
+        # for line in lines:
+        #     moule=line.idmoule
+        #     if moule not in moules:
+        #         moules.append(moule)
+        # js=('J0','J1','J2','J3','J4','J5')
+        # for moule in moules:
+        #     rpjs=self.env['is.revue.projet.jalon'].search([ ('rpj_mouleid', '=', moule.id)],limit=1,order="id desc")
+        #     for rpj in rpjs:
+        #         for j in js:
+        #             date_j = getattr(rpj, "rpj_date_valide_%s"%j.lower()) or getattr(rpj, "rpj_date_%s"%j.lower())
+        #             if date_j:
+        #                 dates_j[j] = date_j
+        #                 id = "%s-%s"%(moule.name,j)
+        #                 start_date = str(date_j)+' 00:00:00"'
+        #                 vals={
+        #                     "id"        : id,
+        #                     "start_date": start_date,
+        #                     "css"       : "today",
+        #                     "text"      : "%s : %s"%(moule.name,j),
+        #                     "j"         : j,
+        #                 }
+        #                 markers.append(vals)
+        # #**********************************************************************
 
-        #** Ajout des markers (J des moules) **********************************
+
+       #** Ajout des markers (J des moules) depuis is.revue.lancement *********
         res=[]
         markers=[]
         moules=[]
@@ -273,22 +302,26 @@ class IsDocMoule(models.Model):
                 moules.append(moule)
         js=('J0','J1','J2','J3','J4','J5')
         for moule in moules:
-            rpjs=self.env['is.revue.projet.jalon'].search([ ('rpj_mouleid', '=', moule.id)],limit=1,order="id desc")
-            for rpj in rpjs:
-                for j in js:
-                    date_j = getattr(rpj, "rpj_date_valide_%s"%j.lower()) or getattr(rpj, "rpj_date_%s"%j.lower())
-                    if date_j:
-                        dates_j[j] = date_j
-                        id = "%s-%s"%(moule.name,j)
-                        start_date = str(date_j)+' 00:00:00"'
-                        vals={
-                            "id"        : id,
-                            "start_date": start_date,
-                            "css"       : "today",
-                            "text"      : "%s : %s"%(moule.name,j),
-                            "j"         : j,
-                        }
-                        markers.append(vals)
+            #** Recherche is.revue.contrat ************************************
+            rcs=self.env['is.revue.de.contrat'].search([ ('rc_num_outillageid', '=', moule.id)],limit=1,order="id desc")
+            for rc in rcs:
+                #** Recherche is.revue.lancement ******************************
+                rls=self.env['is.revue.lancement'].search([ ('rl_num_rcid', '=', rc.id)],limit=1,order="id desc")
+                for rl in rls:
+                    for j in js:
+                        date_j = getattr(rl, "rl_date_%s"%j.lower())
+                        if date_j:
+                            dates_j[j] = date_j
+                            id = "%s-%s"%(moule.name,j)
+                            start_date = str(date_j)+' 00:00:00"'
+                            vals={
+                                "id"        : id,
+                                "start_date": start_date,
+                                "css"       : "today",
+                                "text"      : "%s : %s"%(moule.name,j),
+                                "j"         : j,
+                            }
+                            markers.append(vals)
         #**********************************************************************
 
 
@@ -314,28 +347,6 @@ class IsDocMoule(models.Model):
             }
             res.append(vals)
         #**********************************************************************
-
-
-        # #** Ajout des jours de fermeture des projets **************************
-        # jour_fermeture_ids=[]
-        # for projet in projets:
-        #     for line in projet.fermeture_id.jour_ids:
-        #         if line.date_fin:
-        #             if line.date_fin>=line.date_debut:
-        #                 ladate=line.date_debut
-        #                 while True:
-        #                     if ladate>line.date_fin:
-        #                         break                             
-        #                     if ladate not in jour_fermeture_ids:
-        #                         jour_fermeture_ids.append(str(ladate))
-        #                     ladate+=timedelta(days=1)
-        #         else:
-        #             if line.date_debut not in jour_fermeture_ids:
-        #                 jour_fermeture_ids.append(str(line.date_debut))
-        # #**********************************************************************
-
-
-
 
 
         # #** Ajout des moules, dossierf ou dossier modif **********************

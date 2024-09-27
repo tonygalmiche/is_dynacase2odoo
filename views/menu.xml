@@ -20,6 +20,14 @@
             parent="is_doc_moule_main_menu" action="is_doc_moule_article_action"
         />
         <menuitem 
+            id="is_doc_moule_dao_menu" sequence="40" name="Documents Dossier appels d'offres" 
+            parent="is_doc_moule_main_menu" action="is_doc_moule_dao_action"
+        />
+        <menuitem 
+            id="is_doc_moule_dmv_menu" sequence="50" name="Documents Dossier modif/variante" 
+            parent="is_doc_moule_main_menu" action="is_doc_moule_dmv_action"
+        />
+        <menuitem 
             id="is_doc_moule_menu" sequence="80" name="Tous les documents" 
             parent="is_doc_moule_main_menu" action="is_doc_moule_action"
         />
@@ -137,7 +145,7 @@
             <field name="parent_id" eval="ref('gestion_des_projets_menu')"/>
         </record>
         <menuitem 
-            id="is_param_project_menu" sequence="10" name="Paramétrage projet" 
+            id="is_param_project_menu" sequence="10" name="Paramétrage projet (Familles)" 
             parent="is_parametrage_menu" action="action_is_param_project"
         />
         <record id="is_modele_bilan_menu" model="ir.ui.menu" >
