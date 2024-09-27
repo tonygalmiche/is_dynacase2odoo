@@ -121,8 +121,7 @@ class IsParamProject(models.Model):
     array_ids           = fields.One2many('is.param.project.array', 'param_project_id')
     ppr_project_colors  = fields.Serialized()
     ppr_color           = fields.Char("Color", sparse="ppr_project_colors")
-    dynacase_id               = fields.Integer(string="Id Dynacase (Famille)"     ,index=True,copy=False)
-    param_project_dynacase_id = fields.Integer(string="Id Dynacase (Param projet)",index=True,copy=False)
+    dynacase_id         = fields.Integer(string="Id Dynacase"     ,index=True,copy=False)
     duree               = fields.Integer("Durée par défaut (J)"   , help="Utilisée dans le Gantt")
     duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
     dependance_id       = fields.Many2one("is.param.project", string="Dépendance")
@@ -149,7 +148,7 @@ class IsParamProject(models.Model):
 
     def lien_vers_dynacase_action(self):
         for obj in self:
-            url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.param_project_dynacase_id
+            url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
             return {
                 'type' : 'ir.actions.act_url',
                 'url': url,
