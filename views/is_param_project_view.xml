@@ -78,7 +78,6 @@
                     <field name="duree_attente_avant"       optional="hide"/>
                     <field name="dependance_id"             optional="hide" widget="many2one_clickable"/>
                     <field name='gantt_pdf'                 optional="show"/>
-                    <field name="dynacase_id"               optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}" />
                     <field name="dynacase_id" optional="hide"/>
                 </tree>
