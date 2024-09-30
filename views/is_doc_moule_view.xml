@@ -35,6 +35,7 @@
                                 <field name="client_id" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
                                 <field name="idcp"      attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
                                 <field name="idresp" />
+                                <field name="site_id" />
                             </group>
                             <group string="Gestion des J" name="PLASFIL_FR_J">
                                 <field name="j_prevue"/>
@@ -180,6 +181,7 @@
                     <field name="dossier_modif_variante_id" optional="hide"           widget="many2one_clickable"/>
                     <field name="dossier_article_id"        optional="hide"           widget="many2one_clickable"/>
                     <field name="moule_dossierf"            optional="hide" />
+                    <field name="site_id"                   optional="hide" />
                     <button title="Gantt du projet" name="doc_projet_action" type="object" icon="fa-indent" attrs="{'invisible': [('idproject', '=', False)]}"/>
                     <field name="idproject" optional="show"         widget="many2one_clickable"/>
                     <field name="client_id" optional="show"         widget="many2one_clickable"/>
@@ -223,6 +225,7 @@
                     <field name="idmoule"                          widget="many2one_clickable"/>
                     <field name="dossierf_id"      optional="show" widget="many2one_clickable"/>
                     <field name="moule_dossierf"   optional="hide" />
+                    <field name="site_id"          optional="hide" />
                     <field name="idproject"        optional="show" widget="many2one_clickable"/>
                     <field name="client_id"        optional="show" widget="many2one_clickable"/>
                     <field name="idresp"/>
@@ -330,11 +333,11 @@
                     <field name="param_project_id" />
                     <field name="type_document" />
                     <field name="ppr_type_demande" />
-                    <field name="idmoule" />
-                    <field name="dossierf_id" />
+                    <field name="moule_dossierf" />
                     <field name="dossier_article_id" />
                     <field name="dossier_appel_offre_id" />
                     <field name="dossier_modif_variante_id" />
+                    <field name="site_id" />
                     <field name="idproject" />
                     <field name="client_id" />
                     <field name="idcp" />
@@ -346,6 +349,7 @@
                     <field name="bloquant" />
                     <field name="etat" />
                     <field name="indicateur" />
+                    <field name="demao_nature"/>
                 </search>
             </field>
         </record>
@@ -372,6 +376,7 @@
                     <field name="ppr_type_demande"    optional="hide" />
                     <button title="Gantt du moule" name="doc_moule_action" type="object" icon="fa-indent"/>
                     <field name="idmoule"             optional="show"           widget="many2one_clickable"/>
+                    <field name="site_id"             optional="hide" />
                     <button title="Gantt du projet" name="doc_projet_action" type="object" icon="fa-indent"/>
                     <field name="idproject"           optional="show"         widget="many2one_clickable"/>
                     <field name="client_id"           optional="show"         widget="many2one_clickable"/>
@@ -427,6 +432,7 @@
                     <field name="ppr_type_demande" optional="show" />
                     <button title="Gantt du Dossier F" name="doc_dossierf_action" type="object" icon="fa-indent"/>
                     <field name="dossierf_id"               optional="show"           widget="many2one_clickable"/>
+                    <field name="site_id"                   optional="hide" />
                     <button title="Gantt du projet" name="doc_projet_action" type="object" icon="fa-indent"/>
                     <field name="idproject" optional="show"         widget="many2one_clickable"/>
                     <field name="client_id" optional="show"         widget="many2one_clickable"/>
@@ -573,6 +579,10 @@
                     <field name="type_document"       optional="hide"/>
                     <field name="ppr_type_demande"    optional="hide" />
                     <field name="dossier_modif_variante_id"             optional="show"           widget="many2one_clickable"/>
+                    <field name="demao_nature"        optional="show" />
+                    <field name="solde"               optional="show" />
+                    <field name="moule_dossierf"      optional="show" />
+                    <field name="site_id"             optional="show" />
                     <field name="client_id"           optional="show"         widget="many2one_clickable"/>
                     <field name="idcp"                optional="hide"/>
                     <field name="idresp"              optional="show" />

@@ -63,7 +63,7 @@
                                 <label for="rc_nb_pce_p_jal" colspana="4" string="Commentaire spécifique (essais supplémentaire)"/>
                                 <field name="rc_nb_pce_p_jal" colspan="4" nolabel="1"/>
                             </page>
-                            <page name="rc_donnees_economiques_tab" string="Données économiques et de febrication">
+                            <page name="rc_donnees_economiques_tab" string="Données économiques et de fabrication">
                                 <group name="rc_donnees_economiques_tab" string="Décomposition prix" col="4" colspan="4">
                                     <field name="decomposition_prix_ids" nolabel="1" colspan="4">
                                         <form>

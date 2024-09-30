@@ -18,7 +18,11 @@ class IsDocMoule(models.Model):
         "for xml-rpc"
         self._compute_project_prev()
         self._compute_idproject_moule_dossierf()
+        self._compute_site_id()
+        self._compute_demao_nature()
+        self._compute_solde()
         return True
+
 
     @api.depends('param_project_id', 'param_project_id.ppr_color', 'param_project_id.ppr_icon')
     def _compute_project_prev(self):
@@ -100,6 +104,40 @@ class IsDocMoule(models.Model):
     dependance_id       = fields.Many2one("is.doc.moule", string="Dépendance",index=True, tracking=True)
     origine_copie_id    = fields.Many2one("is.doc.moule", string="Origine de la copie",index=True)
     active              = fields.Boolean('Actif', default=True, tracking=True)
+    site_id             = fields.Many2one('is.database', "Site", compute='_compute_site_id', readonly=True, store=True)
+    demao_nature        = fields.Char(string="Nature", compute='_compute_demao_nature'     , readonly=True, store=True)
+    solde               = fields.Boolean(string="Soldé", compute='_compute_solde'          , readonly=True, store=True)
+    
+
+    @api.depends('dossier_modif_variante_id.solde')
+    def _compute_solde(self):
+        for obj in self:
+            solde = False
+            if obj.dossier_modif_variante_id.solde:
+                solde = obj.dossier_modif_variante_id.solde
+            obj.solde = solde
+
+
+    @api.depends('dossier_modif_variante_id.demao_nature')
+    def _compute_demao_nature(self):
+        for obj in self:
+            demao_nature = False
+            if obj.dossier_modif_variante_id.demao_nature:
+                demao_nature = obj.dossier_modif_variante_id.demao_nature
+            obj.demao_nature = demao_nature
+
+
+    @api.depends('dossier_modif_variante_id.site_id', 'dossierf_id.is_database_id', 'idmoule.is_database_id')
+    def _compute_site_id(self):
+        for obj in self:
+            site_id = False
+            if obj.dossier_modif_variante_id.site_id:
+                site_id = obj.dossier_modif_variante_id.site_id.id
+            if obj.dossierf_id.is_database_id:
+                site_id = obj.dossierf_id.is_database_id.id
+            if obj.idmoule.is_database_id:
+                site_id = obj.idmoule.is_database_id.id
+            obj.site_id = site_id
 
 
     def name_get(self):
