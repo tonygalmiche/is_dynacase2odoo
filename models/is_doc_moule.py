@@ -297,36 +297,10 @@ class IsDocMoule(models.Model):
 
     @api.model
     def get_dhtmlx(self, domain=[]):
-        lines=self.env['is.doc.moule'].search(domain, limit=10000) #, order="dateend"
+        scroll_x = self.env['is.mem.var'].get(self._uid, 'scroll_x')
+        scroll_y = self.env['is.mem.var'].get(self._uid, 'scroll_y')
 
-        # #** Ajout des markers (J des moules) depuis is.revue.projet.jalon *****
-        # res=[]
-        # markers=[]
-        # moules=[]
-        # dates_j={}
-        # for line in lines:
-        #     moule=line.idmoule
-        #     if moule not in moules:
-        #         moules.append(moule)
-        # js=('J0','J1','J2','J3','J4','J5')
-        # for moule in moules:
-        #     rpjs=self.env['is.revue.projet.jalon'].search([ ('rpj_mouleid', '=', moule.id)],limit=1,order="id desc")
-        #     for rpj in rpjs:
-        #         for j in js:
-        #             date_j = getattr(rpj, "rpj_date_valide_%s"%j.lower()) or getattr(rpj, "rpj_date_%s"%j.lower())
-        #             if date_j:
-        #                 dates_j[j] = date_j
-        #                 id = "%s-%s"%(moule.name,j)
-        #                 start_date = str(date_j)+' 00:00:00"'
-        #                 vals={
-        #                     "id"        : id,
-        #                     "start_date": start_date,
-        #                     "css"       : "today",
-        #                     "text"      : "%s : %s"%(moule.name,j),
-        #                     "j"         : j,
-        #                 }
-        #                 markers.append(vals)
-        # #**********************************************************************
+        lines=self.env['is.doc.moule'].search(domain, limit=10000) #, order="dateend"
 
 
        #** Ajout des markers (J des moules) depuis is.revue.lancement *********
@@ -565,7 +539,9 @@ class IsDocMoule(models.Model):
             "items"             : res, 
             "links"             : links, 
             "markers"           : markers, 
-            "jour_fermeture_ids": jour_fermeture_ids
+            "jour_fermeture_ids": jour_fermeture_ids,
+            "scroll_x"          : scroll_x,
+            "scroll_y"          : scroll_y,
         }
     
 
@@ -644,6 +620,14 @@ class IsDocMoule(models.Model):
         doc_dst = self.env[dst[0]].browse(int(dst[1]))
         doc_dst.dependance_id = False
         return msg
+
+
+
+    def set_scroll(self,scroll_x=False,scroll_y=False):
+        self.env['is.mem.var'].set(self._uid, 'scroll_x', scroll_x)
+        self.env['is.mem.var'].set(self._uid, 'scroll_y', scroll_y)
+        return True
+
 
 
 class IsDocMouleArray(models.Model):

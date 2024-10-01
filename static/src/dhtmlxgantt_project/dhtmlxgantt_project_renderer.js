@@ -18,9 +18,6 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             lier: false,
         });
         this.ActivePatched=true;
-
-
-
         onMounted(() => this._mounted());
         onPatched(() => this._patched());
         onWillUnmount(() => this._unmount());
@@ -36,9 +33,10 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
 
     _mounted() {
         this.gantt = gantt;
+
         this.gantt.lier = this.state.lier;
         this.gantt.active_task_id = false;
-        this.gantt.scroll=false;
+        //this.gantt.scroll=false;
 
         //Stocker la liste des events pour pouvoir les désactiver avec le _unmount
         if (typeof this.gantt.events === 'undefined') {
@@ -288,22 +286,12 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         this.gantt.events.push(this.gantt.attachEvent("onBeforeLightbox", function(id) {
             return false;
         }));
-
-
-        // this.gantt.events.push(this.gantt.attachEvent("onAfterTaskUpdate", function(id,item,){
-        //     this.owl.WriteTask(id, item);
-        // }));
-        
         
 
-        // void onAfterTaskDrag(string|number id,string mode,Event e);
         this.gantt.events.push(this.gantt.attachEvent("onAfterTaskDrag", function(id, mode, e){
             const task = gantt.getTaskBy("id", [id])[0]; // Recherche de la task avec son id
             this.owl.WriteTask(id, task, mode);
         }));
-        
-
-        
         this.gantt.events.push(this.gantt.attachEvent("onAfterLinkAdd", function(id,item){
             this.owl.LinkAction('link_add', item);
         }));
@@ -312,6 +300,8 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         }));
         this.gantt.events.push(this.gantt.attachEvent("onTaskRowClick", function(id,row){
             gantt.active_task_id = id;
+            var scroll = gantt.getScrollState();
+            this.owl.SetScroll(scroll);
         }));
         this.GetDocuments();
     }
@@ -391,17 +381,17 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         //*********************************************************************
 
         //** Positionner le gantt au même endroit après le rafrachissement ****
-        var scroll = this.gantt.scroll;
-        if (scroll!==false){
-            this.gantt.scrollTo(scroll.x, scroll.y);
-            //this.gantt.selectTask(this.gantt.active_task_id;);
-        }
+        //var scroll = this.gantt.scroll;
+        //if (scroll!==false){
+        //    this.gantt.scrollTo(scroll.x, scroll.y);
+        //    //this.gantt.selectTask(this.gantt.active_task_id;);
+        //}
         //*********************************************************************
     }
 
 
     RafraichirClick(ev) {
-        this.gantt.scroll = this.gantt.getScrollState();
+        //this.gantt.scroll = this.gantt.getScrollState();
         this.GetDocuments();
     }
     FullscreenClick(ev) {
@@ -477,13 +467,11 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
     
     async GetFormId(task){
         var self=this;
-        console.log(task);
         rpc.query({
             model: 'is.doc.moule',
             method: 'get_form_view_id',
             args: [[task.res_id]],
         }).then(function (result) {
-            console.log('result=',result);
             const form_id=result;
             self.env.bus.trigger('do-action', {
                 action: {
@@ -505,7 +493,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             model: 'is.doc.moule',
             method: 'get_dhtmlx',
             kwargs: {
-                domain: this.props.domain,
+                domain  : this.props.domain,
             }
         }).then(function (result) {
             self.state.items              = result.items;
@@ -513,11 +501,12 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             self.state.markers            = result.markers;
             self.state.jour_fermeture_ids = result.jour_fermeture_ids;
             self.renderDhtmlxGantt();
+            self.gantt.scrollTo(result.scroll_x,result.scroll_y);
         });
     }
 
     async WriteTask(id,item,mode){
-        this.gantt.scroll = this.gantt.getScrollState();
+        //this.gantt.scroll = this.gantt.getScrollState();
         self.this = this;
         rpc.query({
             model: 'is.doc.moule',
@@ -538,6 +527,23 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             console.log('LinkAction : result=',result);
         });
     }
+
+
+
+    async SetScroll(scroll){
+        self.this = this;
+        rpc.query({
+            model: 'is.doc.moule',
+            method: 'set_scroll',
+            args: [[], scroll.x,scroll.y]
+        }).then(function (result) {
+            console.log('SetScroll')
+        });
+    }
+
+
+
+
 
 }
 DhtmlxganttProjectRenderer.template = 'is_dynacase2odoo.DhtmlxganttProjectTemplate';
