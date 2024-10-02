@@ -24,7 +24,7 @@
                                 <field name="lig"              optional="hide"/>
                                 <field name="mb_document"      optional="hide"/>
                                 <field name="mb_documentid"    optional="hide"/>
-                                <field name="param_project_id" optional="show"/>
+                                <field name="param_project_id" optional="show" widget="many2one_clickable"/>
                                 <field name="mb_champ"         optional="show"/>
                                 <field name="mb_champid"       optional="hide"/>
                             </tree>

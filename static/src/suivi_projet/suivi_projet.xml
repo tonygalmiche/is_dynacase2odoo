@@ -22,12 +22,41 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td><input name="suivi_projet_cp"         t-att-value="state.suivi_projet_cp"         t-on-change="onChangeInput" t-on-keyup="OKkey" type="text" class="form-control"/></td>
+                        <!-- <td><input name="suivi_projet_cp"         t-att-value="state.suivi_projet_cp"         t-on-change="onChangeInput" t-on-keyup="OKkey" type="text" class="form-control"/></td> -->
+                        <td>
+                            <select name="suivi_projet_cp_id" class="form-select" t-on-change="onChangeInput">
+                                <t t-foreach="state.cp_options or []" t-as="o"  t-key="o.id">
+                                    <option t-att-value="o.id" t-att-selected="o.selected">
+                                        <t t-esc="o.name" />
+                                    </option>
+                                </t>
+                            </select>
+                        </td>
+  
+                       
                         <td><input name="suivi_projet_client"     t-att-value="state.suivi_projet_client"     t-on-change="onChangeInput" t-on-keyup="OKkey" type="text" class="form-control"/></td>
                         <td><input name="suivi_projet_projet"     t-att-value="state.suivi_projet_projet"     t-on-change="onChangeInput" t-on-keyup="OKkey" type="text" class="form-control"/></td>
                         <td><input name="suivi_projet_moule"      t-att-value="state.suivi_projet_moule"      t-on-change="onChangeInput" t-on-keyup="OKkey" type="text" class="form-control"/></td>
-                        <td><input name="suivi_projet_type_moule" t-att-value="state.suivi_projet_type_moule" t-on-change="onChangeInput" t-on-keyup="OKkey" type="text" class="form-control"/></td>
-                        <td><input name="suivi_projet_modele"     t-att-value="state.suivi_projet_modele"     t-on-change="onChangeInput" t-on-keyup="OKkey" type="text" class="form-control"/></td>
+                        <td>
+                            <select name="suivi_projet_type_moule" class="form-select" t-on-change="onChangeInput">
+                                <t t-foreach="state.type_moule_options or []" t-as="o"  t-key="o.id">
+                                    <option t-att-value="o.id" t-att-selected="o.selected">
+                                        <t t-esc="o.name" />
+                                    </option>
+                                </t>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="suivi_projet_modele_id" class="form-select" t-on-change="onChangeInput">
+                                <t t-foreach="state.modele_options or []" t-as="o"  t-key="o.id">
+                                    <option t-att-value="o.id" t-att-selected="o.selected">
+                                        <t t-esc="o.name" />
+                                    </option>
+                                </t>
+                            </select>
+                        </td>
+
+
                         <td><button class="btn btn-primary ms-1" style="width:50px"  t-on-click="OKclick"> OK </button></td>
                     </tr>
                 </tbody>
