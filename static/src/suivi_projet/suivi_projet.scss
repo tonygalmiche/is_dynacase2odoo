@@ -1,6 +1,39 @@
 
 
 
+
+.suivi_projet thead tr:nth-child(1) th {
+    color: black;
+    font-size: 1rem;
+    text-align: center;
+
+    border-bottom: 1px solid gray;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    border-top: 1px solid gray;
+}
+
+
+.suivi_projet tbody td {
+    color: black;
+    font-size: 1rem;
+    text-align: center;
+
+    border-bottom: 1px solid gray;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    border-top: 1px solid gray;
+}
+
+
+
+
+.suivi_projet table {
+    border-collapse: unset;
+}
+
+
+
 // .filtre_analysecbn{
 //     margin-bottom: 0.5rem;
 // }

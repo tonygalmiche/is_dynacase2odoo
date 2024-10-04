@@ -65,16 +65,29 @@
                     <table style="width:100%;overflow-y:auto">
                         <thead>
                             <tr>
-                                <th style="text-align:left">Moule</th>
-                                <th style="width:1%"/>
+                                <th style="min-width: 8rem;">Projet</th>
+                                <th style="min-width: 8rem;">Moule</th>
+                                <th style="min-width: 8rem;">Photo</th>
+                                <th style="min-width: 8rem;">Chef de projet</th>
+                                <th style="min-width: 8rem;">J</th>
+                                <t t-foreach="Object.values(state.familles or {})" t-as="famille"  t-key="famille.ct">
+                                    <th style="min-width: 8rem;"><span t-esc="famille.name"/></th>
+                                </t>
                             </tr>
                         </thead>
                         <tbody>
                             <t t-foreach="Object.values(state.dict or {})" t-as="line" t-key="line.key">
                                 <tr>
-                                    <td>
-                                        <span t-esc="line.moule"/> (<span t-esc="line.idmoule"/>)
-                                    </td>
+                                    <td><span t-esc="line.moule"/></td>
+                                    <td><span t-esc="line.moule"/></td>
+                                    <td><span t-esc="line.moule"/></td>
+                                    <td><span t-esc="line.moule"/></td>
+                                    <td><span t-esc="line.moule"/></td>
+                                    <t t-foreach="Object.values(line.familles or {})" t-as="famille"  t-key="famille.ct">
+                                        <td style="min-width: 8rem;">
+                                            <span t-esc="famille.html"/>
+                                        </td>
+                                    </t>
                                 </tr>
                             </t>
                         </tbody>

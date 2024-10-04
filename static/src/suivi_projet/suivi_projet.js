@@ -98,6 +98,7 @@ class SuiviProjet extends Component {
         }
         var res = await this.orm.call("is.doc.moule", 'get_suivi_projet', [false],params);
         this.state.dict                    = res.dict;
+        this.state.familles                = res.familles;
         this.state.suivi_projet_client     = res.client;
         this.state.suivi_projet_projet     = res.projet;
         this.state.suivi_projet_moule      = res.moule;
