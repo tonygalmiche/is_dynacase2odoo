@@ -107,7 +107,9 @@ class IsDocMoule(models.Model):
     site_id             = fields.Many2one('is.database', "Site", compute='_compute_site_id', readonly=True, store=True)
     demao_nature        = fields.Char(string="Nature", compute='_compute_demao_nature'     , readonly=True, store=True)
     solde               = fields.Boolean(string="Soldé", compute='_compute_solde'          , readonly=True, store=True)
-    
+    rsp_date            = fields.Date(string="Date réponse")
+    rsp_texte           = fields.Char(string="Réponse à la demande")
+
 
     @api.depends('dossier_modif_variante_id.solde')
     def _compute_solde(self):
@@ -629,6 +631,87 @@ class IsDocMoule(models.Model):
         return True
 
 
+    def get_doc_color(self):
+        "Retourne la couleur de l'indicateur en fonction de différent paramètres"
+        for obj in self:
+            color = 'Lavender'
+            if not obj.dateend:
+                color = 'orange'
+            if obj.action=='':
+                color = 'Lavender'
+            if obj.etat=='AF':
+                color='CornflowerBlue'
+            if obj.etat=='D':
+                color='Orange'
+            if obj.dateend:
+                now = date.today()
+                if now>obj.dateend:
+                    color='Red'
+            if obj.etat=='F':
+                color='SpringGreen'
+            # if ($name_fam=="DFAB")  $color = "Lavender"; // Traitement particulier pour les dossiers de fab
+            return color
+
+
+    def get_doc_note(self):
+        "Retourne la note pour l'indicateur en fonction de différent paramètres"
+        note=5
+        return note
+
+        # $notes=array("I"=>1,"R"=>3,"V"=>5);
+        # for($i=0;$i<count($j);$i++) {
+        #     $note=" ";
+        #     if ($irv[$i]<>"") $note=$notes[$irv[$i]];
+        #     if ($bloquant[$i]=="Oui") $note=$note+10;
+        #     if ($bloquant[$i]!="Oui") $bloquant[$i]=" "; //Pour éffacerr la valeur
+        #     $r[$j[$i]]=array("IRV"=>$irv[$i],"Bloquant"=>$bloquant[$i],"Note"=>$note);        
+        # }
+        # return $r;
+
+
+
+    def get_doc_reponse(self):
+        "Retourne la réponse (PJ, date et commentaire) du document"
+        for obj in self:
+            rsp_pj=False
+            rsp_date  = obj.rsp_date
+            rsp_texte = obj.rsp_texte
+            for line in obj.array_ids:
+                if line.annex:
+                    rsp_pj=True
+                break
+            reponse=[rsp_pj,rsp_date,rsp_texte]
+            print(reponse)
+            return reponse
+
+
+    # annex       = fields.Many2many("ir.attachment", "attach_annex_rel"    , "annex_id"    , "attachment_id", string="Fichiers")
+    # rsp_date    = fields.Date(string="Date")
+    # rsp_texte   = fields.Char(string="Réponse à la demande")
+
+
+   # //** Affichage de la réponse **************************
+    # $rsp_texte = $this->getValue("plasfil_rsp_texte");
+    # if($rsp_texte!="") $trombone='<a href="#" title="'.$rsp_texte.'">'.substr($rsp_texte,0,5).'</a>';
+
+    # $rsp_date = $this->getValue("plasfil_rsp_date");
+    # if($rsp_date!="") $trombone='<a href="#" title="'.$rsp_date.'">'.substr($rsp_date,0,5).'</a>';
+
+    # $piecejointe=$this->getTValue("PLASFIL_ANNEX");
+    # if (count($piecejointe)>0) {
+    #   $trombone="<img border=0 src=\"/www/Images/tronbonne.gif\">";
+    # }
+    # //*****************************************************
+
+
+
+		
+# PLASFIL_RSP_DATE	PLASFIL_FR_ANNEX	Date
+# PLASFIL_RSP_TEXTE	PLASFIL_FR_ANNEX	Réponse à la demande
+# PLASFIL_RSP_HTML	PLASFIL_FR_ANNEX	Réponse à la demande
+
+
+
 
 class IsDocMouleArray(models.Model):
     _name        = "is.doc.moule.array"
@@ -639,8 +722,8 @@ class IsDocMouleArray(models.Model):
     demandmodif = fields.Char(string="Demande de modification")
     maj_amdec   = fields.Boolean(string="Mise à jour de l’AMDEC")
     comment     = fields.Text(string="Commentaire")
-    rsp_date    = fields.Date(string="Date")
-    rsp_texte   = fields.Char(string="Réponse à la demande")
+    #rsp_date    = fields.Date(string="Date")
+    #rsp_texte   = fields.Char(string="Réponse à la demande")
     is_doc_id   = fields.Many2one("is.doc.moule")
     lig         = fields.Integer(string="Lig",index=True,copy=False,readonly=True, help="Permet de faire le lien avec la ligne du tableau dans Dynacase")
 

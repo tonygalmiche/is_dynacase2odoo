@@ -3,11 +3,8 @@ import { registry } from "@web/core/registry";
 import { Layout } from "@web/search/layout";
 import { getDefaultConfig } from "@web/views/view";
 import { useService } from "@web/core/utils/hooks";
-
 const { Component, useSubEnv, useState, onWillStart } = owl;
 
-
-console.log('TEST 1');
 
 class SuiviProjet extends Component {
     setup() {
@@ -85,6 +82,52 @@ class SuiviProjet extends Component {
             ev.target.parentElement.attributes.click.value=click.value;
         }
     }
+
+
+    DateClick(ev) {
+        const res_id    = ev.target.attributes.res_id.value;
+        this.action.doAction({
+            type: 'ir.actions.act_window',
+            target: 'new',
+            res_id: parseInt(res_id),
+            res_model: 'is.doc.moule',
+            views: [[false, 'form']],
+        });
+    }
+    ProjetClick(ev) {
+        const projet_id    = ev.target.attributes.projet_id.value;
+        this.action.doAction({
+            type: 'ir.actions.act_window',
+            target: 'new',
+            res_id: parseInt(projet_id),
+            res_model: 'is.mold.project',
+            views: [[false, 'form']],
+        });
+    }
+    MouleDossierfClick(ev) {
+        const res_model = ev.target.attributes.res_model.value;
+        const res_id    = ev.target.attributes.res_id.value;
+        console.log(res_model, res_id)
+        this.action.doAction({
+            type: 'ir.actions.act_window',
+            target: 'new',
+            res_id: parseInt(res_id),
+            res_model: res_model,
+            views: [[false, 'form']],
+        });
+    }
+    DynacaseClick(ev) {
+        const dynacase_id    = ev.target.attributes.dynacase_id.value;
+        const url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id="+dynacase_id;
+        console.log('dynacase_id=',dynacase_id,url);
+        this.action.doAction({
+            type: 'ir.actions.act_url',
+            target: 'new',
+            url: url,
+        });
+    }
+    
+
 
     async getSuiviProjet(ok=false){
         const params={

@@ -77,42 +77,80 @@
                         </thead>
                         <tbody>
                             <t t-foreach="Object.values(state.dict or {})" t-as="line" t-key="line.key">
-                                <tr>
-                                    <td><span t-esc="line.moule"/></td>
-                                    <td><span t-esc="line.moule"/></td>
-                                    <td><span t-esc="line.moule"/></td>
-                                    <td><span t-esc="line.moule"/></td>
-                                    <td><span t-esc="line.moule"/></td>
-                                    <t t-foreach="Object.values(line.familles or {})" t-as="famille"  t-key="famille.ct">
-                                        <td style="min-width: 8rem;">
-                                            <span t-esc="famille.html"/>
+                                <!-- <tr t-att-style="line.trstyle"> -->
+                                    <!-- t-att-productid="line.product_id" -->
+
+                                <tr 
+                                    t-att-style="line.trstyle"
+                                    t-att-memstyle="line.trstyle"
+                                    t-on-mouseenter="TrMouseEnter" 
+                                    t-on-click="TrClick" 
+                                    t-on-mouseleave="TrMouseLeave" 
+                                    t-att-click="-1"
+                                >
+                                    <td>
+                                        <span 
+                                            t-esc="line.projet" 
+                                            class="link"
+                                            t-on-click="ProjetClick" 
+                                            t-att-projet_id="line.projet_id"
+                                        />
+                                    </td>
+                                    <td>
+                                        <span 
+                                            t-esc="line.moule" 
+                                            class="link"
+                                            t-on-click="MouleDossierfClick" 
+                                            t-att-res_id="line.moule_id"
+                                            t-att-res_model="line.res_model"
+                                        /> <span t-esc="line.designation"/></td>
+                                    <td>
+
+
+                                        <img style='max-width:150px' t-att-src="line.photo"/>
+                                    </td>
+                                    <td><span t-esc="line.cp"/></td>
+                                    <td>?</td>
+                                    <t t-foreach="Object.values(line.familles or {})" t-as="doc"  t-key="doc.ct">
+                                        <td style="min-width: 8rem;" t-att-style="doc.style" >
+                                            <table style="border-collapse:collapse;width:100%">
+                                                <tr>
+                                                    <td style="border:none;text-align:center;white-space:nowrap;" colspan="2">
+                                                        <span 
+                                                            t-esc="doc.dateend" 
+                                                            class="link"
+                                                            t-on-click="DateClick" 
+                                                            t-att-res_id="doc.doc_id"
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border:none;text-align:left;white-space:nowrap;padding-left:0.5rem"><span t-esc="doc.note"/></td>
+                                                    <!-- TODO: Mettre ici le trombonne et la bulle jaune -->
+                                                    <td style="border:none;text-align:right;white-space:nowrap;padding-right:0.5rem">
+                                                        <img 
+                                                            t-if="doc.dynacase_id"
+                                                            src="/is_dynacase2odoo/static/src/img/logo-dynacase.png" 
+                                                            style="max-height:20px;max-width:20px"
+                                                            class="link"
+                                                            t-on-click="DynacaseClick" 
+                                                            t-att-dynacase_id="doc.dynacase_id"
+                                                        />
+
+                                                        <span t-esc="doc.reponse[0]"/>
+                                                        <span t-esc="doc.reponse[1]"/>
+                                                        <span t-esc="doc.reponse[2]"/>
+                                                    </td> 
+                                                    <!-- <td style="border:none;text-align:right;white-space:nowrap">bulle trombone</td> -->
+                                                </tr>
+                                            </table>
                                         </td>
                                     </t>
                                 </tr>
                             </t>
                         </tbody>
                     </table>
-
-
-
-
-
             </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         </Layout>
     </t>
 </templates>
