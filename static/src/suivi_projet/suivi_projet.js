@@ -136,6 +136,7 @@ class SuiviProjet extends Component {
             "projet"     : this.state.suivi_projet_projet,        
             "moule"      : this.state.suivi_projet_moule,        
             "type_moule" : this.state.suivi_projet_type_moule,        
+            "avec_photo" : this.state.suivi_projet_avec_photo,        
             "modele_id"  : this.state.suivi_projet_modele_id,        
             "ok"         : ok,
         }
@@ -145,13 +146,12 @@ class SuiviProjet extends Component {
         this.state.suivi_projet_client     = res.client;
         this.state.suivi_projet_projet     = res.projet;
         this.state.suivi_projet_moule      = res.moule;
-
         this.state.suivi_projet_cp_id      = res.cp_id;
         this.state.cp_options              = res.cp_options;
-
         this.state.suivi_projet_type_moule = res.type_moule;
         this.state.type_moule_options      = res.type_moule_options;
-
+        this.state.suivi_projet_avec_photo = res.avec_photo;
+        this.state.avec_photo_options      = res.avec_photo_options;
         this.state.suivi_projet_modele_id  = res.modele_id;
         this.state.modele_options          = res.modele_options;
     }

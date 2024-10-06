@@ -32,6 +32,7 @@ Module Odoo 16 pour Plastigray pour migrer les développements de Dynacase dans 
         "views/is_gantt_copie_view.xml",
         "views/is_modele_bilan_view.xml",
         "views/is_mold_view.xml",
+        "views/is_dossierf_view.xml",
         "views/menu.xml",
     ], 
     "qweb": [

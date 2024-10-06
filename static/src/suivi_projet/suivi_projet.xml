@@ -17,6 +17,7 @@
                         <th>Moule</th>
                         <th>Type moule</th>
                         <th>Modèle</th>
+                        <th>Photo</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -52,6 +53,15 @@
                                 </t>
                             </select>
                         </td>
+                        <td>
+                            <select name="suivi_projet_avec_photo" class="form-select" t-on-change="onChangeInput">
+                                <t t-foreach="state.avec_photo_options or []" t-as="o"  t-key="o.id">
+                                    <option t-att-value="o.id" t-att-selected="o.selected">
+                                        <t t-esc="o.name" />
+                                    </option>
+                                </t>
+                            </select>
+                        </td>
                         <td><button class="btn btn-primary ms-1" style="width:50px"  t-on-click="OKclick"> OK </button></td>
                     </tr>
                 </tbody>
@@ -62,7 +72,7 @@
                             <tr>
                                 <th style="min-width: 6rem;">Projet</th>
                                 <th style="min-width: 8rem;">Moule</th>
-                                <th style="min-width: 8rem;">Photo</th>
+                                <th t-if="state.suivi_projet_avec_photo==='Oui'"  style="min-width: 8rem;">Photo</th>
                                 <th style="min-width: 8rem;">Chef de projet</th>
                                 <th style="min-width: 8rem;">J</th>
                                 <t t-foreach="Object.values(state.familles or {})" t-as="famille"  t-key="famille.ct">
@@ -97,7 +107,7 @@
                                             t-att-res_model="line.res_model"
                                         /><br />
                                         <span t-esc="line.designation"/></td>
-                                    <td>
+                                    <td  t-if="state.suivi_projet_avec_photo==='Oui'" >
                                         <img style='height:60px' t-att-src="line.photo"/>
                                     </td>
                                     <td><span t-esc="line.cp"/></td>

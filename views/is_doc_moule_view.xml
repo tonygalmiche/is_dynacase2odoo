@@ -717,11 +717,6 @@
         </record>
 
 
-
-
-
-
-
         <!-- Dossier appel d'offre -->
         <record id="is_doc_moule_dossier_appel_offre_edit_tree_view" model="ir.ui.view" >
             <field name="name">is_doc_moule_dossier_appel_offre_edit_tree_view</field>
@@ -750,23 +745,6 @@
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>
-            </field>
-        </record>
-
-
-
-
-        <!-- is.dossierf -->
-        <record id="is_dossierf_form_view" model="ir.ui.view">
-            <field name="name">is_dossierf_form_view</field>
-            <field name="model">is.dossierf</field>
-            <field name="inherit_id" ref="is_plastigray16.is_dossierf_form_view"/>
-            <field name="arch" type="xml">
-                <sheet position="before">
-                    <header>
-                        <button name="gantt_action" string="Gantt" type="object" class="btn-success"/>
-                    </header>
-                </sheet>
             </field>
         </record>
 

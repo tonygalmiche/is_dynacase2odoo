@@ -8,145 +8,11 @@ _logger = logging.getLogger(__name__)
 
 
 #TODO:
-#- Ajouter onglet 'Gestion des J' dans Dossier F
-#- Ajouter option pour masquer les images des moules, car temps de réponse nettement plus long
-#- Pb syncro avec le champ 'Etat' des documents
-#- Manque champ 'J actuelle' dans le moule et d'autres champs de Dynacase
+#- Pb syncro avec le champ 'Etat' des documents et les champs plasfil_rsp_date et plasfil_rsp_texte
 #- Manque la famille 'Dossier de Fab'
 #- Résoudre problème calcul note
-#- Ajouter trobonne et bulle dans indicateur
 #- Ajouter les icones en lignes et en colonne pour effectuer les différentes actions (zip,...)
 #- Bouton pour actualiser une ligne sans tout recharger (idem Analyse CBN) 
-#- Manque champ plasfil_rsp_date, plasfil_rsp_texte et plasfil_rsp_html (pas utilisé) dans is.doc.moule (pb de syncro)
-
-
-
-    # //** Indicateur HTML ******************************************************
-    # $dend=$this->getValue("PLASFIL_DATEEND");
-    # $etat = $this->getValue("PLASFIL_J_ETAT");
-    # $color = "Lavender";
-    # if ($dend=="") {
-    #     $LaDate="(date)";
-    #     $color = "orange";
-    # } else {
-    #     $LaDate=$dend; 
-    # }
-
-    # if ($this->getValue("PLASFIL_J_ACTION")=="") $color = "Lavender";
-    # if ($etat=="AF")        $color = "CornflowerBlue";
-    # if ($etat=="D")         $color = "Orange";
-    # if ($dend!="") {
-    #     $tj=time();
-    #     $tab=explode("/", $dend);
-    #     $te=mktime(0, 0, 0, $tab[1], $tab[0], $tab[2]);
-    #     if ($tj>=$te) $color = "Red";
-    # } 
-    # if ($etat=="F")         $color = "SpringGreen";
-    # if ($name_fam=="DFAB")  $color = "Lavender"; // Traitement particulier pour les dossiers de fab
-
-    # //** Affichage de la réponse **************************
-    # $rsp_texte = $this->getValue("plasfil_rsp_texte");
-    # if($rsp_texte!="") $trombone='<a href="#" title="'.$rsp_texte.'">'.substr($rsp_texte,0,5).'</a>';
-
-    # $rsp_date = $this->getValue("plasfil_rsp_date");
-    # if($rsp_date!="") $trombone='<a href="#" title="'.$rsp_date.'">'.substr($rsp_date,0,5).'</a>';
-
-    # $piecejointe=$this->getTValue("PLASFIL_ANNEX");
-    # if (count($piecejointe)>0) {
-    #   $trombone="<img border=0 src=\"/www/Images/tronbonne.gif\">";
-    # }
-    # //*****************************************************
-
-    # if ($this->getValue("plasfil_rsp_date")<>"" or $this->getValue("plasfil_rsp_texte")<>"" ) {
-    #   $txt=$this->getValue("plasfil_rsp_date")." ".$this->getValue("plasfil_rsp_texte");
-    #   $bulle="<a href=\"#\" title=\"$txt\"><img border=0 src=\"Images/pg_bulle.png\"></a>";
-    # }
-
-    # $r="";
-    # if ($coefficient>0) $r=($note/1)."/".($coefficient/1);
-
-    # $html="
-    #     <table style=\"border-collapse:collapse;width:100%\">
-    #         <tr>
-    #             <td style=\"border:none;text-align:center;white-space:nowrap;background-color:$color\" colspan=\"2\">
-    #                 <a style=\"color:black\" href=\"?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=".$this->id."\">$LaDate</a>
-    #             </td>
-    #         </tr>
-    #         <tr>
-    #             <td style=\"border:none;text-align:left;white-space:nowrap;background-color:$color\">$r &nbsp;</td>
-    #             <td style=\"border:none;text-align:right;white-space:nowrap;background-color:$color\">$bulle $trombone</td>
-    #         </tr>
-    #     </table>";
-    # $this->setValue("PLASFIL_J_INDICATEUR", $html);
-
-
-
-
-
-
-# Array
-# (
-#     [J0] => Array
-#         (
-#             [IRV] => 
-#             [Bloquant] =>  
-#             [Note] =>  
-#         )
-
-#     [J1] => Array
-#         (
-#             [IRV] => 
-#             [Bloquant] =>  
-#             [Note] =>  
-#         )
-
-#     [J2] => Array
-#         (
-#             [IRV] => 
-#             [Bloquant] =>  
-#             [Note] =>  
-#         )
-
-#     [J3] => Array
-#         (
-#             [IRV] => 
-#             [Bloquant] =>  
-#             [Note] =>  
-#         )
-
-#     [J4] => Array
-#         (
-#             [IRV] => V
-#             [Bloquant] => Oui
-#             [Note] => 15
-#         )
-
-#     [J5] => Array
-#         (
-#             [IRV] => R
-#             [Bloquant] => Oui
-#             [Note] => 13
-#         )
-
-
-# Calcul de la note
-
-# $notes=array("I"=>1,"R"=>3,"V"=>5);
-# for($i=0;$i<count($j);$i++) {
-#     $note=" ";
-#     if ($irv[$i]<>"") $note=$notes[$irv[$i]];
-#     if ($bloquant[$i]=="Oui") $note=$note+10;
-#     if ($bloquant[$i]!="Oui") $bloquant[$i]=" "; //Pour éffacerr la valeur
-#     $r[$j[$i]]=array("IRV"=>$irv[$i],"Bloquant"=>$bloquant[$i],"Note"=>$note);        
-# }
-# return $r;
-
-
-
-
-
-
-
 
 
 class IsDocMoule(models.Model):
@@ -160,13 +26,15 @@ class IsDocMoule(models.Model):
             projet=False,
             moule=False,
             type_moule=False,
+            avec_photo=False,
             modele_id=False,
             ok=False
         ):
         cr = self._cr
+        debut=datetime.now()
+        _logger.info("Début (durée=%.2fs)"%(datetime.now()-debut).total_seconds())
 
         #** set/get var *****************************************************
-        debut=datetime.now()
         if ok:
             self.env['is.mem.var'].set(self._uid, 'suivi_projet_cp_id'     , cp_id)
             self.env['is.mem.var'].set(self._uid, 'suivi_projet_client'    , client)
@@ -174,6 +42,7 @@ class IsDocMoule(models.Model):
             self.env['is.mem.var'].set(self._uid, 'suivi_projet_moule'     , moule)
             self.env['is.mem.var'].set(self._uid, 'suivi_projet_type_moule', type_moule)
             self.env['is.mem.var'].set(self._uid, 'suivi_projet_modele_id' , modele_id)
+            self.env['is.mem.var'].set(self._uid, 'suivi_projet_avec_photo', avec_photo)
         else:
             cp_id      = self.env['is.mem.var'].get(self._uid, 'suivi_projet_cp_id')
             client     = self.env['is.mem.var'].get(self._uid, 'suivi_projet_client')
@@ -181,13 +50,15 @@ class IsDocMoule(models.Model):
             moule      = self.env['is.mem.var'].get(self._uid, 'suivi_projet_moule')
             type_moule = self.env['is.mem.var'].get(self._uid, 'suivi_projet_type_moule')
             modele_id  = self.env['is.mem.var'].get(self._uid, 'suivi_projet_modele_id')
+            avec_photo = self.env['is.mem.var'].get(self._uid, 'suivi_projet_avec_photo')
         _logger.info("set/get var (durée=%.2fs)"%(datetime.now()-debut).total_seconds())
-
 
         #** Valeur par défaut *************************************************
         if not type_moule:
             type_moule='Actif'
-
+        if not avec_photo:
+            avec_photo='Oui'
+        _logger.info("set/get var (durée=%.2fs)"%(datetime.now()-debut).total_seconds())
 
         #** Liste de choix cp_options *****************************************
         cp_options=[]
@@ -207,19 +78,6 @@ class IsDocMoule(models.Model):
                 "selected": selected,
             })
 
-        #** Liste de choix type_moule_options *********************************
-        options = ["Actif","Tous"]
-        type_moule_options=[]
-        for o in options:
-            selected=False
-            if o==type_moule:
-                selected=True
-            type_moule_options.append({
-                "id": o,
-                "name": o,
-                "selected": selected,
-            })
-
         #** Liste de choix modele_options *************************************
         modele_options=[]
         lines=self.env['is.modele.bilan'].search([],order='mb_titre')
@@ -234,13 +92,38 @@ class IsDocMoule(models.Model):
             })
         #**********************************************************************
 
+        #** Liste de choix type_moule_options *********************************
+        options = ["Actif","Tous"]
+        type_moule_options=[]
+        for o in options:
+            selected=False
+            if o==type_moule:
+                selected=True
+            type_moule_options.append({
+                "id": o,
+                "name": o,
+                "selected": selected,
+            })
+
+        #** Liste de choix avec_photo_options *********************************
+        options = ["Oui","Non"]
+        avec_photo_options=[]
+        for o in options:
+            selected=False
+            if o==avec_photo:
+                selected=True
+            avec_photo_options.append({
+                "id": o,
+                "name": o,
+                "selected": selected,
+            })
+        _logger.info("Liste de choix (durée=%.2fs)"%(datetime.now()-debut).total_seconds())
 
         #** Recherche des familles du modele **********************************
         modele_ids=[]
         familles={}
         if modele_id:
             modeles=self.env['is.modele.bilan'].search([('id','=',modele_id)])
-
             for modele in modeles:
                 ct=0
                 for line in modele.line_ids:
@@ -260,6 +143,7 @@ class IsDocMoule(models.Model):
                             'dynacase_id' : False,
                             'reponse'     : [False,False,False],
                         }
+        _logger.info("Familles du modele (durée=%.2fs)"%(datetime.now()-debut).total_seconds())
 
         mydict={}
         if len(modele_ids)>0:
@@ -299,11 +183,9 @@ class IsDocMoule(models.Model):
             if type_moule and type_moule=='Actif':
                 SQL+=" and im.date_fin is null "
 
-
             #** Dossier F *****************************************************
             SQL+="""
                 UNION
-
                 select
                     idm.id               id,
                     im.name              moule,
@@ -338,6 +220,8 @@ class IsDocMoule(models.Model):
             SQL+=" limit 500"
             cr.execute(SQL)
             rows = cr.dictfetchall()
+            _logger.info("Requête SQL (nb doc=%s) (durée=%.2fs)"%(len(rows),(datetime.now()-debut).total_seconds())) # 0.02s par document
+
             for row in rows:
                 doc_id = row['id']
                 doc = self.env['is.doc.moule'].browse(doc_id)
@@ -346,10 +230,11 @@ class IsDocMoule(models.Model):
                     if key not in mydict:
                         #** Recherche photo du moule **************************
                         photo=''
-                        if doc.idmoule:
-                            image = doc.idmoule.image
-                            if image and image!='':
-                                photo = 'data:image/png;base64, %s'%image.decode("utf-8")
+                        if avec_photo=='Oui':
+                            if doc.idmoule:
+                                image = doc.idmoule.image
+                                if image and image!='':
+                                    photo = 'data:image/png;base64, %s'%image.decode("utf-8")
                         #** avancement_j **************************************
                         avancement_j=[False,False]
                         if doc.idmoule:
@@ -357,7 +242,9 @@ class IsDocMoule(models.Model):
                                 j_actuelle = dict(GESTION_J).get(doc.idmoule.j_actuelle,"?")
                                 avancement_j=[j_actuelle, doc.idmoule.j_avancement]
                         if doc.dossierf_id:
-                            avancement_j='Dossier F'
+                            if doc.dossierf_id.j_actuelle:
+                                j_actuelle = dict(GESTION_J).get(doc.dossierf_id.j_actuelle,"?")
+                                avancement_j=[j_actuelle, doc.dossierf_id.j_avancement]
                         vals={
                             'key'         : key,
                             'res_model'   : row['res_model'],
@@ -401,12 +288,6 @@ class IsDocMoule(models.Model):
                                 'reponse'    : reponse,
                             }
                             mydict[key]['familles'][famille].update(vals)
-                            # mydict[key]['familles'][famille]['doc_id']      = doc.id
-                            # mydict[key]['familles'][famille]['etat']        = doc.etat
-                            # mydict[key]['familles'][famille]['dateend']     = dateend
-                            # mydict[key]['familles'][famille]['note']        = note_indicateur
-                            # mydict[key]['familles'][famille]['style']       = style
-                            # mydict[key]['familles'][famille]['dynacase_id'] = doc.dynacase_id
         sorted_dict = dict(sorted(mydict.items())) 
 
         #** Ajout de la couleur des lignes ************************************
@@ -416,14 +297,9 @@ class IsDocMoule(models.Model):
                 trcolor="#f2f3f4"
             else:
                 trcolor="#ffffff"
-            #if mem_product_id:
-            #    trcolor="#00FAA2"
             trstyle="background-color:%s"%(trcolor)
             sorted_dict[k]["trstyle"] = trstyle
-
-
-
-
+        _logger.info("Fin (durée=%.2fs)"%(datetime.now()-debut).total_seconds())
 
         res={
             "dict"              : sorted_dict,
@@ -435,6 +311,8 @@ class IsDocMoule(models.Model):
             "cp_options"        : cp_options,
             "type_moule"        : type_moule,
             "type_moule_options": type_moule_options,
+            "avec_photo"        : avec_photo,
+            "avec_photo_options": avec_photo_options,
             "modele_id"         : modele_id,
             "modele_options"    : modele_options,
         }

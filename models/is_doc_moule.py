@@ -724,55 +724,11 @@ class IsDocMouleArray(models.Model):
     demandmodif = fields.Char(string="Demande de modification")
     maj_amdec   = fields.Boolean(string="Mise à jour de l’AMDEC")
     comment     = fields.Text(string="Commentaire")
-    #rsp_date    = fields.Date(string="Date")
-    #rsp_texte   = fields.Char(string="Réponse à la demande")
     is_doc_id   = fields.Many2one("is.doc.moule")
     lig         = fields.Integer(string="Lig",index=True,copy=False,readonly=True, help="Permet de faire le lien avec la ligne du tableau dans Dynacase")
 
 
 
-class is_dossierf(models.Model):
-    _inherit = 'is.dossierf'
-
-    def gantt_action(self):
-        for obj in self:
-            # docs=self.env['is.doc.moule'].search([ ('dossierf_id', '=', obj.id) ])
-            # ids=[]
-            # initial_date=str(datetime.today())
-            # for doc in docs:
-            #     if str(doc.dateend)<initial_date:
-            #         initial_date=str(doc.dateend)
-            #     ids.append(doc.id)
-
-            domain=[ ('dossierf_id', '=', obj.id) ]
-
-            tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_dossierf_edit_tree_view').id
-            gantt_id = self.env.ref('is_dynacase2odoo.is_doc_moule_moule_dhtmlxgantt_project_view').id
-            ctx={
-                'default_type_document': 'Dossier F',
-                'default_dossierf_id'  : obj.id,
-                'default_etat'         :'AF',
-                'default_dateend'      : datetime.today(),
-                'default_idresp'       : self._uid,
-                #'initial_date'         : initial_date,
-            }
-            return {
-                'name': obj.name,
-                'view_mode': 'dhtmlxgantt_project,tree,form,kanban,calendar,pivot,graph',
-                "views"    : [
-                    (gantt_id, "dhtmlxgantt_project"),
-                    (tree_id, "tree"),
-                    (False, "form"),(False, "kanban"),(False, "calendar"),(False, "pivot"),(False, "graph")],
-                'res_model': 'is.doc.moule',
-                # 'domain': [
-                #     ('id','in',ids),
-                # ],
-               'domain': domain,
-                'type': 'ir.actions.act_window',
-                "context": ctx,
-                'limit': 1000,
-            }
-        
 
 class res_partner(models.Model):
     _inherit = 'res.partner'
