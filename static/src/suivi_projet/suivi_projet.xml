@@ -98,7 +98,7 @@
                                         /><br />
                                         <span t-esc="line.designation"/></td>
                                     <td>
-                                        <img style='max-width:150px' t-att-src="line.photo"/>
+                                        <img style='height:60px' t-att-src="line.photo"/>
                                     </td>
                                     <td><span t-esc="line.cp"/></td>
                                     <td>

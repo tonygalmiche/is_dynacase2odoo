@@ -8,6 +8,8 @@ _logger = logging.getLogger(__name__)
 
 
 #TODO:
+#- Ajouter onglet 'Gestion des J' dans Dossier F
+#- Ajouter option pour masquer les images des moules, car temps de réponse nettement plus long
 #- Pb syncro avec le champ 'Etat' des documents
 #- Manque champ 'J actuelle' dans le moule et d'autres champs de Dynacase
 #- Manque la famille 'Dossier de Fab'
