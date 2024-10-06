@@ -756,38 +756,6 @@
 
 
 
-
-        <!-- <form>
-            <style>
-                .o_form_label{
-                    white-space: nowrap;
-                }
-            </style>
-            <sheet>
-                <group>
-                    <group>
-                        <field name="name"/> -->
-
-
-        <!-- is.mold -->
-        <record id="is_mold_form_view" model="ir.ui.view">
-            <field name="name">is_mold_form_view</field>
-            <field name="model">is.mold</field>
-            <field name="inherit_id" ref="is_plastigray16.is_mold_form_view"/>
-            <field name="arch" type="xml">
-                <sheet position="before">
-                    <header>
-                         <button name="gantt_action" string="Gantt" type="object" class="btn-success"/>
-                    </header>
-                </sheet>
-                <xpath expr="//group/field[@name='name']/.." position="after">
-                    <group>
-                        <field name="image" widget="image" style="max-width:600px" nolabel="1" colspan="2"/>
-                    </group>
-                </xpath>
-            </field>
-        </record>
-
         <!-- is.dossierf -->
         <record id="is_dossierf_form_view" model="ir.ui.view">
             <field name="name">is_dossierf_form_view</field>

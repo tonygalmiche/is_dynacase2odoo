@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
+from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J
 from datetime import datetime, timedelta, date
 import copy
 import logging
@@ -246,16 +247,16 @@ class IsDocMoule(models.Model):
                     if id:
                         modele_ids.append(str(id))
                         familles[ct]={
-                            'ct'         : ct,
-                            'id'         : id,
-                            'name'       : line.param_project_id.ppr_famille,
-                            'doc_id'     : False,
-                            'etat'       : '',
-                            'dateend'    : '',
-                            'note'       : '',
-                            'style'      : '',
-                            'dynacase_id': False,
-                            'reponse'    : [False,False,False],
+                            'ct'          : ct,
+                            'id'          : id,
+                            'name'        : line.param_project_id.ppr_famille,
+                            'doc_id'      : False,
+                            'etat'        : '',
+                            'dateend'     : '',
+                            'note'        : '',
+                            'style'       : '',
+                            'dynacase_id' : False,
+                            'reponse'     : [False,False,False],
                         }
 
         mydict={}
@@ -347,18 +348,27 @@ class IsDocMoule(models.Model):
                             image = doc.idmoule.image
                             if image and image!='':
                                 photo = 'data:image/png;base64, %s'%image.decode("utf-8")
+                        #** avancement_j **************************************
+                        avancement_j=[False,False]
+                        if doc.idmoule:
+                            if doc.idmoule.j_actuelle:
+                                j_actuelle = dict(GESTION_J).get(doc.idmoule.j_actuelle,"?")
+                                avancement_j=[j_actuelle, doc.idmoule.j_avancement]
+                        if doc.dossierf_id:
+                            avancement_j='Dossier F'
                         vals={
-                            'key'        : key,
-                            'res_model'  : row['res_model'],
-                            'moule'      : row['moule'],
-                            'designation': row['designation'],
-                            'moule_id'   : row['moule_id'],
-                            'projet'     : row['projet'],
-                            'projet_id'  : row['projet_id'],
-                            'photo'      : photo,
-                            'cp'         : row['cp'],
-                            'cp_id'      : row['cp_id'],
-                            'familles'   : copy.deepcopy(familles),
+                            'key'         : key,
+                            'res_model'   : row['res_model'],
+                            'moule'       : row['moule'],
+                            'designation' : row['designation'],
+                            'moule_id'    : row['moule_id'],
+                            'projet'      : row['projet'],
+                            'projet_id'   : row['projet_id'],
+                            'photo'       : photo,
+                            'cp'          : row['cp'],
+                            'cp_id'       : row['cp_id'],
+                            'familles'    : copy.deepcopy(familles),
+                            'avancement_j': avancement_j
                         }
                         mydict[key]=vals
                     for famille in mydict[key]['familles']:

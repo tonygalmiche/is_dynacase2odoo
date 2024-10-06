@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- is.mold -->
+        <record id="is_mold_form_view" model="ir.ui.view">
+            <field name="name">is_mold_form_view</field>
+            <field name="model">is.mold</field>
+            <field name="inherit_id" ref="is_plastigray16.is_mold_form_view"/>
+            <field name="arch" type="xml">
+                <sheet position="before">
+                    <header>
+                         <button name="gantt_action" string="Gantt" type="object" class="btn-success"/>
+                    </header>
+                </sheet>
+                <xpath expr="//group/field[@name='name']/.." position="after">
+                    <group>
+                        <field name="image" widget="image" style="max-width:600px" nolabel="1" colspan="2"/>
+                    </group>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Gestion des J">
+                        <group>
+                            <field name="j_actuelle"/>
+                            <field name="j_avancement"/>
+                            <field name="revue_contrat_id"/>
+                            <field name="revue_lancement_id"/>
+                            <field name="revue_risque_id"/>    
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        <record id="is_mold_tree_view" model="ir.ui.view">
+            <field name="name">is_mold_tree_view</field>
+            <field name="model">is.mold</field>
+            <field name="inherit_id" ref="is_plastigray16.is_mold_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="is_database_id" position="before">
+                    <field name="j_actuelle"         optional="show"/>
+                    <field name="j_avancement"       optional="hide"/>
+                    <field name="revue_contrat_id"   optional="hide"/>
+                    <field name="revue_lancement_id" optional="hide"/>
+                    <field name="revue_risque_id"    optional="hide"/>    
+                </field>
+            </field>
+        </record>
+        <record id="is_mold_filter_view" model="ir.ui.view">
+            <field name="name">is_mold_filter_view</field>
+            <field name="model">is.mold</field>
+            <field name="inherit_id" ref="is_plastigray16.is_mold_filter_view"/>
+            <field name="arch" type="xml">
+                <field name="lieu_changement" position="after">
+                    <field name="is_database_id"/>
+                    <field name="j_actuelle"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

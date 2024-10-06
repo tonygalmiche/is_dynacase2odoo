@@ -674,14 +674,16 @@ class IsDocMoule(models.Model):
         "Retourne la réponse (PJ, date et commentaire) du document"
         for obj in self:
             rsp_pj=False
-            rsp_date  = obj.rsp_date
+            rsp_date=False
+            if obj.rsp_date:
+                rsp_date = obj.rsp_date.strftime('%d/%m/%y')
             rsp_texte = obj.rsp_texte
             for line in obj.array_ids:
                 if line.annex:
-                    rsp_pj=True
+                    for pj in line.annex:
+                        rsp_pj=pj.name
                 break
             reponse=[rsp_pj,rsp_date,rsp_texte]
-            print(reponse)
             return reponse
 
 
@@ -726,32 +728,6 @@ class IsDocMouleArray(models.Model):
     #rsp_texte   = fields.Char(string="Réponse à la demande")
     is_doc_id   = fields.Many2one("is.doc.moule")
     lig         = fields.Integer(string="Lig",index=True,copy=False,readonly=True, help="Permet de faire le lien avec la ligne du tableau dans Dynacase")
-
-
-class is_mold(models.Model):
-    _inherit = 'is.mold'
-
-
-    image = fields.Binary('Image')
-
-
-
-    # def gantt_action(self):
-    #     for obj in self:
-    #         docs=self.env['is.doc.moule'].search([ ('idmoule', '=', obj.id) ])
-    #         ids=[]
-    #         for doc in docs:
-    #             ids.append(doc.id)
-    #         view_mode = 'dhtmlxgantt_project,tree,form,kanban,calendar,pivot,graph'
-    #         return self.env['is.doc.moule'].list_doc(obj,ids,view_mode=view_mode)
-
-
-    def gantt_action(self):
-        for obj in self:
-            domain=[('idmoule', '=', obj.id)]
-            view_mode = 'dhtmlxgantt_project,tree,form,kanban,calendar,pivot,graph'
-            return self.env['is.doc.moule'].list_doc(obj,domain,view_mode=view_mode)
-
 
 
 
