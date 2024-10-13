@@ -23,5 +23,15 @@
                 </sheet>
             </field>
         </record>
+        <record id="is_dossierf_tree_view" model="ir.ui.view">
+            <field name="name">is_dossierf_tree_view</field>
+            <field name="model">is.dossierf</field>
+            <field name="inherit_id" ref="is_plastigray16.is_dossierf_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="is_database_origine_id" position="after">
+                    <field name="dynacase_id" optional="hide"/>    
+                </field>
+            </field>
+        </record>
     </data>
 </odoo>

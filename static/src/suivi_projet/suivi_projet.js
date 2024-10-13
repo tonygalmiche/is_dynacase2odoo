@@ -129,6 +129,51 @@ class SuiviProjet extends Component {
     
 
 
+    ListeDocClick(ev) {
+
+        console.log(this.state.suivi_projet_modele_id);
+
+        const res_model = ev.target.attributes.res_model.value;
+        const res_id    = ev.target.attributes.res_id.value;
+        const modele_id = this.state.suivi_projet_modele_id;
+
+
+        this.getDocModele(res_model,res_id,modele_id);
+
+
+    }
+
+
+
+    async getDocModele(res_model,res_id,modele_id){
+        const params={
+            "res_model": res_model,        
+            "res_id"   : res_id,        
+            "modele_id": modele_id,        
+        }
+        var res = await this.orm.call("is.doc.moule", 'get_doc_modele', [false],params);
+        console.log(res_model,res_id,modele_id,res);
+  
+
+        this.action.doAction({
+            type: 'ir.actions.act_window',
+            name: 'Liste',
+            target: 'current',
+            res_model: 'is.doc.moule',
+            views: [[false, 'tree'],[false, 'form']],
+            domain: [
+                ['id','in',res.ids],
+            ],
+        });
+
+
+
+
+    }
+
+
+
+
     async getSuiviProjet(ok=false){
         const params={
             "cp_id"      : this.state.suivi_projet_cp_id,        

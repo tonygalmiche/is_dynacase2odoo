@@ -42,6 +42,9 @@
                     <field name="revue_lancement_id" optional="hide"/>
                     <field name="revue_risque_id"    optional="hide"/>    
                 </field>
+                <field name="is_database_origine_id" position="after">
+                    <field name="dynacase_id" optional="hide"/>    
+                </field>
             </field>
         </record>
         <record id="is_mold_filter_view" model="ir.ui.view">

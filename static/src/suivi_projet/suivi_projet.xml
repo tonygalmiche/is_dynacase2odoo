@@ -73,6 +73,7 @@
                                 <th style="min-width: 6rem;">Projet</th>
                                 <th style="min-width: 8rem;">Moule</th>
                                 <th t-if="state.suivi_projet_avec_photo==='Oui'"  style="min-width: 8rem;">Photo</th>
+                                <th style="width: 1rem;"></th>
                                 <th style="min-width: 8rem;">Chef de projet</th>
                                 <th style="min-width: 8rem;">J</th>
                                 <t t-foreach="Object.values(state.familles or {})" t-as="famille"  t-key="famille.ct">
@@ -106,9 +107,21 @@
                                             t-att-res_id="line.moule_id"
                                             t-att-res_model="line.res_model"
                                         /><br />
-                                        <span t-esc="line.designation"/></td>
+                                        <span t-esc="line.designation"/>
+                                    </td>
                                     <td  t-if="state.suivi_projet_avec_photo==='Oui'" >
                                         <img style='height:60px' t-att-src="line.photo"/>
+                                    </td>
+                                    <td>
+                                        <img 
+                                            src="/is_dynacase2odoo/static/src/img/date_projet.png" 
+                                            style="height:15px"
+                                            class="link"
+                                            t-on-click="ListeDocClick" 
+                                            t-att-res_id="line.moule_id"
+                                            t-att-res_model="line.res_model"
+                                        />
+
                                     </td>
                                     <td><span t-esc="line.cp"/></td>
                                     <td>

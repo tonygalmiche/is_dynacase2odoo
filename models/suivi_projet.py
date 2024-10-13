@@ -8,6 +8,8 @@ _logger = logging.getLogger(__name__)
 
 
 #TODO:
+#- Ne pas recherche l'objet doc pour chque ligne de la requete pour gagner 0.02s par docuement => Stocker les informations utilse direcement dans is_doc_moule avec des champs calculés
+#- Afficher la bonne vue liste en cliqant sur l'icone des outils et faire fonctonner avec les dossier f
 #- Pb syncro avec le champ 'Etat' des documents et les champs plasfil_rsp_date et plasfil_rsp_texte
 #- Manque la famille 'Dossier de Fab'
 #- Résoudre problème calcul note
@@ -319,3 +321,22 @@ class IsDocMoule(models.Model):
         return res
 
     
+    def get_doc_modele(self,res_model,res_id,modele_id):
+        famille_ids=[]
+        modele_bilan = self.env['is.modele.bilan'].browse(int(modele_id))
+        if modele_bilan:
+            famille_ids=modele_bilan.get_famille_ids()
+        domain=False
+        if res_model=='is.mold':
+            domain=[
+                ('idmoule','=',int(res_id)),
+                ('param_project_id','in',famille_ids),
+            ]
+        ids=[]
+        if domain:
+            docs=self.env['is.doc.moule'].search(domain)
+            for doc in docs:
+                ids.append(doc.id)
+
+
+        return {'ids':ids}

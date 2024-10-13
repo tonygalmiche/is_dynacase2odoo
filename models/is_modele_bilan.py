@@ -19,6 +19,14 @@ class IsModeleBilan(models.Model):
     dynacase_id = fields.Integer(string="Id Dynacase",index=True,copy=False)
 
 
+    def get_famille_ids(self):
+        for obj in self:
+            ids=[]
+            for line in obj.line_ids:
+                ids.append(line.param_project_id.id)
+            return ids
+
+
 class IsModeleBilanLine(models.Model):
     _name        = "is.modele.bilan.line"
     _description = "Lignes modèle bilan projet"
