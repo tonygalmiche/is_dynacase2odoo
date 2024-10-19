@@ -52,6 +52,11 @@
                                         <field name="rl_responsable_projetid" />
                                         <field name="rl_directeur_siteid" />
                                         <field name="rl_directeur_techniqueid" />
+                                        <button 
+                                            name="initialiser_responsable_doc_action" 
+                                            string="Initialiser les responsables des documents" 
+                                            type="object" colspan="2" class="btn-primary"
+                                        />
                                     </group>
                                     <group name="rl_fr_date_jalon" string="Dates des jalons">
                                         <field name="rl_date_j0" />
@@ -159,6 +164,15 @@
                     <field name="rl_responsable_projetid" optional="hide"/>
                     <field name="rl_directeur_siteid" optional="hide"/>
                     <field name="rl_directeur_techniqueid" optional="hide"/>
+
+                    <field name="rl_date_j0" optional="show" />
+                    <field name="rl_date_j1" optional="hide" />
+                    <field name="rl_date_j2" optional="hide" />
+                    <field name="rl_date_j3" optional="hide" />
+                    <field name="rl_date_j4" optional="hide" />
+                    <field name="rl_date_j5" optional="hide" />
+
+
                     <field name="dynacase_id" optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                 </tree>

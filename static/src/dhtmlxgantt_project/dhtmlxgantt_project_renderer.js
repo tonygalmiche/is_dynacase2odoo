@@ -3,7 +3,7 @@ import AbstractRendererOwl from 'web.AbstractRendererOwl';
 import QWeb from 'web.QWeb';
 import session from 'web.session';
 import utils from 'web.utils';
-
+const Dialog = require('web.Dialog');
 const { useState, onMounted, onPatched, onWillUnmount } = owl;
 var rpc = require('web.rpc');
 
@@ -514,6 +514,9 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             args: [[parseInt(item.res_id)], item.start_date, item.duration,this.state.lier,mode]
         }).then(function (result) {
             self.this.GetDocuments();
+        }, function () {
+                Dialog.alert(this, "Accès non autorisé");
+                self.this.GetDocuments();
         });
     }
 

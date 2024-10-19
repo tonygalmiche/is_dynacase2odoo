@@ -161,6 +161,10 @@ class IsGanttCopie(models.Model):
                                 'dependance_id'   : src_doc.dependance_id.id,
                             }
                             copie.write(vals)
+
+
+                            print(copie, vals)
+                            copie._compute_idproject_moule_dossierf()
                             src2dst[src_doc]=copie
 
                     #** Recherche des copies des dépendances ******************
@@ -180,3 +184,7 @@ class IsGanttCopie(models.Model):
                         #dst_doc.date_debut_gantt = obj.date_debut
                         #dst_doc.move_task_lier(delta)
                         break
+
+            if obj.type_document=='Moule':
+                if obj.dst_idmoule.revue_lancement_id:
+                    obj.dst_idmoule.revue_lancement_id.initialiser_responsable_doc_action()

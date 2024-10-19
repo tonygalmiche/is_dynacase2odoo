@@ -212,11 +212,6 @@ class is_revue_de_contrat(models.Model):
     dynacase_id = fields.Integer(string="Id Dynacase",index=True,copy=False)
 
 
-
-
-
-
-
     def name_get(self):
         result = []
         for obj in self:

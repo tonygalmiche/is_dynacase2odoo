@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
-from odoo.tools import format_date, formatLang, frozendict
+from odoo import models, fields, api, _                              # type: ignore
+from odoo.tools import format_date, formatLang, frozendict           # type: ignore
+from odoo.exceptions import AccessError, ValidationError, UserError  # type: ignore
 from datetime import datetime, timedelta, date
 from random import *
 from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J, TYPE_DOCUMENT
+
 
 
 class IsDocMoule(models.Model):
@@ -35,7 +37,7 @@ class IsDocMoule(models.Model):
                 title = str(record.param_project_id.ppr_famille or '')
                 color = str(record.param_project_id.ppr_color or '')
                 new_add = """
-                    <div height='60px' width='100%' style='padding: 10px;margin-bottom:20px;font-size:18px;background-color:"""+color+"""'>
+                    <div height='60px' width='100%' style='padding: 5px;margin-bottom:5px;font-size:18px;background-color:"""+color+"""'>
                         """+img+"""<span style='margin-left:5px;background-color:white'>"""+title+"""</span>
                     </div>
                 """
@@ -53,9 +55,22 @@ class IsDocMoule(models.Model):
             obj.moule_dossierf = moule_dossierf
             obj.client_id      = client_id
 
+            print('_compute_idproject_moule_dossierf',obj,idproject,client_id)
+
+
+    @api.depends('idmoule.j_actuelle', 'dossierf_id.j_actuelle')
+    def _compute_actuelle(self):
+        for obj in self:
+            actuelle=False
+            if obj.idmoule:
+                actuelle=obj.idmoule.j_actuelle
+            if obj.dossierf_id:
+                actuelle=obj.dossierf_id.j_actuelle
+            obj.actuelle = actuelle
+
 
     type_document = fields.Selection(TYPE_DOCUMENT,string="Type de document", default="Moule", required=True, tracking=True)
-    sequence = fields.Integer(string="Ordre", tracking=True)
+    sequence = fields.Integer(string="Ordre", tracking=True, copy=False)
     project_prev     = fields.Html(compute='_compute_project_prev', store=True)
     project_prev2    = fields.Html()
     param_project_id = fields.Many2one("is.param.project", string="Famille de document", tracking=True)
@@ -73,42 +88,139 @@ class IsDocMoule(models.Model):
     idcp             = fields.Many2one(related="idmoule.chef_projet_id", string="CP", tracking=True)
     idresp           = fields.Many2one("res.users", string="Responsable", tracking=True)
     j_prevue         = fields.Selection(GESTION_J, string="J Prévue", tracking=True)
-    actuelle         = fields.Selection(GESTION_J, string="J Actuelle", tracking=True)
+    actuelle         = fields.Selection(GESTION_J, string="J Actuelle", tracking=True, compute='_compute_actuelle',store=True, readonly=True)
     demande          = fields.Char(string="Demande", tracking=True)
     action           = fields.Selection([
         ("I", "Initialisation"),
         ("R", "Révision"),
         ("V", "Validation"),
-    ], string="Action", tracking=True)
-    bloquant         = fields.Boolean(string="Point Bloquant", tracking=True)
+    ], string="Action", compute='_compute_action', store=True, readonly=True, tracking=True, copy=False)
     etat             = fields.Selection([
         ("AF", "A Faire"),
         ("F", "Fait"),
         ("D", "Dérogé"),
-    ], string="État", tracking=True)
-    fin_derogation   = fields.Date(string="Date de fin de dérogation")
-    coefficient      = fields.Integer(string="Coefficient")
-    note             = fields.Integer(string="Note", tracking=True)
-    indicateur       = fields.Html(string="Indicateur")
-    datecreate       = fields.Date(string="Date de création", default=fields.Date.context_today)
-    dateend          = fields.Date(string="Date de fin", tracking=True)
-    array_ids        = fields.One2many("is.doc.moule.array", "is_doc_id", string="Pièce-jointe de réponse à la demande")
-    dynacase_id      = fields.Integer(string="Id Dynacase",index=True,copy=False)
+    ], string="État", compute='_compute_etat',store=True, readonly=False, tracking=True, copy=False)
+    fin_derogation      = fields.Date(string="Date de fin de dérogation")
+
+    coefficient         = fields.Integer(string="Coefficient"   , compute='_compute_coefficient_bloquant_note',store=True, readonly=True, tracking=True)
+    bloquant            = fields.Boolean(string="Point Bloquant", compute='_compute_coefficient_bloquant_note',store=True, readonly=True, tracking=True)
+    note                = fields.Integer(string="Note"          , compute='_compute_coefficient_bloquant_note',store=True, readonly=True, tracking=True)
+    indicateur          = fields.Html(string="Indicateur"       , compute='_compute_indicateur'               ,store=True, readonly=True)
+
+    datecreate          = fields.Date(string="Date de création", default=fields.Date.context_today)
+    dateend             = fields.Date(string="Date de fin", tracking=True)
+    array_ids           = fields.One2many("is.doc.moule.array", "is_doc_id", string="Pièce-jointe de réponse à la demande")
+    dynacase_id         = fields.Integer(string="Id Dynacase",index=True,copy=False)
     duree               = fields.Integer(string="Durée (J)"      , help="Durée en jours ouvrés"         , default=1, tracking=True)
     duree_gantt         = fields.Integer(string="Durée Gantt (J)", help="Durée calendaire pour le Gantt", default=1, tracking=True, readonly=True)
     duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
     date_debut_gantt    = fields.Date(string="Date début Gantt", default=lambda self: self._date_debut_gantt(), tracking=True)
     date_fin_gantt      = fields.Date(string="Date fin Gantt", readonly=True, tracking=True)
-    section_id          = fields.Many2one("is.section.gantt", string="Section Gantt",index=True, tracking=True)
+    section_id          = fields.Many2one("is.section.gantt", string="Section Gantt",index=True, tracking=True, copy=False)
     gantt_pdf           = fields.Boolean("Gantt PDF", default=True, help="Afficher dans Gantt PDF")
-    dependance_id       = fields.Many2one("is.doc.moule", string="Dépendance",index=True, tracking=True)
-    origine_copie_id    = fields.Many2one("is.doc.moule", string="Origine de la copie",index=True)
+    dependance_id       = fields.Many2one("is.doc.moule", string="Dépendance",index=True, tracking=True, copy=False)
+    origine_copie_id    = fields.Many2one("is.doc.moule", string="Origine de la copie",index=True, copy=False)
     active              = fields.Boolean('Actif', default=True, tracking=True)
     site_id             = fields.Many2one('is.database', "Site", compute='_compute_site_id', readonly=True, store=True)
     demao_nature        = fields.Char(string="Nature", compute='_compute_demao_nature'     , readonly=True, store=True)
     solde               = fields.Boolean(string="Soldé", compute='_compute_solde'          , readonly=True, store=True)
-    rsp_date            = fields.Date(string="Date réponse")
-    rsp_texte           = fields.Char(string="Réponse à la demande")
+    rsp_date            = fields.Date(string="Date réponse", copy=False)
+    rsp_texte           = fields.Char(string="Réponse à la demande", copy=False)
+    acces_chef_projet   = fields.Boolean(string="Accès chef de projet", compute='_compute_acces_chef_projet', readonly=True, store=False, help="Indique si les champs réservés au chef de projet sont modifiables")
+
+
+    @api.depends('param_project_id','j_prevue')
+    def _compute_action(self):
+        for obj in self:
+            action=False
+            if obj.j_prevue:
+                for line in obj.param_project_id.array_ids:
+                    if obj.j_prevue>=line.ppp_j:
+                        action=line.ppr_irv
+            obj.action=action
+
+
+    @api.depends('param_project_id','j_prevue','actuelle','etat','action')
+    def _compute_coefficient_bloquant_note(self):
+        for obj in self:
+            coefficients={'I':1,'R':3,'V':5}
+            note = coefficient = 0
+            bloquant = False
+            if obj.actuelle:
+                if not obj.j_prevue or obj.actuelle>=obj.j_prevue:
+                    for line in obj.param_project_id.array_ids:
+                        if obj.actuelle>=line.ppp_j:
+                            if line.ppr_irv:
+                                coefficient = coefficients[line.ppr_irv]
+                                if line.ppr_bloquant:
+                                    coefficient+=10
+                                    bloquant=True
+                    if obj.etat=='F':
+                        note = coefficient
+            obj.coefficient = coefficient
+            obj.bloquant    = bloquant
+            obj.note        = note
+
+
+    @api.depends('note','coefficient','etat','action','array_ids.annex','rsp_date','rsp_texte')
+    def _compute_indicateur(self):
+        for obj in self:
+            color = obj.get_doc_color()
+            ladate = '(date)'
+            if obj.dateend:
+                ladate = obj.dateend.strftime('%d/%m/%Y')
+            lanote = "%s/%s"%(obj.note,obj.coefficient)
+            reponses=obj.get_doc_reponse()
+            html="""
+                <div style='background-color:"""+color+"""'>
+                    <table style="border-collapse:collapse;width:100%">
+                        <tr>
+                            <td style="border:none;text-align:center;white-space:nowrap;" colspan="2">
+                                <span>"""+ladate+"""</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:50%;border:none;text-align:left;white-space:nowrap;padding-left:0.5rem">
+                                <span>"""+lanote+"""</span>
+                            </td>
+                            <td style="width:50%;border:none;text-align:right;white-space:nowrap;padding-right:0.5rem">
+            """
+            if reponses[0]:
+                html+='<img title="'+reponses[0]+'" src="/is_dynacase2odoo/static/src/img/tronbonne.gif"/>'
+            if reponses[1]:
+                html+='<span>'+reponses[1]+'</span>'
+            if reponses[2]:
+                html+='<img title="'+reponses[2]+'" src="/is_dynacase2odoo/static/src/img/pg_bulle.png"/>'
+            html+="""
+                            </td> 
+                        </tr>
+                    </table>
+                </div>
+            """
+            obj.indicateur = html
+
+
+    @api.depends('note','coefficient','etat','action','array_ids.annex','rsp_date','rsp_texte')
+    def _compute_etat(self):
+        for obj in self:
+            etat='AF'
+            reponses=obj.get_doc_reponse()
+            if reponses[0] or reponses[1] or reponses[2]:
+                etat='F'
+            if etat!='F':
+                if obj.etat=='D' and obj.fin_derogation:
+                    etat='D'
+            if etat=='F':
+                obj.fin_derogation=False
+            obj.etat=etat
+
+
+    def _compute_acces_chef_projet(self):
+        for obj in self:
+            acces=False
+            if self.env.user.has_group('is_plastigray16.is_chef_projet_group'):
+                acces=True
+            obj.acces_chef_projet = acces
 
 
     @api.depends('dossier_modif_variante_id.solde')
@@ -140,6 +252,40 @@ class IsDocMoule(models.Model):
             if obj.idmoule.is_database_id:
                 site_id = obj.idmoule.is_database_id.id
             obj.site_id = site_id
+
+
+    def write(self,vals):
+        res=super(IsDocMoule, self).write(vals)
+        if 'etat' in vals:
+            if vals['etat']=='F':
+                reponses=self.get_doc_reponse()
+                if not reponses[0] and not reponses[1] and not reponses[2]:
+                    raise ValidationError("Impossbile de passer à l'état 'Fait' car aucune réponse n'est fournie !")
+        if not self.acces_chef_projet:
+            champs_interdit=[
+                'section_id',
+                'param_project_id',
+                'idresp',
+                'dateend',
+                'date_debut_gantt',
+                'duree',
+                'j_prevue',
+                'demande',
+                'action',
+                'bloquant',
+                'type_document',
+                'sequence',
+                'idcp',
+                'gantt_pdf',
+            ]
+            msg=[]
+            for key in vals:
+                if key in champs_interdit:
+                    champ = self._fields[key].string
+                    msg.append("- %s"%champ)
+            if len(msg)>0:
+                raise ValidationError("Modification non autorisée pour les champs :\n%s"%'\n'.join(msg))
+        return res
 
 
     def name_get(self):
@@ -536,6 +682,7 @@ class IsDocMoule(models.Model):
                 }
                 links.append(vals)
         #**********************************************************************
+
 
         return {
             "items"             : res, 

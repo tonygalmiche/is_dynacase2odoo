@@ -6,5 +6,10 @@
         <field name="comment"></field>
         <field name="category_id" ref="is_plastigray16.is_groupe_plastigray_module_category"/>
     </record>
+    <record model="res.groups" id="is_membre_equipe_projet_group" >
+        <field name="name">Membres équipe projet</field>
+        <field name="comment"></field>
+        <field name="category_id" ref="is_plastigray16.is_groupe_plastigray_module_category"/>
+    </record>
 </data>
 </openerp>

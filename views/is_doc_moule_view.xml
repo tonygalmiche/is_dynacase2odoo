@@ -7,6 +7,20 @@
             <field name="priority" eval="1" />
             <field name="arch" type="xml">
                 <form string="Document moule">
+                    <STYLE>
+                        .o_form_view .o_field_widget {
+                            margin-bottom: 0px;
+                        }
+                        .o_form_view .o_form_sheet_bg > .o_form_sheet {
+                            margin-top: 5px;
+                        }
+                        .mb-3 {
+                            margin-bottom: 0.5rem !important;
+                        }
+                        .mt-4 {
+                            margin-top: 0.5rem !important;
+                        }
+                    </STYLE>
                     <header>
                         <field name="dynacase_id" invisible="1"/>
                         <button 
@@ -19,78 +33,73 @@
                         <field name="active" invisible="1"/> 
                         <field name="project_prev" widget="html"/>
                         <group>
-                            <group string="Caractéristiques" name="caracteristiques">
-                                <field name="section_id"/>
-                                <field name="sequence"/>
-                                <field name="type_document" is_widget="background_color" options="[{'value':'Moule','color':'red'},{'value':'Article','color':'green'},{'value':'Dossier F','color':'orange'}]"/>
-                                <field name="idmoule"                   attrs="{'invisible': [('type_document', '!=', 'Moule')]                 , 'required': [('type_document', '=', 'Moule')]}"/>
-                                <field name="dossierf_id"               attrs="{'invisible': [('type_document', '!=', 'Dossier F')]             , 'required': [('type_document', '=', 'Dossier F')]}"/>
-                                <field name="dossier_article_id"        attrs="{'invisible': [('type_document', '!=', 'Article')]               , 'required': [('type_document', '=', 'Article')]}" />
-                                <field name="dossier_modif_variante_id" attrs="{'invisible': [('type_document', '!=', 'Dossier Modif Variante')], 'required': [('type_document', '=', 'Dossier Modif Variante')]}"/>
-                                <field name="dossier_appel_offre_id"    attrs="{'invisible': [('type_document', '!=', 'dossier_appel_offre')]   , 'required': [('type_document', '=', 'dossier_appel_offre')]}"/>
-                                <field name="moule_dossierf"  attrs="{'invisible': [('moule_dossierf', '=', False)]}" />
-                                <field name="param_project_id" />
-                                <field name="ppr_type_demande" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
+                            <group>
+                                <field name="section_id" attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
+                                <field name="idmoule"                   attrs="{'invisible': [('type_document', '!=', 'Moule')]                 , 'required': [('type_document', '=', 'Moule')]                 , 'readonly': [('acces_chef_projet', '=', False)]}"/>
+                                <field name="dossierf_id"               attrs="{'invisible': [('type_document', '!=', 'Dossier F')]             , 'required': [('type_document', '=', 'Dossier F')]             , 'readonly': [('acces_chef_projet', '=', False)]}"/>
+                                <field name="dossier_article_id"        attrs="{'invisible': [('type_document', '!=', 'Article')]               , 'required': [('type_document', '=', 'Article')]               , 'readonly': [('acces_chef_projet', '=', False)]}" />
+                                <field name="dossier_modif_variante_id" attrs="{'invisible': [('type_document', '!=', 'Dossier Modif Variante')], 'required': [('type_document', '=', 'Dossier Modif Variante')], 'readonly': [('acces_chef_projet', '=', False)]}"/>
+                                <field name="dossier_appel_offre_id"    attrs="{'invisible': [('type_document', '!=', 'dossier_appel_offre')]   , 'required': [('type_document', '=', 'dossier_appel_offre')]   , 'readonly': [('acces_chef_projet', '=', False)]}"/>
+                                <field name="moule_dossierf"            attrs="{'invisible': ['|',('idmoule', '!=', False),('dossierf_id', '!=', False)]}" />
+                                <field name="param_project_id"          attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
+                                <field name="idresp"                    attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
+                                <field name="dateend"                   attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
+                                <field name="date_debut_gantt"          attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
+                                <field name="duree"                     attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
+                                <field name="duree_gantt"               readonly="1" force_save="1"/>
+                                <field name="date_fin_gantt"            readonly="1" force_save="1"/>
+                            </group>
+                            <group>
                                 <field name="idproject" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
                                 <field name="client_id" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
-                                <field name="idcp"      attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
-                                <field name="idresp" />
-                                <field name="site_id" />
-                            </group>
-                            <group string="Gestion des J" name="PLASFIL_FR_J">
-                                <field name="j_prevue"/>
-                                <field name="actuelle" readonly="1"/>
-                                <field name="demande"/>
+                                <field name="j_prevue"  attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
+                                <field name="actuelle"  readonly="1"/>
+                                <field name="demande"   attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
                                 <field name="action" is_widget="background_color"/>
-                                <field name="bloquant"  readonly="1"/>
-                                <field name="etat" is_widget="background_color" options="[{'value':'AF','color':'red'},{'value':'F','color':'green'},{'value':'D','color':'orange'}]"/>
-                                <field name="fin_derogation"  readonly="1"/>
-                                <field name="coefficient"  readonly="1"/>
-                                <field name="note" readonly="1" />
+                                <field name="etat" is_widget="background_color" options="[{'value':'AF','color':'red'},{'value':'F','color':'SpringGreen'},{'value':'D','color':'orange'}]"/>
+                                <field name="fin_derogation" attrs="{'invisible': [('etat', '!=', 'D')], 'required': [('etat', '=', 'D')]}"/>
                                 <field name="indicateur"  readonly="1"/>
                             </group>
                         </group>
-                        <group>
-                            <group string="Dates"  name="PLASFIL_FR_DATE">
-                                <field name="datecreate"  readonly="1"/>
-                                <field name="dateend"/>
-                            </group>
-                            <group string="Gantt">
-                                <field name="duree_attente_avant"/>
-                                <field name="date_debut_gantt"/>
-                                <field name="duree"/>
-                                <field name="duree_gantt"    force_save="1"/>
-                                <field name="date_fin_gantt" force_save="1"/>
-                                <!-- 
-                                <field name="dependance_idmoule"                   domain="[('idmoule','=',idmoule)]"                                     attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
-                                <field name="dependance_dossierf_id"               domain="[('dossierf_id','=',dossierf_id)]"                             attrs="{'invisible': [('type_document', '!=', 'Dossier F')]}" />
-                                <field name="dependance_dossier_article_id"        domain="[('dossier_article_id','=',dossier_article_id)]"               attrs="{'invisible': [('type_document', '!=', 'Article')]}" />
-                                <field name="dependance_dossier_modif_variante_id" domain="[('dossier_modif_variante_id','=',dossier_modif_variante_id)]" attrs="{'invisible': [('type_document', '!=', 'Dossier Modif Variante')]}" />
-                                <field name="dependance_dossier_appel_offre_id"    domain="[('dossier_appel_offre_id','=',dossier_appel_offre_id)]"       attrs="{'invisible': [('type_document', '!=', 'dossier_appel_offre')]}" /> 
-                                <field name="dependance_id" readonly="1" force_save="1"/> 
-                                -->
-                                <field name="gantt_pdf"/>
-                            </group>
-                        </group>
-                        <group string="Réponse à la demande" name="PLASFIL_FR_ANNEX">
-                            <field name="array_ids" nolabel="1" colspan="2" attrs="{'invisible': [('ppr_type_demande', 'not in', ['PJ', 'PJ_TEXTE', 'PJ_DATE'] )] }">
-                                <tree editable="bottom">
-                                    <field name="lig"         optional="hide"/>
-                                    <field name="annex_pdf"   optional="hide" widget="many2many_binary"/>
-                                    <field name="annex"                       widget="many2many_binary"/>
-                                    <field name="demandmodif" optional="hide"/>
-                                    <field name="maj_amdec"   optional="hide"/>
-                                    <field name="comment"     optional="hide" widget="text"/>
-                                    <!-- <field name="rsp_date" attrs="{'column_invisible': [('parent.ppr_type_demande', 'not in', ['DATE', 'PJ_DATE'])]}"/> -->
-                                    <!-- <field name="rsp_texte" attrs="{'column_invisible': [('parent.ppr_type_demande', 'not in', ['TEXTE'])]}"/> -->
-                                </tree>
-                            </field>
-                            <field name="rsp_date"  attrs="{'invisible': [('ppr_type_demande', 'not in', ['DATE', 'PJ_DATE'])]}"/>
-                            <field name="rsp_texte" attrs="{'invisible': [('ppr_type_demande', 'not in', ['TEXTE','PJ_TEXTE'])]}"/>
-                        </group>
-                        <group>
-                            <field name="dynacase_id" readonly="1"/>
-                        </group>
+                        <notebook>
+                            <page string="Réponse à la demande">
+                                <group>
+                                    <field name="array_ids" nolabel="1" colspan="2" attrs="{'invisible': [('ppr_type_demande', 'not in', ['PJ', 'PJ_TEXTE', 'PJ_DATE'] )] }">
+                                        <tree editable="bottom">
+                                            <field name="lig"         optional="hide"/>
+                                            <field name="annex_pdf"   optional="show" widget="many2many_binary" readonly="1"/>
+                                            <field name="annex"                       widget="many2many_binary"/>
+                                            <field name="demandmodif" optional="hide"/>
+                                            <field name="maj_amdec"   optional="hide"/>
+                                            <field name="comment"     optional="hide" widget="text"/>
+                                        </tree>
+                                    </field>
+                                    <field name="rsp_date"  attrs="{'invisible': [('ppr_type_demande', 'not in', ['DATE', 'PJ_DATE'])]}"/>
+                                    <field name="rsp_texte" attrs="{'invisible': [('ppr_type_demande', 'not in', ['TEXTE','PJ_TEXTE'])]}"/>
+                                </group>
+        
+                            </page>
+                            <page string="Autres informations">
+                                <group>
+                                    <group>
+                                        <field name="datecreate"       readonly="1"/>
+                                        <field name="type_document"    attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
+                                        <field name="sequence"         attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
+                                        <field name="ppr_type_demande" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
+                                        <field name="idcp"             attrs="{'readonly': [('acces_chef_projet', '=', False)],'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
+                                        <field name="acces_chef_projet"/>
+                                    </group>
+                                    <group>
+                                        <field name="coefficient"/>
+                                        <field name="bloquant"/>
+                                        <field name="note"/>
+                                        <field name="site_id" />
+                                        <field name="gantt_pdf"        attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
+                                        <field name="dynacase_id"      readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
@@ -192,6 +201,7 @@
                     <field name="client_id" optional="show"         widget="many2one_clickable"/>
                     <field name="idcp" optional="show"/>
                     <field name="idresp" optional="show" />
+                    <field name="j_prevue" optional="show"/>
                     <field name="actuelle" optional="show" />
                     <field name="demande" optional="show" />
                     <field name="action"  optional="show"/>
@@ -387,6 +397,7 @@
                     <field name="client_id"           optional="show"         widget="many2one_clickable"/>
                     <field name="idcp"                optional="hide"/>
                     <field name="idresp"              optional="show" />
+                    <field name="j_prevue"            optional="show"/>
                     <field name="actuelle"            optional="hide" />
                     <field name="demande"             optional="show" />
                     <field name="action"              optional="show"/>
@@ -443,6 +454,7 @@
                     <field name="client_id" optional="show"         widget="many2one_clickable"/>
                     <field name="idcp" optional="show"/>
                     <field name="idresp" optional="show" />
+                    <field name="j_prevue" optional="show"/>
                     <field name="actuelle" optional="show" />
                     <field name="demande" optional="show" />
                     <field name="action"  optional="show"/>
@@ -537,6 +549,7 @@
                     <field name="client_id"           optional="show"         widget="many2one_clickable"/>
                     <field name="idcp"                optional="hide"/>
                     <field name="idresp"              optional="show" />
+                    <field name="j_prevue"            optional="show"/>
                     <field name="actuelle"            optional="hide" />
                     <field name="demande"             optional="show" />
                     <field name="action"              optional="show"/>
@@ -591,6 +604,7 @@
                     <field name="client_id"           optional="show"         widget="many2one_clickable"/>
                     <field name="idcp"                optional="hide"/>
                     <field name="idresp"              optional="show" />
+                    <field name="j_prevue"            optional="hide"/>
                     <field name="actuelle"            optional="hide" />
                     <field name="demande"             optional="show" />
                     <field name="action"              optional="hide"/>

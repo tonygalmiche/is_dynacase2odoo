@@ -118,7 +118,6 @@ class IsParamProject(models.Model):
         ("rl_be17",  "BE17 : Essai injection"),
     ], string="Revue de lancement")
     ppr_moule_hors_auto = fields.Boolean(string="Famille pour moule hors automobile")
-    array_ids           = fields.One2many('is.param.project.array', 'param_project_id')
     ppr_project_colors  = fields.Serialized()
     ppr_color           = fields.Char("Color", sparse="ppr_project_colors")
     dynacase_id         = fields.Integer(string="Id Dynacase"     ,index=True,copy=False)
@@ -126,6 +125,22 @@ class IsParamProject(models.Model):
     duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
     dependance_id       = fields.Many2one("is.param.project", string="Dépendance")
     gantt_pdf           = fields.Boolean("Gantt PDF", default=True, help="Afficher dans Gantt PDF")
+    array_ids           = fields.One2many('is.param.project.array', 'param_project_id')
+    array_html          = fields.Html(string="Gestion des J", compute='_compute_array_html',store=True, readonly=True)
+
+
+    @api.depends('array_ids','array_ids.ppr_irv','array_ids.ppr_bloquant')
+    def _compute_array_html(self):
+        for obj in self:
+            html='<table style="width:120px">'
+            for line in obj.array_ids:
+                bloquant=''
+                if line.ppr_bloquant:
+                    bloquant='Bloquant'
+                html+='<tr><td style="width:25%%">%s</td><td style="width:25%%">%s</td><td style="width:50%%">%s</td></tr>'%(line.ppp_j,line.ppr_irv or '',bloquant)
+
+            html+='</table>'
+            obj.array_html = html
 
 
     def creer_css_action(self):

@@ -3,6 +3,22 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
 
+_RESPONSABLES={
+    '1' : 'rl_commercial2id',
+    '2' : 'rl_chef_projetid',
+    '3' : 'rl_responsable_outillageid',
+    '4' : 'rl_expert_injectionid',
+    '5' : 'rl_methode_injectionid',
+    '6' : 'rl_methode_assemblageid',
+    '7' : 'rl_qualite_devid',
+    '8' : 'rl_qualite_usineid',
+    '9' : 'rl_logistiqueid',
+    '10': 'rl_logistique_usineid',
+    '11': 'rl_achatsid',
+    '12': 'rl_responsable_projetid',
+}
+
+
 class is_revue_lancement(models.Model):
     _name        = "is.revue.lancement"
     _inherit = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
@@ -149,3 +165,21 @@ class is_revue_lancement(models.Model):
             }
             
             
+    def initialiser_responsable_doc_action(self):
+        for obj in self:
+            moule_id    = obj.rl_num_rcid.rc_mouleid.id
+            dossierf_id = obj.rl_num_rcid.rc_dossierfid.id
+            if moule_id:
+                domain=[('idmoule', '=', moule_id)]
+            if dossierf_id:
+                domain=[('dossierf_id', '=', dossierf_id)]
+            docs = self.env['is.doc.moule'].search(domain)
+            for doc in docs:
+                ppr_responsable = doc.param_project_id.ppr_responsable
+                if ppr_responsable:
+                    responsable = _RESPONSABLES.get(ppr_responsable)          
+                    if hasattr(obj, responsable):
+                        user = getattr(obj,responsable)
+                        if user:
+                            doc.idresp = user.id
+
