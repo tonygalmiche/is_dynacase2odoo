@@ -169,6 +169,7 @@ class IsDocMoule(models.Model):
                     im.j_actuelle        j_actuelle,
                     im.j_avancement      j_avancement,
                     idm.dateend          dateend,
+                    idm.coefficient      coefficient,
                     idm.note             note,
                     idm.etat             etat,
                     idm.dynacase_id      dynacase_id,
@@ -216,6 +217,7 @@ class IsDocMoule(models.Model):
                     im.j_actuelle        j_actuelle,
                     im.j_avancement      j_avancement,
                     idm.dateend          dateend,
+                    idm.coefficient      coefficient,
                     idm.note             note,
                     idm.etat             etat,
                     idm.dynacase_id      dynacase_id,
@@ -300,26 +302,20 @@ class IsDocMoule(models.Model):
                             dateend='(date)'
                             if row['dateend']:
                                 dateend=row['dateend'].strftime("%d/%m/%Y")
-                            #** style *****************************************
-                            #color=doc.get_doc_color()
-                            color=row['color']
-                            style='background-color:%s'%color
-                            #** note_indicateur *******************************
-                            #note = doc.get_doc_note()
-                            note = row['note'] or 0
-                            coefficient=note
-                            if row['etat']!='F':
-                                note=0
-                            note_indicateur = "%s/%s"%(note,coefficient)
-                            #** reponnse **************************************
-                            #reponse = doc.get_doc_reponse()
-                            reponse=[row['rsp_pj'],row['rsp_date'],row['rsp_texte']]
+                            color       = row['color']
+                            coefficient = row['coefficient'] or 0
+                            note        = row['note'] or 0
+                            rsp_date    = row['rsp_date']
+                            if rsp_date:
+                                rsp_date=rsp_date.strftime("%d/%m/%y")
+                            reponse=[row['rsp_pj'],rsp_date,row['rsp_texte']]
                             vals={
                                 'doc_id'     : doc_id,
                                 'etat'       : row['etat'],
                                 'dateend'    : dateend,
-                                'note'       : note_indicateur,
-                                'style'      : style,
+                                'coefficient': coefficient,
+                                'note'       : note,
+                                'style'      : 'background-color:%s'%color,
                                 'dynacase_id': row['dynacase_id'],
                                 'reponse'    : reponse,
                             }

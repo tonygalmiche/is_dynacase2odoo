@@ -88,7 +88,7 @@ class SuiviProjet extends Component {
         const res_id    = ev.target.attributes.res_id.value;
         this.action.doAction({
             type: 'ir.actions.act_window',
-            target: 'new',
+            //target: 'new',
             res_id: parseInt(res_id),
             res_model: 'is.doc.moule',
             views: [[false, 'form']],
@@ -98,7 +98,7 @@ class SuiviProjet extends Component {
         const projet_id    = ev.target.attributes.projet_id.value;
         this.action.doAction({
             type: 'ir.actions.act_window',
-            target: 'new',
+            //target: 'new',
             res_id: parseInt(projet_id),
             res_model: 'is.mold.project',
             views: [[false, 'form']],
@@ -110,7 +110,7 @@ class SuiviProjet extends Component {
         console.log(res_model, res_id)
         this.action.doAction({
             type: 'ir.actions.act_window',
-            target: 'new',
+            //target: 'new',
             res_id: parseInt(res_id),
             res_model: res_model,
             views: [[false, 'form']],
