@@ -1,6 +1,7 @@
 from odoo import models, fields, api, _
-from odoo.addons.is_dynacase2odoo.models.is_param_project import TYPE_DOCUMENT
+from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J, TYPE_DOCUMENT, MODELE_TO_TYPE, TYPE_TO_FIELD
 from datetime import datetime, timedelta
+import pytz
 import calendar
 from random import *
 import base64
@@ -49,8 +50,6 @@ class IsGanttPdf(models.Model):
     section_ids = fields.One2many('is.gantt.pdf.section', 'gantt_pdf_id')
 
 
-
-
     @api.onchange('type_document','moule_id','dossierf_id','dossier_modif_variante_id','dossier_article_id','dossier_appel_offre_id')
     def onchange_moule(self):
         for obj in self:
@@ -93,6 +92,31 @@ class IsGanttPdf(models.Model):
             obj.name = name
 
 
+    def get_gantt_pdf_id(self,dossier_model,dossier_id):
+        type_document = dict(MODELE_TO_TYPE).get(dossier_model)
+        field_id      = dict(TYPE_TO_FIELD).get(type_document)
+        if field_id=='idmoule':
+            field_id='moule_id'
+        domain=[
+            ('create_uid'   ,'=', self.env.user.id),
+            ('type_document','=', type_document),
+            (field_id       ,'=', dossier_id),
+        ]
+        gantt_pdf_id=False
+        for obj in self:
+            lines=self.env['is.gantt.pdf'].search(domain, limit=1) #, order="dateend"
+            for line in lines:
+                gantt_pdf_id = line.id
+            if not gantt_pdf_id:
+                vals={
+                    'type_document': type_document,
+                    field_id       : dossier_id,
+                }
+                gantt_pdf = self.env['is.gantt.pdf'].create(vals)
+                gantt_pdf_id = gantt_pdf.id
+        return gantt_pdf_id
+
+
     def get_taches(self, section_ids=False,gantt_pdf=False):
         "Recherche des tâches en fonction des paramètres"
         for obj in self:
@@ -106,12 +130,17 @@ class IsGanttPdf(models.Model):
             if obj.type_document=="Moule" and obj.moule_id:
                 domain.append(('idmoule','=',obj.moule_id.id))
                 titre="%s - %s"%(obj.moule_id.name,obj.moule_id.designation)
+            if obj.type_document=="Dossier F" and obj.dossierf_id:
+                domain.append(('dossierf_id','=',obj.dossierf_id.id))
+                titre="%s - %s"%(obj.dossierf_id.name,obj.dossierf_id.designation)
             if obj.type_document=="dossier_appel_offre" and obj.dossier_appel_offre_id:
                 domain.append(('dossier_appel_offre_id','=',obj.dossier_appel_offre_id.id))
                 titre=obj.dossier_appel_offre_id.dao_num
             if obj.type_document=="Dossier Modif Variante" and obj.dossier_modif_variante_id:
                 domain.append(('dossier_modif_variante_id','=',obj.dossier_modif_variante_id.id))
                 titre=obj.dossier_modif_variante_id.demao_num
+            now = datetime.now(pytz.timezone('Europe/Paris')).strftime('%d/%m/%y %H:%M')
+            titre="%s du %s"%(titre,now)
             if domain!=[]:
                 res=self.env['is.doc.moule'].get_dhtmlx(domain=domain)
                 items = res['items']

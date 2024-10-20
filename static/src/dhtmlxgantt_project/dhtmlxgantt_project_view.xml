@@ -4,7 +4,7 @@
         <div class="buttons">
             <table>
                 <tr>
-                    <td><button class="btn btn-info" t-on-click="RafraichirClick"  title="Rafraichir">        <i class="fa fa-refresh"/></button></td>        
+                     <td><button class="btn btn-info" t-on-click="RafraichirClick"  title="Rafraichir">        <i class="fa fa-refresh"/></button></td>        
                     <td><button class="btn btn-info" t-on-click="FullscreenClick"  title="Plein écran">       <i class="fa fa-arrows-alt"/></button></td>        
                     <td><button class="btn btn-info" t-on-click="OpenTreeClick"    title="Ouvrir les niveaux"><i class="fa fa-expand"/></button></td>        
                     <td><button class="btn btn-info" t-on-click="CloseTreeClick"   title="Fermer les niveaux"><i class="fa fa-compress"/></button></td>        
@@ -19,6 +19,15 @@
                     <td><button class="btn btn-info" t-on-click="GotoJ4Click" >J4</button></td>
                     <td><button class="btn btn-info" t-on-click="GotoJ5Click" >J5</button></td>
                     <td>Lier : <input class="form-check-input" type="checkbox" value="lier" t-att-checked="state.lier"  id="flexCheckChecked" t-on-change="LierClick"/></td>
+                    <td>
+                        <img 
+                            src="/is_dynacase2odoo/static/src/img/pdf.png" 
+                            style="height:22px;margin-left:30px"
+                            class="link"
+                            t-on-click="PDFClick" 
+                            title="Générer le PDF du Gantt"
+                        />
+                    </td>
                 </tr>
             </table>
         </div>

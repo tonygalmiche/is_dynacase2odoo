@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
-from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J
+from odoo import models, fields, api, _                                    # type: ignore
+from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J # type: ignore
 from datetime import datetime, timedelta, date
 import copy
 import logging
@@ -18,7 +18,7 @@ _logger = logging.getLogger(__name__)
 
 
 class IsDocMoule(models.Model):
-    _inherit        = "is.doc.moule"
+    _inherit = "is.doc.moule"
 
 
     def get_suivi_projet(
@@ -165,7 +165,17 @@ class IsDocMoule(models.Model):
                     imp.client_id        client_id,
                     ipp.ppr_famille      famille,
                     ipp.id               famille_id,
-                    idm.etat             etat
+                    idm.etat             etat,
+                    im.j_actuelle        j_actuelle,
+                    im.j_avancement      j_avancement,
+                    idm.dateend          dateend,
+                    idm.note             note,
+                    idm.etat             etat,
+                    idm.dynacase_id      dynacase_id,
+                    idm.rsp_pj           rsp_pj,
+                    idm.rsp_date         rsp_date,
+                    idm.rsp_texte        rsp_texte,
+                    idm.color            color
                 from is_doc_moule idm inner join is_mold im         on idm.idmoule=im.id
                                     inner join is_mold_project imp  on im.project=imp.id
                                     inner join res_users ru         on imp.chef_projet_id=ru.id
@@ -202,7 +212,17 @@ class IsDocMoule(models.Model):
                     imp.client_id        client_id,
                     ipp.ppr_famille      famille,
                     ipp.id               famille_id,
-                    idm.etat             etat
+                    idm.etat             etat,
+                    im.j_actuelle        j_actuelle,
+                    im.j_avancement      j_avancement,
+                    idm.dateend          dateend,
+                    idm.note             note,
+                    idm.etat             etat,
+                    idm.dynacase_id      dynacase_id,
+                    idm.rsp_pj           rsp_pj,
+                    idm.rsp_date         rsp_date,
+                    idm.rsp_texte        rsp_texte,
+                    idm.color            color
                 from is_doc_moule idm inner join is_dossierf im     on idm.dossierf_id=im.id
                                     inner join is_mold_project imp  on im.project=imp.id
                                     inner join res_users ru         on imp.chef_projet_id=ru.id
@@ -225,28 +245,39 @@ class IsDocMoule(models.Model):
             _logger.info("Requête SQL (nb doc=%s) (durée=%.2fs)"%(len(rows),(datetime.now()-debut).total_seconds())) # 0.02s par document
 
             for row in rows:
+                doc=False
                 doc_id = row['id']
-                doc = self.env['is.doc.moule'].browse(doc_id)
-                if doc:
+                #doc = self.env['is.doc.moule'].browse(doc_id)
+                if doc_id:
                     key="%s-%s"%(row['moule'],row['moule_id'])
                     if key not in mydict:
                         #** Recherche photo du moule **************************
                         photo=''
                         if avec_photo=='Oui':
-                            if doc.idmoule:
+                            doc = self.env['is.doc.moule'].browse(doc_id)
+                            if doc and doc.idmoule:
                                 image = doc.idmoule.image
                                 if image and image!='':
                                     photo = 'data:image/png;base64, %s'%image.decode("utf-8")
                         #** avancement_j **************************************
                         avancement_j=[False,False]
-                        if doc.idmoule:
-                            if doc.idmoule.j_actuelle:
-                                j_actuelle = dict(GESTION_J).get(doc.idmoule.j_actuelle,"?")
-                                avancement_j=[j_actuelle, doc.idmoule.j_avancement]
-                        if doc.dossierf_id:
-                            if doc.dossierf_id.j_actuelle:
-                                j_actuelle = dict(GESTION_J).get(doc.dossierf_id.j_actuelle,"?")
-                                avancement_j=[j_actuelle, doc.dossierf_id.j_avancement]
+                        # if doc.idmoule:
+                        #     if doc.idmoule.j_actuelle:
+                        #         j_actuelle = dict(GESTION_J).get(doc.idmoule.j_actuelle,"?")
+                        #         avancement_j=[j_actuelle, doc.idmoule.j_avancement]
+                        # if doc.dossierf_id:
+                        #     if doc.dossierf_id.j_actuelle:
+                        #         j_actuelle = dict(GESTION_J).get(doc.dossierf_id.j_actuelle,"?")
+                        #         avancement_j=[j_actuelle, doc.dossierf_id.j_avancement]
+
+                        if row['res_model']=='is.mold':
+                            if row['j_actuelle']:
+                                j_actuelle = dict(GESTION_J).get(row['j_actuelle'],"?")
+                                avancement_j=[j_actuelle, row['j_avancement']]
+                        if row['res_model']=='is.dossierf':
+                            if row['j_actuelle']:
+                                j_actuelle = dict(GESTION_J).get(row['j_actuelle'],"?")
+                                avancement_j=[j_actuelle, row['j_avancement']]
                         vals={
                             'key'         : key,
                             'res_model'   : row['res_model'],
@@ -266,27 +297,30 @@ class IsDocMoule(models.Model):
                         famille_id = mydict[key]['familles'][famille]['id']
                         if row['famille_id']==famille_id:
                             #** dateend ***************************************
-                            dateend='??'
-                            if doc.dateend:
-                                dateend=doc.dateend.strftime("%d/%m/%Y")
+                            dateend='(date)'
+                            if row['dateend']:
+                                dateend=row['dateend'].strftime("%d/%m/%Y")
                             #** style *****************************************
-                            color=doc.get_doc_color()
+                            #color=doc.get_doc_color()
+                            color=row['color']
                             style='background-color:%s'%color
                             #** note_indicateur *******************************
-                            note = doc.get_doc_note()
+                            #note = doc.get_doc_note()
+                            note = row['note'] or 0
                             coefficient=note
-                            if doc.etat!='F':
+                            if row['etat']!='F':
                                 note=0
                             note_indicateur = "%s/%s"%(note,coefficient)
                             #** reponnse **************************************
-                            reponse = doc.get_doc_reponse()
+                            #reponse = doc.get_doc_reponse()
+                            reponse=[row['rsp_pj'],row['rsp_date'],row['rsp_texte']]
                             vals={
-                                'doc_id'     : doc.id,
-                                'etat'       : doc.etat,
+                                'doc_id'     : doc_id,
+                                'etat'       : row['etat'],
                                 'dateend'    : dateend,
                                 'note'       : note_indicateur,
                                 'style'      : style,
-                                'dynacase_id': doc.dynacase_id,
+                                'dynacase_id': row['dynacase_id'],
                                 'reponse'    : reponse,
                             }
                             mydict[key]['familles'][famille].update(vals)
@@ -337,6 +371,4 @@ class IsDocMoule(models.Model):
             docs=self.env['is.doc.moule'].search(domain)
             for doc in docs:
                 ids.append(doc.id)
-
-
         return {'ids':ids}

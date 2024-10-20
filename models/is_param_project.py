@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, tools
+from odoo import models, fields, api, tools # type: ignore
 
 TYPE_DOCUMENT=[
     ("Moule"                 , "Moule"),
@@ -7,6 +7,15 @@ TYPE_DOCUMENT=[
     ("Article"               , "Article"),
     ("Dossier Modif Variante", "Dossier Modif Variante"),
     ("dossier_appel_offre"   , "Dossier appel d'offre"),
+]
+
+
+MODELE_TO_TYPE=[
+    ("is.mold"                  , "Moule"),
+    ("is.dossierf"              , "Dossier F"),
+    ("is.dossier.article"       , "Article"),
+    ("is.dossier.modif.variante", "Dossier Modif Variante"),
+    ("is.dossier.appel.offre"   , "dossier_appel_offre"),
 ]
 
 
@@ -184,8 +193,8 @@ class IsParamProjectArray(models.Model):
         ("I", "Initialisation"),
         ("R", "Révision"),
         ("V", "Validation"),
-    ])
-    ppr_bloquant     = fields.Boolean(string="Action")
-    param_project_id = fields.Many2one("is.param.project", string="Point bloquant")
+    ], string="Action")
+    ppr_bloquant     = fields.Boolean(string="Bloquant")
+    param_project_id = fields.Many2one("is.param.project", string="Famille")
 
 

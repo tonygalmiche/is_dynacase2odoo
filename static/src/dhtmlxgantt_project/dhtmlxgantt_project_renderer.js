@@ -14,8 +14,10 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         this.qweb.add_template(utils.json_node_to_xml(this.props.templates));
         //this.orm = useService("orm");
         this.state = useState({
-            dict: {},
-            lier: false,
+            dict         : {},
+            lier         : false,
+            dossier_id   : false,
+            dossier_model: false,
         });
         this.ActivePatched=true;
         onMounted(() => this._mounted());
@@ -102,11 +104,23 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         // ];
 
 
+
+        // Ajouter dans le tableau du Gantt le champ « Action » => I, R, V
+        // => Enlever la colonne « Durée » du  Gantt
+        // => Ajouter les responsable => Première lettre du nom et du prénom
+
+
         //** Configuration des colonnes des tâches
         this.gantt.config.columns = [
             {name: "text"      , label: "Tâche", tree: true , width: "*"},
             {name: "start_date", label: "Début", tree: false, width: 80, align:"center" },
-            {name: "duration"  , label: "Durée", tree: false, width: 50, align:"center" },
+
+            {name: "irv"      , label: "IRV", tree: false, width: 30, align:"center" },
+            {name: "initiales", label: "Rsp", tree: false, width: 30, align:"center" },
+
+
+
+            //{name: "duration"  , label: "Durée", tree: false, width: 50, align:"center" },
             // {name: "start_date", label: "Début", tree: true, width: 160},
             // {
             //     name: "progress", label: "%", width: 80, align: "center",
@@ -248,6 +262,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                     "<tr style='background:#e5e8e8'><th style='text-align:right;font-weight: bold;'>Tâche      : </th><td>"+task.text+"</td></tr>"+
                     "<tr>                           <th style='text-align:right;font-weight: bold;'>Section    : </th><td>"+task.section+ "</td></tr>"+
                     "<tr>                           <th style='text-align:right;font-weight: bold;'>J prévue   : </th><td>"+task.j_prevue+ "</td></tr>"+
+                    "<tr>                           <th style='text-align:right;font-weight: bold;'>Action     : </th><td>"+task.irv+ "</td></tr>"+
                     "<tr>                           <th style='text-align:right;font-weight: bold;'>Responsable: </th><td>"+task.responsable+ "</td></tr>"+
                     "<tr>                           <th style='text-align:right;font-weight: bold;'>Date début : </th><td>"+gantt.templates.tooltip_date_format(start)+ "</td></tr>"+
                     "<tr>                           <th style='text-align:right;font-weight: bold;'>Date fin   : </th><td>"+gantt.templates.tooltip_date_format(end)+"</td></tr>"+
@@ -345,6 +360,8 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                 color_class: item.color_class,
                 section    : item.section,
                 responsable: item.responsable,
+                initiales  : item.initiales,
+                irv        : item.irv,
                 j_prevue   : item.j_prevue,
             }
             data.push(vals);
@@ -465,6 +482,44 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
     }
 
     
+    PDFClick(ev){
+        var dossier_model = gantt.owl.state.dossier_model;
+        var dossier_id    = gantt.owl.state.dossier_id;        
+        console.log(dossier_model, dossier_id);
+        this.GetGanttPdfId(dossier_model,dossier_id);
+    }
+
+    
+
+    async GetGanttPdfId(dossier_model,dossier_id){
+        var self=this;
+        rpc.query({
+            model: 'is.gantt.pdf',
+            method: 'get_gantt_pdf_id',
+            args: [[0]],
+            kwargs: {
+                dossier_model: dossier_model,
+                dossier_id   : dossier_id,
+            }
+        }).then(function (result) {
+            var gantt_pdf_id = result;
+            console.log('GetGanttPdfId',gantt_pdf_id)
+            self.env.bus.trigger('do-action', {
+                action: {
+                    type: 'ir.actions.act_window',
+                    res_model: 'is.gantt.pdf',
+                    res_id: parseInt(gantt_pdf_id),
+                    view_mode: 'form,list',
+                    views: [[false, 'form'],[false, 'list']],
+                    //target: 'new',
+                },
+            });
+        });
+    }
+
+
+
+
     async GetFormId(task){
         var self=this;
         rpc.query({
@@ -496,6 +551,8 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                 domain  : this.props.domain,
             }
         }).then(function (result) {
+            self.state.dossier_id         = result.dossier_id;
+            self.state.dossier_model      = result.dossier_model;
             self.state.items              = result.items;
             self.state.links              = result.links;
             self.state.markers            = result.markers;

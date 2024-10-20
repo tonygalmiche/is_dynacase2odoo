@@ -36,6 +36,9 @@
             <field name="sequence">90</field>
             <field name="parent_id" eval="ref('is_doc_moule_main_menu')"/>
             <field name="action"    ref="is_gantt_pdf_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('base.group_system'),
+            ])]"/>
         </record>
         <record id="is_gantt_copie_menu" model="ir.ui.menu" >
             <field name="name">Copie du Gantt d'un Dossier</field>
@@ -43,9 +46,6 @@
             <field name="parent_id" eval="ref('is_doc_moule_main_menu')"/>
             <field name="action"    ref="is_gantt_copie_action"/>
         </record>
-
-
-
         <record model="ir.actions.client" id="suivi_projet_actions_client">
             <field name="name">Suivi des projets</field>
             <field name="tag">is_dynacase2odoo.suivi_projet_registry</field>

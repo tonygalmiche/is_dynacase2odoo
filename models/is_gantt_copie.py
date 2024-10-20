@@ -44,7 +44,6 @@ class IsGanttCopie(models.Model):
                 if obj.type_document==key:
                     name_field = TYPE_TO_FIELD[key]
                     src_docs=obj.get_docs(name_field,prefix='src') or []     
-                    print(src_docs)          
                     for doc in src_docs:
                         section = doc.section_id
                         if section:
@@ -161,9 +160,6 @@ class IsGanttCopie(models.Model):
                                 'dependance_id'   : src_doc.dependance_id.id,
                             }
                             copie.write(vals)
-
-
-                            print(copie, vals)
                             copie._compute_idproject_moule_dossierf()
                             src2dst[src_doc]=copie
 

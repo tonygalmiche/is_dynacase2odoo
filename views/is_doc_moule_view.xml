@@ -74,6 +74,7 @@
                                             <field name="comment"     optional="hide" widget="text"/>
                                         </tree>
                                     </field>
+                                    <field name="rsp_pj"    attrs="{'invisible': [('rsp_pj', '=', False)]}"/>
                                     <field name="rsp_date"  attrs="{'invisible': [('ppr_type_demande', 'not in', ['DATE', 'PJ_DATE'])]}"/>
                                     <field name="rsp_texte" attrs="{'invisible': [('ppr_type_demande', 'not in', ['TEXTE','PJ_TEXTE'])]}"/>
                                 </group>
@@ -90,9 +91,11 @@
                                         <field name="acces_chef_projet"/>
                                     </group>
                                     <group>
+                                        <field name="ppr_type_demande"/>
                                         <field name="coefficient"/>
                                         <field name="bloquant"/>
                                         <field name="note"/>
+                                        <field name="color"/>
                                         <field name="site_id" />
                                         <field name="gantt_pdf"        attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
                                         <field name="dynacase_id"      readonly="1"/>
@@ -207,6 +210,12 @@
                     <field name="action"  optional="show"/>
                     <field name="bloquant" optional="show"/>
                     <field name="etat" optional="show" />
+
+                    <field name="rsp_pj"    optional="hide" />
+                    <field name="rsp_date"  optional="hide" />
+                    <field name="rsp_texte" optional="hide" />
+                    <field name="color"     optional="hide" />
+
                     <field name="fin_derogation" optional="show" />
                     <field name="coefficient"  optional="show"/>
                     <field name="note"  optional="show"/>
