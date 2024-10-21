@@ -56,7 +56,20 @@
                                 <field name="actuelle"  readonly="1"/>
                                 <field name="demande"   attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
                                 <field name="action" is_widget="background_color"/>
-                                <field name="etat" is_widget="background_color" options="[{'value':'AF','color':'red'},{'value':'F','color':'SpringGreen'},{'value':'D','color':'orange'}]"/>
+                                <label for="etat"/>
+                                <div class="o_row no-gutters d-flex">
+                                    <field 
+                                        name="etat" is_widget="background_color" 
+                                        options="[{'value':'AF','color':'red'},{'value':'F','color':'SpringGreen'},{'value':'D','color':'orange'}]"
+                                        class="oe_inline"
+                                    />
+                                    <button 
+                                        name="ok_action" 
+                                        type="object" string="OK" 
+                                        class="btn-success oe_inline"
+                                        attrs="{'invisible': ['|',('ppr_type_demande', 'not in', ['DATE', 'PJ_DATE']),('etat','=','F')]}"
+                                    />
+                                </div>
                                 <field name="fin_derogation" attrs="{'invisible': [('etat', '!=', 'D')], 'required': [('etat', '=', 'D')]}"/>
                                 <field name="indicateur"  readonly="1"/>
                             </group>

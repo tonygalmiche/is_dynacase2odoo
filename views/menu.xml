@@ -28,12 +28,12 @@
             parent="is_doc_moule_main_menu" action="is_doc_moule_dmv_action"
         />
         <menuitem 
-            id="is_doc_moule_menu" sequence="80" name="Tous les documents" 
+            id="is_doc_moule_menu" sequence="60" name="Tous les documents" 
             parent="is_doc_moule_main_menu" action="is_doc_moule_action"
         />
         <record id="is_gantt_pdf_menu" model="ir.ui.menu" >
             <field name="name">Gantt PDF</field>
-            <field name="sequence">90</field>
+            <field name="sequence">70</field>
             <field name="parent_id" eval="ref('is_doc_moule_main_menu')"/>
             <field name="action"    ref="is_gantt_pdf_action"/>
             <field name="groups_id" eval="[(6,0,[
@@ -42,7 +42,7 @@
         </record>
         <record id="is_gantt_copie_menu" model="ir.ui.menu" >
             <field name="name">Copie du Gantt d'un Dossier</field>
-            <field name="sequence">100</field>
+            <field name="sequence">80</field>
             <field name="parent_id" eval="ref('is_doc_moule_main_menu')"/>
             <field name="action"    ref="is_gantt_copie_action"/>
         </record>
@@ -52,16 +52,18 @@
         </record>
         <record id="suivi_projet_menu" model="ir.ui.menu" >
             <field name="name">Suivi des projets</field>
-            <field name="sequence">110</field>
+            <field name="sequence">90</field>
             <field name="parent_id" eval="ref('is_doc_moule_main_menu')"/>
             <field name="action"    ref="suivi_projet_actions_client"/>
          </record>
-    
-    
-    
+         <record id="is_creation_doc_migration_menu" model="ir.ui.menu" >
+            <field name="name">Création documents migration</field>
+            <field name="sequence">92</field>
+            <field name="parent_id" eval="ref('is_doc_moule_main_menu')"/>
+            <field name="action"    ref="is_creation_doc_migration_action"/>
+         </record>
 
-
-
+    
 
         <!-- Gestion commcerciale -->
         <menuitem 

@@ -128,10 +128,30 @@ class IsDocMoule(models.Model):
     demao_nature        = fields.Char(string="Nature", compute='_compute_demao_nature'     , readonly=True, store=True)
     solde               = fields.Boolean(string="Soldé", compute='_compute_solde'          , readonly=True, store=True)
     rsp_date            = fields.Date(string="Date réponse", copy=False)
-    rsp_texte           = fields.Char(string="Réponse à la demande", copy=False)
+    #rsp_date_vsb        = fields.Boolean(string="Date réponse vsb", copy=False, compute='_compute_rsp_date_vsb', readonly=True, store=False)
+    rsp_texte           = fields.Char(string="Texte réponse", copy=False)
     acces_chef_projet   = fields.Boolean(string="Accès chef de projet", compute='_compute_acces_chef_projet', readonly=True, store=False, help="Indique si les champs réservés au chef de projet sont modifiables")
     rsp_pj              = fields.Char(string="Réponse PJ", compute='_compute_rsp_pj', readonly=True, store=True)
     color               = fields.Char(string="Couleur indicateur", compute='_compute_color', readonly=True, store=True)
+
+
+    # @api.depends('param_project_id')
+    # def _compute_rsp_date_vsb(self):
+    #     for obj in self:
+    #         vsb=False
+    #         if obj.ppr_type_demande in ('DATE','PJ_DATE'):
+    #             vsb=True
+    #         obj.rsp_date_vsb=vsb
+
+
+#    ppr_type_demande        = fields.Selection([
+#         ("PJ",       "Pièce-jointe"),
+#         ("DATE",     "Date"),
+#         ("TEXTE",    "Texte"),
+#         ("PJ_TEXTE", "Pièce-jointe et texte"),
+#         ("PJ_DATE",  "Pièce-jointe et date"),
+#         ("AUTO",     "Automatique"),
+#     ], string="Type de demande", required=True, default='PJ')
 
 
 
@@ -206,7 +226,6 @@ class IsDocMoule(models.Model):
     @api.depends('note','coefficient','etat','action','array_ids.annex','rsp_date','rsp_texte')
     def _compute_indicateur(self):
         for obj in self:
-            #color = obj.get_doc_color()
             color = obj.color
             ladate = '(date)'
             if obj.dateend:
@@ -397,6 +416,12 @@ class IsDocMoule(models.Model):
             if obj.type_document=='dossier_appel_offre':
                 form_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_dossier_appel_offre_id_form').id
             return form_id
+
+
+    def ok_action(self):
+        for obj in self:
+            obj.rsp_date = date.today()
+            obj.etat='F'
 
 
     def acceder_doc_action(self):

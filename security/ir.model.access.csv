@@ -55,3 +55,6 @@ access_is_dossier_appel_offre_manager,access_is_dossier_appel_offre_manager,mode
 access_is_modele_bilan,access_is_modele_bilan,model_is_modele_bilan,base.group_user,1,0,0,0
 access_is_modele_bilan_manager,access_is_modele_bilan_manager,model_is_modele_bilan,is_gestionnaire_projet_group,1,1,1,1
 access_is_modele_bilan_line,access_is_modele_bilan_line,model_is_modele_bilan_line,base.group_user,1,1,1,1
+
+
+access_is_creation_doc_migration,access_is_creation_doc_migration,model_is_creation_doc_migration,is_gestionnaire_projet_group,1,1,1,1

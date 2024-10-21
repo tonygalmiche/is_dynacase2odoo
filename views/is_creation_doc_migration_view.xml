@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- is.creation.doc.migration -->
+        <record id="is_creation_doc_migration_seq" model="ir.sequence">
+            <field name="name">Création documents migration</field>
+            <field name="code">is.creation.doc.migration</field>
+            <field name="prefix"></field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record model="ir.ui.view" id="is_creation_doc_migration_form">
+            <field name="name">is_creation_doc_migration_form</field>
+            <field name="model">is.creation.doc.migration</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button
+                            name="creer_doc_action"
+                            string="Créer les documents"
+                            type="object"
+                        />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="type_document"/>
+                                <field name="moule_id"    attrs="{'invisible': [('type_document', '!=', 'Moule')]    , 'required': [('type_document', '=', 'Moule')]}"/>
+                                <field name="dossierf_id" attrs="{'invisible': [('type_document', '!=', 'Dossier F')], 'required': [('type_document', '=', 'Dossier F')]}"/>
+                            </group>
+                        </group>
+
+
+                        <div style="background:Gainsboro;font-size:11pt;font-family:courier, courier new, serif" attrs="{'invisible':[('analyse','=',False)]}">
+                            <field name="analyse" nolabel="1"/>
+                        </div>
+ 
+
+                     </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_creation_doc_migration_tree">
+            <field name="name">is_creation_doc_migration_tree</field>
+            <field name="model">is.creation.doc.migration</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name='name'/>
+                    <field name='type_document'/>
+                    <field name='moule_id'    widget="many2one_clickable"/>
+                    <field name='dossierf_id' widget="many2one_clickable"/>
+                    <field name="create_date" optional="hide"/>
+                    <field name="create_uid"  optional="hide"/>
+                    <field name="write_date"  optional="hide"/>
+                    <field name="write_uid"   optional="hide"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_creation_doc_migration_search">
+            <field name="name">is_creation_doc_migration_search</field>
+            <field name="model">is.creation.doc.migration</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="type_document"/>
+                    <field name="moule_id"/>
+                    <field name="dossierf_id"/>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <record id="is_creation_doc_migration_action" model="ir.actions.act_window">
+            <field name="name">Création documents migration</field>
+            <field name="res_model">is.creation.doc.migration</field>
+            <field name="view_mode">tree,form</field>
+            <field name="limit">200</field>
+        </record>       
+    </data>
+</odoo>
