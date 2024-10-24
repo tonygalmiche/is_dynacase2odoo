@@ -18,7 +18,8 @@
                         <field name="j_avancement"/>
                         <field name="revue_contrat_id"/>
                         <field name="revue_lancement_id"/>
-                        <field name="revue_risque_id"/>    
+                        <field name="revue_risque_id"/>   
+                        <field name="date_fin_be"/>                            
                     </group>
                 </sheet>
             </field>
@@ -28,8 +29,27 @@
             <field name="model">is.dossierf</field>
             <field name="inherit_id" ref="is_plastigray16.is_dossierf_tree_view"/>
             <field name="arch" type="xml">
-                <field name="is_database_origine_id" position="after">
+                <field name="is_database_id" position="before">
+                    <field name="j_actuelle"         optional="show"/>
+                    <field name="j_avancement"       optional="show"/>
+                    <field name="revue_contrat_id"   optional="hide" widget="many2one_clickable"/>
+                    <field name="revue_lancement_id" optional="hide" widget="many2one_clickable"/>
+                    <field name="revue_risque_id"    optional="hide" widget="many2one_clickable"/>  
+                    <field name="date_fin_be"        optional="show"/>                            
+                </field>
+                <field name="is_database_origine_id" position="after">      
                     <field name="dynacase_id" optional="hide"/>    
+                </field>
+            </field>
+        </record>
+        <record id="is_dossierf_filter_view" model="ir.ui.view">
+            <field name="name">is_dossierf_filter_view</field>
+            <field name="model">is.dossierf</field>
+            <field name="inherit_id" ref="is_plastigray16.is_dossierf_filter_view"/>
+            <field name="arch" type="xml">
+                <field name="is_database_id" position="before">
+                    <field name="j_actuelle"/>
+                    <filter string="Dossiers F BE en cours" name="dossierf_be_en_cours" domain="[('date_fin_be','=',False)]"/>
                 </field>
             </field>
         </record>

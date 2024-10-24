@@ -63,12 +63,12 @@
                                         options="[{'value':'AF','color':'red'},{'value':'F','color':'SpringGreen'},{'value':'D','color':'orange'}]"
                                         class="oe_inline"
                                     />
-                                    <button 
+                                    <!-- <button 
                                         name="ok_action" 
                                         type="object" string="OK" 
                                         class="btn-success oe_inline"
                                         attrs="{'invisible': ['|',('ppr_type_demande', 'not in', ['DATE', 'PJ_DATE']),('etat','=','F')]}"
-                                    />
+                                    /> -->
                                 </div>
                                 <field name="fin_derogation" attrs="{'invisible': [('etat', '!=', 'D')], 'required': [('etat', '=', 'D')]}"/>
                                 <field name="indicateur"  readonly="1"/>

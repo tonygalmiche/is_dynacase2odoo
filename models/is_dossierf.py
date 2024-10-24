@@ -1,5 +1,5 @@
-from odoo import models, fields
-from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J, TYPE_DOCUMENT
+from odoo import models, fields # type: ignore
+from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J, TYPE_DOCUMENT # type: ignore
 from datetime import datetime, timedelta, date
 
 
@@ -10,7 +10,8 @@ class is_dossierf(models.Model):
     revue_lancement_id = fields.Many2one("is.revue.lancement" , string="Revue de lancement", copy=False)
     revue_risque_id    = fields.Many2one("is.revue.risque"    , string="Revue des risques" , copy=False)
     j_actuelle         = fields.Selection(GESTION_J, string="J Actuelle"                   , copy=False)
-    j_avancement       = fields.Integer(string="Avancement J (%)")
+    j_avancement       = fields.Integer(string="Avancement J (%)"                          , copy=False)
+    date_fin_be        = fields.Date(string="Date fin BE"                                  , copy=False)
 
 
     def gantt_action(self):

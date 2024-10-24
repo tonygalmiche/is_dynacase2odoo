@@ -25,6 +25,7 @@
                             <field name="revue_contrat_id"   readonly="1"/>
                             <field name="revue_lancement_id" readonly="1"/>
                             <field name="revue_risque_id"    readonly="1"/>    
+                            <field name="date_fin_be"/>    
                         </group>
                     </page>
                 </xpath>
@@ -37,10 +38,11 @@
             <field name="arch" type="xml">
                 <field name="is_database_id" position="before">
                     <field name="j_actuelle"         optional="show"/>
-                    <field name="j_avancement"       optional="hide"/>
-                    <field name="revue_contrat_id"   optional="hide"/>
-                    <field name="revue_lancement_id" optional="hide"/>
-                    <field name="revue_risque_id"    optional="hide"/>    
+                    <field name="j_avancement"       optional="show"/>
+                    <field name="revue_contrat_id"   optional="hide" widget="many2one_clickable"/>
+                    <field name="revue_lancement_id" optional="hide" widget="many2one_clickable"/>
+                    <field name="revue_risque_id"    optional="hide" widget="many2one_clickable"/>  
+                    <field name="date_fin_be"        optional="show"/>                            
                 </field>
                 <field name="is_database_origine_id" position="after">
                     <field name="dynacase_id" optional="hide"/>    
@@ -55,6 +57,7 @@
                 <field name="lieu_changement" position="after">
                     <field name="is_database_id"/>
                     <field name="j_actuelle"/>
+                    <filter string="Moules BE en cours" name="moules_be_en_cours" domain="[('date_fin_be','=',False)]"/>
                 </field>
             </field>
         </record>

@@ -102,7 +102,7 @@ class IsDocMoule(models.Model):
         ("AF", "A Faire"),
         ("F", "Fait"),
         ("D", "Dérogé"),
-    ], string="État", compute='_compute_etat',store=True, readonly=False, tracking=True, copy=False)
+    ], string="État", tracking=True, copy=False) # , compute='_compute_etat',store=True, readonly=False
     fin_derogation      = fields.Date(string="Date de fin de dérogation")
 
     coefficient         = fields.Integer(string="Coefficient"   , compute='_compute_coefficient_bloquant_note',store=True, readonly=True, tracking=True)
@@ -128,11 +128,22 @@ class IsDocMoule(models.Model):
     demao_nature        = fields.Char(string="Nature", compute='_compute_demao_nature'     , readonly=True, store=True)
     solde               = fields.Boolean(string="Soldé", compute='_compute_solde'          , readonly=True, store=True)
     rsp_date            = fields.Date(string="Date réponse", copy=False)
-    #rsp_date_vsb        = fields.Boolean(string="Date réponse vsb", copy=False, compute='_compute_rsp_date_vsb', readonly=True, store=False)
-    rsp_texte           = fields.Char(string="Texte réponse", copy=False)
+    rsp_texte           = fields.Text(string="Texte réponse", copy=False)
+    rsp_pj              = fields.Text(string="Réponse PJ", compute='_compute_rsp_pj', readonly=True, store=True)
     acces_chef_projet   = fields.Boolean(string="Accès chef de projet", compute='_compute_acces_chef_projet', readonly=True, store=False, help="Indique si les champs réservés au chef de projet sont modifiables")
-    rsp_pj              = fields.Char(string="Réponse PJ", compute='_compute_rsp_pj', readonly=True, store=True)
     color               = fields.Char(string="Couleur indicateur", compute='_compute_color', readonly=True, store=True)
+
+
+    @api.onchange('etat')
+    def onchange_etat(self):
+        for obj in self:
+            type_demande = obj.param_project_id.ppr_type_demande
+            print('onchange_etat',obj, type_demande)
+            if type_demande in ['DATE','PJ_DATE']:
+                if obj.etat=='F':
+                    obj.rsp_date = date.today()
+                else:
+                    obj.rsp_date=False
 
 
     # @api.depends('param_project_id')
@@ -178,11 +189,13 @@ class IsDocMoule(models.Model):
             obj.color=color
 
 
-    @api.depends('etat','array_ids.annex')
+    @api.depends('etat','array_ids.annex','array_ids.comment')
     def _compute_rsp_pj(self):
         for obj in self:
             rsp_pj=False
             for line in obj.array_ids:
+                if line.comment:
+                    rsp_pj=line.comment
                 if line.annex:
                     for pj in line.annex:
                         rsp_pj=pj.name
@@ -261,19 +274,19 @@ class IsDocMoule(models.Model):
             obj.indicateur = html
 
 
-    @api.depends('note','coefficient','etat','action','array_ids.annex','rsp_date','rsp_texte')
-    def _compute_etat(self):
-        for obj in self:
-            etat='AF'
-            reponses=obj.get_doc_reponse()
-            if reponses[0] or reponses[1] or reponses[2]:
-                etat='F'
-            if etat!='F':
-                if obj.etat=='D' and obj.fin_derogation:
-                    etat='D'
-            if etat=='F':
-                obj.fin_derogation=False
-            obj.etat=etat
+    # @api.depends('note','coefficient','etat','action','array_ids.annex','rsp_date','rsp_texte')
+    # def _compute_etat(self):
+    #     for obj in self:
+    #         etat='AF'
+    #         reponses=obj.get_doc_reponse()
+    #         if reponses[0] or reponses[1] or reponses[2]:
+    #             etat='F'
+    #         if etat!='F':
+    #             if obj.etat=='D' and obj.fin_derogation:
+    #                 etat='D'
+    #         if etat=='F':
+    #             obj.fin_derogation=False
+    #         obj.etat=etat
 
 
     def _compute_acces_chef_projet(self):
@@ -418,10 +431,10 @@ class IsDocMoule(models.Model):
             return form_id
 
 
-    def ok_action(self):
-        for obj in self:
-            obj.rsp_date = date.today()
-            obj.etat='F'
+    # def ok_action(self):
+    #     for obj in self:
+    #         obj.rsp_date = date.today()
+    #         obj.etat='F'
 
 
     def acceder_doc_action(self):
