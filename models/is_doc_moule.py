@@ -18,6 +18,7 @@ class IsDocMoule(models.Model):
 
     def compute_project_prev(self):
         "for xml-rpc"
+        self.update_j_prevue_action()
         self._compute_project_prev()
         self._compute_idproject_moule_dossierf()
         self._compute_site_id()
@@ -384,6 +385,30 @@ class IsDocMoule(models.Model):
     def onchange_param_project_id(self):
         for obj in self:
             obj.gantt_pdf = obj.param_project_id.gantt_pdf
+
+
+    def update_j_prevue_action(self):
+        nb=len(self)
+        ct=1
+        for obj in self:
+            j_actuelle = obj.idmoule.j_actuelle
+            j_prevue = False
+            if obj.dynacase_id and j_actuelle:
+                if obj.etat=='F':
+                    for line in obj.param_project_id.array_ids:
+                        if line.ppp_j<=j_actuelle and line.ppr_irv:
+                            j_prevue=line.ppp_j
+                    if not j_prevue:
+                        j_prevue=j_actuelle
+                else:
+                    for line in obj.param_project_id.array_ids:
+                        if line.ppp_j>=j_actuelle and line.ppr_irv:
+                            j_prevue=line.ppp_j
+                            break
+                    if not j_prevue:
+                        j_prevue=j_actuelle
+                obj.j_prevue = j_prevue
+            ct+=1
 
 
     @api.onchange('date_debut_gantt','duree')
