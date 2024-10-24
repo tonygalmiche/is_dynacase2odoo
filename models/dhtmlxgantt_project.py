@@ -203,11 +203,12 @@ class IsDocMoule(models.Model):
                 etat_class='etat_a_faire'
                 if line.etat=='F':
                     etat_class='etat_fait'
-                if line.j_prevue and line.date_fin_gantt:
-                    date_j = dates_j.get(line.j_prevue)
-                    if date_j and line.date_fin_gantt:
-                        if line.date_fin_gantt>date_j:
-                            etat_class = "retard_j"
+                else:
+                    if line.j_prevue and line.date_fin_gantt:
+                        date_j = dates_j.get(line.j_prevue)
+                        if date_j and line.date_fin_gantt:
+                            if line.date_fin_gantt>date_j:
+                                etat_class = "retard_j"
                 #**************************************************************
 
                 color_class = '%s is_section_gantt_%s'%(etat_class,line.section_id.id)

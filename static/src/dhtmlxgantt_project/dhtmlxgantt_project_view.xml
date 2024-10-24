@@ -28,6 +28,13 @@
                             title="Générer le PDF du Gantt"
                         />
                     </td>
+                    <td style="width:100px"></td>
+                    <td><div style="background-color:green;color:green;margin:5px;margin-left:20px">V</div></td>
+                    <td>FAIT</td>
+                    <td><div style="background-color:red;color:red;margin:5px;margin-left:20px">R</div></td>
+                    <td>A Faire</td>
+                    <td><div style="background-color:black;color:black;margin:5px;margin-left:20px">N</div></td>
+                    <td>En retard par rapport à la J prévue</td>
                 </tr>
             </table>
         </div>
