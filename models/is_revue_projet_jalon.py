@@ -1,6 +1,16 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
 
+
+
+#TODO : 
+#- Manque lien Revue de lancement, revue de contrat, revue de projet, revue des risuqes
+#- Lignes en trop dans tableaux Revue de contrat et Revue de projet jalon
+#- Manque le lien avec les documents des moules dans le tableau des docuements
+#- Le champ rpj_total_vente_moule valire des infos dans les investissement achat moule => Pas dispo dans Odoo
+
+
+
 class is_revue_projet_jalon(models.Model):
     _name        = "is.revue.projet.jalon"
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
@@ -59,8 +69,10 @@ class is_revue_projet_jalon(models.Model):
         for obj in self:
             obj.sudo().state = "refuse"
 
-    rpj_chrono                   = fields.Char(string="Chrono", required=True)
+
     rpj_mouleid                  = fields.Many2one("is.mold", string="Moule", required=True)
+    rpj_chrono                   = fields.Char(string="Chrono"   , copy=False, compute='_compute_rpj_chrono',store=True, readonly=True)
+    rpj_indice                   = fields.Integer(string="Indice", copy=False, compute='_compute_rpj_chrono',store=True, readonly=True)
     rpj_j = fields.Selection([
         ("J0", "Préparation J0"),
         ("J1", "Préparation J1"),
@@ -69,15 +81,14 @@ class is_revue_projet_jalon(models.Model):
         ("J4", "Préparation J4"),
         ("J5", "Préparation J5"),
         ("J6", "J5 validé"),
-    ], string="J actuelle")
+    ], string="J actuelle", copy=False, compute='_compute_rpj_chrono',store=True, readonly=True)
     rpj_date_planning_j          = fields.Date(string="Date planning J")
-    rpj_indice                   = fields.Char(string="Indice")
-    rpj_date_creation            = fields.Date(string="Date de réalisation", default=fields.Date.context_today)
+    rpj_date_creation            = fields.Date(string="Date de réalisation", default=fields.Date.context_today, copy=False)
     rpj_plan_action              = fields.Char(string="Plan d'action associé")
     rpj_niveau_ppm               = fields.Char(string="Niveau ppm revue de contrat")
     rpj_commentaire              = fields.Text(string="Commentaire")
     rpj_motif_refus              = fields.Text(string="Motif du refus")
-    rpj_photo                    = fields.Image(string="Photo de la pièce")
+    rpj_photo                    = fields.Image(string="Photo de la pièce", related='rpj_mouleid.image')
     rpj_lieu_production          = fields.Selection([
         ("g", "Gray"),
         ("sb", "St-Brice"),
@@ -94,7 +105,6 @@ class is_revue_projet_jalon(models.Model):
     rpj_affectation_presse2      = fields.Char(string="Affectation presse actuelle")
     rpj_clientid                 = fields.Many2one("res.partner", string="Client", domain=[("is_company","=",True), ("customer","=",True)])
     rpj_rcid                     = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
-    # rpj_indice                   = fields.Integer(string="Indice")
     rpj_rlid                     = fields.Many2one("is.revue.lancement", string="Revue de lancement")
     rpj_rp                       = fields.Char(string="Revue de projet")
     rpj_rr                       = fields.Char(string="Revue des risques")
@@ -142,7 +152,7 @@ class is_revue_projet_jalon(models.Model):
     revue_de_projet_jalon_ids    = fields.One2many("is.revue.projet.jalon.revue.de.projet.jalon", "is_revue_project_jalon_id")
     rpj_total_vente_moule        = fields.Float(string="Total vente moule")
     rpj_total_achat_moule        = fields.Float(string="Total achat moule")
-    rp_marge_brute_moule         = fields.Float(string="Marge brute moule (%)")
+    rp_marge_brute_moule         = fields.Float(string="Marge brute moule (%)", compute='_compute_rp_marge_brute_moule', readonly=True, store=True, copy=False)
     decomposition_prix_ids       = fields.One2many("is.revue.projet.jalon.decomposition.prix", "is_revue_project_jalon_id")
     rpj_dp_ca_annuel             = fields.Float(string="CA Annuel")
     rpj_dp_vac                   = fields.Float(string="VAC")
@@ -156,13 +166,17 @@ class is_revue_projet_jalon(models.Model):
         ("rpj_pour_information",    "Pour Information"),
         ("rpj_valide",              "Validé"),
         ("rpj_refus",               "Refusé"),
-    ], default="brouillon", string="State", tracking=True)
-    vers_brouillon_vsb           = fields.Boolean(string="Brouillon", compute='_compute_vsb', readonly=True, store=False)
+    ], default="rpj_brouillon", string="State", tracking=True, copy=False)
+    vers_brouillon_vsb           = fields.Boolean(string="Brouillon"          , compute='_compute_vsb', readonly=True, store=False)
     vers_directeur_technique_vsb = fields.Boolean(string="Directeur Technique", compute='_compute_vsb', readonly=True, store=False)
-    vers_direceeur_de_site_vsb   = fields.Boolean(string="Direceeur de Site", compute='_compute_vsb', readonly=True, store=False)
-    vers_pour_information_vsb    = fields.Boolean(string="Pour Information", compute='_compute_vsb', readonly=True, store=False)
-    vers_valide_vsb              = fields.Boolean(string="Validé", compute='_compute_vsb', readonly=True, store=False)
-    vers_refuse_vsb              = fields.Boolean(string="Refusé", compute='_compute_vsb', readonly=True, store=False)
+    vers_direceeur_de_site_vsb   = fields.Boolean(string="Direceeur de Site"  , compute='_compute_vsb', readonly=True, store=False)
+    vers_pour_information_vsb    = fields.Boolean(string="Pour Information"   , compute='_compute_vsb', readonly=True, store=False)
+    vers_valide_vsb              = fields.Boolean(string="Validé"             , compute='_compute_vsb', readonly=True, store=False)
+    vers_refuse_vsb              = fields.Boolean(string="Refusé"             , compute='_compute_vsb', readonly=True, store=False)
+    logo_rs                      = fields.Char(string="Logo RS"               , compute='_compute_logo_rs', readonly=True, store=False)
+
+
+
 
     def lien_vers_dynacase_action(self):
         for obj in self:
@@ -172,8 +186,118 @@ class is_revue_projet_jalon(models.Model):
                 'url': url,
                 'target': 'new',
             }
-            
-            
+
+
+    @api.depends('rpj_rcid','rpj_total_achat_moule')
+    def _compute_logo_rs(self):
+        for obj in self:
+            logo_rs = False
+            if obj.rpj_rcid:
+                if obj.rpj_rcid.rc_sp_piece_reglem:
+                    logo_rs='R'
+                if obj.rpj_rcid.rc_sp_piece_sec:
+                    logo_rs='S'
+                if obj.rpj_rcid.rc_sp_piece_reglem and obj.rpj_rcid.rc_sp_piece_sec:
+                    logo_rs='RS'
+            obj.logo_rs = logo_rs
+
+
+    @api.depends('rpj_total_vente_moule','rpj_total_achat_moule')
+    def _compute_rp_marge_brute_moule(self):
+        for obj in self:
+            vente_moule = obj.rpj_total_vente_moule
+            achat_moule = obj.rpj_total_achat_moule
+            marge_brute_moule = 0
+            if vente_moule>0:
+                marge_brute_moule = round(100*(1 - (achat_moule / vente_moule)),2)
+            obj.rp_marge_brute_moule = marge_brute_moule
+
+
+
+    # rpj_total_vente_moule        = fields.Float(string="Total vente moule")
+    # rpj_total_achat_moule        = fields.Float(string="Total achat moule")
+
+
+#   //** Marge brute **************************************************
+#   $vente_moule=$this->getValue("rpj_total_vente_moule");
+#   $achat_moule=$this->getValue("rpj_total_achat_moule");
+#   //Marge en % =1-(Achat/ Vente)*100 = (1-(14104/32402))*100= 56.47 % 
+#   $marge_brute_moule = round(100*(1 - ($achat_moule / $vente_moule)),2);
+#   $this->setValue("rp_marge_brute_moule",$marge_brute_moule);
+#   //*****************************************************************
+
+
+
+    @api.depends('rpj_mouleid')
+    def _compute_rpj_chrono(self):
+        for obj in self:
+            rpj_indice=0
+            rpj_chrono = "?"
+            rpj_indice = rpj_j = ''
+            if obj.rpj_mouleid.j_actuelle:
+                rpj_j = obj.rpj_mouleid.j_actuelle
+                domain=[
+                    ('rpj_mouleid','=', obj.rpj_mouleid.id),
+                    ('rpj_j'      ,'=', rpj_j),
+                ]
+                docs=self.env['is.revue.projet.jalon'].search(domain, limit=1, order="rpj_indice desc")
+                for doc in docs:
+                    rpj_indice = doc.rpj_indice
+                    print(doc, doc.rpj_indice)
+                rpj_indice+=1
+                indice = ("00%s"%rpj_indice)[-2:]
+                rpj_chrono = "%s-%s-%s"%(obj.rpj_mouleid.name,rpj_j, indice)
+            obj.rpj_j      = rpj_j
+            obj.rpj_indice = rpj_indice
+            obj.rpj_chrono = rpj_chrono
+
+
+
+
+    # //** Recherche indice et création chrono **************************
+    # $chrono=$this->getValue("rpj_chrono");
+    # if (is_object($moule)) {
+    #     $num_moule=$moule->getValue("moul_num");
+    #     $J=$moule->getValue("moul_j_actuelle");
+    #     if($J=="") $J="J0";
+
+    #     //$this->setValue("rpj_commentaire", $this->getValue("rpj_chrono")."\n".$J."\n".$this->getValue("rpj_j")."\n".$this->getValue("rpj_indice"));
+
+    #     $s=new SearchDoc($dbaccess,"PG_REVUE_PROJET_JALON");
+    #     $s->setObjectReturn(); // retour d'objets documentaires
+    #     $s->addFilter("(rpj_num_moule='$num_moule' and rpj_j='$J')");
+    #     $s->addFilter("initid<>".$this->initid);
+    #     $s->orderby="rpj_indice desc";
+    #     $s->userid=1; // Recherche admin sans tenir compte des droits
+    #     $s->slice=1;
+    #     $s->search(); // déclenchement de la recherche
+    #     $indice=0;
+    #     while ($doc=$s->nextDoc()) {
+    #         $indice=$doc->getValue("rpj_indice")/1;
+    #     }
+    #     $indice++;
+    #     $indice=substr("00".$indice,-2);
+    #     $chrono="$num_moule-$J-$indice";
+    #     $this->setValue("rpj_num_moule", $num_moule);
+    #     $this->setValue("rpj_j"        , $J);
+    #     $this->setValue("rpj_indice"   , $indice);
+    #     $this->setValue("rpj_chrono"   , $chrono);
+    # }
+    # //*************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class is_revue_projet_jalon_bilan(models.Model):
     _name        = "is.revue.projet.jalon.bilan"
     _description = "Compte-rendu revue de projet jalon - Bilan"

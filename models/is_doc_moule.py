@@ -334,7 +334,7 @@ class IsDocMoule(models.Model):
         if 'etat' in vals:
             if vals['etat']=='F':
                 reponses=self.get_doc_reponse()
-                if not reponses[0] and not reponses[1] and not reponses[2]:
+                if not reponses[0] and not reponses[1] and not reponses[2] and self.ppr_type_demande!='AUTO':
                     raise ValidationError("Impossbile de passer à l'état 'Fait' car aucune réponse n'est fournie !")
         if not self.acces_chef_projet:
             champs_interdit=[
@@ -394,19 +394,24 @@ class IsDocMoule(models.Model):
             j_actuelle = obj.idmoule.j_actuelle
             j_prevue = False
             if obj.dynacase_id and j_actuelle:
-                if obj.etat=='F':
-                    for line in obj.param_project_id.array_ids:
-                        if line.ppp_j<=j_actuelle and line.ppr_irv:
-                            j_prevue=line.ppp_j
-                    if not j_prevue:
-                        j_prevue=j_actuelle
-                else:
-                    for line in obj.param_project_id.array_ids:
-                        if line.ppp_j>=j_actuelle and line.ppr_irv:
-                            j_prevue=line.ppp_j
-                            break
-                    if not j_prevue:
-                        j_prevue=j_actuelle
+                for line in obj.param_project_id.array_ids:
+                    if line.ppp_j<=j_actuelle and line.ppr_irv:
+                        j_prevue=line.ppp_j
+                if not j_prevue:
+                    j_prevue=j_actuelle
+                # if obj.etat=='F':
+                #     for line in obj.param_project_id.array_ids:
+                #         if line.ppp_j<=j_actuelle and line.ppr_irv:
+                #             j_prevue=line.ppp_j
+                #     if not j_prevue:
+                #         j_prevue=j_actuelle
+                # else:
+                #     for line in obj.param_project_id.array_ids:
+                #         if line.ppp_j>=j_actuelle and line.ppr_irv:
+                #             j_prevue=line.ppp_j
+                #             break
+                #     if not j_prevue:
+                #         j_prevue=j_actuelle
                 obj.j_prevue = j_prevue
             ct+=1
 
