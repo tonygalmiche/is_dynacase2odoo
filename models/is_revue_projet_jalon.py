@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
-
+from odoo import models, fields, api # type: ignore
 
 
 #TODO : 
@@ -176,8 +175,6 @@ class is_revue_projet_jalon(models.Model):
     logo_rs                      = fields.Char(string="Logo RS"               , compute='_compute_logo_rs', readonly=True, store=False)
 
 
-
-
     def lien_vers_dynacase_action(self):
         for obj in self:
             url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
@@ -233,7 +230,7 @@ class is_revue_projet_jalon(models.Model):
         for obj in self:
             rpj_indice=0
             rpj_chrono = "?"
-            rpj_indice = rpj_j = ''
+            rpj_j = ''
             if obj.rpj_mouleid.j_actuelle:
                 rpj_j = obj.rpj_mouleid.j_actuelle
                 domain=[
@@ -242,7 +239,7 @@ class is_revue_projet_jalon(models.Model):
                 ]
                 docs=self.env['is.revue.projet.jalon'].search(domain, limit=1, order="rpj_indice desc")
                 for doc in docs:
-                    rpj_indice = doc.rpj_indice
+                    rpj_indice = int(doc.rpj_indice)
                     print(doc, doc.rpj_indice)
                 rpj_indice+=1
                 indice = ("00%s"%rpj_indice)[-2:]
@@ -254,38 +251,147 @@ class is_revue_projet_jalon(models.Model):
 
 
 
-    # //** Recherche indice et création chrono **************************
-    # $chrono=$this->getValue("rpj_chrono");
-    # if (is_object($moule)) {
-    #     $num_moule=$moule->getValue("moul_num");
-    #     $J=$moule->getValue("moul_j_actuelle");
-    #     if($J=="") $J="J0";
+    @api.onchange('rpj_mouleid')
+    def onchange_rpj_mouleid(self):
+        for obj in self:
+            obj.rpj_clientid = obj.rpj_mouleid.client_id.id
+            obj.rpj_rcid     = obj.rpj_mouleid.revue_contrat_id.id
+            obj.rpj_rlid     = obj.rpj_mouleid.revue_lancement_id.id
+            obj.rpj_rr       = obj.rpj_mouleid.revue_risque_id.id
+            
+            #** Equipe projet *************************************************
+            obj.equipe_projet_ids=False
+            equipe_projet_ids=[]
+            if obj.rpj_rlid:
+                equipe_projet_fonction={
+                    "chef_projet"          : "Chef de projet",
+                    "expert_injection"     : "Expert injection",
+                    "methode_injection"    : "Méthode injection",
+                    "methode_assemblage"   : "Méthode assemblage",
+                    "qualite_dev"          : "Métrologie",
+                    "qualite_usine"        : "Qualité développement",
+                    "achats"               : "Achats",
+                    "logistique"           : "Logistique",
+                    "logistique_usine"     : "Logistique Usine",
+                    "commercial2"          : "Commercial",
+                    "responsable_outillage": "Responsable outillage",
+                    "responsable_projet"   : "Responsable projets",
+                    "directeur_site"       : "Directeur site de production",
+                    "directeur_technique"  : "Directeur technique",
+                }
+                for k in equipe_projet_fonction:
+                    field_name="rl_%sid"%k
+                    nomid = getattr(obj.rpj_rlid,field_name).id              
+                    field_name="rpj_%sid"%k
+                    setattr(obj, field_name, nomid)
 
-    #     //$this->setValue("rpj_commentaire", $this->getValue("rpj_chrono")."\n".$J."\n".$this->getValue("rpj_j")."\n".$this->getValue("rpj_indice"));
 
-    #     $s=new SearchDoc($dbaccess,"PG_REVUE_PROJET_JALON");
-    #     $s->setObjectReturn(); // retour d'objets documentaires
-    #     $s->addFilter("(rpj_num_moule='$num_moule' and rpj_j='$J')");
-    #     $s->addFilter("initid<>".$this->initid);
-    #     $s->orderby="rpj_indice desc";
-    #     $s->userid=1; // Recherche admin sans tenir compte des droits
-    #     $s->slice=1;
-    #     $s->search(); // déclenchement de la recherche
-    #     $indice=0;
-    #     while ($doc=$s->nextDoc()) {
-    #         $indice=$doc->getValue("rpj_indice")/1;
-    #     }
-    #     $indice++;
-    #     $indice=substr("00".$indice,-2);
-    #     $chrono="$num_moule-$J-$indice";
-    #     $this->setValue("rpj_num_moule", $num_moule);
-    #     $this->setValue("rpj_j"        , $J);
-    #     $this->setValue("rpj_indice"   , $indice);
-    #     $this->setValue("rpj_chrono"   , $chrono);
+
+                    print(field_name,nomid)
+                    vals={
+                        'rpj_equipe_projet_fonction': equipe_projet_fonction[k],
+                        'rpj_equipe_projet_nomid'   : nomid,
+                    }
+                    equipe_projet_ids.append([0,False,vals])
+                obj.equipe_projet_ids=equipe_projet_ids
+
+
+
+                                # setattr(copie, name_field, dst_dossier_id)
+                    # doc = getattr(obj,name_field)                
+
+
+
+
+
+ 
+            #            workorders_values += [{
+            #                 'sequence': operation.sequence,
+            #                 'name': operation.name,
+            #                 'production_id': production.id,
+            #                 'workcenter_id': operation.workcenter_id.id,
+            #                 'product_uom_id': production.product_uom_id.id,
+            #                 'operation_id': operation.id,
+            #                 'state': 'pending',
+            #             }]
+            #     workorders_dict = {wo.operation_id.id: wo for wo in production.workorder_ids.filtered(lambda wo: wo.operation_id)}
+            #     for workorder_values in workorders_values:
+            #         if workorder_values['operation_id'] in workorders_dict:
+            #             # update existing entries
+            #             workorders_list += [Command.update(workorders_dict[workorder_values['operation_id']].id, workorder_values)]
+            #         else:
+            #             # add new entries
+            #             workorders_list += [Command.create(workorder_values)]                    
+            #     production.workorder_ids = workorders_list
+            # else:
+            #     production.workorder_ids = [Command.delete(wo.id) for wo in production.workorder_ids.filtered(lambda wo: wo.operation_id)]
+
+
+
+
+
+
+    # //** Equipe projet ************************************************
+    # if (is_object($rl) and $this->getValue("rpj_equipe_projet_fonction")=="") {
+    #   $equipe_projet_fonction="Chef de projet\nExpert injection\nMéthode injection\nMéthode assemblage\nMétrologie\nQualité développement\nAchats\nLogistique\nLogistique Usine\nCommercial\nResponsable outillage\nResponsable projets\nDirecteur site de production\nDirecteur technique";
+    #   $tab=array(
+    #     "chef_projet",
+    #     "expert_injection",
+    #     "methode_injection",
+    #     "methode_assemblage",
+    #     "qualite_dev",
+    #     "qualite_usine",
+    #     "achats",
+    #     "logistique",
+    #     "logistique_usine",
+    #     "commercial2",
+    #     "responsable_outillage",
+    #     "responsable_projet",
+    #     "directeur_site",
+    #     "directeur_technique"
+    #   );
+
+    #   $noms=array(); $nomsid=array();
+    #   foreach($tab as $v) {
+    #     $title = $rl->getValue("rl_".$v);
+    #     $id    = $rl->getValue("rl_".$v."id");
+    #     $this->setValue("rpj_".$v,$title);
+    #     $this->setValue("rpj_".$v."id",$id);
+    #     $noms[]=$title;
+    #     $nomsid[]=$id;
+    #   }
+
+    #   $this->setValue("rpj_equipe_projet_fonction", $equipe_projet_fonction);
+    #   $this->setValue("rpj_equipe_projet_nom"     , $noms);
+    #   $this->setValue("rpj_equipe_projet_nomid"   , $nomsid);
     # }
-    # //*************************
+    # //*****************************************************************
 
 
+
+
+
+
+
+    # rpj_rcid                     = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
+    # rpj_rlid                     = fields.Many2one("is.revue.lancement", string="Revue de lancement")
+    # rpj_rp                       = fields.Char(string="Revue de projet")
+    # rpj_rr                       = fields.Char(string="Revue des risques")
+
+
+
+    # revue_contrat_id   = fields.Many2one("is.revue.de.contrat", string="Revue de contrat"  , copy=False)
+    # revue_lancement_id = fields.Many2one("is.revue.lancement" , string="Revue de lancement", copy=False)
+    # revue_risque_id    = fields.Many2one("is.revue.risque"    , string="Revue des risques" , copy=False)
+
+
+            # type_demande = obj.param_project_id.ppr_type_demande
+            # print('onchange_etat',obj, type_demande)
+            # if type_demande in ['DATE','PJ_DATE']:
+            #     if obj.etat=='F':
+            #         obj.rsp_date = date.today()
+            #     else:
+            #         obj.rsp_date=False
 
 
 

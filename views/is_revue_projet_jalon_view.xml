@@ -56,7 +56,8 @@
                         <group>
                             <group name="rpj_fr_identification" string="Identification">
                                 <field name="rpj_chrono"              readonly="1"/>
-                                <field name="rpj_mouleid" />
+                                <field name="rpj_mouleid"/>
+                                 <!-- attrs="{'readonly': [('rpj_mouleid', '!=', False)]}" force_save="1"/> -->
                                 <field name="rpj_j"                   readonly="1"/>
                                 <field name="rpj_date_planning_j"     readonly="1"/>
                                 <field name="rpj_indice"              readonly="1"/>
@@ -71,13 +72,12 @@
                                 <field name="rpj_lieu_production2" />
                                 <field name="rpj_affectation_presse2" />
                                 <separator string="Liens" />
-                                <field name="rpj_clientid" readonly="1"/>
-                                <field name="rpj_rcid"     readonly="0" />
-                                <field name="logo_rs"      invisible="1" />
-                                <field name="rpj_rlid"     readonly="1" />
-                                <field name="rpj_rp"       readonly="1" />
+                                <field name="rpj_clientid" readonly="1" force_save="1"/>
+                                <field name="rpj_rcid"     readonly="1" force_save="1" />
+                                <field name="rpj_rlid"     readonly="1" force_save="1" />
+                                <field name="rpj_rp"       invisible="1"/>
                                 <separator string="Revue des risques" />
-                                <field name="rpj_rr"       readonly="1"/>
+                                <field name="rpj_rr" readonly="1" force_save="1"/>
                                 <field name="bilan_ids" nolabel="1" colspan="2">
                                     <tree editable="bottom" create="false" delete="false" colspan="2">
                                         <field name="rpj_bilan_risque_j"            optional="show" width="15%" readonly="1"/>
@@ -91,10 +91,11 @@
                                 <field name="rpj_piece_jointe" widget="many2many_binary"/>
                             </group>
                             <group string="">
+                                <field name="logo_rs" invisible="1" />
                                 <div colspan="2" style="text-align:center">
                                     <field name="rpj_photo" widget="image" readonly="1" style="max-width:400px;max-height:400px" nolabel="1" colspan="2"/><br />
-                                    <img attrs="{'invisible': [('logo_rs', '!=', 'S')]}" alt="Logo S" src="/is_dynacase2odoo/static/src/img/logo_s.png"/>
-                                    <img attrs="{'invisible': [('logo_rs', '!=', 'R')]}" alt="Logo R"  src="/is_dynacase2odoo/static/src/img/logo_r.png"/><br />
+                                    <img attrs="{'invisible': [('logo_rs', '!=', 'S')]}"  alt="Logo S"  src="/is_dynacase2odoo/static/src/img/logo_s.png"/>
+                                    <img attrs="{'invisible': [('logo_rs', '!=', 'R')]}"  alt="Logo R"  src="/is_dynacase2odoo/static/src/img/logo_r.png"/><br />
                                     <img attrs="{'invisible': [('logo_rs', '!=', 'RS')]}" alt="Logo RS" src="/is_dynacase2odoo/static/src/img/logo_rs.png"/><br />        
                                 </div>
                                 <separator string="Équipe projet" />
