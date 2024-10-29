@@ -3,7 +3,7 @@ from odoo import models, fields, api # type: ignore
 
 
 #TODO : 
-#- Manque lien Revue de lancement, revue de contrat, revue de projet, revue des risuqes
+#- Manque lien Revue de lancement, revue de contrat, revue de projet, revue des risques
 #- Lignes en trop dans tableaux Revue de contrat et Revue de projet jalon
 #- Manque le lien avec les documents des moules dans le tableau des docuements
 #- Le champ rpj_total_vente_moule valire des infos dans les investissement achat moule => Pas dispo dans Odoo
@@ -105,8 +105,8 @@ class is_revue_projet_jalon(models.Model):
     rpj_clientid                 = fields.Many2one("res.partner", string="Client", domain=[("is_company","=",True), ("customer","=",True)])
     rpj_rcid                     = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
     rpj_rlid                     = fields.Many2one("is.revue.lancement", string="Revue de lancement")
-    rpj_rp                       = fields.Char(string="Revue de projet")
-    rpj_rr                       = fields.Char(string="Revue des risques")
+    #rpj_rp                      = fields.Char(string="Revue de projet")
+    rpj_rrid                     = fields.Many2one("is.revue.risque", string="Revue des risques")
     bilan_ids                    = fields.One2many("is.revue.projet.jalon.bilan", "is_revue_project_jalon_id")
     rpj_piece_jointe             = fields.Many2many("ir.attachment", "is_jalon_rpj_jointe_rel", "rpj_jointe_id", "att_id", string="Pièces jointes")
     equipe_projet_ids            = fields.One2many("is.revue.projet.jalon.equipe.projet", "is_revue_project_jalon_id")
@@ -284,114 +284,43 @@ class is_revue_projet_jalon(models.Model):
                     nomid = getattr(obj.rpj_rlid,field_name).id              
                     field_name="rpj_%sid"%k
                     setattr(obj, field_name, nomid)
-
-
-
-                    print(field_name,nomid)
                     vals={
                         'rpj_equipe_projet_fonction': equipe_projet_fonction[k],
                         'rpj_equipe_projet_nomid'   : nomid,
                     }
                     equipe_projet_ids.append([0,False,vals])
                 obj.equipe_projet_ids=equipe_projet_ids
+            #******************************************************************
+
+            #** Planning ******************************************************
+            if obj.rpj_rlid:
+                obj.rpj_date_j0 = obj.rpj_rlid.rl_date_j0
+                obj.rpj_date_j1 = obj.rpj_rlid.rl_date_j1
+                obj.rpj_date_j2 = obj.rpj_rlid.rl_date_j2
+                obj.rpj_date_j3 = obj.rpj_rlid.rl_date_j3
+                obj.rpj_date_j4 = obj.rpj_rlid.rl_date_j4
+                obj.rpj_date_j5 = obj.rpj_rlid.rl_date_j5
 
 
 
-                                # setattr(copie, name_field, dst_dossier_id)
-                    # doc = getattr(obj,name_field)                
-
-
-
-
-
- 
-            #            workorders_values += [{
-            #                 'sequence': operation.sequence,
-            #                 'name': operation.name,
-            #                 'production_id': production.id,
-            #                 'workcenter_id': operation.workcenter_id.id,
-            #                 'product_uom_id': production.product_uom_id.id,
-            #                 'operation_id': operation.id,
-            #                 'state': 'pending',
-            #             }]
-            #     workorders_dict = {wo.operation_id.id: wo for wo in production.workorder_ids.filtered(lambda wo: wo.operation_id)}
-            #     for workorder_values in workorders_values:
-            #         if workorder_values['operation_id'] in workorders_dict:
-            #             # update existing entries
-            #             workorders_list += [Command.update(workorders_dict[workorder_values['operation_id']].id, workorder_values)]
-            #         else:
-            #             # add new entries
-            #             workorders_list += [Command.create(workorder_values)]                    
-            #     production.workorder_ids = workorders_list
-            # else:
-            #     production.workorder_ids = [Command.delete(wo.id) for wo in production.workorder_ids.filtered(lambda wo: wo.operation_id)]
-
-
-
-
-
-
-    # //** Equipe projet ************************************************
-    # if (is_object($rl) and $this->getValue("rpj_equipe_projet_fonction")=="") {
-    #   $equipe_projet_fonction="Chef de projet\nExpert injection\nMéthode injection\nMéthode assemblage\nMétrologie\nQualité développement\nAchats\nLogistique\nLogistique Usine\nCommercial\nResponsable outillage\nResponsable projets\nDirecteur site de production\nDirecteur technique";
-    #   $tab=array(
-    #     "chef_projet",
-    #     "expert_injection",
-    #     "methode_injection",
-    #     "methode_assemblage",
-    #     "qualite_dev",
-    #     "qualite_usine",
-    #     "achats",
-    #     "logistique",
-    #     "logistique_usine",
-    #     "commercial2",
-    #     "responsable_outillage",
-    #     "responsable_projet",
-    #     "directeur_site",
-    #     "directeur_technique"
-    #   );
-
-    #   $noms=array(); $nomsid=array();
-    #   foreach($tab as $v) {
-    #     $title = $rl->getValue("rl_".$v);
-    #     $id    = $rl->getValue("rl_".$v."id");
-    #     $this->setValue("rpj_".$v,$title);
-    #     $this->setValue("rpj_".$v."id",$id);
-    #     $noms[]=$title;
-    #     $nomsid[]=$id;
-    #   }
-
-    #   $this->setValue("rpj_equipe_projet_fonction", $equipe_projet_fonction);
-    #   $this->setValue("rpj_equipe_projet_nom"     , $noms);
-    #   $this->setValue("rpj_equipe_projet_nomid"   , $nomsid);
+    # //** Planning *****************************************************
+    # if (is_object($rp)) {
+    #     $this->setValue("rpj_date_j0",$rp->getValue("rp_date_j0"));
+    #     $this->setValue("rpj_date_j1",$rp->getValue("rp_date_j1"));
+    #     $this->setValue("rpj_date_j2",$rp->getValue("rp_date_j2"));
+    #     $this->setValue("rpj_date_j3",$rp->getValue("rp_date_j3"));
+    #     $this->setValue("rpj_date_j4",$rp->getValue("rp_date_j4"));
+    #     $this->setValue("rpj_date_j5",$rp->getValue("rp_date_j5"));
+    # }
+    # if (is_object($rl)) {
+    #     $this->setValue("rpj_date_j0",$rl->getValue("rl_date_j0"));
+    #     $this->setValue("rpj_date_j1",$rl->getValue("rl_date_j1"));
+    #     $this->setValue("rpj_date_j2",$rl->getValue("rl_date_j2"));
+    #     $this->setValue("rpj_date_j3",$rl->getValue("rl_date_j3"));
+    #     $this->setValue("rpj_date_j4",$rl->getValue("rl_date_j4"));
+    #     $this->setValue("rpj_date_j5",$rl->getValue("rl_date_j5"));
     # }
     # //*****************************************************************
-
-
-
-
-
-
-
-    # rpj_rcid                     = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
-    # rpj_rlid                     = fields.Many2one("is.revue.lancement", string="Revue de lancement")
-    # rpj_rp                       = fields.Char(string="Revue de projet")
-    # rpj_rr                       = fields.Char(string="Revue des risques")
-
-
-
-    # revue_contrat_id   = fields.Many2one("is.revue.de.contrat", string="Revue de contrat"  , copy=False)
-    # revue_lancement_id = fields.Many2one("is.revue.lancement" , string="Revue de lancement", copy=False)
-    # revue_risque_id    = fields.Many2one("is.revue.risque"    , string="Revue des risques" , copy=False)
-
-
-            # type_demande = obj.param_project_id.ppr_type_demande
-            # print('onchange_etat',obj, type_demande)
-            # if type_demande in ['DATE','PJ_DATE']:
-            #     if obj.etat=='F':
-            #         obj.rsp_date = date.today()
-            #     else:
-            #         obj.rsp_date=False
 
 
 

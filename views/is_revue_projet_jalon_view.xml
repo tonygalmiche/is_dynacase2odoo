@@ -75,9 +75,9 @@
                                 <field name="rpj_clientid" readonly="1" force_save="1"/>
                                 <field name="rpj_rcid"     readonly="1" force_save="1" />
                                 <field name="rpj_rlid"     readonly="1" force_save="1" />
-                                <field name="rpj_rp"       invisible="1"/>
+                                <!-- <field name="rpj_rp"       invisible="1"/> -->
                                 <separator string="Revue des risques" />
-                                <field name="rpj_rr" readonly="1" force_save="1"/>
+                                <field name="rpj_rrid" readonly="1" force_save="1"/>
                                 <field name="bilan_ids" nolabel="1" colspan="2">
                                     <tree editable="bottom" create="false" delete="false" colspan="2">
                                         <field name="rpj_bilan_risque_j"            optional="show" width="15%" readonly="1"/>
@@ -127,12 +127,12 @@
                         </group>
                         <group col="3">
                             <group name="rpj_planning" string="Planning">
-                                <field name="rpj_date_j0" readonly="1"/>
-                                <field name="rpj_date_j1" readonly="1"/>
-                                <field name="rpj_date_j2" readonly="1"/>
-                                <field name="rpj_date_j3" readonly="1"/>
-                                <field name="rpj_date_j4" readonly="1"/>
-                                <field name="rpj_date_j5" readonly="1"/>
+                                <field name="rpj_date_j0" readonly="1" force_save="1"/>
+                                <field name="rpj_date_j1" readonly="1" force_save="1"/>
+                                <field name="rpj_date_j2" readonly="1" force_save="1"/>
+                                <field name="rpj_date_j3" readonly="1" force_save="1"/>
+                                <field name="rpj_date_j4" readonly="1" force_save="1"/>
+                                <field name="rpj_date_j5" readonly="1" force_save="1"/>
                             </group>
                             <group name="rpj_fr_avancement_jalon" string="État d'avancement des jalons (en %)">
                                 <field name="rpj_avancement_j0" />
@@ -269,6 +269,10 @@
                     <field name="rpj_date_j4"         optional="show" />
                     <field name="rpj_date_j5"         optional="show" />
                     <field name="rpj_indice"          optional="hide" />
+                    <field name="rpj_clientid"        optional="hide" widget="many2one_clickable" />
+                    <field name="rpj_rcid"            optional="hide" widget="many2one_clickable" />
+                    <field name="rpj_rlid"            optional="hide" widget="many2one_clickable" />
+                    <field name="rpj_rrid"            optional="hide" widget="many2one_clickable" />
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
                 </tree>
             </field>
@@ -278,6 +282,7 @@
             <field name="model">is.revue.projet.jalon</field>
             <field name="arch" type="xml">
                 <search string="Compte-rendu revue de projet jalon">
+                    <field name="rpj_clientid" />
                     <field name="rpj_chrono" />
                     <field name="rpj_mouleid" />
                     <field name="rpj_j" />
