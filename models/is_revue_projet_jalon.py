@@ -257,7 +257,7 @@ class is_revue_projet_jalon(models.Model):
             obj.rpj_clientid = obj.rpj_mouleid.client_id.id
             obj.rpj_rcid     = obj.rpj_mouleid.revue_contrat_id.id
             obj.rpj_rlid     = obj.rpj_mouleid.revue_lancement_id.id
-            obj.rpj_rr       = obj.rpj_mouleid.revue_risque_id.id
+            obj.rpj_rrid     = obj.rpj_mouleid.revue_risque_id.id
             
             #** Equipe projet *************************************************
             obj.equipe_projet_ids=False
