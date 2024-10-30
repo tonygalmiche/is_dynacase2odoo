@@ -381,22 +381,13 @@ class is_revue_projet_jalon_documents(models.Model):
 
     rpj_doc_document          = fields.Char(string="Document")
     rpj_doc_documentid        = fields.Many2one("is.doc.moule", string="Famille Document")
-
-    #rpj_doc_action            = fields.Char(string="Action")
-    #rpj_doc_etat              = fields.Char(string="État")
-
     rpj_doc_action            = fields.Selection(DOCUMENT_ACTION, string="Action")
     rpj_doc_etat              = fields.Selection(DOCUMENT_ETAT, string="État")
-
-    rpj_doc_bloquant          = fields.Char(string="Point bloquant")
+    rpj_doc_bloquant          = fields.Boolean(string="Point bloquant", default=False)
     rpj_doc_respid            = fields.Many2one("res.users", string="Responsable")
     rpj_doc_coeff             = fields.Integer(string="Coefficient")
     rpj_doc_note              = fields.Integer(string="Note")
     is_revue_project_jalon_id = fields.Many2one("is.revue.projet.jalon")
-
-
-
-
 
 
 class is_revue_projet_jalon_revue_de_contrat(models.Model):
