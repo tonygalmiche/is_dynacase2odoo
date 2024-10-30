@@ -156,7 +156,7 @@
                             <field name="documents_ids" nolabel="1" colspan="2">
                                 <tree 
                                     editable="bottom" create="false" delete="false" limit="500"
-                                    decoration-danger="rpj_doc_bloquant==True"
+                                    decoration-danger="rpj_doc_bloquant==True and rpj_doc_etat=='AF'"
                                     decoration-warning="rpj_doc_etat=='AF'"
                                     decoration-muted="rpj_doc_etat==False"
                                     decoration-success="rpj_doc_etat=='F'"
