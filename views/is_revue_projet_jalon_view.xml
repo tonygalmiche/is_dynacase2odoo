@@ -57,6 +57,7 @@
                             <group name="rpj_fr_identification" string="Identification">
                                 <field name="rpj_chrono"              readonly="1"/>
                                 <field name="rpj_mouleid"/>
+                                <field name="dossierf_id"/>
                                  <!-- attrs="{'readonly': [('rpj_mouleid', '!=', False)]}" force_save="1"/> -->
                                 <field name="rpj_j"                   readonly="1"/>
                                 <field name="rpj_date_planning_j"     readonly="1"/>
@@ -250,6 +251,7 @@
                 <tree string="Compte-rendu revue de projet jalon">
                     <field name="rpj_chrono"          optional="show" />
                     <field name="rpj_mouleid"         optional="show" widget="many2one_clickable"/>
+                    <field name="dossierf_id"         optional="show" widget="many2one_clickable"/>
                     <field name="rpj_j"               optional="hide" />
                     <field name="rpj_indice"          optional="hide" />
                     <field name="rpj_date_planning_j" optional="show" />
@@ -285,6 +287,7 @@
                     <field name="rpj_clientid" />
                     <field name="rpj_chrono" />
                     <field name="rpj_mouleid" />
+                    <field name="dossierf_id" />
                     <field name="rpj_j" />
                     <field name="rpj_indice" />
                     <field name="rpj_plan_action" />

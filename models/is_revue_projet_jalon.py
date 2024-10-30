@@ -3,7 +3,8 @@ from odoo import models, fields, api # type: ignore
 
 
 #TODO : 
-#- Manque lien Revue de lancement, revue de contrat, revue de projet, revue des risques
+#- Manque champ pour les Dossiers F
+#- Ajout champ pour indiquer si le moule est actif
 #- Lignes en trop dans tableaux Revue de contrat et Revue de projet jalon
 #- Manque le lien avec les documents des moules dans le tableau des docuements
 #- Le champ rpj_total_vente_moule valire des infos dans les investissement achat moule => Pas dispo dans Odoo
@@ -69,7 +70,8 @@ class is_revue_projet_jalon(models.Model):
             obj.sudo().state = "refuse"
 
 
-    rpj_mouleid                  = fields.Many2one("is.mold", string="Moule", required=True)
+    rpj_mouleid                  = fields.Many2one("is.mold"    , string="Moule")
+    dossierf_id                  = fields.Many2one("is.dossierf", string="Dossier F")
     rpj_chrono                   = fields.Char(string="Chrono"   , copy=False, compute='_compute_rpj_chrono',store=True, readonly=True)
     rpj_indice                   = fields.Integer(string="Indice", copy=False, compute='_compute_rpj_chrono',store=True, readonly=True)
     rpj_j = fields.Selection([
@@ -231,10 +233,11 @@ class is_revue_projet_jalon(models.Model):
             rpj_indice=0
             rpj_chrono = "?"
             rpj_j = ''
-            if obj.rpj_mouleid.j_actuelle:
-                rpj_j = obj.rpj_mouleid.j_actuelle
+            if obj.rpj_mouleid.j_actuelle or obj.dossierf_id.j_actuelle:
+                rpj_j = obj.rpj_mouleid.j_actuelle or obj.dossierf_id.j_actuelle
                 domain=[
                     ('rpj_mouleid','=', obj.rpj_mouleid.id),
+                    ('dossierf_id','=', obj.dossierf_id.id),
                     ('rpj_j'      ,'=', rpj_j),
                 ]
                 docs=self.env['is.revue.projet.jalon'].search(domain, limit=1, order="rpj_indice desc")
