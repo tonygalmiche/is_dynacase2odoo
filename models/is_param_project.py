@@ -39,6 +39,20 @@ GESTION_J=[
 ]
 
 
+DOCUMENT_ACTION=[
+    ("I", "Initialisation"),
+    ("R", "Révision"),
+    ("V", "Validation"),
+]
+
+
+DOCUMENT_ETAT = [
+    ("AF", "A Faire"),
+    ("F", "Fait"),
+    ("D", "Dérogé"),
+]
+
+
 class IsSectionGantt(models.Model):
     _name        = "is.section.gantt"
     _description = "Sections du Gantt"
@@ -189,11 +203,7 @@ class IsParamProjectArray(models.Model):
     _rec_name    = "ppp_j"
 
     ppp_j   = fields.Selection(GESTION_J, string="J")
-    ppr_irv = fields.Selection([
-        ("I", "Initialisation"),
-        ("R", "Révision"),
-        ("V", "Validation"),
-    ], string="Action")
+    ppr_irv = fields.Selection(DOCUMENT_ACTION, string="Action")
     ppr_bloquant     = fields.Boolean(string="Bloquant")
     param_project_id = fields.Many2one("is.param.project", string="Famille")
 

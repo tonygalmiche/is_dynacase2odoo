@@ -4,8 +4,7 @@ from odoo.tools import format_date, formatLang, frozendict           # type: ign
 from odoo.exceptions import AccessError, ValidationError, UserError  # type: ignore
 from datetime import datetime, timedelta, date
 from random import *
-from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J, TYPE_DOCUMENT, MODELE_TO_TYPE, TYPE_TO_FIELD # type: ignore
-
+from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J, TYPE_DOCUMENT, MODELE_TO_TYPE, TYPE_TO_FIELD, DOCUMENT_ACTION, DOCUMENT_ETAT # type: ignore
 
 
 class IsDocMoule(models.Model):
@@ -94,23 +93,13 @@ class IsDocMoule(models.Model):
     j_prevue         = fields.Selection(GESTION_J, string="J Prévue", tracking=True)
     actuelle         = fields.Selection(GESTION_J, string="J Actuelle", tracking=True, compute='_compute_actuelle',store=True, readonly=True)
     demande          = fields.Char(string="Demande", tracking=True)
-    action           = fields.Selection([
-        ("I", "Initialisation"),
-        ("R", "Révision"),
-        ("V", "Validation"),
-    ], string="Action", compute='_compute_action', store=True, readonly=True, tracking=True, copy=False)
-    etat             = fields.Selection([
-        ("AF", "A Faire"),
-        ("F", "Fait"),
-        ("D", "Dérogé"),
-    ], string="État", tracking=True, copy=False) # , compute='_compute_etat',store=True, readonly=False
+    action           = fields.Selection(DOCUMENT_ACTION, string="Action", compute='_compute_action', store=True, readonly=True, tracking=True, copy=False)
+    etat             = fields.Selection(DOCUMENT_ETAT, string="État", tracking=True, copy=False) # , compute='_compute_etat',store=True, readonly=False
     fin_derogation      = fields.Date(string="Date de fin de dérogation")
-
     coefficient         = fields.Integer(string="Coefficient"   , compute='_compute_coefficient_bloquant_note',store=True, readonly=True, tracking=True)
     bloquant            = fields.Boolean(string="Point Bloquant", compute='_compute_coefficient_bloquant_note',store=True, readonly=True, tracking=True)
     note                = fields.Integer(string="Note"          , compute='_compute_coefficient_bloquant_note',store=True, readonly=True, tracking=True)
     indicateur          = fields.Html(string="Indicateur"       , compute='_compute_indicateur'               ,store=True, readonly=True)
-
     datecreate          = fields.Date(string="Date de création", default=fields.Date.context_today)
     dateend             = fields.Date(string="Date de fin", tracking=True)
     array_ids           = fields.One2many("is.doc.moule.array", "is_doc_id", string="Pièce-jointe de réponse à la demande")
