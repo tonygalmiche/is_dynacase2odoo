@@ -159,19 +159,20 @@
                                     decoration-danger="rpj_doc_bloquant==True"
                                     decoration-warning="rpj_doc_etat=='AF'"
                                     decoration-muted="rpj_doc_etat==False"
+                                    decoration-success="rpj_doc_etat==F"
                                 >
                                     <field name="rpj_doc_documentid" optional="show" readonly="1" widget="many2one_clickable"/>
                                     <field name="rpj_doc_document"   optional="hide" readonly="1"/>
                                     <field 
-                                        name="rpj_doc_action" optional="show" readonly="0" widget="badge" 
+                                        name="rpj_doc_action" optional="show" readonly="1" widget="badge" 
                                         decoration-info="rpj_doc_action == 'I'" 
                                         decoration-warning="rpj_doc_action == 'R'"
                                         decoration-danger="rpj_doc_action == 'V'"
                                     />
-                                    <field name="rpj_doc_bloquant"   optional="show" readonly="0"/>
+                                    <field name="rpj_doc_bloquant"   optional="show" readonly="1"/>
                                     <field name="rpj_doc_respid"     optional="show" readonly="1"/>
                                     <field 
-                                        name="rpj_doc_etat" optional="show" readonly="0" widget="badge" 
+                                        name="rpj_doc_etat" optional="show" readonly="1" widget="badge" 
                                         decoration-success="rpj_doc_etat == 'F'" 
                                         decoration-warning="rpj_doc_etat == 'D'"
                                         decoration-danger="rpj_doc_etat == 'AF'"
