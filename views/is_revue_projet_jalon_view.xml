@@ -159,7 +159,7 @@
                                     decoration-danger="rpj_doc_bloquant==True"
                                     decoration-warning="rpj_doc_etat=='AF'"
                                     decoration-muted="rpj_doc_etat==False"
-                                    decoration-success="rpj_doc_etat==F"
+                                    decoration-success="rpj_doc_etat=='F'"
                                 >
                                     <field name="rpj_doc_documentid" optional="show" readonly="1" widget="many2one_clickable"/>
                                     <field name="rpj_doc_document"   optional="hide" readonly="1"/>
