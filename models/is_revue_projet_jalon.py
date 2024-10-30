@@ -378,7 +378,8 @@ class is_revue_projet_jalon_documents(models.Model):
     _description = "Compte-rendu revue de projet jalon Bilan - Documents"
     _rec_name    = "rpj_doc_documentid"
 
-    rpj_doc_documentid        = fields.Many2one("is.doc.moule", string="Document")
+    rpj_doc_document          = fields.Char(string="Document")
+    rpj_doc_documentid        = fields.Many2one("is.doc.moule", string="Famille Document")
     rpj_doc_action            = fields.Char(string="Action")
     rpj_doc_bloquant          = fields.Char(string="Point bloquant")
     rpj_doc_respid            = fields.Many2one("res.users", string="Responsable")

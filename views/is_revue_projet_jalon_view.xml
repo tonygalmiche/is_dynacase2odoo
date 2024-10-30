@@ -156,6 +156,7 @@
                             <field name="documents_ids" nolabel="1" colspan="2">
                                 <tree editable="bottom" create="false" delete="false">
                                     <field name="rpj_doc_documentid" optional="show" readonly="1" widget="many2one_clickable"/>
+                                    <field name="rpj_doc_document"   optional="hide" readonly="1"/>
                                     <field name="rpj_doc_action"     optional="show" readonly="1"/>
                                     <field name="rpj_doc_bloquant"   optional="show" readonly="1"/>
                                     <field name="rpj_doc_respid"     optional="show" readonly="1"/>
