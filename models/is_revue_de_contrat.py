@@ -210,6 +210,10 @@ class is_revue_de_contrat(models.Model):
 
     dfe_version_ids                    = fields.One2many("is.revue.de.contrat.dfe.version", "is_revue_id")
     dynacase_id = fields.Integer(string="Id Dynacase",index=True,copy=False)
+    state = fields.Selection([
+        ("brouillon", "Brouillon"),
+        ("diffuse"  , "Diffusé"),
+    ], string="État", default='brouillon', copy=False)
 
 
     def name_get(self):

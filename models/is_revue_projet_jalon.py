@@ -4,7 +4,7 @@ from odoo.addons.is_dynacase2odoo.models.is_param_project import DOCUMENT_ACTION
 
 
 #TODO : 
-#- Manque champ pour les Dossiers F
+#- Manque les données économiques de la revue de contrat pour faire la revue des J
 #- Ajout champ pour indiquer si le moule est actif
 #- Lignes en trop dans tableaux Revue de contrat et Revue de projet jalon
 #- Manque le lien avec les documents des moules dans le tableau des docuements
@@ -112,7 +112,7 @@ class is_revue_projet_jalon(models.Model):
     rpj_rrid                     = fields.Many2one("is.revue.risque", string="Revue des risques")
     bilan_ids                    = fields.One2many("is.revue.projet.jalon.bilan", "is_revue_project_jalon_id")
     rpj_piece_jointe             = fields.Many2many("ir.attachment", "is_jalon_rpj_jointe_rel", "rpj_jointe_id", "att_id", string="Pièces jointes")
-    equipe_projet_ids            = fields.One2many("is.revue.projet.jalon.equipe.projet", "is_revue_project_jalon_id")
+    equipe_projet_ids            = fields.One2many("is.revue.projet.jalon.equipe.projet", "is_revue_project_jalon_id", copy=True)
     rpj_chef_projetid            = fields.Many2one("res.users", string="Chef de projet")
     rpj_expert_injectionid       = fields.Many2one("res.users", string="Expert injection")
     rpj_methode_injectionid      = fields.Many2one("res.users", string="Méthode injection")
@@ -228,7 +228,7 @@ class is_revue_projet_jalon(models.Model):
 
 
 
-    @api.depends('rpj_mouleid')
+    @api.depends('rpj_mouleid','dossierf_id')
     def _compute_rpj_chrono(self):
         for obj in self:
             rpj_indice=0
@@ -247,7 +247,7 @@ class is_revue_projet_jalon(models.Model):
                     print(doc, doc.rpj_indice)
                 rpj_indice+=1
                 indice = ("00%s"%rpj_indice)[-2:]
-                rpj_chrono = "%s-%s-%s"%(obj.rpj_mouleid.name,rpj_j, indice)
+                rpj_chrono = "%s-%s-%s"%(obj.rpj_mouleid.name or obj.dossierf_id.name,rpj_j, indice)
             obj.rpj_j      = rpj_j
             obj.rpj_indice = rpj_indice
             obj.rpj_chrono = rpj_chrono
@@ -255,14 +255,23 @@ class is_revue_projet_jalon(models.Model):
 
 
 
-    @api.onchange('rpj_mouleid')
-    def onchange_rpj_mouleid(self):
+    # @api.onchange('rpj_mouleid')
+    # def onchange_rpj_mouleid(self):
+    #     for obj in self:
+  
+    def actualiser_action(self):
         for obj in self:
-            obj.rpj_clientid = obj.rpj_mouleid.client_id.id
-            obj.rpj_rcid     = obj.rpj_mouleid.revue_contrat_id.id
-            obj.rpj_rlid     = obj.rpj_mouleid.revue_lancement_id.id
-            obj.rpj_rrid     = obj.rpj_mouleid.revue_risque_id.id
-            
+            if obj.rpj_mouleid:
+                obj.rpj_clientid = obj.rpj_mouleid.client_id.id
+                obj.rpj_rcid     = obj.rpj_mouleid.revue_contrat_id.id
+                obj.rpj_rlid     = obj.rpj_mouleid.revue_lancement_id.id
+                obj.rpj_rrid     = obj.rpj_mouleid.revue_risque_id.id
+            if obj.dossierf_id:
+                obj.rpj_clientid = obj.dossierf_id.client_id.id
+                obj.rpj_rcid     = obj.dossierf_id.revue_contrat_id.id
+                obj.rpj_rlid     = obj.dossierf_id.revue_lancement_id.id
+                obj.rpj_rrid     = obj.dossierf_id.revue_risque_id.id
+
             #** Equipe projet *************************************************
             obj.equipe_projet_ids=False
             equipe_projet_ids=[]
@@ -304,34 +313,107 @@ class is_revue_projet_jalon(models.Model):
                 obj.rpj_date_j3 = obj.rpj_rlid.rl_date_j3
                 obj.rpj_date_j4 = obj.rpj_rlid.rl_date_j4
                 obj.rpj_date_j5 = obj.rpj_rlid.rl_date_j5
+            #******************************************************************
+
+            #** Recherche de tous les documents à faire ***********************
+            obj.documents_ids=False
+            line_ids={}
+            domain=[
+                ('idmoule'    ,'=' , obj.rpj_mouleid.id),
+                ('dossierf_id','=' , obj.dossierf_id.id),
+                ('etat'       ,'in', ['AF','D']),
+            ]
+            docs=self.env['is.doc.moule'].search(domain)
+            for doc in docs:
+                line_ids[doc.param_project_id]=doc
+            #******************************************************************
+
+            #** Recherche des documents du modèle de la J**********************
+            J = obj.rpj_j
+            if J:
+                domain=[
+                    ('mb_titre','=' , J),
+                ]
+                modeles=self.env['is.modele.bilan'].search(domain,limit=1)
+                for modele in modeles:
+                    for line in modele.line_ids:
+                        domain=[
+                            ('idmoule'         ,'=', obj.rpj_mouleid.id),
+                            ('dossierf_id'     ,'=', obj.dossierf_id.id),
+                            ('param_project_id','=', line.param_project_id.id),
+                        ]
+                        docs=self.env['is.doc.moule'].search(domain,limit=1)
+                        doc=False
+                        for d in docs:
+                            doc=d
+                        line_ids[line.param_project_id]=doc
+            documents_ids=[]
+            rpj_point_bloquant=coefficient=note=rpj_note=0
+            for param_project_id in line_ids:
+                doc = line_ids[param_project_id]
+                if doc:
+                    coefficient+=doc.coefficient
+                    note+=doc.note
+                    if doc.bloquant and doc.etat!='F':
+                        rpj_point_bloquant+=1
+                vals={
+                    'rpj_doc_document'  : param_project_id.ppr_famille,
+                    'rpj_doc_documentid': doc and doc.id,
+                    'rpj_doc_action'    : doc and doc.action,
+                    'rpj_doc_bloquant'  : doc and doc.bloquant,
+                    'rpj_doc_respid'    : doc and doc.idresp.id,
+                    'rpj_doc_etat'      : doc and doc.etat,
+                    'rpj_doc_coeff'     : doc and doc.coefficient,
+                    'rpj_doc_note'      : doc and doc.note,
+                }
+                documents_ids.append([0,False,vals])     
+            rpj_note
+            if coefficient>0:
+                rpj_note = round(100*note/coefficient)
+            obj.documents_ids      = documents_ids
+            obj.rpj_point_bloquant = rpj_point_bloquant
+            obj.rpj_note           = rpj_note
+            #******************************************************************
+
+            #** Date Planning J ***********************************************
+            if obj.rpj_rlid:
+                j_actuelle=(obj.rpj_j or '').lower()
+                name =  'rl_date_%s'%j_actuelle
+                date_planning_j = getattr(obj.rpj_rlid,name)
+                obj.rpj_date_planning_j = date_planning_j
+            #******************************************************************
+
+            #** Niveau de PPM *************************************************
+            rpj_niveau_ppm=0
+            if obj.rpj_rcid:
+                if obj.rpj_rcid.rc_type_automobile=='Oui':
+                    rpj_niveau_ppm = obj.rpj_rcid.rc_edl_at_n_ppm
+                else:
+                    rpj_niveau_ppm = obj.rpj_rcid.rc_edl_n_at_n_ppm
+            obj.rpj_niveau_ppm = rpj_niveau_ppm
+            #******************************************************************
+
+            #** Suivi des données économiques *********************************
+            #if obj.rpj_rcid:
 
 
 
-    # //** Planning *****************************************************
-    # if (is_object($rp)) {
-    #     $this->setValue("rpj_date_j0",$rp->getValue("rp_date_j0"));
-    #     $this->setValue("rpj_date_j1",$rp->getValue("rp_date_j1"));
-    #     $this->setValue("rpj_date_j2",$rp->getValue("rp_date_j2"));
-    #     $this->setValue("rpj_date_j3",$rp->getValue("rp_date_j3"));
-    #     $this->setValue("rpj_date_j4",$rp->getValue("rp_date_j4"));
-    #     $this->setValue("rpj_date_j5",$rp->getValue("rp_date_j5"));
-    # }
-    # if (is_object($rl)) {
-    #     $this->setValue("rpj_date_j0",$rl->getValue("rl_date_j0"));
-    #     $this->setValue("rpj_date_j1",$rl->getValue("rl_date_j1"));
-    #     $this->setValue("rpj_date_j2",$rl->getValue("rl_date_j2"));
-    #     $this->setValue("rpj_date_j3",$rl->getValue("rl_date_j3"));
-    #     $this->setValue("rpj_date_j4",$rl->getValue("rl_date_j4"));
-    #     $this->setValue("rpj_date_j5",$rl->getValue("rl_date_j5"));
-    # }
-    # //*****************************************************************
+            #   //** Suivi des données économiques ********************************
+            #   if (is_object($rc)) {
+            #     $this->setValue("rpj_de1_article",       $rc->getValue("rc_dfi_article"));
+            #     $this->setValue("rpj_de1_cycle",         $rc->getValue("rc_dfi_cycle"));
+            #     $this->setValue("rpj_de1_nb_emp",        $rc->getValue("rc_dfi_nb_emp"));
+            #     $this->setValue("rpj_de1_mod",           $rc->getValue("rc_dfi_mod"));
+            #     $this->setValue("rpj_de1_taux_rebut",    $rc->getValue("rc_dfi_taux_rebut"));
+            #     $this->setValue("rpj_de1_poids_piece",   $rc->getValue("rc_dfi_poids_piece"));
+            #     $this->setValue("rpj_de1_poids_carotte", $rc->getValue("rc_dfi_poids_carotte"));
 
-
-
-
-
-
-
+                
+            #     if($this->getValue("rpj_de2_article")=="") {
+            #       $this->setValue("rpj_de2_article",       $rc->getValue("rc_dfi_article"));
+            #     }
+            #   }
+            #   //*****************************************************************
 
 
 
@@ -388,6 +470,24 @@ class is_revue_projet_jalon_documents(models.Model):
     rpj_doc_coeff             = fields.Integer(string="Coefficient")
     rpj_doc_note              = fields.Integer(string="Note")
     is_revue_project_jalon_id = fields.Many2one("is.revue.projet.jalon")
+
+
+    def acceder_doc_action(self):
+        for obj in self:
+            form_id = obj.rpj_doc_documentid.get_form_view_id()
+            res= {
+                'name': 'Doc',
+                'view_mode': 'form',
+                "views"    : [
+                    (form_id, "form")
+                ],
+                'res_model': 'is.doc.moule',
+                'res_id': obj.rpj_doc_documentid.id,
+                'type': 'ir.actions.act_window',
+            }
+            return res
+
+
 
 
 class is_revue_projet_jalon_revue_de_contrat(models.Model):
