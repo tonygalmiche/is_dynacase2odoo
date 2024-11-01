@@ -202,12 +202,12 @@ class is_revue_de_contrat(models.Model):
     rc_dfi_temp_occ_pm                 = fields.Float(string="Temps occupation presse mensuelle")
     rc_dfe_desc_proc                   = fields.Text(string="Descriptif du process et site de fabrication vendu")
     rc_dfe_sch_lieu_fab                = fields.Text(string="Schéma de flux vendu (Logistique) ")
-
     rc_eqs_pj                          = fields.Many2many("ir.attachment", "is_rc_eqs_pj_rel"                         , "rc_eqs_pj"                         , "att_id", string="Pièce jointe")
     rc_df_engagement_faisabilite       = fields.Many2many("ir.attachment", "is_rc_df_engagement_faisabilite_rel"      , "rc_df_engagement_faisabilite"      , "att_id", string="PJ Engagement de faisabilité")
     rc_df_engagement_faisabilite_autre = fields.Many2many("ir.attachment", "is_rc_df_engagement_faisabilite_autre_rel", "rc_df_engagement_faisabilite_autre", "att_id", string="PJ Engagement de faisabilité (autres)")
     rc_df_fiche_capacitaire            = fields.Many2many("ir.attachment", "is_rc_df_fiche_capacitaire_rel"           , "rc_df_fiche_capacitaire"           , "att_id", string="PJ Fiche capacitaire")
-
+    rc_ca_annuel                       = fields.Float(string="CA annuel", digits=(12, 2))
+    rc_vac                             = fields.Float(string="VAC", digits=(12, 2))
     dfe_version_ids                    = fields.One2many("is.revue.de.contrat.dfe.version", "is_revue_id")
     dynacase_id = fields.Integer(string="Id Dynacase",index=True,copy=False)
     state = fields.Selection([
@@ -261,8 +261,6 @@ class is_revue_de_contrat_decomposition_prix(models.Model):
     rc_preserie_surcout             = fields.Float(string="Surcoût présérie", digits=(12, 4))
     rc_preserie_surcout_commentaire = fields.Char(string="Surcoût présérie Commentaire")
     rc_sell_price                   = fields.Float(string="Prix de vente", digits=(12, 4))
-    #rc_ca_annuel                    = fields.Float(string="CA annuel", digits=(12, 2))
-    #rc_vac                          = fields.Float(string="VAC", digits=(12, 2))
     is_revue_id = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
 
 

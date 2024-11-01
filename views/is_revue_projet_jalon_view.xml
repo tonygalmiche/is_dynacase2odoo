@@ -8,6 +8,13 @@
             <field name="arch" type="xml">
                 <form string="Compte-rendu revue de projet jalon">
                     <header>
+                        <field name="dynacase_id" invisible="1"/>
+                        <button 
+                            name="lien_vers_dynacase_action"
+                            string="Dynacase"
+                            type="object"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                        />
                         <field name="vers_brouillon_vsb" invisible="1" />
                         <button
                             name="actualiser_action"
@@ -56,7 +63,7 @@
                             attrs="{'invisible': [('vers_refuse_vsb', '!=', True)]}"
                             type="object"
                         />
-                        <field name="state" widget="statusbar" />
+                        <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet>
                         <group>
@@ -198,8 +205,7 @@
                                 <field name="rpj_point_bloquant_liste" readonly="1"/>
                             </group>
                         </group>
-                        <group name="rpj_fr_donnees_economiques" string="Suivi des données économique">
-                            <separator string="Revue de contrat" style="width:15%" />
+                        <group string="Suivi des données économique de la revue de contrat">
                             <field name="revue_de_contrat_ids" nolabel="1" colspan="2">
                                 <tree editable="bottom" create="false" delete="false">
                                     <field name="rpj_de1_article"       optional="show" readonly="1"/>
@@ -211,7 +217,8 @@
                                     <field name="rpj_de1_poids_carotte" optional="show" readonly="1"/>
                                 </tree>
                             </field>
-                            <separator string="Revue de projet jalon" style="width:15%" />
+                        </group>
+                        <group string="Suivi des données économique de la revue de projet jalon">
                             <field name="revue_de_projet_jalon_ids" nolabel="1" colspan="2">
                                 <tree editable="bottom" create="false" delete="false">
                                     <field name="rpj_de2_article"       optional="show" readonly="1"/>

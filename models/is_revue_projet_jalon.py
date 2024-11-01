@@ -273,36 +273,36 @@ class is_revue_projet_jalon(models.Model):
                 obj.rpj_rrid     = obj.dossierf_id.revue_risque_id.id
 
             #** Equipe projet *************************************************
-            obj.equipe_projet_ids=False
-            equipe_projet_ids=[]
-            if obj.rpj_rlid:
-                equipe_projet_fonction={
-                    "chef_projet"          : "Chef de projet",
-                    "expert_injection"     : "Expert injection",
-                    "methode_injection"    : "Méthode injection",
-                    "methode_assemblage"   : "Méthode assemblage",
-                    "qualite_dev"          : "Métrologie",
-                    "qualite_usine"        : "Qualité développement",
-                    "achats"               : "Achats",
-                    "logistique"           : "Logistique",
-                    "logistique_usine"     : "Logistique Usine",
-                    "commercial2"          : "Commercial",
-                    "responsable_outillage": "Responsable outillage",
-                    "responsable_projet"   : "Responsable projets",
-                    "directeur_site"       : "Directeur site de production",
-                    "directeur_technique"  : "Directeur technique",
-                }
-                for k in equipe_projet_fonction:
-                    field_name="rl_%sid"%k
-                    nomid = getattr(obj.rpj_rlid,field_name).id              
-                    field_name="rpj_%sid"%k
-                    setattr(obj, field_name, nomid)
-                    vals={
-                        'rpj_equipe_projet_fonction': equipe_projet_fonction[k],
-                        'rpj_equipe_projet_nomid'   : nomid,
+            if not obj.equipe_projet_ids:
+                equipe_projet_ids=[]
+                if obj.rpj_rlid:
+                    equipe_projet_fonction={
+                        "chef_projet"          : "Chef de projet",
+                        "expert_injection"     : "Expert injection",
+                        "methode_injection"    : "Méthode injection",
+                        "methode_assemblage"   : "Méthode assemblage",
+                        "qualite_dev"          : "Métrologie",
+                        "qualite_usine"        : "Qualité développement",
+                        "achats"               : "Achats",
+                        "logistique"           : "Logistique",
+                        "logistique_usine"     : "Logistique Usine",
+                        "commercial2"          : "Commercial",
+                        "responsable_outillage": "Responsable outillage",
+                        "responsable_projet"   : "Responsable projets",
+                        "directeur_site"       : "Directeur site de production",
+                        "directeur_technique"  : "Directeur technique",
                     }
-                    equipe_projet_ids.append([0,False,vals])
-                obj.equipe_projet_ids=equipe_projet_ids
+                    for k in equipe_projet_fonction:
+                        field_name="rl_%sid"%k
+                        nomid = getattr(obj.rpj_rlid,field_name).id              
+                        field_name="rpj_%sid"%k
+                        setattr(obj, field_name, nomid)
+                        vals={
+                            'rpj_equipe_projet_fonction': equipe_projet_fonction[k],
+                            'rpj_equipe_projet_nomid'   : nomid,
+                        }
+                        equipe_projet_ids.append([0,False,vals])
+                    obj.equipe_projet_ids=equipe_projet_ids
             #******************************************************************
 
             #** Planning ******************************************************
@@ -393,29 +393,89 @@ class is_revue_projet_jalon(models.Model):
             obj.rpj_niveau_ppm = rpj_niveau_ppm
             #******************************************************************
 
-            #** Suivi des données économiques *********************************
-            #if obj.rpj_rcid:
+            #** Revue de contrat - Suivi des données économiques **************
+            obj.revue_de_contrat_ids=False
+            revue_de_contrat_ids=[]
+            if obj.rpj_rcid:
+                for line in obj.rpj_rcid.version_ids:
+                    vals={
+                        'rpj_de1_article': line.rc_dfi_article,
+                        'rpj_de1_cycle': line.rc_dfi_cycle,
+                        'rpj_de1_nb_emp': line.rc_dfi_nb_emp,
+                        'rpj_de1_mod': line.rc_dfi_mod,
+                        'rpj_de1_taux_rebut': line.rc_dfi_taux_rebut,
+                        'rpj_de1_poids_piece': line.rc_dfi_poids_piece,
+                        'rpj_de1_poids_carotte': line.rc_dfi_poids_carotte,
+                    }
+                    revue_de_contrat_ids.append([0,False,vals])     
+            obj.revue_de_contrat_ids = revue_de_contrat_ids
+            if obj.rpj_rcid and not obj.revue_de_projet_jalon_ids:
+                revue_de_projet_jalon_ids=[]
+                for line in obj.rpj_rcid.version_ids:
+                    vals={
+                        'rpj_de2_article': line.rc_dfi_article,
+                    }
+                    revue_de_projet_jalon_ids.append([0,False,vals])     
+                obj.revue_de_projet_jalon_ids = revue_de_projet_jalon_ids
+            #******************************************************************
 
+            #** Decomposition prix revue de contrat ***************************
+            obj.decomposition_prix_ids=False
+            decomposition_prix_ids=[]
+            rpj_dp_ca_annuel = rpj_dp_vac = rpj_dp_eiv_total = rpj_dp_schema_flux_vendu = False
+            if obj.rpj_rcid:
+                rpj_dp_ca_annuel         = obj.rpj_rcid.rc_ca_annuel
+                rpj_dp_vac               = obj.rpj_rcid.rc_vac
+                rpj_dp_eiv_total         = obj.rpj_rcid.rc_eiv_total
+                rpj_dp_schema_flux_vendu = obj.rpj_rcid.rc_dfi_schema_lieu_fab
+                for line in obj.rpj_rcid.decomposition_prix_ids:
+                    prix_piece = line.rc_sell_price - line.rc_preserie_surcout
+                    vals={
+                        'rpj_dp_article': line.rc_price_comp_article,
+                        'rpj_dp_qt_annuelle': line.rc_year_quantity,
+                        'rpj_dp_part_matiere': line.rc_mat_part,
+                        'rpj_dp_part_composant': line.rc_comp_part,
+                        'rpj_dp_part_emballage': line.rc_emb_part,
+                        'rpj_dp_va_injection': line.rc_va_injection,
+                        'rpj_dp_va_assemblage': line.rc_va_assembly,
+                        'rpj_dp_frais_port': line.rc_port_fee,
+                        'rpj_dp_logistique': line.rc_logistic,
+                        'rpj_dp_amt_moule': line.rc_moul_amort,
+                        'rpj_dp_prix_piece': prix_piece,
+                     }
+                    decomposition_prix_ids.append([0,False,vals])     
+            obj.decomposition_prix_ids   = decomposition_prix_ids
+            obj.rpj_dp_ca_annuel         = rpj_dp_ca_annuel
+            obj.rpj_dp_vac               = rpj_dp_vac
+            obj.rpj_dp_eiv_total         = rpj_dp_eiv_total
+            obj.rpj_dp_schema_flux_vendu = rpj_dp_schema_flux_vendu
+            #******************************************************************
 
+            #** Revue de lancement ********************************************
+            rl_lieu_production = rl_affectation_presse = False
+            if  obj.rpj_rlid:
+                rl_lieu_production = obj.rpj_rlid.rl_lieu_production
+                rl_affectation_presse = obj.rpj_rlid.rl_affectation_presse
+            obj.rpj_lieu_production = rl_lieu_production
+            obj.rpj_affectation_presse = rl_affectation_presse
+            #******************************************************************
 
-            #   //** Suivi des données économiques ********************************
-            #   if (is_object($rc)) {
-            #     $this->setValue("rpj_de1_article",       $rc->getValue("rc_dfi_article"));
-            #     $this->setValue("rpj_de1_cycle",         $rc->getValue("rc_dfi_cycle"));
-            #     $this->setValue("rpj_de1_nb_emp",        $rc->getValue("rc_dfi_nb_emp"));
-            #     $this->setValue("rpj_de1_mod",           $rc->getValue("rc_dfi_mod"));
-            #     $this->setValue("rpj_de1_taux_rebut",    $rc->getValue("rc_dfi_taux_rebut"));
-            #     $this->setValue("rpj_de1_poids_piece",   $rc->getValue("rc_dfi_poids_piece"));
-            #     $this->setValue("rpj_de1_poids_carotte", $rc->getValue("rc_dfi_poids_carotte"));
-
-                
-            #     if($this->getValue("rpj_de2_article")=="") {
-            #       $this->setValue("rpj_de2_article",       $rc->getValue("rc_dfi_article"));
-            #     }
-            #   }
-            #   //*****************************************************************
-
-
+            #** Revue des risquee *********************************************
+            obj.bilan_ids=False
+            bilan_ids=[]
+            rpj_dp_ca_annuel = rpj_dp_vac = rpj_dp_eiv_total = rpj_dp_schema_flux_vendu = False
+            if obj.rpj_rrid:
+                for line in obj.rpj_rrid.rr_bilan_ar:
+                    vals={
+                        'rpj_bilan_risque_j': line.rr_bilan_risque_j,
+                        'rpj_bilan_risque_design': line.rr_bilan_risque_design,
+                        'rpj_bilan_risque_supply_chain': line.rr_bilan_risque_supply_chain,
+                        'rpj_bilan_risque_qualite': line.rr_bilan_risque_qualite,
+                        'rpj_bilan_risque_leadership': line.rr_bilan_risque_leadership,
+                     }
+                    bilan_ids.append([0,False,vals])     
+            obj.bilan_ids   = bilan_ids
+            #******************************************************************
 
 
 
@@ -452,7 +512,7 @@ class is_revue_projet_jalon_equipe_projet(models.Model):
         ("P", "Présent"),
         ("E", "Excusé"),
         ("N", "Non convoqué"),
-    ], string="Présence")
+    ], string="Présence", copy=False)
     is_revue_project_jalon_id  = fields.Many2one("is.revue.projet.jalon")
 
 
