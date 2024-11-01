@@ -261,8 +261,8 @@ class is_revue_de_contrat_decomposition_prix(models.Model):
     rc_preserie_surcout             = fields.Float(string="Surcoût présérie", digits=(12, 4))
     rc_preserie_surcout_commentaire = fields.Char(string="Surcoût présérie Commentaire")
     rc_sell_price                   = fields.Float(string="Prix de vente", digits=(12, 4))
-    rc_ca_annuel                    = fields.Float(string="CA annuel", digits=(12, 2))
-    rc_vac                          = fields.Float(string="VAC", digits=(12, 2))
+    #rc_ca_annuel                    = fields.Float(string="CA annuel", digits=(12, 2))
+    #rc_vac                          = fields.Float(string="VAC", digits=(12, 2))
     is_revue_id = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
 
 

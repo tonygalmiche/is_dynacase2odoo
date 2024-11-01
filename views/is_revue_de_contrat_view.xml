@@ -101,8 +101,8 @@
                                                     <field name="rc_preserie_surcout" />
                                                     <field name="rc_preserie_surcout_commentaire" />
                                                     <field name="rc_sell_price" />
-                                                    <field name="rc_ca_annuel" />
-                                                    <field name="rc_vac" />
+                                                    <!-- <field name="rc_ca_annuel" /> -->
+                                                    <!-- <field name="rc_vac" /> -->
                                                 </group>
                                             </group>
                                         </form>
@@ -124,9 +124,9 @@
                                             <field name="rc_moul_amort_commentaire" optional="hide"/>
                                             <field name="rc_preserie_surcout" optional="hide"/>
                                             <field name="rc_preserie_surcout_commentaire" optional="hide"/>
-                                            <field name="rc_sell_price" optional="hide"/>
-                                            <field name="rc_ca_annuel" optional="hide"/>
-                                            <field name="rc_vac" optional="hide"/>
+                                            <field name="rc_sell_price" optional="show"/>
+                                            <!-- <field name="rc_ca_annuel" optional="hide"/> -->
+                                            <!-- <field name="rc_vac" optional="hide"/> -->
                                         </tree>
                                     </field>
                                 </group>
