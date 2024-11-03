@@ -24,42 +24,42 @@
                         />
                         <button
                             name="vers_brouillon_action"
-                            string="Brouillon"
+                            string="vers Brouillon"
                             attrs="{'invisible': [('vers_brouillon_vsb', '!=', True)]}"
                             type="object"
                         />
                         <field name="vers_directeur_technique_vsb" invisible="1" />
                         <button
                             name="vers_directeur_technique_action"
-                            string="Directeur Technique"
+                            string="vers Directeur Technique"
                             attrs="{'invisible': [('vers_directeur_technique_vsb', '!=', True)]}"
                             type="object"
                         />
                         <field name="vers_direceeur_de_site_vsb" invisible="1" />
                         <button
                             name="vers_direceeur_de_site_action"
-                            string="Direceeur de Site"
+                            string="vers Direceeur de Site"
                             attrs="{'invisible': [('vers_direceeur_de_site_vsb', '!=', True)]}"
                             type="object"
                         />
                         <field name="vers_pour_information_vsb" invisible="1" />
                         <button
                             name="vers_pour_information_action"
-                            string="Pour Information"
+                            string="vers Pour Information"
                             attrs="{'invisible': [('vers_pour_information_vsb', '!=', True)]}"
                             type="object"
                         />
                         <field name="vers_valide_vsb" invisible="1" />
                         <button
                             name="vers_valide_action"
-                            string="Validé"
+                            string="vers Validé"
                             attrs="{'invisible': [('vers_valide_vsb', '!=', True)]}"
                             type="object"
                         />
                         <field name="vers_refuse_vsb" invisible="1" />
                         <button
                             name="vers_refuse_action"
-                            string="Refusé"
+                            string="vers Refusé"
                             attrs="{'invisible': [('vers_refuse_vsb', '!=', True)]}"
                             type="object"
                         />
@@ -69,31 +69,29 @@
                         <group>
                             <group name="rpj_fr_identification" string="Identification">
                                 <field name="rpj_chrono"              readonly="1"/>
-                                <field name="rpj_mouleid"/>
-                                <field name="dossierf_id"/>
-                                 <!-- attrs="{'readonly': [('rpj_mouleid', '!=', False)]}" force_save="1"/> -->
+                                <field name="rpj_mouleid" attrs="{'readonly': ['|',('rpj_mouleid', '!=', False),('dossierf_id', '!=', False)]}" force_save="1"/>
+                                <field name="dossierf_id" attrs="{'readonly': ['|',('rpj_mouleid', '!=', False),('dossierf_id', '!=', False)]}" force_save="1"/>
                                 <field name="rpj_j"                   readonly="1"/>
                                 <field name="rpj_date_planning_j"     readonly="1"/>
                                 <field name="rpj_indice"              readonly="1"/>
-                                <field name="rpj_date_creation" />
-                                <field name="rpj_plan_action" invisible="1"/>
-                                <field name="rpj_niveau_ppm"          readonly="1"/>
-                                <field name="rpj_commentaire" />
-                                <field name="rpj_motif_refus" invisible="1"/>
+                                <field name="rpj_date_creation" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_plan_action"   invisible="1"/>
+                                <field name="rpj_niveau_ppm"    attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"          readonly="1"/>
+                                <field name="rpj_commentaire"   attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}" />
+                                <field name="rpj_motif_refus"   invisible="1"/>
                                 <separator string="Lieu de production" />
                                 <field name="rpj_lieu_production"     readonly="1"/>
                                 <field name="rpj_affectation_presse"  readonly="1"/>
-                                <field name="rpj_lieu_production2" />
-                                <field name="rpj_affectation_presse2" />
+                                <field name="rpj_lieu_production2"    attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_affectation_presse2" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
                                 <separator string="Liens" />
                                 <field name="rpj_clientid" readonly="1" force_save="1"/>
                                 <field name="rpj_rcid"     readonly="1" force_save="1" />
                                 <field name="rpj_rlid"     readonly="1" force_save="1" />
-                                <!-- <field name="rpj_rp"       invisible="1"/> -->
                                 <separator string="Revue des risques" />
                                 <field name="rpj_rrid" readonly="1" force_save="1"/>
                                 <field name="bilan_ids" nolabel="1" colspan="2">
-                                    <tree editable="bottom" create="false" delete="false" colspan="2">
+                                    <tree editable="bottom" create="false" colspan="2" delete="false">
                                         <field name="rpj_bilan_risque_j"            optional="show" width="15%" readonly="1"/>
                                         <field name="rpj_bilan_risque_design"       optional="show" width="20%" readonly="1"/>
                                         <field name="rpj_bilan_risque_supply_chain" optional="show" width="25%" readonly="1"/>
@@ -102,10 +100,10 @@
                                     </tree>
                                 </field>
                                 <separator string="Pièces jointes" />
-                                <field name="rpj_piece_jointe" widget="many2many_binary"/>
+                                <field name="rpj_piece_jointe" widget="many2many_binary" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
                             </group>
                             <group string="">
-                                <field name="logo_rs" invisible="1" />
+                                <field name="logo_rs" invisible="1"/>
                                 <div colspan="2" style="text-align:center">
                                     <field name="rpj_photo" widget="image" readonly="1" style="max-width:400px;max-height:400px" nolabel="1" colspan="2"/><br />
                                     <img attrs="{'invisible': [('logo_rs', '!=', 'S')]}"  alt="Logo S"  src="/is_dynacase2odoo/static/src/img/logo_s.png"/>
@@ -113,7 +111,7 @@
                                     <img attrs="{'invisible': [('logo_rs', '!=', 'RS')]}" alt="Logo RS" src="/is_dynacase2odoo/static/src/img/logo_rs.png"/><br />        
                                 </div>
                                 <separator string="Équipe projet" />
-                                <field name="equipe_projet_ids" nolabel="1" colspan="2">
+                                <field name="equipe_projet_ids" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}">
                                     <tree editable="bottom">
                                         <field name="rpj_equipe_projet_fonction" optional="show" />
                                         <field name="rpj_equipe_projet_nomid" optional="show" />
@@ -121,20 +119,20 @@
                                     </tree>
                                 </field>
                                 <separator string="Équipe projet (Pour gestion des droits et des mails)"/>
-                                <field name="rpj_chef_projetid"/>
-                                <field name="rpj_expert_injectionid"/>
-                                <field name="rpj_methode_injectionid"/>
-                                <field name="rpj_methode_assemblageid"/>
-                                <field name="rpj_qualite_devid"/>
-                                <field name="rpj_qualite_usineid"/>
-                                <field name="rpj_achatsid"/>
-                                <field name="rpj_logistiqueid"/>
-                                <field name="rpj_logistique_usineid"/>
-                                <field name="rpj_commercial2id"/>
-                                <field name="rpj_responsable_outillageid"/>
-                                <field name="rpj_responsable_projetid"/>
-                                <field name="rpj_directeur_siteid"/>
-                                <field name="rpj_directeur_techniqueid"/>
+                                <field name="rpj_chef_projetid"           attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_expert_injectionid"      attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_methode_injectionid"     attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_methode_assemblageid"    attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_qualite_devid"           attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_qualite_usineid"         attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_achatsid"                attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_logistiqueid"            attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_logistique_usineid"      attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_commercial2id"           attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_responsable_outillageid" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_responsable_projetid"    attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_directeur_siteid"        attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_directeur_techniqueid"   attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
                                 <separator string="Critères à risque"/>
                                 <field name="rpj_critere_a_risque" readonly="1"/>
                             </group>
@@ -149,20 +147,20 @@
                                 <field name="rpj_date_j5" readonly="1" force_save="1"/>
                             </group>
                             <group name="rpj_fr_avancement_jalon" string="État d'avancement des jalons (en %)">
-                                <field name="rpj_avancement_j0" />
-                                <field name="rpj_avancement_j1" />
-                                <field name="rpj_avancement_j2" />
-                                <field name="rpj_avancement_j3" />
-                                <field name="rpj_avancement_j4" />
-                                <field name="rpj_avancement_j5" />
+                                <field name="rpj_avancement_j0" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_avancement_j1" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_avancement_j2" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_avancement_j3" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_avancement_j4" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_avancement_j5" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
                             </group>
                             <group name="rpj_date_validation" string="Date de validation">
-                                <field name="rpj_date_valide_j0" />
-                                <field name="rpj_date_valide_j1" />
-                                <field name="rpj_date_valide_j2" />
-                                <field name="rpj_date_valide_j3" />
-                                <field name="rpj_date_valide_j4" />
-                                <field name="rpj_date_valide_j5" />
+                                <field name="rpj_date_valide_j0" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_date_valide_j1" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_date_valide_j2" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_date_valide_j3" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_date_valide_j4" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_date_valide_j5" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
                             </group>
                         </group>
                         <group name="rpj_fr_documents" string="Documents">
@@ -172,7 +170,7 @@
                                     decoration-danger="rpj_doc_bloquant==True and rpj_doc_etat=='AF'"
                                     decoration-warning="rpj_doc_etat=='AF'"
                                     decoration-muted="rpj_doc_etat==False"
-                                    decoration-success="rpj_doc_etat=='F'"
+                                    decoration-success="rpj_doc_etat=='F'" 
                                 >
                                     <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus" attrs="{'invisible': [('rpj_doc_documentid', '=', False)]}"/>
                                     <field name="rpj_doc_documentid" optional="hide" readonly="1" widget="many2one_clickable"/>
@@ -222,20 +220,19 @@
                             <field name="revue_de_projet_jalon_ids" nolabel="1" colspan="2">
                                 <tree editable="bottom" create="false" delete="false">
                                     <field name="rpj_de2_article"       optional="show" readonly="1"/>
-                                    <field name="rpj_de2_cycle"         optional="show"/>
-                                    <field name="rpj_de2_nb_emp"        optional="show"/>
-                                    <field name="rpj_de2_mod"           optional="show"/>
-                                    <field name="rpj_de2_taux_rebut"    optional="show"/>
-                                    <field name="rpj_de2_poids_piece"   optional="show"/>
-                                    <field name="rpj_de2_poids_carotte" optional="show"/>
+                                    <field name="rpj_de2_cycle"         optional="show" attrs="{'readonly': [('parent.state', '!=', 'rpj_brouillon')]}"/>
+                                    <field name="rpj_de2_nb_emp"        optional="show" attrs="{'readonly': [('parent.state', '!=', 'rpj_brouillon')]}"/>
+                                    <field name="rpj_de2_mod"           optional="show" attrs="{'readonly': [('parent.state', '!=', 'rpj_brouillon')]}"/>
+                                    <field name="rpj_de2_taux_rebut"    optional="show" attrs="{'readonly': [('parent.state', '!=', 'rpj_brouillon')]}"/>
+                                    <field name="rpj_de2_poids_piece"   optional="show" attrs="{'readonly': [('parent.state', '!=', 'rpj_brouillon')]}"/>
+                                    <field name="rpj_de2_poids_carotte" optional="show" attrs="{'readonly': [('parent.state', '!=', 'rpj_brouillon')]}"/>
                                 </tree>
                             </field>
                         </group>
                         <group>
                             <group>
-                                <!-- Le champ rpj_total_vente_moule valire des infos dans les investissement achat moule => Pas dispo dans Odoo -->
-                                <field name="rpj_total_vente_moule"/>
-                                <field name="rpj_total_achat_moule" />
+                                <field name="rpj_total_vente_moule" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_total_achat_moule" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
                                 <field name="rp_marge_brute_moule"  readonly="1"/>
                             </group>
                             <group></group>

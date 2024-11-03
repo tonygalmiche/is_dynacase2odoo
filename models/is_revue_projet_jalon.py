@@ -22,53 +22,183 @@ class is_revue_projet_jalon(models.Model):
     def _compute_vsb(self):
         for obj in self:
             vsb = False
-            if obj.state in ["directeur_technique"]:
+            if obj.state in ["rpj_directeur_technique"]:
                 vsb = True
             obj.vers_brouillon_vsb = vsb
             vsb = False
-            if obj.state in ["brouillon"]:
+            if obj.state in ["rpj_brouillon"]:
                 vsb = True
             obj.vers_directeur_technique_vsb = vsb
             vsb = False
-            if obj.state in ["directeur_technique"]:
+            if obj.state in ["rpj_directeur_technique"]:
                 vsb = True
             obj.vers_direceeur_de_site_vsb = vsb
             vsb = False
-            if obj.state in ["brouillon"]:
+            if obj.state in ["rpj_brouillon"]:
                 vsb = True
             obj.vers_pour_information_vsb = vsb
             vsb = False
-            if obj.state in ["brouillon", "direceeur_de_site"]:
+            if obj.state=="rpj_directeur_site":
                 vsb = True
+
+            #En J4 et J5, il faut passer par la validation du directeur de technique"
+            if obj.state=="rpj_brouillon":
+                if obj.rpj_j not in ['J4','J5']:
+                    vsb = True
+
+
+
+
             obj.vers_valide_vsb = vsb
+
+
+
+
             vsb = False
-            if obj.state in ["directeur_technique", "direceeur_de_site"]:
+            if obj.state in ["rpj_directeur_technique", "rpj_directeur_site"]:
                 vsb = True
             obj.vers_refuse_vsb = vsb
 
+
+#   function m1_vers_directeur_technique($newstate,$oldstate) {
+#     //if ($this->doc->getValue("rpj_rrid")=="") return "Il est obligatoire d'avoir une revue des risques pour valider ce document";
+#     $J=$this->doc->getValue("rpj_j");
+#     if ($J!="J4" and $J!="J5") $err="En J0, J1, J2 et J3, il ne faut pas passer par la validation du directeur de technique";
+#     if($J=="J5") {
+#       $cycle         = trim($this->doc->getValue("rpj_de2_cycle"));
+#       $nb_emp        = trim($this->doc->getValue("rpj_de2_nb_emp"));
+#       $mod           = trim($this->doc->getValue("rpj_de2_mod"));
+#       $taux_rebut    = trim($this->doc->getValue("rpj_de2_taux_rebut"));
+#       $poids_piece   = trim($this->doc->getValue("rpj_de2_poids_piece"));
+#       $poids_carotte = trim($this->doc->getValue("rpj_de2_poids_carotte"));
+#       if($cycle=="" or $nb_emp=="" or $mod==""  or $taux_rebut==""  or $poids_piece==""  or $poids_carotte=="") {
+#         $err="Ces champs sont obligatoires en J5 : 'Cycle par pièce', 'Nb empreintes', 'MOD', 'Tx rebut vendu', 'Poids pièce (en g)', 'Poids carotte (en g)'";
+#       }
+#     }
+#     return $err;
+#   }
+
+
+
+#   function m1_vers_refus($newstate,$oldstate) {
+#     $motif_refus=$this->getValue("par_motif_refus");
+#     $this->doc->disableEditControl(); // no control here
+#     $this->doc->setValue("rpj_motif_refus",$motif_refus);
+#     $this->doc->modify();
+#   }
+
+
+
+#   function m2_vers_diffuse($newstate) {
+#     $layout="PG_CR_RP_JALON:MAIL_DIFFUSE:S";
+#     $dbaccess=$this->dbaccess;
+#     $ids=$this->doc->getTValue("rpj_equipe_projet_nomid");
+#     $to=array();
+#     foreach($ids as $id) {
+#       if ($id>0) {
+#         $doc=new_Doc($dbaccess,$id);
+#         if(is_object($doc)) {
+#           $mail=$doc->getValue("US_MAIL");
+#           $to[$mail]=$mail;
+#         }
+#       }
+#     }
+#     $to=implode(", ",$to);
+#     $this->Envoi_Mail($newstate,$to,$cc,$layout);
+#   }
+
+
+
+#   function m2_vers_directeur_technique($newstate) {
+#     $to=$this->doc->GetRValue("rpj_directeur_techniqueid:US_MAIL");
+#     $cc=$this->doc->GetRValue("rpj_chef_projetid:US_MAIL");
+#     $layout="PG_CR_RP_JALON:MAIL_DIRECTEUR_TECHNIQUE:S";
+#     $this->Envoi_Mail($newstate,$to,$cc,$layout);
+#   }
+
+#   function m2_vers_directeur_site($newstate) {
+#     $to=$this->doc->GetRValue("rpj_directeur_siteid:US_MAIL");
+#     $cc=$this->doc->GetRValue("rpj_chef_projetid:US_MAIL");
+#     $layout="PG_CR_RP_JALON:MAIL_DIRECTEUR_SITE:S";
+#     $this->Envoi_Mail($newstate,$to,$cc,$layout);
+#   }
+
+#   function m2_vers_valide($newstate) {
+#     $layout="PG_CR_RP_JALON:MAIL_VALIDE:S";
+
+#     $J=$this->doc->getValue("rpj_j");
+#     $J=strtolower($J);
+#     $note=$this->doc->getValue("rpj_note");
+#     $this->doc->disableEditControl(); // no control here
+#     $this->doc->setValue("rpj_avancement_".$J , $note);
+#     $this->doc->setValue("rpj_date_valide_".$J, date("d/m/Y"));
+#     $this->doc->modify();
+
+#     $dbaccess=$this->dbaccess;
+#     $ids=$this->doc->getTValue("rpj_equipe_projet_nomid");
+#     $to=array();
+#     foreach($ids as $id) {
+#       if ($id>0) {
+#         $doc=new_Doc($dbaccess,$id);
+#         if(is_object($doc)) {
+#           $mail=$doc->getValue("US_MAIL");
+#           $to[$mail]=$mail;
+#         }
+#       }
+#     }
+#     $to=implode(", ",$to);
+#     $this->Envoi_Mail($newstate,$to,$cc,$layout);
+#   }
+
+
+#   function m2_vers_refus($newstate) {
+#     //$to=$this->doc->GetRValue("rpj_chef_projetid:US_MAIL");
+#     //$cc=$this->doc->GetRValue("rpj_directeur_techniqueid:US_MAIL");
+
+#     $dbaccess=$this->dbaccess;
+#     $ids=$this->doc->getTValue("rpj_equipe_projet_nomid");
+#     $to=array();
+#     foreach($ids as $id) {
+#       if ($id>0) {
+#         $doc=new_Doc($dbaccess,$id);
+#         if(is_object($doc)) {
+#           $mail=$doc->getValue("US_MAIL");
+#           $to[$mail]=$mail;
+#         }
+#       }
+#     }
+#     $to=implode(", ",$to);
+
+#     $layout="PG_CR_RP_JALON:MAIL_REFUS:S";
+#     $this->Envoi_Mail($newstate,$to,$cc,$layout);
+#   }
+
+
+
+
     def vers_brouillon_action(self):
         for obj in self:
-            obj.sudo().state = "brouillon"
+            obj.sudo().state = "rpj_brouillon"
 
     def vers_directeur_technique_action(self):
         for obj in self:
-            obj.sudo().state = "directeur_technique"
+            obj.sudo().state = "rpj_directeur_technique"
 
     def vers_direceeur_de_site_action(self):
         for obj in self:
-            obj.sudo().state = "direceeur_de_site"
+            obj.sudo().state = "rpj_directeur_site"
 
     def vers_pour_information_action(self):
         for obj in self:
-            obj.sudo().state = "pour_information"
+            obj.sudo().state = "rpj_pour_information"
 
     def vers_valide_action(self):
         for obj in self:
-            obj.sudo().state = "valide"
+            obj.sudo().state = "rpj_valide"
 
     def vers_refuse_action(self):
         for obj in self:
-            obj.sudo().state = "refuse"
+            obj.sudo().state = "rpj_refus"
 
 
     rpj_mouleid                  = fields.Many2one("is.mold"    , string="Moule")
@@ -213,21 +343,6 @@ class is_revue_projet_jalon(models.Model):
             obj.rp_marge_brute_moule = marge_brute_moule
 
 
-
-    # rpj_total_vente_moule        = fields.Float(string="Total vente moule")
-    # rpj_total_achat_moule        = fields.Float(string="Total achat moule")
-
-
-#   //** Marge brute **************************************************
-#   $vente_moule=$this->getValue("rpj_total_vente_moule");
-#   $achat_moule=$this->getValue("rpj_total_achat_moule");
-#   //Marge en % =1-(Achat/ Vente)*100 = (1-(14104/32402))*100= 56.47 % 
-#   $marge_brute_moule = round(100*(1 - ($achat_moule / $vente_moule)),2);
-#   $this->setValue("rp_marge_brute_moule",$marge_brute_moule);
-#   //*****************************************************************
-
-
-
     @api.depends('rpj_mouleid','dossierf_id')
     def _compute_rpj_chrono(self):
         for obj in self:
@@ -252,15 +367,11 @@ class is_revue_projet_jalon(models.Model):
             obj.rpj_indice = rpj_indice
             obj.rpj_chrono = rpj_chrono
 
-
-
-
-    # @api.onchange('rpj_mouleid')
-    # def onchange_rpj_mouleid(self):
-    #     for obj in self:
   
     def actualiser_action(self):
         for obj in self:
+            obj._compute_logo_rs()
+            obj._compute_rp_marge_brute_moule()
             if obj.rpj_mouleid:
                 obj.rpj_clientid = obj.rpj_mouleid.client_id.id
                 obj.rpj_rcid     = obj.rpj_mouleid.revue_contrat_id.id
@@ -476,7 +587,6 @@ class is_revue_projet_jalon(models.Model):
                     bilan_ids.append([0,False,vals])     
             obj.bilan_ids   = bilan_ids
             #******************************************************************
-
 
 
 class is_revue_projet_jalon_bilan(models.Model):
