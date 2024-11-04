@@ -77,6 +77,7 @@ class IsDocMoule(models.Model):
     project_prev     = fields.Html(compute='_compute_project_prev', store=True)
     project_prev2    = fields.Html()
     param_project_id = fields.Many2one("is.param.project", string="Famille de document", tracking=True, index=True)
+    param_project_array_html = fields.Html(related="param_project_id.array_html")
     ppr_type_demande = fields.Selection(related="param_project_id.ppr_type_demande")
     ppr_icon         = fields.Image(related="param_project_id.ppr_icon", string="Icône", store=True)
     ppr_color        = fields.Char(related="param_project_id.ppr_color", string="Color", store=True)
@@ -128,7 +129,6 @@ class IsDocMoule(models.Model):
     def onchange_etat(self):
         for obj in self:
             type_demande = obj.param_project_id.ppr_type_demande
-            print('onchange_etat',obj, type_demande)
             if type_demande in ['DATE','PJ_DATE']:
                 if obj.etat=='F':
                     obj.rsp_date = date.today()
@@ -221,6 +221,8 @@ class IsDocMoule(models.Model):
                                     bloquant=True
                     if obj.etat=='F':
                         note = coefficient
+                        if obj.j_prevue and obj.actuelle>obj.j_prevue:
+                            note=coefficient=0
             obj.coefficient = coefficient
             obj.bloquant    = bloquant
             obj.note        = note
@@ -233,7 +235,9 @@ class IsDocMoule(models.Model):
             ladate = '(date)'
             if obj.dateend:
                 ladate = obj.dateend.strftime('%d/%m/%Y')
-            lanote = "%s/%s"%(obj.note,obj.coefficient)
+            lanote=""
+            if obj.coefficient>0:
+                lanote = "%s/%s"%(obj.note,obj.coefficient)
             reponses=obj.get_doc_reponse()
             html="""
                 <div style='background-color:"""+color+"""'>

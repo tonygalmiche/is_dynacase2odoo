@@ -111,6 +111,7 @@
                                         <field name="acces_chef_projet"/>
                                     </group>
                                     <group>
+                                        <field name="param_project_array_html"/>
                                         <field name="ppr_type_demande"/>
                                         <field name="coefficient"/>
                                         <field name="bloquant"/>
@@ -237,6 +238,7 @@
                     <field name="color"     optional="hide" />
 
                     <field name="fin_derogation" optional="show" />
+                    <field name="param_project_array_html" optional="hide"/>
                     <field name="coefficient"  optional="show"/>
                     <field name="note"  optional="show"/>
                     <field name="indicateur"  optional="show"/>
