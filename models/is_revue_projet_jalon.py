@@ -321,6 +321,7 @@ class is_revue_projet_jalon(models.Model):
                 ('idmoule'    ,'=' , obj.rpj_mouleid.id),
                 ('dossierf_id','=' , obj.dossierf_id.id),
                 ('etat'       ,'in', ['AF','D']),
+                ('action'     ,'!=', False),
             ]
             docs=self.env['is.doc.moule'].search(domain)
             for doc in docs:
