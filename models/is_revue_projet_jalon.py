@@ -2,11 +2,11 @@
 from odoo import models, fields, api # type: ignore
 from odoo.addons.is_dynacase2odoo.models.is_param_project import DOCUMENT_ACTION, DOCUMENT_ETAT # type: ignore
 from odoo.exceptions import AccessError, ValidationError, UserError  # type: ignore
+from datetime import datetime, timedelta, date
 
 
 #TODO : 
 #- Le champ rpj_total_vente_moule va lire des infos dans les investissement achat moule => Pas dispo dans Odoo
-
 
 
 class is_revue_projet_jalon(models.Model):
@@ -22,8 +22,6 @@ class is_revue_projet_jalon(models.Model):
             if obj.state in ["rpj_directeur_technique"]:
                 vsb = True
             obj.vers_brouillon_vsb = vsb
-
-
             vsb = False
             if obj.state in ["rpj_brouillon"] and obj.rpj_j in ['J4','J5']:
                 vsb = True
@@ -35,7 +33,7 @@ class is_revue_projet_jalon(models.Model):
             vsb = False
             if obj.state in ["rpj_brouillon"]:
                 vsb = True
-            obj.vers_pour_information_vsb = vsb
+            obj.vers_diffuse_vsb = vsb
             vsb = False
             if obj.state=="rpj_directeur_site":
                 vsb = True
@@ -45,106 +43,9 @@ class is_revue_projet_jalon(models.Model):
                     vsb = True
             obj.vers_valide_vsb = vsb
             vsb = False
-            if obj.state in ["rpj_directeur_technique", "rpj_directeur_site"]:
+            if obj.state in ["rpj_directeur_technique", "rpj_directeur_site"] and obj.rpj_motif_refus:
                 vsb = True
             obj.vers_refuse_vsb = vsb
-
-
-
-#   function m1_vers_refus($newstate,$oldstate) {
-#     $motif_refus=$this->getValue("par_motif_refus");
-#     $this->doc->disableEditControl(); // no control here
-#     $this->doc->setValue("rpj_motif_refus",$motif_refus);
-#     $this->doc->modify();
-#   }
-
-
-
-#   function m2_vers_diffuse($newstate) {
-#     $layout="PG_CR_RP_JALON:MAIL_DIFFUSE:S";
-#     $dbaccess=$this->dbaccess;
-#     $ids=$this->doc->getTValue("rpj_equipe_projet_nomid");
-#     $to=array();
-#     foreach($ids as $id) {
-#       if ($id>0) {
-#         $doc=new_Doc($dbaccess,$id);
-#         if(is_object($doc)) {
-#           $mail=$doc->getValue("US_MAIL");
-#           $to[$mail]=$mail;
-#         }
-#       }
-#     }
-#     $to=implode(", ",$to);
-#     $this->Envoi_Mail($newstate,$to,$cc,$layout);
-#   }
-
-
-
-#   function m2_vers_directeur_technique($newstate) {
-#     $to=$this->doc->GetRValue("rpj_directeur_techniqueid:US_MAIL");
-#     $cc=$this->doc->GetRValue("rpj_chef_projetid:US_MAIL");
-#     $layout="PG_CR_RP_JALON:MAIL_DIRECTEUR_TECHNIQUE:S";
-#     $this->Envoi_Mail($newstate,$to,$cc,$layout);
-#   }
-
-#   function m2_vers_directeur_site($newstate) {
-#     $to=$this->doc->GetRValue("rpj_directeur_siteid:US_MAIL");
-#     $cc=$this->doc->GetRValue("rpj_chef_projetid:US_MAIL");
-#     $layout="PG_CR_RP_JALON:MAIL_DIRECTEUR_SITE:S";
-#     $this->Envoi_Mail($newstate,$to,$cc,$layout);
-#   }
-
-#   function m2_vers_valide($newstate) {
-#     $layout="PG_CR_RP_JALON:MAIL_VALIDE:S";
-
-#     $J=$this->doc->getValue("rpj_j");
-#     $J=strtolower($J);
-#     $note=$this->doc->getValue("rpj_note");
-#     $this->doc->disableEditControl(); // no control here
-#     $this->doc->setValue("rpj_avancement_".$J , $note);
-#     $this->doc->setValue("rpj_date_valide_".$J, date("d/m/Y"));
-#     $this->doc->modify();
-
-#     $dbaccess=$this->dbaccess;
-#     $ids=$this->doc->getTValue("rpj_equipe_projet_nomid");
-#     $to=array();
-#     foreach($ids as $id) {
-#       if ($id>0) {
-#         $doc=new_Doc($dbaccess,$id);
-#         if(is_object($doc)) {
-#           $mail=$doc->getValue("US_MAIL");
-#           $to[$mail]=$mail;
-#         }
-#       }
-#     }
-#     $to=implode(", ",$to);
-#     $this->Envoi_Mail($newstate,$to,$cc,$layout);
-#   }
-
-
-#   function m2_vers_refus($newstate) {
-#     //$to=$this->doc->GetRValue("rpj_chef_projetid:US_MAIL");
-#     //$cc=$this->doc->GetRValue("rpj_directeur_techniqueid:US_MAIL");
-
-#     $dbaccess=$this->dbaccess;
-#     $ids=$this->doc->getTValue("rpj_equipe_projet_nomid");
-#     $to=array();
-#     foreach($ids as $id) {
-#       if ($id>0) {
-#         $doc=new_Doc($dbaccess,$id);
-#         if(is_object($doc)) {
-#           $mail=$doc->getValue("US_MAIL");
-#           $to[$mail]=$mail;
-#         }
-#       }
-#     }
-#     $to=implode(", ",$to);
-
-#     $layout="PG_CR_RP_JALON:MAIL_REFUS:S";
-#     $this->Envoi_Mail($newstate,$to,$cc,$layout);
-#   }
-
-
 
 
     def vers_brouillon_action(self):
@@ -158,81 +59,34 @@ class is_revue_projet_jalon(models.Model):
             J = obj.rpj_j
             if J!='J4' and J!='J5':
                 raise ValidationError("En J0, J1, J2 et J3, il ne faut pas passer par la validation du directeur de technique!")
-            
             if J=='J5':
                 for line in obj.revue_de_projet_jalon_ids:
                     if not line.rpj_de2_cycle or not line.rpj_de2_nb_emp or not line.rpj_de2_mod or not line.rpj_de2_taux_rebut or not line.rpj_de2_poids_piece or not line.rpj_de2_poids_carotte:
                         err="Ces champs sont obligatoires en J5 : 'Cycle par pièce', 'Nb empreintes', 'MOD', 'Tx rebut vendu', 'Poids pièce (en g)', 'Poids carotte (en g)'"
                         raise ValidationError(err)
-
-
-
-
-
             obj.sudo().state = "rpj_directeur_technique"
-
-
-#     if($J=="J5") {
-#       $cycle         = trim($this->doc->getValue("rpj_de2_cycle"));
-#       $nb_emp        = trim($this->doc->getValue("rpj_de2_nb_emp"));
-#       $mod           = trim($this->doc->getValue("rpj_de2_mod"));
-#       $taux_rebut    = trim($this->doc->getValue("rpj_de2_taux_rebut"));
-#       $poids_piece   = trim($this->doc->getValue("rpj_de2_poids_piece"));
-#       $poids_carotte = trim($this->doc->getValue("rpj_de2_poids_carotte"));
-#       if($cycle=="" or $nb_emp=="" or $mod==""  or $taux_rebut==""  or $poids_piece==""  or $poids_carotte=="") {
-#         $err="Ces champs sont obligatoires en J5 : 'Cycle par pièce', 'Nb empreintes', 'MOD', 'Tx rebut vendu', 'Poids pièce (en g)', 'Poids carotte (en g)'";
-#       }
-#     }
-#     return $err;
-#   }
-
-
-
-
-# class is_revue_projet_jalon_revue_de_projet_jalon(models.Model):
-#     _name        = "is.revue.projet.jalon.revue.de.projet.jalon"
-#     _description = "Compte-rendu revue de projet jalon Bilan - Revue de projet jalon"
-#     _rec_name    = "rpj_de2_article"
-
-#     rpj_de2_article = fields.Char(string="Article")
-#     rpj_de2_cycle = fields.Char(string="Cycle par pièce")
-#     rpj_de2_nb_emp = fields.Char(string="Nb empreintes")
-#     rpj_de2_mod = fields.Selection([
-#         ("0.25", "0.25"),
-#         ("0.5", "0.5"),
-#         ("0.75", "0.75"),
-#         ("1", "1"),
-#         ("1.5", "1.5"),
-#         ("2", "2"),
-#     ], string="MOD")
-#     rpj_de2_taux_rebut        = fields.Char(string="Tx rebut vendu")
-#     rpj_de2_poids_piece       = fields.Char(string="Poids pièce (en g)")
-#     rpj_de2_poids_carotte     = fields.Char(string="Poids carotte (en g)")
-#     is_revue_project_jalon_id = fields.Many2one("is.revue.projet.jalon")
-
-
-
-
-
-
-
-
-
 
     def vers_direceeur_de_site_action(self):
         for obj in self:
             obj.sudo().state = "rpj_directeur_site"
 
-    def vers_pour_information_action(self):
+    def vers_diffuse_action(self):
         for obj in self:
-            obj.sudo().state = "rpj_pour_information"
+            obj.sudo().state = "rpj_diffuse"
 
     def vers_valide_action(self):
         for obj in self:
+            J=obj.rpj_j.lower()
+            field_name="rpj_avancement_%s"%J
+            setattr(obj, field_name, obj.rpj_note)
+            field_name="rpj_date_valide_%s"%J
+            setattr(obj, field_name, date.today())
             obj.sudo().state = "rpj_valide"
 
     def vers_refuse_action(self):
         for obj in self:
+            if not obj.rpj_motif_refus:
+                raise ValidationError("Le motif du refus est obligatoire!")
             obj.sudo().state = "rpj_refus"
 
 
@@ -273,7 +127,6 @@ class is_revue_projet_jalon(models.Model):
     rpj_clientid                 = fields.Many2one("res.partner", string="Client", domain=[("is_company","=",True), ("customer","=",True)])
     rpj_rcid                     = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
     rpj_rlid                     = fields.Many2one("is.revue.lancement", string="Revue de lancement")
-    #rpj_rp                      = fields.Char(string="Revue de projet")
     rpj_rrid                     = fields.Many2one("is.revue.risque", string="Revue des risques")
     bilan_ids                    = fields.One2many("is.revue.projet.jalon.bilan", "is_revue_project_jalon_id")
     rpj_piece_jointe             = fields.Many2many("ir.attachment", "is_jalon_rpj_jointe_rel", "rpj_jointe_id", "att_id", string="Pièces jointes")
@@ -330,14 +183,14 @@ class is_revue_projet_jalon(models.Model):
         ("rpj_brouillon",           "Brouillon"),
         ("rpj_directeur_technique", "Directeur Technique"),
         ("rpj_directeur_site",      "DIRECTEUR de Site"),
-        ("rpj_pour_information",    "Pour Information"),
+        ("rpj_diffuse",             "Pour Information"),
         ("rpj_valide",              "Validé"),
         ("rpj_refus",               "Refusé"),
-    ], default="rpj_brouillon", string="State", tracking=True, copy=False)
+    ], default="rpj_brouillon", string="État", tracking=True, copy=False)
     vers_brouillon_vsb           = fields.Boolean(string="Brouillon"          , compute='_compute_vsb', readonly=True, store=False)
     vers_directeur_technique_vsb = fields.Boolean(string="Directeur Technique", compute='_compute_vsb', readonly=True, store=False)
     vers_direceeur_de_site_vsb   = fields.Boolean(string="Direceeur de Site"  , compute='_compute_vsb', readonly=True, store=False)
-    vers_pour_information_vsb    = fields.Boolean(string="Pour Information"   , compute='_compute_vsb', readonly=True, store=False)
+    vers_diffuse_vsb             = fields.Boolean(string="Pour Information"   , compute='_compute_vsb', readonly=True, store=False)
     vers_valide_vsb              = fields.Boolean(string="Validé"             , compute='_compute_vsb', readonly=True, store=False)
     vers_refuse_vsb              = fields.Boolean(string="Refusé"             , compute='_compute_vsb', readonly=True, store=False)
     logo_rs                      = fields.Char(string="Logo RS"               , compute='_compute_logo_rs', readonly=True, store=False)

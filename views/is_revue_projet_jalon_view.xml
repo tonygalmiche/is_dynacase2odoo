@@ -38,15 +38,15 @@
                         <field name="vers_direceeur_de_site_vsb" invisible="1" />
                         <button
                             name="vers_direceeur_de_site_action"
-                            string="vers Direceeur de Site"
+                            string="vers Directeur de Site"
                             attrs="{'invisible': [('vers_direceeur_de_site_vsb', '!=', True)]}"
                             type="object"
                         />
-                        <field name="vers_pour_information_vsb" invisible="1" />
+                        <field name="vers_diffuse_vsb" invisible="1" />
                         <button
-                            name="vers_pour_information_action"
+                            name="vers_diffuse_action"
                             string="vers Pour Information"
-                            attrs="{'invisible': [('vers_pour_information_vsb', '!=', True)]}"
+                            attrs="{'invisible': [('vers_diffuse_vsb', '!=', True)]}"
                             type="object"
                         />
                         <field name="vers_valide_vsb" invisible="1" />
@@ -63,7 +63,10 @@
                             attrs="{'invisible': [('vers_refuse_vsb', '!=', True)]}"
                             type="object"
                         />
-                        <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                        <field 
+                            name="state" widget="statusbar" options="{'clickable': '1'}"
+                            statusbar_visible="rpj_brouillon,rpj_directeur_technique,rpj_directeur_site,rpj_valide"
+                        />
                     </header>
                     <sheet>
                         <group>
@@ -78,7 +81,7 @@
                                 <field name="rpj_plan_action"   invisible="1"/>
                                 <field name="rpj_niveau_ppm"    attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"          readonly="1"/>
                                 <field name="rpj_commentaire"   attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}" />
-                                <field name="rpj_motif_refus"   invisible="1"/>
+                                <field name="rpj_motif_refus"   attrs="{'readonly': [('state', 'in', ['rpj_refus','rpj_valide'])]}" />
                                 <separator string="Lieu de production" />
                                 <field name="rpj_lieu_production"     readonly="1"/>
                                 <field name="rpj_affectation_presse"  readonly="1"/>
