@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api # type: ignore
 from odoo.addons.is_dynacase2odoo.models.is_param_project import DOCUMENT_ACTION, DOCUMENT_ETAT # type: ignore
+from odoo.exceptions import AccessError, ValidationError, UserError  # type: ignore
 
 
 #TODO : 
-#- Manque les données économiques de la revue de contrat pour faire la revue des J
-#- Ajout champ pour indiquer si le moule est actif
-#- Lignes en trop dans tableaux Revue de contrat et Revue de projet jalon
-#- Manque le lien avec les documents des moules dans le tableau des docuements
-#- Le champ rpj_total_vente_moule valire des infos dans les investissement achat moule => Pas dispo dans Odoo
+#- Le champ rpj_total_vente_moule va lire des infos dans les investissement achat moule => Pas dispo dans Odoo
 
 
 
@@ -25,8 +22,10 @@ class is_revue_projet_jalon(models.Model):
             if obj.state in ["rpj_directeur_technique"]:
                 vsb = True
             obj.vers_brouillon_vsb = vsb
+
+
             vsb = False
-            if obj.state in ["rpj_brouillon"]:
+            if obj.state in ["rpj_brouillon"] and obj.rpj_j in ['J4','J5']:
                 vsb = True
             obj.vers_directeur_technique_vsb = vsb
             vsb = False
@@ -40,43 +39,15 @@ class is_revue_projet_jalon(models.Model):
             vsb = False
             if obj.state=="rpj_directeur_site":
                 vsb = True
-
             #En J4 et J5, il faut passer par la validation du directeur de technique"
             if obj.state=="rpj_brouillon":
                 if obj.rpj_j not in ['J4','J5']:
                     vsb = True
-
-
-
-
             obj.vers_valide_vsb = vsb
-
-
-
-
             vsb = False
             if obj.state in ["rpj_directeur_technique", "rpj_directeur_site"]:
                 vsb = True
             obj.vers_refuse_vsb = vsb
-
-
-#   function m1_vers_directeur_technique($newstate,$oldstate) {
-#     //if ($this->doc->getValue("rpj_rrid")=="") return "Il est obligatoire d'avoir une revue des risques pour valider ce document";
-#     $J=$this->doc->getValue("rpj_j");
-#     if ($J!="J4" and $J!="J5") $err="En J0, J1, J2 et J3, il ne faut pas passer par la validation du directeur de technique";
-#     if($J=="J5") {
-#       $cycle         = trim($this->doc->getValue("rpj_de2_cycle"));
-#       $nb_emp        = trim($this->doc->getValue("rpj_de2_nb_emp"));
-#       $mod           = trim($this->doc->getValue("rpj_de2_mod"));
-#       $taux_rebut    = trim($this->doc->getValue("rpj_de2_taux_rebut"));
-#       $poids_piece   = trim($this->doc->getValue("rpj_de2_poids_piece"));
-#       $poids_carotte = trim($this->doc->getValue("rpj_de2_poids_carotte"));
-#       if($cycle=="" or $nb_emp=="" or $mod==""  or $taux_rebut==""  or $poids_piece==""  or $poids_carotte=="") {
-#         $err="Ces champs sont obligatoires en J5 : 'Cycle par pièce', 'Nb empreintes', 'MOD', 'Tx rebut vendu', 'Poids pièce (en g)', 'Poids carotte (en g)'";
-#       }
-#     }
-#     return $err;
-#   }
 
 
 
@@ -182,7 +153,71 @@ class is_revue_projet_jalon(models.Model):
 
     def vers_directeur_technique_action(self):
         for obj in self:
+            if not obj.rpj_rrid:
+                raise ValidationError("Il est obligatoire d'avoir une revue des risques pour valider ce document!")
+            J = obj.rpj_j
+            if J!='J4' and J!='J5':
+                raise ValidationError("En J0, J1, J2 et J3, il ne faut pas passer par la validation du directeur de technique!")
+            
+            if J=='J5':
+                for line in obj.revue_de_projet_jalon_ids:
+                    if not line.rpj_de2_cycle or not line.rpj_de2_nb_emp or not line.rpj_de2_mod or not line.rpj_de2_taux_rebut or not line.rpj_de2_poids_piece or not line.rpj_de2_poids_carotte:
+                        err="Ces champs sont obligatoires en J5 : 'Cycle par pièce', 'Nb empreintes', 'MOD', 'Tx rebut vendu', 'Poids pièce (en g)', 'Poids carotte (en g)'"
+                        raise ValidationError(err)
+
+
+
+
+
             obj.sudo().state = "rpj_directeur_technique"
+
+
+#     if($J=="J5") {
+#       $cycle         = trim($this->doc->getValue("rpj_de2_cycle"));
+#       $nb_emp        = trim($this->doc->getValue("rpj_de2_nb_emp"));
+#       $mod           = trim($this->doc->getValue("rpj_de2_mod"));
+#       $taux_rebut    = trim($this->doc->getValue("rpj_de2_taux_rebut"));
+#       $poids_piece   = trim($this->doc->getValue("rpj_de2_poids_piece"));
+#       $poids_carotte = trim($this->doc->getValue("rpj_de2_poids_carotte"));
+#       if($cycle=="" or $nb_emp=="" or $mod==""  or $taux_rebut==""  or $poids_piece==""  or $poids_carotte=="") {
+#         $err="Ces champs sont obligatoires en J5 : 'Cycle par pièce', 'Nb empreintes', 'MOD', 'Tx rebut vendu', 'Poids pièce (en g)', 'Poids carotte (en g)'";
+#       }
+#     }
+#     return $err;
+#   }
+
+
+
+
+# class is_revue_projet_jalon_revue_de_projet_jalon(models.Model):
+#     _name        = "is.revue.projet.jalon.revue.de.projet.jalon"
+#     _description = "Compte-rendu revue de projet jalon Bilan - Revue de projet jalon"
+#     _rec_name    = "rpj_de2_article"
+
+#     rpj_de2_article = fields.Char(string="Article")
+#     rpj_de2_cycle = fields.Char(string="Cycle par pièce")
+#     rpj_de2_nb_emp = fields.Char(string="Nb empreintes")
+#     rpj_de2_mod = fields.Selection([
+#         ("0.25", "0.25"),
+#         ("0.5", "0.5"),
+#         ("0.75", "0.75"),
+#         ("1", "1"),
+#         ("1.5", "1.5"),
+#         ("2", "2"),
+#     ], string="MOD")
+#     rpj_de2_taux_rebut        = fields.Char(string="Tx rebut vendu")
+#     rpj_de2_poids_piece       = fields.Char(string="Poids pièce (en g)")
+#     rpj_de2_poids_carotte     = fields.Char(string="Poids carotte (en g)")
+#     is_revue_project_jalon_id = fields.Many2one("is.revue.projet.jalon")
+
+
+
+
+
+
+
+
+
 
     def vers_direceeur_de_site_action(self):
         for obj in self:
@@ -460,6 +495,7 @@ class is_revue_projet_jalon(models.Model):
                         line_ids[line.param_project_id]=doc
             documents_ids=[]
             rpj_point_bloquant=coefficient=note=rpj_note=0
+            rpj_point_bloquant_liste=[]
             for param_project_id in line_ids:
                 doc = line_ids[param_project_id]
                 if doc:
@@ -467,6 +503,7 @@ class is_revue_projet_jalon(models.Model):
                     note+=doc.note
                     if doc.bloquant and doc.etat!='F':
                         rpj_point_bloquant+=1
+                        rpj_point_bloquant_liste.append(param_project_id.ppr_famille)
                 vals={
                     'rpj_doc_document'  : param_project_id.ppr_famille,
                     'rpj_doc_documentid': doc and doc.id,
@@ -483,6 +520,7 @@ class is_revue_projet_jalon(models.Model):
                 rpj_note = round(100*note/coefficient)
             obj.documents_ids      = documents_ids
             obj.rpj_point_bloquant = rpj_point_bloquant
+            obj.rpj_point_bloquant_liste = '\n'.join(rpj_point_bloquant_liste)
             obj.rpj_note           = rpj_note
             #******************************************************************
 
