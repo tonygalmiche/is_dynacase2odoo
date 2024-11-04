@@ -314,21 +314,9 @@ class is_revue_projet_jalon(models.Model):
                 obj.rpj_date_j5 = obj.rpj_rlid.rl_date_j5
             #******************************************************************
 
-            #** Recherche de tous les documents à faire ***********************
+            #** Recherche des documents du modèle de la J**********************
             obj.documents_ids=False
             line_ids={}
-            domain=[
-                ('idmoule'    ,'=' , obj.rpj_mouleid.id),
-                ('dossierf_id','=' , obj.dossierf_id.id),
-                ('etat'       ,'in', ['AF','D']),
-                ('action'     ,'!=', False),
-            ]
-            docs=self.env['is.doc.moule'].search(domain)
-            for doc in docs:
-                line_ids[doc.param_project_id]=doc
-            #******************************************************************
-
-            #** Recherche des documents du modèle de la J**********************
             J = obj.rpj_j
             if J:
                 domain=[
@@ -347,6 +335,19 @@ class is_revue_projet_jalon(models.Model):
                         for d in docs:
                             doc=d
                         line_ids[line.param_project_id]=doc
+
+            #** Recherche de tous les documents à faire ***********************
+            domain=[
+                ('idmoule'    ,'=' , obj.rpj_mouleid.id),
+                ('dossierf_id','=' , obj.dossierf_id.id),
+                ('etat'       ,'in', ['AF','D']),
+                ('action'     ,'!=', False),
+            ]
+            docs=self.env['is.doc.moule'].search(domain)
+            for doc in docs:
+                line_ids[doc.param_project_id]=doc
+            #******************************************************************
+
             documents_ids=[]
             rpj_point_bloquant=coefficient=note=rpj_note=0
             rpj_point_bloquant_liste=[]
