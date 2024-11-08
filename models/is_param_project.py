@@ -66,6 +66,7 @@ class IsSectionGantt(models.Model):
 
 class IsParamProject(models.Model):
     _name        = "is.param.project"
+    _inherit=['mail.thread']
     _description = "Paramétrage projet"
     _rec_name    = "ppr_famille"
     _order = 'sequence, ppr_famille'
@@ -86,15 +87,14 @@ class IsParamProject(models.Model):
         })
         return res
 
-    sequence = fields.Integer(string="Ordre")
-
+    sequence = fields.Integer(string="Ordre", tracking=True)
     ppr_icon                = fields.Image(string="Icône")
-    ppr_famille             = fields.Char(string="Famille", required=True)
-    ppr_familleid           = fields.Integer(string="Famille Id")
-    ppr_transformation_pdf  = fields.Boolean(string="Transformation en PDF")
-    type_document           = fields.Selection(TYPE_DOCUMENT,string="Type de document", default="Moule", required=True)
-    ppr_dossier_fab         = fields.Boolean(string="Famille du dossier de fabrication")
-    ppr_demande             = fields.Char(string="Demande")
+    ppr_famille             = fields.Char(string="Famille", required=True, tracking=True)
+    ppr_familleid           = fields.Integer(string="Famille Id", tracking=True)
+    ppr_transformation_pdf  = fields.Boolean(string="Transformation en PDF", tracking=True)
+    type_document           = fields.Selection(TYPE_DOCUMENT,string="Type de document", default="Moule", required=True, tracking=True)
+    ppr_dossier_fab         = fields.Boolean(string="Famille du dossier de fabrication", tracking=True)
+    ppr_demande             = fields.Char(string="Demande", tracking=True)
     ppr_type_demande        = fields.Selection([
         ("PJ",       "Pièce-jointe"),
         ("DATE",     "Date"),
@@ -102,11 +102,11 @@ class IsParamProject(models.Model):
         ("PJ_TEXTE", "Pièce-jointe et texte"),
         ("PJ_DATE",  "Pièce-jointe et date"),
         ("AUTO",     "Automatique"),
-    ], string="Type de demande", required=True, default='PJ')
+    ], string="Type de demande", required=True, default='PJ', tracking=True)
     ppr_maj_amdec          = fields.Selection([
         ("Oui", "Oui"),
         ("Non", "Non"),
-    ], string="Mise à jour de l’AMDEC")
+    ], string="Mise à jour de l’AMDEC", tracking=True)
     ppr_responsable        = fields.Selection([
         ("1",  "1-Commercial"),
         ("2",  "2-Chef de projet"),
@@ -120,7 +120,7 @@ class IsParamProject(models.Model):
         ("10", "10-Logistique Usine"),
         ("11", "11-Achats"),
         ("12", "12-Responsable projets"),
-    ], string="Responsable du document")
+    ], string="Responsable du document", tracking=True)
     ppr_revue_lancement    = fields.Selection([
         ("rl_be01",  "BE01a : Nouveau moule - Moule transféré"),
         ("rl_be01b", "BE01b : Grainage"),
@@ -139,17 +139,18 @@ class IsParamProject(models.Model):
         ("rl_be15",  "BE15 : Achat matière"),
         ("rl_be16",  "BE16 : Achat composants"),
         ("rl_be17",  "BE17 : Essai injection"),
-    ], string="Revue de lancement")
-    ppr_moule_hors_auto = fields.Boolean(string="Famille pour moule hors automobile")
+    ], string="Revue de lancement", tracking=True)
+    ppr_moule_hors_auto = fields.Boolean(string="Famille pour moule hors automobile", tracking=True)
     ppr_project_colors  = fields.Serialized()
-    ppr_color           = fields.Char("Color", sparse="ppr_project_colors")
+    ppr_color           = fields.Char("Color", sparse="ppr_project_colors", tracking=True)
     dynacase_id         = fields.Integer(string="Id Dynacase"     ,index=True,copy=False)
-    duree               = fields.Integer("Durée par défaut (J)"   , help="Utilisée dans le Gantt")
-    duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
-    dependance_id       = fields.Many2one("is.param.project", string="Dépendance")
-    gantt_pdf           = fields.Boolean("Gantt PDF", default=True, help="Afficher dans Gantt PDF")
+    duree               = fields.Integer("Durée par défaut (J)"   , help="Utilisée dans le Gantt", tracking=True)
+    duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt", tracking=True)
+    dependance_id       = fields.Many2one("is.param.project", string="Dépendance", tracking=True)
+    gantt_pdf           = fields.Boolean("Gantt PDF", default=True, help="Afficher dans Gantt PDF", tracking=True)
     array_ids           = fields.One2many('is.param.project.array', 'param_project_id')
-    array_html          = fields.Html(string="Gestion des J", compute='_compute_array_html',store=True, readonly=True)
+    array_html          = fields.Html(string="Gestion des J", compute='_compute_array_html',store=True, readonly=True, tracking=True)
+    active              = fields.Boolean('Actif', default=True, tracking=True)
 
 
     @api.depends('array_ids','array_ids.ppr_irv','array_ids.ppr_bloquant')
