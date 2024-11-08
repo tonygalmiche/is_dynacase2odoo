@@ -20,11 +20,12 @@
                 <xpath expr="//notebook" position="inside">
                     <page string="Gestion des J">
                         <group>
+                            <field name="dossier_appel_offre_id"/>
+                            <field name="revue_contrat_id"       readonly="1"/>
+                            <field name="revue_lancement_id"     readonly="1"/>
+                            <field name="revue_risque_id"        readonly="1"/>    
                             <field name="j_actuelle"/>
-                            <field name="j_avancement"       readonly="1"/>
-                            <field name="revue_contrat_id"   readonly="1"/>
-                            <field name="revue_lancement_id" readonly="1"/>
-                            <field name="revue_risque_id"    readonly="1"/>    
+                            <field name="j_avancement"           readonly="1"/>
                             <field name="date_fin_be"/>    
                         </group>
                     </page>
@@ -37,12 +38,13 @@
             <field name="inherit_id" ref="is_plastigray16.is_mold_tree_view"/>
             <field name="arch" type="xml">
                 <field name="is_database_id" position="before">
-                    <field name="j_actuelle"         optional="show"/>
-                    <field name="j_avancement"       optional="show"/>
-                    <field name="revue_contrat_id"   optional="hide" widget="many2one_clickable"/>
-                    <field name="revue_lancement_id" optional="hide" widget="many2one_clickable"/>
-                    <field name="revue_risque_id"    optional="hide" widget="many2one_clickable"/>  
-                    <field name="date_fin_be"        optional="show"/>                            
+                    <field name="dossier_appel_offre_id" optional="hide" widget="many2one_clickable"/>
+                    <field name="revue_contrat_id"       optional="hide" widget="many2one_clickable"/>
+                    <field name="revue_lancement_id"     optional="hide" widget="many2one_clickable"/>
+                    <field name="revue_risque_id"        optional="hide" widget="many2one_clickable"/>  
+                    <field name="j_actuelle"             optional="show"/>
+                    <field name="j_avancement"           optional="show"/>
+                    <field name="date_fin_be"            optional="show"/>                            
                 </field>
                 <field name="is_database_origine_id" position="after">
                     <field name="dynacase_id" optional="hide"/>    
