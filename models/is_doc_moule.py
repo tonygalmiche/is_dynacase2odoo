@@ -5,6 +5,8 @@ from odoo.exceptions import AccessError, ValidationError, UserError  # type: ign
 from datetime import datetime, timedelta, date
 from random import *
 from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J, TYPE_DOCUMENT, MODELE_TO_TYPE, TYPE_TO_FIELD, DOCUMENT_ACTION, DOCUMENT_ETAT # type: ignore
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class IsDocMoule(models.Model):
@@ -448,8 +450,14 @@ class IsDocMoule(models.Model):
                 if rsp_auto:
                     obj.etat='F'
                 obj.rsp_auto = rsp_auto
-                print(ct,'/',nb,obj, obj.param_project_id.ppr_famille,rsp_auto)
+                #print(ct,'/',nb,obj, obj.param_project_id.ppr_famille,rsp_auto)
+                _logger.info("actualisation_famille_automatique_action : %s/%s : %s : rsp_auto=%s"%(ct,nb,obj.param_project_id.ppr_famille,rsp_auto))
+
+
             ct+=1
+        return
+
+
 
 # http://pg-odoo16-0:8069/web#id=19643&cids=1&menu_id=814&model=is.dossier.appel.offre&view_type=form
 
