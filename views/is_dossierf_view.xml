@@ -14,11 +14,12 @@
                 </sheet>
                 <sheet position="inside">
                     <group string="Gestion des J">
-                        <field name="j_actuelle"/>
-                        <field name="j_avancement"/>
+                        <field name="dossier_appel_offre_id"/>
                         <field name="revue_contrat_id"/>
                         <field name="revue_lancement_id"/>
                         <field name="revue_risque_id"/>   
+                        <field name="j_actuelle"/>
+                        <field name="j_avancement"/>
                         <field name="date_fin_be"/>                            
                     </group>
                 </sheet>
@@ -30,12 +31,13 @@
             <field name="inherit_id" ref="is_plastigray16.is_dossierf_tree_view"/>
             <field name="arch" type="xml">
                 <field name="is_database_id" position="before">
-                    <field name="j_actuelle"         optional="show"/>
-                    <field name="j_avancement"       optional="show"/>
-                    <field name="revue_contrat_id"   optional="hide" widget="many2one_clickable"/>
-                    <field name="revue_lancement_id" optional="hide" widget="many2one_clickable"/>
-                    <field name="revue_risque_id"    optional="hide" widget="many2one_clickable"/>  
-                    <field name="date_fin_be"        optional="show"/>                            
+                    <field name="dossier_appel_offre_id" optional="hide" widget="many2one_clickable"/>
+                    <field name="revue_contrat_id"       optional="hide" widget="many2one_clickable"/>
+                    <field name="revue_lancement_id"     optional="hide" widget="many2one_clickable"/>
+                    <field name="revue_risque_id"        optional="hide" widget="many2one_clickable"/>  
+                    <field name="j_actuelle"             optional="show"/>
+                    <field name="j_avancement"           optional="show"/>
+                    <field name="date_fin_be"            optional="show"/>                            
                 </field>
                 <field name="is_database_origine_id" position="after">      
                     <field name="dynacase_id" optional="hide"/>    

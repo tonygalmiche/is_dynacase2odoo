@@ -6,12 +6,13 @@ from datetime import datetime, timedelta, date
 class is_dossierf(models.Model):
     _inherit = 'is.dossierf'
 
-    revue_contrat_id   = fields.Many2one("is.revue.de.contrat", string="Revue de contrat"  , copy=False)
-    revue_lancement_id = fields.Many2one("is.revue.lancement" , string="Revue de lancement", copy=False)
-    revue_risque_id    = fields.Many2one("is.revue.risque"    , string="Revue des risques" , copy=False)
-    j_actuelle         = fields.Selection(GESTION_J, string="J Actuelle"                   , copy=False)
-    j_avancement       = fields.Integer(string="Avancement J (%)"                          , copy=False)
-    date_fin_be        = fields.Date(string="Date fin BE"                                  , copy=False)
+    dossier_appel_offre_id = fields.Many2one("is.dossier.appel.offre", string="Dossier appel d'offre", copy=False)
+    revue_contrat_id       = fields.Many2one("is.revue.de.contrat"   , string="Revue de contrat"     , copy=False)
+    revue_lancement_id     = fields.Many2one("is.revue.lancement"    , string="Revue de lancement"   , copy=False)
+    revue_risque_id        = fields.Many2one("is.revue.risque"       , string="Revue des risques"    , copy=False)
+    j_actuelle             = fields.Selection(GESTION_J              , string="J Actuelle"           , copy=False)
+    j_avancement           = fields.Integer(string="Avancement J (%)"                                , copy=False)
+    date_fin_be            = fields.Date(string="Date fin BE"                                        , copy=False)
 
 
     def gantt_action(self):
