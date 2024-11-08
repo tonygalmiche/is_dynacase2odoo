@@ -455,7 +455,7 @@ class IsDocMoule(models.Model):
 
 
             ct+=1
-        return
+        return []
 
 
 
