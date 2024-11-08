@@ -30,6 +30,7 @@ class is_creation_doc_migration(models.Model):
 
     def creer_doc_action(self):
         for obj in self:
+            rl = obj.moule_id.revue_lancement_id
             domain=[
                 ('idmoule','=', obj.moule_id.id)
             ]
@@ -54,46 +55,83 @@ class is_creation_doc_migration(models.Model):
             analyse.append('J actuelle : %s'%j_actuelle)
 
 
-            nb_a_creer_total=0
+            nb_a_creer=0
             for line in lines:
-                print(line.param_project_id.ppr_famille)
-
-
                 famille_id = line.param_project_id.id
                 nb_doc_famille = familles.get(famille_id)
                 j_prevue=str(dict(GESTION_J).get(line.j_prevue)).ljust(15)
 
 
-                #** Recherche des documents à créer après la J actuelle *******
-                if nb_doc_famille==1:
-                    for param in line.param_project_id.array_ids:
-                        if param.ppp_j>obj.moule_id.j_actuelle and param.ppr_irv:
-                            nb_a_creer_total+=1
-                            #print('-',obj.moule_id.j_actuelle, param.ppp_j, param.ppr_irv)
-
-
-
-                            analyse.append('- %s : nb_doc=%s : J prévue=%s : %s'%(
-                                j_prevue,
-                                str(nb_doc_famille).ljust(2),
-                                param.ppp_j,
-                                line.param_project_id.ppr_famille[:48].ljust(50))
-                            )
-
-
-
-
+                #** Nombre de documents de la famille à créer en tout *********
+                nb_doc_besoin=0
+                for param in line.param_project_id.array_ids:
+                    if param.ppr_irv:
+                        nb_doc_besoin+=1
+                if nb_doc_besoin==0:
+                    nb_doc_besoin=1
                 #**************************************************************
 
-                # if nb_a_creer>0:
-                #     analyse.append('- %s : nb_doc=%s : nb_a_creer=%s : %s'%(
-                #         j_prevue,
-                #         str(nb_doc_famille).ljust(2),
-                #         str(nb_a_creer).ljust(2),
-                #         line.param_project_id.ppr_famille[:48].ljust(50))
-                #     )
 
-            analyse.append('%s documents à créer au total'%nb_a_creer_total)
+                #** Recherche des documents à créer après la J actuelle *******
+                num_irv=0
+                for param in line.param_project_id.array_ids:
+                    a_creer='n'
+                    num_a_creer=''
+                    if param.ppr_irv:
+                        num_irv+=1
+                        if param.ppp_j>obj.moule_id.j_actuelle and nb_doc_besoin>1 and nb_doc_famille==1 and num_irv>1:
+                            a_creer='Oui'
+                            nb_a_creer+=1
+                            num_a_creer=nb_a_creer
+                            dateend = False
+                            if rl:
+                                dateend = getattr(rl, "rl_date_%s"%param.ppp_j.lower())
+                            vals={
+                                'param_project_id'  : line.param_project_id.id,
+                                'idmoule'           : line.idmoule.id,
+                                'j_prevue'          : param.ppp_j,
+                                'idresp'            : line.idresp.id,
+                                'action'            : param.ppr_irv,
+                                'etat'              : 'AF',
+                                'dateend'           : dateend,
+                                'date_debut_gantt'  : dateend,
+                                'duree_gantt'       : 1,
+                                'date_creation_auto': datetime.now(),
+                            }
+                            doc = self.env['is.doc.moule'].create(vals)
+                            doc.set_fin_gantt()
+                        analyse.append('- %s : %s : %s : %s : %s : nb_doc_famille=%s : nb_doc_besoin=%s : a_creer=%s : %s'%(
+                            line.param_project_id.ppr_famille[:48].ljust(50),
+                            (line.action or'').ljust(3),
+                            param.ppp_j,
+                            (param.ppr_irv or '').ljust(3),
+                            str(num_irv).ljust(3),
+                            str(nb_doc_famille).ljust(4),
+                            str(nb_doc_besoin).ljust(4),
+                            str(a_creer).ljust(4),
+                            str(num_a_creer).ljust(3)
+                        ))
 
-
+            analyse.append('%s documents à créer au total'%nb_a_creer)
             obj.analyse = '\n'.join(analyse)
+
+
+    def liste_doc_action(self):
+        tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_tree').id
+        for obj in self:
+            return {
+                'name': obj.name,
+                'view_mode': 'tree,form',
+                "views"    : [
+                    (tree_id, "tree"),
+                    (False, "form")
+                ],
+                'res_model': 'is.doc.moule',
+                'domain': [
+                    ('idmoule','=',obj.moule_id.id),
+                    ('date_creation_auto','!=',False),
+                ],
+                'type': 'ir.actions.act_window',
+                'limit': 1000,
+            }
+           

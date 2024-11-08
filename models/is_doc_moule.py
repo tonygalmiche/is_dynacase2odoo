@@ -126,6 +126,7 @@ class IsDocMoule(models.Model):
     rsp_auto            = fields.Html(string="Réponse Auto", readonly=True)
     acces_chef_projet   = fields.Boolean(string="Accès chef de projet", compute='_compute_acces_chef_projet', readonly=True, store=False, help="Indique si les champs réservés au chef de projet sont modifiables")
     color               = fields.Char(string="Couleur indicateur", compute='_compute_color', readonly=True, store=True)
+    date_creation_auto  = fields.Datetime(string="Date création auto",copy=False,readonly=True)
 
 
     @api.onchange('etat')

@@ -123,7 +123,8 @@
                                         <field name="color"/>
                                         <field name="site_id" />
                                         <field name="gantt_pdf"        attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
-                                        <field name="dynacase_id"      readonly="1"/>
+                                        <field name="dynacase_id" readonly="1"/>
+                                        <field name="date_creation_auto"/>
                                     </group>
                                 </group>
                             </page>
@@ -197,14 +198,7 @@
             </field>
         </record>
 
-
-
-
-
-
-
-
-       <record model="ir.ui.view" id="is_doc_moule_tree">
+        <record model="ir.ui.view" id="is_doc_moule_tree">
             <field name="name">is_doc_moule_tree</field>
             <field name="model">is.doc.moule</field>
             <field name="arch" type="xml">
@@ -235,13 +229,11 @@
                     <field name="action"  optional="show"/>
                     <field name="bloquant" optional="show"/>
                     <field name="etat" optional="show" />
-
                     <field name="rsp_pj"    optional="hide" />
                     <field name="rsp_date"  optional="hide" />
                     <field name="rsp_texte" optional="hide" />
                     <field name="rsp_auto"  optional="hide" />
                     <field name="color"     optional="hide" />
-
                     <field name="fin_derogation" optional="show" />
                     <field name="param_project_array_html" optional="hide"/>
                     <field name="coefficient"  optional="show"/>
@@ -256,6 +248,11 @@
                     <field name="duree_attente_avant" optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="gantt_pdf"           optional="hide"/>
+                    <field name="create_date"         optional="hide"/>
+                    <field name="create_uid"          optional="hide"/>
+                    <field name="write_date"          optional="hide"/>
+                    <field name="write_uid"           optional="hide"/>
+                    <field name="date_creation_auto"  optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
                     <field name="dynacase_id"  optional="hide"/>
                 </tree>

@@ -20,6 +20,11 @@
                             string="Créer les documents"
                             type="object"
                         />
+                        <button
+                            name="liste_doc_action"
+                            string="Liste des documents créés"
+                            type="object"
+                        />
                     </header>
                     <sheet>
                         <group>
