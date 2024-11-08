@@ -8,6 +8,13 @@
             <field name="state">code</field>
             <field name="code">action = records.update_j_prevue_action()</field>
         </record>
+        <record id="actualisation_famille_automatique_action_server" model="ir.actions.server">
+            <field name="name">Actualisation famille automatique</field>
+            <field name="model_id" ref="model_is_doc_moule"/>
+            <field name="binding_model_id" ref="model_is_doc_moule"/>
+            <field name="state">code</field>
+            <field name="code">action = records.actualisation_famille_automatique_action()</field>
+        </record>
         <record model="ir.ui.view" id="is_doc_moule_form">
             <field name="name">is_doc_moule_form</field>
             <field name="model">is.doc.moule</field>
@@ -17,9 +24,6 @@
                     <STYLE>
                         .o_form_view .o_field_widget {
                             margin-bottom: 0px;
-                        }
-                        .o_form_view .o_form_sheet_bg > .o_form_sheet {
-                            margin-top: 5px;
                         }
                         .mb-3 {
                             margin-bottom: 0.5rem !important;
@@ -97,8 +101,8 @@
                                     <field name="rsp_pj"    attrs="{'invisible': [('rsp_pj', '=', False)]}"/>
                                     <field name="rsp_date"  attrs="{'invisible': [('ppr_type_demande', 'not in', ['DATE', 'PJ_DATE'])]}"/>
                                     <field name="rsp_texte" attrs="{'invisible': [('ppr_type_demande', 'not in', ['TEXTE','PJ_TEXTE'])]}"/>
+                                    <field name="rsp_auto"  attrs="{'invisible': [('rsp_auto', '=', False)]}"/>
                                 </group>
-        
                             </page>
                             <page string="Autres informations">
                                 <group>
@@ -205,8 +209,8 @@
             <field name="model">is.doc.moule</field>
             <field name="arch" type="xml">
                 <tree string="Document moule">
-                    <field name="section_id"       optional="show"/>
-                    <field name='sequence'/>
+                    <field name="section_id"  optional="show"/>
+                    <field name='sequence'    optional="show"/>
                     <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
                     <field name="param_project_id" optional="show"  widget="many2one_clickable"/>
                     <field name="type_document" optional="show"/>
@@ -235,6 +239,7 @@
                     <field name="rsp_pj"    optional="hide" />
                     <field name="rsp_date"  optional="hide" />
                     <field name="rsp_texte" optional="hide" />
+                    <field name="rsp_auto"  optional="hide" />
                     <field name="color"     optional="hide" />
 
                     <field name="fin_derogation" optional="show" />
