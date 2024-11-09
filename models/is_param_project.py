@@ -153,6 +153,12 @@ class IsParamProject(models.Model):
     active              = fields.Boolean('Actif', default=True, tracking=True)
 
 
+    # def write(self,vals):
+    #     print(self,vals)
+    #     res=super(IsParamProject, self).write(vals)
+    #     return res
+
+
     @api.depends('array_ids','array_ids.ppr_irv','array_ids.ppr_bloquant')
     def _compute_array_html(self):
         for obj in self:
@@ -165,6 +171,7 @@ class IsParamProject(models.Model):
 
             html+='</table>'
             obj.array_html = html
+            #obj.write({'array_html':html}) # Permet de faire fonctionner le tracking => Ne fonctionne pas avec les champs HTML
 
 
     def creer_css_action(self):

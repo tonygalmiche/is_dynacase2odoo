@@ -120,13 +120,17 @@ class IsDocMoule(models.Model):
     site_id             = fields.Many2one('is.database', "Site", compute='_compute_site_id', readonly=True, store=True)
     demao_nature        = fields.Char(string="Nature", compute='_compute_demao_nature'     , readonly=True, store=True)
     solde               = fields.Boolean(string="Soldé", compute='_compute_solde'          , readonly=True, store=True)
-    rsp_date            = fields.Date(string="Date réponse", copy=False)
-    rsp_texte           = fields.Text(string="Texte réponse", copy=False)
-    rsp_pj              = fields.Text(string="Réponse PJ", compute='_compute_rsp_pj', readonly=True, store=True)
+    rsp_date            = fields.Date(string="Date réponse", copy=False, tracking=True)
+    rsp_texte           = fields.Text(string="Texte réponse", copy=False, tracking=True)
+    rsp_pj              = fields.Text(string="Réponse PJ", compute='_compute_rsp_pj', readonly=True, store=True, tracking=True)
     rsp_auto            = fields.Html(string="Réponse Auto", readonly=True)
     acces_chef_projet   = fields.Boolean(string="Accès chef de projet", compute='_compute_acces_chef_projet', readonly=True, store=False, help="Indique si les champs réservés au chef de projet sont modifiables")
     color               = fields.Char(string="Couleur indicateur", compute='_compute_color', readonly=True, store=True)
     date_creation_auto  = fields.Datetime(string="Date création auto",copy=False,readonly=True)
+    conforme            = fields.Selection([
+        ("01", "Conforme à la norme FMV SS n°302 < 102 mm/min (ou 4 inches/min)"),
+        ("02", "Conforme à l’exigence client < 80 mm/min"),
+    ],string="Conforme", tracking=True)
 
 
     @api.onchange('etat')
@@ -186,16 +190,17 @@ class IsDocMoule(models.Model):
     @api.depends('etat','array_ids.annex','array_ids.comment')
     def _compute_rsp_pj(self):
         for obj in self:
-            rsp_pj=False
+            rsp_pj=[]
             for line in obj.array_ids:
-                if line.comment:
-                    rsp_pj=line.comment
+                rsp=False
                 if line.annex:
                     for pj in line.annex:
-                        rsp_pj=pj.name
-                break
+                        rsp_pj.append(pj.name)
+                if line.comment:
+                    rsp_pj.append(line.comment)
+            rsp_pj = '\n'.join(rsp_pj)
             obj.rsp_pj = rsp_pj
-            #obj.actualisation_famille_automatique_action()
+            obj.write({'rsp_pj':rsp_pj}) # Permet de faire fonctionner le tracking
 
 
     @api.depends('param_project_id','j_prevue')
@@ -364,7 +369,10 @@ class IsDocMoule(models.Model):
     def name_get(self):
         result = []
         for obj in self:
-            name="[%s]%s"%(obj.moule_dossierf,obj.param_project_id.ppr_famille)
+            if obj.type_document=='Article':
+                name="[%s]%s"%(obj.dossier_article_id.code_pg,obj.param_project_id.ppr_famille)
+            else:
+                name="[%s]%s"%(obj.moule_dossierf,obj.param_project_id.ppr_famille)
             result.append((obj.id, name))
         return result
 
@@ -445,13 +453,9 @@ class IsDocMoule(models.Model):
                         rsp_auto=get_pj(rc.rc_df_engagement_faisabilite)
                     if obj.param_project_id.ppr_famille=="Fiche capacitaire":
                         rsp_auto=get_pj(rc.rc_df_fiche_capacitaire)
-
-
-
                 if rsp_auto:
                     obj.etat='F'
                 obj.rsp_auto = rsp_auto
-                #print(ct,'/',nb,obj, obj.param_project_id.ppr_famille,rsp_auto)
                 _logger.info("actualisation_famille_automatique_action : %s/%s : %s : rsp_auto=%s"%(ct,nb,obj.param_project_id.ppr_famille,rsp_auto))
 
 
@@ -584,20 +588,17 @@ class IsDocMoule(models.Model):
             return obj.client_id.gantt_action()
 
 
-
-
-
 class IsDocMouleArray(models.Model):
     _name        = "is.doc.moule.array"
     _description = "Document moule array"
 
-    annex_pdf   = fields.Many2many("ir.attachment", "attach_annex_pdf_rel", "annex_pdf_id", "attachment_id", string="Fichiers PDF")
-    annex       = fields.Many2many("ir.attachment", "attach_annex_rel"    , "annex_id"    , "attachment_id", string="Fichiers")
-    demandmodif = fields.Char(string="Demande de modification")
-    maj_amdec   = fields.Boolean(string="Mise à jour de l’AMDEC")
-    comment     = fields.Text(string="Commentaire")
-    is_doc_id   = fields.Many2one("is.doc.moule")
-    lig         = fields.Integer(string="Lig",index=True,copy=False,readonly=True, help="Permet de faire le lien avec la ligne du tableau dans Dynacase")
+    annex_pdf     = fields.Many2many("ir.attachment", "attach_annex_pdf_rel", "annex_pdf_id", "attachment_id", string="Fichiers PDF")
+    annex         = fields.Many2many("ir.attachment", "attach_annex_rel"    , "annex_id"    , "attachment_id", string="Fichiers")
+    demandmodif   = fields.Char(string="Demande de modification")
+    maj_amdec     = fields.Boolean(string="Mise à jour de l’AMDEC")
+    comment       = fields.Text(string="Commentaire")
+    is_doc_id     = fields.Many2one("is.doc.moule")
+    lig           = fields.Integer(string="Lig",index=True,copy=False,readonly=True, help="Permet de faire le lien avec la ligne du tableau dans Dynacase")
 
 
 class res_partner(models.Model):
