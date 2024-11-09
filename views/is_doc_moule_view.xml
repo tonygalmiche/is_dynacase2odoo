@@ -558,6 +558,7 @@
                     />
                     <field name="conforme"            optional="hide"/>
                     <field name="rsp_pj"              optional="show"/>
+                    <field name="rsp_texte"           optional="show" />
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
                     <field name="dynacase_id" optional="hide"/>
                 </tree>
