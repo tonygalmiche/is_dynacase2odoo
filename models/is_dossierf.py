@@ -13,6 +13,7 @@ class is_dossierf(models.Model):
     j_actuelle             = fields.Selection(GESTION_J              , string="J Actuelle"           , copy=False)
     j_avancement           = fields.Integer(string="Avancement J (%)"                                , copy=False)
     date_fin_be            = fields.Date(string="Date fin BE"                                        , copy=False)
+    article_ids            = fields.One2many('is.mold.dossierf.article', 'dossierf_id')
 
 
     def gantt_action(self):

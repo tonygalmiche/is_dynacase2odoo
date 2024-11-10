@@ -67,3 +67,5 @@ access_is_modele_bilan_line,access_is_modele_bilan_line,model_is_modele_bilan_li
 access_is_creation_doc_migration,access_is_creation_doc_migration,model_is_creation_doc_migration,is_gestionnaire_projet_group,1,1,1,1
 
 access_is_dossier_article_doc,access_is_dossier_article_doc,model_is_dossier_article_doc,base.group_user,1,1,1,1
+
+access_is_mold_dossierf_article,access_is_mold_dossierf_article,model_is_mold_dossierf_article,base.group_user,1,1,1,1

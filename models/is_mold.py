@@ -13,7 +13,7 @@ class is_mold(models.Model):
     j_actuelle             = fields.Selection(GESTION_J, string="J Actuelle", tracking=True          , copy=False)
     j_avancement           = fields.Integer(string="Avancement J (%)"       , tracking=True          , copy=False)
     date_fin_be            = fields.Date(string="Date fin BE"               , tracking=True          , copy=False)
-
+    article_ids            = fields.One2many('is.mold.dossierf.article', 'mold_id')
 
     def gantt_action(self):
         for obj in self:
@@ -21,3 +21,13 @@ class is_mold(models.Model):
             view_mode = 'dhtmlxgantt_project,tree,form,kanban,calendar,pivot,graph'
             return self.env['is.doc.moule'].list_doc(obj,domain,view_mode=view_mode)
 
+
+class is_mold_dossierf_article(models.Model):
+    _name        = "is.mold.dossierf.article"
+    _description = "Articles associés aux moules ou dossier F"
+    _order       = 'article_id'
+
+    mold_id          = fields.Many2one("is.mold", string="Moule"         , ondelete='cascade')
+    dossierf_id      = fields.Many2one("is.dossierf", string="Dossier F", ondelete='cascade')
+    article_id       = fields.Many2one("is.dossier.article", string="Dossier article")
+    planning         = fields.Boolean(string="Utiliser ce planning",default=False, help="Utiliser le planning de ce moule ou dossier F pour cet article")

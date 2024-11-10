@@ -20,13 +20,23 @@
                 <xpath expr="//notebook" position="inside">
                     <page string="Gestion des J">
                         <group>
-                            <field name="dossier_appel_offre_id"/>
-                            <field name="revue_contrat_id"       readonly="1"/>
-                            <field name="revue_lancement_id"     readonly="1"/>
-                            <field name="revue_risque_id"        readonly="1"/>    
-                            <field name="j_actuelle"/>
-                            <field name="j_avancement"           readonly="1"/>
-                            <field name="date_fin_be"/>    
+                            <group string="Gestion des J">
+                                <field name="dossier_appel_offre_id"/>
+                                <field name="revue_contrat_id"       readonly="1"/>
+                                <field name="revue_lancement_id"     readonly="1"/>
+                                <field name="revue_risque_id"        readonly="1"/>    
+                                <field name="j_actuelle"/>
+                                <field name="j_avancement"           readonly="1"/>
+                                <field name="date_fin_be"/>    
+                            </group>
+                            <group string="Articles liés à ce moule">
+                                <field name="article_ids" nolabel="1" colspan="2">
+                                    <tree editable="bottom">
+                                        <field name="article_id" widget="many2one_clickable" required="1"/>
+                                        <field name="planning" style="width:30%"/>
+                                    </tree>
+                                </field>
+                            </group>    
                         </group>
                     </page>
                 </xpath>

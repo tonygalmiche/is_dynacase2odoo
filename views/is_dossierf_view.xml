@@ -13,14 +13,24 @@
                     </header>
                 </sheet>
                 <sheet position="inside">
-                    <group string="Gestion des J">
-                        <field name="dossier_appel_offre_id"/>
-                        <field name="revue_contrat_id"/>
-                        <field name="revue_lancement_id"/>
-                        <field name="revue_risque_id"/>   
-                        <field name="j_actuelle"/>
-                        <field name="j_avancement"/>
-                        <field name="date_fin_be"/>                            
+                    <group>
+                        <group string="Gestion des J">
+                            <field name="dossier_appel_offre_id"/>
+                            <field name="revue_contrat_id"/>
+                            <field name="revue_lancement_id"/>
+                            <field name="revue_risque_id"/>   
+                            <field name="j_actuelle"/>
+                            <field name="j_avancement"/>
+                            <field name="date_fin_be"/>                            
+                        </group>
+                        <group string="Articles liés à ce moule">
+                            <field name="article_ids" nolabel="1" colspan="2">
+                                <tree editable="bottom">
+                                    <field name="article_id" widget="many2one_clickable" required="1"/>
+                                    <field name="planning" style="width:30%"/>
+                                </tree>
+                            </field>
+                        </group>        
                     </group>
                 </sheet>
             </field>
