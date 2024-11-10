@@ -422,6 +422,15 @@ class IsDocMoule(models.Model):
             ct+=1
 
 
+    def get_pj(self,attachment_ids):
+        res=False
+        if attachment_ids:
+            res=[]
+            for pj in attachment_ids:
+                res.append(pj.name)
+            if len(res)>0:
+                res='<br>'.join(res)
+        return res
 
 
     def actualisation_famille_automatique_action(self):
@@ -430,29 +439,20 @@ class IsDocMoule(models.Model):
         for obj in self:
             if obj.ppr_type_demande=='AUTO':
                 rsp_auto=False
-                def get_pj(attachment_ids):
-                    res=False
-                    if attachment_ids:
-                        res=[]
-                        for pj in attachment_ids:
-                            res.append(pj.name)
-                        if len(res)>0:
-                            res='<br>'.join(res)
-                    return res
                 dao = obj.idmoule.dossier_appel_offre_id or obj.dossierf_id.dossier_appel_offre_id
                 if dao:
                     if obj.param_project_id.ppr_famille=="Dossier commercial":
-                        rsp_auto=get_pj(dao.dao_offre_validee)
+                        rsp_auto=obj.get_pj(dao.dao_offre_validee)
                     if obj.param_project_id.ppr_famille=="Commande client":
-                        rsp_auto=get_pj(dao.dao_commande_client)
+                        rsp_auto=obj.get_pj(dao.dao_commande_client)
                     if obj.param_project_id.ppr_famille=="Lettre de nomination et contrats":
-                        rsp_auto=get_pj(dao.dao_lettre_nomination)
+                        rsp_auto=obj.get_pj(dao.dao_lettre_nomination)
                 rc = obj.idmoule.revue_contrat_id or obj.dossierf_id.revue_contrat_id
                 if rc:
                     if obj.param_project_id.ppr_famille=="Engagement de faisabilité":
-                        rsp_auto=get_pj(rc.rc_df_engagement_faisabilite)
+                        rsp_auto=obj.get_pj(rc.rc_df_engagement_faisabilite)
                     if obj.param_project_id.ppr_famille=="Fiche capacitaire":
-                        rsp_auto=get_pj(rc.rc_df_fiche_capacitaire)
+                        rsp_auto=obj.get_pj(rc.rc_df_fiche_capacitaire)
                 if rsp_auto:
                     obj.etat='F'
                 obj.rsp_auto = rsp_auto
