@@ -7,6 +7,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Form">  
+                    <header>
+                        <field name="dynacase_id" invisible="1"/>
+                        <button 
+                            string="Dynacase" name="lien_vers_dynacase_action" type="object" class="btn btn-info"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                        />
+                    </header>
                     <sheet class="oe_form_sheet_width_wider">
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/> 
@@ -96,18 +103,20 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="code_pg"/>
-                    <field name="type_dossier"/>
-                    <field name="designation"/>
-                    <field name="famille"/>
-                    <field name="sous_famille"/>
-                    <field name="categorie"/>
-                    <field name="gestionnaire"/>
-                    <field name="ref_fournisseur"/>
-                    <field name="ref_plan"/>
-                    <field name="couleur"/>
-                    <field name="fournisseur"/>
-                    <field name="unite"/>
+                    <field name="code_pg"         optional="show"/>
+                    <field name="type_dossier"    optional="show"/>
+                    <field name="designation"     optional="show"/>
+                    <field name="famille"         optional="show"/>
+                    <field name="sous_famille"    optional="show"/>
+                    <field name="categorie"       optional="show"/>
+                    <field name="gestionnaire"    optional="show"/>
+                    <field name="ref_fournisseur" optional="show"/>
+                    <field name="ref_plan"        optional="show"/>
+                    <field name="couleur"         optional="show"/>
+                    <field name="fournisseur"     optional="show"/>
+                    <field name="unite"           optional="show"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
+                    <field name="dynacase_id"  optional="hide"/>
                  </tree>
             </field>
         </record>

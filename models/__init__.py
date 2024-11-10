@@ -19,3 +19,4 @@ from . import ir_attachment
 from . import is_modele_bilan
 from . import suivi_projet
 from . import is_creation_doc_migration
+from . import is_dossier_article
