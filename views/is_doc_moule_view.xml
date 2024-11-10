@@ -93,7 +93,7 @@
                                             <field name="comment"                       attrs="{'column_invisible':[('parent.type_document', '=', 'Article')]}"/>
                                         </tree>
                                     </field>
-                                    <field name="rsp_pj"    attrs="{'invisible': 1}"/>
+                                    <field name="rsp_pj"    attrs="{'invisible': [('rsp_pj', '=', False)]}"/>
                                     <field name="rsp_date"  attrs="{'invisible': [('ppr_type_demande', 'not in', ['DATE', 'PJ_DATE'])]}"/>
                                     <field name="rsp_texte" attrs="{'invisible': [('ppr_type_demande', 'not in', ['TEXTE','PJ_TEXTE'])]}"/>
                                     <field name="rsp_auto"  attrs="{'invisible': [('rsp_auto', '=', False)]}"/>
