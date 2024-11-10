@@ -29,6 +29,9 @@
                                 <field name="type_document"/>
                                 <field name="ppr_transformation_pdf" attrs="{'invisible': [('type_document', '!=', 'Moule')]}"/>
                                 <field name="ppr_dossier_fab"        attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
+                                <field name="dossier_matiere"        attrs="{'invisible': [('type_document', '!=', 'Article')]}" />
+                                <field name="dossier_colorant"       attrs="{'invisible': [('type_document', '!=', 'Article')]}" />
+                                <field name="dossier_composant"      attrs="{'invisible': [('type_document', '!=', 'Article')]}" />
                                 <field name="ppr_demande"            attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="ppr_type_demande" />
                                 <field name="ppr_maj_amdec"          attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
@@ -64,25 +67,28 @@
             <field name="model">is.param.project</field>
             <field name="arch" type="xml">
                 <tree string="Paramétrage projet">
-                    <field name='sequence'/>
-                    <field name="ppr_famille"               optional="show" />
-                    <field name="ppr_familleid"             optional="hide" />
+                    <field name='sequence'                  optional="hide"/>
+                    <field name="ppr_famille"               optional="show"/>
+                    <field name="ppr_familleid"             optional="hide"/>
                     <field name="type_document"             optional="show"/>
-                    <field name="ppr_transformation_pdf"    optional="show"/>
-                    <field name="ppr_dossier_fab"           optional="show"/>
-                    <field name="ppr_demande"               optional="show" />
-                    <field name="ppr_type_demande"          optional="show" />
-                    <field name="ppr_maj_amdec"             optional="show"/>
-                    <field name="ppr_responsable"           optional="show" />
-                    <field name="ppr_revue_lancement"       optional="show"/>
-                    <field name="ppr_moule_hors_auto"       optional="show"/>
+                    <field name="ppr_transformation_pdf"    optional="hide"/>
+                    <field name="ppr_dossier_fab"           optional="hide"/>
+                    <field name="dossier_matiere"           optional="hide"/>
+                    <field name="dossier_colorant"          optional="hide"/>
+                    <field name="dossier_composant"         optional="hide"/>
+                    <field name="ppr_demande"               optional="hide"/>
+                    <field name="ppr_type_demande"          optional="show"/>
+                    <field name="ppr_maj_amdec"             optional="hide"/>
+                    <field name="ppr_responsable"           optional="show"/>
+                    <field name="ppr_revue_lancement"       optional="hide"/>
+                    <field name="ppr_moule_hors_auto"       optional="hide"/>
                     <field name="duree_attente_avant"       optional="hide"/>
                     <field name="ppr_color"                 optional="show" widget="color"/>
                     <field name="duree"                     optional="hide"/>
                     <field name="duree_attente_avant"       optional="hide"/>
                     <field name="dependance_id"             optional="hide" widget="many2one_clickable"/>
-                    <field name='gantt_pdf'                 optional="show"/>
-                    <field name="array_html"                optional="hide" />
+                    <field name='gantt_pdf'                 optional="hide"/>
+                    <field name="array_html"                optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}" />
                     <field name="dynacase_id" optional="hide"/>
                 </tree>
@@ -112,7 +118,7 @@
             <field name="name">Paramétrage projet (Familles)</field>
             <field name="res_model">is.param.project</field>
             <field name="view_mode">tree,form</field>
-            <field name="limit">200</field>
+            <field name="limit">500</field>
         </record>
 
         <!-- is.section.gantt -->

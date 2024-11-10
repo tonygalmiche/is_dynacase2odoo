@@ -86,7 +86,7 @@ class IsDocMoule(models.Model):
     idmoule          = fields.Many2one("is.mold"                  , string="Moule"    , tracking=True, index=True)
     dossierf_id      = fields.Many2one("is.dossierf"              , string="Dossier F", tracking=True, index=True)
     dossier_modif_variante_id = fields.Many2one("is.dossier.modif.variante", string="Dossier Modif / Variante", tracking=True)
-    dossier_article_id        = fields.Many2one("is.dossier.article"       , string="Dossier article", tracking=True)
+    dossier_article_id        = fields.Many2one("is.dossier.article"       , string="Dossier article", index=True, tracking=True)
     dossier_appel_offre_id    = fields.Many2one("is.dossier.appel.offre"   , string="Dossier appel d'offre", tracking=True)
     moule_dossierf   = fields.Char("Moule / Dossier F"                   , compute='_compute_idproject_moule_dossierf',store=True, readonly=True)
     idproject        = fields.Many2one("is.mold.project", string="Projet", compute='_compute_idproject_moule_dossierf',store=True, readonly=True)
@@ -370,9 +370,9 @@ class IsDocMoule(models.Model):
         result = []
         for obj in self:
             if obj.type_document=='Article':
-                name="[%s]%s"%(obj.dossier_article_id.code_pg,obj.param_project_id.ppr_famille)
+                name="[%s] %s"%(obj.dossier_article_id.code_pg,obj.param_project_id.ppr_famille)
             else:
-                name="[%s]%s"%(obj.moule_dossierf,obj.param_project_id.ppr_famille)
+                name="[%s] %s"%(obj.moule_dossierf,obj.param_project_id.ppr_famille)
             result.append((obj.id, name))
         return result
 

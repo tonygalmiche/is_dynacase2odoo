@@ -93,7 +93,10 @@ class IsParamProject(models.Model):
     ppr_familleid           = fields.Integer(string="Famille Id", tracking=True)
     ppr_transformation_pdf  = fields.Boolean(string="Transformation en PDF", tracking=True)
     type_document           = fields.Selection(TYPE_DOCUMENT,string="Type de document", default="Moule", required=True, tracking=True)
-    ppr_dossier_fab         = fields.Boolean(string="Famille du dossier de fabrication", tracking=True)
+    ppr_dossier_fab         = fields.Boolean(string="Dossier de fabrication", tracking=True)
+    dossier_matiere         = fields.Boolean(string="Dossier matière"  , tracking=True)
+    dossier_colorant        = fields.Boolean(string="Dossier colorant" , tracking=True)
+    dossier_composant       = fields.Boolean(string="Dossier composant", tracking=True)
     ppr_demande             = fields.Char(string="Demande", tracking=True)
     ppr_type_demande        = fields.Selection([
         ("PJ",       "Pièce-jointe"),
