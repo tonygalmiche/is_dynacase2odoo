@@ -15,11 +15,7 @@
             id="is_doc_moule_dossierf_menu" sequence="20" name="Documents Dossier F" 
             parent="is_doc_moule_main_menu" action="is_doc_moule_dossierf_action"
         />
-        <menuitem 
-            id="is_doc_moule_article_menu" sequence="30" name="Documents Articles" 
-            parent="is_doc_moule_main_menu" action="is_doc_moule_article_action"
-        />
-        <menuitem 
+         <menuitem 
             id="is_doc_moule_dao_menu" sequence="40" name="Documents Dossier appels d'offres" 
             parent="is_doc_moule_main_menu" action="is_doc_moule_dao_action"
         />
@@ -95,6 +91,38 @@
             <field name="action"    ref="is_revue_lancement_action"/>
         </record>
 
+        
+        <!-- BDT -->
+        <record id="is_bdt_menu" model="ir.ui.menu" >
+            <field name="name">BDT</field>
+            <field name="sequence">17</field>
+            <field name="parent_id" eval="ref('gestion_des_projets_menu')"/>
+        </record>
+        <record id="is_dossier_matiere_menu" model="ir.ui.menu" >
+            <field name="name">Dossier matière</field>
+            <field name="sequence">10</field>
+            <field name="parent_id" eval="ref('is_bdt_menu')"/>
+            <field name="action"    ref="is_dossier_article_action"/>
+        </record>
+        <record id="is_dossier_colorant_menu" model="ir.ui.menu" >
+            <field name="name">Dossier colorant</field>
+            <field name="sequence">20</field>
+            <field name="parent_id" eval="ref('is_bdt_menu')"/>
+            <field name="action"    ref="is_dossier_article_action"/>
+        </record>
+        <record id="is_dossier_composant_menu" model="ir.ui.menu" >
+            <field name="name">Dossier composant</field>
+            <field name="sequence">30</field>
+            <field name="parent_id" eval="ref('is_bdt_menu')"/>
+            <field name="action"    ref="is_dossier_article_action"/>
+        </record>
+        <record id="is_doc_moule_article_menu" model="ir.ui.menu" >
+            <field name="name">Documents Articles</field>
+            <field name="sequence">40</field>
+            <field name="parent_id" eval="ref('is_bdt_menu')"/>
+            <field name="action"    ref="is_doc_moule_article_action"/>
+        </record>
+
 
         <!-- Projets et moules -->
         <record id="is_projet_moule_menu" model="ir.ui.menu" >
@@ -120,12 +148,7 @@
             <field name="parent_id" eval="ref('is_projet_moule_menu')"/>
             <field name="action"    ref="is_plastigray16.is_mold_action"/>
         </record>
-        <record id="is_dossier_article_menu" model="ir.ui.menu" >
-            <field name="name">Dossier article</field>
-            <field name="sequence">40</field>
-            <field name="parent_id" eval="ref('is_projet_moule_menu')"/>
-            <field name="action"    ref="is_plastigray16.is_dossier_article_action"/>
-        </record>
+
         <record id="is_revue_risque_menu" model="ir.ui.menu" >
             <field name="name">Revue des risques projet</field>
             <field name="sequence">41</field>
@@ -175,10 +198,23 @@
             <field name="action"    ref="is_plastigray16.action_is_head_model_form"/>
         </record>
 
+        <!-- Données technique / Dossier article -->
+        <record id="is_dossier_article_menu" model="ir.ui.menu" >
+            <field name="name">Dossier article</field>
+            <field name="sequence">10</field>
+            <field name="parent_id" eval="ref('is_plastigray16.is_dossier_article_main_menu')"/>
+            <field name="action"    ref="is_dossier_article_action"/>
+        </record>
 
+        <record id="is_dossier_article_actualiser_menu" model="ir.ui.menu" >
+            <field name="name">Actualiser Dossier article</field>
+            <field name="sequence">20</field>
+            <field name="parent_id" eval="ref('is_plastigray16.is_dossier_article_main_menu')"/>
+            <field name="action"    ref="is_dossier_article_actions_server"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray16.is_gestionnaire_dossier_article_grp'),
+            ])]"/>
+        </record>
 
-
-
-    
     </data>
 </odoo>
