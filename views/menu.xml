@@ -91,38 +91,42 @@
             <field name="action"    ref="is_revue_lancement_action"/>
         </record>
 
-        
         <!-- BDT -->
         <record id="is_bdt_menu" model="ir.ui.menu" >
             <field name="name">BDT</field>
             <field name="sequence">17</field>
             <field name="parent_id" eval="ref('gestion_des_projets_menu')"/>
         </record>
-        <record id="is_dossier_matiere_menu" model="ir.ui.menu" >
-            <field name="name">Dossier matière</field>
+        <record id="is_dossier_article_bdt_menu" model="ir.ui.menu" >
+            <field name="name">Dossier article</field>
             <field name="sequence">10</field>
             <field name="parent_id" eval="ref('is_bdt_menu')"/>
             <field name="action"    ref="is_dossier_article_action"/>
         </record>
-        <record id="is_dossier_colorant_menu" model="ir.ui.menu" >
-            <field name="name">Dossier colorant</field>
+        <record id="is_dossier_matiere_bdt_menu" model="ir.ui.menu" >
+            <field name="name">Dossier matière</field>
             <field name="sequence">20</field>
             <field name="parent_id" eval="ref('is_bdt_menu')"/>
-            <field name="action"    ref="is_dossier_article_action"/>
+            <field name="action"    ref="is_dossier_article_matiere_action"/>
         </record>
-        <record id="is_dossier_composant_menu" model="ir.ui.menu" >
-            <field name="name">Dossier composant</field>
+        <record id="is_dossier_colorant_bdt_menu" model="ir.ui.menu" >
+            <field name="name">Dossier colorant</field>
             <field name="sequence">30</field>
             <field name="parent_id" eval="ref('is_bdt_menu')"/>
-            <field name="action"    ref="is_dossier_article_action"/>
+            <field name="action"    ref="is_dossier_article_colorant_action"/>
+        </record>
+        <record id="is_dossier_composant_bdt_menu" model="ir.ui.menu" >
+            <field name="name">Dossier composant</field>
+            <field name="sequence">40</field>
+            <field name="parent_id" eval="ref('is_bdt_menu')"/>
+            <field name="action"    ref="is_dossier_article_composant_action"/>
         </record>
         <record id="is_doc_moule_article_menu" model="ir.ui.menu" >
             <field name="name">Documents Articles</field>
-            <field name="sequence">40</field>
+            <field name="sequence">50</field>
             <field name="parent_id" eval="ref('is_bdt_menu')"/>
             <field name="action"    ref="is_doc_moule_article_action"/>
         </record>
-
 
         <!-- Projets et moules -->
         <record id="is_projet_moule_menu" model="ir.ui.menu" >
