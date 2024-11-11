@@ -9,6 +9,11 @@
             <field name="arch" type="xml">
                 <sheet position="before">
                     <header>
+                        <field name="dynacase_id" invisible="1"/>
+                        <button 
+                            string="Dynacase" name="lien_vers_dynacase_action" type="object" class="btn btn-info"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                        />
                          <button name="gantt_action" string="Gantt" type="object" class="btn-success"/>
                     </header>
                 </sheet>
@@ -57,7 +62,8 @@
                     <field name="date_fin_be"            optional="show"/>                            
                 </field>
                 <field name="is_database_origine_id" position="after">
-                    <field name="dynacase_id" optional="hide"/>    
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
+                    <field name="dynacase_id"  optional="hide"/>
                 </field>
             </field>
         </record>

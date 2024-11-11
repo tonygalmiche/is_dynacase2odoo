@@ -15,6 +15,14 @@ class is_dossierf(models.Model):
     date_fin_be            = fields.Date(string="Date fin BE"                                        , copy=False)
     article_ids            = fields.One2many('is.mold.dossierf.article', 'dossierf_id')
 
+    def lien_vers_dynacase_action(self):
+        for obj in self:
+            url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
+            return {
+                'type' : 'ir.actions.act_url',
+                'url': url,
+                'target': 'new',
+            }
 
     def gantt_action(self):
         for obj in self:

@@ -21,6 +21,15 @@ class is_mold(models.Model):
             view_mode = 'dhtmlxgantt_project,tree,form,kanban,calendar,pivot,graph'
             return self.env['is.doc.moule'].list_doc(obj,domain,view_mode=view_mode)
 
+    def lien_vers_dynacase_action(self):
+        for obj in self:
+            url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
+            return {
+                'type' : 'ir.actions.act_url',
+                'url': url,
+                'target': 'new',
+            }
+
 
 class is_mold_dossierf_article(models.Model):
     _name        = "is.mold.dossierf.article"
