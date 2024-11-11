@@ -8,6 +8,8 @@ _logger = logging.getLogger(__name__)
 
 
 #TODO:
+#- Faire fonctionner les dosssiers article et le modèle 07-Composant / Matière
+
 #- Ne pas recherche l'objet doc pour chque ligne de la requete pour gagner 0.02s par docuement => Stocker les informations utilse direcement dans is_doc_moule avec des champs calculés
 #- Afficher la bonne vue liste en cliqant sur l'icone des outils et faire fonctonner avec les dossier f
 #- Pb syncro avec le champ 'Etat' des documents et les champs plasfil_rsp_date et plasfil_rsp_texte
@@ -124,9 +126,11 @@ class IsDocMoule(models.Model):
         #** Recherche des familles du modele **********************************
         modele_ids=[]
         familles={}
+        type_modele=False
         if modele_id:
             modeles=self.env['is.modele.bilan'].search([('id','=',modele_id)])
             for modele in modeles:
+                type_modele=modele.mb_type
                 ct=0
                 for line in modele.line_ids:
                     ct+=1
@@ -148,7 +152,185 @@ class IsDocMoule(models.Model):
         _logger.info("Familles du modele (durée=%.2fs)"%(datetime.now()-debut).total_seconds())
 
         mydict={}
-        if len(modele_ids)>0:
+
+
+        #** Clause WHERE ******************************************************
+        WHERE=""
+        if cp_id and cp_id!='0':
+            WHERE+=" and ru.id=%s "%cp_id
+        if client:
+            WHERE+=" and client.name ilike '%"+client+"%' "
+        if projet:
+            WHERE+=" and imp.name ilike '%"+projet+"%' "
+        if moule:
+            WHERE+=" and im.name ilike '"+moule+"%' "
+        if type_moule and type_moule=='Actif':
+            WHERE+=" and im.date_fin is null "
+        #**********************************************************************
+
+
+
+
+        # article_ids=[]
+        # if type_modele=='Article':
+        #     #** Recherche des articles liés aux moules ************************
+        #     SQL="""
+        #         select im.name,im.id,article.article_id
+        #         from is_mold im join is_mold_project imp  on im.project=imp.id
+        #                         join res_users ru         on imp.chef_projet_id=ru.id
+        #                         join res_partner rp       on ru.partner_id=rp.id
+        #                         join res_partner client   on imp.client_id=client.id
+        #                         join is_mold_dossierf_article article on article.mold_id=im.id
+        #         where im.active='t' %s
+        #     """%WHERE
+        #     cr.execute(SQL)
+        #     rows = cr.dictfetchall()
+        #     for row in rows:
+        #         article_id = str(row['article_id'])
+        #         if article_id not in article_ids:
+        #             article_ids.append(article_id)
+        #      #******************************************************************
+
+        #     #** Recherche des articles liés aux dossiers F ********************
+        #     SQL="""
+        #         select im.name,im.id,article.article_id
+        #         from is_dossierf im join is_mold_project imp  on im.project=imp.id
+        #                             join res_users ru         on imp.chef_projet_id=ru.id
+        #                             join res_partner rp       on ru.partner_id=rp.id
+        #                             join res_partner client   on imp.client_id=client.id
+        #                             join is_mold_dossierf_article article on article.dossierf_id=im.id
+        #         where im.active='t' %s
+        #     """%WHERE
+        #     cr.execute(SQL)
+        #     rows = cr.dictfetchall()
+        #     for row in rows:
+        #         article_id = str(row['article_id'])
+        #         if article_id not in article_ids:
+        #             article_ids.append(article_id)
+        #     #******************************************************************
+
+        #     #** Recherche des documents liés aux articles *********************
+        #     SQL="""
+        #         select
+        #             idm.id               id,
+        #             ida.code_pg          moule,
+        #             ida.designation      designation,
+        #             ida.id               moule_id,
+        #             'is.dossier.article' res_model,
+        #             'imp.name'           projet,
+        #             0                    projet_id,
+        #             'rp.name'            cp,
+        #             0                    cp_id,
+        #             'client.name'        client,
+        #             0                    client_id,
+        #             ipp.ppr_famille      famille,
+        #             ipp.id               famille_id,
+        #             idm.etat             etat,
+        #             'im.j_actuelle'      j_actuelle,
+        #             0                    j_avancement,
+        #             idm.dateend          dateend,
+        #             idm.coefficient      coefficient,
+        #             idm.note             note,
+        #             idm.etat             etat,
+        #             idm.dynacase_id      dynacase_id,
+        #             idm.rsp_pj           rsp_pj,
+        #             idm.rsp_date         rsp_date,
+        #             idm.rsp_texte        rsp_texte,
+        #             idm.color            color
+        #         from is_doc_moule idm join is_dossier_article ida on idm.dossier_article_id=ida.id
+        #                               join is_param_project   ipp on idm.param_project_id=ipp.id
+        #         where idm.active='t' and idm.param_project_id in (%s) and idm.dossier_article_id in (%s)
+        #     """%(','.join(modele_ids), ','.join(article_ids))
+
+
+
+        if type_modele=='Article':
+            #** Moules ********************************************************
+            SQL="""
+                select
+                    idm.id               id,
+                    ida.code_pg          moule,
+                    CONCAT(ida.designation,'- ',im.name) designation,
+                    ida.id                moule_id,
+                    'is.dossier.article' res_model,
+                    imp.name             projet,
+                    imp.id               projet_id,
+                    rp.name              cp,
+                    imp.chef_projet_id   cp_id,
+                    client.name          client,
+                    imp.client_id        client_id,
+                    ipp.ppr_famille      famille,
+                    ipp.id               famille_id,
+                    idm.etat             etat,
+                    im.j_actuelle        j_actuelle,
+                    im.j_avancement      j_avancement,
+                    idm.dateend          dateend,
+                    idm.coefficient      coefficient,
+                    idm.note             note,
+                    idm.etat             etat,
+                    idm.dynacase_id      dynacase_id,
+                    idm.rsp_pj           rsp_pj,
+                    idm.rsp_date         rsp_date,
+                    idm.rsp_texte        rsp_texte,
+                    idm.color            color
+                from is_mold_dossierf_article article join is_dossier_article ida on article.article_id=ida.id
+                                                      join is_mold im on article.mold_id=im.id
+                                                      join is_mold_project imp              on im.project=imp.id
+                                                      join res_users ru                     on imp.chef_projet_id=ru.id
+                                                      join res_partner rp                   on ru.partner_id=rp.id
+                                                      join res_partner client               on imp.client_id=client.id
+                                                      join is_doc_moule idm                 on idm.dossier_article_id=article.article_id
+                                                      join is_param_project ipp             on idm.param_project_id=ipp.id
+                where idm.active='t' and idm.param_project_id in (%s) %s
+            """%(','.join(modele_ids),WHERE)
+
+
+            #** Dossier F *****************************************************
+            SQL+="""
+                UNION
+                select
+                    idm.id               id,
+                    ida.code_pg          moule,
+                    CONCAT(ida.designation,'- ',im.name) designation,
+                    ida.id                moule_id,
+                    'is.dossier.article' res_model,
+                    imp.name             projet,
+                    imp.id               projet_id,
+                    rp.name              cp,
+                    imp.chef_projet_id   cp_id,
+                    client.name          client,
+                    imp.client_id        client_id,
+                    ipp.ppr_famille      famille,
+                    ipp.id               famille_id,
+                    idm.etat             etat,
+                    im.j_actuelle        j_actuelle,
+                    im.j_avancement      j_avancement,
+                    idm.dateend          dateend,
+                    idm.coefficient      coefficient,
+                    idm.note             note,
+                    idm.etat             etat,
+                    idm.dynacase_id      dynacase_id,
+                    idm.rsp_pj           rsp_pj,
+                    idm.rsp_date         rsp_date,
+                    idm.rsp_texte        rsp_texte,
+                    idm.color            color
+                from is_mold_dossierf_article article join is_dossier_article ida on article.article_id=ida.id
+                                                      join is_dossierf im on article.dossierf_id=im.id
+                                                      join is_mold_project imp              on im.project=imp.id
+                                                      join res_users ru                     on imp.chef_projet_id=ru.id
+                                                      join res_partner rp                   on ru.partner_id=rp.id
+                                                      join res_partner client               on imp.client_id=client.id
+                                                      join is_doc_moule idm                 on idm.dossier_article_id=article.article_id
+                                                      join is_param_project ipp             on idm.param_project_id=ipp.id
+
+                where idm.active='t' and idm.param_project_id in (%s) %s
+            """%(','.join(modele_ids),WHERE)
+
+
+
+
+
+        if type_modele=='Moule':
             #** Moules ********************************************************
             SQL="""
                 select
@@ -183,18 +365,9 @@ class IsDocMoule(models.Model):
                                     inner join res_partner rp       on ru.partner_id=rp.id
                                     inner join res_partner client   on imp.client_id=client.id
                                     inner join is_param_project ipp on idm.param_project_id=ipp.id
-                where idm.active='t' and idm.param_project_id in (%s)
-            """%','.join(modele_ids)
-            if cp_id and cp_id!='0':
-                SQL+=" and ru.id=%s "%cp_id
-            if client:
-                SQL+=" and client.name ilike '%"+client+"%' "
-            if projet:
-                SQL+=" and imp.name ilike '%"+projet+"%' "
-            if moule:
-                SQL+=" and im.name ilike '"+moule+"%' "
-            if type_moule and type_moule=='Actif':
-                SQL+=" and im.date_fin is null "
+                where idm.active='t' and idm.param_project_id in (%s) %s
+            """%(','.join(modele_ids),WHERE)
+
 
             #** Dossier F *****************************************************
             SQL+="""
@@ -231,21 +404,15 @@ class IsDocMoule(models.Model):
                                     inner join res_partner rp       on ru.partner_id=rp.id
                                     inner join res_partner client   on imp.client_id=client.id
                                     inner join is_param_project ipp on idm.param_project_id=ipp.id
-                where idm.active='t' and idm.param_project_id in (%s)
-            """%','.join(modele_ids)
-            if cp_id and cp_id!='0':
-                SQL+=" and ru.id=%s "%cp_id
-            if client:
-                SQL+=" and client.name ilike '%"+client+"%' "
-            if projet:
-                SQL+=" and imp.name ilike '%"+projet+"%' "
-            if moule:
-                SQL+=" and im.name ilike '"+moule+"%' "
-            SQL+=" limit 500"
+                where idm.active='t' and idm.param_project_id in (%s) %s 
+                limit 500
+            """%(','.join(modele_ids),WHERE)
+
+
+        if len(modele_ids)>0:
             cr.execute(SQL)
             rows = cr.dictfetchall()
             _logger.info("Requête SQL (nb doc=%s) (durée=%.2fs)"%(len(rows),(datetime.now()-debut).total_seconds())) # 0.02s par document
-
             for row in rows:
                 doc=False
                 doc_id = row['id']

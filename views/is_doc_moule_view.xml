@@ -77,7 +77,7 @@
                                 </div>
                                 <field name="fin_derogation" attrs="{'invisible': [('etat', '!=', 'D')], 'required': [('etat', '=', 'D')]}"/>
                                 <field name="conforme"       attrs="{'invisible': [('type_document', '!=', 'Article')]}"/>
-                                <field name="indicateur"     attrs="{'readonly': 1, 'invisible': [('type_document', '=', 'Article')]}" force_save="1"/>
+                                <field name="indicateur"     attrs="{'readonly': 1}" force_save="1"/>
                             </group>
                         </group>
                         <notebook>
@@ -556,6 +556,7 @@
                         decoration-warning="etat == 'D'"
                         decoration-danger="etat == 'AF'"
                     />
+                    <field name="indicateur"          optional="hide"/>
                     <field name="conforme"            optional="hide"/>
                     <field name="rsp_pj"              optional="show"/>
                     <field name="rsp_texte"           optional="show" />
