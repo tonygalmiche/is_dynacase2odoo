@@ -17,6 +17,11 @@
                         <button name="gantt_action" string="Gantt" type="object" class="btn-success"/>
                     </header>
                 </sheet>
+                <group name="identification" position="after">
+                    <group>
+                        <field name="image" widget="image" style="max-width:300px;max-height:300px;float:right" nolabel="1" colspan="2"/>
+                    </group>
+                </group>
                 <sheet position="inside">
                     <group>
                         <group string="Gestion des J">

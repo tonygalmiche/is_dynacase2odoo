@@ -6,6 +6,7 @@ from datetime import datetime, timedelta, date
 class is_dossierf(models.Model):
     _inherit = 'is.dossierf'
 
+    image                  = fields.Binary('Image')
     dossier_appel_offre_id = fields.Many2one("is.dossier.appel.offre", string="Dossier appel d'offre", copy=False)
     revue_contrat_id       = fields.Many2one("is.revue.de.contrat"   , string="Revue de contrat"     , copy=False)
     revue_lancement_id     = fields.Many2one("is.revue.lancement"    , string="Revue de lancement"   , copy=False)
