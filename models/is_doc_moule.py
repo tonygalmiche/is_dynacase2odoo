@@ -144,46 +144,34 @@ class IsDocMoule(models.Model):
                     obj.rsp_date=False
 
 
-    # @api.depends('param_project_id')
-    # def _compute_rsp_date_vsb(self):
-    #     for obj in self:
-    #         vsb=False
-    #         if obj.ppr_type_demande in ('DATE','PJ_DATE'):
-    #             vsb=True
-    #         obj.rsp_date_vsb=vsb
-
-
-#    ppr_type_demande        = fields.Selection([
-#         ("PJ",       "Pièce-jointe"),
-#         ("DATE",     "Date"),
-#         ("TEXTE",    "Texte"),
-#         ("PJ_TEXTE", "Pièce-jointe et texte"),
-#         ("PJ_DATE",  "Pièce-jointe et date"),
-#         ("AUTO",     "Automatique"),
-#     ], string="Type de demande", required=True, default='PJ')
-
-
-
     @api.depends('etat','dateend')
     def _compute_color(self):
         "Retourne la couleur de l'indicateur en fonction de différent paramètres"
         for obj in self:
-            color = 'Lavender'
-            if not obj.dateend:
-                color = 'orange'
-            if obj.action=='':
+            now = date.today()
+            if obj.type_document=='Article':
+                if obj.etat=='F':
+                    color='SpringGreen'
+                else:
+                    color = 'orange'
+                    if now>obj.dateend:
+                        color='Red'
+            else:
                 color = 'Lavender'
-            if obj.etat=='AF':
-                color='CornflowerBlue'
-            if obj.etat=='D':
-                color='Orange'
-            if obj.dateend:
-                now = date.today()
-                if now>obj.dateend:
-                    color='Red'
-            if obj.etat=='F':
-                color='SpringGreen'
-            # if ($name_fam=="DFAB")  $color = "Lavender"; // Traitement particulier pour les dossiers de fab
+                if not obj.dateend:
+                    color = 'orange'
+                if obj.action=='':
+                    color = 'Lavender'
+                if obj.etat=='AF':
+                    color='CornflowerBlue'
+                if obj.etat=='D':
+                    color='Orange'
+                if obj.dateend:
+                    if now>obj.dateend:
+                        color='Red'
+                if obj.etat=='F':
+                    color='SpringGreen'
+                # if ($name_fam=="DFAB")  $color = "Lavender"; // Traitement particulier pour les dossiers de fab
             obj.color=color
 
 
@@ -238,7 +226,7 @@ class IsDocMoule(models.Model):
             obj.note        = note
 
 
-    @api.depends('note','coefficient','etat','action','array_ids.annex','rsp_date','rsp_texte')
+    @api.depends('note','coefficient','etat','action','array_ids.annex','rsp_date','rsp_texte','dateend')
     def _compute_indicateur(self):
         for obj in self:
             color = obj.color

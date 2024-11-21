@@ -143,7 +143,14 @@
                                                 </tr>
                                                 <tr>
                                                     <td style="width:33%;border:none;text-align:left;white-space:nowrap;padding-left:0.5rem">
-                                                        <t t-if="doc.coefficient"><span t-esc="doc.note"/>/<span t-esc="doc.coefficient"/></t>
+                                                        <t t-if="doc.type_document=='Article'">
+                                                            <t t-if="doc.etat=='F'">
+                                                                (T)
+                                                            </t>
+                                                        </t>
+                                                        <t t-if="doc.type_document!='Article'">
+                                                            <t t-if="doc.coefficient"><span t-esc="doc.note"/>/<span t-esc="doc.coefficient"/></t>
+                                                        </t>
                                                     </td>
                                                     <td style="width:34%;border:none;text-align:center;white-space:nowrap;padding-right:0.5rem">
                                                         <img 

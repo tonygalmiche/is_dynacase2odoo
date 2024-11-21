@@ -171,79 +171,6 @@ class IsDocMoule(models.Model):
 
 
 
-        # article_ids=[]
-        # if type_modele=='Article':
-        #     #** Recherche des articles liés aux moules ************************
-        #     SQL="""
-        #         select im.name,im.id,article.article_id
-        #         from is_mold im join is_mold_project imp  on im.project=imp.id
-        #                         join res_users ru         on imp.chef_projet_id=ru.id
-        #                         join res_partner rp       on ru.partner_id=rp.id
-        #                         join res_partner client   on imp.client_id=client.id
-        #                         join is_mold_dossierf_article article on article.mold_id=im.id
-        #         where im.active='t' %s
-        #     """%WHERE
-        #     cr.execute(SQL)
-        #     rows = cr.dictfetchall()
-        #     for row in rows:
-        #         article_id = str(row['article_id'])
-        #         if article_id not in article_ids:
-        #             article_ids.append(article_id)
-        #      #******************************************************************
-
-        #     #** Recherche des articles liés aux dossiers F ********************
-        #     SQL="""
-        #         select im.name,im.id,article.article_id
-        #         from is_dossierf im join is_mold_project imp  on im.project=imp.id
-        #                             join res_users ru         on imp.chef_projet_id=ru.id
-        #                             join res_partner rp       on ru.partner_id=rp.id
-        #                             join res_partner client   on imp.client_id=client.id
-        #                             join is_mold_dossierf_article article on article.dossierf_id=im.id
-        #         where im.active='t' %s
-        #     """%WHERE
-        #     cr.execute(SQL)
-        #     rows = cr.dictfetchall()
-        #     for row in rows:
-        #         article_id = str(row['article_id'])
-        #         if article_id not in article_ids:
-        #             article_ids.append(article_id)
-        #     #******************************************************************
-
-        #     #** Recherche des documents liés aux articles *********************
-        #     SQL="""
-        #         select
-        #             idm.id               id,
-        #             ida.code_pg          moule,
-        #             ida.designation      designation,
-        #             ida.id               moule_id,
-        #             'is.dossier.article' res_model,
-        #             'imp.name'           projet,
-        #             0                    projet_id,
-        #             'rp.name'            cp,
-        #             0                    cp_id,
-        #             'client.name'        client,
-        #             0                    client_id,
-        #             ipp.ppr_famille      famille,
-        #             ipp.id               famille_id,
-        #             idm.etat             etat,
-        #             'im.j_actuelle'      j_actuelle,
-        #             0                    j_avancement,
-        #             idm.dateend          dateend,
-        #             idm.coefficient      coefficient,
-        #             idm.note             note,
-        #             idm.etat             etat,
-        #             idm.dynacase_id      dynacase_id,
-        #             idm.rsp_pj           rsp_pj,
-        #             idm.rsp_date         rsp_date,
-        #             idm.rsp_texte        rsp_texte,
-        #             idm.color            color
-        #         from is_doc_moule idm join is_dossier_article ida on idm.dossier_article_id=ida.id
-        #                               join is_param_project   ipp on idm.param_project_id=ipp.id
-        #         where idm.active='t' and idm.param_project_id in (%s) and idm.dossier_article_id in (%s)
-        #     """%(','.join(modele_ids), ','.join(article_ids))
-
-
-
         if type_modele=='Article':
             #** Moules ********************************************************
             SQL="""
@@ -272,7 +199,8 @@ class IsDocMoule(models.Model):
                     idm.rsp_pj           rsp_pj,
                     idm.rsp_date         rsp_date,
                     idm.rsp_texte        rsp_texte,
-                    idm.color            color
+                    idm.color            color,
+                    idm.type_document
                 from is_mold_dossierf_article article join is_dossier_article ida on article.article_id=ida.id
                                                       join is_mold im on article.mold_id=im.id
                                                       join is_mold_project imp              on im.project=imp.id
@@ -313,7 +241,8 @@ class IsDocMoule(models.Model):
                     idm.rsp_pj           rsp_pj,
                     idm.rsp_date         rsp_date,
                     idm.rsp_texte        rsp_texte,
-                    idm.color            color
+                    idm.color            color,
+                    idm.type_document
                 from is_mold_dossierf_article article join is_dossier_article ida on article.article_id=ida.id
                                                       join is_dossierf im on article.dossierf_id=im.id
                                                       join is_mold_project imp              on im.project=imp.id
@@ -358,7 +287,8 @@ class IsDocMoule(models.Model):
                     idm.rsp_pj           rsp_pj,
                     idm.rsp_date         rsp_date,
                     idm.rsp_texte        rsp_texte,
-                    idm.color            color
+                    idm.color            color,
+                    idm.type_document
                 from is_doc_moule idm inner join is_mold im         on idm.idmoule=im.id
                                     inner join is_mold_project imp  on im.project=imp.id
                                     inner join res_users ru         on imp.chef_projet_id=ru.id
@@ -397,7 +327,8 @@ class IsDocMoule(models.Model):
                     idm.rsp_pj           rsp_pj,
                     idm.rsp_date         rsp_date,
                     idm.rsp_texte        rsp_texte,
-                    idm.color            color
+                    idm.color            color,
+                    idm.type_document
                 from is_doc_moule idm inner join is_dossierf im     on idm.dossierf_id=im.id
                                     inner join is_mold_project imp  on im.project=imp.id
                                     inner join res_users ru         on imp.chef_projet_id=ru.id
@@ -477,14 +408,15 @@ class IsDocMoule(models.Model):
                                 rsp_date=rsp_date.strftime("%d/%m/%y")
                             reponse=[row['rsp_pj'],rsp_date,row['rsp_texte']]
                             vals={
-                                'doc_id'     : doc_id,
-                                'etat'       : row['etat'],
-                                'dateend'    : dateend,
-                                'coefficient': coefficient,
-                                'note'       : note,
-                                'style'      : 'background-color:%s'%color,
-                                'dynacase_id': row['dynacase_id'],
-                                'reponse'    : reponse,
+                                'doc_id'       : doc_id,
+                                'etat'         : row['etat'],
+                                'dateend'      : dateend,
+                                'coefficient'  : coefficient,
+                                'note'         : note,
+                                'style'        : 'background-color:%s'%color,
+                                'dynacase_id'  : row['dynacase_id'],
+                                'type_document': row['type_document'],
+                                'reponse'      : reponse,
                             }
                             mydict[key]['familles'][famille].update(vals)
         sorted_dict = dict(sorted(mydict.items())) 
