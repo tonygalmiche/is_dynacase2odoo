@@ -11,6 +11,24 @@ class IsDocMoule(models.Model):
     _inherit        = "is.doc.moule"
 
 
+    def get_jour_fermeture_ids(self,fermeture_id):
+        jour_fermeture_ids=[]
+        for line in fermeture_id.jour_ids:
+            if line.date_fin:
+                if line.date_fin>=line.date_debut:
+                    ladate=line.date_debut
+                    while True:
+                        if ladate>line.date_fin:
+                            break                             
+                        if ladate not in jour_fermeture_ids:
+                            jour_fermeture_ids.append(str(ladate))
+                        ladate+=timedelta(days=1)
+            else:
+                if line.date_debut not in jour_fermeture_ids:
+                    jour_fermeture_ids.append(str(line.date_debut))
+        return jour_fermeture_ids
+
+
     @api.model
     def get_dhtmlx(self, domain=[]):
         scroll_x = self.env['is.mem.var'].get(self._uid, 'scroll_x')
@@ -52,7 +70,6 @@ class IsDocMoule(models.Model):
                             markers.append(vals)
         #**********************************************************************
 
-
         #** Ajout des projets *************************************************
         projets=[]
         for line in lines:
@@ -87,28 +104,35 @@ class IsDocMoule(models.Model):
 
 
         #** Ajout des jours de fermeture des projets **************************
-        def get_jour_fermeture_ids(fermeture_id):
-            jour_fermeture_ids=[]
-            for line in fermeture_id.jour_ids:
-                if line.date_fin:
-                    if line.date_fin>=line.date_debut:
-                        ladate=line.date_debut
-                        while True:
-                            if ladate>line.date_fin:
-                                break                             
-                            if ladate not in jour_fermeture_ids:
-                                jour_fermeture_ids.append(str(ladate))
-                            ladate+=timedelta(days=1)
-                else:
-                    if line.date_debut not in jour_fermeture_ids:
-                        jour_fermeture_ids.append(str(line.date_debut))
-            return jour_fermeture_ids
+        # def get_jour_fermeture_ids(fermeture_id):
+        #     jour_fermeture_ids=[]
+        #     for line in fermeture_id.jour_ids:
+        #         if line.date_fin:
+        #             if line.date_fin>=line.date_debut:
+        #                 ladate=line.date_debut
+        #                 while True:
+        #                     if ladate>line.date_fin:
+        #                         break                             
+        #                     if ladate not in jour_fermeture_ids:
+        #                         jour_fermeture_ids.append(str(ladate))
+        #                     ladate+=timedelta(days=1)
+        #         else:
+        #             if line.date_debut not in jour_fermeture_ids:
+        #                 jour_fermeture_ids.append(str(line.date_debut))
+        #     return jour_fermeture_ids
+        
+
+        #def get_jour_fermeture_ids(self,fermeture_id):
+
+
         jour_fermeture_ids=[]
         for projet in projets:
-            jour_fermeture_ids=get_jour_fermeture_ids(projet.fermeture_id)
+            jour_fermeture_ids=self.get_jour_fermeture_ids(projet.fermeture_id)
         for dossier in dossiers:
-            if hasattr(dossier, 'demao_num'):
-                jour_fermeture_ids=get_jour_fermeture_ids(dossier.fermeture_id)
+            #if hasattr(dossier, 'demao_num'):
+            #    jour_fermeture_ids=get_jour_fermeture_ids(dossier.fermeture_id)
+            if hasattr(dossier, 'fermeture_id'):
+                jour_fermeture_ids=self.get_jour_fermeture_ids(dossier.fermeture_id)
         #**********************************************************************
 
 

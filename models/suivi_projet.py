@@ -350,14 +350,7 @@ class IsDocMoule(models.Model):
                 #doc = self.env['is.doc.moule'].browse(doc_id)
                 if doc_id:
                     key="%s-%s"%(row['moule'],row['moule_id'])
-
-
                     if key not in mydict:
-                        print(key)
-
-
-                        #nb_notes = total_note = total_coefficient = avancement_j = 0
-
                         #** Recherche photo du moule **************************
                         photo=''
                         if avec_photo=='Oui':
@@ -481,6 +474,7 @@ class IsDocMoule(models.Model):
 
     
     def get_doc_modele(self,res_model,res_id,modele_id):
+        tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_suivi_projet_tree_view').id
         famille_ids=[]
         modele_bilan = self.env['is.modele.bilan'].browse(int(modele_id))
         if modele_bilan:
@@ -491,9 +485,18 @@ class IsDocMoule(models.Model):
                 ('idmoule','=',int(res_id)),
                 ('param_project_id','in',famille_ids),
             ]
+        if res_model=='is.dossierf':
+            domain=[
+                ('dossierf_id','=',int(res_id)),
+                ('param_project_id','in',famille_ids),
+            ]
         ids=[]
         if domain:
             docs=self.env['is.doc.moule'].search(domain)
             for doc in docs:
                 ids.append(doc.id)
-        return {'ids':ids}
+        res = {
+            'ids'    : ids,
+            'tree_id': tree_id,
+        }
+        return res

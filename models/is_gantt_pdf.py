@@ -1,6 +1,6 @@
-from odoo import models, fields, api, _
-from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J, TYPE_DOCUMENT, MODELE_TO_TYPE, TYPE_TO_FIELD
-from datetime import datetime, timedelta
+from odoo import models, fields, api, _  # type: ignore
+from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J, TYPE_DOCUMENT, MODELE_TO_TYPE, TYPE_TO_FIELD  # type: ignore
+from datetime import datetime, timedelta, date
 import pytz
 import calendar
 from random import *
@@ -32,28 +32,28 @@ class IsGanttPdf(models.Model):
 
 
     name                      = fields.Char("Document", compute='_compute_name',store=True, readonly=True)
-    type_document             = fields.Selection(TYPE_DOCUMENT,string="Type de document", default="Moule", required=True)
-    moule_id                  = fields.Many2one("is.mold"                  , string="Moule")
-    dossierf_id               = fields.Many2one("is.dossierf"              , string="Dossier F")
-    dossier_modif_variante_id = fields.Many2one("is.dossier.modif.variante", string="Dossier Modif / Variante")
-    dossier_article_id        = fields.Many2one("is.dossier.article"       , string="Dossier article")
-    dossier_appel_offre_id    = fields.Many2one("is.dossier.appel.offre"   , string="Dossier appel d'offre")
-    date_debut                = fields.Date("Date début")
-    date_fin                  = fields.Date("Date fin")
-    bordure_jour              = fields.Boolean("Bordure jour", default=False)
-    logo_droite               = fields.Image(string="Logo de droite")
+    type_document             = fields.Selection(TYPE_DOCUMENT,string="Type de document", default="Moule", required=True, tracking=True)
+    moule_id                  = fields.Many2one("is.mold"                  , string="Moule", tracking=True)
+    dossierf_id               = fields.Many2one("is.dossierf"              , string="Dossier F", tracking=True)
+    dossier_modif_variante_id = fields.Many2one("is.dossier.modif.variante", string="Dossier Modif / Variante", tracking=True)
+    dossier_article_id        = fields.Many2one("is.dossier.article"       , string="Dossier article", tracking=True)
+    dossier_appel_offre_id    = fields.Many2one("is.dossier.appel.offre"   , string="Dossier appel d'offre", tracking=True)
+    date_debut                = fields.Date("Date début", tracking=True)
+    date_fin                  = fields.Date("Date fin", tracking=True)
+    bordure_jour              = fields.Boolean("Bordure jour", default=False, tracking=True)
+    logo_droite               = fields.Image(string="Logo de droite", tracking=True)
     format_fichier            = fields.Selection([
         ("png", "PNG"),
         ("pdf", "PDF"),
         ("svg", "SVG"),
-    ], string="Format fichier", default="png")
+    ], string="Format fichier", default="png", tracking=True)
     section_ids = fields.One2many('is.gantt.pdf.section', 'gantt_pdf_id')
 
 
     @api.onchange('type_document','moule_id','dossierf_id','dossier_modif_variante_id','dossier_article_id','dossier_appel_offre_id')
     def onchange_moule(self):
         for obj in self:
-            items,titre = obj.get_taches()
+            items,titre,jour_fermeture_ids,markers = obj.get_taches()
             lines=[]
             ids=[]
             for item in items:
@@ -122,6 +122,8 @@ class IsGanttPdf(models.Model):
         for obj in self:
             items=[]
             domain=[]
+            jour_fermeture_ids=[]
+            markers=[]
             if gantt_pdf:
                 domain.append(('gantt_pdf','=',True))
             if section_ids:
@@ -143,8 +145,10 @@ class IsGanttPdf(models.Model):
             titre="%s du %s"%(titre,now)
             if domain!=[]:
                 res=self.env['is.doc.moule'].get_dhtmlx(domain=domain)
-                items = res['items']
-            return items,titre
+                items              = res['items']
+                jour_fermeture_ids = res['jour_fermeture_ids']
+                markers            = res['markers']
+            return items,titre,jour_fermeture_ids,markers
 
 
     def get_sections(self):
@@ -159,8 +163,7 @@ class IsGanttPdf(models.Model):
     def generer_pdf_action(self):
         for obj in self:
             section_ids=obj.get_sections()
-            items,titre = obj.get_taches(section_ids=section_ids, gantt_pdf=True)
-
+            items,titre,jour_fermeture_ids,markers = obj.get_taches(section_ids=section_ids, gantt_pdf=True)
 
             #** Calcul start_date *********************************************
             for item in items:
@@ -215,8 +218,11 @@ class IsGanttPdf(models.Model):
 
             #** Ajout des durations pour les parents **************************
             for enfant in enfants:
-                if 'duration' not in enfant or enfant['duration']==False:
-                    enfant['duration'] = (enfant['end_date'] - enfant['start_date']).days
+                duration=1
+                if 'end_date' in enfant:
+                    if 'duration' not in enfant or enfant['duration']==False:
+                        duration = (enfant['end_date'] - enfant['start_date']).days
+                enfant['duration'] = duration
             #******************************************************************
 
             #** Ajout de la couleur de la section **************************
@@ -252,12 +258,13 @@ class IsGanttPdf(models.Model):
                 if end_date:
                     if not date_fin or date_fin<end_date:
                         date_fin = end_date
-
             if obj.date_debut:
                 date_debut=datetime.fromisoformat(obj.date_debut.isoformat()) 
             if obj.date_fin:
                 date_fin=datetime.fromisoformat(obj.date_fin.isoformat()) 
-            jour_nb = (date_fin-date_debut).days
+            jour_nb=0
+            if date_debut and date_fin:
+                jour_nb = (date_fin-date_debut).days
             #******************************************************************
 
             #** Calcul du nombre de taches à afficher *************************
@@ -413,6 +420,46 @@ class IsGanttPdf(models.Model):
                     y      = entete_height+tache_height*1
                     height = nb_taches*tache_height+tache_height
                     cairo_rectangle(ctx,x,y,jour_width,height,fill_rgb=fill_rgb)
+                ladate += timedelta(days=1)
+
+            #** Ajout des vacances ********************************************
+            ladate = date_debut
+            for ct in range(0,jour_nb):
+                ladate_str = str(ladate)[0:10]
+                if ladate_str in jour_fermeture_ids:
+                    fill_rgb=to_rgb("#fdeab6")
+                    x      = grille_width+ct*jour_width
+                    y      = entete_height+tache_height*1
+                    height = nb_taches*tache_height+tache_height
+                    cairo_rectangle(ctx,x,y,jour_width,height,fill_rgb=fill_rgb)
+                ladate += timedelta(days=1)
+
+            #** Ligne verticale pour le now ***********************************
+            ladate = date_debut
+            now = date.today()
+            for ct in range(0,jour_nb):
+                ladate_str = str(ladate)[0:10]
+                if ladate_str==str(now):
+                    fill_rgb=to_rgb("#dc143c")
+                    x      = grille_width+ct*jour_width
+                    y      = entete_height #+tache_height*1
+                    height = nb_taches*tache_height+tache_height*2
+                    cairo_rectangle(ctx,x,y,jour_width/4,height,fill_rgb=fill_rgb)
+                    cairo_show_text(ctx,x,y,txt='Now',font_rgb=fill_rgb)
+                ladate += timedelta(days=1)
+
+            #** Lignes verticales pour les J **********************************
+            ladate = date_debut
+            for ct in range(0,jour_nb):
+                ladate_str = str(ladate)[0:10]
+                for marker in markers:
+                    if marker['start_date'][0:10]==ladate_str:
+                        fill_rgb=to_rgb("#dc143c")
+                        x      = grille_width+ct*jour_width
+                        y      = entete_height #+tache_height*1
+                        height = nb_taches*tache_height+tache_height*2
+                        cairo_rectangle(ctx,x,y,jour_width/4,height,fill_rgb=fill_rgb)
+                        cairo_show_text(ctx,x,y,txt=marker['j'],font_rgb=fill_rgb)
                 ladate += timedelta(days=1)
 
             #** Ajout des tâches **********************************************
@@ -606,4 +653,6 @@ class IsGanttPdf(models.Model):
             os.unlink(path)
             #*******************************************************************
 
-
+            msg = "Génération du %s"%obj.format_fichier.upper()
+            obj.message_post(body=msg)
+        

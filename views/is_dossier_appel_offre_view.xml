@@ -50,6 +50,7 @@
                                 <field name="dao_comment"/>
                                 <field name="dao_motif"/>
                                 <field name="dao_avancement"/>
+                                <field name="fermeture_id"/>    
                                 <field name="dynacase_id"/>
                             </group>
                         </group>
@@ -63,6 +64,11 @@
                             <field name="dao_devis_achat"       widget="many2many_binary"/>
                          </group>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" />
+                        <field name="activity_ids" />
+                        <field name="message_ids" />
+                    </div>
                 </form>
             </field>
         </record>
@@ -95,6 +101,7 @@
                     <field name="dao_comment" optional="show"/>
                     <field name="dao_motif" optional="show"/>
                     <field name="dao_avancement" optional="show"/>
+                    <field name="fermeture_id" optional="hide"/>    
                     <field name="state" optional="show"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
                     <field name="dynacase_id"  optional="hide"/>

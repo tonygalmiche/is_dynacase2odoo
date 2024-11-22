@@ -808,5 +808,29 @@
 
 
 
+               <!-- Liste des documents depuis 'Suivi des projets' -->
+               <record id="is_doc_moule_suivi_projet_tree_view" model="ir.ui.view" >
+                <field name="name">is_doc_moule_suivi_projet_tree_view</field>
+                <field name="model">is.doc.moule</field>
+                <field name="priority" eval="90"/>
+                <field name="arch" type="xml">
+                    <tree editable="top">
+                        <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
+                        <!-- <field name="type_document" invisible="1"/> -->
+                        <field name="param_project_id" readonly="1"/>
+                        <field name="idresp"/>
+                        <field name="dateend"/>
+                        <field name="etat"/>
+                        <field name="indicateur"   optional="hide"/>
+                        <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
+                        <field name="dynacase_id"  optional="hide"/>
+                    </tree>
+                </field>
+            </record>
+    
+    
+    
+
+
     </data>
 </odoo>

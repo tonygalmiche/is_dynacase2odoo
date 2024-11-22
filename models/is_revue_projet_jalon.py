@@ -254,7 +254,6 @@ class is_revue_projet_jalon(models.Model):
                 docs=self.env['is.revue.projet.jalon'].search(domain, limit=1, order="rpj_indice desc")
                 for doc in docs:
                     rpj_indice = int(doc.rpj_indice)
-                    print(doc, doc.rpj_indice)
                 rpj_indice+=1
                 indice = ("00%s"%rpj_indice)[-2:]
                 rpj_chrono = "%s-%s-%s"%(obj.rpj_mouleid.name or obj.dossierf_id.name,rpj_j, indice)

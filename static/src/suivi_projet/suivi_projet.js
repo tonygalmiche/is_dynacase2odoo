@@ -160,12 +160,13 @@ class SuiviProjet extends Component {
             name: 'Liste',
             target: 'current',
             res_model: 'is.doc.moule',
-            views: [[false, 'tree'],[false, 'form']],
+            views: [[res.tree_id, 'tree']],
             domain: [
                 ['id','in',res.ids],
             ],
         });
 
+        // #views: [[false, 'tree'],[false, 'form']],
 
 
 

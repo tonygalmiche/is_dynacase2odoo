@@ -157,7 +157,6 @@ class IsParamProject(models.Model):
 
 
     # def write(self,vals):
-    #     print(self,vals)
     #     res=super(IsParamProject, self).write(vals)
     #     return res
 
