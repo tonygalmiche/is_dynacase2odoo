@@ -154,7 +154,7 @@ class IsDocMoule(models.Model):
                     color='SpringGreen'
                 else:
                     color = 'orange'
-                    if now>obj.dateend:
+                    if obj.dateend and now>obj.dateend:
                         color='Red'
             else:
                 color = 'Lavender'
