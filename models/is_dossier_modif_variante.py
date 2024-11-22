@@ -117,23 +117,23 @@ class is_dossier_modif_variante(models.Model):
     demao_type                  = fields.Selection([
         ("modification", "Modification"),
         ("variante",     "Variante"),
-    ], string="Type", required=True)
+    ], string="Type", required=True, tracking=True)
     demao_num                   = fields.Char(string="N° ordre", required=True)
-    demao_dao                   = fields.Char(string="Dossier AO")
-    demao_date                  = fields.Date(string="Date", default=fields.Date.context_today, required=False)
-    demao_idclient              = fields.Many2one("res.partner", string="Client", required=False, domain=[("is_company","=",True), ("customer","=",True)])
-    demao_idcommercial          = fields.Many2one("res.users", string="Commercial", default=lambda self: self.env.user, required=False)
-    demao_idmoule               = fields.Many2one("is.mold", string="Moule")
-    dossierf_id                 = fields.Many2one("is.dossierf", string="Dossier F")
+    demao_dao                   = fields.Char(string="Dossier AO", tracking=True)
+    demao_date                  = fields.Date(string="Date", default=fields.Date.context_today, required=False, tracking=True)
+    demao_idclient              = fields.Many2one("res.partner", string="Client", required=False, domain=[("is_company","=",True), ("customer","=",True)], tracking=True)
+    demao_idcommercial          = fields.Many2one("res.users", string="Commercial", default=lambda self: self.env.user, required=False, tracking=True)
+    demao_idmoule               = fields.Many2one("is.mold", string="Moule", tracking=True)
+    dossierf_id                 = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
     site_id                     = fields.Many2one('is.database', "Site", compute='_compute_site_id', readonly=True, store=True)
-    demao_desig                 = fields.Char(string="Désignation pièce", required=False)
-    demao_nature                = fields.Char(string="Nature", required=False)
-    demao_ref                   = fields.Char(string="Référence")
-    demao_daterep               = fields.Date(string="Date réponse")
-    demao_datelanc              = fields.Date(string="Date lancement")
-    demao_pxvente               = fields.Char(string="Prix de vente")
-    demao_numcmd                = fields.Char(string="N° commande")
-    demao_obs                   = fields.Char(string="Observation")
+    demao_desig                 = fields.Char(string="Désignation pièce", required=False, tracking=True)
+    demao_nature                = fields.Char(string="Nature", required=False, tracking=True)
+    demao_ref                   = fields.Char(string="Référence", tracking=True)
+    demao_daterep               = fields.Date(string="Date réponse", tracking=True)
+    demao_datelanc              = fields.Date(string="Date lancement", tracking=True)
+    demao_pxvente               = fields.Char(string="Prix de vente", tracking=True)
+    demao_numcmd                = fields.Char(string="N° commande", tracking=True)
+    demao_obs                   = fields.Char(string="Observation", tracking=True)
     demao_motif                 = fields.Selection([
         ("1", "abandon client"),
         ("2", "délai trop long"),
@@ -142,11 +142,11 @@ class is_dossier_modif_variante(models.Model):
         ("5", "pièce trop chère"),
         ("6", "autre"),
         ("7", "abandon Plastigray"),
-    ], string="Motif ")
-    demao_idbe                  = fields.Many2one("res.users", string="BE")
-    demao_annexcom              = fields.Many2many("ir.attachment", "is_dmv_annexcom_rel", "annexcom_id", "att_id", string="Fichiers commercial")
-    demao_annex                 = fields.Many2many("ir.attachment", "is_dmv_annex_rel", "annex_id", "att_id", string="Fichiers BE")
-    demao_cde_be                = fields.Many2many("ir.attachment", "is_dmv_cde_be_rel", "cde_be_id", "att_id", string="Commandes BE")
+    ], string="Motif ", tracking=True)
+    demao_idbe                  = fields.Many2one("res.users", string="BE", tracking=True)
+    demao_annexcom              = fields.Many2many("ir.attachment", "is_dmv_annexcom_rel", "annexcom_id", "att_id", string="Fichiers commercial", tracking=True)
+    demao_annex                 = fields.Many2many("ir.attachment", "is_dmv_annex_rel", "annex_id", "att_id", string="Fichiers BE", tracking=True)
+    demao_cde_be                = fields.Many2many("ir.attachment", "is_dmv_cde_be_rel", "cde_be_id", "att_id", string="Commandes BE", tracking=True)
     state                       = fields.Selection([
         ("plascreate",      "Créé"),
         ("plasanalysed",    "Analysé"),
@@ -171,8 +171,9 @@ class is_dossier_modif_variante(models.Model):
     vers_gagne_vsb              = fields.Boolean(string="Gagne", compute='_compute_vsb', readonly=True, store=False)
     vers_annule_vsb             = fields.Boolean(string="Annule", compute='_compute_vsb', readonly=True, store=False)
     dynacase_id                 = fields.Integer(string="Id Dynacase",index=True,copy=False)
-    solde                       = fields.Boolean(string="Soldé", default=False, copy=False)
-    fermeture_id                = fields.Many2one("is.fermeture.gantt", string="Fermeture du Gantt")
+    solde                       = fields.Boolean(string="Soldé", default=False, copy=False, tracking=True)
+    fermeture_id                = fields.Many2one("is.fermeture.gantt", string="Fermeture du Gantt", tracking=True)
+    active                      = fields.Boolean('Actif', default=True, tracking=True)
 
 
     def update_client_action(self):

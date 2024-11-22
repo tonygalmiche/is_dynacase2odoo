@@ -350,7 +350,14 @@ class IsDocMoule(models.Model):
                 #doc = self.env['is.doc.moule'].browse(doc_id)
                 if doc_id:
                     key="%s-%s"%(row['moule'],row['moule_id'])
+
+
                     if key not in mydict:
+                        print(key)
+
+
+                        #nb_notes = total_note = total_coefficient = avancement_j = 0
+
                         #** Recherche photo du moule **************************
                         photo=''
                         if avec_photo=='Oui':
@@ -360,7 +367,8 @@ class IsDocMoule(models.Model):
                                 if image and image!='':
                                     photo = 'data:image/png;base64, %s'%image.decode("utf-8")
                         #** avancement_j **************************************
-                        avancement_j=[False,False]
+                        #j_actuelle = False
+                        #avancement_j=[False,False]
                         # if doc.idmoule:
                         #     if doc.idmoule.j_actuelle:
                         #         j_actuelle = dict(GESTION_J).get(doc.idmoule.j_actuelle,"?")
@@ -370,14 +378,18 @@ class IsDocMoule(models.Model):
                         #         j_actuelle = dict(GESTION_J).get(doc.dossierf_id.j_actuelle,"?")
                         #         avancement_j=[j_actuelle, doc.dossierf_id.j_avancement]
 
-                        if row['res_model']=='is.mold':
-                            if row['j_actuelle']:
-                                j_actuelle = dict(GESTION_J).get(row['j_actuelle'],"?")
-                                avancement_j=[j_actuelle, row['j_avancement']]
-                        if row['res_model']=='is.dossierf':
-                            if row['j_actuelle']:
-                                j_actuelle = dict(GESTION_J).get(row['j_actuelle'],"?")
-                                avancement_j=[j_actuelle, row['j_avancement']]
+                        # if row['res_model']=='is.mold':
+                        #     if row['j_actuelle']:
+                        #         j_actuelle = dict(GESTION_J).get(row['j_actuelle'],"?")
+                        #         avancement_j=[j_actuelle, row['j_avancement']]
+                        # if row['res_model']=='is.dossierf':
+                        #     if row['j_actuelle']:
+                        #         j_actuelle = dict(GESTION_J).get(row['j_actuelle'],"?")
+                        #         avancement_j=[j_actuelle, row['j_avancement']]
+
+                        j_actuelle = False
+                        if row['j_actuelle']:
+                            j_actuelle = dict(GESTION_J).get(row['j_actuelle'],"?")
                         vals={
                             'key'         : key,
                             'res_model'   : row['res_model'],
@@ -390,9 +402,14 @@ class IsDocMoule(models.Model):
                             'cp'          : row['cp'],
                             'cp_id'       : row['cp_id'],
                             'familles'    : copy.deepcopy(familles),
-                            'avancement_j': avancement_j
+                            'j_actuelle'  : j_actuelle,
+                            'avancement_j'     : 0,
+                            'total_coefficient': 0,
+                            'total_note'       : 0,
+                            'nb_notes'         : 0,
                         }
                         mydict[key]=vals
+
                     for famille in mydict[key]['familles']:
                         famille_id = mydict[key]['familles'][famille]['id']
                         if row['famille_id']==famille_id:
@@ -403,6 +420,10 @@ class IsDocMoule(models.Model):
                             color       = row['color']
                             coefficient = row['coefficient'] or 0
                             note        = row['note'] or 0
+                            if coefficient>0:
+                                mydict[key]['nb_notes']+=1
+                                mydict[key]['total_note']+=note
+                                mydict[key]['total_coefficient']+=coefficient
                             rsp_date    = row['rsp_date']
                             if rsp_date:
                                 rsp_date=rsp_date.strftime("%d/%m/%y")
@@ -419,6 +440,15 @@ class IsDocMoule(models.Model):
                                 'reponse'      : reponse,
                             }
                             mydict[key]['familles'][famille].update(vals)
+
+
+                    if mydict[key]['total_coefficient']>0:
+                        mydict[key]['avancement_j'] =round(100*mydict[key]['total_note']/mydict[key]['total_coefficient'])
+
+
+
+
+
         sorted_dict = dict(sorted(mydict.items())) 
 
         #** Ajout de la couleur des lignes ************************************

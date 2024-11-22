@@ -127,8 +127,11 @@
                                     </td>
                                     <td><span t-esc="line.cp"/></td>
                                     <td>
-                                        <span t-if="line.avancement_j[0]" t-esc="line.avancement_j[0]"/><br />
-                                        <t t-if="line.avancement_j[1]"><span t-esc="line.avancement_j[1]"/>%</t>
+                                        <t t-if="line.j_actuelle"><span t-esc="line.j_actuelle"/><br /></t>
+                                        <t t-if="line.avancement_j"><span t-esc="line.avancement_j"/>%</t>
+
+                                        <!-- <span t-if="line.avancement_j[0]" t-esc="line.avancement_j[0]"/><br />
+                                        <t t-if="line.avancement_j[1]"><span t-esc="line.avancement_j[1]"/>%</t> -->
                                     </td>
                                     <t t-foreach="Object.values(line.familles or {})" t-as="doc"  t-key="doc.ct">
                                         <td style="min-width: 8rem;" t-att-style="doc.style" >

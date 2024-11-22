@@ -102,6 +102,8 @@
                         <field name="dynacase_id" invisible="1"/>
                     </header>
                     <sheet>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active" invisible="1"/> 
                         <group string="Caractéristiques">
                             <group>
                                 <field name="demao_type" />

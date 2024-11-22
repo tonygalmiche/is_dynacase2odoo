@@ -196,6 +196,13 @@ class is_revue_projet_jalon(models.Model):
     logo_rs                      = fields.Char(string="Logo RS"               , compute='_compute_logo_rs', readonly=True, store=False)
 
 
+    @api.constrains('rpj_total_vente_moule')
+    def rpj_total_vente_moule_constrain(self):
+        for obj in self:
+            if obj.rpj_total_vente_moule <= 0 and obj.state=='rpj_brouillon':
+                raise ValidationError("Le champ 'Total vente moule' est obligatoire !")
+
+
     def lien_vers_dynacase_action(self):
         for obj in self:
             url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
