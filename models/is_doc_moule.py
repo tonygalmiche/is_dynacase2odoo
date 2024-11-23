@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _                              # type: ignore
-from odoo.tools import format_date, formatLang, frozendict           # type: ignore
+from odoo.tools import format_date, formatLang, frozendict, config   # type: ignore
 from odoo.exceptions import AccessError, ValidationError, UserError  # type: ignore
-from datetime import datetime, timedelta, date
-from random import *
 from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J, TYPE_DOCUMENT, MODELE_TO_TYPE, TYPE_TO_FIELD, DOCUMENT_ACTION, DOCUMENT_ETAT # type: ignore
+import shutil
+from pathlib import Path
+from datetime import datetime, timedelta, date
+from time import time
+from random import *
+from subprocess import PIPE, Popen
+import base64
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -80,7 +85,8 @@ class IsDocMoule(models.Model):
     project_prev2    = fields.Html()
     param_project_id = fields.Many2one("is.param.project", string="Famille de document", tracking=True, index=True)
     param_project_array_html = fields.Html(related="param_project_id.array_html")
-    ppr_type_demande = fields.Selection(related="param_project_id.ppr_type_demande")
+    ppr_type_demande         = fields.Selection(related="param_project_id.ppr_type_demande")
+    ppr_transformation_pdf   = fields.Boolean(related="param_project_id.ppr_transformation_pdf")
     ppr_icon         = fields.Image(related="param_project_id.ppr_icon", string="Icône", store=True)
     ppr_color        = fields.Char(related="param_project_id.ppr_color", string="Color", store=True)
     idmoule          = fields.Many2one("is.mold"                  , string="Moule"    , tracking=True, index=True)
@@ -580,13 +586,53 @@ class IsDocMouleArray(models.Model):
     _name        = "is.doc.moule.array"
     _description = "Document moule array"
 
-    annex_pdf     = fields.Many2many("ir.attachment", "attach_annex_pdf_rel", "annex_pdf_id", "attachment_id", string="Fichiers PDF")
     annex         = fields.Many2many("ir.attachment", "attach_annex_rel"    , "annex_id"    , "attachment_id", string="Fichiers")
+    annex_pdf     = fields.Many2many("ir.attachment", "attach_annex_pdf_rel", "annex_pdf_id", "attachment_id", string="Fichiers PDF", compute='_compute_annex_pdf', store=True, readonly=True)
     demandmodif   = fields.Char(string="Demande de modification")
     maj_amdec     = fields.Boolean(string="Mise à jour de l’AMDEC")
     comment       = fields.Text(string="Commentaire")
     is_doc_id     = fields.Many2one("is.doc.moule")
     lig           = fields.Integer(string="Lig",index=True,copy=False,readonly=True, help="Permet de faire le lien avec la ligne du tableau dans Dynacase")
+    duree_convertion_pdf = fields.Float(string="Tps conversation en PDF (s)", digits=(12, 2), readonly=True)
+
+
+    @api.depends('annex')
+    def _compute_annex_pdf(self):
+        data_dir = config['data_dir']
+        db = self._cr.dbname
+        for obj in self:
+            start = time()
+            if isinstance(obj.id, int) and obj.is_doc_id.param_project_id.ppr_transformation_pdf:
+                obj.annex_pdf.unlink()
+                annex_pdf=[]
+                for attachment in obj.annex:
+                    if attachment.store_fname:
+                        tmp_dir = "/tmp/convert-to-pdf"
+                        Path(tmp_dir).mkdir(parents=True, exist_ok=True)
+                        src_path = "%s/filestore/%s/%s"%(data_dir,db,attachment.store_fname)
+                        dst_path = '%s/%s'%(tmp_dir,attachment.name)                    
+                        shutil.copy(src_path, dst_path)
+                        if attachment.mimetype!='application/pdf':
+                            cde = 'cd %s && libreoffice --convert-to pdf "%s" '%(tmp_dir,dst_path)
+                            p = Popen(cde, shell=True, stdout=PIPE, stderr=PIPE)
+                            stdout, stderr = p.communicate()
+                            _logger.info("cde:%s, stdout:%s, stderr:%s"%(cde,stdout.decode("utf-8"),stderr.decode("utf-8")))
+                            if stderr:
+                                raise ValidationError("%s\n%s"%(cde,stderr.decode("utf-8")))
+                        filename = Path(attachment.name)
+                        name_pdf = filename.with_suffix('.pdf')
+                        path_pdf = "%s/%s"%(tmp_dir,name_pdf)
+                        datas = open(path_pdf,'rb').read()
+                        vals = {
+                            'name' : name_pdf,
+                            'type' : 'binary',
+                            'datas': base64.b64encode(datas),
+                        }
+                        attachment_pdf = self.env['ir.attachment'].create(vals)
+                        annex_pdf.append(attachment_pdf.id)
+                    obj.annex_pdf = annex_pdf
+            duree = (time() - start)
+            obj.duree_convertion_pdf=duree
 
 
 class res_partner(models.Model):

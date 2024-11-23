@@ -85,12 +85,13 @@
                                 <group>
                                     <field name="array_ids" nolabel="1" colspan="2" attrs="{'invisible': [('ppr_type_demande', 'not in', ['PJ', 'PJ_TEXTE', 'PJ_DATE'] )] }">
                                         <tree editable="bottom">
-                                            <field name="lig"           optional="hide" attrs="{'column_invisible':[('parent.type_document', '=', 'Article')]}"/>
-                                            <field name="annex_pdf"     optional="show" attrs="{'column_invisible':[('parent.type_document', '=', 'Article')]}" widget="many2many_binary" readonly="1"/>
-                                            <field name="annex"         widget="many2many_binary"/>
-                                            <field name="demandmodif"   optional="hide" attrs="{'column_invisible':[('parent.type_document', '=', 'Article')]}"/>
-                                            <field name="maj_amdec"     optional="hide" attrs="{'column_invisible':[('parent.type_document', '=', 'Article')]}"/>
-                                            <field name="comment"                       attrs="{'column_invisible':[('parent.type_document', '=', 'Article')]}"/>
+                                            <field name="lig" invisible="1"/>
+                                            <field name="annex_pdf"                             attrs="{'column_invisible':[('parent.ppr_transformation_pdf', '=', False)]}" widget="many2many_binary" readonly="1"/>
+                                            <field name="annex" widget="many2many_binary"/>
+                                            <field name="demandmodif"           optional="hide" attrs="{'column_invisible':[('parent.type_document', '=', 'Article')]}"/>
+                                            <field name="maj_amdec"             optional="hide" attrs="{'column_invisible':[('parent.type_document', '=', 'Article')]}"/>
+                                            <field name="comment"                               attrs="{'column_invisible':[('parent.type_document', '=', 'Article')]}"/>
+                                            <field name="duree_convertion_pdf"  optional="hide" attrs="{'column_invisible':[('parent.ppr_transformation_pdf', '=', False)]}"/>
                                         </tree>
                                     </field>
                                     <field name="rsp_pj"    attrs="{'invisible': [('rsp_pj', '=', False)]}"/>
@@ -106,12 +107,12 @@
                                         <field name="type_document"     readonly="1" force_save="1"/>
                                         <field name="sequence"          attrs="{'readonly': [('acces_chef_projet', '=', False)], 'invisible': [('type_document', '=', 'Article')]}"/>
                                         <field name="ppr_type_demande"  attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
+                                        <field name="ppr_transformation_pdf"/>
                                         <field name="idcp"              attrs="{'readonly': [('acces_chef_projet', '=', False)],'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
                                         <field name="acces_chef_projet" attrs="{'invisible': [('type_document', '=', 'Article')]}"/>
                                     </group>
                                     <group>
                                         <field name="param_project_array_html" attrs="{'invisible': [('type_document', '=', 'Article')]}"/>
-                                        <field name="ppr_type_demande"/>
                                         <field name="coefficient"        attrs="{'invisible': [('type_document', '=', 'Article')]}"/>
                                         <field name="bloquant"           attrs="{'invisible': [('type_document', '=', 'Article')]}"/>
                                         <field name="note"               attrs="{'invisible': [('type_document', '=', 'Article')]}"/>
