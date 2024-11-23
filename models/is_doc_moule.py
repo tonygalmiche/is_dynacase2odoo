@@ -117,7 +117,7 @@ class IsDocMoule(models.Model):
     duree_gantt         = fields.Integer(string="Durée Gantt (J)", help="Durée calendaire pour le Gantt", default=1, tracking=True, readonly=True)
     duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
     date_debut_gantt    = fields.Date(string="Date début Gantt", default=lambda self: self._date_debut_gantt(), tracking=True)
-    date_fin_gantt      = fields.Date(string="Date fin Gantt", readonly=True, tracking=True)
+    date_fin_gantt      = fields.Date(string="Date fin Gantt", tracking=True)
     section_id          = fields.Many2one("is.section.gantt", string="Section Gantt",index=True, tracking=True, copy=False)
     gantt_pdf           = fields.Boolean("Gantt PDF", default=True, help="Afficher dans Gantt PDF")
     dependance_id       = fields.Many2one("is.doc.moule", string="Dépendance",index=True, tracking=True, copy=False)
@@ -340,6 +340,7 @@ class IsDocMoule(models.Model):
                 'idresp',
                 'dateend',
                 'date_debut_gantt',
+                'date_fin_gantt',
                 'duree',
                 'j_prevue',
                 'demande',
@@ -457,32 +458,52 @@ class IsDocMoule(models.Model):
         return []
 
 
-
-# http://pg-odoo16-0:8069/web#id=19643&cids=1&menu_id=814&model=is.dossier.appel.offre&view_type=form
-
-# 31 / 73 is.doc.moule(124230,) AUTO Engagement de faisabilité
-# 36 / 73 is.doc.moule(124261,) AUTO Injection compte rendu d'essai
-
-
-
-
     @api.onchange('date_debut_gantt','duree')
     def set_fin_gantt(self):
         for obj in self:
-            if obj.date_debut_gantt and obj.duree:
-                duree_gantt = obj.duree
-                new_date = date_debut = date_fin = obj.date_debut_gantt
-                while True:
-                    if not(new_date.weekday() in [5,6]):
-                        duree_gantt=duree_gantt-1
-                    if duree_gantt<=0:
-                        date_fin=new_date  + timedelta(days=1)
-                        break
-                    new_date = new_date + timedelta(days=1)
-                duree_gantt = (date_fin - date_debut).days 
-                date_fin_gantt = obj.date_debut_gantt + timedelta(days=duree_gantt)
-                obj.duree_gantt = duree_gantt
-                obj.date_fin_gantt = date_fin_gantt
+            if not self.env.context.get("noonchange"):
+                if obj.date_debut_gantt and obj.duree:
+                    duree_gantt = obj.duree
+                    new_date = date_debut = date_fin = obj.date_debut_gantt
+                    while True:
+                        if not(new_date.weekday() in [5,6]):
+                            duree_gantt=duree_gantt-1
+                        if duree_gantt<=0:
+                            date_fin=new_date  + timedelta(days=1)
+                            break
+                        new_date = new_date + timedelta(days=1)
+                    duree_gantt = (date_fin - date_debut).days 
+                    date_fin_gantt = obj.date_debut_gantt + timedelta(days=duree_gantt)
+                    vals={
+                        'duree_gantt':    duree_gantt,
+                        'date_fin_gantt': date_fin_gantt,
+                    }
+                    self.env.context = self.with_context(noonchange=True).env.context
+                    obj.write(vals)
+
+
+    @api.onchange('date_fin_gantt')
+    def set_debut_gantt(self):
+        for obj in self:
+            if not self.env.context.get("noonchange"):
+                if obj.date_fin_gantt and obj.duree:
+                    duree_gantt = obj.duree
+                    new_date = date_debut = date_fin = obj.date_fin_gantt - timedelta(days=1)
+                    while True:
+                        if not(new_date.weekday() in [5,6]):
+                            duree_gantt=duree_gantt-1
+                        if duree_gantt<=0:
+                            date_debut=new_date - timedelta(days=1)
+                            break
+                        new_date = new_date - timedelta(days=1)
+                    duree_gantt = (date_fin - date_debut).days 
+                    date_debut_gantt = obj.date_fin_gantt - timedelta(days=duree_gantt)
+                    vals={
+                        'duree_gantt'     : duree_gantt,
+                        'date_debut_gantt': date_debut_gantt,
+                    }
+                    self.env.context = self.with_context(noonchange=True).env.context
+                    obj.write(vals)
 
 
     def lien_vers_dynacase_action(self):

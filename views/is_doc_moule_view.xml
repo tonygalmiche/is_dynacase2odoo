@@ -58,7 +58,7 @@
                                 <field name="date_debut_gantt"          attrs="{'readonly': [('acces_chef_projet', '=', False)], 'invisible': [('type_document', '=', 'Article')]}"/>
                                 <field name="duree"                     attrs="{'readonly': [('acces_chef_projet', '=', False)], 'invisible': [('type_document', '=', 'Article')]}"/>
                                 <field name="duree_gantt"               attrs="{'readonly': 1, 'invisible': [('type_document', '=', 'Article')]}" force_save="1"/>
-                                <field name="date_fin_gantt"            attrs="{'readonly': 1, 'invisible': [('type_document', '=', 'Article')]}" force_save="1"/>
+                                <field name="date_fin_gantt"            attrs="{'readonly': [('acces_chef_projet', '=', False)], 'invisible': [('type_document', '=', 'Article')]}"/>
                             </group>
                             <group>
                                 <field name="idproject" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
