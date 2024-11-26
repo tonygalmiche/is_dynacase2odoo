@@ -329,7 +329,9 @@ class IsDocMoule(models.Model):
     def write(self,vals):
 
 
-        print('write',self.env.context.get("noonchange"))
+        #print('write',self.env.context.get("noonchange"))
+        #print(self,'write',self.env.context)
+
 
         res=super(IsDocMoule, self).write(vals)
         if 'etat' in vals:
@@ -467,7 +469,7 @@ class IsDocMoule(models.Model):
         for obj in self:
 
 
-            print('set_fin_gantt',self.env.context.get("noonchange"))
+            #print(obj,'set_fin_gantt',self.env.context.get("noonchange"))
 
             if not self.env.context.get("noonchange"):
                 if obj.date_debut_gantt and obj.duree:
@@ -483,44 +485,44 @@ class IsDocMoule(models.Model):
                     duree_gantt = (date_fin - date_debut).days 
                     date_fin_gantt = obj.date_debut_gantt + timedelta(days=duree_gantt)
 
-                    obj.duree_gantt = duree_gantt
-                    obj.date_fin_gantt = date_fin_gantt
+                    #obj.duree_gantt = duree_gantt
+                    #obj.date_fin_gantt = date_fin_gantt
 
-                    # vals={
-                    #     'duree_gantt':    duree_gantt,
-                    #     'date_fin_gantt': date_fin_gantt,
-                    # }
-                    # self.env.context = self.with_context(noonchange=True).env.context
-                    # obj.write(vals)
-
-
-    # @api.onchange('date_fin_gantt')
-    # def set_debut_gantt(self):
-    #     for obj in self:
+                    vals={
+                        'duree_gantt':    duree_gantt,
+                        'date_fin_gantt': date_fin_gantt,
+                    }
+                    self.env.context = self.with_context(noonchange=True).env.context
+                    obj.write(vals)
 
 
-    #         print('set_debut_gantt',self.env.context.get("noonchange"))
+    @api.onchange('date_fin_gantt')
+    def set_debut_gantt(self):
+        for obj in self:
 
 
-    #         if not self.env.context.get("noonchange"):
-    #             if obj.date_fin_gantt and obj.duree:
-    #                 duree_gantt = obj.duree
-    #                 new_date = date_debut = date_fin = obj.date_fin_gantt - timedelta(days=1)
-    #                 while True:
-    #                     if not(new_date.weekday() in [5,6]):
-    #                         duree_gantt=duree_gantt-1
-    #                     if duree_gantt<=0:
-    #                         date_debut=new_date - timedelta(days=1)
-    #                         break
-    #                     new_date = new_date - timedelta(days=1)
-    #                 duree_gantt = (date_fin - date_debut).days 
-    #                 date_debut_gantt = obj.date_fin_gantt - timedelta(days=duree_gantt)
-    #                 vals={
-    #                     'duree_gantt'     : duree_gantt,
-    #                     'date_debut_gantt': date_debut_gantt,
-    #                 }
-    #                 self.env.context = self.with_context(noonchange=True).env.context
-    #                 obj.write(vals)
+            #print(obj,'set_debut_gantt',self.env.context.get("noonchange"))
+
+
+            if not self.env.context.get("noonchange"):
+                if obj.date_fin_gantt and obj.duree:
+                    duree_gantt = obj.duree
+                    new_date = date_debut = date_fin = obj.date_fin_gantt - timedelta(days=1)
+                    while True:
+                        if not(new_date.weekday() in [5,6]):
+                            duree_gantt=duree_gantt-1
+                        if duree_gantt<=0:
+                            date_debut=new_date - timedelta(days=1)
+                            break
+                        new_date = new_date - timedelta(days=1)
+                    duree_gantt = (date_fin - date_debut).days 
+                    date_debut_gantt = obj.date_fin_gantt - timedelta(days=duree_gantt)
+                    vals={
+                        'duree_gantt'     : duree_gantt,
+                        'date_debut_gantt': date_debut_gantt,
+                    }
+                    self.env.context = self.with_context(noonchange=True).env.context
+                    obj.write(vals)
 
 
     def lien_vers_dynacase_action(self):

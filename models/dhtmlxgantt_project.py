@@ -302,7 +302,7 @@ class IsDocMoule(models.Model):
     def write_task(self,start_date=False,duration=False,lier=False,mode=False):
 
 
-        print('write_task',self,self.env.context.get("noonchange"),start_date,duration,lier,mode)
+        #print(self,'write_task',self.env.context.get("noonchange"),start_date,duration,lier,mode)
 
 
         start_date = start_date[0:10]
@@ -343,7 +343,7 @@ class IsDocMoule(models.Model):
 
                     delta = (obj.date_fin_gantt - mem_date_fin).days
 
-                    print(obj,'lier=',lier,'delta=',delta)
+                    #print(obj,'lier=',lier,'delta=',delta)
 
                     if lier and delta:
                         obj.move_task_lier(delta)
@@ -355,7 +355,10 @@ class IsDocMoule(models.Model):
     def move_task_lier(self,delta):
         for obj in self:
 
-            print('move_task_lier',obj,self.env.context.get("noonchange"),delta)
+            self.env.context = self.with_context(noonchange=False).env.context
+
+
+            #print(obj,'move_task_lier',self.env.context.get("noonchange"),delta)
 
 
             docs=self.env['is.doc.moule'].search([ ('dependance_id', '=', obj.id) ])
@@ -365,6 +368,7 @@ class IsDocMoule(models.Model):
                 doc.date_debut_gantt = date_debut_gantt
                 doc.set_fin_gantt()
                 delta = (doc.date_fin_gantt - mem_date_fin).days
+
                 doc.move_task_lier(delta)
 
 
