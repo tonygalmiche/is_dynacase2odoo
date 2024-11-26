@@ -55,6 +55,10 @@
                     <field name='type_document'/>
                     <field name='name'/>
                     <field name='date_debut'/>
+                    <field name="create_date"         optional="hide"/>
+                    <field name="create_uid"          optional="hide"/>
+                    <field name="write_date"          optional="hide"/>
+                    <field name="write_uid"           optional="hide"/>
                 </tree>
             </field>
         </record>
