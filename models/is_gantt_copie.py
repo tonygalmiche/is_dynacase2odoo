@@ -14,25 +14,27 @@ class IsGanttCopieSection(models.Model):
 
 class IsGanttCopie(models.Model):
     _name        = "is.gantt.copie"
+    _inherit     =['mail.thread']
     _description = "Gantt Copie"
     _order = "id desc"
 
     name                          = fields.Char("Document", compute='_compute_name',store=True, readonly=True)
-    type_document                 = fields.Selection(TYPE_DOCUMENT,string="Type de document", default="Moule", required=True)
-    src_idmoule                   = fields.Many2one("is.mold"                  , string="Moule à copier")
-    src_dossierf_id               = fields.Many2one("is.dossierf"              , string="Dossier F à copier")
-    src_dossier_modif_variante_id = fields.Many2one("is.dossier.modif.variante", string="Dossier Modif / Variante à copier")
-    src_dossier_article_id        = fields.Many2one("is.dossier.article"       , string="Dossier article à copier")
-    src_dossier_appel_offre_id    = fields.Many2one("is.dossier.appel.offre"   , string="Dossier appel d'offre à copier")
-    dst_idmoule                   = fields.Many2one("is.mold"                  , string="Moule")
-    dst_dossierf_id               = fields.Many2one("is.dossierf"              , string="Dossier F")
-    dst_dossier_modif_variante_id = fields.Many2one("is.dossier.modif.variante", string="Dossier Modif / Variante")
-    dst_dossier_article_id        = fields.Many2one("is.dossier.article"       , string="Dossier article")
-    dst_dossier_appel_offre_id    = fields.Many2one("is.dossier.appel.offre"   , string="Dossier appel d'offre")
-    date_debut                    = fields.Date("Date de début de la copie",required=True, default=fields.Date.context_today)
+    type_document                 = fields.Selection(TYPE_DOCUMENT,string="Type de document", default="Moule", required=True, tracking=True)
+    src_idmoule                   = fields.Many2one("is.mold"                  , string="Moule à copier", tracking=True)
+    src_dossierf_id               = fields.Many2one("is.dossierf"              , string="Dossier F à copier", tracking=True)
+    src_dossier_modif_variante_id = fields.Many2one("is.dossier.modif.variante", string="Dossier Modif / Variante à copier", tracking=True)
+    src_dossier_article_id        = fields.Many2one("is.dossier.article"       , string="Dossier article à copier", tracking=True)
+    src_dossier_appel_offre_id    = fields.Many2one("is.dossier.appel.offre"   , string="Dossier appel d'offre à copier", tracking=True)
+    dst_idmoule                   = fields.Many2one("is.mold"                  , string="Moule", tracking=True)
+    dst_dossierf_id               = fields.Many2one("is.dossierf"              , string="Dossier F", tracking=True)
+    dst_dossier_modif_variante_id = fields.Many2one("is.dossier.modif.variante", string="Dossier Modif / Variante", tracking=True)
+    dst_dossier_article_id        = fields.Many2one("is.dossier.article"       , string="Dossier article", tracking=True)
+    dst_dossier_appel_offre_id    = fields.Many2one("is.dossier.appel.offre"   , string="Dossier appel d'offre", tracking=True)
+    date_debut                    = fields.Date("Date de début de la copie",required=True, default=fields.Date.context_today, tracking=True)
     src_nb_taches                 = fields.Integer("Nb tâches à copier"      , compute='_compute_nb_taches')
     dst_nb_taches                 = fields.Integer("Nb tâches actuellement", compute='_compute_nb_taches')
     section_ids                   = fields.One2many('is.gantt.copie.section', 'gantt_copie_id')
+    active                        = fields.Boolean('Actif', default=True, tracking=True)
 
 
     @api.onchange('type_document','src_idmoule','src_dossierf_id','src_dossier_modif_variante_id','src_dossier_article_id','src_dossier_appel_offre_id')
@@ -184,3 +186,10 @@ class IsGanttCopie(models.Model):
             if obj.type_document=='Moule':
                 if obj.dst_idmoule.revue_lancement_id:
                     obj.dst_idmoule.revue_lancement_id.initialiser_responsable_doc_action()
+
+            vals={
+                'body'      : "Copie effectuée",
+                'model'     : self._name,
+                'res_id'    : obj.id
+            }
+            self.env['mail.message'].create(vals)
