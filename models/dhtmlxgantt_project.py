@@ -283,6 +283,8 @@ class IsDocMoule(models.Model):
         #**********************************************************************
 
 
+
+
         return {
             "dossier_id"        : dossier_id, 
             "dossier_model"     : dossier_model, 
@@ -302,7 +304,6 @@ class IsDocMoule(models.Model):
     def write_task(self,start_date=False,duration=False,lier=False,mode=False):
 
 
-        #print(self,'write_task',self.env.context.get("noonchange"),start_date,duration,lier,mode)
 
 
         start_date = start_date[0:10]
@@ -343,7 +344,6 @@ class IsDocMoule(models.Model):
 
                     delta = (obj.date_fin_gantt - mem_date_fin).days
 
-                    #print(obj,'lier=',lier,'delta=',delta)
 
                     if lier and delta:
                         obj.move_task_lier(delta)
@@ -358,7 +358,6 @@ class IsDocMoule(models.Model):
             self.env.context = self.with_context(noonchange=False).env.context
 
 
-            #print(obj,'move_task_lier',self.env.context.get("noonchange"),delta)
 
 
             docs=self.env['is.doc.moule'].search([ ('dependance_id', '=', obj.id) ])

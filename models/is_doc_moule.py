@@ -327,12 +327,6 @@ class IsDocMoule(models.Model):
 
 
     def write(self,vals):
-
-
-        #print('write',self.env.context.get("noonchange"))
-        #print(self,'write',self.env.context)
-
-
         res=super(IsDocMoule, self).write(vals)
         if 'etat' in vals:
             if vals['etat']=='F':
@@ -467,10 +461,6 @@ class IsDocMoule(models.Model):
     @api.onchange('date_debut_gantt','duree')
     def set_fin_gantt(self):
         for obj in self:
-
-
-            #print(obj,'set_fin_gantt',self.env.context.get("noonchange"))
-
             if not self.env.context.get("noonchange"):
                 if obj.date_debut_gantt and obj.duree:
                     duree_gantt = obj.duree
@@ -499,11 +489,6 @@ class IsDocMoule(models.Model):
     @api.onchange('date_fin_gantt')
     def set_debut_gantt(self):
         for obj in self:
-
-
-            #print(obj,'set_debut_gantt',self.env.context.get("noonchange"))
-
-
             if not self.env.context.get("noonchange"):
                 if obj.date_fin_gantt and obj.duree:
                     duree_gantt = obj.duree

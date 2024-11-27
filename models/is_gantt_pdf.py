@@ -165,16 +165,23 @@ class IsGanttPdf(models.Model):
             section_ids=obj.get_sections()
             items,titre,jour_fermeture_ids,markers = obj.get_taches(section_ids=section_ids, gantt_pdf=True)
 
+
+
+
             #** Calcul start_date *********************************************
             for item in items:
                 end_date = item.get('end_date')
                 duration =  item.get('duration')
+
+
                 if end_date and  duration:
                     end_date   = datetime.strptime(end_date, '%Y-%m-%d 00:00:00')
                     start_date = end_date - timedelta(days=duration)
                     item['start_date'] = start_date
                     item['end_date']   = end_date
             #******************************************************************
+
+
 
             #** Recherche des enfants de chaque niveau ************************
             def get_enfants(items,parent,niveau):
@@ -189,6 +196,11 @@ class IsGanttPdf(models.Model):
             get_enfants(items,False,0)
             #******************************************************************
  
+
+
+
+
+
             #** Calcul date de debut et de fin des parents ********************
             fin=False
             while fin==False:
@@ -216,14 +228,20 @@ class IsGanttPdf(models.Model):
                                     fin=False
             #******************************************************************
 
+
+        
+
+
             #** Ajout des durations pour les parents **************************
             for enfant in enfants:
                 duration=1
                 if 'end_date' in enfant:
                     if 'duration' not in enfant or enfant['duration']==False:
                         duration = (enfant['end_date'] - enfant['start_date']).days
-                enfant['duration'] = duration
+                        enfant['duration'] = duration
             #******************************************************************
+
+
 
             #** Ajout de la couleur de la section **************************
             for enfant in enfants:
@@ -239,6 +257,9 @@ class IsGanttPdf(models.Model):
                 enfant['color'] = color
             #******************************************************************
 
+       
+
+
             #** Recherche du nombre de jours **********************************
             def get_date(end_date,duration):
                 start_date = False
@@ -250,6 +271,10 @@ class IsGanttPdf(models.Model):
             items = enfants
             for item in items:
                 duration   = item.get('duration')
+
+
+
+
                 end_date   = get_date(item.get('end_date'),0)
                 start_date = get_date(item.get('end_date'),duration)
                 if start_date:
@@ -465,6 +490,8 @@ class IsGanttPdf(models.Model):
             #** Ajout des tâches **********************************************
             nb=0
             for item in items:
+
+
                 duration   = item.get('duration')
                 end_date   = get_date(item.get('end_date'),0)
                 start_date = get_date(item.get('end_date'),duration)
@@ -478,8 +505,12 @@ class IsGanttPdf(models.Model):
                     x      = decal*jour_width+grille_width
                     y      = entete_height + entete_table_height + nb*tache_height
                     width  = duration*jour_width
+
                     height = tache_height
                     txt = '%s %s'%('- '*item.get('niveau'),item.get('text'))
+
+
+
                     cairo_show_text(ctx,5,y+tache_height-1,txt=txt) # Nom de la tache à gauche
                     if obj.bordure_jour:
                         for ct in range(0,jour_nb):
