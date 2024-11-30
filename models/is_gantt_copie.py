@@ -1,5 +1,6 @@
-from odoo import models, fields, api, _
-from odoo.addons.is_dynacase2odoo.models.is_param_project import TYPE_DOCUMENT, TYPE_TO_FIELD
+from odoo import models, fields, api, _ # type: ignore
+from odoo.addons.is_dynacase2odoo.models.is_param_project import TYPE_DOCUMENT, TYPE_TO_FIELD, PPR_REVUE_LANCEMENT # type: ignore
+from odoo.exceptions import AccessError, ValidationError, UserError  # type: ignore
 from datetime import datetime, timedelta
 
 
@@ -10,7 +11,31 @@ class IsGanttCopieSection(models.Model):
     gantt_copie_id = fields.Many2one('is.gantt.copie', 'Gantt Copie', required=True, ondelete='cascade')
     section_id     = fields.Many2one("is.section.gantt", string="Section", required=True)
     copier         = fields.Boolean("Copier", default=True)
+    nb_taches      = fields.Integer("Nb tâches revue de lancement", compute='_compute_nb_taches')
 
+    @api.depends('section_id','gantt_copie_id.copier_sup_j_actuelle')
+    def _compute_nb_taches(self):
+        for obj in self:
+            nb=0
+            idmoule = obj.gantt_copie_id.src_idmoule
+            rl      = obj.gantt_copie_id.revue_lancement_id
+            if obj.gantt_copie_id.type_document=='Moule' and rl and obj.copier:
+                budgets = obj.gantt_copie_id.get_budgets_revue_lancement(rl)
+                domain = [('idmoule', '=', idmoule.id)]
+                docs=self.env['is.doc.moule'].search(domain)
+                for doc in docs:
+                    if doc.param_project_id.ppr_revue_lancement in budgets and obj.section_id==doc.section_id:
+                        if obj.gantt_copie_id.copier_sup_j_actuelle:
+                            if not doc.j_prevue:
+                                nb+=1
+                            else:
+                                if doc.j_prevue>=obj.gantt_copie_id.j_actuelle:
+                                    nb+=1
+                        else:
+                            nb+=1
+            obj.nb_taches=nb
+        
+ 
 
 class IsGanttCopie(models.Model):
     _name        = "is.gantt.copie"
@@ -35,6 +60,21 @@ class IsGanttCopie(models.Model):
     dst_nb_taches                 = fields.Integer("Nb tâches actuellement", compute='_compute_nb_taches')
     section_ids                   = fields.One2many('is.gantt.copie.section', 'gantt_copie_id')
     active                        = fields.Boolean('Actif', default=True, tracking=True)
+    revue_lancement_id            = fields.Many2one(related="dst_idmoule.revue_lancement_id")
+    j_actuelle                    = fields.Selection(related="dst_idmoule.j_actuelle")
+    copier_sup_j_actuelle         = fields.Boolean('Ne copier que les tâches >= J actuelle', default=True, tracking=True)
+
+
+    def get_budgets_revue_lancement(self,rl):
+        "Recherche des budgets sur la revue de lancement"
+        for obj in self:
+            budgets=[]
+            if obj.type_document=='Moule' and rl:
+                for key in dict(PPR_REVUE_LANCEMENT):                    
+                    v = getattr(rl,key)
+                    if v>0:
+                        budgets.append(key)
+            return budgets
 
 
     @api.onchange('type_document','src_idmoule','src_dossierf_id','src_dossier_modif_variante_id','src_dossier_article_id','src_dossier_appel_offre_id')
@@ -111,59 +151,76 @@ class IsGanttCopie(models.Model):
 
     def generer_copie_action(self):
         for obj in self:
+            if obj.type_document=='Moule' and not obj.revue_lancement_id:
+                raise ValidationError("La revue de lancement est obligaoire sur le moule de destinattion")
+
+            budgets=[]
+            rl = obj.revue_lancement_id
+            if obj.type_document=='Moule' and rl:
+                budgets = obj.get_budgets_revue_lancement(rl)
+
             section_ids=[]
             for line in obj.section_ids:
                 if line.copier:
                     section_ids.append(line.section_id.id)
 
 
+            nb_taches=0
             for key in TYPE_TO_FIELD:
                 if obj.type_document==key:
                     name_field = TYPE_TO_FIELD[key]
                     src_docs=obj.get_docs(name_field,prefix='src')
                     src2dst={}
                     for src_doc in src_docs:
-                        if src_doc.section_id.id in section_ids:
-                            dst_docs=obj.get_docs(name_field,prefix='dst')
-                            #** Recherche si le doc a déja été copié **************
-                            copie=False
-                            for dst_doc in dst_docs:
-                                if src_doc.id==dst_doc.origine_copie_id.id:
-                                    copie=dst_doc
-                                    break
-                            #** Recherche un doc avec la même famille **************
-                            if not copie:
+                        test=True
+                        if obj.type_document=='Moule' and src_doc.param_project_id.ppr_revue_lancement not in budgets:
+                            test=False
+                        if obj.copier_sup_j_actuelle:
+                            if src_doc.j_prevue and src_doc.j_prevue<obj.j_actuelle:
+                                test=False
+                        if test:
+                            if src_doc.section_id.id in section_ids:
+                                dst_docs=obj.get_docs(name_field,prefix='dst')
+                                #** Recherche si le doc a déja été copié **************
+                                copie=False
                                 for dst_doc in dst_docs:
-                                    if src_doc.param_project_id==dst_doc.param_project_id and not dst_doc.origine_copie_id.id:
+                                    if src_doc.id==dst_doc.origine_copie_id.id:
                                         copie=dst_doc
                                         break
-                            #** Création du doc si non trouvé avant ***************
-                            if not copie:
-                                copie=src_doc.copy()
-                                copie.idresp = src_doc.idresp.id
-                                dst_name_field =  'dst_%s'%name_field
-                                dst_dossier_id = getattr(obj,dst_name_field).id
-                                setattr(copie, name_field, dst_dossier_id)
+                                #** Recherche un doc avec la même famille **************
+                                if not copie:
+                                    for dst_doc in dst_docs:
+                                        if src_doc.param_project_id==dst_doc.param_project_id and not dst_doc.origine_copie_id.id:
+                                            copie=dst_doc
+                                            break
+                                #** Création du doc si non trouvé avant ***************
+                                if not copie:
+                                    copie=src_doc.copy()
+                                    copie.idresp = src_doc.idresp.id
+                                    dst_name_field =  'dst_%s'%name_field
+                                    dst_dossier_id = getattr(obj,dst_name_field).id
+                                    setattr(copie, name_field, dst_dossier_id)
 
 
-                            vals={
-                                'section_id'      : src_doc.section_id.id,
-                                'sequence'        : src_doc.sequence,
-                                'param_project_id': src_doc.param_project_id.id,
-                                'type_document'   : src_doc.type_document,
-                                #'idresp'          : src_doc.idresp, Pour les doc venant de Dynacase ne pas changer le responsable
-                                'demande'         : src_doc.demande,
-                                'dateend'         : src_doc.dateend,
-                                'duree'           : src_doc.duree,
-                                'duree_gantt'     : src_doc.duree_gantt,
-                                'date_debut_gantt': src_doc.date_debut_gantt,
-                                'date_fin_gantt'  : src_doc.date_fin_gantt,
-                                'origine_copie_id': src_doc.id,
-                                'dependance_id'   : src_doc.dependance_id.id,
-                            }
-                            copie.write(vals)
-                            copie._compute_idproject_moule_dossierf()
-                            src2dst[src_doc]=copie
+                                vals={
+                                    'section_id'      : src_doc.section_id.id,
+                                    'sequence'        : src_doc.sequence,
+                                    'param_project_id': src_doc.param_project_id.id,
+                                    'type_document'   : src_doc.type_document,
+                                    #'idresp'          : src_doc.idresp, Pour les doc venant de Dynacase ne pas changer le responsable
+                                    'demande'         : src_doc.demande,
+                                    'dateend'         : src_doc.dateend,
+                                    'duree'           : src_doc.duree,
+                                    'duree_gantt'     : src_doc.duree_gantt,
+                                    'date_debut_gantt': src_doc.date_debut_gantt,
+                                    'date_fin_gantt'  : src_doc.date_fin_gantt,
+                                    'origine_copie_id': src_doc.id,
+                                    'dependance_id'   : src_doc.dependance_id.id,
+                                }
+                                copie.write(vals)
+                                copie._compute_idproject_moule_dossierf()
+                                src2dst[src_doc]=copie
+                                nb_taches+=1
 
                     #** Recherche des copies des dépendances ******************
                     dst_docs=obj.get_docs(name_field,prefix='dst')
@@ -187,8 +244,9 @@ class IsGanttCopie(models.Model):
                 if obj.dst_idmoule.revue_lancement_id:
                     obj.dst_idmoule.revue_lancement_id.initialiser_responsable_doc_action()
 
+            type_document = dict(TYPE_DOCUMENT)[obj.type_document]
             vals={
-                'body'      : "Copie effectuée",
+                'body'      : "Copie effectuée de %s tâches sur %s %s"%(nb_taches,type_document,obj.name),
                 'model'     : self._name,
                 'res_id'    : obj.id
             }

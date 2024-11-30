@@ -184,6 +184,11 @@ class IsDocMoule(models.Model):
             parent=tab[1] 
             text="%s"%(tab[2])
             res_id=tab[3] 
+            name_var = "open_close_task-%s"%id
+            open_close_task = self.env['is.mem.var'].get(self._uid, name_var)
+            open=True
+            if open_close_task=='close':
+                open=False
             vals={
                 "id": id,
                 "model": 'is.section.gantt',
@@ -193,7 +198,7 @@ class IsDocMoule(models.Model):
                 "duration": False,
                 "parent": parent,
                 "progress": 0,
-                "open": True,
+                "open": open,
                 "priority": 2,
             }
             res.append(vals)
@@ -219,7 +224,9 @@ class IsDocMoule(models.Model):
 
 
                 if line.param_project_id.ppr_revue_lancement:
-                    name="%s [%s]"%(name,line.param_project_id.ppr_revue_lancement)
+                    name="%s"%name
+                    #name="%s [%s]"%(name,line.param_project_id.ppr_revue_lancement)
+
                 duration = line.duree_gantt or 1
                 parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id or line.dossier_appel_offre_id.id)+20000000 + line.section_id.id + 30000000
                 
@@ -262,6 +269,7 @@ class IsDocMoule(models.Model):
                     "responsable": responsable,
                     "initiales"  : initiales,
                     "irv"        : line.action or '',
+                    "attendus"   : line.attendus or '',
                 }
                 res.append(vals)
         #**********************************************************************
@@ -297,15 +305,19 @@ class IsDocMoule(models.Model):
         }
     
 
+    def copy_task(self):
+        for obj in self:
+            copy = obj.copy()
+            copy.section_id = obj.section_id.id
+            copy.sequence   = obj.sequence
 
 
+    def archive_task(self):
+        for obj in self:
+            obj.active=False
 
 
     def write_task(self,start_date=False,duration=False,lier=False,mode=False):
-
-
-
-
         start_date = start_date[0:10]
         try:
             date_debut_gantt = datetime.strptime(start_date, '%Y-%m-%d') + timedelta(days=1)
@@ -398,21 +410,10 @@ class IsDocMoule(models.Model):
         return True
 
 
-    # def get_doc_note(self):
-    #     "Retourne la note pour l'indicateur en fonction de différent paramètres"
-    #     note=5
-    #     return note
-
-    #     # $notes=array("I"=>1,"R"=>3,"V"=>5);
-    #     # for($i=0;$i<count($j);$i++) {
-    #     #     $note=" ";
-    #     #     if ($irv[$i]<>"") $note=$notes[$irv[$i]];
-    #     #     if ($bloquant[$i]=="Oui") $note=$note+10;
-    #     #     if ($bloquant[$i]!="Oui") $bloquant[$i]=" "; //Pour éffacerr la valeur
-    #     #     $r[$j[$i]]=array("IRV"=>$irv[$i],"Bloquant"=>$bloquant[$i],"Note"=>$note);        
-    #     # }
-    #     # return $r;
-
+    def open_close_task(self,task_id=False,task_state=False):
+        name="open_close_task-%s"%task_id
+        self.env['is.mem.var'].set(self._uid, name, task_state)
+        return True
 
 
     def get_doc_reponse(self):

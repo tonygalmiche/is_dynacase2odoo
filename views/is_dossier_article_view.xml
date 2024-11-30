@@ -38,21 +38,6 @@
                             </group>    
                         </group>
                         <notebook>
-                            <page string="Documents">
-                                <field name="doc_ids" nolabel="1" colspan="2">
-                                    <tree editable="bottom" create="false" delete="false">
-                                        <button title="Créer le document" name="creer_doc_action" type="object" icon="fa-plus"    attrs="{'invisible':[('doc_id','!=',False)]}" />
-                                        <field name="param_project_id" readonly="1"/>
-                                        <field name="doc_id"           readonly="1" widget="many2one_clickable"/>
-                                        <field name="piecejointe"      readonly="1"/>
-                                    </tree>
-                                </field>
-                                <group>
-                                    <field name="nb_a_faire"/>
-                                    <field name="nb_crees"/>
-                                    <field name="nb_fait"/>
-                                </group>    
-                            </page>
                             <page string="Données techniques" attrs="{'invisible': [('type_dossier', '=', 'composant')]}">
                                 <group>
                                     <group string="Identifcation">
@@ -106,6 +91,21 @@
                                         <field name="conditions_stockage"/>
                                     </group>
                                 </group>
+                            </page>
+                            <page string="Documents">
+                                <field name="doc_ids" nolabel="1" colspan="2">
+                                    <tree editable="bottom" create="false" delete="false">
+                                        <button title="Créer le document" name="creer_doc_action" type="object" icon="fa-plus"    attrs="{'invisible':[('doc_id','!=',False)]}" />
+                                        <field name="param_project_id" readonly="1"/>
+                                        <field name="doc_id"           readonly="1" widget="many2one_clickable"/>
+                                        <field name="piecejointe"      readonly="1"/>
+                                    </tree>
+                                </field>
+                                <group>
+                                    <field name="nb_a_faire"/>
+                                    <field name="nb_crees"/>
+                                    <field name="nb_fait"/>
+                                </group>    
                             </page>
                         </notebook>
                     </sheet>

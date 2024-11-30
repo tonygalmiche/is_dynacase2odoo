@@ -26,6 +26,9 @@
                                 <field name="src_dossier_modif_variante_id" attrs="{'invisible': [('type_document', '!=', 'Dossier Modif Variante')], 'required': [('type_document', '=', 'Dossier Modif Variante')]}"/>
                                 <field name="src_dossier_appel_offre_id"    attrs="{'invisible': [('type_document', '!=', 'dossier_appel_offre')]   , 'required': [('type_document', '=', 'dossier_appel_offre')]}"/>
                                 <field name="dst_idmoule"                   attrs="{'invisible': [('type_document', '!=', 'Moule')]                 , 'required': [('type_document', '=', 'Moule')]}"/>
+                                <field name="revue_lancement_id"            attrs="{'invisible': [('type_document', '!=', 'Moule')]}"/>
+                                <field name="j_actuelle"                    attrs="{'invisible': [('type_document', '!=', 'Moule')]}"/>
+                                <field name="copier_sup_j_actuelle"         attrs="{'invisible': [('type_document', '!=', 'Moule')]}"/>
                                 <field name="dst_dossierf_id"               attrs="{'invisible': [('type_document', '!=', 'Dossier F')]             , 'required': [('type_document', '=', 'Dossier F')]}"/>
                                 <field name="dst_dossier_article_id"        attrs="{'invisible': [('type_document', '!=', 'Article')]               , 'required': [('type_document', '=', 'Article')]}" />
                                 <field name="dst_dossier_modif_variante_id" attrs="{'invisible': [('type_document', '!=', 'Dossier Modif Variante')], 'required': [('type_document', '=', 'Dossier Modif Variante')]}"/>
@@ -41,6 +44,7 @@
                             <field name="section_ids" nolabel="1" colspan="2">
                                 <tree  create="false" edit="false">
                                     <field name="section_id" readonly="1" force_save="1"/>
+                                    <field name="nb_taches" sum="Total" attrs="{'column_invisible':[('parent.type_document', '!=', 'Moule')]}" />
                                     <field name="copier" widget="boolean_toggle"/>
                                 </tree>
                             </field>

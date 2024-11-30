@@ -42,16 +42,6 @@
             <field name="parent_id" eval="ref('is_doc_moule_main_menu')"/>
             <field name="action"    ref="is_gantt_copie_action"/>
         </record>
-        <record model="ir.actions.client" id="suivi_projet_actions_client">
-            <field name="name">Suivi des projets</field>
-            <field name="tag">is_dynacase2odoo.suivi_projet_registry</field>
-        </record>
-        <record id="suivi_projet_menu" model="ir.ui.menu" >
-            <field name="name">Suivi des projets</field>
-            <field name="sequence">90</field>
-            <field name="parent_id" eval="ref('is_doc_moule_main_menu')"/>
-            <field name="action"    ref="suivi_projet_actions_client"/>
-         </record>
          <record id="is_creation_doc_migration_menu" model="ir.ui.menu" >
             <field name="name">Création documents migration</field>
             <field name="sequence">92</field>
@@ -61,9 +51,23 @@
 
     
 
+        <record model="ir.actions.client" id="suivi_projet_actions_client">
+            <field name="name">Suivi des projets</field>
+            <field name="tag">is_dynacase2odoo.suivi_projet_registry</field>
+        </record>
+        <record id="suivi_projet_menu" model="ir.ui.menu" >
+            <field name="name">Suivi des projets</field>
+            <field name="sequence">20</field>
+            <field name="parent_id" eval="ref('gestion_des_projets_menu')"/>
+            <field name="action"    ref="suivi_projet_actions_client"/>
+         </record>
+
+
+
+
         <!-- Gestion commcerciale -->
         <menuitem 
-            name="Gestion commerciale"  id="is_gestion_commerciale_menu" sequence="15" 
+            name="Gestion commerciale"  id="is_gestion_commerciale_menu" sequence="30" 
             parent="gestion_des_projets_menu"
         />
         <menuitem 
@@ -94,7 +98,7 @@
         <!-- BDT -->
         <record id="is_bdt_menu" model="ir.ui.menu" >
             <field name="name">BDT</field>
-            <field name="sequence">17</field>
+            <field name="sequence">40</field>
             <field name="parent_id" eval="ref('gestion_des_projets_menu')"/>
         </record>
         <record id="is_dossier_article_bdt_menu" model="ir.ui.menu" >
@@ -131,7 +135,7 @@
         <!-- Projets et moules -->
         <record id="is_projet_moule_menu" model="ir.ui.menu" >
             <field name="name">Projets et moules</field>
-            <field name="sequence">20</field>
+            <field name="sequence">50</field>
             <field name="parent_id" eval="ref('gestion_des_projets_menu')"/>
         </record>
         <record id="is_projet_menu" model="ir.ui.menu" >

@@ -84,7 +84,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         this.gantt.config.add_column = false;
         this.gantt.config.drag_progress = false;
         this.gantt.config.scroll_size = 30;
-        this.gantt.config.open_tree_initially = true; //Développer tous les niveaux par défaut
+        //this.gantt.config.open_tree_initially = true; //Développer tous les niveaux par défaut
 
 
         // this.gantt.templates.grid_row_class = function (start_date, end_date, item) {
@@ -113,11 +113,30 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         //** Configuration des colonnes des tâches
         this.gantt.config.columns = [
             {name: "text"      , label: "Tâche", tree: true , width: "*"},
+            {name: "trash",label: '',width: 25,template: function (task) {
+                var button=''
+                if(task.model=='is.doc.moule') {
+                    button='<i class="fa fa-trash"  style="cursor: pointer;" title="Supprimer cette tâche" data-action="delete"></i>';
+                }
+                return (button);
+            }},
             {name: "start_date", label: "Début", tree: false, width: 80, align:"center" },
-
             {name: "irv"      , label: "IRV", tree: false, width: 30, align:"center" },
             {name: "initiales", label: "Rsp", tree: false, width: 30, align:"center" },
+            {name: "copy",label: '',width: 50,template: function (task) {
+                var button=''
+                if(task.model=='is.doc.moule') {
+                    button='<i class="fa fa-copy"  style="cursor: pointer;" title="Dupliquer cette tâche" data-action="copy"></i>';
+                }
+                return (button);
+            }},
 
+            // {name: "edit",label: '',width: 50,template: function (task) {
+            //     return (
+            //         '<i class="fa fa-pencil" style="cursor: pointer;" title="Modifier"  data-action="edit"></i>' +
+            //         '<i class="fa fa-plus"   style="cursor: pointer;" title="Ajouter"   data-action="add"></i>'
+            //         );
+            // }},
 
 
             //{name: "duration"  , label: "Durée", tree: false, width: 50, align:"center" },
@@ -140,6 +159,8 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             //     // }
             // },
         ];
+
+
 
 
         /* ZOOM */
@@ -267,7 +288,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                     "<tr>                           <th style='text-align:right;font-weight: bold;'>Date début : </th><td>"+gantt.templates.tooltip_date_format(start)+ "</td></tr>"+
                     "<tr>                           <th style='text-align:right;font-weight: bold;'>Date fin   : </th><td>"+gantt.templates.tooltip_date_format(end)+"</td></tr>"+
                     "<tr>                           <th style='text-align:right;font-weight: bold;'>Durée      : </th><td>"+task.duration+"</td></tr>"+
-                    "<tr>                           <th style='text-align:right;font-weight: bold;'>id         : </th><td>"+task.id+"</td></tr>"+
+                    "<tr>                           <th style='text-align:right;font-weight: bold;'>Attendus   : </th><td>"+task.attendus+"</td></tr>"+
                 "</table>";
             return html
         };
@@ -301,9 +322,61 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         this.gantt.events.push(this.gantt.attachEvent("onBeforeLightbox", function(id) {
             return false;
         }));
-        
+        this.gantt.events.push(this.gantt.attachEvent("onTaskClick", function(id, e){
+            var button = e.target.closest("[data-action]")
+            if(button){
+                var action = button.getAttribute("data-action");
+                switch (action) {
+                    // case "edit":
+                    //     console.log('TEST edit',id)
+                    //     gantt.showLightbox(id);
+                    //     break;
+                    // case "add":
+                    //     console.log('TEST add',id)
+                    //     gantt.createTask(null, id);
+                    //     break;
+                    case "copy":
+                        const task = gantt.getTaskBy("id", [id])[0]; // Recherche de la task avec son id
+                        if (task.model=='is.doc.moule'){
+                            gantt.owl.CopyTask(id, task);
+
+                        }
+                        break;
+                    case "delete":
+                        gantt.confirm({
+                            title: gantt.locale.labels.confirm_deleting_title,
+                            text: "Confirmez-vous la suppression (archivage) de cette tâche ?",   //gantt.locale.labels.confirm_deleting,
+                            callback: function (res) {
+                                if (res) {
+                                    const task = gantt.getTaskBy("id", [id])[0]; // Recherche de la task avec son id
+                                    if (task.model=='is.doc.moule'){
+                                        gantt.owl.ArchiveTask(id, task);
+                                    }
+                                }
+                            }
+                        });
+                        break;
+                }
+                return false;
+    
+            }
+            return true;
+        }));
+    
+
+        this.gantt.events.push(this.gantt.attachEvent("onTaskOpened", function (id) {
+            this.owl.OpenCloseTask(id,'open');
+            const task = gantt.getTaskBy("id", [id])[0]; // Recherche de la task avec son id
+        }));
+        this.gantt.events.push(this.gantt.attachEvent("onTaskClosed", function (id) {
+            this.owl.OpenCloseTask(id,'close');
+        }));
+
 
         this.gantt.events.push(this.gantt.attachEvent("onAfterTaskDrag", function(id, mode, e){
+            gantt.active_task_id = id;
+            var scroll = gantt.getScrollState();
+            this.owl.SetScroll(scroll);
             const task = gantt.getTaskBy("id", [id])[0]; // Recherche de la task avec son id
             this.owl.WriteTask(id, task, mode);
         }));
@@ -320,6 +393,10 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         }));
         this.GetDocuments();
     }
+
+
+
+
 
     _patched() {
         if (this.ActivePatched==true) {
@@ -362,7 +439,9 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                 responsable: item.responsable,
                 initiales  : item.initiales,
                 irv        : item.irv,
+                attendus   : item.attendus,
                 j_prevue   : item.j_prevue,
+                open       : item.open,
             }
             data.push(vals);
         }
@@ -485,11 +564,9 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
     PDFClick(ev){
         var dossier_model = gantt.owl.state.dossier_model;
         var dossier_id    = gantt.owl.state.dossier_id;        
-        console.log(dossier_model, dossier_id);
         this.GetGanttPdfId(dossier_model,dossier_id);
     }
 
-    
 
     async GetGanttPdfId(dossier_model,dossier_id){
         var self=this;
@@ -503,7 +580,6 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             }
         }).then(function (result) {
             var gantt_pdf_id = result;
-            console.log('GetGanttPdfId',gantt_pdf_id)
             self.env.bus.trigger('do-action', {
                 action: {
                     type: 'ir.actions.act_window',
@@ -575,6 +651,52 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                 Dialog.alert(this, "Accès non autorisé");
                 self.this.GetDocuments();
         });
+    }
+
+    async ArchiveTask(id,item){
+        self.this = this;
+        rpc.query({
+            model: 'is.doc.moule',
+            method: 'archive_task',
+            args: [[parseInt(item.res_id)]]
+        }).then(function (result) {
+            self.this.GetDocuments();
+        }, function () {
+                Dialog.alert(this, "Accès non autorisé");
+                self.this.GetDocuments();
+        });
+    }
+
+    async CopyTask(id,item){
+        self.this = this;
+        rpc.query({
+            model: 'is.doc.moule',
+            method: 'copy_task',
+            args: [[parseInt(item.res_id)]]
+        }).then(function (result) {
+            self.this.GetDocuments();
+        }, function () {
+                Dialog.alert(this, "Accès non autorisé");
+                self.this.GetDocuments();
+        });
+    }
+
+
+    async OpenCloseTask(id,task_state){
+        self.this = this;
+        const task = gantt.getTaskBy("id", [id])[0]; // Recherche de la task avec son id
+        if(task.model=='is.section.gantt'){
+            rpc.query({
+                model: 'is.doc.moule',
+                method: 'open_close_task',
+                args: [[parseInt(false)],task.id,task_state]
+            }).then(function (result) {
+                return true;
+            }, function () {
+                    Dialog.alert(this, "Accès non autorisé");
+                    self.this.GetDocuments();
+            });
+        }
     }
 
 

@@ -170,6 +170,7 @@ class IsGanttPdf(models.Model):
 
             #** Calcul start_date *********************************************
             for item in items:
+                print(item)
                 end_date = item.get('end_date')
                 duration =  item.get('duration')
 

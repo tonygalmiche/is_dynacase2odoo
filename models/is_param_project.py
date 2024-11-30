@@ -53,6 +53,27 @@ DOCUMENT_ETAT = [
 ]
 
 
+PPR_REVUE_LANCEMENT = [
+    ("rl_be01",  "BE01a : Nouveau moule - Moule transféré"),
+    ("rl_be01b", "BE01b : Grainage"),
+    ("rl_be01c", "BE01c : Barre chaude"),
+    ("rl_be02",  "BE02 : Etude - CAO - Rhéologie"),
+    ("rl_be03",  "BE03 : Prototype"),
+    ("rl_be04",  "BE04 : Main de préhension"),
+    ("rl_be05",  "BE05 : Gabarit de contrôle"),
+    ("rl_be06",  "BE06 : Mise au point"),
+    ("rl_be07",  "BE07 : Test"),
+    ("rl_be09",  "BE09 : Essais + divers"),
+    ("rl_be10",  "BE10 : Métrologie"),
+    ("rl_be11",  "BE11 : Transports"),
+    ("rl_be12",  "BE12 : Etude - Developpement - Packaging"),
+    ("rl_be13",  "BE13 : Poste d'assemblage"),
+    ("rl_be15",  "BE15 : Achat matière"),
+    ("rl_be16",  "BE16 : Achat composants"),
+    ("rl_be17",  "BE17 : Essai injection"),
+]
+
+
 class IsSectionGantt(models.Model):
     _name        = "is.section.gantt"
     _description = "Sections du Gantt"
@@ -97,7 +118,7 @@ class IsParamProject(models.Model):
     dossier_matiere         = fields.Boolean(string="Dossier matière"  , tracking=True)
     dossier_colorant        = fields.Boolean(string="Dossier colorant" , tracking=True)
     dossier_composant       = fields.Boolean(string="Dossier composant", tracking=True)
-    ppr_demande             = fields.Char(string="Demande", tracking=True)
+    ppr_demande             = fields.Char(string="Attendus", tracking=True)
     ppr_type_demande        = fields.Selection([
         ("PJ",       "Pièce-jointe"),
         ("DATE",     "Date"),
@@ -124,25 +145,7 @@ class IsParamProject(models.Model):
         ("11", "11-Achats"),
         ("12", "12-Responsable projets"),
     ], string="Responsable du document", tracking=True)
-    ppr_revue_lancement    = fields.Selection([
-        ("rl_be01",  "BE01a : Nouveau moule - Moule transféré"),
-        ("rl_be01b", "BE01b : Grainage"),
-        ("rl_be01c", "BE01c : Barre chaude"),
-        ("rl_be02",  "BE02 : Etude - CAO - Rhéologie"),
-        ("rl_be03",  "BE03 : Prototype"),
-        ("rl_be04",  "BE04 : Main de préhension"),
-        ("rl_be05",  "BE05 : Gabarit de contrôle"),
-        ("rl_be06",  "BE06 : Mise au point"),
-        ("rl_be07",  "BE07 : Test"),
-        ("rl_be09",  "BE09 : Essais + divers"),
-        ("rl_be10",  "BE10 : Métrologie"),
-        ("rl_be11",  "BE11 : Transports"),
-        ("rl_be12",  "BE12 : Etude - Developpement - Packaging"),
-        ("rl_be13",  "BE13 : Poste d'assemblage"),
-        ("rl_be15",  "BE15 : Achat matière"),
-        ("rl_be16",  "BE16 : Achat composants"),
-        ("rl_be17",  "BE17 : Essai injection"),
-    ], string="Revue de lancement", tracking=True)
+    ppr_revue_lancement    = fields.Selection(PPR_REVUE_LANCEMENT, string="Revue de lancement", tracking=True)
     ppr_moule_hors_auto = fields.Boolean(string="Famille pour moule hors automobile", tracking=True)
     ppr_project_colors  = fields.Serialized()
     ppr_color           = fields.Char("Color", sparse="ppr_project_colors", tracking=True)

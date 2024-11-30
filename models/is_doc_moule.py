@@ -133,6 +133,7 @@ class IsDocMoule(models.Model):
     acces_chef_projet   = fields.Boolean(string="Accès chef de projet", compute='_compute_acces_chef_projet', readonly=True, store=False, help="Indique si les champs réservés au chef de projet sont modifiables")
     color               = fields.Char(string="Couleur indicateur", compute='_compute_color', readonly=True, store=True)
     date_creation_auto  = fields.Datetime(string="Date création auto",copy=False,readonly=True)
+    attendus            = fields.Char(related="param_project_id.ppr_demande", string="Attendus")
     conforme            = fields.Selection([
         ("01", "Conforme à la norme FMV SS n°302 < 102 mm/min (ou 4 inches/min)"),
         ("02", "Conforme à l’exigence client < 80 mm/min"),
@@ -333,31 +334,34 @@ class IsDocMoule(models.Model):
                 reponses=self.get_doc_reponse()
                 if not reponses[0] and not reponses[1] and not reponses[2] and self.ppr_type_demande!='AUTO':
                     raise ValidationError("Impossbile de passer à l'état 'Fait' car aucune réponse n'est fournie !")
-        if not self.acces_chef_projet:
-            champs_interdit=[
-                'section_id',
-                'param_project_id',
-                'idresp',
-                'dateend',
-                'date_debut_gantt',
-                'date_fin_gantt',
-                'duree',
-                'j_prevue',
-                'demande',
-                'action',
-                'bloquant',
-                'type_document',
-                'sequence',
-                'idcp',
-                'gantt_pdf',
-            ]
-            msg=[]
-            for key in vals:
-                if key in champs_interdit:
-                    champ = self._fields[key].string
-                    msg.append("- %s"%champ)
-            if len(msg)>0:
-                raise ValidationError("Modification non autorisée pour les champs :\n%s"%'\n'.join(msg))
+                
+
+        for obj in self:
+            if not obj.acces_chef_projet:
+                champs_interdit=[
+                    'section_id',
+                    'param_project_id',
+                    'idresp',
+                    'dateend',
+                    'date_debut_gantt',
+                    'date_fin_gantt',
+                    'duree',
+                    'j_prevue',
+                    'demande',
+                    'action',
+                    'bloquant',
+                    'type_document',
+                    'sequence',
+                    'idcp',
+                    'gantt_pdf',
+                ]
+                msg=[]
+                for key in vals:
+                    if key in champs_interdit:
+                        champ = obj._fields[key].string
+                        msg.append("- %s"%champ)
+                if len(msg)>0:
+                    raise ValidationError("Modification non autorisée pour les champs :\n%s"%'\n'.join(msg))
         return res
 
 
