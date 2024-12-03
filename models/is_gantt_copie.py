@@ -24,15 +24,16 @@ class IsGanttCopieSection(models.Model):
                 domain = [('idmoule', '=', idmoule.id)]
                 docs=self.env['is.doc.moule'].search(domain)
                 for doc in docs:
-                    if doc.param_project_id.ppr_revue_lancement in budgets and obj.section_id==doc.section_id:
-                        if obj.gantt_copie_id.copier_sup_j_actuelle:
-                            if not doc.j_prevue:
-                                nb+=1
-                            else:
-                                if doc.j_prevue>=obj.gantt_copie_id.j_actuelle:
+                    if not doc.param_project_id.ppr_revue_lancement or doc.param_project_id.ppr_revue_lancement in budgets:
+                        if obj.section_id==doc.section_id:
+                            if obj.gantt_copie_id.copier_sup_j_actuelle:
+                                if not doc.j_prevue:
                                     nb+=1
-                        else:
-                            nb+=1
+                                else:
+                                    if doc.j_prevue>=obj.gantt_copie_id.j_actuelle:
+                                        nb+=1
+                            else:
+                                nb+=1
             obj.nb_taches=nb
         
  
@@ -172,8 +173,9 @@ class IsGanttCopie(models.Model):
                     src_docs=obj.get_docs(name_field,prefix='src')
                     src2dst={}
                     for src_doc in src_docs:
+
                         test=True
-                        if obj.type_document=='Moule' and src_doc.param_project_id.ppr_revue_lancement not in budgets:
+                        if obj.type_document=='Moule' and src_doc.param_project_id.ppr_revue_lancement and src_doc.param_project_id.ppr_revue_lancement not in budgets:
                             test=False
                         if obj.copier_sup_j_actuelle:
                             if src_doc.j_prevue and src_doc.j_prevue<obj.j_actuelle:
