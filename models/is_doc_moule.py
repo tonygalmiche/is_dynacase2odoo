@@ -392,6 +392,20 @@ class IsDocMoule(models.Model):
             obj.gantt_pdf = obj.param_project_id.gantt_pdf
 
 
+    def actualisation_indicateur_action(self):
+        for obj in self:
+            if obj.date_fin_gantt:
+                obj.dateend = obj.date_fin_gantt
+            if not obj.etat:
+                if obj.actuelle and obj.j_prevue:
+                    if obj.j_prevue<=obj.actuelle:
+                        obj.etat='AF'
+            obj._compute_coefficient_bloquant_note()
+            obj._compute_color()
+            obj._compute_indicateur()
+        return []
+
+
     def update_j_prevue_action(self):
         nb=len(self)
         ct=1
@@ -483,8 +497,9 @@ class IsDocMoule(models.Model):
                     #obj.date_fin_gantt = date_fin_gantt
 
                     vals={
-                        'duree_gantt':    duree_gantt,
+                        'duree_gantt'   : duree_gantt,
                         'date_fin_gantt': date_fin_gantt,
+                        #'dateend'       : date_fin_gantt,
                     }
                     self.env.context = self.with_context(noonchange=True).env.context
                     obj.write(vals)

@@ -15,6 +15,17 @@
             <field name="state">code</field>
             <field name="code">action = records.actualisation_famille_automatique_action()</field>
         </record>
+
+        <record id="actualisation_indicateur_action_server" model="ir.actions.server">
+            <field name="name">Actualisation indicateur</field>
+            <field name="model_id" ref="model_is_doc_moule"/>
+            <field name="binding_model_id" ref="model_is_doc_moule"/>
+            <field name="state">code</field>
+            <field name="code">action = records.actualisation_indicateur_action()</field>
+        </record>
+
+
+
         <record model="ir.ui.view" id="is_doc_moule_form">
             <field name="name">is_doc_moule_form</field>
             <field name="model">is.doc.moule</field>
