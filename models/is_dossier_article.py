@@ -71,6 +71,7 @@ class is_dossier_article(models.Model):
                     line_id.piecejointe = doc.rsp_pj
                 #**************************************************************
             obj._compute_fait()
+        return True
 
 
 class is_dossier_article_doc(models.Model):
