@@ -110,7 +110,7 @@ class IsDocMoule(models.Model):
     note                = fields.Integer(string="Note"          , compute='_compute_coefficient_bloquant_note',store=True, readonly=True, tracking=True)
     indicateur          = fields.Html(string="Indicateur"       , compute='_compute_indicateur'               ,store=True, readonly=True)
     datecreate          = fields.Date(string="Date de création", default=fields.Date.context_today)
-    dateend             = fields.Date(string="Date de fin", tracking=True)
+    dateend             = fields.Date(string="Date fin (Ne plus utiliser)", tracking=True, readonly=True, help="Remplacé par date_fin_gantt le 05/12/2024")
     array_ids           = fields.One2many("is.doc.moule.array", "is_doc_id", string="Pièce-jointe de réponse à la demande")
     dynacase_id         = fields.Integer(string="Id Dynacase",index=True,copy=False)
     duree               = fields.Integer(string="Durée (J)"      , help="Durée en jours ouvrés"         , default=1, tracking=True)
@@ -151,7 +151,7 @@ class IsDocMoule(models.Model):
                     obj.rsp_date=False
 
 
-    @api.depends('etat','dateend')
+    @api.depends('etat','date_fin_gantt')
     def _compute_color(self):
         "Retourne la couleur de l'indicateur en fonction de différent paramètres"
         for obj in self:
@@ -161,11 +161,11 @@ class IsDocMoule(models.Model):
                     color='SpringGreen'
                 else:
                     color = 'orange'
-                    if obj.dateend and now>obj.dateend:
+                    if obj.date_fin_gantt and now>obj.date_fin_gantt:
                         color='Red'
             else:
                 color = 'Lavender'
-                if not obj.dateend:
+                if not obj.date_fin_gantt:
                     color = 'orange'
                 if obj.action=='':
                     color = 'Lavender'
@@ -173,8 +173,8 @@ class IsDocMoule(models.Model):
                     color='CornflowerBlue'
                 if obj.etat=='D':
                     color='Orange'
-                if obj.dateend:
-                    if now>obj.dateend:
+                if obj.date_fin_gantt:
+                    if now>obj.date_fin_gantt:
                         color='Red'
                 if obj.etat=='F':
                     color='SpringGreen'
@@ -233,13 +233,13 @@ class IsDocMoule(models.Model):
             obj.note        = note
 
 
-    @api.depends('note','coefficient','etat','action','array_ids.annex','rsp_date','rsp_texte','dateend')
+    @api.depends('note','coefficient','etat','action','array_ids.annex','rsp_date','rsp_texte','date_fin_gantt')
     def _compute_indicateur(self):
         for obj in self:
             color = obj.color
             ladate = '(date)'
-            if obj.dateend:
-                ladate = obj.dateend.strftime('%d/%m/%Y')
+            if obj.date_fin_gantt:
+                ladate = obj.date_fin_gantt.strftime('%d/%m/%Y')
             lanote=""
             if obj.coefficient>0:
                 lanote = "%s/%s"%(obj.note,obj.coefficient)
@@ -342,7 +342,6 @@ class IsDocMoule(models.Model):
                     'section_id',
                     'param_project_id',
                     'idresp',
-                    'dateend',
                     'date_debut_gantt',
                     'date_fin_gantt',
                     'duree',
@@ -492,14 +491,9 @@ class IsDocMoule(models.Model):
                         new_date = new_date + timedelta(days=1)
                     duree_gantt = (date_fin - date_debut).days 
                     date_fin_gantt = obj.date_debut_gantt + timedelta(days=duree_gantt)
-
-                    #obj.duree_gantt = duree_gantt
-                    #obj.date_fin_gantt = date_fin_gantt
-
                     vals={
                         'duree_gantt'   : duree_gantt,
                         'date_fin_gantt': date_fin_gantt,
-                        #'dateend'       : date_fin_gantt,
                     }
                     self.env.context = self.with_context(noonchange=True).env.context
                     obj.write(vals)
@@ -587,7 +581,7 @@ class IsDocMoule(models.Model):
             ctx={
                 'default_idmoule': obj.id,
                 'default_etat'   :'AF',
-                'default_dateend': datetime.today(),
+                'default_date_fin_gantt': datetime.today(),
                 'default_idresp' : self._uid,
             }
         return {
@@ -688,16 +682,16 @@ class res_partner(models.Model):
             ids=[]
             initial_date=str(datetime.today())
             for doc in docs:
-                if str(doc.dateend)<initial_date:
-                    initial_date=str(doc.dateend)
+                if str(doc.date_fin_gantt)<initial_date:
+                    initial_date=str(doc.date_fin_gantt)
                 ids.append(doc.id)
             tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_edit_tree_view').id
             gantt_id = self.env.ref('is_dynacase2odoo.is_doc_moule_moule_dhtmlxgantt_project_view').id
             ctx={
-                'default_etat'         :'AF',
-                'default_dateend'      : datetime.today(),
-                'default_idresp'       : self._uid,
-                'initial_date'         : initial_date,
+                'default_etat'          :'AF',
+                'default_date_fin_gantt': datetime.today(),
+                'default_idresp'        : self._uid,
+                'initial_date'          : initial_date,
             }
             return {
                 'name': obj.name,

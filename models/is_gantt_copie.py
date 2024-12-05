@@ -209,9 +209,7 @@ class IsGanttCopie(models.Model):
                                     'sequence'        : src_doc.sequence,
                                     'param_project_id': src_doc.param_project_id.id,
                                     'type_document'   : src_doc.type_document,
-                                    #'idresp'          : src_doc.idresp, Pour les doc venant de Dynacase ne pas changer le responsable
                                     'demande'         : src_doc.demande,
-                                    #'dateend'         : src_doc.dateend,
                                     'duree'           : src_doc.duree,
                                     'duree_gantt'     : src_doc.duree_gantt,
                                     'date_debut_gantt': src_doc.date_debut_gantt,
@@ -220,7 +218,6 @@ class IsGanttCopie(models.Model):
                                     'dependance_id'   : src_doc.dependance_id.id,
                                 }
                                 copie.write(vals)
-                                #copie.dateend = copie.date_fin_gantt
                                 copie._compute_idproject_moule_dossierf()
                                 copie.actualisation_indicateur_action()
                                 src2dst[src_doc]=copie

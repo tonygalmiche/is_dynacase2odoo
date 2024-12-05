@@ -34,7 +34,7 @@ class IsDocMoule(models.Model):
         scroll_x = self.env['is.mem.var'].get(self._uid, 'scroll_x')
         scroll_y = self.env['is.mem.var'].get(self._uid, 'scroll_y')
 
-        lines=self.env['is.doc.moule'].search(domain, limit=10000) #, order="dateend"
+        lines=self.env['is.doc.moule'].search(domain, limit=10000)
 
 
        #** Ajout des markers (J des moules) depuis is.revue.lancement *********
@@ -207,7 +207,7 @@ class IsDocMoule(models.Model):
 
         #** Ajout des documents des moules **************************************
         for line in lines:
-            if (line.dateend or line.date_fin_gantt) and line.idresp:
+            if line.date_fin_gantt and line.idresp:
                 priority = round(2*random()) # Nombre aléatoire entre 0 et 2
                 famille=line.param_project_id.ppr_famille
                 name=famille
@@ -243,7 +243,7 @@ class IsDocMoule(models.Model):
                 #**************************************************************
 
                 color_class = '%s is_section_gantt_%s'%(etat_class,line.section_id.id)
-                end_date = str(line.date_fin_gantt or line.dateend)+' 00:00:00'
+                end_date = str(line.date_fin_gantt)+' 00:00:00'
                 j_prevue = dict(GESTION_J).get(line.j_prevue,"?")
 
                 #** Initiales du responsable **********************************

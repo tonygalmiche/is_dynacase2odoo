@@ -140,7 +140,7 @@
                                                 <tr>
                                                     <td style="border:none;text-align:center;white-space:nowrap;" colspan="3">
                                                         <span 
-                                                            t-esc="doc.dateend" 
+                                                            t-esc="doc.date_fin_gantt" 
                                                             class="link"
                                                             t-on-click="DateClick" 
                                                             t-att-res_id="doc.doc_id"

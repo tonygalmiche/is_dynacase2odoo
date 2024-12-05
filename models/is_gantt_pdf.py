@@ -104,7 +104,7 @@ class IsGanttPdf(models.Model):
         ]
         gantt_pdf_id=False
         for obj in self:
-            lines=self.env['is.gantt.pdf'].search(domain, limit=1) #, order="dateend"
+            lines=self.env['is.gantt.pdf'].search(domain, limit=1) #, order="date_fin_gantt"
             for line in lines:
                 gantt_pdf_id = line.id
             if not gantt_pdf_id:
@@ -165,24 +165,16 @@ class IsGanttPdf(models.Model):
             section_ids=obj.get_sections()
             items,titre,jour_fermeture_ids,markers = obj.get_taches(section_ids=section_ids, gantt_pdf=True)
 
-
-
-
             #** Calcul start_date *********************************************
             for item in items:
-                print(item)
                 end_date = item.get('end_date')
                 duration =  item.get('duration')
-
-
                 if end_date and  duration:
                     end_date   = datetime.strptime(end_date, '%Y-%m-%d 00:00:00')
                     start_date = end_date - timedelta(days=duration)
                     item['start_date'] = start_date
                     item['end_date']   = end_date
             #******************************************************************
-
-
 
             #** Recherche des enfants de chaque niveau ************************
             def get_enfants(items,parent,niveau):

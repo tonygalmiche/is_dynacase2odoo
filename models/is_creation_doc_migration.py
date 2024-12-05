@@ -83,9 +83,9 @@ class is_creation_doc_migration(models.Model):
                             a_creer='Oui'
                             nb_a_creer+=1
                             num_a_creer=nb_a_creer
-                            dateend = False
+                            date_debut_gantt = False
                             if rl:
-                                dateend = getattr(rl, "rl_date_%s"%param.ppp_j.lower())
+                                date_debut_gantt = getattr(rl, "rl_date_%s"%param.ppp_j.lower())
                             vals={
                                 'param_project_id'  : line.param_project_id.id,
                                 'idmoule'           : line.idmoule.id,
@@ -93,8 +93,7 @@ class is_creation_doc_migration(models.Model):
                                 'idresp'            : line.idresp.id,
                                 'action'            : param.ppr_irv,
                                 'etat'              : 'AF',
-                                'dateend'           : dateend,
-                                'date_debut_gantt'  : dateend,
+                                'date_debut_gantt'  : date_debut_gantt,
                                 'duree_gantt'       : 1,
                                 'date_creation_auto': datetime.now(),
                             }

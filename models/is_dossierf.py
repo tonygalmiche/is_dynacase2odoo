@@ -32,11 +32,11 @@ class is_dossierf(models.Model):
             tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_dossierf_edit_tree_view').id
             gantt_id = self.env.ref('is_dynacase2odoo.is_doc_moule_moule_dhtmlxgantt_project_view').id
             ctx={
-                'default_type_document': 'Dossier F',
-                'default_dossierf_id'  : obj.id,
-                'default_etat'         :'AF',
-                'default_dateend'      : datetime.today(),
-                'default_idresp'       : self._uid,
+                'default_type_document' : 'Dossier F',
+                'default_dossierf_id'   : obj.id,
+                'default_etat'          :'AF',
+                'default_date_fin_gantt': datetime.today(),
+                'default_idresp'        : self._uid,
             }
             return {
                 'name': obj.name,

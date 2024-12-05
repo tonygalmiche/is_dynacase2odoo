@@ -65,7 +65,6 @@
                                 <field name="moule_dossierf"            attrs="{'invisible': ['|','|',('moule_dossierf', '=', False),('idmoule', '!=', False),('dossierf_id', '!=', False)]}" />
                                 <field name="param_project_id"          attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
                                 <field name="idresp"                    attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
-                                <field name="dateend"                   attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
                                 <field name="date_debut_gantt"          attrs="{'readonly': [('acces_chef_projet', '=', False)], 'invisible': [('type_document', '=', 'Article')]}"/>
                                 <field name="duree"                     attrs="{'readonly': [('acces_chef_projet', '=', False)], 'invisible': [('type_document', '=', 'Article')]}"/>
                                 <field name="duree_gantt"               attrs="{'readonly': 1, 'invisible': [('type_document', '=', 'Article')]}" force_save="1"/>
@@ -131,6 +130,7 @@
                                         <field name="color"              attrs="{'invisible': [('type_document', '=', 'Article')]}"/>
                                         <field name="site_id"            attrs="{'invisible': [('type_document', '=', 'Article')]}"/>
                                         <field name="gantt_pdf"          attrs="{'readonly': [('acces_chef_projet', '=', False)], 'invisible': [('type_document', '=', 'Article')]}"/>
+                                        <field name="dateend" readonly="1"/>
                                         <field name="dynacase_id"        readonly="1"/>
                                         <field name="date_creation_auto" attrs="{'invisible': [('type_document', '=', 'Article')]}"/>
                                     </group>
@@ -248,12 +248,11 @@
                     <field name="note"  optional="show"/>
                     <field name="indicateur"  optional="show"/>
                     <field name="datecreate" optional="show" />
-                    <field name="dateend" optional="show" />
                     <field name="duree"               optional="hide" />
                     <field name="duree_gantt"         optional="hide"/>
                     <field name="date_debut_gantt"    optional="hide" />
                     <field name="date_fin_gantt"      optional="hide" />
-                    <field name="duree_attente_avant" optional="hide" />
+                    <field name="dateend"             optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="gantt_pdf"           optional="hide"/>
                     <field name="create_date"         optional="hide"/>
@@ -287,7 +286,6 @@
                     <field name="idresp"/>
                     <field name="demande"/>
                     <field name="etat"/>
-                    <field name="dateend"             optional="hide"/>
                     <field name="duree_attente_avant" optional="hide"/>
                     <field name="duree"/>
                     <field name="duree_gantt"         optional="hide" force_save="1"/>
@@ -340,7 +338,7 @@
                                             <field name="etat" /><br />
                                             <div  attrs="{'indicateur': [('idresp', '=', False)]}">                  <field name="indicateur" /></div>
                                             <field name="datecreate" /><br />
-                                            <field name="dateend" /><br />
+                                            <field name="date_fin_gantt" /><br />
                                             <field name="dynacase_id" invisible="1" />
                                             <button 
                                                 string="Dynacase" name="lien_vers_dynacase_action" type="object" class="btn btn-info"
@@ -464,7 +462,6 @@
                     <field name="note"                optional="hide"/>
                     <field name="indicateur"          optional="hide"/>
                     <field name="datecreate"          optional="hide" />
-                    <field name="dateend"             optional="show" />
                     <field name="duree"               optional="show"/>
                     <field name="duree_gantt"         optional="hide"/>
                     <field name="date_debut_gantt"    optional="show"/>
@@ -521,7 +518,6 @@
                     <field name="note"  optional="show"/>
                     <field name="indicateur"  optional="show"/>
                     <field name="datecreate" optional="show" />
-                    <field name="dateend" optional="show" />
                     <field name="duree"               optional="hide"/>
                     <field name="duree_gantt"         optional="hide"/>
                     <field name="date_debut_gantt"    optional="hide"/>
@@ -562,7 +558,7 @@
                     <field name="dossier_article_id"  optional="show" widget="many2one_clickable"/>
                     <field name="param_project_id"    optional="show"/>
                     <field name="idresp"              optional="show" />
-                    <field name="dateend"             optional="show" />
+                    <field name="date_fin_gantt"      optional="show" />
                     <field 
                         name="etat" optional="show" widget="badge" 
                         decoration-success="etat == 'F'" 
@@ -617,7 +613,6 @@
                     <field name="note"                optional="hide"/>
                     <field name="indicateur"          optional="hide"/>
                     <field name="datecreate"          optional="hide" />
-                    <field name="dateend"             optional="show" />
                     <field name="duree"               optional="show"/>
                     <field name="duree_gantt"         optional="hide"/>
                     <field name="date_debut_gantt"    optional="show"/>
@@ -672,7 +667,6 @@
                     <field name="note"                optional="hide"/>
                     <field name="indicateur"          optional="hide"/>
                     <field name="datecreate"          optional="hide" />
-                    <field name="dateend"             optional="show" />
                     <field name="duree"               optional="show"/>
                     <field name="duree_gantt"         optional="hide"/>
                     <field name="date_debut_gantt"    optional="show"/>
@@ -736,7 +730,6 @@
                     <field name="idresp"/>
                     <field name="demande"         optional="show"/>
                     <field name="etat"/>
-                    <field name="dateend"          optional="hide"/>
                     <field name="duree"/>
                     <field name="duree_gantt"      optional="hide" force_save="1"/>
                     <field name="date_debut_gantt"/>
@@ -770,7 +763,6 @@
                     <field name="idresp"/>
                     <field name="demande"/>
                     <field name="etat"/>
-                    <field name="dateend"          optional="hide"/>
                     <field name="duree"/>
                     <field name="duree_gantt"         optional="hide" force_save="1"/>
                     <field name="date_debut_gantt"/>
@@ -804,7 +796,6 @@
                     <field name="idresp"/>
                     <field name="demande"/>
                     <field name="etat"/>
-                    <field name="dateend"          optional="hide"/>
                     <field name="duree"/>
                     <field name="duree_gantt"      optional="hide" force_save="1"/>
                     <field name="date_debut_gantt"/>
@@ -829,10 +820,9 @@
                 <field name="arch" type="xml">
                     <tree editable="top">
                         <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
-                        <!-- <field name="type_document" invisible="1"/> -->
                         <field name="param_project_id" readonly="1"/>
                         <field name="idresp"/>
-                        <field name="dateend"/>
+                        <field name="date_fin_gantt"/>
                         <field name="etat"/>
                         <field name="indicateur"   optional="hide"/>
                         <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>

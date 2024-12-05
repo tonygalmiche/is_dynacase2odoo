@@ -200,9 +200,9 @@ class is_dossier_modif_variante(models.Model):
             ctx={
                 'default_type_document': 'Dossier Modif Variante',
                 'default_dossier_modif_variante_id'  : obj.id,
-                'default_etat'         :'AF',
-                'default_dateend'      : datetime.today(),
-                'default_idresp'       : self._uid,
+                'default_etat'          :'AF',
+                'default_date_fin_gantt': datetime.today(),
+                'default_idresp'        : self._uid,
             }
             return {
                 'name': obj.demao_num,

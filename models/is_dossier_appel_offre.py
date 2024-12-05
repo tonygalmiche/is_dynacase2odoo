@@ -102,9 +102,9 @@ class is_dossier_appel_offre(models.Model):
             ctx={
                 'default_type_document': 'dossier_appel_offre',
                 'default_dossier_appel_offre_id'  : obj.id,
-                'default_etat'         :'AF',
-                'default_dateend'      : datetime.today(),
-                'default_idresp'       : self._uid,
+                'default_etat'          :'AF',
+                'default_date_fin_gantt': datetime.today(),
+                'default_idresp'        : self._uid,
             }
             return {
                 'name': obj.dao_num,

@@ -138,16 +138,16 @@ class IsDocMoule(models.Model):
                     if id:
                         modele_ids.append(str(id))
                         familles[ct]={
-                            'ct'          : ct,
-                            'id'          : id,
-                            'name'        : line.param_project_id.ppr_famille,
-                            'doc_id'      : False,
-                            'etat'        : '',
-                            'dateend'     : '',
-                            'note'        : '',
-                            'style'       : '',
-                            'dynacase_id' : False,
-                            'reponse'     : [False,False,False],
+                            'ct'            : ct,
+                            'id'            : id,
+                            'name'          : line.param_project_id.ppr_famille,
+                            'doc_id'        : False,
+                            'etat'          : '',
+                            'date_fin_gantt': '',
+                            'note'          : '',
+                            'style'         : '',
+                            'dynacase_id'   : False,
+                            'reponse'       : [False,False,False],
                         }
         _logger.info("Familles du modele (durée=%.2fs)"%(datetime.now()-debut).total_seconds())
 
@@ -165,7 +165,7 @@ class IsDocMoule(models.Model):
         if moule:
             WHERE+=" and im.name ilike '"+moule+"%' "
         if type_moule and type_moule=='Actif':
-            WHERE+=" and im.date_fin is null "
+            WHERE+=" and im.date_fin_be is null "
         #**********************************************************************
 
 
@@ -191,7 +191,7 @@ class IsDocMoule(models.Model):
                     idm.etat             etat,
                     im.j_actuelle        j_actuelle,
                     im.j_avancement      j_avancement,
-                    idm.dateend          dateend,
+                    idm.date_fin_gantt   date_fin_gantt,
                     idm.coefficient      coefficient,
                     idm.note             note,
                     idm.etat             etat,
@@ -233,7 +233,7 @@ class IsDocMoule(models.Model):
                     idm.etat             etat,
                     im.j_actuelle        j_actuelle,
                     im.j_avancement      j_avancement,
-                    idm.dateend          dateend,
+                    idm.date_fin_gantt   date_fin_gantt,
                     idm.coefficient      coefficient,
                     idm.note             note,
                     idm.etat             etat,
@@ -279,7 +279,7 @@ class IsDocMoule(models.Model):
                     idm.etat             etat,
                     im.j_actuelle        j_actuelle,
                     im.j_avancement      j_avancement,
-                    idm.dateend          dateend,
+                    idm.date_fin_gantt   date_fin_gantt,
                     idm.coefficient      coefficient,
                     idm.note             note,
                     idm.etat             etat,
@@ -319,7 +319,7 @@ class IsDocMoule(models.Model):
                     idm.etat             etat,
                     im.j_actuelle        j_actuelle,
                     im.j_avancement      j_avancement,
-                    idm.dateend          dateend,
+                    idm.date_fin_gantt   date_fin_gantt,
                     idm.coefficient      coefficient,
                     idm.note             note,
                     idm.etat             etat,
@@ -338,7 +338,6 @@ class IsDocMoule(models.Model):
                 where idm.active='t' and idm.param_project_id in (%s) %s 
                 limit 500
             """%(','.join(modele_ids),WHERE)
-
 
         if len(modele_ids)>0:
             cr.execute(SQL)
@@ -406,10 +405,10 @@ class IsDocMoule(models.Model):
                     for famille in mydict[key]['familles']:
                         famille_id = mydict[key]['familles'][famille]['id']
                         if row['famille_id']==famille_id:
-                            #** dateend ***************************************
-                            dateend='(date)'
-                            if row['dateend']:
-                                dateend=row['dateend'].strftime("%d/%m/%Y")
+                            #** date_fin_gantt ********************************
+                            date_fin_gantt='(date)'
+                            if row['date_fin_gantt']:
+                                date_fin_gantt=row['date_fin_gantt'].strftime("%d/%m/%Y")
                             color       = row['color']
                             coefficient = row['coefficient'] or 0
                             note        = row['note'] or 0
@@ -422,15 +421,15 @@ class IsDocMoule(models.Model):
                                 rsp_date=rsp_date.strftime("%d/%m/%y")
                             reponse=[row['rsp_pj'],rsp_date,row['rsp_texte']]
                             vals={
-                                'doc_id'       : doc_id,
-                                'etat'         : row['etat'],
-                                'dateend'      : dateend,
-                                'coefficient'  : coefficient,
-                                'note'         : note,
-                                'style'        : 'background-color:%s'%color,
-                                'dynacase_id'  : row['dynacase_id'],
-                                'type_document': row['type_document'],
-                                'reponse'      : reponse,
+                                'doc_id'        : doc_id,
+                                'etat'          : row['etat'],
+                                'date_fin_gantt': date_fin_gantt,
+                                'coefficient'   : coefficient,
+                                'note'          : note,
+                                'style'         : 'background-color:%s'%color,
+                                'dynacase_id'   : row['dynacase_id'],
+                                'type_document' : row['type_document'],
+                                'reponse'       : reponse,
                             }
                             mydict[key]['familles'][famille].update(vals)
 
