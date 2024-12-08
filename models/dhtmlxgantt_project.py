@@ -231,15 +231,16 @@ class IsDocMoule(models.Model):
                 parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id or line.dossier_appel_offre_id.id)+20000000 + line.section_id.id + 30000000
                 
                 #** Bordure gauche de la tâche (Fait, A Faire ou en retard) ***
-                etat_class='etat_a_faire'
-                if line.etat=='F':
-                    etat_class='etat_fait'
-                else:
-                    if line.j_prevue and line.date_fin_gantt:
-                        date_j = dates_j.get(line.j_prevue)
-                        if date_j and line.date_fin_gantt:
-                            if line.date_fin_gantt>date_j:
-                                etat_class = "retard_j"
+                # etat_class='etat_a_faire'
+                # if line.etat=='F':
+                #     etat_class='etat_fait'
+                # else:
+                #     if line.j_prevue and line.date_fin_gantt:
+                #         date_j = dates_j.get(line.j_prevue)
+                #         if date_j and line.date_fin_gantt:
+                #             if line.date_fin_gantt>date_j:
+                #                 etat_class = "retard_j"
+                etat_class = "border_left_%s"%(line.color or '').lower()
                 #**************************************************************
 
                 color_class = '%s is_section_gantt_%s'%(etat_class,line.section_id.id)
@@ -254,22 +255,23 @@ class IsDocMoule(models.Model):
                     initiales+=t[1][0]
                 #**************************************************************
                 vals={
-                    "id"         : "%s-%s"%(line._name,line.id),
-                    "model"      : line._name,
-                    "res_id"     : line.id,
-                    "text"       : name,
-                    "end_date"   : end_date,
-                    "duration"   : duration,
-                    "parent"     : parent,
-                    "priority"   : priority,
-                    "etat_class" : etat_class,
-                    "color_class": color_class,
-                    "section"    : line.section_id.name,
-                    "j_prevue"   : j_prevue,
-                    "responsable": responsable,
-                    "initiales"  : initiales,
-                    "irv"        : line.action or '',
-                    "attendus"   : line.attendus or '',
+                    "id"          : "%s-%s"%(line._name,line.id),
+                    "model"       : line._name,
+                    "res_id"      : line.id,
+                    "text"        : name,
+                    "end_date"    : end_date,
+                    "duration"    : duration,
+                    "parent"      : parent,
+                    "priority"    : priority,
+                    "etat_class"  : etat_class,
+                    "color_class" : color_class,
+                    "section"     : line.section_id.name,
+                    "j_prevue"    : j_prevue,
+                    "responsable" : responsable,
+                    "initiales"   : initiales,
+                    "irv"         : line.action or '',
+                    "attendus"    : line.attendus or '',
+                    "border_color": line.color,
                 }
                 res.append(vals)
         #**********************************************************************

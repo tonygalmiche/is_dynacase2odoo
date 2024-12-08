@@ -267,7 +267,6 @@ class IsGanttPdf(models.Model):
 
 
 
-
                 end_date   = get_date(item.get('end_date'),0)
                 start_date = get_date(item.get('end_date'),duration)
                 if start_date:
@@ -483,8 +482,6 @@ class IsGanttPdf(models.Model):
             #** Ajout des tâches **********************************************
             nb=0
             for item in items:
-
-
                 duration   = item.get('duration')
                 end_date   = get_date(item.get('end_date'),0)
                 start_date = get_date(item.get('end_date'),duration)
@@ -513,11 +510,25 @@ class IsGanttPdf(models.Model):
                     fill_rgb = to_rgb(item.get('color'))
                     cairo_rectangle(ctx,x,y+3,width,height-6,fill_rgb=fill_rgb,line_rgb=(0, 0, 0),line_width=0.5) # Tache
                     fill_rgb=(0, 0, 0)
+
                     etat_class = item.get('etat_class')
                     if etat_class=='etat_a_faire':
                         fill_rgb=(1, 0, 0)
                     if etat_class=='etat_fait':
                         fill_rgb=(0, 1, 0)
+
+                    css_color={
+                        'lavender'      : "#e6e6fa",
+                        'cornflowerblue': "#6495ed",
+                        'red'           : "#ff0000",
+                        'gray'          : "#000000",
+                        'springgreen'   : "#00ff7f",
+                        'orange'        : "#ffa500",
+                    }
+                    border_color = (item.get('border_color') or '').lower()
+                    if border_color in css_color:
+                        fill_rgb = to_rgb(css_color[border_color])
+
                     cairo_rectangle(ctx,x,y+3,tache_height/2,height-6,fill_rgb=fill_rgb)    # Rectangle Fait/Pas fait
                     cairo_show_text(ctx,x+tache_height,y+tache_height,txt=item.get('text')) # Nom de la tache sur le rectangle de la tache
                     nb+=1

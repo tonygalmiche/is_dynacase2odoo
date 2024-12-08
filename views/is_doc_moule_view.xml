@@ -84,6 +84,7 @@
                                 <field name="idproject" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
                                 <field name="client_id" attrs="{'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
                                 <field name="j_prevue"  attrs="{'readonly': [('acces_chef_projet', '=', False)], 'invisible': [('type_document', '=', 'Article')]}"/>
+                                <field name="date_j_prevue" attrs="{'invisible': [('type_document', '=', 'Article')]}"/>
                                 <field name="actuelle"  attrs="{'readonly': 1, 'invisible': [('type_document', '=', 'Article')]}"/>
                                 <field name="demande"   attrs="{'readonly': [('acces_chef_projet', '=', False)], 'invisible': [('type_document', '=', 'Article')]}"/>
                                 <field name="attendus"  attrs="{'invisible': [('attendus', '=', False)]}"/>
@@ -140,8 +141,8 @@
                                         <field name="color"              attrs="{'invisible': [('type_document', '=', 'Article')]}"/>
                                         <field name="site_id"            attrs="{'invisible': [('type_document', '=', 'Article')]}"/>
                                         <field name="gantt_pdf"          attrs="{'readonly': [('acces_chef_projet', '=', False)], 'invisible': [('type_document', '=', 'Article')]}"/>
-                                        <field name="dateend" readonly="1"/>
                                         <field name="suivi_projet"/>
+                                        <field name="dateend" readonly="1"/>
                                         <field name="dynacase_id"        readonly="1"/>
                                         <field name="date_creation_auto" attrs="{'invisible': [('type_document', '=', 'Article')]}"/>
                                     </group>
@@ -243,6 +244,7 @@
                     <field name="idcp" optional="show"/>
                     <field name="idresp" optional="show" />
                     <field name="j_prevue" optional="show"/>
+                    <field name="date_j_prevue"        optional="hide"/>
                     <field name="actuelle" optional="show" />
                     <field name="demande" optional="show" />
                     <field name="action"  optional="show"/>

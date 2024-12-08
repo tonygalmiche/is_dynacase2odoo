@@ -29,12 +29,32 @@
                         />
                     </td>
                     <td style="width:100px"></td>
-                    <td><div style="background-color:green;color:green;margin:5px;margin-left:20px">V</div></td>
-                    <td>FAIT</td>
-                    <td><div style="background-color:red;color:red;margin:5px;margin-left:20px">R</div></td>
+                    <td><div style="background-color:lavender;color:lavender;margin:5px;margin-left:20px">X</div></td>
+                    <td>Attente</td>
+
+                    <td><div style="background-color:cornflowerblue;color:cornflowerblue;margin:5px;margin-left:20px">X</div></td>
+
                     <td>A Faire</td>
-                    <td><div style="background-color:black;color:black;margin:5px;margin-left:20px">N</div></td>
+                    <td><div style="background-color:red;color:red;margin:5px;margin-left:20px">X</div></td>
+                    <td>En retard</td>
+                    <td><div style="background-color:black;color:black;margin:5px;margin-left:20px">X</div></td>
                     <td>En retard par rapport à la J prévue</td>
+                    <td><div style="background-color:springgreen;color:springgreen;margin:5px;margin-left:20px">X</div></td>
+
+                    <td>FAIT</td>
+
+
+
+<!-- 
+springgreen
+orange
+red
+
+cornflowerblue
+gray -->
+
+
+
                 </tr>
             </table>
         </div>

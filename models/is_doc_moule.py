@@ -79,6 +79,21 @@ class IsDocMoule(models.Model):
             obj.actuelle = actuelle
 
 
+    @api.depends('j_prevue')
+    def _compute_date_j_prevue(self):
+        for obj in self:
+            date_j_prevue=False
+            rl=False
+            if obj.idmoule:
+                rl=obj.idmoule.revue_lancement_id
+            if obj.dossierf_id:
+                actuelle=obj.dossierf_id.revue_lancement_id
+            if rl:
+                if obj.j_prevue and obj.j_prevue!='J6':
+                    date_j_prevue = getattr(rl, "rl_date_%s"%obj.j_prevue.lower())
+            obj.date_j_prevue = date_j_prevue
+
+
     type_document = fields.Selection(TYPE_DOCUMENT,string="Type de document", default="Moule", required=True, tracking=True)
     sequence = fields.Integer(string="Ordre", tracking=True, copy=False)
     project_prev     = fields.Html(compute='_compute_project_prev', store=True)
@@ -100,6 +115,7 @@ class IsDocMoule(models.Model):
     idcp             = fields.Many2one(related="idmoule.chef_projet_id", string="CP", tracking=True)
     idresp           = fields.Many2one("res.users", string="Responsable", tracking=True)
     j_prevue         = fields.Selection(GESTION_J, string="J Prévue", tracking=True)
+    date_j_prevue    = fields.Date(string="Date J prévue", compute='_compute_date_j_prevue',store=True, readonly=True)
     actuelle         = fields.Selection(GESTION_J, string="J Actuelle", tracking=True, compute='_compute_actuelle',store=True, readonly=True)
     demande          = fields.Char(string="Demande", tracking=True)
     action           = fields.Selection(DOCUMENT_ACTION, string="Action", compute='_compute_action', store=True, readonly=True, tracking=True, copy=False)
@@ -110,14 +126,14 @@ class IsDocMoule(models.Model):
     note                = fields.Integer(string="Note"          , compute='_compute_coefficient_bloquant_note',store=True, readonly=True, tracking=True)
     indicateur          = fields.Html(string="Indicateur"       , compute='_compute_indicateur'               ,store=True, readonly=True)
     datecreate          = fields.Date(string="Date de création", default=fields.Date.context_today)
-    dateend             = fields.Date(string="Date fin (Ne plus utiliser)", tracking=True, readonly=True, help="Remplacé par date_fin_gantt le 05/12/2024")
+    dateend             = fields.Date(string="Date fin dynacase (Ne plus utiliser)", tracking=True, readonly=True, help="Remplacé par date_fin_gantt le 05/12/2024")
     array_ids           = fields.One2many("is.doc.moule.array", "is_doc_id", string="Pièce-jointe de réponse à la demande")
     dynacase_id         = fields.Integer(string="Id Dynacase",index=True,copy=False)
     duree               = fields.Integer(string="Durée (J)"      , help="Durée en jours ouvrés"         , default=1, tracking=True)
     duree_gantt         = fields.Integer(string="Durée Gantt (J)", help="Durée calendaire pour le Gantt", default=1, tracking=True, readonly=True)
     duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
-    date_debut_gantt    = fields.Date(string="Date début Gantt", default=lambda self: self._date_debut_gantt(), tracking=True)
-    date_fin_gantt      = fields.Date(string="Date fin Gantt", tracking=True)
+    date_debut_gantt    = fields.Date(string="Date début", default=lambda self: self._date_debut_gantt(), tracking=True)
+    date_fin_gantt      = fields.Date(string="Date fin", tracking=True)
     section_id          = fields.Many2one("is.section.gantt", string="Section Gantt",index=True, tracking=True, copy=False)
     gantt_pdf           = fields.Boolean("Gantt PDF", default=True, help="Afficher dans Gantt PDF")
     dependance_id       = fields.Many2one("is.doc.moule", string="Dépendance",index=True, tracking=True, copy=False)
@@ -152,7 +168,7 @@ class IsDocMoule(models.Model):
                     obj.rsp_date=False
 
 
-    @api.depends('etat','date_fin_gantt')
+    @api.depends('etat','date_fin_gantt','date_j_prevue')
     def _compute_color(self):
         "Retourne la couleur de l'indicateur en fonction de différent paramètres"
         for obj in self:
@@ -161,13 +177,13 @@ class IsDocMoule(models.Model):
                 if obj.etat=='F':
                     color='SpringGreen'
                 else:
-                    color = 'orange'
+                    color = 'Orange'
                     if obj.date_fin_gantt and now>obj.date_fin_gantt:
                         color='Red'
             else:
                 color = 'Lavender'
                 if not obj.date_fin_gantt:
-                    color = 'orange'
+                    color = 'Orange'
                 if obj.action=='':
                     color = 'Lavender'
                 if obj.etat=='AF':
@@ -177,8 +193,12 @@ class IsDocMoule(models.Model):
                 if obj.date_fin_gantt:
                     if now>obj.date_fin_gantt:
                         color='Red'
+                if obj.etat in ('AF','D') and obj.date_j_prevue and obj.date_fin_gantt:
+                    if obj.date_fin_gantt> obj.date_j_prevue:
+                        color='Gray'
                 if obj.etat=='F':
                     color='SpringGreen'
+
                 # if ($name_fam=="DFAB")  $color = "Lavender"; // Traitement particulier pour les dossiers de fab
             obj.color=color
 
