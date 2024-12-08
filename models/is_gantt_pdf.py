@@ -74,7 +74,6 @@ class IsGanttPdf(models.Model):
             obj.section_ids = lines
 
 
-
     @api.depends('type_document', 'moule_id', 'dossierf_id', 'dossier_modif_variante_id', 'dossier_article_id', 'dossier_appel_offre_id')
     def _compute_name(self):
         for obj in self:
@@ -113,6 +112,7 @@ class IsGanttPdf(models.Model):
                     field_id       : dossier_id,
                 }
                 gantt_pdf = self.env['is.gantt.pdf'].create(vals)
+                gantt_pdf.onchange_moule()
                 gantt_pdf_id = gantt_pdf.id
         return gantt_pdf_id
 
