@@ -455,7 +455,14 @@
             <field name="name">is_doc_moule_moule_tree</field>
             <field name="model">is.doc.moule</field>
             <field name="arch" type="xml">
-                <tree string="Document moule">
+                <!-- <tree 
+                    string="Document moule"
+                    decoration-muted="etat=='F'"
+                    decoration-info="color=='cornflowerblue'"
+                    decoration-warning="color=='Red'"
+                    decoration-danger="color=='Gray'"
+                > -->
+                 <tree string="Document moule">
                     <field name="section_id"          optional="show"/>
                     <field name="sequence"            optional="show"/>
                     <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
@@ -490,6 +497,7 @@
                     <field name="gantt_pdf"           optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
                     <field name="dynacase_id"  optional="hide"/>
+                    <field name="color" invisible="1"/>
                 </tree>
             </field>
         </record>
