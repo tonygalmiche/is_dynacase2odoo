@@ -40,10 +40,8 @@ class SuiviProjet extends Component {
 
 
     onChangeInput(ev) {
-        console.log("onChangeInput",ev.target.name,ev.target.value);
         this.state[ev.target.name] = ev.target.value;
     }
-
 
 
     OKkey(ev) {
@@ -107,7 +105,6 @@ class SuiviProjet extends Component {
     MouleDossierfClick(ev) {
         const res_model = ev.target.attributes.res_model.value;
         const res_id    = ev.target.attributes.res_id.value;
-        console.log(res_model, res_id)
         this.action.doAction({
             type: 'ir.actions.act_window',
             //target: 'new',
@@ -119,7 +116,6 @@ class SuiviProjet extends Component {
     DynacaseClick(ev) {
         const dynacase_id    = ev.target.attributes.dynacase_id.value;
         const url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id="+dynacase_id;
-        console.log('dynacase_id=',dynacase_id,url);
         this.action.doAction({
             type: 'ir.actions.act_url',
             target: 'new',
@@ -130,21 +126,11 @@ class SuiviProjet extends Component {
 
 
     ListeDocClick(ev) {
-
-        console.log(this.state.suivi_projet_modele_id);
-
         const res_model = ev.target.attributes.res_model.value;
         const res_id    = ev.target.attributes.res_id.value;
         const modele_id = this.state.suivi_projet_modele_id;
-
-
         this.getDocModele(res_model,res_id,modele_id);
-
-
     }
-
-
-
     async getDocModele(res_model,res_id,modele_id){
         const params={
             "res_model": res_model,        
@@ -152,9 +138,6 @@ class SuiviProjet extends Component {
             "modele_id": modele_id,        
         }
         var res = await this.orm.call("is.doc.moule", 'get_doc_modele', [false],params);
-        console.log(res_model,res_id,modele_id,res);
-  
-
         this.action.doAction({
             type: 'ir.actions.act_window',
             name: 'Liste',
@@ -165,14 +148,76 @@ class SuiviProjet extends Component {
                 ['id','in',res.ids],
             ],
         });
-
-        // #views: [[false, 'tree'],[false, 'form']],
-
-
-
     }
 
 
+    ZipDocClick(ev) {
+        const res_model = ev.target.attributes.res_model.value;
+        const res_id    = ev.target.attributes.res_id.value;
+        const modele_id = this.state.suivi_projet_modele_id;
+        this.getZIP(res_model,res_id,modele_id);
+    }
+    async getZIP(res_model,res_id,modele_id){
+        const params={
+            "res_model": res_model,        
+            "res_id"   : res_id,        
+            "modele_id": modele_id,        
+        }
+        var res = await this.orm.call("is.doc.moule", 'get_zip', [false],params);
+        var attachment_id = res.attachment_id
+        if (attachment_id){
+            this.action.doAction({
+                type: 'ir.actions.act_url',
+                url: '/web/content/'+attachment_id+'?download=true'
+            });
+        }
+    }
+
+
+    CRJalonClick(ev) {
+        const res_model = ev.target.attributes.res_model.value;
+        const res_id    = ev.target.attributes.res_id.value;
+        const modele_id = this.state.suivi_projet_modele_id;
+        this.getCRJalon(res_model,res_id,modele_id);
+    }
+    async getCRJalon(res_model,res_id,modele_id){
+        const params={
+            "res_model": res_model,        
+            "res_id"   : res_id,        
+            "modele_id": modele_id,        
+        }
+        var res = await this.orm.call("is.doc.moule", 'get_cr_jalon', [false],params);
+        this.action.doAction({
+            type: 'ir.actions.act_window',
+            res_id: parseInt(res.id),
+            res_model: res.model,
+            views: [[false, 'form']],
+        });
+    }
+
+
+    CRRisqueClick(ev) {
+        const res_model = ev.target.attributes.res_model.value;
+        const res_id    = ev.target.attributes.res_id.value;
+        const modele_id = this.state.suivi_projet_modele_id;
+        this.getCRRisque(res_model,res_id,modele_id);
+    }
+    async getCRRisque(res_model,res_id,modele_id){
+        const params={
+            "res_model": res_model,        
+            "res_id"   : res_id,        
+            "modele_id": modele_id,        
+        }
+        var res = await this.orm.call("is.doc.moule", 'get_cr_risque', [false],params);
+        if (res.id){
+            this.action.doAction({
+                type: 'ir.actions.act_window',
+                res_id: parseInt(res.id),
+                res_model: res.model,
+                views: [[false, 'form']],
+            });
+        }
+    }
 
 
     async getSuiviProjet(ok=false){

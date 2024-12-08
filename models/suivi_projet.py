@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _                                    # type: ignore
 from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J # type: ignore
+from odoo.exceptions import AccessError, ValidationError, UserError        # type: ignore
 from datetime import datetime, timedelta, date
+from pathlib import Path
+from subprocess import PIPE, Popen
 import copy
+import base64
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -472,9 +476,7 @@ class IsDocMoule(models.Model):
         return res
 
     
-    def get_doc_modele(self,res_model,res_id,modele_id):
-        tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_suivi_projet_tree_view').id
-        famille_ids=[]
+    def _get_doc_modele(self,res_model,res_id,modele_id):
         modele_bilan = self.env['is.modele.bilan'].browse(int(modele_id))
         if modele_bilan:
             famille_ids=modele_bilan.get_famille_ids()
@@ -489,13 +491,124 @@ class IsDocMoule(models.Model):
                 ('dossierf_id','=',int(res_id)),
                 ('param_project_id','in',famille_ids),
             ]
-        ids=[]
+        docs=False
         if domain:
             docs=self.env['is.doc.moule'].search(domain)
+        return docs
+
+
+    def get_doc_modele(self,res_model,res_id,modele_id):
+        tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_suivi_projet_tree_view').id
+        docs = self._get_doc_modele(res_model,res_id,modele_id)
+        ids=[]
+        if docs:
             for doc in docs:
                 ids.append(doc.id)
         res = {
             'ids'    : ids,
             'tree_id': tree_id,
+        }
+        return res
+    
+
+    def get_zip(self,res_model,res_id,modele_id):
+        attachment_id=False
+        docs = self._get_doc_modele(res_model,res_id,modele_id)
+        ids=[]
+        if docs:
+            for doc in docs:
+                ids.append(doc.id)
+        nb_pdf=0
+        if ids!=[]:
+            domain=[('id', 'in', ids)]
+            docs=self.env['is.doc.moule'].search(domain)
+            if len(docs)>0:
+                moule_dossierf = doc[0].moule_dossierf
+                name_dossier   = "dossier-%s-%s"%(moule_dossierf,self._uid)
+                tmp_dir        = "/tmp/%s"%name_dossier 
+                Path(tmp_dir).mkdir(parents=True, exist_ok=True)
+                for doc in docs:
+                    for line in doc.array_ids:
+                        for attachment in line.annex_pdf:
+                            if attachment.datas:
+                                file_name = '/%s/%s'%(tmp_dir,attachment.name)
+                                with open(file_name,'wb') as f:
+                                    f.write(base64.decodebytes(attachment.datas))
+                                    nb_pdf+=1
+                if nb_pdf>0:
+                    cde = 'cd /tmp && zip -r %s.zip %s'%(name_dossier,name_dossier)
+                    p = Popen(cde, shell=True, stdout=PIPE, stderr=PIPE)
+                    stdout, stderr = p.communicate()
+                    _logger.info("cde:%s, stdout:%s, stderr:%s"%(cde,stdout.decode("utf-8"),stderr.decode("utf-8")))
+                    if stderr:
+                        raise ValidationError("%s\n%s"%(cde,stderr.decode("utf-8")))
+                    else: 
+                        # ** Creation ou modification de la pièce jointe ******
+                        name ="%s.zip"%name_dossier
+                        path="/tmp/%s"%name
+                        zip = open(path,'rb').read()
+                        attachments = self.env['ir.attachment'].search([('name','=',name)],limit=1)
+                        vals = {
+                            'name':        name,
+                            'type':        'binary',
+                            'datas':       base64.b64encode(zip),
+                        }
+                        if attachments:
+                            for attachment in attachments:
+                                attachment.write(vals)
+                                attachment_id=attachment.id
+                        else:
+                            attachment = self.env['ir.attachment'].create(vals)
+                            attachment_id=attachment.id
+                        #***********************************************************************
+
+
+                        # # ** Création piece jointe du zip *********************
+                        # name ="%s.zip"%name_dossier
+                        # vals = {
+                        #     'name':        name,
+                        #     'type':        'binary',
+                        #     'datas':        base64.b64encode(zip),
+                        # }
+                        # attachment = self.env['ir.attachment'].create(vals)
+                        # attachment_id = attachment.id
+                        # #******************************************************
+
+        res = {
+            'attachment_id'    : attachment_id,
+        }
+        return res
+    
+
+    def get_cr_jalon(self,res_model,res_id,modele_id):
+        domain=False
+        if res_model=='is.mold':
+            domain=[('rpj_mouleid','=',int(res_id))]
+        if res_model=='is.dossierf':
+            domain=[('dossierf_id','=',int(res_id))]
+        id=False
+        if domain:
+            docs=self.env['is.revue.projet.jalon'].search(domain, order="id desc", limit=1)
+            for doc in docs:
+                id=doc.id
+        res = {
+            'id'   : id,
+            'model': 'is.revue.projet.jalon',
+        }
+        return res
+    
+
+    def get_cr_risque(self,res_model,res_id,modele_id):
+        domain=False
+        if res_model=='is.mold':
+            domain=[('rr_mouleid','=',int(res_id))]
+        id=False
+        if domain:
+            docs=self.env['is.revue.risque'].search(domain, order="id desc", limit=1)
+            for doc in docs:
+                id=doc.id
+        res = {
+            'id'   : id,
+            'model': 'is.revue.risque',
         }
         return res

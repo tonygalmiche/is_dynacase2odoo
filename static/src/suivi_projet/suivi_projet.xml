@@ -115,16 +115,42 @@
                                         <img style='height:60px' t-att-src="line.photo"/>
                                     </td>
                                     <td>
+                                        <div class="nowrap">
+                                            <img 
+                                                src="/is_dynacase2odoo/static/src/img/date_projet.png" 
+                                                style="height:15px"
+                                                class="link"
+                                                t-on-click="ListeDocClick" 
+                                                t-att-res_id="line.moule_id"
+                                                t-att-res_model="line.res_model"
+                                                title="Liste des documents"
+                                            />
+                                            <span 
+                                                class="link"
+                                                t-on-click="ZipDocClick" 
+                                                t-att-res_id="line.moule_id"
+                                                t-att-res_model="line.res_model"
+                                                title="ZIP des documents"
+                                            >Zip</span>
+                                        </div>
                                         <img 
-                                            src="/is_dynacase2odoo/static/src/img/date_projet.png" 
+                                            src="/is_dynacase2odoo/static/src/img/pg_revue_projet_jalon.png" 
                                             style="height:15px"
                                             class="link"
-                                            t-on-click="ListeDocClick" 
+                                            t-on-click="CRJalonClick" 
                                             t-att-res_id="line.moule_id"
                                             t-att-res_model="line.res_model"
-                                            title="Liste des documents"
+                                            title="Consulter le dernier CR Revue de projet jalon"
                                         />
-
+                                        <img 
+                                            src="/is_dynacase2odoo/static/src/img/pg_revue_risque.png" 
+                                            style="height:15px"
+                                            class="link"
+                                            t-on-click="CRRisqueClick" 
+                                            t-att-res_id="line.moule_id"
+                                            t-att-res_model="line.res_model"
+                                            title="Consulter la dernière Revue des risques"
+                                        />
                                     </td>
                                     <td><span t-esc="line.cp"/></td>
                                     <td>
