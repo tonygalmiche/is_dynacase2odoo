@@ -209,7 +209,7 @@ class IsDocMoule(models.Model):
                                                       join res_partner client               on imp.client_id=client.id
                                                       join is_doc_moule idm                 on idm.dossier_article_id=article.article_id
                                                       join is_param_project ipp             on idm.param_project_id=ipp.id
-                where idm.active='t' and idm.param_project_id in (%s) %s
+                where idm.active='t' and idm.suivi_projet='t' and idm.param_project_id in (%s) %s
             """%(','.join(modele_ids),WHERE)
 
 
@@ -252,7 +252,7 @@ class IsDocMoule(models.Model):
                                                       join is_doc_moule idm                 on idm.dossier_article_id=article.article_id
                                                       join is_param_project ipp             on idm.param_project_id=ipp.id
 
-                where idm.active='t' and idm.param_project_id in (%s) %s
+                where idm.active='t' and idm.suivi_projet='t' and idm.param_project_id in (%s) %s
             """%(','.join(modele_ids),WHERE)
 
 
@@ -295,7 +295,7 @@ class IsDocMoule(models.Model):
                                     inner join res_partner rp       on ru.partner_id=rp.id
                                     inner join res_partner client   on imp.client_id=client.id
                                     inner join is_param_project ipp on idm.param_project_id=ipp.id
-                where idm.active='t' and idm.param_project_id in (%s) %s
+                where idm.active='t' and idm.suivi_projet='t' and idm.param_project_id in (%s) %s
             """%(','.join(modele_ids),WHERE)
 
 
@@ -335,7 +335,7 @@ class IsDocMoule(models.Model):
                                     inner join res_partner rp       on ru.partner_id=rp.id
                                     inner join res_partner client   on imp.client_id=client.id
                                     inner join is_param_project ipp on idm.param_project_id=ipp.id
-                where idm.active='t' and idm.param_project_id in (%s) %s 
+                where idm.active='t' and idm.suivi_projet='t' and idm.param_project_id in (%s) %s 
                 limit 500
             """%(','.join(modele_ids),WHERE)
 

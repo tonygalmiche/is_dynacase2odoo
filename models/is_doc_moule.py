@@ -138,6 +138,7 @@ class IsDocMoule(models.Model):
         ("01", "Conforme à la norme FMV SS n°302 < 102 mm/min (ou 4 inches/min)"),
         ("02", "Conforme à l’exigence client < 80 mm/min"),
     ],string="Conforme", tracking=True)
+    suivi_projet        = fields.Boolean(string="Suivi des projets", default=True, tracking=True, help="Indique si c'est ce document qui doit être affiché dans le suivi des projets dans le cas où il y a plusieurs documents de la même famille")
 
 
     @api.onchange('etat')
@@ -402,6 +403,114 @@ class IsDocMoule(models.Model):
             obj._compute_coefficient_bloquant_note()
             obj._compute_color()
             obj._compute_indicateur()
+        return []
+
+
+
+
+
+
+# TYPE_DOCUMENT=[
+#     ("Moule"                 , "Moule"),
+#     ("Dossier F"             , "Dossier F"),
+#     ("Article"               , "Article"),
+#     ("Dossier Modif Variante", "Dossier Modif Variante"),
+#     ("dossier_appel_offre"   , "Dossier appel d'offre"),
+# ]
+
+#    idmoule          = fields.Many2one("is.mold"                  , string="Moule"    , tracking=True, index=True)
+#     dossierf_id      = fields.Many2one("is.dossierf"              , string="Dossier F", tracking=True, index=True)
+#     dossier_modif_variante_id = fields.Many2one("is.dossier.modif.variante", string="Dossier Modif / Variante", tracking=True)
+#     dossier_article_id        = fields.Many2one("is.dossier.article"       , string="Dossier article", index=True, tracking=True)
+#     dossier_appel_offre_id    = fields.Many2one("is.dossier.appel.offre"   , string="Dossier appel d'offre", tracking=True)
+
+
+    def get_domain_type_document(self):
+        for obj in self:
+            domain=[]
+            if obj.type_document=='Moule':
+                if obj.idmoule.id:
+                    domain=[('idmoule', '=', obj.idmoule.id)]
+            if obj.type_document=='Dossier F':
+                if obj.dossierf_id.id:
+                    domain=[('dossierf_id', '=', obj.dossierf_id.id)]
+            if obj.type_document=='Article':
+                if obj.dossier_modif_variante_id.id:
+                    domain=[('dossier_modif_variante_id', '=', obj.dossier_modif_variante_id.id)]
+            if obj.type_document=='Dossier Modif Variante':
+                if obj.dossier_article_id.id:
+                    domain=[('dossier_article_id', '=', obj.dossier_article_id.id)]
+            if obj.type_document=='dossier_appel_offre':
+                if obj.dossier_appel_offre_id.id:
+                    domain=[('dossier_appel_offre_id', '=', obj.dossier_appel_offre_id.id)]
+            return domain
+
+
+    def actualisation_champ_suivi_projet_action(self):
+        nb=len(self)
+        ct=1
+        for obj in self:
+
+
+
+
+            domain=obj.get_domain_type_document()
+            if domain!=[]:
+                domain.append(('param_project_id', '=', obj.param_project_id.id))
+                docs=self.env['is.doc.moule'].search(domain,order='j_prevue')
+                nb_doc = len(docs)
+
+                _logger.info("actualisation_champ_suivi_projet_action : %s/%s : nb_doc=%s : %s : %s : %s"%(ct,nb,nb_doc,obj.moule_dossierf,obj.param_project_id.ppr_famille,obj.j_prevue))
+
+
+                #** Initialisation à False de tous les documents **************
+                res={}
+                for doc in docs:
+                    res[doc]=False
+
+                #** Permet de savoir si un docuement répond aux criteres ******
+                test=False
+
+                #** Si un seul document, il est forcement actif ***************
+                if nb_doc==1:
+                    for doc in docs:
+                        res[doc]=True
+                        test=True
+
+                #** True si 'A Faire' et le plus ancien <= j actuelle *********
+                if not test:
+                    for doc in docs:
+                        if doc.j_prevue and doc.actuelle:
+                            if doc.j_prevue<=doc.actuelle and doc.etat!='F':
+                                res[doc]=True
+                                test=True
+                                break
+
+               #** Recherche du dernier document <= j actuelle ***************
+                if not test:
+                    last_doc=False
+                    for doc in docs:
+                        if doc.j_prevue and doc.actuelle:
+                            if doc.j_prevue<=doc.actuelle:
+                                last_doc = doc
+                    if last_doc:
+                        res[last_doc]=True
+                        test=True
+                    
+                #** Recherche du premier document > actuelle ******************
+                if not test:
+                    last_doc=False
+                    for doc in docs:
+                        if doc.j_prevue and doc.actuelle:
+                            if doc.j_prevue>doc.actuelle:
+                                res[doc]=True
+                                test=True
+                                break
+
+                #** Mise à jour des documents *********************************
+                for doc in docs:
+                    doc.suivi_projet = res[doc]
+            ct+=1
         return []
 
 
