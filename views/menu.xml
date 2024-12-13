@@ -157,12 +157,12 @@
             <field name="action"    ref="is_plastigray16.is_mold_action"/>
         </record>
 
-        <!-- <record id="is_revue_risque_menu" model="ir.ui.menu" >
+        <record id="is_revue_risque_menu" model="ir.ui.menu" >
             <field name="name">Revue des risques projet</field>
             <field name="sequence">41</field>
             <field name="parent_id" eval="ref('is_projet_moule_menu')"/>
             <field name="action"    ref="is_revue_risque_action"/>
-        </record> -->
+        </record>
         <record id="is_revue_projet_jalon_menu" model="ir.ui.menu" >
             <field name="name">CR revue projet jalon</field>
             <field name="sequence">50</field>
