@@ -39,6 +39,7 @@ access_user_is_revue_projet_jalon_decomposition_prix,access_is_revue_projet_jalo
 
 
 access_user_is_revue_risque,access_is_revue_risque,model_is_revue_risque,base.group_user,1,0,0,0
+access_chef_projet_is_revue_risque,access_chef_projet_is_revue_risque,model_is_revue_risque,is_plastigray16.is_chef_projet_group,1,1,1,1
 access_user_is_revue_risque_bilan,access_is_revue_risque_bilan,model_is_revue_risque_bilan,base.group_user,1,1,1,1
 
 access_is_section_gantt,access_is_section_gantt,model_is_section_gantt,base.group_user,1,0,0,0
