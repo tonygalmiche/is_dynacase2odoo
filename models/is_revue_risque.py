@@ -28,95 +28,92 @@ class is_revue_risque(models.Model):
     dossierf_id = fields.Many2one("is.dossierf", string="Dossier F", tracking=True, index=True)
 
     rr_indice  = fields.Integer(string="Indice", tracking=True)
-    rr_j_actuelle = fields.Selection([
-        ("J0", "Préparation J0"),
-        ("J1", "Préparation J1"),
-        ("J2", "Préparation J2"),
-        ("J3", "Préparation J3"),
-        ("J4", "Préparation J4"),
-        ("J5", "Préparation J5"),
-        ("J6", "J5 validé"),
-    ], string="J actuelle"  
-                                                                                             
-                                                                                             
-                                                                                                                                                                                      , compute='_compute',store=True, readonly=True)
-    rr_revue_lancementid                  = fields.Many2one("is.revue.lancement", string="Revue de lancement"        , compute='_compute',store=True, readonly=True)
-    rr_clientid                           = fields.Many2one("res.partner", string="Client"                           , compute='_compute',store=True, readonly=True)
-    rr_projetid                           = fields.Many2one("is.mold.project", string="Projet"                       , compute='_compute',store=True, readonly=True)
-    rr_rpjid                              = fields.Many2one("is.revue.projet.jalon", string="Dernier CR projet jalon", compute='_compute',store=True, readonly=True)
+    # rr_j_actuelle = fields.Selection([
+    #     ("J0", "Préparation J0"),
+    #     ("J1", "Préparation J1"),
+    #     ("J2", "Préparation J2"),
+    #     ("J3", "Préparation J3"),
+    #     ("J4", "Préparation J4"),
+    #     ("J5", "Préparation J5"),
+    #     ("J6", "J5 validé"),
+    # ], string="J actuelle", compute='_compute',store=True, readonly=True)
+    # rr_revue_lancementid                  = fields.Many2one("is.revue.lancement", string="Revue de lancement"        , compute='_compute',store=True, readonly=True)
+    # rr_clientid                           = fields.Many2one("res.partner", string="Client"                           , compute='_compute',store=True, readonly=True)
+    # rr_projetid                           = fields.Many2one("is.mold.project", string="Projet"                       , compute='_compute',store=True, readonly=True)
+    # rr_rpjid                              = fields.Many2one("is.revue.projet.jalon", string="Dernier CR projet jalon", compute='_compute',store=True, readonly=True)
 
-    rr_bilan_ar                           = fields.One2many("is.revue.risque.bilan", "rr_risqueid", string="Bilan", compute='_compute_rr_bilan_ar', store=True, readonly=True, copy=False)
+    # rr_bilan_ar                           = fields.One2many("is.revue.risque.bilan", "rr_risqueid", string="Bilan", compute='_compute_rr_bilan_ar', store=True, readonly=True, copy=False)
 
-    rr_risques_risque_design              = fields.Integer(string="Design / Industrialisation", compute='_compute_risque_design'      , store=True, readonly=True, copy=False)
-    rr_risques_risque_supply_chain        = fields.Integer(string="Supply chain / Achat"      , compute='_compute_risque_supply_chain', store=True, readonly=True, copy=False)
-    rr_risques_risque_qualite             = fields.Integer(string="Qualite"                   , compute='_compute_risque_qualite'     , store=True, readonly=True, copy=False)
-    rr_risques_risque_leadership          = fields.Integer(string="Leadership / Finances"     , compute='_compute_risque_leadership'  , store=True, readonly=True, copy=False)
+    # rr_risques_risque_design              = fields.Integer(string="Design / Industrialisation", compute='_compute_risque_design'      , store=True, readonly=True, copy=False)
+    # rr_risques_risque_supply_chain        = fields.Integer(string="Supply chain / Achat"      , compute='_compute_risque_supply_chain', store=True, readonly=True, copy=False)
+    # rr_risques_risque_qualite             = fields.Integer(string="Qualite"                   , compute='_compute_risque_qualite'     , store=True, readonly=True, copy=False)
+    # rr_risques_risque_leadership          = fields.Integer(string="Leadership / Finances"     , compute='_compute_risque_leadership'  , store=True, readonly=True, copy=False)
 
-    rr_retour_experience                  = fields.Selection(_SELECT_RISQUE, string="Retour d’expérience - Process similaire", tracking=True, default=False)
-    rr_retour_experience_comment          = fields.Char(string="Retour d’expérience - Process similaire ", tracking=True)
-    rr_exigence_specifique                = fields.Selection(_SELECT_RISQUE, string="Exigences spécifiques liées à la matière / mélange maître", tracking=True)
-    rr_exigence_specifique_comment        = fields.Char(string="Exigences spécifiques liées à la matière / mélange maître ", tracking=True)
-    rr_planning_previsionnel              = fields.Selection(_SELECT_RISQUE, string="Planning prévisionnel", tracking=True)
-    rr_planning_previsionnel_comment      = fields.Char(string="Planning prévisionnel ", tracking=True)
-    rr_plan_piece                         = fields.Selection(_SELECT_RISQUE, string="Plan pièce / CS produit-Process", tracking=True)
-    rr_plan_piece_comment                 = fields.Char(string="Plan pièce / CS produit-Process ", tracking=True)
-    rr_norme_applicable                   = fields.Selection(_SELECT_RISQUE, string="Normes applicables", tracking=True)
-    rr_norme_applicable_comment           = fields.Char(string="Normes applicables ", tracking=True)
-    rr_conception_piece                   = fields.Selection(_SELECT_RISQUE, string="Conception pièce", tracking=True)
-    rr_conception_piece_comment           = fields.Char(string="Conception pièce ", tracking=True)
-    rr_injection                          = fields.Selection(_SELECT_RISQUE, string="Injection (paramètres / passage en process 4.0)", tracking=True)
-    rr_injection_comment                  = fields.Char(string="Injection (paramètres / passage en process 4.0) ", tracking=True)
-    rr_design_moule                       = fields.Selection(_SELECT_RISQUE, string="Moule ", tracking=True)
-    rr_design_moule_comment               = fields.Char(string="Moule.", tracking=True)
-    rr_methode_mesure                     = fields.Selection(_SELECT_RISQUE, string="Méthode de mesure / Gabarit de contrôle", tracking=True)
-    rr_methode_mesure_comment             = fields.Char(string="Méthode de mesure / Gabarit de contrôle.", tracking=True)
-    rr_composant                          = fields.Selection(_SELECT_RISQUE, string="Composants + Intégration de nouveaux produits chimiques", tracking=True)
-    rr_composant_comment                  = fields.Char(string="Composants + Intégration de nouveaux produits chimiques ", tracking=True)
-    rr_machine_speciale                   = fields.Selection(_SELECT_RISQUE, string="Machine Spéciale / Poka-Yoké", tracking=True)
-    rr_machine_speciale_comment           = fields.Char(string="Machine Spéciale / Poka-Yoké.", tracking=True)
-    rr_decoration                         = fields.Selection(_SELECT_RISQUE, string="Décoration (tampographie / Laser / Peinture)", tracking=True)
-    rr_decoration_comment                 = fields.Char(string="Décoration (tampographie / Laser / Peinture) ", tracking=True)
-    rr_parachevement                      = fields.Selection(_SELECT_RISQUE, string="Parachèvement (soudure / collage / Peinture ...)", tracking=True)
-    rr_parachevement_comment              = fields.Char(string="Parachèvement (soudure / collage / Peinture ...) ", tracking=True)
+    # rr_retour_experience                  = fields.Selection(_SELECT_RISQUE, string="Retour d’expérience - Process similaire", tracking=True, default=False)
+    # rr_retour_experience_comment          = fields.Char(string="Retour d’expérience - Process similaire ", tracking=True)
+    # rr_exigence_specifique                = fields.Selection(_SELECT_RISQUE, string="Exigences spécifiques liées à la matière / mélange maître", tracking=True)
+    # rr_exigence_specifique_comment        = fields.Char(string="Exigences spécifiques liées à la matière / mélange maître ", tracking=True)
+    # rr_planning_previsionnel              = fields.Selection(_SELECT_RISQUE, string="Planning prévisionnel", tracking=True)
+    # rr_planning_previsionnel_comment      = fields.Char(string="Planning prévisionnel ", tracking=True)
+    # rr_plan_piece                         = fields.Selection(_SELECT_RISQUE, string="Plan pièce / CS produit-Process", tracking=True)
+    # rr_plan_piece_comment                 = fields.Char(string="Plan pièce / CS produit-Process ", tracking=True)
+    # rr_norme_applicable                   = fields.Selection(_SELECT_RISQUE, string="Normes applicables", tracking=True)
+    # rr_norme_applicable_comment           = fields.Char(string="Normes applicables ", tracking=True)
+    # rr_conception_piece                   = fields.Selection(_SELECT_RISQUE, string="Conception pièce", tracking=True)
+    # rr_conception_piece_comment           = fields.Char(string="Conception pièce ", tracking=True)
+    # rr_injection                          = fields.Selection(_SELECT_RISQUE, string="Injection (paramètres / passage en process 4.0)", tracking=True)
+    # rr_injection_comment                  = fields.Char(string="Injection (paramètres / passage en process 4.0) ", tracking=True)
+    # rr_design_moule                       = fields.Selection(_SELECT_RISQUE, string="Moule ", tracking=True)
+    # rr_design_moule_comment               = fields.Char(string="Moule.", tracking=True)
+    # rr_methode_mesure                     = fields.Selection(_SELECT_RISQUE, string="Méthode de mesure / Gabarit de contrôle", tracking=True)
+    # rr_methode_mesure_comment             = fields.Char(string="Méthode de mesure / Gabarit de contrôle.", tracking=True)
+    # rr_composant                          = fields.Selection(_SELECT_RISQUE, string="Composants + Intégration de nouveaux produits chimiques", tracking=True)
+    # rr_composant_comment                  = fields.Char(string="Composants + Intégration de nouveaux produits chimiques ", tracking=True)
+    # rr_machine_speciale                   = fields.Selection(_SELECT_RISQUE, string="Machine Spéciale / Poka-Yoké", tracking=True)
+    # rr_machine_speciale_comment           = fields.Char(string="Machine Spéciale / Poka-Yoké.", tracking=True)
+    # rr_decoration                         = fields.Selection(_SELECT_RISQUE, string="Décoration (tampographie / Laser / Peinture)", tracking=True)
+    # rr_decoration_comment                 = fields.Char(string="Décoration (tampographie / Laser / Peinture) ", tracking=True)
+    # rr_parachevement                      = fields.Selection(_SELECT_RISQUE, string="Parachèvement (soudure / collage / Peinture ...)", tracking=True)
+    # rr_parachevement_comment              = fields.Char(string="Parachèvement (soudure / collage / Peinture ...) ", tracking=True)
 
-    rr_capacitaire                        = fields.Selection(_SELECT_RISQUE, string="Capacitaire et montée en cadence", tracking=True)
-    rr_capacitaire_comment                = fields.Char(string="Capacitaire et montée en cadence ", tracking=True)
-    rr_conditionnement                    = fields.Selection(_SELECT_RISQUE, string="Conditionnement et transport", tracking=True)
-    rr_conditionnement_comment            = fields.Char(string="Conditionnement et transport ", tracking=True)
-    rr_identification_tracabilite         = fields.Selection(_SELECT_RISQUE, string="Identification et traçabilité", tracking=True)
-    rr_identification_tracabilite_comment = fields.Char(string="Identification et traçabilité.", tracking=True)
-    rr_validation_fournisseur             = fields.Selection(_SELECT_RISQUE, string="Validation fournisseur ", tracking=True)
-    rr_validation_fournisseur_comment     = fields.Char(string="Validation fournisseur.", tracking=True)
-    rr_capacitaire_fournisseur            = fields.Selection(_SELECT_RISQUE, string="Capacitaires et montée en cadence fournisseurs", tracking=True)
-    rr_capacitaire_fournisseur_comment    = fields.Char(string="Capacitaires et montée en cadence fournisseurs ", tracking=True)
-    rr_presse_substitution                = fields.Selection(_SELECT_RISQUE, string="Presse de substitution", tracking=True)
-    rr_presse_substitution_comment        = fields.Char(string="Presse de substitution ", tracking=True)
-    rr_modification_csr                   = fields.Selection(_SELECT_RISQUE, string="Revue des CSR client par rapport aux exigences propres au projet", tracking=True)
-    rr_modification_csr_comment           = fields.Char(string="Revue des CSR client par rapport aux exigences propres au projet ", tracking=True)
-    rr_critere_acceptation                = fields.Selection(_SELECT_RISQUE, string="Critères d'acceptation sur le produit ", tracking=True)
-    rr_critere_acceptation_comment        = fields.Char(string="Critères d'acceptation sur le produit  ", tracking=True)
-    rr_exigence_reglementaire             = fields.Selection(_SELECT_RISQUE, string="Exigences réglementaires et légales sur le produit", tracking=True)
-    rr_exigence_reglementaire_comment     = fields.Char(string="Exigences réglementaires et légales sur le produit ", tracking=True)
-    rr_engagement_qualite                 = fields.Selection(_SELECT_RISQUE, string="Engagement qualité (PPM)", tracking=True)
-    rr_engagement_qualite_comment         = fields.Char(string="Engagement qualité (PPM) ", tracking=True)
-    rr_securite_produit                   = fields.Selection(_SELECT_RISQUE, string="Sécurité du produit (protection de l'utilisateur final) + information au PSR", tracking=True)
-    rr_securite_produit_comment           = fields.Char(string="Sécurité du produit (protection de l'utilisateur final) + information au PSR ", tracking=True)
-    rr_rentabilite                        = fields.Selection(_SELECT_RISQUE, string="Rentabilité", tracking=True)
-    rr_rentabilite_comment                = fields.Char(string="Rentabilité.", tracking=True)
-    rr_investissement_necessaire          = fields.Selection(_SELECT_RISQUE, string="Investissements nécessaires", tracking=True)
-    rr_investissement_necessaire_comment  = fields.Char(string="Investissements nécessaires ", tracking=True)
-    rr_competence_effectif                = fields.Selection(_SELECT_RISQUE, string="Compétences et effectifs / Formation", tracking=True)
-    rr_competence_effectif_comment        = fields.Char(string="Compétences et effectifs / Formation.", tracking=True)
-    rr_validation_revue_risque            = fields.Selection([
-        ("OK",  "OK"),
-        ("nOK", "non OK"),
-    ], string="Validation de cette revue des risques", tracking=True)
+    # rr_capacitaire                        = fields.Selection(_SELECT_RISQUE, string="Capacitaire et montée en cadence", tracking=True)
+    # rr_capacitaire_comment                = fields.Char(string="Capacitaire et montée en cadence ", tracking=True)
+    # rr_conditionnement                    = fields.Selection(_SELECT_RISQUE, string="Conditionnement et transport", tracking=True)
+    # rr_conditionnement_comment            = fields.Char(string="Conditionnement et transport ", tracking=True)
+    # rr_identification_tracabilite         = fields.Selection(_SELECT_RISQUE, string="Identification et traçabilité", tracking=True)
+    # rr_identification_tracabilite_comment = fields.Char(string="Identification et traçabilité.", tracking=True)
+    # rr_validation_fournisseur             = fields.Selection(_SELECT_RISQUE, string="Validation fournisseur ", tracking=True)
+    # rr_validation_fournisseur_comment     = fields.Char(string="Validation fournisseur.", tracking=True)
+    # rr_capacitaire_fournisseur            = fields.Selection(_SELECT_RISQUE, string="Capacitaires et montée en cadence fournisseurs", tracking=True)
+    # rr_capacitaire_fournisseur_comment    = fields.Char(string="Capacitaires et montée en cadence fournisseurs ", tracking=True)
+    # rr_presse_substitution                = fields.Selection(_SELECT_RISQUE, string="Presse de substitution", tracking=True)
+    # rr_presse_substitution_comment        = fields.Char(string="Presse de substitution ", tracking=True)
+    # rr_modification_csr                   = fields.Selection(_SELECT_RISQUE, string="Revue des CSR client par rapport aux exigences propres au projet", tracking=True)
+    # rr_modification_csr_comment           = fields.Char(string="Revue des CSR client par rapport aux exigences propres au projet ", tracking=True)
+    # rr_critere_acceptation                = fields.Selection(_SELECT_RISQUE, string="Critères d'acceptation sur le produit ", tracking=True)
+    # rr_critere_acceptation_comment        = fields.Char(string="Critères d'acceptation sur le produit  ", tracking=True)
+    # rr_exigence_reglementaire             = fields.Selection(_SELECT_RISQUE, string="Exigences réglementaires et légales sur le produit", tracking=True)
+    # rr_exigence_reglementaire_comment     = fields.Char(string="Exigences réglementaires et légales sur le produit ", tracking=True)
+    # rr_engagement_qualite                 = fields.Selection(_SELECT_RISQUE, string="Engagement qualité (PPM)", tracking=True)
+    # rr_engagement_qualite_comment         = fields.Char(string="Engagement qualité (PPM) ", tracking=True)
+    # rr_securite_produit                   = fields.Selection(_SELECT_RISQUE, string="Sécurité du produit (protection de l'utilisateur final) + information au PSR", tracking=True)
+    # rr_securite_produit_comment           = fields.Char(string="Sécurité du produit (protection de l'utilisateur final) + information au PSR ", tracking=True)
+    # rr_rentabilite                        = fields.Selection(_SELECT_RISQUE, string="Rentabilité", tracking=True)
+    # rr_rentabilite_comment                = fields.Char(string="Rentabilité.", tracking=True)
+    # rr_investissement_necessaire          = fields.Selection(_SELECT_RISQUE, string="Investissements nécessaires", tracking=True)
+    # rr_investissement_necessaire_comment  = fields.Char(string="Investissements nécessaires ", tracking=True)
+    # rr_competence_effectif                = fields.Selection(_SELECT_RISQUE, string="Compétences et effectifs / Formation", tracking=True)
+    # rr_competence_effectif_comment        = fields.Char(string="Compétences et effectifs / Formation.", tracking=True)
+    # rr_validation_revue_risque            = fields.Selection([
+    #     ("OK",  "OK"),
+    #     ("nOK", "non OK"),
+    # ], string="Validation de cette revue des risques", tracking=True)
     dynacase_id                           = fields.Integer(string="Id Dynacase",index=True,copy=False)
     state                                 = fields.Selection([
         ("rr_brouillon", "Brouillon"),
         ("rr_diffuse",   "Diffusé"),
     ], string="État", tracking=True, default='rr_brouillon')
-    rr_title = fields.Char(string="Revue des risques (champ à supprimer)")
+    # rr_title = fields.Char(string="Revue des risques (champ à supprimer)")
 
 
 
