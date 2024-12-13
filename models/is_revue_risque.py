@@ -114,6 +114,7 @@ class is_revue_risque(models.Model):
         ("rr_diffuse",   "Diffusé"),
     ], string="État", tracking=True, default='rr_brouillon')
     rr_title = fields.Char(string="Revue des risques (champ à supprimer)")
+    active = fields.Boolean('Actif', default=True, tracking=True)
 
 
     def name_get(self):

@@ -24,6 +24,8 @@
                         <field name="dynacase_id" invisible="1"/>
                     </header>
                     <sheet>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active" invisible="1"/> 
                         <group>
                             <group name="rr_identification_fr" string="Identification">
                                 <field name="rr_mouleid"  attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
