@@ -116,6 +116,22 @@ class is_revue_risque(models.Model):
     rr_title = fields.Char(string="Revue des risques (champ à supprimer)")
 
 
+    def name_get(self):
+        result = []
+        for obj in self:
+            name=""
+            if obj.rr_mouleid:
+                name = obj.rr_mouleid.name
+            if obj.dossierf_id:
+                name = obj.dossierf_id.name
+            if obj.rr_j_actuelle:
+                name="%s-%s"%(name,obj.rr_j_actuelle)
+            result.append((obj.id, name))
+        return result
+
+
+
+
 
     def _get_val_risque(self,name_field):
         res = getattr(self, name_field)
@@ -243,8 +259,23 @@ class is_revue_risque(models.Model):
         for obj in self:
             if not obj.rr_validation_revue_risque:
                 raise ValidationError("Le champ 'Validation de cette revue des risques' est obligatoire !")
-            obj.rr_mouleid.revue_risque_id = obj.id
+            obj.rr_mouleid.revue_risque_id  = obj.id
+            obj.dossierf_id.revue_risque_id = obj.id
             obj.state = "rr_diffuse"
+
+
+
+
+    def lien_vers_dynacase_action(self):
+        for obj in self:
+            url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
+            return {
+                'type' : 'ir.actions.act_url',
+                'url': url,
+                'target': 'new',
+            }
+
+
 
 
 

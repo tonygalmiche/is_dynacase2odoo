@@ -9,12 +9,19 @@
                 <form string="Revue des risques projet">
                     <header>
                         <button 
+                            name="lien_vers_dynacase_action"
+                            string="Dynacase"
+                            type="object"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                        />
+                        <button 
                             name="action_vers_diffuse" 
                             string="Vers Diffusé" type="object" class="btn-primary" 
                             attrs="{'invisible': [('state', 'in', ['rr_diffuse',None,False])]}" 
                             groups="is_plastigray16.is_chef_projet_group"
                         />
                         <field name="state" widget="statusbar" />
+                        <field name="dynacase_id" invisible="1"/>
                     </header>
                     <sheet>
                         <group>
@@ -164,6 +171,7 @@
                     <field name="write_uid"   optional="hide" string="Modifié par"/>
                     <field name="id"          optional="hide"/>
                     <field name="dynacase_id" optional="hide"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
                 </tree>
             </field>
         </record>
