@@ -109,9 +109,9 @@
                                 <field name="logo_rs" invisible="1"/>
                                 <div colspan="2" style="text-align:center">
                                     <field name="rpj_photo" widget="image" readonly="1" style="max-width:400px;max-height:400px" nolabel="1" colspan="2"/><br />
-                                    <img attrs="{'invisible': [('logo_rs', '!=', 'S')]}"  alt="Logo S"  src="/is_dynacase2odoo/static/src/img/logo_s.png"/>
-                                    <img attrs="{'invisible': [('logo_rs', '!=', 'R')]}"  alt="Logo R"  src="/is_dynacase2odoo/static/src/img/logo_r.png"/><br />
-                                    <img attrs="{'invisible': [('logo_rs', '!=', 'RS')]}" alt="Logo RS" src="/is_dynacase2odoo/static/src/img/logo_rs.png"/><br />        
+                                    <img attrs="{'invisible': [('logo_rs', '!=', 'S')]}"  alt="Logo S"  src="/is_dynacase2odoo/static/src/img/logo_s.png"  style="max-width:50px"/>
+                                    <img attrs="{'invisible': [('logo_rs', '!=', 'R')]}"  alt="Logo R"  src="/is_dynacase2odoo/static/src/img/logo_r.png"  style="max-width:50px"/><br />
+                                    <img attrs="{'invisible': [('logo_rs', '!=', 'RS')]}" alt="Logo RS" src="/is_dynacase2odoo/static/src/img/logo_rs.png" style="max-width:50px"/><br />        
                                 </div>
                                 <separator string="Équipe projet" />
                                 <field name="equipe_projet_ids" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}">
