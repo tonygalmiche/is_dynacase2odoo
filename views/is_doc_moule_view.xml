@@ -269,10 +269,11 @@
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="gantt_pdf"           optional="hide"/>
                     <field name="suivi_projet"        optional="hide"/>
-                    <field name="create_date"         optional="hide"/>
-                    <field name="create_uid"          optional="hide"/>
-                    <field name="write_date"          optional="hide"/>
-                    <field name="write_uid"           optional="hide"/>
+                    <field name="create_date"         optional="hide" string="Créé le"/>
+                    <field name="create_uid"          optional="hide" string="Créé par"/>
+                    <field name="write_date"          optional="hide" string="Modifié le"/>
+                    <field name="write_uid"           optional="hide" string="Modifié par"/>
+                    <field name="id"                  optional="hide"/>
                     <field name="date_creation_auto"  optional="hide"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
                     <field name="dynacase_id"  optional="hide"/>
