@@ -14,6 +14,8 @@ class is_revue_projet_jalon(models.Model):
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description = "Compte-rendu revue de projet jalon"
     _rec_name    = "rpj_chrono"
+    _order = "create_date desc"
+
 
     @api.depends("state")
     def _compute_vsb(self):
