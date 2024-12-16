@@ -128,7 +128,7 @@
                                         <field name="datecreate"        readonly="1"/>
                                         <field name="type_document"     readonly="1" force_save="1"/>
                                         <field name="sequence"          attrs="{'readonly': [('acces_chef_projet', '=', False)], 'invisible': [('type_document', '=', 'Article')]}"/>
-                                        <field name="ppr_type_demande"  attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
+                                        <field name="ppr_type_demande"/>
                                         <field name="ppr_transformation_pdf"/>
                                         <field name="idcp"              attrs="{'readonly': [('acces_chef_projet', '=', False)],'invisible': [('type_document', '!=', 'Moule')]}" readonly="1"/>
                                         <field name="acces_chef_projet" attrs="{'invisible': [('type_document', '=', 'Article')]}"/>
@@ -299,8 +299,10 @@
                     <field name="idproject"        optional="show" widget="many2one_clickable"/>
                     <field name="client_id"        optional="show" widget="many2one_clickable"/>
                     <field name="idresp"/>
+                    <field name="ppr_type_demande" optional="hide"/>
                     <field name="demande"/>
                     <field name="etat"/>
+                    <field name="rsp_date" optional="hide"/>
                     <field name="duree_attente_avant" optional="hide"/>
                     <field name="duree"/>
                     <field name="duree_gantt"         optional="hide" force_save="1"/>
@@ -469,7 +471,6 @@
                     <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
                     <field name="param_project_id"    optional="show"  widget="many2one_clickable"/>
                     <field name="type_document"       optional="hide"/>
-                    <field name="ppr_type_demande"    optional="hide" />
                     <button title="Gantt du moule" name="doc_moule_action" type="object" icon="fa-indent"/>
                     <field name="idmoule"             optional="show"           widget="many2one_clickable"/>
                     <field name="site_id"             optional="hide" />
@@ -480,10 +481,12 @@
                     <field name="idresp"              optional="show" />
                     <field name="j_prevue"            optional="show"/>
                     <field name="actuelle"            optional="hide" />
+                    <field name="ppr_type_demande"    optional="hide"/>
                     <field name="demande"             optional="show" />
                     <field name="action"              optional="show"/>
                     <field name="bloquant"            optional="hide"/>
                     <field name="etat"                optional="show" />
+                    <field name="rsp_date" optional="hide"/>
                     <field name="fin_derogation"      optional="hide" />
                     <field name="coefficient"         optional="hide"/>
                     <field name="note"                optional="hide"/>
@@ -526,7 +529,6 @@
                     <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
                     <field name="param_project_id" optional="show"  widget="many2one_clickable"/>
                     <field name="type_document" optional="hide"/>
-                    <field name="ppr_type_demande" optional="show" />
                     <button title="Gantt du Dossier F" name="doc_dossierf_action" type="object" icon="fa-indent"/>
                     <field name="dossierf_id"               optional="show"           widget="many2one_clickable"/>
                     <field name="site_id"                   optional="hide" />
@@ -537,10 +539,12 @@
                     <field name="idresp" optional="show" />
                     <field name="j_prevue" optional="show"/>
                     <field name="actuelle" optional="show" />
+                    <field name="ppr_type_demande" optional="hide"/>
                     <field name="demande" optional="show" />
                     <field name="action"  optional="show"/>
                     <field name="bloquant" optional="show"/>
                     <field name="etat" optional="show" />
+                    <field name="rsp_date" optional="hide"/>
                     <field name="fin_derogation" optional="show" />
                     <field name="coefficient"  optional="show"/>
                     <field name="note"  optional="show"/>
@@ -625,17 +629,18 @@
                     <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
                     <field name="param_project_id"    optional="show"  widget="many2one_clickable"/>
                     <field name="type_document"       optional="hide"/>
-                    <field name="ppr_type_demande"    optional="hide" />
                     <field name="dossier_appel_offre_id"             optional="show"           widget="many2one_clickable"/>
                     <field name="client_id"           optional="show"         widget="many2one_clickable"/>
                     <field name="idcp"                optional="hide"/>
                     <field name="idresp"              optional="show" />
                     <field name="j_prevue"            optional="show"/>
                     <field name="actuelle"            optional="hide" />
+                    <field name="ppr_type_demande" optional="hide"/>
                     <field name="demande"             optional="show" />
                     <field name="action"              optional="show"/>
                     <field name="bloquant"            optional="hide"/>
                     <field name="etat"                optional="show" />
+                    <field name="rsp_date" optional="hide"/>
                     <field name="fin_derogation"      optional="hide" />
                     <field name="coefficient"         optional="hide"/>
                     <field name="note"                optional="hide"/>
@@ -675,7 +680,6 @@
                     <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
                     <field name="param_project_id"    optional="show"  widget="many2one_clickable"/>
                     <field name="type_document"       optional="hide"/>
-                    <field name="ppr_type_demande"    optional="hide" />
                     <field name="dossier_modif_variante_id"             optional="show"           widget="many2one_clickable"/>
                     <field name="demao_nature"        optional="show" />
                     <field name="solde"               optional="show" />
@@ -686,10 +690,12 @@
                     <field name="idresp"              optional="show" />
                     <field name="j_prevue"            optional="hide"/>
                     <field name="actuelle"            optional="hide" />
+                    <field name="ppr_type_demande" optional="hide"/>
                     <field name="demande"             optional="show" />
                     <field name="action"              optional="hide"/>
                     <field name="bloquant"            optional="hide"/>
                     <field name="etat"                optional="show" />
+                    <field name="rsp_date" optional="hide"/>
                     <field name="fin_derogation"      optional="hide" />
                     <field name="coefficient"         optional="hide"/>
                     <field name="note"                optional="hide"/>
@@ -756,8 +762,10 @@
                     <field name="idproject"        optional="show" widget="many2one_clickable"/>
                     <field name="client_id"        optional="show" widget="many2one_clickable"/>
                     <field name="idresp"/>
+                    <field name="ppr_type_demande" optional="hide"/>
                     <field name="demande"         optional="show"/>
                     <field name="etat"/>
+                    <field name="rsp_date" optional="hide"/>
                     <field name="duree"/>
                     <field name="duree_gantt"      optional="hide" force_save="1"/>
                     <field name="date_debut_gantt"/>
@@ -789,8 +797,10 @@
                     <field name="dossier_modif_variante_id" required="1" widget="many2one_clickable"/>
                     <field name="client_id" optional="show"              widget="many2one_clickable"/>
                     <field name="idresp"/>
+                    <field name="ppr_type_demande" optional="hide"/>
                     <field name="demande"/>
                     <field name="etat"/>
+                    <field name="rsp_date" optional="hide"/>
                     <field name="duree"/>
                     <field name="duree_gantt"         optional="hide" force_save="1"/>
                     <field name="date_debut_gantt"/>
@@ -822,8 +832,10 @@
                     <field name="type_document"          optional="hide"/>
                     <field name="dossier_appel_offre_id"      optional="hide" widget="many2one_clickable"/>
                     <field name="idresp"/>
+                    <field name="ppr_type_demande" optional="hide"/>
                     <field name="demande"/>
                     <field name="etat"/>
+                    <field name="rsp_date" optional="hide"/>
                     <field name="duree"/>
                     <field name="duree_gantt"      optional="hide" force_save="1"/>
                     <field name="date_debut_gantt"/>

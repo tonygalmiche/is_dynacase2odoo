@@ -353,8 +353,9 @@ class IsDocMoule(models.Model):
         if 'etat' in vals:
             if vals['etat']=='F':
                 reponses=self.get_doc_reponse()
+                type_demande = dict(self._fields['ppr_type_demande'].get_description(self.env).get('selection')).get(self.ppr_type_demande)
                 if not reponses[0] and not reponses[1] and not reponses[2] and self.ppr_type_demande!='AUTO':
-                    raise ValidationError("Impossbile de passer à l'état 'Fait' car aucune réponse n'est fournie !")
+                    raise ValidationError("Impossbile de passer à l'état 'Fait' car aucune réponse n'est fournie (%s) !"%type_demande)
                 
 
         for obj in self:
