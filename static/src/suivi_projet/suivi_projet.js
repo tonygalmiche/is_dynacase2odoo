@@ -165,7 +165,9 @@ class SuiviProjet extends Component {
         }
         var res = await this.orm.call("is.doc.moule", 'get_zip', [false],params);
         var attachment_id = res.attachment_id
-        if (attachment_id){
+        if(attachment_id==false){
+            alert('Aucune pièce jointe trouvée dans ces documents !');
+        } else{
             this.action.doAction({
                 type: 'ir.actions.act_url',
                 url: '/web/content/'+attachment_id+'?download=true'

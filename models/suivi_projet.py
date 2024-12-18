@@ -529,7 +529,11 @@ class IsDocMoule(models.Model):
                 Path(tmp_dir).mkdir(parents=True, exist_ok=True)
                 for doc in docs:
                     for line in doc.array_ids:
-                        for attachment in line.annex_pdf:
+                        if doc.param_project_id.ppr_transformation_pdf:
+                            champ=line.annex_pdf
+                        else:
+                            champ=line.annex
+                        for attachment in champ:
                             if attachment.datas:
                                 file_name = '/%s/%s'%(tmp_dir,attachment.name)
                                 with open(file_name,'wb') as f:
@@ -561,18 +565,6 @@ class IsDocMoule(models.Model):
                             attachment = self.env['ir.attachment'].create(vals)
                             attachment_id=attachment.id
                         #***********************************************************************
-
-
-                        # # ** Création piece jointe du zip *********************
-                        # name ="%s.zip"%name_dossier
-                        # vals = {
-                        #     'name':        name,
-                        #     'type':        'binary',
-                        #     'datas':        base64.b64encode(zip),
-                        # }
-                        # attachment = self.env['ir.attachment'].create(vals)
-                        # attachment_id = attachment.id
-                        # #******************************************************
 
         res = {
             'attachment_id'    : attachment_id,
