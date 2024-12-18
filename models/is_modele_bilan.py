@@ -4,19 +4,21 @@ from odoo import models, fields
 
 class IsModeleBilan(models.Model):
     _name        = "is.modele.bilan"
+    _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description = "Modèle bilan projet"
     _rec_name    = "mb_titre"
     _order       = 'mb_titre'
 
-    mb_titre = fields.Char(string="Titre du modèle",required=True)
-    mb_cp    = fields.Char(string="Chef de projet")
-    mb_cpid  = fields.Integer(string="Chef de projet id")
+    mb_titre = fields.Char(string="Titre du modèle",required=True, tracking=True)
+    mb_cp    = fields.Char(string="Chef de projet", tracking=True)
+    mb_cpid  = fields.Integer(string="Chef de projet id", tracking=True)
     mb_type  = fields.Selection([
             ("Moule", "Moule"),
             ("Article", "Article"),
-        ], string='Type de modèle',required=True)
+        ], string='Type de modèle',required=True, tracking=True)
     line_ids    = fields.One2many('is.modele.bilan.line', 'modele_bilan_id', string="Lignes")
     dynacase_id = fields.Integer(string="Id Dynacase",index=True,copy=False)
+    active      = fields.Boolean('Actif', default=True, tracking=True)
 
 
     def get_famille_ids(self):

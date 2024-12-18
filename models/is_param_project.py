@@ -76,13 +76,15 @@ PPR_REVUE_LANCEMENT = [
 
 class IsSectionGantt(models.Model):
     _name        = "is.section.gantt"
+    _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description = "Sections du Gantt"
     _order = 'sequence, id'
 
-    sequence  = fields.Integer(string="Ordre",index=True)
-    name      = fields.Char("Section",required=True,index=True)
-    gantt_pdf = fields.Boolean("Gantt PDF", default=True, help="Afficher dans Gantt PDF")
-    color     = fields.Char("Color")
+    sequence  = fields.Integer(string="Ordre",index=True, tracking=True)
+    name      = fields.Char("Section",required=True,index=True, tracking=True)
+    gantt_pdf = fields.Boolean("Gantt PDF", default=True, help="Afficher dans Gantt PDF", tracking=True)
+    color     = fields.Char("Color", tracking=True)
+    active    = fields.Boolean('Actif', default=True, tracking=True)
 
 
 class IsParamProject(models.Model):
