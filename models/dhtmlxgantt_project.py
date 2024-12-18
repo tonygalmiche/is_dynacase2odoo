@@ -368,12 +368,7 @@ class IsDocMoule(models.Model):
 
     def move_task_lier(self,delta):
         for obj in self:
-
             self.env.context = self.with_context(noonchange=False).env.context
-
-
-
-
             docs=self.env['is.doc.moule'].search([ ('dependance_id', '=', obj.id) ])
             for doc in docs:
                 date_debut_gantt = doc.date_debut_gantt +  timedelta(days=delta)

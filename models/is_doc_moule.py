@@ -349,7 +349,19 @@ class IsDocMoule(models.Model):
 
 
     def write(self,vals):
+        mem_date_debut_gantt = self.date_debut_gantt
         res=super(IsDocMoule, self).write(vals)
+        lier = self.env.context.get('lier')
+        date_debut_gantt = vals.get('date_debut_gantt')
+        duree            = vals.get('duree')
+        if isinstance(date_debut_gantt, str):
+            if mem_date_debut_gantt and date_debut_gantt and lier:
+                date_debut_gantt   = datetime.strptime(date_debut_gantt, '%Y-%m-%d').date()
+                delta=(date_debut_gantt - mem_date_debut_gantt).days
+                if delta:
+                    self.move_task_lier(delta)
+
+
         if 'etat' in vals:
             if vals['etat']=='F':
                 reponses=self.get_doc_reponse()
@@ -605,6 +617,10 @@ class IsDocMoule(models.Model):
         return []
 
 
+
+    # def write_task(self,start_date=False,duration=False,lier=False,mode=False):
+
+
     @api.onchange('date_debut_gantt','duree')
     def set_fin_gantt(self):
         for obj in self:
@@ -627,6 +643,10 @@ class IsDocMoule(models.Model):
                     }
                     self.env.context = self.with_context(noonchange=True).env.context
                     obj.write(vals)
+
+
+
+
 
 
     @api.onchange('date_fin_gantt')

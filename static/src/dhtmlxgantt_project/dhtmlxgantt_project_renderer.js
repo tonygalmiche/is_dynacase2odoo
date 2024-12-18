@@ -594,8 +594,6 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
     }
 
 
-
-
     async GetFormId(task){
         var self=this;
         rpc.query({
@@ -604,6 +602,9 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
             args: [[task.res_id]],
         }).then(function (result) {
             const form_id=result;
+            var ctx={
+                'lier': self.state.lier,
+            }
             self.env.bus.trigger('do-action', {
                 action: {
                     type: 'ir.actions.act_window',
@@ -612,6 +613,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                     view_mode: 'form,list',
                     views: [[form_id, 'form'],[false, 'list']],
                     target: 'new',
+                    context: ctx,
                 },
             });
         });
