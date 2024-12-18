@@ -173,8 +173,8 @@
                     <field name="rl_date_j5" optional="hide" />
 
 
-                    <field name="dynacase_id" optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"/>
+                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
+                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" groups="base.group_system"/>
                 </tree>
             </field>
         </record>

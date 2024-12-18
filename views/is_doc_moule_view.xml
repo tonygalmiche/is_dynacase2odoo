@@ -58,6 +58,7 @@
                         <button 
                             string="Dynacase" name="lien_vers_dynacase_action" type="object" class="btn btn-info"
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                            groups="base.group_system"
                         />
                     </header>
                     <sheet>
@@ -273,10 +274,14 @@
                     <field name="create_uid"          optional="hide" string="Créé par"/>
                     <field name="write_date"          optional="hide" string="Modifié le"/>
                     <field name="write_uid"           optional="hide" string="Modifié par"/>
-                    <field name="id"                  optional="hide"/>
-                    <field name="date_creation_auto"  optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
-                    <field name="dynacase_id"  optional="hide"/>
+                    <field name="id"                  optional="hide" groups="base.group_system"/>
+                    <field name="date_creation_auto"  optional="hide" groups="base.group_system"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"   
+                        groups="base.group_system"
+                    />
+                    <field name="dynacase_id"  optional="hide" groups="base.group_system"/>
                 </tree>
             </field>
         </record>
@@ -311,8 +316,12 @@
                     <field name="dependance_id"       optional="hide" domain="[('idmoule','=',idmoule)]"/>
                     <field name="indicateur"          optional="hide"/>
                     <field name="gantt_pdf"           optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}" />
-                    <field name="dynacase_id"  optional="hide"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                        groups="base.group_system"
+                    />
+                    <field name="dynacase_id"  optional="hide" groups="base.group_system"/>
                 </tree>
             </field>
         </record>
@@ -360,6 +369,7 @@
                                             <button 
                                                 string="Dynacase" name="lien_vers_dynacase_action" type="object" class="btn btn-info"
                                                 attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                                                groups="base.group_system"
                                             />
                                         </div>
                                     </div>
@@ -499,8 +509,12 @@
                     <field name="duree_attente_avant" optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="gantt_pdf"           optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
-                    <field name="dynacase_id"  optional="hide"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                        groups="base.group_system"
+                    />
+                    <field name="dynacase_id"  optional="hide" groups="base.group_system"/>
                     <field name="color" invisible="1"/>
                 </tree>
             </field>
@@ -557,8 +571,12 @@
                     <field name="duree_attente_avant" optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="gantt_pdf"           optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
-                    <field name="dynacase_id"  optional="hide"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+                    <field name="dynacase_id"  optional="hide" groups="base.group_system"/>
                 </tree>
             </field>
         </record>
@@ -601,8 +619,12 @@
                     <field name="conforme"            optional="hide"/>
                     <field name="rsp_pj"              optional="show"/>
                     <field name="rsp_texte"           optional="show" />
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
-                    <field name="dynacase_id" optional="hide"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                          groups="base.group_system"
+                    />
+                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
                 </tree>
             </field>
         </record>
@@ -653,8 +675,12 @@
                     <field name="duree_attente_avant" optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="gantt_pdf"           optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
-                    <field name="dynacase_id"  optional="hide"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+                    <field name="dynacase_id"  optional="hide" groups="base.group_system"/>
                 </tree>
             </field>
         </record>
@@ -708,8 +734,12 @@
                     <field name="duree_attente_avant" optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="gantt_pdf"           optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
-                    <field name="dynacase_id"  optional="hide"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+                    <field name="dynacase_id"  optional="hide" groups="base.group_system"/>
                 </tree>
             </field>
         </record>
@@ -774,8 +804,12 @@
                     <field name="dependance_id"       optional="hide" domain="[('dossierf_id','=',dossierf_id)]"/>
                     <field name="indicateur"          optional="hide"/>
                     <field name="gantt_pdf"           optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
-                    <field name="dynacase_id"  optional="hide"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+                    <field name="dynacase_id"  optional="hide" groups="base.group_system"/>
                 </tree>
             </field>
         </record>
@@ -809,10 +843,14 @@
                     <field name="dependance_id"       optional="hide" domain="[('dossier_modif_variante_id','=',dossier_modif_variante_id)]"/>
                     <field name="indicateur"          optional="hide"/>
                     <field name="gantt_pdf"           optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
-                    <field name="dynacase_id"      optional="hide"/>
+                    <button
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+                    <field name="dynacase_id"      optional="hide" groups="base.group_system"/>
                     <field name="origine_copie_id" optional="hide"/>
-                    <field name="id"               optional="hide"/>
+                    <field name="id"               optional="hide" groups="base.group_system"/>
                 </tree>
             </field>
         </record>
@@ -844,8 +882,12 @@
                     <field name="dependance_id"       optional="hide" domain="[('dossier_appel_offre_id','=',dossier_appel_offre_id)]"/>
                     <field name="indicateur"          optional="hide"/>
                     <field name="gantt_pdf"           optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
-                    <field name="dynacase_id"  optional="hide"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+                    <field name="dynacase_id"  optional="hide" groups="base.group_system"/>
                 </tree>
             </field>
         </record>
@@ -865,8 +907,12 @@
                         <field name="date_fin_gantt"/>
                         <field name="etat"/>
                         <field name="indicateur"   optional="hide"/>
-                        <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
-                        <field name="dynacase_id"  optional="hide"/>
+                        <button 
+                            title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                            groups="base.group_system"
+                        />
+                        <field name="dynacase_id"  optional="hide" groups="base.group_system"/>
                     </tree>
                 </field>
             </record>

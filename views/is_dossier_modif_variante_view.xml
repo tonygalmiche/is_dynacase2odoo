@@ -97,6 +97,7 @@
                             string="Dynacase"
                             type="object"
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                            groups="base.group_system"
                         />
                         <field name="state" widget="statusbar" />
                         <field name="dynacase_id" invisible="1"/>
@@ -177,8 +178,12 @@
                     <field name="demao_idbe" optional="hide"/>
                     <field name="solde" optional="show"/>
                     <field name="state" optional="show"/>
-                    <field name="dynacase_id" optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
+                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
                 </tree>
             </field>
         </record>

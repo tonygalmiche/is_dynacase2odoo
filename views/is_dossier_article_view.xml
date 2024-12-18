@@ -20,6 +20,7 @@
                         <button 
                             string="Dynacase" name="lien_vers_dynacase_action" type="object" class="btn btn-info"
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                            groups="base.group_system"
                         />
                     </header>
                     <sheet class="oe_form_sheet_width_wider">
@@ -137,8 +138,12 @@
                     <field name="nb_a_faire"      optional="hide"/>
                     <field name="nb_crees"        optional="hide"/>
                     <field name="nb_fait"         optional="hide"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" attrs="{'invisible': [('dynacase_id', '=', 0)]}"/>
-                    <field name="dynacase_id"  optional="hide"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
                  </tree>
             </field>
         </record>
