@@ -36,7 +36,7 @@ class is_revue_risque(models.Model):
         ("J4", "Préparation J4"),
         ("J5", "Préparation J5"),
         ("J6", "J5 validé"),
-    ], string="J actuelle", compute='_compute',store=True, readonly=True)
+    ], string="J actuelle")
     rr_revue_lancementid                  = fields.Many2one("is.revue.lancement", string="Revue de lancement"        , compute='_compute',store=True, readonly=True)
     rr_clientid                           = fields.Many2one("res.partner", string="Client"                           , compute='_compute',store=True, readonly=True)
     rr_projetid                           = fields.Many2one("is.mold.project", string="Projet"                       , compute='_compute',store=True, readonly=True)
@@ -189,18 +189,19 @@ class is_revue_risque(models.Model):
     @api.depends("rr_mouleid","dossierf_id")
     def _compute(self):
         for obj in self:
-            j_actuelle = revue_lancement_id = client_id = projet_id = False
+            #j_actuelle = 
+            revue_lancement_id = client_id = projet_id = False
             if obj.rr_mouleid:
-                j_actuelle         = obj.rr_mouleid.j_actuelle
+                #j_actuelle         = obj.rr_mouleid.j_actuelle
                 revue_lancement_id = obj.rr_mouleid.revue_lancement_id.id
                 client_id          = obj.rr_mouleid.client_id.id
                 projet_id          = obj.rr_mouleid.project.id
             if obj.dossierf_id:
-                j_actuelle         = obj.dossierf_id.j_actuelle
+                #j_actuelle         = obj.dossierf_id.j_actuelle
                 revue_lancement_id = obj.dossierf_id.revue_lancement_id.id
                 client_id          = obj.dossierf_id.client_id.id
                 projet_id          = obj.dossierf_id.project.id
-            obj.rr_j_actuelle        = j_actuelle
+            #obj.rr_j_actuelle        = j_actuelle
             obj.rr_revue_lancementid = revue_lancement_id
             obj.rr_clientid          = client_id
             obj.rr_projetid          = projet_id

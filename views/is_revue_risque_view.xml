@@ -29,9 +29,9 @@
                         <field name="active" invisible="1"/> 
                         <group>
                             <group name="rr_identification_fr" string="Identification">
-                                <field name="rr_mouleid"  attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="dossierf_id" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_j_actuelle"/>
+                                <field name="rr_mouleid"    attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="dossierf_id"   attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_j_actuelle" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
                                 <field name="rr_revue_lancementid" />
                                 <field name="rr_clientid" />
                                 <field name="rr_projetid" />
@@ -93,36 +93,36 @@
                             </group>
                             <group string="Commentaire">
                                 <separator string="." style="color:transparent;"/>
-                                <field name="rr_retour_experience_comment"     nolabel="1" colspan="2" placeholder="Retour d’expérience - Process similaire" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_exigence_specifique_comment"   nolabel="1" colspan="2" placeholder="Exigences spécifiques liées à la matière / mélange maître" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
-                                <field name="rr_planning_previsionnel_comment" nolabel="1" colspan="2" placeholder="Planning prévisionnel" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
-                                <field name="rr_plan_piece_comment"            nolabel="1" colspan="2" placeholder="Plan pièce / CS produit-Process" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
-                                <field name="rr_norme_applicable_comment"      nolabel="1" colspan="2" placeholder="Normes applicables" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
-                                <field name="rr_conception_piece_comment"      nolabel="1" colspan="2" placeholder="Conception pièce" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
-                                <field name="rr_injection_comment"             nolabel="1" colspan="2" placeholder="Injection (paramètres / passage en process 4.0)" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
-                                <field name="rr_design_moule_comment"          nolabel="1" colspan="2" placeholder="Moule" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
-                                <field name="rr_methode_mesure_comment"        nolabel="1" colspan="2" placeholder="Méthode de mesure / Gabarit de contrôle" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
-                                <field name="rr_composant_comment"             nolabel="1" colspan="2" placeholder="Composants + Intégration de nouveaux produits chimiques" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
-                                <field name="rr_machine_speciale_comment"      nolabel="1" colspan="2" placeholder="Machine Spéciale / Poka-Yoké" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
-                                <field name="rr_decoration_comment"            nolabel="1" colspan="2" placeholder="Décoration (tampographie / Laser / Peinture)" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
-                                <field name="rr_parachevement_comment"         nolabel="1" colspan="2" placeholder="Parachèvement (soudure / collage / Peinture ...)" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
+                                <field name="rr_retour_experience_comment"     nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_exigence_specifique_comment"   nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
+                                <field name="rr_planning_previsionnel_comment" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
+                                <field name="rr_plan_piece_comment"            nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
+                                <field name="rr_norme_applicable_comment"      nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
+                                <field name="rr_conception_piece_comment"      nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
+                                <field name="rr_injection_comment"             nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
+                                <field name="rr_design_moule_comment"          nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
+                                <field name="rr_methode_mesure_comment"        nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
+                                <field name="rr_composant_comment"             nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
+                                <field name="rr_machine_speciale_comment"      nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
+                                <field name="rr_decoration_comment"            nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
+                                <field name="rr_parachevement_comment"         nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
                                 <separator string="." style="color:transparent;"/>
-                                <field name="rr_capacitaire_comment"                nolabel="1" colspan="2" placeholder="Capacitaire et montée en cadence" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_conditionnement_comment"            nolabel="1" colspan="2" placeholder="Conditionnement et transport" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_identification_tracabilite_comment" nolabel="1" colspan="2" placeholder="Identification et traçabilité" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_validation_fournisseur_comment"     nolabel="1" colspan="2" placeholder="Validation fournisseur" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_capacitaire_fournisseur_comment"    nolabel="1" colspan="2" placeholder="Capacitaires et montée en cadence fournisseurs" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_presse_substitution_comment"        nolabel="1" colspan="2" placeholder="Presse de substitution" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_capacitaire_comment"                nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_conditionnement_comment"            nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_identification_tracabilite_comment" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_validation_fournisseur_comment"     nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_capacitaire_fournisseur_comment"    nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_presse_substitution_comment"        nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
                                 <separator string="." style="color:transparent;"/>
-                                <field name="rr_modification_csr_comment"       nolabel="1" colspan="2" placeholder="Revue des CSR client par rapport aux exigences propres au projet" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_critere_acceptation_comment"    nolabel="1" colspan="2" placeholder="Critères d'acceptation sur le produit " attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_exigence_reglementaire_comment" nolabel="1" colspan="2" placeholder="Exigences réglementaires et légales sur le produit" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_engagement_qualite_comment"     nolabel="1" colspan="2" placeholder="Engagement qualité (PPM)" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_securite_produit_comment"       nolabel="1" colspan="2" placeholder="Sécurité du produit (protection de l'utilisateur final) + information au PSR" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_modification_csr_comment"       nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_critere_acceptation_comment"    nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_exigence_reglementaire_comment" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_engagement_qualite_comment"     nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_securite_produit_comment"       nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
                                 <separator string="." style="color:transparent;"/>
-                                <field name="rr_rentabilite_comment"               nolabel="1" colspan="2" placeholder="Rentabilité" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_investissement_necessaire_comment" nolabel="1" colspan="2" placeholder="Investissements nécessaires" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_competence_effectif_comment"       nolabel="1" colspan="2" placeholder="Compétences et effectifs / Formation" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_rentabilite_comment"               nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_investissement_necessaire_comment" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_competence_effectif_comment"       nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
                             </group>
                         </group>
                         <group name="rr_validation_fr" string="Validation">

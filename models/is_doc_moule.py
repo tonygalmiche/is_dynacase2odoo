@@ -126,7 +126,7 @@ class IsDocMoule(models.Model):
     note                = fields.Integer(string="Note"          , compute='_compute_coefficient_bloquant_note',store=True, readonly=True, tracking=True)
     indicateur          = fields.Html(string="Indicateur"       , compute='_compute_indicateur'               ,store=True, readonly=True)
     datecreate          = fields.Date(string="Date de création", default=fields.Date.context_today)
-    dateend             = fields.Date(string="Date fin dynacase (Ne plus utiliser)", tracking=True, readonly=True, help="Remplacé par date_fin_gantt le 05/12/2024")
+    dateend             = fields.Date(string="Date fin dynacase (Ne plus utiliser)", readonly=True, help="Remplacé par date_fin_gantt le 05/12/2024")
     array_ids           = fields.One2many("is.doc.moule.array", "is_doc_id", string="Pièce-jointe de réponse à la demande")
     dynacase_id         = fields.Integer(string="Id Dynacase",index=True,copy=False)
     duree               = fields.Integer(string="Durée (J)"      , help="Durée en jours ouvrés"         , default=1, tracking=True)
