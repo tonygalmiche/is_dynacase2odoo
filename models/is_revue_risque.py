@@ -36,7 +36,7 @@ class is_revue_risque(models.Model):
         ("J4", "Préparation J4"),
         ("J5", "Préparation J5"),
         ("J6", "J5 validé"),
-    ], string="J actuelle")
+    ], string="J actuelle", tracking=True)
     rr_revue_lancementid                  = fields.Many2one("is.revue.lancement", string="Revue de lancement"        , compute='_compute',store=True, readonly=True)
     rr_clientid                           = fields.Many2one("res.partner", string="Client"                           , compute='_compute',store=True, readonly=True)
     rr_projetid                           = fields.Many2one("is.mold.project", string="Projet"                       , compute='_compute',store=True, readonly=True)
