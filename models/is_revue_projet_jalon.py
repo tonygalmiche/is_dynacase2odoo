@@ -84,7 +84,7 @@ class is_revue_projet_jalon(models.Model):
                 nom           = user.name
                 subject       = "[CR Jalon] %s état '%s'"%(obj.rpj_chrono, etat)
                 base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-                url = base_url + '/web#id=%s' '&view_type=form&model=%sn'%(obj.id,self._name)
+                url = base_url + '/web#id=%s' '&view_type=form&model=%s'%(obj.id,self._name)
                 destinataires_name = ', '.join(destinataires_name)
                 body = """ 
                     <p>Bonjour,</p> 
@@ -108,9 +108,6 @@ class is_revue_projet_jalon(models.Model):
                 wizard = self.env['mail.compose.message'].with_context(ctx).create(vals)
                 wizard.action_send_mail()
  
-
-
-
 
     def vers_brouillon_action(self):
         for obj in self:
@@ -163,31 +160,6 @@ class is_revue_projet_jalon(models.Model):
                 obj.rpj_directeur_techniqueid,
             ]
             self.envoi_mail(users)
-
-
-
-    # rpj_chef_projetid            = fields.Many2one("res.users", string="Chef de projet", tracking=True)
-    # rpj_expert_injectionid       = fields.Many2one("res.users", string="Expert injection", tracking=True)
-    # rpj_methode_injectionid      = fields.Many2one("res.users", string="Méthode injection", tracking=True)
-    # rpj_methode_assemblageid     = fields.Many2one("res.users", string="Méthode assemblage", tracking=True)
-    # rpj_qualite_devid            = fields.Many2one("res.users", string="Métrologie", tracking=True)
-    # rpj_qualite_usineid          = fields.Many2one("res.users", string="Qualité développement", tracking=True)
-    # rpj_achatsid                 = fields.Many2one("res.users", string="Achats", tracking=True)
-    # rpj_logistiqueid             = fields.Many2one("res.users", string="Logistique", tracking=True)
-    # rpj_logistique_usineid       = fields.Many2one("res.users", string="Logistique Usine", tracking=True)
-    # rpj_commercial2id            = fields.Many2one("res.users", string="Commercial", tracking=True)
-    # rpj_responsable_outillageid  = fields.Many2one("res.users", string="Responsable outillage", tracking=True)
-    # rpj_responsable_projetid     = fields.Many2one("res.users", string="Responsable projets", tracking=True)
-    # rpj_directeur_siteid         = fields.Many2one("res.users", string="Directeur site de production", tracking=True)
-    # rpj_directeur_techniqueid    = fields.Many2one("res.users", string="Directeur technique", tracking=True)
-
-
-
-
-
-
-
-
 
 
     def vers_valide_action(self):
