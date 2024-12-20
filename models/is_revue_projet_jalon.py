@@ -20,39 +20,104 @@ class is_revue_projet_jalon(models.Model):
     @api.depends("state")
     def _compute_vsb(self):
         for obj in self:
+            uid = self._uid
+
             vsb = False
             if obj.state in ["rpj_directeur_technique"]:
                 vsb = True
             obj.vers_brouillon_vsb = vsb
+            
             vsb = False
             if obj.state in ["rpj_brouillon"] and obj.rpj_j in ['J4','J5']:
-                vsb = True
+                if  uid in [obj.rpj_chef_projetid.id, obj.rpj_directeur_techniqueid.id]:
+                    vsb = True
             obj.vers_directeur_technique_vsb = vsb
+
             vsb = False
             if obj.state in ["rpj_directeur_technique"]:
-                vsb = True
+                if  uid in [obj.rpj_directeur_techniqueid.id]:
+                    vsb = True
             obj.vers_direceeur_de_site_vsb = vsb
+
             vsb = False
             if obj.state in ["rpj_brouillon"]:
                 vsb = True
             obj.vers_diffuse_vsb = vsb
+
             vsb = False
             if obj.state=="rpj_directeur_site":
-                vsb = True
+                if  uid in [obj.rpj_directeur_siteid.id]:
+                    vsb = True
             #En J4 et J5, il faut passer par la validation du directeur de technique"
             if obj.state=="rpj_brouillon":
                 if obj.rpj_j not in ['J4','J5']:
                     vsb = True
             obj.vers_valide_vsb = vsb
+
             vsb = False
             if obj.state in ["rpj_directeur_technique", "rpj_directeur_site"] and obj.rpj_motif_refus:
                 vsb = True
             obj.vers_refuse_vsb = vsb
 
+            vsb = False
+            if obj.state=='rpj_valide':                                   # Etat Validé uniquement
+                if obj.rpj_j!='J6':                                       # Pas en J6
+                    if obj.rpj_note>=80:                                  # Note >= 80
+                        if obj.rpj_point_bloquant==0:                     # Pas de point bloquant
+                            if obj.rpj_j==obj.rpj_mouleid.j_actuelle:     # Uniquement si J moule = J CR
+                                if  uid in [obj.rpj_chef_projetid.id, obj.rpj_directeur_techniqueid.id]:
+                                    vsb=True
+            obj.vers_j_suivante_vsb = vsb
+
+
+    def envoi_mail(self, users=[]):
+        for obj in self:
+            partner_ids = []
+            destinataires_name = []
+            for user in users:
+                if user.id:
+                    destinataires_name.append(user.name)
+                    partner_ids.append(user.partner_id.id)
+            if len(partner_ids)>0:
+                etat = dict(self._fields['state'].get_description(self.env).get('selection')).get(self.state)
+                user          = self.env['res.users'].browse(self._uid)
+                nom           = user.name
+                subject       = "[CR Jalon] %s état '%s'"%(obj.rpj_chrono, etat)
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                url = base_url + '/web#id=%s' '&view_type=form&model=%sn'%(obj.id,self._name)
+                destinataires_name = ', '.join(destinataires_name)
+                body = """ 
+                    <p>Bonjour,</p> 
+                    <p>%s vient de passer le 'CR revue projet jalon'  
+                    <a href='%s'>%s</a> à l'état '%s'.</p> 
+                    <p>Merci d'en prendre connaissance.</p> 
+                    <p><i>(Destinataires : %s)</i></p>
+                """%(nom, url,obj.rpj_chrono,etat,destinataires_name)
+                vals={
+                    "model"         : self._name,
+                    "subject"       : subject,
+                    "body"          : body,
+                    "partner_ids"   : partner_ids,
+                }
+                ctx = dict(
+                    default_model=self._name,
+                    default_res_id=obj.id,
+                    default_composition_mode='comment',
+                    custom_layout='mail.mail_notification_light', # Permet de définir la mise en page du mail
+                )
+                wizard = self.env['mail.compose.message'].with_context(ctx).create(vals)
+                wizard.action_send_mail()
+ 
+
+
+
 
     def vers_brouillon_action(self):
         for obj in self:
             obj.sudo().state = "rpj_brouillon"
+            users = [obj.rpj_chef_projetid]
+            self.envoi_mail(users)
+
 
     def vers_directeur_technique_action(self):
         for obj in self:
@@ -67,14 +132,63 @@ class is_revue_projet_jalon(models.Model):
                         err="Ces champs sont obligatoires en J5 : 'Cycle par pièce', 'Nb empreintes', 'MOD', 'Tx rebut vendu', 'Poids pièce (en g)', 'Poids carotte (en g)'"
                         raise ValidationError(err)
             obj.sudo().state = "rpj_directeur_technique"
+            users = [obj.rpj_directeur_techniqueid]
+            self.envoi_mail(users)
+
 
     def vers_direceeur_de_site_action(self):
         for obj in self:
             obj.sudo().state = "rpj_directeur_site"
+            users = [obj.rpj_directeur_siteid]
+            self.envoi_mail(users)
+
 
     def vers_diffuse_action(self):
         for obj in self:
             obj.sudo().state = "rpj_diffuse"
+            users = [
+                obj.rpj_chef_projetid,
+                obj.rpj_expert_injectionid,
+                obj.rpj_methode_injectionid,
+                obj.rpj_methode_assemblageid,
+                obj.rpj_qualite_devid,
+                obj.rpj_qualite_usineid,
+                obj.rpj_achatsid,
+                obj.rpj_logistiqueid,
+                obj.rpj_logistique_usineid,
+                obj.rpj_commercial2id,
+                obj.rpj_responsable_outillageid,
+                obj.rpj_responsable_projetid,
+                obj.rpj_directeur_siteid,
+                obj.rpj_directeur_techniqueid,
+            ]
+            self.envoi_mail(users)
+
+
+
+    # rpj_chef_projetid            = fields.Many2one("res.users", string="Chef de projet", tracking=True)
+    # rpj_expert_injectionid       = fields.Many2one("res.users", string="Expert injection", tracking=True)
+    # rpj_methode_injectionid      = fields.Many2one("res.users", string="Méthode injection", tracking=True)
+    # rpj_methode_assemblageid     = fields.Many2one("res.users", string="Méthode assemblage", tracking=True)
+    # rpj_qualite_devid            = fields.Many2one("res.users", string="Métrologie", tracking=True)
+    # rpj_qualite_usineid          = fields.Many2one("res.users", string="Qualité développement", tracking=True)
+    # rpj_achatsid                 = fields.Many2one("res.users", string="Achats", tracking=True)
+    # rpj_logistiqueid             = fields.Many2one("res.users", string="Logistique", tracking=True)
+    # rpj_logistique_usineid       = fields.Many2one("res.users", string="Logistique Usine", tracking=True)
+    # rpj_commercial2id            = fields.Many2one("res.users", string="Commercial", tracking=True)
+    # rpj_responsable_outillageid  = fields.Many2one("res.users", string="Responsable outillage", tracking=True)
+    # rpj_responsable_projetid     = fields.Many2one("res.users", string="Responsable projets", tracking=True)
+    # rpj_directeur_siteid         = fields.Many2one("res.users", string="Directeur site de production", tracking=True)
+    # rpj_directeur_techniqueid    = fields.Many2one("res.users", string="Directeur technique", tracking=True)
+
+
+
+
+
+
+
+
+
 
     def vers_valide_action(self):
         for obj in self:
@@ -90,6 +204,16 @@ class is_revue_projet_jalon(models.Model):
             if not obj.rpj_motif_refus:
                 raise ValidationError("Le motif du refus est obligatoire!")
             obj.sudo().state = "rpj_refus"
+
+    def vers_j_suivante_action(self):
+        for obj in self:
+            if obj.vers_j_suivante_vsb:
+                j = int(obj.rpj_j[-1:])
+                j_suivante = j+1
+                obj.rpj_mouleid.j_actuelle = "J%s"%j_suivante
+
+
+
 
 
     rpj_mouleid                  = fields.Many2one("is.mold"    , string="Moule", tracking=True)
@@ -195,6 +319,7 @@ class is_revue_projet_jalon(models.Model):
     vers_diffuse_vsb             = fields.Boolean(string="Pour Information"   , compute='_compute_vsb', readonly=True, store=False)
     vers_valide_vsb              = fields.Boolean(string="Validé"             , compute='_compute_vsb', readonly=True, store=False)
     vers_refuse_vsb              = fields.Boolean(string="Refusé"             , compute='_compute_vsb', readonly=True, store=False)
+    vers_j_suivante_vsb          = fields.Boolean(string="J suivante"         , compute='_compute_vsb', readonly=True, store=False)
     logo_rs                      = fields.Char(string="Logo RS"               , compute='_compute_logo_rs', readonly=True, store=False)
     active                       = fields.Boolean('Actif', default=True, tracking=True)
 
@@ -339,6 +464,7 @@ class is_revue_projet_jalon(models.Model):
                             ('idmoule'         ,'=', obj.rpj_mouleid.id),
                             ('dossierf_id'     ,'=', obj.dossierf_id.id),
                             ('param_project_id','=', line.param_project_id.id),
+                            ('suivi_projet'    ,'=', True),
                         ]
                         docs=self.env['is.doc.moule'].search(domain,limit=1)
                         doc=False

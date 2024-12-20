@@ -64,6 +64,16 @@
                             attrs="{'invisible': [('vers_refuse_vsb', '!=', True)]}"
                             type="object"
                         />
+                        <field name="vers_j_suivante_vsb" invisible="1" />
+                        <button
+                            name="vers_j_suivante_action"
+                            string="Passer à la J suivante"
+                            attrs="{'invisible': [('vers_j_suivante_vsb', '!=', True)]}"
+                            type="object"
+                        />
+
+
+
                         <field 
                             name="state" widget="statusbar" options="{'clickable': '1'}"
                             statusbar_visible="rpj_brouillon,rpj_directeur_technique,rpj_directeur_site,rpj_valide"
