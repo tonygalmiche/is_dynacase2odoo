@@ -46,6 +46,7 @@ _STATE=([
 
 class is_dossier_appel_offre(models.Model):
     _name = "is.dossier.appel.offre"
+    _inherit=['mail.thread']
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description="is_dossier_appel_offre"
     _order = "dao_num"
@@ -85,9 +86,8 @@ class is_dossier_appel_offre(models.Model):
     dao_commande_client   = fields.Many2many("ir.attachment", "is_dao_commande_client_rel"  , "commande_client_id"  , "att_id", string="Commande client")
     dao_lettre_nomination = fields.Many2many("ir.attachment", "is_dao_lettre_nomination_rel", "lettre_nomination_id", "att_id", string="Lettre de nomination et contrats")
     dao_devis_achat       = fields.Many2many("ir.attachment", "is_dao_devis_achat_rel"      , "devis_achat_id"      , "att_id", string="Fichier de devis des achats")
-
     fermeture_id          = fields.Many2one("is.fermeture.gantt", string="Fermeture du Gantt", tracking=True)
-
+    active                = fields.Boolean('Actif', default=True, tracking=True)
 
 
     def gantt_action(self):
