@@ -8,7 +8,7 @@ class is_indicateur_revue_jalon(models.Model):
     _rec_name = 'moule'
     _order = "moule"
     _sql_constraints = [
-        ('moule_uniq', 'unique(moule)', u"Le moule doit-être unique !")
+        ('moule_uniq', 'unique(moule)', "Le moule doit-être unique !")
     ]
 
 
@@ -16,7 +16,10 @@ class is_indicateur_revue_jalon(models.Model):
     client                      = fields.Char('Client', required=True)
     moule                       = fields.Char('Moule' , required=True)
     chef_de_projet              = fields.Char('Chef de projet')
+
     chrono                      = fields.Char('Chrono')
+    rpj_id                      = fields.Many2one("is.revue.projet.jalon", string="CR Jalon")
+
     j_actuelle                  = fields.Char('J actuelle')
     revue_de_lancement          = fields.Char('Revue de lancement')
     revue_des_risques           = fields.Char('Revue des risques')
