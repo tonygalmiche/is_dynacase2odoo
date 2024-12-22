@@ -115,11 +115,21 @@
                 </search>
             </field>
         </record>
-        <record id="is_indicateur_revue_jalon_graph_view" model="ir.ui.view">
-            <field name="name">is_indicateur_revue_jalon_graph_view</field>
+        <record id="is_indicateur_revue_jalon_graph" model="ir.ui.view">
+            <field name="name">is_indicateur_revue_jalon_graph</field>
             <field name="model">is.indicateur.revue.jalon</field>
             <field name="arch" type="xml">
-                <pivot string="pivot">
+                <graph order="desc">
+                    <field name="client"/>
+                    <field name="ca_annuel"  type="measure"/>
+                </graph>
+            </field>
+        </record>
+        <record id="is_indicateur_revue_jalon_pivot" model="ir.ui.view">
+            <field name="name">is_indicateur_revue_jalon_pivot</field>
+            <field name="model">is.indicateur.revue.jalon</field>
+            <field name="arch" type="xml">
+                <pivot>
                     <field name="client"     type="row"/>
                     <field name="j_actuelle" type="col"/>
                     <field name="ca_annuel"  type="measure"/>
@@ -129,7 +139,7 @@
         <record model="ir.actions.act_window" id="is_indicateur_revue_jalon_action">
             <field name="name">Indicateur revue jalon</field>
             <field name="res_model">is.indicateur.revue.jalon</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
         </record>
     </data>
 </odoo>
