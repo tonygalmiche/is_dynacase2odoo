@@ -2,6 +2,15 @@
 <odoo>
     <data>
         <!-- is.mold -->
+        <record id="archiver_documents_action_server" model="ir.actions.server">
+             <field name="name">Archiver les documents de ce moule</field>
+            <field name="model_id" ref="model_is_mold"/>
+            <field name="binding_model_id" ref="model_is_mold"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">action = records.archiver_documents_action()</field>
+            <field name="groups_id" eval="[(4, ref('is_gestionnaire_projet_group'))]"/>
+        </record>
         <record id="is_mold_form_view" model="ir.ui.view">
             <field name="name">is_mold_form_view</field>
             <field name="model">is.mold</field>

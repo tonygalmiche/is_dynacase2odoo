@@ -51,3 +51,14 @@ class is_dossierf(models.Model):
                 "context": ctx,
                 'limit': 1000,
             }
+
+
+    def archiver_documents_action(self):
+        for obj in self:
+            domain=[
+                ('dossierf_id'     ,'=', obj.id),
+            ]
+            docs=self.env['is.doc.moule'].search(domain)
+            for doc in docs:
+                doc.active = False
+

@@ -31,6 +31,17 @@ class is_mold(models.Model):
             }
 
 
+    def archiver_documents_action(self):
+        for obj in self:
+            domain=[
+                ('idmoule'         ,'=', obj.id),
+                #('dossierf_id'     ,'=', obj.id),
+            ]
+            docs=self.env['is.doc.moule'].search(domain)
+            for doc in docs:
+                doc.active = False
+
+
 class is_mold_dossierf_article(models.Model):
     _name        = "is.mold.dossierf.article"
     _description = "Articles associés aux moules ou dossier F"
