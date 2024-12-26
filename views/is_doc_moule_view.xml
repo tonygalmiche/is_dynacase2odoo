@@ -423,6 +423,7 @@
                     <field name="client_id" />
                     <field name="idcp" />
                     <field name="idresp" />
+                    <field name="dependance_id" />
                     <field name="j_prevue" />
                     <field name="actuelle" />
                     <field name="demande" />

@@ -349,17 +349,25 @@ class IsDocMoule(models.Model):
 
 
     def write(self,vals):
-        mem_date_debut_gantt = self.date_debut_gantt
+        nb=len(self)
+        if nb==1:
+            mem_date_debut_gantt = self.date_debut_gantt
+            mem_duree            = self.duree
         res=super(IsDocMoule, self).write(vals)
-        lier = self.env.context.get('lier')
-        date_debut_gantt = vals.get('date_debut_gantt')
-        duree            = vals.get('duree')
-        if isinstance(date_debut_gantt, str):
-            if mem_date_debut_gantt and date_debut_gantt and lier:
-                date_debut_gantt   = datetime.strptime(date_debut_gantt, '%Y-%m-%d').date()
-                delta=(date_debut_gantt - mem_date_debut_gantt).days
-                if delta:
-                    self.move_task_lier(delta)
+        if nb==1:
+            lier = self.env.context.get('lier')
+            date_debut_gantt = vals.get('date_debut_gantt')
+            duree            = vals.get('duree')
+            delta = 0
+            if isinstance(date_debut_gantt, str):
+                if mem_date_debut_gantt and date_debut_gantt and lier:
+                    date_debut_gantt   = datetime.strptime(date_debut_gantt, '%Y-%m-%d').date()
+                    delta=(date_debut_gantt - mem_date_debut_gantt).days
+            if isinstance(duree, int):
+                if mem_duree and duree and lier:
+                        delta=duree - mem_duree
+            if delta:
+                self.move_task_lier(delta)
 
 
         if 'etat' in vals:
@@ -369,7 +377,6 @@ class IsDocMoule(models.Model):
                 if not reponses[0] and not reponses[1] and not reponses[2] and self.ppr_type_demande!='AUTO':
                     raise ValidationError("Impossbile de passer à l'état 'Fait' car aucune réponse n'est fournie (%s) !"%type_demande)
                 
-
         for obj in self:
             if not obj.acces_chef_projet:
                 champs_interdit=[
