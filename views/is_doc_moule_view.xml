@@ -117,6 +117,11 @@
                                             <field name="duree_convertion_pdf"  optional="hide" attrs="{'column_invisible':[('parent.ppr_transformation_pdf', '=', False)]}"/>
                                         </tree>
                                     </field>
+
+
+                                    <!-- <field name="attachment_ids" widget="many2many_binary"/> -->
+
+
                                     <field name="rsp_pj"    attrs="{'invisible': [('rsp_pj', '=', False)]}"/>
                                     <field name="rsp_date"  attrs="{'invisible': [('ppr_type_demande', 'not in', ['DATE', 'PJ_DATE'])]}"/>
                                     <field name="rsp_texte" attrs="{'invisible': [('ppr_type_demande', 'not in', ['TEXTE','PJ_TEXTE'])]}"/>

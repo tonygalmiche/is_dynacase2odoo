@@ -6,7 +6,21 @@ class IrAttachment(models.Model):
     is_dynacase_id = fields.Integer(string="Id Dynacase",index=True, readonly=True,copy=False)
 
 
-    #TODO : Pour ajouter une piece jointe par glisser / déposer => Fonctionne, mais le document n'est pas rafraichi automatiquement
+    # is_doc_moule_id = fields.Many2one("is.doc.moule", string="is.doc.moule", compute='_compute_is_doc_moule_id', store=True, readonly=True)
+
+    # @api.depends('res_model','res_id')
+    # def _compute_is_doc_moule_id(self):
+    #     for obj in self:
+    #         doc_id = False
+    #         if obj.res_model=='is.doc.moule':
+    #             doc_id = obj.res_id
+    #             doc = self.env['is.doc.moule'].browse(doc_id)
+    #             doc._compute_rsp_pj()
+    #         obj.is_doc_moule_id = doc_id
+           
+
+
+    # #TODO : Pour ajouter une piece jointe par glisser / déposer => Fonctionne, mais le document n'est pas rafraichi automatiquement
     # @api.model_create_multi
     # def create(self, vals_list):
     #     line_id=False
@@ -32,3 +46,11 @@ class IrAttachment(models.Model):
     #         cr.commit()
     #     return res
     
+    #     return {
+    #         'type': 'ir.actions.client',
+    #         'tag': 'reload',
+    #     }
+    #     return {
+    #         'type': 'ir.actions.client',
+    #         'tag': 'soft_reload'
+    #     }

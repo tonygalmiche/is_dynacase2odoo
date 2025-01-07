@@ -157,6 +157,10 @@ class IsDocMoule(models.Model):
     suivi_projet        = fields.Boolean(string="Suivi des projets", default=True, tracking=True, help="Indique si c'est ce document qui doit être affiché dans le suivi des projets dans le cas où il y a plusieurs documents de la même famille")
 
 
+    # attachment_ids      = fields.One2many("ir.attachment", "is_doc_moule_id", string="Pièces-jointes")
+
+
+
     @api.onchange('etat')
     def onchange_etat(self):
         for obj in self:

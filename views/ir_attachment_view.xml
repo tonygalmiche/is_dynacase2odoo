@@ -8,6 +8,7 @@
             <field name="inherit_id" ref="base.view_attachment_tree"/>
             <field name="arch" type="xml">
                 <field name="create_date" position="after">
+                    <!-- <field name="is_doc_moule_id" optional="hide" widget="many2one_clickable"/> -->
                     <field name="is_dynacase_id" optional="hide"/>
                 </field>
             </field>
@@ -18,7 +19,8 @@
             <field name="inherit_id" ref="base.view_attachment_form"/>
             <field name="arch" type="xml">
                 <field name="public" position="after">
-                    <field name="is_dynacase_id" optional="hide"/>
+                    <!-- <field name="is_doc_moule_id"/> -->
+                    <field name="is_dynacase_id"/>
                 </field>
             </field>
         </record>
