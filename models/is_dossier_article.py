@@ -60,6 +60,7 @@ class is_dossier_article(models.Model):
                         'param_project_id': famille.id,
                     }
                     line_id = self.env['is.dossier.article.doc'].create(vals)
+
                 #** Recherche des docuements pour cette famille ***************
                 domain=[
                     ('param_project_id'  , '=', famille.id),
@@ -71,7 +72,7 @@ class is_dossier_article(models.Model):
                     line_id.piecejointe = doc.rsp_pj
                 #**************************************************************
             obj._compute_fait()
-        return True
+        return []
 
 
 class is_dossier_article_doc(models.Model):
