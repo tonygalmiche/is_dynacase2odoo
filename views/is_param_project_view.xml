@@ -29,7 +29,7 @@
                                 <field name="ppr_famille"/>
                                 <field name="sequence"/>
                                 <field name="type_document"/>
-                                <field name="ppr_transformation_pdf" attrs="{'invisible': [('type_document', '!=', 'Moule')]}"/>
+                                <field name="ppr_transformation_pdf"/>
                                 <field name="ppr_dossier_fab"        attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="dossier_matiere"        attrs="{'invisible': [('type_document', '!=', 'Article')]}" />
                                 <field name="dossier_colorant"       attrs="{'invisible': [('type_document', '!=', 'Article')]}" />
