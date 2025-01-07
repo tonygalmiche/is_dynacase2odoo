@@ -34,6 +34,7 @@ _STATE=([
     ('plascreate'     , 'créé'),
     ('plasanalysed'   , 'analysé'),
     ('plastransbe'    , 'transmis BE'),
+    ('Analyse_BE'     , 'Analysé BE'),
     ('plasvalidbe'    , 'validé BE'),
     ('plasvalidcom'   , 'validé commercial'),
     ('plasdiffusedcli', 'diffusé client'),
