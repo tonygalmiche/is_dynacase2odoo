@@ -113,7 +113,7 @@
                                             <field name="annex" widget="many2many_binary"/>
                                             <field name="demandmodif"           optional="hide" attrs="{'column_invisible':[('parent.type_document', '=', 'Article')]}"/>
                                             <field name="maj_amdec"             optional="hide" attrs="{'column_invisible':[('parent.type_document', '=', 'Article')]}"/>
-                                            <field name="comment"                               attrs="{'column_invisible':[('parent.type_document', '=', 'Article')]}"/>
+                                            <field name="comment"/>
                                             <field name="duree_convertion_pdf"  optional="hide" attrs="{'column_invisible':[('parent.ppr_transformation_pdf', '=', False)]}"/>
                                         </tree>
                                     </field>
