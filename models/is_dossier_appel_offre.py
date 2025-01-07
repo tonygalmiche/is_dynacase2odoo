@@ -31,17 +31,17 @@ _DAO_AVANCEMENT=([
 
 
 _STATE=([
-    ('plascreate'     , 'créé'),
-    ('plasanalysed'   , 'analysé'),
-    ('plastransbe'    , 'transmis BE'),
+    ('plascreate'     , 'Créé'),
+    ('plasanalysed'   , 'Analysé'),
+    ('plastransbe'    , 'Transmis BE'),
     ('Analyse_BE'     , 'Analysé BE'),
-    ('plasvalidbe'    , 'validé BE'),
-    ('plasvalidcom'   , 'validé commercial'),
-    ('plasdiffusedcli', 'diffusé client'),
-    ('plasrelancecli' , 'relance client'),
-    ('plaswinned'     , 'gagné'),
-    ('plasloosed'     , 'perdu'),
-    ('plascancelled'  , 'annulé'),
+    ('plasvalidbe'    , 'Validé BE'),
+    ('plasvalidcom'   , 'Validé commercial'),
+    ('plasdiffusedcli', 'Diffusé client'),
+    ('plasrelancecli' , 'Relance client'),
+    ('plaswinned'     , 'Gagné'),
+    ('plasloosed'     , 'Perdu'),
+    ('plascancelled'  , 'Annulé'),
 ])
 
 
