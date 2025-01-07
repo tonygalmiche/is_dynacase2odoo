@@ -234,8 +234,6 @@ class IsGanttPdf(models.Model):
                         enfant['duration'] = duration
             #******************************************************************
 
-
-
             #** Ajout de la couleur de la section **************************
             for enfant in enfants:
                 model  = enfant.get('model')
@@ -244,14 +242,13 @@ class IsGanttPdf(models.Model):
                 o = self.env[model].browse(res_id)
                 if o:
                     if model=='is.doc.moule' and o.section_id:
-                        color = o.section_id.color
+                        if o.section_id.color:
+                            color = o.section_id.color
                     if model=='is.section.gantt':
-                        color = o.color
+                        if o.color:
+                            color = o.color
                 enfant['color'] = color
             #******************************************************************
-
-       
-
 
             #** Recherche du nombre de jours **********************************
             def get_date(end_date,duration):
@@ -498,19 +495,16 @@ class IsGanttPdf(models.Model):
 
                     height = tache_height
                     txt = '%s %s'%('- '*item.get('niveau'),item.get('text'))
-
-
-
                     cairo_show_text(ctx,5,y+tache_height-1,txt=txt) # Nom de la tache à gauche
                     if obj.bordure_jour:
                         for ct in range(0,jour_nb):
                             cairo_rectangle(ctx,ct*jour_width+grille_width,y,jour_width,tache_height,line_rgb=(0.8, 0.8, 0.8),line_width=0.2) # Bordure des jours
                     else:
                         cairo_rectangle(ctx,0,y,grille_width,tache_height,line_rgb=(0.8, 0.8, 0.8),line_width=0.2) # Bordure du tableau des taches
-                    fill_rgb = to_rgb(item.get('color'))
+                    color = item.get('color')
+                    fill_rgb = to_rgb(color)
                     cairo_rectangle(ctx,x,y+3,width,height-6,fill_rgb=fill_rgb,line_rgb=(0, 0, 0),line_width=0.5) # Tache
                     fill_rgb=(0, 0, 0)
-
                     etat_class = item.get('etat_class')
                     if etat_class=='etat_a_faire':
                         fill_rgb=(1, 0, 0)

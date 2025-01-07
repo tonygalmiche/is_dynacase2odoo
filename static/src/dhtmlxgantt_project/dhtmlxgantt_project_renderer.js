@@ -84,6 +84,8 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         this.gantt.config.add_column = false;
         this.gantt.config.drag_progress = false;
         this.gantt.config.scroll_size = 30;
+        this.gantt.config.wheel_scroll_sensitivity = 0.1;
+
         //this.gantt.config.open_tree_initially = true; //Développer tous les niveaux par défaut
 
 

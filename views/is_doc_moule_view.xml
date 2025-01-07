@@ -89,7 +89,7 @@
                                 <field name="actuelle"  attrs="{'readonly': 1, 'invisible': [('type_document', '=', 'Article')]}"/>
                                 <field name="demande"   attrs="{'readonly': [('acces_chef_projet', '=', False)], 'invisible': [('type_document', '=', 'Article')]}"/>
                                 <field name="attendus"  attrs="{'invisible': [('attendus', '=', False)]}"/>
-                                <field name="action"    attrs="{'invisible': [('type_document', '=', 'Article')]}" is_widget="background_color"/>
+                                <field name="action"    attrs="{'invisible': [('type_document', '=', 'Article')]}"/>
                                 <label for="etat"/>
                                 <div class="o_row no-gutters d-flex">
                                     <field 
