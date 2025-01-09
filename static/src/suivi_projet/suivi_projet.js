@@ -92,6 +92,9 @@ class SuiviProjet extends Component {
             views: [[false, 'form']],
         });
     }
+
+
+
     ProjetClick(ev) {
         const projet_id    = ev.target.attributes.projet_id.value;
         this.action.doAction({
@@ -149,6 +152,44 @@ class SuiviProjet extends Component {
             ],
         });
     }
+
+
+    ListDocFamilleClick(ev) {
+        const res_id    = ev.target.attributes.res_id.value;
+        this.GetDocFamille(res_id);
+    }
+    async GetDocFamille(res_id){
+        const params={
+            "res_id"   : res_id,        
+        }
+        var res = await this.orm.call("is.doc.moule", 'get_doc_famille', [false],params);
+        this.action.doAction({
+            type: 'ir.actions.act_window',
+            name: 'Liste',
+            target: 'current',
+            res_model: 'is.doc.moule',
+            views: [[res.tree_id, 'tree'],[false, 'form']],
+            domain: [
+                ['id','in',res.ids],
+            ],
+        });
+    }
+
+
+
+
+    // ListDocFamilleClick(ev) {
+    //     const res_id    = ev.target.attributes.res_id.value;
+    //     this.action.doAction({
+    //         type: 'ir.actions.act_window',
+    //         res_id: parseInt(res_id),
+    //         res_model: 'is.doc.moule',
+    //         views: [[false, 'form']],
+    //     });
+    // }
+
+
+
 
 
     ZipDocClick(ev) {

@@ -511,6 +511,33 @@ class IsDocMoule(models.Model):
         return res
     
 
+    def _get_doc_famille(self,res_id):
+        doc = self.env['is.doc.moule'].browse(int(res_id))
+        docs=False
+        if doc:
+            domain=[
+                ('idmoule','=',doc.idmoule.id),
+                ('dossierf_id','=',doc.dossierf_id.id),
+                ('param_project_id','=',doc.param_project_id.id),
+            ]
+            docs=self.env['is.doc.moule'].search(domain)
+        return docs
+
+
+    def get_doc_famille(self,res_id):
+        tree_id  = self.env.ref('is_dynacase2odoo.is_doc_moule_moule_tree').id
+        docs = self._get_doc_famille(res_id)
+        ids=[]
+        if docs:
+            for doc in docs:
+                ids.append(doc.id)
+        res = {
+            'ids'    : ids,
+            'tree_id': tree_id,
+        }
+        return res
+    
+
     def get_zip(self,res_model,res_id,modele_id):
         attachment_id=False
         docs = self._get_doc_modele(res_model,res_id,modele_id)
