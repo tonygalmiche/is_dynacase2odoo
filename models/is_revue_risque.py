@@ -261,8 +261,8 @@ class is_revue_risque(models.Model):
         for obj in self:
             if not obj.rr_validation_revue_risque:
                 raise ValidationError("Le champ 'Validation de cette revue des risques' est obligatoire !")
-            obj.rr_mouleid.revue_risque_id  = obj.id
-            obj.dossierf_id.revue_risque_id = obj.id
+            obj.sudo().rr_mouleid.revue_risque_id  = obj.id
+            obj.sudo().dossierf_id.revue_risque_id = obj.id
             obj.state = "rr_diffuse"
 
 

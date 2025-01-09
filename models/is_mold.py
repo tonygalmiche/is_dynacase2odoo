@@ -6,13 +6,13 @@ class is_mold(models.Model):
     _inherit = 'is.mold'
 
     image                  = fields.Binary('Image')
-    dossier_appel_offre_id = fields.Many2one("is.dossier.appel.offre", string="Dossier appel d'offre", copy=False)
-    revue_contrat_id       = fields.Many2one("is.revue.de.contrat"   , string="Revue de contrat"     , copy=False)
-    revue_lancement_id     = fields.Many2one("is.revue.lancement"    , string="Revue de lancement"   , copy=False)
-    revue_risque_id        = fields.Many2one("is.revue.risque"       , string="Revue des risques"    , copy=False)
-    j_actuelle             = fields.Selection(GESTION_J, string="J Actuelle", tracking=True          , copy=False)
-    j_avancement           = fields.Integer(string="Avancement J (%)"       , tracking=True          , copy=False)
-    date_fin_be            = fields.Date(string="Date fin BE"               , tracking=True          , copy=False)
+    dossier_appel_offre_id = fields.Many2one("is.dossier.appel.offre", string="Dossier appel d'offre", copy=False, tracking=True)
+    revue_contrat_id       = fields.Many2one("is.revue.de.contrat"   , string="Revue de contrat"     , copy=False, tracking=True)
+    revue_lancement_id     = fields.Many2one("is.revue.lancement"    , string="Revue de lancement"   , copy=False, tracking=True)
+    revue_risque_id        = fields.Many2one("is.revue.risque"       , string="Revue des risques"    , copy=False, tracking=True)
+    j_actuelle             = fields.Selection(GESTION_J, string="J Actuelle"                         , copy=False, tracking=True)
+    j_avancement           = fields.Integer(string="Avancement J (%)"                                , copy=False, tracking=True)
+    date_fin_be            = fields.Date(string="Date fin BE"                                        , copy=False)
     article_ids            = fields.One2many('is.mold.dossierf.article', 'mold_id')
 
     def gantt_action(self):
