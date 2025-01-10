@@ -37,8 +37,8 @@
                         <group>
                             <group string="Gestion des J">
                                 <field name="dossier_appel_offre_id"/>
-                                <field name="revue_contrat_id"       readonly="1"/>
-                                <field name="revue_lancement_id"     readonly="1"/>
+                                <field name="revue_contrat_id"/>
+                                <field name="revue_lancement_id"/>
                                 <field name="revue_risque_id"        readonly="1"/>    
                                 <field name="j_actuelle"             readonly="1"/>
                                 <field name="j_avancement"           readonly="1"/>
