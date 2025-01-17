@@ -62,6 +62,9 @@
             <field name="model">is.mold</field>
             <field name="inherit_id" ref="is_plastigray16.is_mold_tree_view"/>
             <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="image" optional="show" widget="image" options='{"size": [80, 80]}'/>                            
+                </field>
                 <field name="is_database_id" position="before">
                     <field name="dossier_appel_offre_id" optional="hide" widget="many2one_clickable"/>
                     <field name="revue_contrat_id"       optional="hide" widget="many2one_clickable"/>

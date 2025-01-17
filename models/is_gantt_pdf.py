@@ -1,5 +1,6 @@
 from odoo import models, fields, api, _  # type: ignore
 from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J, TYPE_DOCUMENT, MODELE_TO_TYPE, TYPE_TO_FIELD  # type: ignore
+from odoo.exceptions import AccessError, ValidationError, UserError  # type: ignore
 from datetime import datetime, timedelta, date
 import pytz
 import calendar
@@ -22,6 +23,14 @@ class IsGanttPdfSection(models.Model):
     gantt_pdf_id = fields.Many2one('is.gantt.pdf', 'Gantt PDF', required=True, ondelete='cascade')
     section_id   = fields.Many2one("is.section.gantt", string="Section", required=True)
     afficher     = fields.Boolean("Afficher", default=True)
+
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+           if 'gantt_pdf_id' not in vals:
+                raise ValidationError("Il faut enregistrer ce document avant de modifier les sections")
+        return super().create(vals_list)
 
 
 class IsGanttPdf(models.Model):

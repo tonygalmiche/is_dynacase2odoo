@@ -37,6 +37,13 @@ class IsGanttCopieSection(models.Model):
             obj.nb_taches=nb
         
  
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+           if 'gantt_copie_id' not in vals:
+                raise ValidationError("Il faut enregistrer ce document avant de modifier les sections")
+        return super().create(vals_list)
+
 
 class IsGanttCopie(models.Model):
     _name        = "is.gantt.copie"
