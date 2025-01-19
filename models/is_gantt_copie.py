@@ -30,7 +30,7 @@ class IsGanttCopieSection(models.Model):
                                 if not doc.j_prevue:
                                     nb+=1
                                 else:
-                                    if doc.j_prevue>=obj.gantt_copie_id.j_actuelle:
+                                    if doc.j_prevue and obj.gantt_copie_id.j_actuelle and doc.j_prevue>=obj.gantt_copie_id.j_actuelle:
                                         nb+=1
                             else:
                                 nb+=1

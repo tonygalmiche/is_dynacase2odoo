@@ -397,7 +397,8 @@ class IsGanttPdf(models.Model):
             ladate = date_debut
             semaines=[]
             for x in range(0,int(jour_nb)):
-                txt = ladate.strftime("S%W")
+                #txt = ladate.strftime("S%W")
+                txt = ladate.strftime("S%V")
                 jour_semaine = ladate.isoweekday()
                 if x==0 or jour_semaine==1:
                     nb_jours_semaine = 7 - jour_semaine
@@ -466,8 +467,8 @@ class IsGanttPdf(models.Model):
                     if couleur=='chine':
                         fill_rgb=to_rgb("#fadcb8")
                     x      = grille_width+ct*jour_width
-                    y      = entete_height+tache_height*1
-                    height = nb_taches*tache_height+tache_height
+                    y      = entete_height+tache_height*2
+                    height = nb_taches*tache_height #+tache_height
                     cairo_rectangle(ctx,x,y,jour_width,height,fill_rgb=fill_rgb)
                 ladate += timedelta(days=1)
 
