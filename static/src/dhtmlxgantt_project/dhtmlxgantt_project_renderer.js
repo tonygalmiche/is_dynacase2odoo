@@ -123,6 +123,17 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                 return (button);
             }},
             {name: "start_date", label: "Début", tree: false, width: 80, align:"center" },
+
+            {name: "view_task",label: '',width: 25,template: function (task) {
+                var button=''
+                if(task.model=='is.doc.moule') {
+                    button='<i class="fa fa-search-plus"  style="cursor: pointer;" title="Voir cette tâche" data-action="view_task"></i>';
+                }
+                return (button);
+            }},
+
+
+
             {name: "irv"      , label: "IRV", tree: false, width: 30, align:"center" },
             {name: "initiales", label: "Rsp", tree: false, width: 30, align:"center" },
             {name: "copy",label: '',width: 50,template: function (task) {
@@ -340,7 +351,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                     //     gantt.createTask(null, id);
                     //     break;
                     case "copy":
-                        const task = gantt.getTaskBy("id", [id])[0]; // Recherche de la task avec son id
+                        var task = gantt.getTaskBy("id", [id])[0]; // Recherche de la task avec son id
                         if (task.model=='is.doc.moule'){
                             gantt.owl.CopyTask(id, task);
 
@@ -360,6 +371,16 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                             }
                         });
                         break;
+
+
+                    case "view_task":
+                        var task = gantt.getTaskBy("id", [id])[0]; // Recherche de la task avec son id
+                        if (task.model=='is.doc.moule'){
+                            gantt.owl.GetFormId(task,false);
+                        }
+                        break;
+
+
                 }
                 return false;
     
@@ -598,7 +619,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
     }
 
 
-    async GetFormId(task){
+    async GetFormId(task, target='new'){
         var self=this;
         rpc.query({
             model: 'is.doc.moule',
@@ -616,7 +637,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                     res_id: parseInt(task.res_id),
                     view_mode: 'form,list',
                     views: [[form_id, 'form'],[false, 'list']],
-                    target: 'new',
+                    target: target,
                     context: ctx,
                 },
             });
