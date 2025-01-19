@@ -185,7 +185,7 @@ class IsGanttCopie(models.Model):
                         if obj.type_document=='Moule' and src_doc.param_project_id.ppr_revue_lancement and src_doc.param_project_id.ppr_revue_lancement not in budgets:
                             test=False
                         if obj.copier_sup_j_actuelle:
-                            if src_doc.j_prevue and src_doc.j_prevue<obj.j_actuelle:
+                            if src_doc.j_prevue and obj.j_actuelle and src_doc.j_prevue<obj.j_actuelle:
                                 test=False
                         if test:
                             if src_doc.section_id.id in section_ids:
