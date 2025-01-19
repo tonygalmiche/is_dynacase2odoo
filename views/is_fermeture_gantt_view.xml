@@ -16,10 +16,10 @@
                                 <tree editable="bottom">
                                     <field name="date_debut"/>
                                     <field name="date_fin" />
+                                    <field name="couleur" />
                                 </tree>
                             </field>
                         </group>
-
                     </sheet>
                 </form>
             </field>

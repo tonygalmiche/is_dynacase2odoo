@@ -78,10 +78,15 @@
 }
 
 
-.dhtmlxgantt_project .jour_fermeture{ 
-    background: #fdeab6 !important;
+// .dhtmlxgantt_project .jour_fermeture{ 
+//     background: #fdeab6 !important;
+// }
+.dhtmlxgantt_project .jour_fermeture_france{ 
+    background: #faf5b8 !important;
 }
-
+.dhtmlxgantt_project .jour_fermeture_chine{ 
+    background: #fadcb8 !important;
+}
 
 
 // .dhtmlxgantt_project .etat_a_faire{

@@ -15,6 +15,8 @@ class is_dossierf(models.Model):
     j_avancement           = fields.Integer(string="Avancement J (%)"                                , copy=False, tracking=True)
     date_fin_be            = fields.Date(string="Date fin BE"                                        , copy=False, tracking=True)
     article_ids            = fields.One2many('is.mold.dossierf.article', 'dossierf_id'               , copy=False)
+    fermeture_id           = fields.Many2one("is.fermeture.gantt", string="Fermeture du Gantt")
+
 
     def lien_vers_dynacase_action(self):
         for obj in self:

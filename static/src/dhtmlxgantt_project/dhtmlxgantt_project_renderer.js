@@ -266,8 +266,10 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
                 const jour_fermeture_ids = gantt.owl.state.jour_fermeture_ids;
                 var formatFunc = gantt.date.date_to_str("%Y-%m-%d");
                 var date_str = formatFunc(date); 
-                if(jour_fermeture_ids.indexOf(date_str)>=0){
-                    return "jour_fermeture";
+                var test = jour_fermeture_ids[date_str];
+                if (typeof test !=='undefined'){
+                    var couleur = "jour_fermeture_"+test[1];
+                    return couleur;
                 }
              }
         };

@@ -63,6 +63,11 @@ class IsGanttPdf(models.Model):
     def onchange_moule(self):
         for obj in self:
             items,titre,jour_fermeture_ids,markers = obj.get_taches()
+
+
+            print(jour_fermeture_ids)
+
+
             lines=[]
             ids=[]
             for item in items:
@@ -154,6 +159,11 @@ class IsGanttPdf(models.Model):
             titre="%s du %s"%(titre,now)
             if domain!=[]:
                 res=self.env['is.doc.moule'].get_dhtmlx(domain=domain)
+
+
+                print('TEST',res['jour_fermeture_ids'])
+
+
                 items              = res['items']
                 jour_fermeture_ids = res['jour_fermeture_ids']
                 markers            = res['markers']
@@ -450,7 +460,31 @@ class IsGanttPdf(models.Model):
             for ct in range(0,jour_nb):
                 ladate_str = str(ladate)[0:10]
                 if ladate_str in jour_fermeture_ids:
-                    fill_rgb=to_rgb("#fdeab6")
+
+
+# .dhtmlxgantt_project .jour_fermeture_france{ 
+#     background: #faf5b8 !important;
+# }
+# .dhtmlxgantt_project .jour_fermeture_chine{ 
+#     background: #fadcb8 !important;
+# }
+
+                    couleur = jour_fermeture_ids[ladate_str][1]
+
+                    print(jour_fermeture_ids[ladate_str],couleur)
+
+
+                    fill_rgb=to_rgb("#faf5b8")
+                    if couleur=='chine':
+                        fill_rgb=to_rgb("#fadcb8")
+
+
+
+
+
+
+
+
                     x      = grille_width+ct*jour_width
                     y      = entete_height+tache_height*1
                     height = nb_taches*tache_height+tache_height

@@ -1,4 +1,4 @@
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _  # type: ignore
 
 class IsFermetureGantt(models.Model):
     _name        = "is.fermeture.gantt"
@@ -17,3 +17,7 @@ class IsFermetureGanttJour(models.Model):
     fermeture_id = fields.Many2one("is.fermeture.gantt", string="Fermeture", required=True, ondelete='cascade')
     date_debut   = fields.Date(string="Date début", required=True)
     date_fin     = fields.Date(string="Date fin")
+    couleur      = fields.Selection([
+        ("france", "France"),
+        ("chine" , "Chine"),
+    ], string="Couleur", required=True, default='france')

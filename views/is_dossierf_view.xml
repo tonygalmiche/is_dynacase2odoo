@@ -35,6 +35,7 @@
                 <sheet position="inside">
                     <group>
                         <group string="Gestion des J">
+                            <field name="fermeture_id"/>
                             <field name="dossier_appel_offre_id"/>
                             <field name="revue_contrat_id"/>
                             <field name="revue_lancement_id"/>
@@ -61,6 +62,7 @@
             <field name="inherit_id" ref="is_plastigray16.is_dossierf_tree_view"/>
             <field name="arch" type="xml">
                 <field name="is_database_id" position="before">
+                    <field name="fermeture_id"           optional="hide" widget="many2one_clickable"/>
                     <field name="dossier_appel_offre_id" optional="hide" widget="many2one_clickable"/>
                     <field name="revue_contrat_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="revue_lancement_id"     optional="hide" widget="many2one_clickable"/>

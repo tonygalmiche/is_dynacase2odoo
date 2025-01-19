@@ -12,8 +12,10 @@ class IsDocMoule(models.Model):
 
 
     def get_jour_fermeture_ids(self,fermeture_id):
-        jour_fermeture_ids=[]
+        jour_fermeture_ids={}
+        #color='red'
         for line in fermeture_id.jour_ids:
+            couleur = line.couleur
             if line.date_fin:
                 if line.date_fin>=line.date_debut:
                     ladate=line.date_debut
@@ -21,11 +23,13 @@ class IsDocMoule(models.Model):
                         if ladate>line.date_fin:
                             break                             
                         if ladate not in jour_fermeture_ids:
-                            jour_fermeture_ids.append(str(ladate))
+                            key = str(ladate)
+                            jour_fermeture_ids[key] = (key,couleur)
                         ladate+=timedelta(days=1)
             else:
                 if line.date_debut not in jour_fermeture_ids:
-                    jour_fermeture_ids.append(str(line.date_debut))
+                    key = str(line.date_debut)
+                    jour_fermeture_ids[key] = (key,couleur)
         return jour_fermeture_ids
 
 
@@ -102,38 +106,21 @@ class IsDocMoule(models.Model):
             if doc not in dossiers:
                 dossiers.append(doc)
 
-
-        #** Ajout des jours de fermeture des projets **************************
-        # def get_jour_fermeture_ids(fermeture_id):
-        #     jour_fermeture_ids=[]
-        #     for line in fermeture_id.jour_ids:
-        #         if line.date_fin:
-        #             if line.date_fin>=line.date_debut:
-        #                 ladate=line.date_debut
-        #                 while True:
-        #                     if ladate>line.date_fin:
-        #                         break                             
-        #                     if ladate not in jour_fermeture_ids:
-        #                         jour_fermeture_ids.append(str(ladate))
-        #                     ladate+=timedelta(days=1)
-        #         else:
-        #             if line.date_debut not in jour_fermeture_ids:
-        #                 jour_fermeture_ids.append(str(line.date_debut))
-        #     return jour_fermeture_ids
-        
-
-        #def get_jour_fermeture_ids(self,fermeture_id):
-
-
         jour_fermeture_ids=[]
         for projet in projets:
             jour_fermeture_ids=self.get_jour_fermeture_ids(projet.fermeture_id)
         for dossier in dossiers:
-            #if hasattr(dossier, 'demao_num'):
-            #    jour_fermeture_ids=get_jour_fermeture_ids(dossier.fermeture_id)
             if hasattr(dossier, 'fermeture_id'):
-                jour_fermeture_ids=self.get_jour_fermeture_ids(dossier.fermeture_id)
+                jours = self.get_jour_fermeture_ids(dossier.fermeture_id)
+                if len(jours)>0:
+                    jour_fermeture_ids=jours
         #**********************************************************************
+
+
+#PROJET is.mold.project(776,) ['2009-05-18', '2009-05-19', '2009-05-20', '2009-05-21', '2009-05-22', '2009-05-23', '2009-05-24', '2009-05-25', '2009-05-26', '2009-05-27', '2009-05-28', '2009-05-29', '2009-05-30', '2024-12-01', '2024-12-02', '2024-12-03', '2024-12-04', '2024-12-05', '2024-12-06', '2024-12-07', '2024-12-08', '2024-12-09', '2024-12-10', '2024-12-11', '2024-12-12', '2024-12-13', '2024-12-14', '2024-12-15', '2024-12-16', '2024-12-17', '2024-12-18', '2024-12-19', '2024-12-20', '2024-12-21', '2024-12-22', '2024-12-23', '2024-12-24', '2024-12-25', '2024-12-26', '2024-12-27', '2024-12-28', '2024-12-29', '2024-12-30', '2024-12-31', '2025-01-27', '2025-01-28', '2025-01-29', '2025-01-30', '2025-01-31', '2025-02-01', '2025-02-02', '2025-02-03', '2025-02-04', '2025-02-05', '2025-02-06', '2025-02-07']
+
+
+
 
 
         dossier_id=dossier_model=False

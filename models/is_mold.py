@@ -14,6 +14,8 @@ class is_mold(models.Model):
     j_avancement           = fields.Integer(string="Avancement J (%)"                                , copy=False, tracking=True)
     date_fin_be            = fields.Date(string="Date fin BE"                                        , copy=False)
     article_ids            = fields.One2many('is.mold.dossierf.article', 'mold_id')
+    fermeture_id           = fields.Many2one("is.fermeture.gantt", string="Fermeture du Gantt")
+
 
     def gantt_action(self):
         for obj in self:
