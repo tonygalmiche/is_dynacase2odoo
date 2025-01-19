@@ -448,7 +448,8 @@ class IsGanttPdf(models.Model):
             ladate = date_debut
             for ct in range(0,jour_nb):
                 if ladate.weekday() in (5,6):
-                    fill_rgb=to_rgb("#fadcb8")
+                    #fill_rgb=to_rgb("#fadcb8")
+                    fill_rgb=to_rgb("#d3d3d3")
                     x      = grille_width+ct*jour_width
                     y      = entete_height+tache_height*1
                     height = nb_taches*tache_height+tache_height
@@ -460,31 +461,10 @@ class IsGanttPdf(models.Model):
             for ct in range(0,jour_nb):
                 ladate_str = str(ladate)[0:10]
                 if ladate_str in jour_fermeture_ids:
-
-
-# .dhtmlxgantt_project .jour_fermeture_france{ 
-#     background: #faf5b8 !important;
-# }
-# .dhtmlxgantt_project .jour_fermeture_chine{ 
-#     background: #fadcb8 !important;
-# }
-
                     couleur = jour_fermeture_ids[ladate_str][1]
-
-                    print(jour_fermeture_ids[ladate_str],couleur)
-
-
                     fill_rgb=to_rgb("#faf5b8")
                     if couleur=='chine':
                         fill_rgb=to_rgb("#fadcb8")
-
-
-
-
-
-
-
-
                     x      = grille_width+ct*jour_width
                     y      = entete_height+tache_height*1
                     height = nb_taches*tache_height+tache_height
