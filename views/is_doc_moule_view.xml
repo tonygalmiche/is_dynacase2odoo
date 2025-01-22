@@ -514,6 +514,7 @@
                     <field name="date_fin_gantt"      optional="show"/>
                     <field name="duree_attente_avant" optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
+                    <field name="suivi_projet"        optional="hide"/>
                     <field name="gantt_pdf"           optional="hide"/>
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 

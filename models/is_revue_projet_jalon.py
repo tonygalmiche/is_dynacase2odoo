@@ -446,13 +446,15 @@ class is_revue_projet_jalon(models.Model):
 
             #** Recherche de tous les documents à faire ***********************
             domain=[
-                ('idmoule'    ,'=' , obj.rpj_mouleid.id),
-                ('dossierf_id','=' , obj.dossierf_id.id),
-                ('etat'       ,'in', ['AF','D']),
-                ('action'     ,'!=', False),
+                ('idmoule'     ,'=' , obj.rpj_mouleid.id),
+                ('dossierf_id' ,'=' , obj.dossierf_id.id),
+                ('etat'        ,'in', ['AF','D']),
+                ('action'      ,'!=', False),
+                ('suivi_projet','=' , True),
             ]
             docs=self.env['is.doc.moule'].search(domain)
             for doc in docs:
+                print(doc.param_project_id.ppr_famille)
                 line_ids[doc.param_project_id]=doc
             #******************************************************************
 

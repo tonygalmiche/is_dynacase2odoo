@@ -191,12 +191,13 @@
                                     <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus" attrs="{'invisible': [('rpj_doc_documentid', '=', False)]}"/>
                                     <field name="rpj_doc_documentid" optional="hide" readonly="1" widget="many2one_clickable"/>
                                     <field name="rpj_doc_document"   optional="hide" readonly="1"/>
-                                    <field 
+                                    <!-- <field 
                                         name="rpj_doc_action" optional="show" readonly="1" widget="badge" 
                                         decoration-info="rpj_doc_action == 'I'" 
                                         decoration-warning="rpj_doc_action == 'R'"
                                         decoration-danger="rpj_doc_action == 'V'"
-                                    />
+                                    /> -->
+                                    <field name="rpj_doc_action"     optional="show" readonly="1" widget="badge" />
                                     <field name="rpj_doc_bloquant"   optional="show" readonly="1"/>
                                     <field name="rpj_doc_respid"     optional="show" readonly="1"/>
                                     <field 
