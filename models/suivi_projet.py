@@ -7,6 +7,7 @@ from pathlib import Path
 from subprocess import PIPE, Popen
 import copy
 import base64
+import unidecode  # type: ignore
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -562,7 +563,14 @@ class IsDocMoule(models.Model):
                             champ=line.annex
                         for attachment in champ:
                             if attachment.datas:
-                                file_name = '/%s/%s'%(tmp_dir,attachment.name)
+                                tmp_dir_doc = unidecode.unidecode("%s/%s"%(tmp_dir,doc.param_project_id.ppr_famille)) # Sans les accents                          
+                                cde='mkdir -p "%s"'%tmp_dir_doc
+                                p = Popen(cde, shell=True, stdout=PIPE, stderr=PIPE)
+                                stdout, stderr = p.communicate()
+                                _logger.info("cde:%s, stdout:%s, stderr:%s"%(cde,stdout.decode("utf-8"),stderr.decode("utf-8")))
+                                if stderr:
+                                    raise ValidationError("%s\n%s"%(cde,stderr.decode("utf-8")))
+                                file_name = unidecode.unidecode('/%s/%s'%(tmp_dir_doc,attachment.name)) # Sans les accents     
                                 with open(file_name,'wb') as f:
                                     f.write(base64.decodebytes(attachment.datas))
                                     nb_pdf+=1
@@ -592,6 +600,15 @@ class IsDocMoule(models.Model):
                             attachment = self.env['ir.attachment'].create(vals)
                             attachment_id=attachment.id
                         #***********************************************************************
+
+                    #** Suppression du dossier et du zip **********************
+                    cde = 'cd /tmp && rm -Rf %s'%(name_dossier)
+                    p = Popen(cde, shell=True, stdout=PIPE, stderr=PIPE)
+                    stdout, stderr = p.communicate()
+                    cde = 'cd /tmp && rm %s.zip'%(name_dossier)
+                    p = Popen(cde, shell=True, stdout=PIPE, stderr=PIPE)
+                    stdout, stderr = p.communicate()
+                    #**********************************************************
 
         res = {
             'attachment_id'    : attachment_id,
