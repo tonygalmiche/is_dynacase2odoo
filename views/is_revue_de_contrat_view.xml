@@ -39,7 +39,7 @@
                                         <field name="rc_client" />
                                         <field name="rc_designation" />
                                         <field name="rc_num_outillageid" />
-                                        <field name="rc_dao" />
+                                        <field name="rc_daoid"/>
                                         <field name="rc_commercial" />
                                         <field name="rc_duration" />
                                         <field name="rc_product_dest" />
@@ -427,11 +427,11 @@
                     <field name="rc_type_automobile"       optional="show"/>
                     <field name="rc_projetid"              optional="show" widget="many2one_clickable"/>
                     <field name="rc_revue_contrat_assid"   optional="show" widget="many2one_clickable"/>
-                    <field name="rc_ass_mouleid"           optional="show" widget="many2one_clickable"/>
+                    <field name="rc_ass_mouleid"           optional="show" widget="many2many_tags"/>
                     <field name="rc_client"                optional="show" widget="many2one_clickable"/>
                     <field name="rc_designation"           optional="show"/>
                     <field name="rc_num_outillageid"       optional="hide"  widget="many2one_clickable"/>
-                    <field name="rc_dao"                   optional="hide"/>
+                    <field name="rc_daoid"                 optional="hide"  widget="many2one_clickable"/>
                     <field name="rc_commercial"            optional="hide"/>
                     <field name="rc_duration"              optional="hide"/>
                     <field name="rc_product_dest"          optional="hide"/>
@@ -455,9 +455,10 @@
             <field name="model">is.revue.de.contrat</field>
             <field name="arch" type="xml">
                 <search string="Revue de contrat">
-                    <field name="rc_mouleid" />
-                    <field name="rc_dossierfid" />
-                    <field name="state" />
+                    <field name="rc_mouleid"/>
+                    <field name="rc_dossierfid"/>
+                    <field name="rc_daoid"/>
+                    <field name="state"/>
                 </search>
             </field>
         </record>

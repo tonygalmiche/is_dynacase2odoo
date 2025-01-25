@@ -34,7 +34,10 @@ class is_revue_de_contrat(models.Model):
     rc_client                          = fields.Many2one("res.partner", string="Client", tracking=True)
     rc_designation                     = fields.Char(string="Désignation", tracking=True)
     rc_num_outillageid                 = fields.Many2one("is.mold", string="N° outillage", tracking=True)
-    rc_dao                             = fields.Char(string="Dossier d'appel d'offre", tracking=True)
+ 
+    #rc_dao                             = fields.Char(string="Dossier d'appel d'offre", tracking=True)
+    rc_daoid                           = fields.Many2one("is.dossier.appel.offre", string="Dossier d'appel d'offre", tracking=True)
+
     rc_commercial                      = fields.Many2one("res.users", string="Nom du commercial", tracking=True)
     rc_duration                        = fields.Float(string="Durée de vie", tracking=True)
     rc_product_dest                    = fields.Char(string="Destination du produit", tracking=True)
