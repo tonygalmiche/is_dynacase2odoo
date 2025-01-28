@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+        <!-- Sequence is.codification -->
+        <record id="is_codification_seq" model="ir.sequence">
+            <field name="name">Demande de transport</field>
+            <field name="code">is.codification</field>
+            <field name="prefix">T-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- is.codification -->
+        <record model="ir.ui.view" id="is_codification_form_view">
+            <field name="name">is_codification_form_view</field>
+            <field name="model">is.codification</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Form">
+                    <sheet>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active" invisible="1"/> 
+                        <group>
+                            <group>
+                                <field name="etabli_par_id"/>
+                                <field name="date"/>
+                                <field name="dossier_commercial"/>
+                                <field name="type_dossier"/>
+                                <field name="creation_modif"/>
+                                <field name="chef_de_projet_id"/>
+                                <field name="client_id"/>
+                                <field name="project_id"/>
+                                <field name="is_mold_id"/>
+                            </group>
+                            <group string="Gamme">
+                                <field name="type_presse"/>
+                                <field name="tps_cycle"/>
+                                <field name="nb_empreintes"/>
+                                <field name="nb_mod"/>
+                            </group>
+                            <group string="Codification">
+                                <field name="code_pg"/>
+                                <field name="designation"/>
+                                <field name="code_client"/>
+                                <field name="ref_plan"/>
+                                <field name="indice_plan"/>
+                                <field name="type_uc"/>
+                                <field name="qt_uc"/>
+                                <field name="commentaire"/>
+                            </group>
+                            <group string="Livraison">
+                                <field name="prev_annuelle"/>
+                                <field name="date_dms"/>
+                                <field name="duree_vie"/>
+                                <field name="lot_livraison"/>
+                                <field name="site_livraison"/>
+                            </group>
+                        </group>
+                        <field name="nomenclature_ids" nolabel="1" colspan="2">
+                            <tree editable="bottom">
+                                <field name="nom_code_pg"/>
+                                <field name="nom_designation"/>
+                                <field name="nom_qt"/>
+                            </tree>
+                        </field>
+                        <field name="decomposition_ids" nolabel="1" colspan="2">
+                            <tree editable="bottom">
+                                <field name="part_mat"/>
+                                <field name="part_comp"/>
+                                <field name="part_emb"/>
+                                <field name="va_inj"/>
+                                <field name="va_ass"/>
+                                <field name="frais_port"/>
+                                <field name="logis"/>
+                                <field name="amt_moule"/>
+                                <field name="surcout_pre_serie"/>
+                                <field name="prix_vente"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                   <div class="oe_chatter">
+                        <field name="message_follower_ids" />
+                        <field name="activity_ids" />
+                        <field name="message_ids" />
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_codification_tree_view">
+            <field name="name">is_codification_tree_view</field>
+            <field name="model">is.codification</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="code_pg"/>
+                    <field name="date"/>
+                    <field name="type_dossier"/>
+                    <field name="creation_modif"/>
+                    <field name="client_id"/>
+                    <field name="project_id"/>
+                    <field name="chef_de_projet_id"/>
+                    <field name="etabli_par_id"/>
+                    <field name="duree_vie"/>
+                    <field name="dynacase_id"        optional="hide"/>
+                    <field name="dossier_commercial" optional="hide"/>
+                    <field name="type_presse"        optional="hide"/>
+                    <field name="tps_cycle"          optional="hide"/>
+                    <field name="nb_empreintes"      optional="hide"/>
+                    <field name="nb_mod"             optional="hide"/>
+                    <field name="designation"        optional="hide"/>
+                    <field name="code_client"        optional="hide"/>
+                    <field name="ref_plan"           optional="hide"/>
+                    <field name="indice_plan"        optional="hide"/>
+                    <field name="type_uc"            optional="hide"/>
+                    <field name="qt_uc"              optional="hide"/>
+                    <field name="commentaire"        optional="hide"/>
+                    <field name="prev_annuelle"      optional="hide"/>
+                    <field name="date_dms"           optional="hide"/>
+                    <field name="lot_livraison"      optional="hide"/>
+                    <field name="site_livraison"     optional="hide"/>
+                </tree>
+            </field>
+        </record>
+        <!--record model="ir.ui.view" id="is_codification_search_view" >
+            <field name="name">is_codification_search_view</field>
+            <field name="model">is.codification</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="type_demande"/>
+                    <field name="demandeur_id"/>
+                    <field name="dest_raison_sociale"/>
+                    <field name="contact"/>
+                    <field name="enlev_raison_sociale"/>
+                    <field name="state"/>
+                </search>
+            </field>
+        </record-->
+        <record model="ir.actions.act_window" id="is_codification_action">
+            <field name="name">Fiche de codification</field>
+            <field name="res_model">is.codification</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}
+            </field>
+        </record>
+  </data>
+</openerp>
