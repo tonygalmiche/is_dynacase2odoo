@@ -2,7 +2,7 @@ from odoo import models, fields  # type: ignore
 
 
 class is_fiche_codification(models.Model):
-    _name='is.codification'
+    _name='is.fiche.codification'
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description="Fiche de codification"
 #    _order='name desc'
@@ -39,27 +39,27 @@ class is_fiche_codification(models.Model):
     lot_livraison      = fields.Char("Lot de livraison", tracking=True)
     site_livraison     = fields.Char("Site de livraison", tracking=True)
 
-    nomenclature_ids   = fields.One2many('is.codification.nomenclature.line', 'codification_id', string="Nomenclature")
+    nomenclature_ids   = fields.One2many('is.fiche.codification.nomenclature.line', 'codification_id', string="Nomenclature")
 
-    decomposition_ids   = fields.One2many('is.codification.decomposition.line', 'codification_id', string="Décomposition")
+    decomposition_ids   = fields.One2many('is.fiche.codification.decomposition.line', 'codification_id', string="Décomposition")
 
 
 class is_fiche_codification_nomenclature_line(models.Model):
-    _name        = "is.codification.nomenclature.line"
+    _name        = "is.fiche.codification.nomenclature.line"
     _description = "Lignes nomenclature codification"
     _rec_name    = "nom_code_pg"
     _order       = 'nom_code_pg'
 
-    codification_id    = fields.Many2one("is.codification", string="Codification", required=True, ondelete='cascade')
+    codification_id    = fields.Many2one("is.fiche.codification", string="Codification", required=True, ondelete='cascade')
     nom_code_pg        = fields.Char("Nomenclature code PG")
     nom_designation	   = fields.Char("Désignation nomenclature")
     nom_qt	           = fields.Char("Quantité")
 
 class is_fiche_codification_decomposition_line(models.Model):
-    _name        = "is.codification.decomposition.line"
+    _name        = "is.fiche.codification.decomposition.line"
     _description = "Décomposition du prix de vente"
 
-    codification_id    = fields.Many2one("is.codification", string="Codification", required=True, ondelete='cascade')
+    codification_id    = fields.Many2one("is.fiche.codification", string="Codification", required=True, ondelete='cascade')
     part_mat	       = fields.Float("Part mat", digits=(12, 4))
     part_comp	       = fields.Float("Part comp", digits=(12, 4))
     part_emb	       = fields.Float("Part emb", digits=(12, 4))
