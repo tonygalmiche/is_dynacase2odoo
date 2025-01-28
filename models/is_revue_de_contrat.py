@@ -242,6 +242,16 @@ class is_revue_de_contrat(models.Model):
                 'target': 'new',
             }
             
+
+    def vers_diffuse_action(self):
+        for obj in self:
+            obj.state='diffuse'
+
+
+    def vers_brouillon_action(self):
+        for obj in self:
+            obj.state='brouillon'
+
             
 class is_revue_de_contrat_decomposition_prix(models.Model):
     _name        = "is.revue.de.contrat.decomposition.prix"
