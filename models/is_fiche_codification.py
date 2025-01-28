@@ -1,8 +1,7 @@
-#from email.policy import default
-from odoo import models,fields,api
+from odoo import models, fields  # type: ignore
 
 
-class is_codification(models.Model):
+class is_fiche_codification(models.Model):
     _name='is.codification'
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description="Fiche de codification"
@@ -27,7 +26,7 @@ class is_codification(models.Model):
     indice_plan        = fields.Char("Indice plan", tracking=True)
     type_uc            = fields.Char("Type UC", tracking=True)
     qt_uc              = fields.Char("Quantité / UC", tracking=True)
-    commentaire        = fields.Char("Commentaire", tracking=True)
+    commentaire        = fields.Text("Commentaire", tracking=True)
 
     type_presse        = fields.Char("Type presse", tracking=True)
     tps_cycle          = fields.Char("Temps de cycle", tracking=True)
@@ -45,7 +44,7 @@ class is_codification(models.Model):
     decomposition_ids   = fields.One2many('is.codification.decomposition.line', 'codification_id', string="Décomposition")
 
 
-class is_codification_nomenclature_line(models.Model):
+class is_fiche_codification_nomenclature_line(models.Model):
     _name        = "is.codification.nomenclature.line"
     _description = "Lignes nomenclature codification"
     _rec_name    = "nom_code_pg"
@@ -56,20 +55,20 @@ class is_codification_nomenclature_line(models.Model):
     nom_designation	   = fields.Char("Désignation nomenclature")
     nom_qt	           = fields.Char("Quantité")
 
-class is_codification_decomposition_line(models.Model):
+class is_fiche_codification_decomposition_line(models.Model):
     _name        = "is.codification.decomposition.line"
     _description = "Décomposition du prix de vente"
 
     codification_id    = fields.Many2one("is.codification", string="Codification", required=True, ondelete='cascade')
-    part_mat	       = fields.Float("Part mat")
-    part_comp	       = fields.Float("Part comp")
-    part_emb	       = fields.Float("Part emb")
-    va_inj	           = fields.Float("VA inj")
-    va_ass	           = fields.Float("VA ass")
-    frais_port	       = fields.Float("Frais port")
-    logis	           = fields.Float("Logis")
-    amt_moule	       = fields.Float("Amt moule")
-    surcout_pre_serie  = fields.Float("Surcôut pré-série")
-    prix_vente	       = fields.Float("Prix vente")
+    part_mat	       = fields.Float("Part mat", digits=(12, 4))
+    part_comp	       = fields.Float("Part comp", digits=(12, 4))
+    part_emb	       = fields.Float("Part emb", digits=(12, 4))
+    va_inj	           = fields.Float("VA inj", digits=(12, 4))
+    va_ass	           = fields.Float("VA ass", digits=(12, 4))
+    frais_port	       = fields.Float("Frais port", digits=(12, 4))
+    logis	           = fields.Float("Logis", digits=(12, 4))
+    amt_moule	       = fields.Float("Amt moule", digits=(12, 4))
+    surcout_pre_serie  = fields.Float("Surcôut pré-série", digits=(12, 4))
+    prix_vente	       = fields.Float("Prix vente", digits=(12, 4))
 #
 #    #piece_jointe

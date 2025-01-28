@@ -21,4 +21,4 @@ from . import suivi_projet
 from . import is_creation_doc_migration
 from . import is_dossier_article
 from . import is_indicateur_revue_jalon
-from . import is_codification
+from . import is_fiche_codification

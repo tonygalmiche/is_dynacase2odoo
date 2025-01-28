@@ -3,17 +3,17 @@
 <openerp>
     <data>
         <!-- Sequence is.codification -->
-        <record id="is_codification_seq" model="ir.sequence">
-            <field name="name">Demande de transport</field>
+        <record id="is_fiche_codification_seq" model="ir.sequence">
+            <field name="name">Fiche de codification</field>
             <field name="code">is.codification</field>
-            <field name="prefix">T-</field>
+            <field name="prefix"></field>
             <field name="padding">5</field>
             <field name="company_id" eval="False"/>
         </record>
 
         <!-- is.codification -->
-        <record model="ir.ui.view" id="is_codification_form_view">
-            <field name="name">is_codification_form_view</field>
+        <record model="ir.ui.view" id="is_fiche_codification_form_view">
+            <field name="name">is_fiche_codification_form_view</field>
             <field name="model">is.codification</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -87,8 +87,8 @@
                 </form>
             </field>
         </record>
-        <record model="ir.ui.view" id="is_codification_tree_view">
-            <field name="name">is_codification_tree_view</field>
+        <record model="ir.ui.view" id="is_fiche_codification_tree_view">
+            <field name="name">is_fiche_codification_tree_view</field>
             <field name="model">is.codification</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
@@ -122,8 +122,8 @@
                 </tree>
             </field>
         </record>
-        <!--record model="ir.ui.view" id="is_codification_search_view" >
-            <field name="name">is_codification_search_view</field>
+        <!--record model="ir.ui.view" id="is_fiche_codification_search_view" >
+            <field name="name">is_fiche_codification_search_view</field>
             <field name="model">is.codification</field>
             <field name="arch" type="xml">
                 <search>
@@ -137,7 +137,7 @@
                 </search>
             </field>
         </record-->
-        <record model="ir.actions.act_window" id="is_codification_action">
+        <record model="ir.actions.act_window" id="is_fiche_codification_action">
             <field name="name">Fiche de codification</field>
             <field name="res_model">is.codification</field>
             <field name="view_mode">tree,form</field>
