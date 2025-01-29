@@ -81,6 +81,9 @@
                     </tbody>
                 </table>
             </div>
+            <t t-if="state.alert">
+                <div class="alert alert-warning mb-0"><t t-esc="state.alert" /></div>
+            </t>
             <div class="suivi_projet" style="height:calc(100vh - 140px) !important;overflow: auto">
                     <table style="width:100%;overflow-y:auto">
                         <thead>

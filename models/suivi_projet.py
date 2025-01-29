@@ -341,12 +341,15 @@ class IsDocMoule(models.Model):
                                     inner join res_partner client   on imp.client_id=client.id
                                     inner join is_param_project ipp on idm.param_project_id=ipp.id
                 where idm.active='t' and idm.suivi_projet='t' and idm.param_project_id in (%s) %s 
-                limit 500
+                limit 10000
             """%(','.join(modele_ids),WHERE)
 
+        alert=''
         if len(modele_ids)>0:
             cr.execute(SQL)
             rows = cr.dictfetchall()
+            if len(rows)==10000:
+                alert="Limite de 10 000 dépassée => Tous les documents ne sont pas affichés"
             _logger.info("Requête SQL (nb doc=%s) (durée=%.2fs)"%(len(rows),(datetime.now()-debut).total_seconds())) # 0.02s par document
             for row in rows:
                 doc=False
@@ -473,6 +476,7 @@ class IsDocMoule(models.Model):
             "avec_photo_options": avec_photo_options,
             "modele_id"         : modele_id,
             "modele_options"    : modele_options,
+            "alert"             : alert,
         }
         return res
 

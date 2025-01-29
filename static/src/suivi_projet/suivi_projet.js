@@ -288,6 +288,7 @@ class SuiviProjet extends Component {
         this.state.avec_photo_options      = res.avec_photo_options;
         this.state.suivi_projet_modele_id  = res.modele_id;
         this.state.modele_options          = res.modele_options;
+        this.state.alert                   = res.alert;
     }
 }
 

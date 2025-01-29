@@ -40,7 +40,6 @@ class IsDocMoule(models.Model):
 
         lines=self.env['is.doc.moule'].search(domain, limit=10000)
 
-
        #** Ajout des markers (J des moules) depuis is.revue.lancement *********
         res=[]
         markers=[]
