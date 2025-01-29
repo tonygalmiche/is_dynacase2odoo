@@ -368,15 +368,26 @@ class is_revue_projet_jalon(models.Model):
             obj._compute_logo_rs()
             obj._compute_rp_marge_brute_moule()
             if obj.rpj_mouleid:
+                if not obj.rpj_mouleid.j_actuelle:
+                    obj.rpj_mouleid.j_actuelle='J0'
+                if not obj.rpj_j:
+                    obj.rpj_j = obj.rpj_mouleid.j_actuelle
                 obj.rpj_clientid = obj.rpj_mouleid.client_id.id
                 obj.rpj_rcid     = obj.rpj_mouleid.revue_contrat_id.id
                 obj.rpj_rlid     = obj.rpj_mouleid.revue_lancement_id.id
                 obj.rpj_rrid     = obj.rpj_mouleid.revue_risque_id.id
             if obj.dossierf_id:
+                if not obj.dossierf_id.j_actuelle:
+                    obj.dossierf_id.j_actuelle='J0'
+                if not obj.rpj_j:
+                    obj.rpj_j = obj.dossierf_id.j_actuelle
                 obj.rpj_clientid = obj.dossierf_id.client_id.id
                 obj.rpj_rcid     = obj.dossierf_id.revue_contrat_id.id
                 obj.rpj_rlid     = obj.dossierf_id.revue_lancement_id.id
                 obj.rpj_rrid     = obj.dossierf_id.revue_risque_id.id
+            obj._compute_rpj_chrono()
+
+
 
             #** Equipe projet *************************************************
             if not obj.equipe_projet_ids:
@@ -454,7 +465,6 @@ class is_revue_projet_jalon(models.Model):
             ]
             docs=self.env['is.doc.moule'].search(domain)
             for doc in docs:
-                print(doc.param_project_id.ppr_famille)
                 line_ids[doc.param_project_id]=doc
             #******************************************************************
 

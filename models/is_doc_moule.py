@@ -270,16 +270,16 @@ class IsDocMoule(models.Model):
                 lanote = "%s/%s"%(obj.note,obj.coefficient)
             reponses=obj.get_doc_reponse()
             html="""
-                <div style='background-color:"""+color+"""'>
+                <div style='background-color:"""+(color or '')+"""'>
                     <table style="border-collapse:collapse;width:100%">
                         <tr>
                             <td style="border:none;text-align:center;white-space:nowrap;" colspan="2">
-                                <span>"""+ladate+"""</span>
+                                <span>"""+(ladate or '')+"""</span>
                             </td>
                         </tr>
                         <tr>
                             <td style="width:50%;border:none;text-align:left;white-space:nowrap;padding-left:0.5rem">
-                                <span>"""+lanote+"""</span>
+                                <span>"""+(lanote or '')+"""</span>
                             </td>
                             <td style="width:50%;border:none;text-align:right;white-space:nowrap;padding-right:0.5rem">
             """
