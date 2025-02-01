@@ -385,7 +385,7 @@ class is_revue_projet_jalon(models.Model):
                 obj.rpj_rcid     = obj.dossierf_id.revue_contrat_id.id
                 obj.rpj_rlid     = obj.dossierf_id.revue_lancement_id.id
                 obj.rpj_rrid     = obj.dossierf_id.revue_risque_id.id
-            obj._compute_rpj_chrono()
+            #obj._compute_rpj_chrono()
 
 
 
