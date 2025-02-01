@@ -1,6 +1,17 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo import models, fields, api, _       # type: ignore
+from odoo.exceptions import ValidationError   # type: ignore
+
+
+#TODO : 
+# Ajouter un champ 'name' comme la revue de contrat
+# Dans le programme de syncro faire un compute du name et des autres champs
+
+# Ajouter un champ name dans la revue des risques 
+# Copie des données depuis la revue de contrat
+# Duplication revue de lancement avec indice
+# Contrainet pour revue de lancement en double
+# Création invitessiiement achat moule
 
 
 _RESPONSABLES={
@@ -155,6 +166,10 @@ class is_revue_lancement(models.Model):
     ], string="État", tracking=True)
     dynacase_id = fields.Integer(string="Id Dynacase",index=True,copy=False)
     active      = fields.Boolean('Actif', default=True, tracking=True)
+
+
+
+
 
 
     def lien_vers_dynacase_action(self):

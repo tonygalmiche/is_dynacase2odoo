@@ -8,8 +8,13 @@
             <field name="arch" type="xml">
                 <form string="Revue de contrat">
                     <header>
-
-
+                        <button 
+                            name="copie_assemblage_action"
+                            string="Copie du dossier F"
+                            type="object"
+                            attrs="{'invisible': ['|',('state', '=', 'diffuse'),('rc_doc_moule_assemblage', '!=', 'c3')]}" 
+                            groups="is_dynacase2odoo.is_gestionnaire_revue_contrat_group"
+                        />
                         <button 
                             name="vers_diffuse_action"
                             string="vers Diffusé"
@@ -24,9 +29,6 @@
                             attrs="{'invisible': [('state', '=', 'brouillon')]}" 
                             groups="is_dynacase2odoo.is_gestionnaire_revue_contrat_group"
                         />
-
-
-
                         <button 
                             name="lien_vers_dynacase_action"
                             string="Dynacase"
@@ -44,17 +46,40 @@
                             <page name="donnees_d_initialisation" string="Données d'initialisation">
                                 <group>
                                     <group name="rc_initial_tab" string="Données d'initialisation">
-                                        <field name="rc_mouleid" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_dossierfid" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_indice" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="name"/>
                                         <field name="rc_doc_moule_assemblage" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_type_automobile" required="True" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_projetid" readonly="1" />
-                                        <field name="rc_revue_contrat_assid" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <separator string="Moules du dossier d'assemblage" />
-                                        <field name="rc_ass_mouleid" widget="many2many_tags" domain="[('dossierf_id','=',rc_dossierfid)]" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field 
+                                            name="rc_mouleid" 
+                                            attrs="{
+                                                'readonly':[('state','!=','brouillon')], 
+                                                'invisible':[('rc_doc_moule_assemblage','not in',('c2','c3'))],
+                                                'required':[('rc_doc_moule_assemblage','in',('c2','c3'))],
+                                            }" 
+                                        />
+                                        <field 
+                                            name="rc_dossierfid" 
+                                            attrs="{
+                                                'readonly':[('state','!=','brouillon')], 
+                                                'invisible':[('rc_doc_moule_assemblage','!=','c1')],
+                                                'required':[('rc_doc_moule_assemblage','=','c1')]
+                                            }" 
+                                        />
+                                        <field name="rc_ass_mouleid" widget="many2many_tags" attrs="{'invisible': [('rc_ass_mouleid', '=', [])]}" />
+                                        <field name="rc_indice" attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}" />
+                                        <field 
+                                            name="rc_type_automobile" 
+                                            attrs="{
+                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'invisible': [('rc_doc_moule_assemblage', '=', False)]
+                                            }" 
+                                        />
+                                        <field name="rc_projetid" readonly="1"  attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}" />
+                                        <field 
+                                            name="rc_revue_contrat_assid" 
+                                            attrs="{'invisible': [('rc_revue_contrat_assid', '=', False)]}" 
+                                        />
                                     </group>
-                                    <group name="rc_presentation_tab" string="Présentation de la pièce">
+                                    <group name="rc_presentation_tab" string="Présentation de la pièce" attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}" >
                                         <field name="rc_client" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                         <field name="rc_designation" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                         <field name="rc_num_outillageid" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
@@ -66,7 +91,7 @@
                                         <field name="rc_done_study" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                     </group>
                                 </group>
-                                <group col="3" name="rc_presentation_tab" string="Principales dates">
+                                <group col="2" name="rc_presentation_tab" string="Principales dates" attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}" >
                                     <group name="rc_presentation_tab_date" string="Date">
                                         <field name="rc_cmd_date" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                         <field name="rc_dfn_ro_date" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
@@ -75,14 +100,14 @@
                                         <field name="rc_dms_date" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                         <field name="rc_eop_date" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                     </group>
-                                    <group name="rc_presentation_tab_semaine" string="Semaine">
+                                    <!-- <group name="rc_presentation_tab_semaine" string="Semaine">
                                         <field name="rc_cmd_date_semaine" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
                                         <field name="rc_dfn_ro_date_semaine" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
                                         <field name="rc_first_m_try_semaine" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
                                         <field name="rc_ei_pres_semaine" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
                                         <field name="rc_dms_date_semaine" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
                                         <field name="rc_eop_date_semaine" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                    </group>
+                                    </group> -->
                                     <group name="rc_presentation_tab_vendues" string="Nb pièces vendues">
                                         <field name="rc_cmd_date_nb" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
                                         <field name="rc_dfn_ro_date_nb" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
@@ -92,10 +117,14 @@
                                         <field name="rc_eop_date_nb" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
                                     </group>
                                 </group>
-                                <label for="rc_nb_pce_p_jal" colspana="4" string="Commentaire spécifique (essais supplémentaire)"/>
-                                <field name="rc_nb_pce_p_jal" colspan="4" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                <!-- <label for="rc_nb_pce_p_jal" colspana="4" string="Commentaire spécifique (essais supplémentaire)"/>
+                                <field name="rc_nb_pce_p_jal" colspan="4" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/> -->
+
+                                <group string="Commentaire spécifique (essais supplémentaire)" attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}">
+                                    <field name="rc_nb_pce_p_jal" colspan="2" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                </group>
                             </page>
-                            <page name="rc_donnees_economiques_tab" string="Données économiques et de fabrication">
+                            <page name="rc_donnees_economiques_tab" string="Données économiques et de fabrication"  attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}" >
                                 <group name="rc_donnees_economiques_tab" string="Décomposition prix" col="4" colspan="4">
                                     <field name="decomposition_prix_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state', '!=', 'brouillon')]}" >
                                         <form>
@@ -123,6 +152,8 @@
                                                     <field name="rc_preserie_surcout" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
                                                     <field name="rc_preserie_surcout_commentaire" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
                                                     <field name="rc_sell_price"  attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_total"/>
+                                                    <field name="rc_ecart" attrs="{'invisible':[('rc_ecart','=',0)]}" style="background-color:orange"/>
                                                 </group>
                                             </group>
                                         </form>
@@ -144,7 +175,9 @@
                                             <field name="rc_moul_amort_commentaire" optional="hide" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
                                             <field name="rc_preserie_surcout" optional="hide" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
                                             <field name="rc_preserie_surcout_commentaire" optional="hide" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
+                                            <field name="rc_total" optional="show"/>
                                             <field name="rc_sell_price" optional="show" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
+                                            <field name="rc_ecart" optional="show"/>
                                         </tree>
                                     </field>
                                 </group>
@@ -166,8 +199,15 @@
                                         </tree>
                                     </field>
                                 </group>
-                                <group name="rc_donnees_fabrication_fr" string="Données de fabrication">
+                                <group name="rc_donnees_fabrication_fr" string="Données de fabrication" attrs="{'invisible': [('rc_doc_moule_assemblage', 'not in', ('c2','c3'))]}">
                                     <field name="rc_site_fabrication" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                    <field 
+                                        name="rc_site_fabrication_autre" 
+                                        attrs="{
+                                            'readonly': [('state', '!=', 'brouillon')],
+                                            'invisible': [('rc_site_fabrication', '!=', 'autre')],
+                                        }"
+                                    />
                                     <field name="rc_process_fabrication"  attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
                                     <field name="rc_nb_empreintes_moule" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                     <field name="rc_moulage_sur" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
@@ -175,12 +215,12 @@
                                     <field name="rc_stock_securite" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                     <field name="rc_stock_securite_commentaire" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                 </group>
-                                <group name="rc_df_d_injection" string="Dossier injection">
+                                <group name="rc_df_d_injection" string="Dossier injection" attrs="{'invisible': [('rc_doc_moule_assemblage', 'not in', ('c2','c3'))]}">
                                     <field name="rc_dfi_process_fab" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                     <field name="rc_dfi_schema_lieu_fab" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                     <field name="rc_dfi_classe_comrc" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                 </group>
-                                <group name="rc_ar_version" string="Versions" col="4" colspan="4">
+                                <group name="rc_ar_version" string="Versions" col="4" colspan="4"  attrs="{'invisible': [('rc_doc_moule_assemblage', 'not in', ('c2','c3'))]}">
                                     <field name="version_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state', '!=', 'brouillon')]}" >
                                         <form>
                                             <group col="3">
@@ -258,23 +298,62 @@
                                 </group>
                                 <group name="rc_eiv_fr" string="Enveloppe investissement vendue" col="6" >
                                     <group>
-                                        <field name="rc_eiv_moule"  attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                        <field 
+                                            name="rc_eiv_moule"  
+                                            attrs="{
+                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'invisible': [('rc_doc_moule_assemblage','=','c1')]
+                                            }"
+                                        />
                                         <field name="rc_eiv_etude" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_eiv_main_prehension" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_eiv_barre_chaude" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                       <field 
+                                            name="rc_eiv_main_prehension"  
+                                            attrs="{
+                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'invisible': [('rc_doc_moule_assemblage','=','c1')]
+                                            }"
+                                        />
+                                       <field 
+                                            name="rc_eiv_barre_chaude"  
+                                            attrs="{
+                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'invisible': [('rc_doc_moule_assemblage','=','c1')]
+                                            }"
+                                        />
                                         <field name="rc_eiv_gab_controle" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_eiv_mach_spec" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_eiv_plan_valid"  attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_mis_point" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_eiv_pack" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_eiv_amort" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_eiv_total" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_eiv_mach_spec"    attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_eiv_plan_valid"   attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                        <field name="rc_eiv_mis_point"    attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_eiv_pack"         attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_eiv_amort"        attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_eiv_total"/>
                                     </group>
                                     <group>
-                                        <field name="rc_eiv_moule_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                        <field 
+                                            name="rc_eiv_moule_cmt"  
+                                            nolabel="1" colspan="10"
+                                            attrs="{
+                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'invisible': [('rc_doc_moule_assemblage','=','c1')]
+                                            }"
+                                        />
                                         <field name="rc_eiv_etude_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_main_prehension_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_barre_chaude_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                        <field 
+                                            name="rc_eiv_main_prehension_cmt"  
+                                            nolabel="1" colspan="10"
+                                            attrs="{
+                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'invisible': [('rc_doc_moule_assemblage','=','c1')]
+                                            }"
+                                        />
+                                        <field 
+                                            name="rc_eiv_barre_chaude_cmt"  
+                                            nolabel="1" colspan="10"
+                                            attrs="{
+                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'invisible': [('rc_doc_moule_assemblage','=','c1')]
+                                            }"
+                                        />
                                         <field name="rc_eiv_gab_controle_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
                                         <field name="rc_eiv_mach_spec_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
                                         <field name="rc_eiv_plan_valid_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
@@ -322,7 +401,7 @@
                                     </field>
                                 </group>
                             </page>
-                            <page name="rc_specificites_tab" string="Spécificités et Éléments qualités">
+                            <page name="rc_specificites_tab" string="Spécificités et Éléments qualités" attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}" >
                                 <group name="rc_specificites_tab" string="Spécificités">
                                     <group>
                                         <field name="rc_sp_type_piece" widget="radio" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
@@ -370,7 +449,7 @@
                                     </div>
                                 </group>
                                 <group>
-                                    <group name="rc_edl_at_fr" string="Liste modele auto">
+                                    <group name="rc_edl_at_fr" string="Liste modele auto" attrs="{'invisible': [('rc_type_automobile', '!=', 'Oui')]}">
                                         <field name="rc_edl_at_n_ppm" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
                                         <field name="rc_edl_at_eng_fais" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
                                         <field name="rc_edl_at_syn_am_proc" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
@@ -395,7 +474,7 @@
                                         <field name="rc_edl_at_aud_proc" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
                                         <field name="rc_edl_at_acc_ei" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
                                     </group>
-                                    <group name="rc_edl_n_at_fr" string="Liste modele hors auto">
+                                    <group name="rc_edl_n_at_fr" string="Liste modele hors auto" attrs="{'invisible': [('rc_type_automobile', '!=', 'Non')]}">
                                         <field name="rc_edl_n_at_n_ppm" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
                                         <field name="rc_edl_n_at_synt_amdec_proc"  attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                         <field name="rc_edl_n_at_syn_fab" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
@@ -409,8 +488,15 @@
                                         <field name="rc_edl_n_at_fic_cond"  attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                         <field name="rc_edl_n_at_aud_proc" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
                                         <field name="rc_edl_n_at_acc_ei" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <separator string="Exigences qualité supplémentaires" />
-                                        <field name="rc_synthese_amdec_process_choix" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
+                                    </group>
+                                    <group string="Exigences qualité supplémentaires"  attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}">
+                                        <field 
+                                            name="rc_synthese_amdec_process_choix" 
+                                            attrs="{
+                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'invisible': [('rc_edl_at_syn_am_proc', '=', False),('rc_edl_n_at_synt_amdec_proc', '=', False)]
+                                            }"  
+                                        />
                                         <field name="rc_num_plan" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
                                         <field name="rc_num_dfn" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
                                         <field name="rc_num_cdc" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
@@ -435,10 +521,11 @@
             <field name="model">is.revue.de.contrat</field>
             <field name="arch" type="xml">
                 <tree string="Revue de contrat">
+                    <field name="name"                     optional="show"/>
                     <field name="rc_mouleid"               optional="show" widget="many2one_clickable"/>
                     <field name="rc_dossierfid"            optional="show" widget="many2one_clickable"/>
                     <field name="rc_indice"                optional="show"/>
-                    <field name="rc_doc_moule_assemblage"  optional="show"/>
+                    <field name="rc_doc_moule_assemblage"  optional="hide"/>
                     <field name="rc_type_automobile"       optional="show"/>
                     <field name="rc_projetid"              optional="show" widget="many2one_clickable"/>
                     <field name="rc_revue_contrat_assid"   optional="show" widget="many2one_clickable"/>
@@ -453,12 +540,21 @@
                     <field name="rc_cust_wait"             optional="hide"/>
                     <field name="rc_done_study"            optional="hide" />
                     <field name="rc_cmd_date"              optional="show"/>
-                    <field name="rc_dfn_ro_date"           optional="show"/>
-                    <field name="rc_first_m_try"           optional="show"/>
-                    <field name="rc_ei_pres"               optional="show"/>
-                    <field name="rc_dms_date"              optional="show"/>
-                    <field name="rc_eop_date"              optional="show"/>
-                    <field name="state"                    optional="show"/>
+                    <field name="rc_dfn_ro_date"           optional="hide"/>
+                    <field name="rc_first_m_try"           optional="hide"/>
+                    <field name="rc_ei_pres"               optional="hide"/>
+                    <field name="rc_dms_date"              optional="hide"/>
+                    <field name="rc_eop_date"              optional="hide"/>
+                    <field name="rc_eiv_total"             optional="hide"/>
+                    <field name="create_date"              optional="hide" string="Créé le"/>
+                    <field name="create_uid"               optional="hide" string="Créé par"/>
+                    <field name="write_date"               optional="hide" string="Modifié le"/>
+                    <field name="write_uid"                optional="hide" string="Modifié par"/>
+                    <field 
+                        name="state" optional="show" readonly="1" widget="badge" 
+                        decoration-muted="state == 'diffuse'" 
+                        decoration-warning="state == 'brouillon'" 
+                    />
                     <field name="dynacase_id"              optional="hide" groups="base.group_system"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" groups="base.group_system"/>
                 </tree>
@@ -469,7 +565,8 @@
             <field name="name">view.is.revue.de.contrat.search</field>
             <field name="model">is.revue.de.contrat</field>
             <field name="arch" type="xml">
-                <search string="Revue de contrat">
+                <search>
+                    <field name="name"/>
                     <field name="rc_mouleid"/>
                     <field name="rc_dossierfid"/>
                     <field name="rc_daoid"/>

@@ -1,43 +1,270 @@
 # -*- coding: utf-8 -*-
+from odoo import models, fields, api, _      # type: ignore
+from odoo.exceptions import ValidationError  # type: ignore
 
-from odoo import models, fields, api, _
+
+#TODO : 
+# Vérfier la class et la methode en PHP dans Dynacase
+# Dans le programme de syncro faire un compute du name et des autres champs
+
+# Ajouter ces 3 contraites : 
+
+#   function m1_vers_diffuse($newstate,$oldstate){
+#     $nb1=count($this->doc->getTValue("rc_dfi_article"));
+#     $nb2=count($this->doc->getTValue("rc_dfe_comp"));
+#     $err="";
+#     if($nb1==0 and $nb2==0) $err="Les versions dans l'onglet 'Données de fabrication' ne sont pas renseignées !";
+#     return $err;
+#   }
+
+#   function m1_vers_brouillon($newstate,$oldstate){
+#     $dbaccess= GetParam("FREEDOM_DB");
+#     $docid=$this->doc->getValue("rc_num_outillageid");
+#     if ($docid>0) {
+#       $doc = new_Doc($dbaccess, $docid);
+#       if (is_object($doc)) {
+#         $rlid=$doc->getValue("MOUL_RLID");
+#         if ($rlid>0) {
+#           $err="Impossible de repasser à l'état 'Brouillon' car une revue de lancement existe !";
+#         }
+#       }
+#     }
+#     return $err;
+#   }
+
+
+# //** Recherche revue de projet jalon ***************************************
+# if ($err==""){
+#     $filter=array();
+#     foreach ($tid as $k=>$v) {
+#         $filter[]="RPJ_MOULEID ~ E'\\\\y".$v."\\\\y'";
+#     }
+#     $mouleid=$rc->getValue("rc_mouleid");
+#     $filter=array();
+#     $tid=array();
+#     if ($mouleid>0) {
+#         $moule = new_Doc($dbaccess, $mouleid,true);
+#         if (is_object($moule)) {
+#             $trev=$moule->getRevisions("TABLE");
+#             foreach ($trev as $k=>$v) {
+#                 $tid[]=$v["id"];
+#                 $filter[]="RPJ_MOULEID ~ E'\\\\y".$v["id"]."\\\\y'";
+#             }
+
+#         }
+#     }
+#     if (count($filter)>0) {
+#         $filter=implode(" or ",$filter);
+#         $s=new SearchDoc($dbaccess,"PG_REVUE_PROJET_JALON");
+#         $s->setObjectReturn();
+#         $s->addFilter($filter); 
+#         $s->addFilter("state='rpj_valide'"); 
+#         $s->search();
+#         while ($doc=$s->nextDoc()) {
+#             $err="Il existe déjà une revue de projet jalon de validée => Duplication impossible !".$doc->title;
+#         }
+#     }
+# }
+# //**************************************************************************
+
+
+
+# Ajouter ces champs calculés
+
+# function calcul_champs() {
+
+
+#     error_log("### TEST calcul_champs #### ");
+
+
+#     //** chiffre d'affaire annuel **********************************************
+#     $sell_price       = $this->getTValue('rc_sell_price');
+#     $moul_amort       = $this->getTValue('rc_moul_amort');
+#     $preserie_surcout = $this->getTValue('rc_preserie_surcout');
+#     $qte_annuelle     = $this->getTValue('rc_year_quantity');
+#         $X=0;
+#         for ($i=0;$i<count($sell_price);$i++) {
+#             $ca_annuel=$ca_annuel+$qte_annuelle[$i]*($sell_price[$i]-$moul_amort[$i]-$preserie_surcout[$i]);
+#         }
+#         if ($ca_annuel==0) $ca_annuel=" ";
+#     $this->setValue('rc_ca_annuel', $ca_annuel);
+#     //**************************************************************************
+
+
+#     //** vac *******************************************************************
+#     $va_injection     = $this->getTValue('rc_va_injection');
+#     $va_assembly      = $this->getTValue('rc_va_assembly');
+#         for ($i=0;$i<count($sell_price);$i++) {
+#             $vac = $vac + ($va_injection[$i] + $va_assembly[$i])*$qte_annuelle[$i];
+#         }
+#         if ($vac==0) $vac=" ";
+#     $this->setValue('rc_vac', $vac);
+#     //**************************************************************************
+
+
+#     //** Total Enveloppe investissement vendue *********************************
+#     $moule           = $this->getValue('rc_eiv_moule');
+#     $etude           = $this->getValue('rc_eiv_etude');
+#     $main_prehension = $this->getValue('rc_eiv_main_prehension');
+#     $barre_chaude    = $this->getValue('rc_eiv_barre_chaude');
+#     $gab_controle    = $this->getValue('rc_eiv_gab_controle');
+#     $mach_spec       = $this->getValue('rc_eiv_mach_spec');
+#     $plan_valid      = $this->getValue('rc_eiv_plan_valid');
+#     $mis_point       = $this->getValue('rc_eiv_mis_point');
+#     $pack            = $this->getValue('rc_eiv_pack');
+#     $amort           = $this->getValue('rc_eiv_amort');
+#     $eiv_total=$moule+$etude+$main_prehension+$barre_chaude+$gab_controle+$mach_spec+$plan_valid+$mis_point+$pack; //+$amort;
+#     if ($eiv_total==0) $eiv_total=" ";
+#     $this->setValue('rc_eiv_total',$eiv_total);
+#     //**************************************************************************
+
+#     $cycle  = $this->getTValue('rc_dfi_cycle');
+#     $nb_emp = $this->getTValue('rc_dfi_nb_emp');
+#         $temp_occ_pm=0;
+#         for ($i=0;$i<count($qte_annuelle);$i++) {
+#             $temp_occ_pm = $temp_occ_pm + ($qte_annuelle[$i]/11) * $cycle[$i] /3600;
+#         }
+#         if ($temp_occ_pm==0) {
+#             $temp_occ_pm=" ";
+#         } else {
+#             $temp_occ_pm=number_format(floatval($temp_occ_pm), 2);
+#         }
+#     $this->setValue('rc_dfi_temp_occ_pm', $temp_occ_pm);
+#     //**************************************************************************
+
+
+
+#     //** Recopie du champ moule pour lien vers le moule ************************
+#     $mouleid  = $this->getValue('rc_mouleid');
+#     $this->setValue('rc_num_outillageid',$mouleid);
+#     //**************************************************************************
+# }
+
+
+
+
+
+# Liste de choix des clients livrés et des articles
+
+# function lclientlivre($dbaccess,$rc_price_client){
+#     global $action;
+
+#     $filter=array();
+#     $filter[]="title like '%$rc_price_client%'";
+#     $filter[]="cli_etiquete like '%LIVRAISON%'";
+
+#     $tdoc = getChildDoc($dbaccess,
+#                         0,
+#                         0,
+#                         10,
+#                         $filter,
+#                         $action->user->id,
+#                         "ITEM",
+#                         "CLIENT",
+# 			$distinct,
+# 			"title");
+#     $tr = array();
+#     while ($doc=getNextDoc($dbaccess,$tdoc)) {
+#         $tr[] = array(    $doc->title,
+#                 $doc->id,
+#                 $doc->title);
+#     }
+#     return $tr;
+# }
+
+
+# function larticle($docid) {
+# 	include_once("FDL/Class.Doc.php");
+# 	$dbaccess = GetParam("FREEDOM_DB");
+
+# 	$tr=array();
+# 	if ($docid>0) {
+# 		$doc = new_Doc($dbaccess, $docid,true);
+# 		$article=$doc->getTValue("rc_price_comp_article");
+# 		foreach($article as $v) {
+# 			$tr[]=array($v,$v);
+# 		}
+# 	}
+#   return $tr;
+# }
+
+
+
+
+
+
+
 
 
 class is_revue_de_contrat(models.Model):
     _name        = "is.revue.de.contrat"
     _inherit=['mail.thread']
     _description = "Revue de contrat"
-    #_rec_name    = "rc_mouleid"
+
 
     @api.depends("rc_eiv_moule", "rc_eiv_etude", "rc_eiv_main_prehension", "rc_eiv_barre_chaude" , "rc_eiv_gab_controle", "rc_eiv_mach_spec", "rc_eiv_plan_valid", "rc_eiv_mis_point" ,"rc_eiv_pack", "rc_eiv_amort")
-    def get_rc_eiv_total(self):
+    def _compute_rc_eiv_total(self):
         for record in self:
             record.rc_eiv_total = record.rc_eiv_moule +  record.rc_eiv_etude +  record.rc_eiv_main_prehension + \
                                   record.rc_eiv_barre_chaude + record.rc_eiv_gab_controle +record.rc_eiv_mach_spec + \
                                   record.rc_eiv_plan_valid + record.rc_eiv_mis_point + record.rc_eiv_pack + record.rc_eiv_amort
 
-    rc_mouleid                         = fields.Many2one("is.mold", string="Revue de contrat (Moule)", tracking=True)
-    rc_dossierfid                      = fields.Many2one("is.dossierf", string="Revue de contrat (Dossier F)", tracking=True)
-    rc_indice                          = fields.Integer(string="Indice", tracking=True)
+    @api.depends("rc_mouleid","rc_dossierfid","rc_mouleid.project","rc_dossierfid.project","rc_mouleid.project.client_id","rc_dossierfid.project.client_id")
+    def _compute_rc_projetid(self):
+        for obj in self:
+            projetid = False
+            client_id = False
+            if obj.rc_mouleid:
+                projetid  = obj.rc_mouleid.project.id
+                client_id = obj.rc_mouleid.project.client_id.id
+            if obj.rc_dossierfid:
+                projetid  = obj.rc_dossierfid.project.id
+                client_id = obj.rc_dossierfid.project.client_id.id
+            obj.rc_projetid = projetid
+            obj.rc_client = client_id
+
+
+    @api.depends("rc_dossierfid")
+    def _compute_rc_ass_mouleid(self):
+        for obj in self:
+            ids=[]
+            if obj.rc_dossierfid:
+                for mold in obj.rc_dossierfid.mold_ids:
+                    ids.append(mold.id)
+            obj.rc_ass_mouleid = ids
+
+
+    @api.depends("rc_mouleid","rc_dossierfid","rc_indice")
+    def _compute_name(self):
+        for obj in self:
+            name="x"
+            if obj.rc_mouleid:
+                name = obj.rc_mouleid.name
+            if obj.rc_dossierfid:
+                name = obj.rc_dossierfid.name
+            obj.name='RC-%s-%s'%(name,obj.rc_indice)
+
+
+    name                               = fields.Char(string="N°", compute="_compute_name", store=True, readonly=True)
+    rc_mouleid                         = fields.Many2one("is.mold", string="Moule", tracking=True)
+    rc_dossierfid                      = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
+    rc_indice                          = fields.Integer(string="Indice", readonly=True, default=0)
     rc_doc_moule_assemblage            = fields.Selection([
         ("c1", "La revue de contrat est attachée à un dossier d'assemblage"),
         ("c2", "La revue de contrat est attachée à un moule autonome"),
         ("c3", "La revue de contrat est attachée à un moule appartenant à un dossier d'assemblage"),
-    ], string="Dossier moule ou assemblage", tracking=True)
+    ], string="Dossier moule ou assemblage", tracking=True, required=True)
     rc_type_automobile                 = fields.Selection([
         ("Non", "hors Automobile"),
         ("Oui", "Automobile"),
-    ], string="Type automobile", tracking=True)
-    rc_projetid                        = fields.Many2one(related="rc_mouleid.project", string="Projet", tracking=True)
-    rc_revue_contrat_assid             = fields.Many2one("is.revue.de.contrat", string="Revue de contrat du dossier d'assemblage", tracking=True)
-    rc_ass_mouleid                     = fields.Many2many("is.mold", "is_revue_mold_rel", "revue_id", "mold_id", string="Moule", tracking=True)
-    rc_client                          = fields.Many2one("res.partner", string="Client", tracking=True)
+    ], string="Type automobile", tracking=True, required=True)
+    rc_projetid                        = fields.Many2one("is.mold.project", string="Projet", compute="_compute_rc_projetid", store=True, readonly=True)
+    rc_revue_contrat_assid             = fields.Many2one("is.revue.de.contrat", string="RC dossier F", readonly=True)
+    rc_ass_mouleid                     = fields.Many2many("is.mold", "is_revue_mold_rel", "revue_id", "mold_id", string="Moules Dossier F", compute="_compute_rc_ass_mouleid", store=False, readonly=True)
+    rc_client                          = fields.Many2one("res.partner", string="Client", compute="_compute_rc_projetid", store=True, readonly=True)
     rc_designation                     = fields.Char(string="Désignation", tracking=True)
-    rc_num_outillageid                 = fields.Many2one("is.mold", string="N° outillage", tracking=True)
- 
-    #rc_dao                             = fields.Char(string="Dossier d'appel d'offre", tracking=True)
+    rc_num_outillageid                 = fields.Many2one("is.mold", string="N° outillage", tracking=True) 
     rc_daoid                           = fields.Many2one("is.dossier.appel.offre", string="Dossier d'appel d'offre", tracking=True)
-
     rc_commercial                      = fields.Many2one("res.users", string="Nom du commercial", tracking=True)
     rc_duration                        = fields.Float(string="Durée de vie", tracking=True)
     rc_product_dest                    = fields.Char(string="Destination du produit", tracking=True)
@@ -46,6 +273,7 @@ class is_revue_de_contrat(models.Model):
         ("Oui", "Oui"),
         ("Non", "Non"),
     ], string="Étude pièce faite par PG", tracking=True)
+
     rc_cmd_date                        = fields.Date(string="Date de la commande", tracking=True)
     rc_cmd_date_semaine                = fields.Integer(string="Semaine de la commande", tracking=True)
     rc_cmd_date_nb                     = fields.Char(string="Nombre de pièces vendues", tracking=True)
@@ -63,6 +291,7 @@ class is_revue_de_contrat(models.Model):
     rc_dms_date_nb                     = fields.Char(string="Nombre de pièces vendues 4", tracking=True)
     rc_eop_date                        = fields.Date(string="Date EOP (Fin de vie)", tracking=True)
     rc_eop_date_semaine                = fields.Integer(string="Semaine EOP", tracking=True)
+
     rc_eop_date_nb                     = fields.Char(string="Nombre de pièces vendues 5", tracking=True)
     rc_nb_pce_p_jal                    = fields.Text(string="Commentaire spécifique (essais supplémentaire)", tracking=True)
     decomposition_prix_ids             = fields.One2many("is.revue.de.contrat.decomposition.prix", "is_revue_id", tracking=True)
@@ -88,7 +317,7 @@ class is_revue_de_contrat(models.Model):
     rc_eiv_pack_cmt                    = fields.Char(string="Commentaire 8", tracking=True)
     rc_eiv_amort                       = fields.Float(string="Amortissement", tracking=True)
     rc_eiv_amort_cmt                   = fields.Char(string="Commentaire 9", tracking=True)
-    rc_eiv_total                       = fields.Float(string="Total", compute="get_rc_eiv_total")
+    rc_eiv_total                       = fields.Float(string="Total", compute="_compute_rc_eiv_total", store=True, readonly=True)
     rc_sp_type_piece                   = fields.Selection([
         ("PLS", "PLS"),
         ("POE", "POE"),
@@ -221,16 +450,67 @@ class is_revue_de_contrat(models.Model):
     active = fields.Boolean('Actif', default=True, tracking=True)
 
 
-    def name_get(self):
-        result = []
+    def write(self,vals):
+        res=super().write(vals)
+        self._rc_unique()
+        return res
+
+
+
+    @api.constrains('rc_mouleid', 'rc_dossierfid', 'rc_indice')
+    def _rc_unique(self):
         for obj in self:
-            name=""
-            if obj.rc_mouleid:
-                name = obj.rc_mouleid.name
-            if obj.rc_dossierfid:
-                name = obj.rc_dossierfid.name
-            result.append((obj.id, name))
-        return result
+            domain=[
+                ('rc_mouleid'   , '=', obj.rc_mouleid.id), 
+                ('rc_dossierfid', '=', obj.rc_dossierfid.id), 
+                ('rc_indice'    , '=', obj.rc_indice), 
+                #('active'       , 'in', (True,False)), 
+            ]
+            lines = self.env['is.revue.de.contrat'].search(domain)
+
+
+            print('TEST 2 _rc_unique', domain, lines, len(lines))
+
+            if len(lines) > 1:
+                raise ValidationError("Cette revue de contrat existe déjà !")
+
+
+    # def name_get(self):
+    #     result = []
+    #     for obj in self:
+    #         name=""
+    #         if obj.rc_mouleid:
+    #             name = obj.rc_mouleid.name
+    #         if obj.rc_dossierfid:
+    #             name = obj.rc_dossierfid.name
+
+    #         name='RC-%s-%s'%(name,obj.rc_indice)
+
+    #         result.append((obj.id, name))
+    #     return result
+
+
+    # def _name_search(self, name='', args=None, operator='ilike', context=None, limit=100):
+    #     if not args:
+    #         args = []
+    #     if name:
+    #         ids = list(self._search(['|',('rc_mouleid','ilike', name),('rc_dossierfid','ilike', name)], limit=limit))
+    #     else:
+    #         ids = self._search(args, limit=limit)
+    #     return ids
+
+
+
+    def copy(self, default=None):
+        for obj in self:
+            default = dict(default or {})
+            print(default)
+            default['rc_indice']=obj.rc_indice+1
+            res=super().copy(default=default)
+            return res
+
+
+
 
 
     def lien_vers_dynacase_action(self):
@@ -247,21 +527,154 @@ class is_revue_de_contrat(models.Model):
         for obj in self:
             obj.state='diffuse'
 
+            if obj.rc_mouleid:
+                obj.rc_mouleid.revue_contrat_id = obj.id
+            if obj.rc_dossierfid:
+                obj.rc_dossierfid.revue_contrat_id = obj.id
+
+
+
+
+
 
     def vers_brouillon_action(self):
         for obj in self:
             obj.state='brouillon'
 
-            
+
+
+    def copie_assemblage_action(self):
+        copie=[
+            "rc_client",
+            "rc_clientid",
+
+            "rc_designation",
+
+            "rc_num_outillage",
+            "rc_num_outillageid",
+
+            "rc_commercial",
+            "rc_commercialid",
+
+            "rc_year_quantity",
+            "rc_duration",
+            "rc_product_dest",
+            "rc_cust_wait",
+            "rc_done_study",
+
+            "rc_cmd_date",
+            "rc_dfn_ro_date",
+            "rc_first_m_try",
+            "rc_ei_pres",
+            "rc_dms_date",
+            "rc_nb_pce_p_jal",
+
+            "rc_sp_type_piece",
+            "rc_sp_aspect",
+            "rc_sp_piece_technique",
+            "rc_sp_piece_reglem",
+            "rc_sp_piece_reglem_cmt",
+            "rc_sp_piece_sec",
+            "rc_sp_piece_sec_cmt",
+            "rc_sp_com_exig_part",
+            "rc_sp_com_exig_part_cmt",
+            "rc_sp_carac_spec",
+            "rc_sp_carac_spec_cmt",
+            "rc_sp_mat_con_pg",
+            "rc_sp_mat_con_pg_cmt",
+
+            "rc_edl_at_n_ppm",
+            "rc_edl_at_eng_fais",
+            "rc_edl_at_syn_am_proc",
+            "rc_edl_at_synop_fabr",
+            "rc_edl_at_plan_surv",
+            "rc_edl_at_car_spec",
+            "rc_edl_at_plan_piece",
+            "rc_edl_at_pres_util",
+            "rc_edl_at_fiche_tech_mat",
+            "rc_edl_at_rapport_ctrl",
+            "rc_edl_at_cap",
+            "rc_edl_at_plan_m_ctrl",
+            "rc_edl_at_moy_ctrl",
+            "rc_edl_at_ut_moy_ctrl",
+            "rc_edl_at_plan_valid",
+            "rc_edl_at_rap_ess_lab",
+            "rc_edl_at_acc_mont",
+            "rc_edl_at_acc_style",
+            "rc_edl_at_fic_cond",
+            "rc_edl_at_dec_idms",
+            "rc_edl_at_fic_cap",
+            "rc_edl_at_aud_proc",
+            "rc_edl_at_acc_ei",
+
+            "rc_edl_n_at_n_ppm",
+            "rc_edl_n_at_synt_amdec_proc",
+            "rc_edl_n_at_syn_fab",
+            "rc_edl_n_at_plan_surv",
+            "rc_edl_n_at_carac_spec",
+            "rc_edl_n_at_plan_piece",
+            "rc_edl_n_at_prec_ut",
+            "rc_edl_n_at_f_t_mat",
+            "rc_edl_n_at_rprt_ctrl",
+            "rc_edl_n_at_cap",
+            "rc_edl_n_at_fic_cond",
+            "rc_edl_n_at_aud_proc",
+            "rc_edl_n_at_acc_ei",
+
+            "rc_eqs_comment",
+        ]
+
+
+
+
+
+
+
+        for obj in self:
+            if obj.rc_doc_moule_assemblage=='c3':
+                print('TEST', obj)
+                dossierf = obj.rc_mouleid.dossierf_id
+                if not dossierf:
+                    raise ValidationError("Il n'y a pas de dossier F sur ce moule !")
+                
+                rc = dossierf.revue_contrat_id
+                if not rc:
+                    raise ValidationError("Il n'y a pas de revue de contrat sur le dossier %s"%dossierf.name)
+
+                obj.rc_revue_contrat_assid = rc.id
+                obj._compute_rc_ass_mouleid()
+                for field_name in copie:                   
+                    if hasattr(rc, field_name):
+                        val = getattr(rc,field_name)
+                        setattr(obj, field_name, val)
+
+
+
+    # responsable = _RESPONSABLES.get(ppr_responsable)          
+    #                 if hasattr(obj, responsable):
+    #                     user = getattr(obj,responsable)
+    #                     if user:
+    #                         doc.idresp = user.id
+
+#    field_name="rpj_%sid"%k
+#                         setattr(obj, field_name, nomid)
+
+
+
+
 class is_revue_de_contrat_decomposition_prix(models.Model):
     _name        = "is.revue.de.contrat.decomposition.prix"
     _description = "Revue de contrat Décomposition prix"
     _rec_name    = "rc_price_comp_article"
 
+
+    is_revue_id                     = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
+
     rc_price_comp_article           = fields.Char(string="Désignation pièce")
     rc_reference_client             = fields.Char(string="Référence client")
     rc_year_quantity                = fields.Integer(string="Quantité annuelle")
     rc_price_clientid               = fields.Many2one("res.partner", string="Site de livraison client")
+
     rc_mat_part                     = fields.Float(string="Part matière"              , digits=(12, 6))
     rc_comp_part                    = fields.Float(string="Part composant"            , digits=(12, 6))
     rc_va_injection                 = fields.Float(string="VA injection"              , digits=(12, 6))
@@ -276,7 +689,18 @@ class is_revue_de_contrat_decomposition_prix(models.Model):
     rc_preserie_surcout             = fields.Float(string="Surcoût présérie"          , digits=(12, 6))
     rc_preserie_surcout_commentaire = fields.Char(string="Surcoût présérie Commentaire")
     rc_sell_price                   = fields.Float(string="Prix de vente"             , digits=(12, 6))
-    is_revue_id = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
+    rc_total                        = fields.Float(string="Total", digits=(12, 6), compute="_compute_rc_total", store=False, readonly=True)
+    rc_ecart                        = fields.Float(string="Écart", digits=(12, 6), compute="_compute_rc_total", store=False, readonly=True)
+
+    @api.depends("rc_mat_part","rc_comp_part","rc_va_injection","rc_va_assembly","rc_emb_part","rc_port_fee","rc_logistic",
+                 "rc_moul_amort","rc_moul_amort_interne","rc_moul_cagnotage","rc_preserie_surcout","rc_sell_price")
+    def _compute_rc_total(self):
+        for obj in self:
+            total = 0
+            total += obj.rc_mat_part + obj.rc_comp_part + obj.rc_va_injection + obj.rc_va_assembly + obj.rc_emb_part + obj.rc_port_fee
+            total += obj.rc_logistic + obj.rc_moul_amort + obj.rc_moul_amort_interne + obj.rc_moul_cagnotage + obj.rc_preserie_surcout
+            obj.rc_total = total
+            obj.rc_ecart = total - obj.rc_sell_price
 
 
 class is_revue_de_contrat_decomposition_productivite(models.Model):
