@@ -2,96 +2,9 @@
 from odoo import models, fields, api, _      # type: ignore
 from odoo.exceptions import ValidationError  # type: ignore
 
-
 #TODO : 
 # Vérfier la class et la methode en PHP dans Dynacase
 # Dans le programme de syncro faire un compute du name et des autres champs
-
-
-
-# Ajouter ces champs calculés
-
-# function calcul_champs() {
-
-#     //** Total Enveloppe investissement vendue *********************************
-#     $moule           = $this->getValue('rc_eiv_moule');
-#     $etude           = $this->getValue('rc_eiv_etude');
-#     $main_prehension = $this->getValue('rc_eiv_main_prehension');
-#     $barre_chaude    = $this->getValue('rc_eiv_barre_chaude');
-#     $gab_controle    = $this->getValue('rc_eiv_gab_controle');
-#     $mach_spec       = $this->getValue('rc_eiv_mach_spec');
-#     $plan_valid      = $this->getValue('rc_eiv_plan_valid');
-#     $mis_point       = $this->getValue('rc_eiv_mis_point');
-#     $pack            = $this->getValue('rc_eiv_pack');
-#     $amort           = $this->getValue('rc_eiv_amort');
-#     $eiv_total=$moule+$etude+$main_prehension+$barre_chaude+$gab_controle+$mach_spec+$plan_valid+$mis_point+$pack; //+$amort;
-#     if ($eiv_total==0) $eiv_total=" ";
-#     $this->setValue('rc_eiv_total',$eiv_total);
-#     //**************************************************************************
-
-
-
-#     //** Recopie du champ moule pour lien vers le moule ************************
-#     $mouleid  = $this->getValue('rc_mouleid');
-#     $this->setValue('rc_num_outillageid',$mouleid);
-#     //**************************************************************************
-# }
-
-
-
-
-
-# Liste de choix des clients livrés et des articles
-
-# function lclientlivre($dbaccess,$rc_price_client){
-#     global $action;
-
-#     $filter=array();
-#     $filter[]="title like '%$rc_price_client%'";
-#     $filter[]="cli_etiquete like '%LIVRAISON%'";
-
-#     $tdoc = getChildDoc($dbaccess,
-#                         0,
-#                         0,
-#                         10,
-#                         $filter,
-#                         $action->user->id,
-#                         "ITEM",
-#                         "CLIENT",
-# 			$distinct,
-# 			"title");
-#     $tr = array();
-#     while ($doc=getNextDoc($dbaccess,$tdoc)) {
-#         $tr[] = array(    $doc->title,
-#                 $doc->id,
-#                 $doc->title);
-#     }
-#     return $tr;
-# }
-
-
-# function larticle($docid) {
-# 	include_once("FDL/Class.Doc.php");
-# 	$dbaccess = GetParam("FREEDOM_DB");
-
-# 	$tr=array();
-# 	if ($docid>0) {
-# 		$doc = new_Doc($dbaccess, $docid,true);
-# 		$article=$doc->getTValue("rc_price_comp_article");
-# 		foreach($article as $v) {
-# 			$tr[]=array($v,$v);
-# 		}
-# 	}
-#   return $tr;
-# }
-
-
-
-
-
-
-
-
 
 class is_revue_de_contrat(models.Model):
     _name        = "is.revue.de.contrat"
@@ -615,7 +528,10 @@ class is_revue_de_contrat_version(models.Model):
         ("Non", "Non"),
         ("Oui", "Oui"),
     ], string="Version")
+
+    decomposition_prix_id      = fields.Many2one("is.revue.de.contrat.decomposition.prix", string="Décomposition de prix")
     rc_dfi_article             = fields.Char(string="Article")
+
     rc_dfi_cycle               = fields.Float(string="Cycle par pièce", digits=(12, 2))
     rc_dfi_nb_emp              = fields.Integer(string="Nb empreintes par référence")
     rc_dfi_mod                 = fields.Selection([
@@ -647,6 +563,15 @@ class is_revue_de_contrat_version(models.Model):
     rc_dfi_multiple_liv        = fields.Integer(string="Multiple de livraison")
     rc_dfi_lot_fab             = fields.Integer(string="Lot de fabrication (en pièces)")
     is_revue_id                = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
+
+
+
+    @api.onchange('decomposition_prix_id')
+    def onchange_decomposition_prix_id(self):
+        self.rc_dfi_article = self.decomposition_prix_id.rc_price_comp_article
+
+
+
 
 
 class is_revue_de_contrat_dfe_version(models.Model):

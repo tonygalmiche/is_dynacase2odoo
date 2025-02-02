@@ -80,7 +80,7 @@
                                         />
                                     </group>
                                     <group name="rc_presentation_tab" string="Présentation de la pièce" attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}" >
-                                        <field name="rc_client" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_client"/>
                                         <field name="rc_designation" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                         <field name="rc_num_outillageid" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                         <field name="rc_daoid" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
@@ -229,15 +229,20 @@
                                         <form>
                                             <group col="3">
                                                 <group>
-                                                    <field name="rc_dfi_version" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_article" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_cycle" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_nb_emp" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_mod" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_taux_rebut" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_poids_piece" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_poids_carotte" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_car_reb" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_dfi_version"             attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field 
+                                                        name="decomposition_prix_id"      
+                                                        attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" 
+                                                        domain="[('id', 'in', parent.decomposition_prix_ids)]"
+                                                    />
+                                                    <field name="rc_dfi_article" readonly="1" force_save="1"/>
+                                                    <field name="rc_dfi_cycle"               attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_dfi_nb_emp"              attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_dfi_mod"                 attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_dfi_taux_rebut"          attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_dfi_poids_piece"         attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_dfi_poids_carotte"       attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_dfi_car_reb"             attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
                                                     <field name="rc_dfi_car_reb_pourcentage" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
                                                 </group>
                                                 <group>
@@ -260,6 +265,7 @@
                                         </form>
                                         <tree>
                                             <field name="rc_dfi_version" optional="show"/>
+                                            <field name="decomposition_prix_id" optional="hide"/>
                                             <field name="rc_dfi_article" optional="show"/>
                                             <field name="rc_dfi_cycle" optional="show"/>
                                             <field name="rc_dfi_nb_emp" optional="show"/>
