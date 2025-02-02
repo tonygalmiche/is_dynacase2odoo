@@ -18,108 +18,108 @@
                         <notebook>
                             <page name="rl_initial_tab" string="Données d'entrée">
                                 <group>
-                                    <field name="rl_title" />
-                                    <field name="rl_indice" />
-                                    <field name="rl_num_rcid" />
-                                    <field name="rl_designation_rc" />
-                                    <field name="rl_client_rcid" />
-                                    <field name="rl_projet_rcid" />
-                                    <field name="rl_commercial_rcid" />
+                                    <field name="rl_num_rcid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                    <field name="rl_indice"/>
+                                    <field name="rl_designation_rc"  attrs="{'invisible': [('rl_num_rcid', '=', False)]}"/>
+                                    <field name="rl_client_rcid"     attrs="{'invisible': [('rl_num_rcid', '=', False)]}"/>
+                                    <field name="rl_projet_rcid"     attrs="{'invisible': [('rl_num_rcid', '=', False)]}"/>
+                                    <field name="rl_commercial_rcid" attrs="{'invisible': [('rl_num_rcid', '=', False)]}"/>
                                 </group>
                             </page>
-                            <page name="rl_choix_industriel_tab" string="Choix industriel">
+                            <page name="rl_choix_industriel_tab" string="Choix industriel" attrs="{'invisible': [('rl_num_rcid', '=', False)]}" >
                                 <group name="rl_choix_industriel_fr" string="Choix industriel">
-                                    <field name="rl_lieu_production" />
-                                    <field name="rl_nom_soutraitant" />
-                                    <field name="rl_affectation_presse" />
-                                    <field name="rl_choix_industriel" />
-                                    <field name="rl_validation_capacitaire" />
-                                    <field name="rl_validation_capacitaire_comment" />
+                                    <field name="rl_lieu_production"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                    <field name="rl_nom_soutraitant"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                    <field name="rl_affectation_presse"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                    <field name="rl_choix_industriel"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                    <field name="rl_validation_capacitaire"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                    <field name="rl_validation_capacitaire_comment"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                 </group>
                             </page>
-                            <page name="rl_eq_projet_tab" string="Gestion projet">
+                            <page name="rl_eq_projet_tab" string="Gestion projet" attrs="{'invisible': [('rl_num_rcid', '=', False)]}" >
                                 <group>
                                     <group name="rl_eq_projet_fr" string="Equipe projet">
-                                        <field name="rl_chef_projetid" />
-                                        <field name="rl_expert_injectionid" />
-                                        <field name="rl_methode_injectionid" />
-                                        <field name="rl_methode_assemblageid" />
-                                        <field name="rl_qualite_devid" />
-                                        <field name="rl_qualite_usineid" />
-                                        <field name="rl_achatsid" />
-                                        <field name="rl_logistiqueid" />
-                                        <field name="rl_logistique_usineid" />
-                                        <field name="rl_commercial2id" />
-                                        <field name="rl_responsable_outillageid" />
-                                        <field name="rl_responsable_projetid" />
-                                        <field name="rl_directeur_siteid" />
-                                        <field name="rl_directeur_techniqueid" />
+                                        <field name="rl_chef_projetid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_expert_injectionid"   attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
+                                        <field name="rl_methode_injectionid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_methode_assemblageid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_qualite_devid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_qualite_usineid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_achatsid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_logistiqueid"   attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
+                                        <field name="rl_logistique_usineid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_commercial2id"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_responsable_outillageid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_responsable_projetid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_directeur_siteid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_directeur_techniqueid"   attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
                                         <button 
                                             name="initialiser_responsable_doc_action" 
                                             string="Initialiser les responsables des documents" 
                                             type="object" colspan="2" class="btn-primary"
+                                            attrs="{'invisible': [('state', '!=', 'rl_brouillon')]}"
                                         />
                                     </group>
                                     <group name="rl_fr_date_jalon" string="Dates des jalons">
-                                        <field name="rl_date_j0" />
-                                        <field name="rl_date_j1" />
-                                        <field name="rl_date_j2" />
-                                        <field name="rl_date_j3" />
-                                        <field name="rl_date_j4" />
-                                        <field name="rl_date_j5" />
+                                        <field name="rl_date_j0"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_date_j1"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_date_j2"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_date_j3"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_date_j4"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_date_j5"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                     </group>
                                 </group>
                             </page>
-                            <page name="rl_investissement_tab" string="Investissement">
+                            <page name="rl_investissement_tab" string="Investissement" attrs="{'invisible': [('rl_num_rcid', '=', False)]}" >
                                 <group name="rl_investissement_pgrc_fr" string="Données moule" col="4">
                                     <group string="Designation - Montant">
-                                        <field name="rl_pgrc_moule_mnt" />
-                                        <field name="rl_pgrc_etude_mnt" />
-                                        <field name="rl_pgrc_main_prehension_mnt" />
-                                        <field name="rl_pgrc_barre_chaude_mnt" />
-                                        <field name="rl_pgrc_gabarit_controle_mnt" />
-                                        <field name="rl_pgrc_machine_speciale_mnt" />
-                                        <field name="rl_pgrc_plan_validation_mnt" />
-                                        <field name="rl_pgrc_mise_point_mnt" />
-                                        <field name="rl_pgrc_packaging_mnt" />
-                                        <field name="rl_pgrc_amort_mnt" />
-                                        <field name="rl_pgrc_total" />
+                                        <field name="rl_pgrc_moule_mnt"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_pgrc_etude_mnt"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_pgrc_main_prehension_mnt"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_pgrc_barre_chaude_mnt"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_pgrc_gabarit_controle_mnt"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_pgrc_machine_speciale_mnt"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_pgrc_plan_validation_mnt"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_pgrc_mise_point_mnt"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_pgrc_packaging_mnt"   attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
+                                        <field name="rl_pgrc_amort_mnt"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_pgrc_total"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                     </group>
                                     <group string="Commentaire">
-                                        <field name="rl_pgrc_moule_cmt" nolabel="1" colspan="6"/>
-                                        <field name="rl_pgrc_etude_cmt" nolabel="1" colspan="6"/>
-                                        <field name="rl_pgrc_main_prehension_cmt" nolabel="1" colspan="6"/>
-                                        <field name="rl_pgrc_barre_chaude_cmt" nolabel="1" colspan="6"/>
-                                        <field name="rl_pgrc_gabarit_controle_cmt" nolabel="1" colspan="6"/>
-                                        <field name="rl_pgrc_machine_speciale_cmt" nolabel="1" colspan="6"/>
-                                        <field name="rl_pgrc_plan_validation_cmt" nolabel="1" colspan="6"/>
-                                        <field name="rl_pgrc_mise_point_cmt" nolabel="1" colspan="6"/>
-                                        <field name="rl_pgrc_packaging_cmt" nolabel="1" colspan="6"/>
-                                        <field name="rl_pgrc_amort_cmt" nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_moule_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
+                                        <field name="rl_pgrc_etude_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
+                                        <field name="rl_pgrc_main_prehension_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
+                                        <field name="rl_pgrc_barre_chaude_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
+                                        <field name="rl_pgrc_gabarit_controle_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
+                                        <field name="rl_pgrc_machine_speciale_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
+                                        <field name="rl_pgrc_plan_validation_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
+                                        <field name="rl_pgrc_mise_point_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
+                                        <field name="rl_pgrc_packaging_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
+                                        <field name="rl_pgrc_amort_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
                                     </group>
                                 </group>
                                 <group>
                                     <group name="rl_investissement_pgrl_fr" string="Données revue de lancement">
-                                        <field name="rl_be01" />
-                                        <field name="rl_be01b" />
-                                        <field name="rl_be01c" />
-                                        <field name="rl_be02" />
-                                        <field name="rl_be03" />
-                                        <field name="rl_be04" />
-                                        <field name="rl_be05" />
-                                        <field name="rl_be06" />
-                                        <field name="rl_be07" />
-                                        <field name="rl_be09" />
-                                        <field name="rl_be10" />
-                                        <field name="rl_be11" />
-                                        <field name="rl_be12" />
-                                        <field name="rl_be13" />
-                                        <field name="rl_be14" />
-                                        <field name="rl_be15" />
-                                        <field name="rl_be16" />
-                                        <field name="rl_be17" />
-                                        <field name="rl_be_total" />
-                                        <field name="rl_annee_inv" />
+                                        <field name="rl_be01"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be01b"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be01c"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be02"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be03"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be04"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be05"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be06"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be07"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be09"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be10"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be11"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be12"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be13"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be14"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be15"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be16"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be17"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be_total"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_annee_inv"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                     </group>
                                 </group>
                             </page>
@@ -138,9 +138,8 @@
             <field name="model">is.revue.lancement</field>
             <field name="arch" type="xml">
                 <tree string="Revue de lancement">
-                    <field name="rl_title" optional="show"/>
-                    <field name="rl_indice" optional="show"/>
                     <field name="rl_num_rcid" optional="show" widget="many2one_clickable"/>
+                    <field name="rl_indice" optional="show"/>
                     <field name="rl_designation_rc" optional="show"/>
                     <field name="rl_client_rcid" optional="show" widget="many2one_clickable"/>
                     <field name="rl_projet_rcid" optional="show" widget="many2one_clickable"/>
@@ -185,7 +184,6 @@
             <field name="model">is.revue.lancement</field>
             <field name="arch" type="xml">
                 <search string="Revue de lancement">
-                    <field name="rl_title" />
                     <field name="rl_num_rcid" />
                     <field name="rl_designation_rc" />
                     <field name="rl_client_rcid" />

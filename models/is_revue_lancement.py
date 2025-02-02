@@ -6,6 +6,10 @@ from odoo.exceptions import ValidationError   # type: ignore
 #TODO : 
 # Ajouter un champ 'name' comme la revue de contrat
 # Dans le programme de syncro faire un compute du name et des autres champs
+# Ajouter les champs vers les lignes des invetissements
+# Créer et modifier automatiquement les lignes des invesittsements
+# Faire le changement d'incide par duplication avec recherhe de la denire revue de co,trat validée
+# Ajout de la RL dans la fiche du moule lors de la validation
 
 # Ajouter un champ name dans la revue des risques 
 # Copie des données depuis la revue de contrat
@@ -78,13 +82,24 @@ class is_revue_lancement(models.Model):
                 except Exception as e:
                     raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
 
-    rl_title                          = fields.Char(string="Revue de lancement", tracking=True)
-    rl_indice                         = fields.Integer(string="Indice", tracking=True)
-    rl_num_rcid                       = fields.Many2one("is.revue.de.contrat", string="Revue de contrat", tracking=True)
-    rl_designation_rc                 = fields.Char(string="Désignation", tracking=True)
-    rl_client_rcid                    = fields.Many2one("res.partner", string="Client", tracking=True)
-    rl_projet_rcid                    = fields.Many2one("is.mold.project", string="Projet", tracking=True)
-    rl_commercial_rcid                = fields.Many2one("res.users", string="Commercial", tracking=True)
+
+    @api.depends("rl_num_rcid","rl_num_rcid.rc_designation","rl_num_rcid.rc_client","rl_num_rcid.rc_projetid","rl_num_rcid.rc_commercial")
+    def _compute_rc(self):
+        for obj in self:
+            obj.rl_designation_rc  = obj.rl_num_rcid.rc_designation
+            obj.rl_client_rcid     = obj.rl_num_rcid.rc_client
+            obj.rl_projet_rcid     = obj.rl_num_rcid.rc_projetid
+            obj.rl_commercial_rcid = obj.rl_num_rcid.rc_commercial
+
+
+
+    rl_num_rcid                       = fields.Many2one("is.revue.de.contrat", string="Revue de contrat", required=True, tracking=True)
+    rl_title                          = fields.Char(string="Revue de lancement (champ à supprimer)", tracking=True)
+    rl_indice                         = fields.Integer(string="Indice", tracking=True, readonly=True)
+    rl_designation_rc                 = fields.Char(string="Désignation"                  , tracking=True, compute="_compute_rc", store=True, readonly=True)
+    rl_client_rcid                    = fields.Many2one("res.partner", string="Client"    , tracking=True, compute="_compute_rc", store=True, readonly=True)
+    rl_projet_rcid                    = fields.Many2one("is.mold.project", string="Projet", tracking=True, compute="_compute_rc", store=True, readonly=True)
+    rl_commercial_rcid                = fields.Many2one("res.users", string="Commercial"  , tracking=True, compute="_compute_rc", store=True, readonly=True)
     rl_lieu_production                = fields.Selection([
         ("g",  "Gray"),
         ("sb", "St-Brice"),
@@ -163,7 +178,7 @@ class is_revue_lancement(models.Model):
     state                             = fields.Selection([
         ("rl_brouillon",  "Brouillon"),
         ("rl_diffuse",    "Diffusé"),
-    ], string="État", tracking=True)
+    ], string="État", tracking=True, default="rl_brouillon")
     dynacase_id = fields.Integer(string="Id Dynacase",index=True,copy=False)
     active      = fields.Boolean('Actif', default=True, tracking=True)
 
