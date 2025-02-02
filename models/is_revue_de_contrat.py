@@ -329,7 +329,7 @@ class is_revue_de_contrat(models.Model):
         ("Classe 6", "Classe 6 : 800T - 1000T"),
     ], string="Classe commerciale", tracking=True)
     version_ids                        = fields.One2many("is.revue.de.contrat.version", "is_revue_id", tracking=True)
-    rc_dfi_temp_occ_pm                 = fields.Float(string="Temps occupation presse mensuelle", compute="_compute_rc_dfi_temp_occ_pm", store=False, readonly=True)
+    rc_dfi_temp_occ_pm                 = fields.Float(string="Temps occupation presse mensuelle", compute="_compute_rc_dfi_temp_occ_pm", store=True, readonly=True)
     rc_dfe_desc_proc                   = fields.Text(string="Descriptif du process et site de fabrication vendu", tracking=True)
     rc_dfe_sch_lieu_fab                = fields.Text(string="Schéma de flux vendu (Logistique) ", tracking=True)
     rc_eqs_pj                          = fields.Many2many("ir.attachment", "is_rc_eqs_pj_rel"                         , "rc_eqs_pj"                         , "att_id", string="Pièce jointe")
@@ -360,53 +360,18 @@ class is_revue_de_contrat(models.Model):
             obj.rc_vac       = vac
 
 
-
     #Exemple avec 4 lignes sur RC 3139
     @api.depends("decomposition_prix_ids","decomposition_prix_ids.rc_year_quantity","version_ids","version_ids.rc_dfi_cycle")
     def _compute_rc_dfi_temp_occ_pm(self):
         for obj in self:
             tps=0
-            # res={}
-            # for line in obj.decomposition_prix_ids:
-            #     res[line.rc_price_comp_article] = (line.rc_year_quantity or 0)
-
-            # print(res)
-                
-            # for line in obj.version_ids:
-            #     if line.rc_dfi_article in res:
-            #         tps += res[line.rc_dfi_article] * line.rc_dfi_cycle  / 3600
-
-            # print(res)
-
-
+            res={}
+            for line in obj.decomposition_prix_ids:
+                res[line.rc_price_comp_article] = (line.rc_year_quantity or 0)                
+            for line in obj.version_ids:
+                if line.rc_dfi_article in res:
+                    tps += (res[line.rc_dfi_article]/11) * line.rc_dfi_cycle  / 3600
             obj.rc_dfi_temp_occ_pm = tps
-
-
-
-
-
-
-#     $cycle  = $this->getTValue('rc_dfi_cycle');
-#     $nb_emp = $this->getTValue('rc_dfi_nb_emp');
-#         $temp_occ_pm=0;
-#         for ($i=0;$i<count($qte_annuelle);$i++) {
-#             $temp_occ_pm = $temp_occ_pm + ($qte_annuelle[$i]/11) * $cycle[$i] /3600;
-#         }
-#         if ($temp_occ_pm==0) {
-#             $temp_occ_pm=" ";
-#         } else {
-#             $temp_occ_pm=number_format(floatval($temp_occ_pm), 2);
-#         }
-#     $this->setValue('rc_dfi_temp_occ_pm', $temp_occ_pm);
-#     //**************************************************************************
-
-
-
-
-
-
-
-
 
 
     def write(self,vals):
@@ -652,7 +617,7 @@ class is_revue_de_contrat_version(models.Model):
     ], string="Version")
     rc_dfi_article             = fields.Char(string="Article")
     rc_dfi_cycle               = fields.Float(string="Cycle par pièce", digits=(12, 2))
-    rc_dfi_nb_emp              = fields.Char(string="Nb empreintes par référence")
+    rc_dfi_nb_emp              = fields.Integer(string="Nb empreintes par référence")
     rc_dfi_mod                 = fields.Selection([
         ("0.25", "0.25"),
         ("0.5", "0.5"),

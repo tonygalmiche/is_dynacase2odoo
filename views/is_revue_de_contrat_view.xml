@@ -550,6 +550,7 @@
                     <field name="rc_dms_date"              optional="hide"/>
                     <field name="rc_eop_date"              optional="hide"/>
                     <field name="rc_eiv_total"             optional="hide"/>
+                    <field name="rc_dfi_temp_occ_pm"       optional="hide"/>
                     <field name="rc_ca_annuel"             optional="hide" sum="Total"/>
                     <field name="rc_vac"                   optional="hide" sum="Total"/>
                     <field name="create_date"              optional="hide" string="Créé le"/>
