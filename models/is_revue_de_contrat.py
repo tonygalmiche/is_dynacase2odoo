@@ -7,100 +7,11 @@ from odoo.exceptions import ValidationError  # type: ignore
 # Vérfier la class et la methode en PHP dans Dynacase
 # Dans le programme de syncro faire un compute du name et des autres champs
 
-# Ajouter ces 3 contraites : 
-
-#   function m1_vers_diffuse($newstate,$oldstate){
-#     $nb1=count($this->doc->getTValue("rc_dfi_article"));
-#     $nb2=count($this->doc->getTValue("rc_dfe_comp"));
-#     $err="";
-#     if($nb1==0 and $nb2==0) $err="Les versions dans l'onglet 'Données de fabrication' ne sont pas renseignées !";
-#     return $err;
-#   }
-
-#   function m1_vers_brouillon($newstate,$oldstate){
-#     $dbaccess= GetParam("FREEDOM_DB");
-#     $docid=$this->doc->getValue("rc_num_outillageid");
-#     if ($docid>0) {
-#       $doc = new_Doc($dbaccess, $docid);
-#       if (is_object($doc)) {
-#         $rlid=$doc->getValue("MOUL_RLID");
-#         if ($rlid>0) {
-#           $err="Impossible de repasser à l'état 'Brouillon' car une revue de lancement existe !";
-#         }
-#       }
-#     }
-#     return $err;
-#   }
-
-
-# //** Recherche revue de projet jalon ***************************************
-# if ($err==""){
-#     $filter=array();
-#     foreach ($tid as $k=>$v) {
-#         $filter[]="RPJ_MOULEID ~ E'\\\\y".$v."\\\\y'";
-#     }
-#     $mouleid=$rc->getValue("rc_mouleid");
-#     $filter=array();
-#     $tid=array();
-#     if ($mouleid>0) {
-#         $moule = new_Doc($dbaccess, $mouleid,true);
-#         if (is_object($moule)) {
-#             $trev=$moule->getRevisions("TABLE");
-#             foreach ($trev as $k=>$v) {
-#                 $tid[]=$v["id"];
-#                 $filter[]="RPJ_MOULEID ~ E'\\\\y".$v["id"]."\\\\y'";
-#             }
-
-#         }
-#     }
-#     if (count($filter)>0) {
-#         $filter=implode(" or ",$filter);
-#         $s=new SearchDoc($dbaccess,"PG_REVUE_PROJET_JALON");
-#         $s->setObjectReturn();
-#         $s->addFilter($filter); 
-#         $s->addFilter("state='rpj_valide'"); 
-#         $s->search();
-#         while ($doc=$s->nextDoc()) {
-#             $err="Il existe déjà une revue de projet jalon de validée => Duplication impossible !".$doc->title;
-#         }
-#     }
-# }
-# //**************************************************************************
-
 
 
 # Ajouter ces champs calculés
 
 # function calcul_champs() {
-
-
-#     error_log("### TEST calcul_champs #### ");
-
-
-#     //** chiffre d'affaire annuel **********************************************
-#     $sell_price       = $this->getTValue('rc_sell_price');
-#     $moul_amort       = $this->getTValue('rc_moul_amort');
-#     $preserie_surcout = $this->getTValue('rc_preserie_surcout');
-#     $qte_annuelle     = $this->getTValue('rc_year_quantity');
-#         $X=0;
-#         for ($i=0;$i<count($sell_price);$i++) {
-#             $ca_annuel=$ca_annuel+$qte_annuelle[$i]*($sell_price[$i]-$moul_amort[$i]-$preserie_surcout[$i]);
-#         }
-#         if ($ca_annuel==0) $ca_annuel=" ";
-#     $this->setValue('rc_ca_annuel', $ca_annuel);
-#     //**************************************************************************
-
-
-#     //** vac *******************************************************************
-#     $va_injection     = $this->getTValue('rc_va_injection');
-#     $va_assembly      = $this->getTValue('rc_va_assembly');
-#         for ($i=0;$i<count($sell_price);$i++) {
-#             $vac = $vac + ($va_injection[$i] + $va_assembly[$i])*$qte_annuelle[$i];
-#         }
-#         if ($vac==0) $vac=" ";
-#     $this->setValue('rc_vac', $vac);
-#     //**************************************************************************
-
 
 #     //** Total Enveloppe investissement vendue *********************************
 #     $moule           = $this->getValue('rc_eiv_moule');
@@ -116,20 +27,6 @@ from odoo.exceptions import ValidationError  # type: ignore
 #     $eiv_total=$moule+$etude+$main_prehension+$barre_chaude+$gab_controle+$mach_spec+$plan_valid+$mis_point+$pack; //+$amort;
 #     if ($eiv_total==0) $eiv_total=" ";
 #     $this->setValue('rc_eiv_total',$eiv_total);
-#     //**************************************************************************
-
-#     $cycle  = $this->getTValue('rc_dfi_cycle');
-#     $nb_emp = $this->getTValue('rc_dfi_nb_emp');
-#         $temp_occ_pm=0;
-#         for ($i=0;$i<count($qte_annuelle);$i++) {
-#             $temp_occ_pm = $temp_occ_pm + ($qte_annuelle[$i]/11) * $cycle[$i] /3600;
-#         }
-#         if ($temp_occ_pm==0) {
-#             $temp_occ_pm=" ";
-#         } else {
-#             $temp_occ_pm=number_format(floatval($temp_occ_pm), 2);
-#         }
-#     $this->setValue('rc_dfi_temp_occ_pm', $temp_occ_pm);
 #     //**************************************************************************
 
 
@@ -432,15 +329,15 @@ class is_revue_de_contrat(models.Model):
         ("Classe 6", "Classe 6 : 800T - 1000T"),
     ], string="Classe commerciale", tracking=True)
     version_ids                        = fields.One2many("is.revue.de.contrat.version", "is_revue_id", tracking=True)
-    rc_dfi_temp_occ_pm                 = fields.Float(string="Temps occupation presse mensuelle", tracking=True)
+    rc_dfi_temp_occ_pm                 = fields.Float(string="Temps occupation presse mensuelle", compute="_compute_rc_dfi_temp_occ_pm", store=False, readonly=True)
     rc_dfe_desc_proc                   = fields.Text(string="Descriptif du process et site de fabrication vendu", tracking=True)
     rc_dfe_sch_lieu_fab                = fields.Text(string="Schéma de flux vendu (Logistique) ", tracking=True)
     rc_eqs_pj                          = fields.Many2many("ir.attachment", "is_rc_eqs_pj_rel"                         , "rc_eqs_pj"                         , "att_id", string="Pièce jointe")
     rc_df_engagement_faisabilite       = fields.Many2many("ir.attachment", "is_rc_df_engagement_faisabilite_rel"      , "rc_df_engagement_faisabilite"      , "att_id", string="PJ Engagement de faisabilité")
     rc_df_engagement_faisabilite_autre = fields.Many2many("ir.attachment", "is_rc_df_engagement_faisabilite_autre_rel", "rc_df_engagement_faisabilite_autre", "att_id", string="PJ Engagement de faisabilité (autres)")
     rc_df_fiche_capacitaire            = fields.Many2many("ir.attachment", "is_rc_df_fiche_capacitaire_rel"           , "rc_df_fiche_capacitaire"           , "att_id", string="PJ Fiche capacitaire")
-    rc_ca_annuel                       = fields.Float(string="CA annuel", digits=(12, 2), tracking=True)
-    rc_vac                             = fields.Float(string="VAC", digits=(12, 2), tracking=True)
+    rc_ca_annuel                       = fields.Float(string="CA annuel", digits=(12, 2), compute="_compute_rc_ca_annuel", store=True, readonly=True)
+    rc_vac                             = fields.Float(string="VAC"      , digits=(12, 2), compute="_compute_rc_ca_annuel", store=True, readonly=True)
     dfe_version_ids                    = fields.One2many("is.revue.de.contrat.dfe.version", "is_revue_id")
     dynacase_id = fields.Integer(string="Id Dynacase",index=True,copy=False)
     state = fields.Selection([
@@ -448,6 +345,68 @@ class is_revue_de_contrat(models.Model):
         ("diffuse"  , "Diffusé"),
     ], string="État", default='brouillon', copy=False, tracking=True)
     active = fields.Boolean('Actif', default=True, tracking=True)
+
+
+    @api.depends("decomposition_prix_ids","decomposition_prix_ids.rc_year_quantity","decomposition_prix_ids.rc_sell_price",
+                 "decomposition_prix_ids.rc_moul_amort","decomposition_prix_ids.rc_preserie_surcout",
+                 "decomposition_prix_ids.rc_va_injection","decomposition_prix_ids.rc_va_assembly")
+    def _compute_rc_ca_annuel(self):
+        for obj in self:
+            ca = vac = 0
+            for line in obj.decomposition_prix_ids:
+                ca+= line.rc_year_quantity * (line.rc_sell_price - line.rc_moul_amort - line.rc_preserie_surcout)
+                vac+=line.rc_year_quantity * (line.rc_va_injection - line.rc_va_assembly)
+            obj.rc_ca_annuel = ca
+            obj.rc_vac       = vac
+
+
+
+    #Exemple avec 4 lignes sur RC 3139
+    @api.depends("decomposition_prix_ids","decomposition_prix_ids.rc_year_quantity","version_ids","version_ids.rc_dfi_cycle")
+    def _compute_rc_dfi_temp_occ_pm(self):
+        for obj in self:
+            tps=0
+            # res={}
+            # for line in obj.decomposition_prix_ids:
+            #     res[line.rc_price_comp_article] = (line.rc_year_quantity or 0)
+
+            # print(res)
+                
+            # for line in obj.version_ids:
+            #     if line.rc_dfi_article in res:
+            #         tps += res[line.rc_dfi_article] * line.rc_dfi_cycle  / 3600
+
+            # print(res)
+
+
+            obj.rc_dfi_temp_occ_pm = tps
+
+
+
+
+
+
+#     $cycle  = $this->getTValue('rc_dfi_cycle');
+#     $nb_emp = $this->getTValue('rc_dfi_nb_emp');
+#         $temp_occ_pm=0;
+#         for ($i=0;$i<count($qte_annuelle);$i++) {
+#             $temp_occ_pm = $temp_occ_pm + ($qte_annuelle[$i]/11) * $cycle[$i] /3600;
+#         }
+#         if ($temp_occ_pm==0) {
+#             $temp_occ_pm=" ";
+#         } else {
+#             $temp_occ_pm=number_format(floatval($temp_occ_pm), 2);
+#         }
+#     $this->setValue('rc_dfi_temp_occ_pm', $temp_occ_pm);
+#     //**************************************************************************
+
+
+
+
+
+
+
+
 
 
     def write(self,vals):
@@ -464,53 +423,26 @@ class is_revue_de_contrat(models.Model):
                 ('rc_mouleid'   , '=', obj.rc_mouleid.id), 
                 ('rc_dossierfid', '=', obj.rc_dossierfid.id), 
                 ('rc_indice'    , '=', obj.rc_indice), 
-                #('active'       , 'in', (True,False)), 
             ]
             lines = self.env['is.revue.de.contrat'].search(domain)
-
-
-            print('TEST 2 _rc_unique', domain, lines, len(lines))
-
             if len(lines) > 1:
                 raise ValidationError("Cette revue de contrat existe déjà !")
 
 
-    # def name_get(self):
-    #     result = []
-    #     for obj in self:
-    #         name=""
-    #         if obj.rc_mouleid:
-    #             name = obj.rc_mouleid.name
-    #         if obj.rc_dossierfid:
-    #             name = obj.rc_dossierfid.name
-
-    #         name='RC-%s-%s'%(name,obj.rc_indice)
-
-    #         result.append((obj.id, name))
-    #     return result
-
-
-    # def _name_search(self, name='', args=None, operator='ilike', context=None, limit=100):
-    #     if not args:
-    #         args = []
-    #     if name:
-    #         ids = list(self._search(['|',('rc_mouleid','ilike', name),('rc_dossierfid','ilike', name)], limit=limit))
-    #     else:
-    #         ids = self._search(args, limit=limit)
-    #     return ids
-
-
-
     def copy(self, default=None):
         for obj in self:
+            domain=[
+                ('rpj_mouleid', '=', obj.rc_mouleid.id), 
+                ('dossierf_id', '=', obj.rc_dossierfid.id), 
+                ('state'      , '=', 'rpj_valide'), 
+            ]
+            lines = self.env['is.revue.projet.jalon'].search(domain)
+            if len(lines)>0:
+                raise ValidationError("Il existe déjà une revue de projet jalon de validée => Duplication impossible !")
             default = dict(default or {})
-            print(default)
             default['rc_indice']=obj.rc_indice+1
             res=super().copy(default=default)
             return res
-
-
-
 
 
     def lien_vers_dynacase_action(self):
@@ -525,22 +457,25 @@ class is_revue_de_contrat(models.Model):
 
     def vers_diffuse_action(self):
         for obj in self:
+            if len(obj.version_ids)==0 or len(obj.dfe_version_ids)==0:
+                raise ValidationError("Les versions dans l'onglet 'Données de fabrication' ne sont pas renseignées !")
             obj.state='diffuse'
-
             if obj.rc_mouleid:
                 obj.rc_mouleid.revue_contrat_id = obj.id
             if obj.rc_dossierfid:
                 obj.rc_dossierfid.revue_contrat_id = obj.id
 
 
-
-
-
-
     def vers_brouillon_action(self):
         for obj in self:
+            rl=False
+            if obj.rc_mouleid:
+                rl = obj.rc_mouleid.revue_lancement_id
+            if obj.rc_dossierfid:
+                rl = obj.rc_dossierfid.revue_lancement_id
+            if rl:
+                raise ValidationError("Impossible de repasser à l'état 'Brouillon' car une revue de lancement existe !")
             obj.state='brouillon'
-
 
 
     def copie_assemblage_action(self):
@@ -625,14 +560,8 @@ class is_revue_de_contrat(models.Model):
         ]
 
 
-
-
-
-
-
         for obj in self:
             if obj.rc_doc_moule_assemblage=='c3':
-                print('TEST', obj)
                 dossierf = obj.rc_mouleid.dossierf_id
                 if not dossierf:
                     raise ValidationError("Il n'y a pas de dossier F sur ce moule !")
@@ -647,19 +576,6 @@ class is_revue_de_contrat(models.Model):
                     if hasattr(rc, field_name):
                         val = getattr(rc,field_name)
                         setattr(obj, field_name, val)
-
-
-
-    # responsable = _RESPONSABLES.get(ppr_responsable)          
-    #                 if hasattr(obj, responsable):
-    #                     user = getattr(obj,responsable)
-    #                     if user:
-    #                         doc.idresp = user.id
-
-#    field_name="rpj_%sid"%k
-#                         setattr(obj, field_name, nomid)
-
-
 
 
 class is_revue_de_contrat_decomposition_prix(models.Model):
@@ -735,7 +651,7 @@ class is_revue_de_contrat_version(models.Model):
         ("Oui", "Oui"),
     ], string="Version")
     rc_dfi_article             = fields.Char(string="Article")
-    rc_dfi_cycle               = fields.Char(string="Cycle par pièce")
+    rc_dfi_cycle               = fields.Float(string="Cycle par pièce", digits=(12, 2))
     rc_dfi_nb_emp              = fields.Char(string="Nb empreintes par référence")
     rc_dfi_mod                 = fields.Selection([
         ("0.25", "0.25"),
@@ -745,9 +661,9 @@ class is_revue_de_contrat_version(models.Model):
         ("1.5", "1.5"),
         ("2", "2"),
     ], string="MOD totale pour le poste")
-    rc_dfi_taux_rebut          = fields.Char(string="Tx rebut vendu")
-    rc_dfi_poids_piece         = fields.Char(string="Poids pièce (en g)")
-    rc_dfi_poids_carotte       = fields.Char(string="Poids carotte (en g)")
+    rc_dfi_taux_rebut          = fields.Float(string="Tx rebut vendu")
+    rc_dfi_poids_piece         = fields.Float(string="Poids pièce (en g)")
+    rc_dfi_poids_carotte       = fields.Float(string="Poids carotte (en g)")
     rc_dfi_car_reb             = fields.Selection([
         ("Non", "Non"),
         ("Oui", "Oui"),
@@ -760,11 +676,11 @@ class is_revue_de_contrat_version(models.Model):
     rc_dfi_sous_traitance      = fields.Text(string="Sous-traitance (description)")
     rc_dfi_sous_traitance_prix = fields.Text(string="Prix vendu sous-traitance")
     rc_dfi_desc_emb            = fields.Text(string="Descriptif emballage")
-    rc_dfi_qte_carton          = fields.Char(string="Qt par UC")
-    rc_dfi_qte_palette         = fields.Char(string="Nb UC par palette")
-    rc_dfi_lot_liv             = fields.Char(string="Lot de livraison (en pièces)")
-    rc_dfi_multiple_liv        = fields.Char(string="Multiple de livraison")
-    rc_dfi_lot_fab             = fields.Char(string="Lot de fabrication (en pièces)")
+    rc_dfi_qte_carton          = fields.Integer(string="Qt par UC")
+    rc_dfi_qte_palette         = fields.Integer(string="Nb UC par palette")
+    rc_dfi_lot_liv             = fields.Integer(string="Lot de livraison (en pièces)")
+    rc_dfi_multiple_liv        = fields.Integer(string="Multiple de livraison")
+    rc_dfi_lot_fab             = fields.Integer(string="Lot de fabrication (en pièces)")
     is_revue_id                = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
 
 

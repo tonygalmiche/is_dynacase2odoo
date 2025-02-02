@@ -180,6 +180,10 @@
                                             <field name="rc_ecart" optional="show"/>
                                         </tree>
                                     </field>
+                                    <group>
+                                        <field name="rc_ca_annuel"/>
+                                        <field name="rc_vac"/>
+                                    </group>
                                 </group>
                                 <group name="rc_productivite_fr" string="Productivité" col="4" colspan="4">
                                     <field name="productivite_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state', '!=', 'brouillon')]}" >
@@ -546,6 +550,8 @@
                     <field name="rc_dms_date"              optional="hide"/>
                     <field name="rc_eop_date"              optional="hide"/>
                     <field name="rc_eiv_total"             optional="hide"/>
+                    <field name="rc_ca_annuel"             optional="hide" sum="Total"/>
+                    <field name="rc_vac"                   optional="hide" sum="Total"/>
                     <field name="create_date"              optional="hide" string="Créé le"/>
                     <field name="create_uid"               optional="hide" string="Créé par"/>
                     <field name="write_date"               optional="hide" string="Modifié le"/>
