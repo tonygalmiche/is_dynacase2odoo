@@ -174,15 +174,17 @@
                     <field name="rl_responsable_projetid" optional="hide"/>
                     <field name="rl_directeur_siteid" optional="hide"/>
                     <field name="rl_directeur_techniqueid" optional="hide"/>
-
                     <field name="rl_date_j0" optional="show" />
                     <field name="rl_date_j1" optional="hide" />
                     <field name="rl_date_j2" optional="hide" />
                     <field name="rl_date_j3" optional="hide" />
                     <field name="rl_date_j4" optional="hide" />
                     <field name="rl_date_j5" optional="hide" />
-
-
+                    <field 
+                        name="state" optional="show" readonly="1" widget="badge" 
+                        decoration-muted="state == 'rl_diffuse'" 
+                        decoration-warning="state == 'rl_brouillon'" 
+                    />
                     <field name="dynacase_id" optional="hide" groups="base.group_system"/>
                     <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" groups="base.group_system"/>
                 </tree>
@@ -204,6 +206,7 @@
                     <field name="rl_commercial_rcid" />
                     <field name="rl_lieu_production" />
                     <field name="rl_chef_projetid" />
+                    <field name="state" />
                 </search>
             </field>
         </record>
