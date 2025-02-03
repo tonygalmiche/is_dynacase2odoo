@@ -14,6 +14,8 @@ _SELECT_RISQUE=[
 #TODO : 
 # - Lors de la sycnro récupérer les champs create_date, create_uid, write_date, write_uid
 # - Supprimer un N/A de la liste de choix
+# - Ajouter un champ name dans la revue des risques comme RL et RC
+
 
 
 class is_revue_risque(models.Model):

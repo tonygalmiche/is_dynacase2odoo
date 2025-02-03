@@ -8,6 +8,10 @@
             <field name="arch" type="xml">
                 <form string="Revue de lancement">
                     <header>
+
+                        <button name="copie_rc_action" string="Copie données revue de contrat" type="object" class="btn" attrs="{'invisible': [('state', '=', 'rl_diffuse')]}" />
+
+
                         <button name="action_vers_diffuse" string="Vers Diffusé" type="object" class="btn-primary" attrs="{'invisible': [('state', 'in', ['rl_diffuse',None,False])]}" />
                         <button name="action_vers_brouillon" string="Vers Brouillon" type="object" class="btn-primary" attrs="{'invisible': [('state', '=', 'rl_brouillon')]}" />
                         <field name="state" widget="statusbar" />
@@ -18,12 +22,15 @@
                         <notebook>
                             <page name="rl_initial_tab" string="Données d'entrée">
                                 <group>
-                                    <field name="rl_num_rcid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
-                                    <field name="rl_indice"/>
-                                    <field name="rl_designation_rc"  attrs="{'invisible': [('rl_num_rcid', '=', False)]}"/>
-                                    <field name="rl_client_rcid"     attrs="{'invisible': [('rl_num_rcid', '=', False)]}"/>
-                                    <field name="rl_projet_rcid"     attrs="{'invisible': [('rl_num_rcid', '=', False)]}"/>
-                                    <field name="rl_commercial_rcid" attrs="{'invisible': [('rl_num_rcid', '=', False)]}"/>
+                                    <field name="name"               attrs="{'invisible': [('rl_num_rcid'  , '=', False)]}"/>
+                                    <field name="rl_num_rcid"        attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                    <field name="rl_indice"          attrs="{'invisible': [('rl_num_rcid'  , '=', False)]}"/>
+                                    <field name="rl_mouleid"         attrs="{'invisible': [('rl_mouleid'   , '=', False)]}"/>
+                                    <field name="rl_dossierfid"      attrs="{'invisible': [('rl_dossierfid', '=', False)]}"/>
+                                    <field name="rl_designation_rc"  attrs="{'invisible': [('rl_num_rcid'  , '=', False)]}"/>
+                                    <field name="rl_client_rcid"     attrs="{'invisible': [('rl_num_rcid'  , '=', False)]}"/>
+                                    <field name="rl_projet_rcid"     attrs="{'invisible': [('rl_num_rcid'  , '=', False)]}"/>
+                                    <field name="rl_commercial_rcid" attrs="{'invisible': [('rl_num_rcid'  , '=', False)]}"/>
                                 </group>
                             </page>
                             <page name="rl_choix_industriel_tab" string="Choix industriel" attrs="{'invisible': [('rl_num_rcid', '=', False)]}" >
@@ -73,29 +80,29 @@
                             <page name="rl_investissement_tab" string="Investissement" attrs="{'invisible': [('rl_num_rcid', '=', False)]}" >
                                 <group name="rl_investissement_pgrc_fr" string="Données moule" col="4">
                                     <group string="Designation - Montant">
-                                        <field name="rl_pgrc_moule_mnt"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
-                                        <field name="rl_pgrc_etude_mnt"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
-                                        <field name="rl_pgrc_main_prehension_mnt"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
-                                        <field name="rl_pgrc_barre_chaude_mnt"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
-                                        <field name="rl_pgrc_gabarit_controle_mnt"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
-                                        <field name="rl_pgrc_machine_speciale_mnt"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
-                                        <field name="rl_pgrc_plan_validation_mnt"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
-                                        <field name="rl_pgrc_mise_point_mnt"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
-                                        <field name="rl_pgrc_packaging_mnt"   attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
-                                        <field name="rl_pgrc_amort_mnt"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
-                                        <field name="rl_pgrc_total"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_pgrc_moule_mnt"/>
+                                        <field name="rl_pgrc_etude_mnt"/>
+                                        <field name="rl_pgrc_main_prehension_mnt"/>
+                                        <field name="rl_pgrc_barre_chaude_mnt"/>
+                                        <field name="rl_pgrc_gabarit_controle_mnt"/>
+                                        <field name="rl_pgrc_machine_speciale_mnt"/>
+                                        <field name="rl_pgrc_plan_validation_mnt"/>
+                                        <field name="rl_pgrc_mise_point_mnt"/>
+                                        <field name="rl_pgrc_packaging_mnt"/>
+                                        <field name="rl_pgrc_amort_mnt"/>
+                                        <field name="rl_pgrc_total"/>
                                     </group>
                                     <group string="Commentaire">
-                                        <field name="rl_pgrc_moule_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
-                                        <field name="rl_pgrc_etude_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
-                                        <field name="rl_pgrc_main_prehension_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
-                                        <field name="rl_pgrc_barre_chaude_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
-                                        <field name="rl_pgrc_gabarit_controle_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
-                                        <field name="rl_pgrc_machine_speciale_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
-                                        <field name="rl_pgrc_plan_validation_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
-                                        <field name="rl_pgrc_mise_point_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
-                                        <field name="rl_pgrc_packaging_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
-                                        <field name="rl_pgrc_amort_cmt" nolabel="1" colspan="6"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
+                                        <field name="rl_pgrc_moule_cmt"            nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_etude_cmt"            nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_main_prehension_cmt"  nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_barre_chaude_cmt"     nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_gabarit_controle_cmt" nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_machine_speciale_cmt" nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_plan_validation_cmt"  nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_mise_point_cmt"       nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_packaging_cmt"        nolabel="1" colspan="6"/>
+                                        <field name="rl_pgrc_amort_cmt"            nolabel="1" colspan="6"/>
                                     </group>
                                 </group>
                                 <group>
@@ -118,7 +125,7 @@
                                         <field name="rl_be15"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                         <field name="rl_be16"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                         <field name="rl_be17"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
-                                        <field name="rl_be_total"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be_total"/>
                                         <field name="rl_annee_inv"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                     </group>
                                 </group>
@@ -138,16 +145,19 @@
             <field name="model">is.revue.lancement</field>
             <field name="arch" type="xml">
                 <tree string="Revue de lancement">
-                    <field name="rl_num_rcid" optional="show" widget="many2one_clickable"/>
-                    <field name="rl_indice" optional="show"/>
-                    <field name="rl_designation_rc" optional="show"/>
-                    <field name="rl_client_rcid" optional="show" widget="many2one_clickable"/>
-                    <field name="rl_projet_rcid" optional="show" widget="many2one_clickable"/>
-                    <field name="rl_commercial_rcid" optional="show"/>
-                    <field name="rl_lieu_production" optional="hide"/>
-                    <field name="rl_nom_soutraitant" optional="hide"/>
-                    <field name="rl_affectation_presse" optional="hide"/>
-                    <field name="rl_choix_industriel" optional="hide"/>
+                    <field name="name"/>
+                    <field name="rl_num_rcid"               optional="show" widget="many2one_clickable"/>
+                    <field name="rl_indice"                 optional="show"/>
+                    <field name="rl_mouleid"                optional="hide" widget="many2one_clickable"/>
+                    <field name="rl_dossierfid"             optional="hide" widget="many2one_clickable"/>
+                    <field name="rl_designation_rc"         optional="show"/>
+                    <field name="rl_client_rcid"            optional="show" widget="many2one_clickable"/>
+                    <field name="rl_projet_rcid"            optional="show" widget="many2one_clickable"/>
+                    <field name="rl_commercial_rcid"        optional="show"/>
+                    <field name="rl_lieu_production"        optional="hide"/>
+                    <field name="rl_nom_soutraitant"        optional="hide"/>
+                    <field name="rl_affectation_presse"     optional="hide"/>
+                    <field name="rl_choix_industriel"       optional="hide"/>
                     <field name="rl_validation_capacitaire" optional="hide"/>
                     <field name="rl_validation_capacitaire_comment" optional="hide"/>
                     <field name="rl_chef_projetid" optional="hide"/>
@@ -184,31 +194,16 @@
             <field name="model">is.revue.lancement</field>
             <field name="arch" type="xml">
                 <search string="Revue de lancement">
+                    <field name="name" />
+                    <field name="rl_indice" />
                     <field name="rl_num_rcid" />
-                    <field name="rl_designation_rc" />
+                    <field name="rl_mouleid"/>
+                    <field name="rl_dossierfid"/>
                     <field name="rl_client_rcid" />
                     <field name="rl_projet_rcid" />
                     <field name="rl_commercial_rcid" />
                     <field name="rl_lieu_production" />
-                    <field name="rl_nom_soutraitant" />
-                    <field name="rl_affectation_presse" />
-                    <field name="rl_choix_industriel" />
-                    <field name="rl_validation_capacitaire" />
-                    <field name="rl_validation_capacitaire_comment" />
                     <field name="rl_chef_projetid" />
-                    <field name="rl_expert_injectionid" />
-                    <field name="rl_methode_injectionid" />
-                    <field name="rl_methode_assemblageid" />
-                    <field name="rl_qualite_devid" />
-                    <field name="rl_qualite_usineid" />
-                    <field name="rl_achatsid" />
-                    <field name="rl_logistiqueid" />
-                    <field name="rl_logistique_usineid" />
-                    <field name="rl_commercial2id" />
-                    <field name="rl_responsable_outillageid" />
-                    <field name="rl_responsable_projetid" />
-                    <field name="rl_directeur_siteid" />
-                    <field name="rl_directeur_techniqueid" />
                 </search>
             </field>
         </record>

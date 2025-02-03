@@ -2,20 +2,10 @@
 from odoo import models, fields, api, _       # type: ignore
 from odoo.exceptions import ValidationError   # type: ignore
 
-
 #TODO : 
-# Ajouter un champ 'name' comme la revue de contrat
-# Dans le programme de syncro faire un compute du name et des autres champs
 # Ajouter les champs vers les lignes des invetissements
 # Créer et modifier automatiquement les lignes des invesittsements
-# Faire le changement d'incide par duplication avec recherhe de la denire revue de co,trat validée
-# Ajout de la RL dans la fiche du moule lors de la validation
-
-# Ajouter un champ name dans la revue des risques 
-# Copie des données depuis la revue de contrat
-# Duplication revue de lancement avec indice
-# Contrainet pour revue de lancement en double
-# Création invitessiiement achat moule
+# Contrainte sur montant moule et RL à revoir
 
 
 _RESPONSABLES={
@@ -37,9 +27,8 @@ _RESPONSABLES={
 class is_revue_lancement(models.Model):
     _name        = "is.revue.lancement"
     _inherit     = ['mail.thread']
-    #_inherit    = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description = "Revue de lancement"
-    _rec_name    = "rl_title"
+
 
     @api.depends("rl_pgrc_moule_mnt", "rl_pgrc_etude_mnt", "rl_pgrc_main_prehension_mnt", "rl_pgrc_barre_chaude_mnt",
                  "rl_pgrc_gabarit_controle_mnt", "rl_pgrc_machine_speciale_mnt", "rl_pgrc_plan_validation_mnt",
@@ -59,28 +48,21 @@ class is_revue_lancement(models.Model):
                                 record.rl_be10 + record.rl_be11 + record.rl_be12 + record.rl_be13 + record.rl_be14 + \
                                 record.rl_be15 + record.rl_be16 + record.rl_be17
 
-    def action_vers_diffuse(self):
-        for record in self:
-            record.state = "rl_diffuse"
 
-    def action_vers_brouillon(self):
-        for record in self:
-            record.state = "rl_brouillon"
-
-    @api.constrains("rl_be_total", "rl_pgrc_total", "rl_annee_inv")
-    def _check_vals(self):
-        for obj in self:
-            if obj.rl_pgrc_total != obj.rl_be_total:
-                raise ValidationError(_("Données moule and revue de lancement total must be same!"))
-            if obj.rl_annee_inv:
-                try:
-                    rl_annee_inv = int(obj.rl_annee_inv)
-                    if len(str(rl_annee_inv)) != 4:
-                        raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
-                    if rl_annee_inv < 2000 or rl_annee_inv > 2099:
-                        raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
-                except Exception as e:
-                    raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
+    # @api.constrains("rl_be_total", "rl_pgrc_total", "rl_annee_inv")
+    # def _check_vals(self):
+    #     for obj in self:
+    #         if obj.rl_pgrc_total != obj.rl_be_total:
+    #             raise ValidationError(_("Données moule and revue de lancement total must be same!"))
+    #         if obj.rl_annee_inv:
+    #             try:
+    #                 rl_annee_inv = int(obj.rl_annee_inv)
+    #                 if len(str(rl_annee_inv)) != 4:
+    #                     raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
+    #                 if rl_annee_inv < 2000 or rl_annee_inv > 2099:
+    #                     raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
+    #             except Exception as e:
+    #                 raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
 
 
     @api.depends("rl_num_rcid","rl_num_rcid.rc_designation","rl_num_rcid.rc_client","rl_num_rcid.rc_projetid","rl_num_rcid.rc_commercial")
@@ -91,11 +73,23 @@ class is_revue_lancement(models.Model):
             obj.rl_projet_rcid     = obj.rl_num_rcid.rc_projetid
             obj.rl_commercial_rcid = obj.rl_num_rcid.rc_commercial
 
+    @api.depends("rl_mouleid","rl_dossierfid","rl_indice")
+    def _compute_name(self):
+        for obj in self:
+            name="x"
+            if obj.rl_mouleid:
+                name = obj.rl_mouleid.name
+            if obj.rl_dossierfid:
+                name = obj.rl_dossierfid.name
+            obj.name='RL-%s-%s'%(name,obj.rl_indice)
 
 
+    name                              = fields.Char(string="N°", compute="_compute_name", store=True, readonly=True)
     rl_num_rcid                       = fields.Many2one("is.revue.de.contrat", string="Revue de contrat", required=True, tracking=True)
+    rl_mouleid                        = fields.Many2one(related='rl_num_rcid.rc_mouleid')
+    rl_dossierfid                     = fields.Many2one(related='rl_num_rcid.rc_dossierfid')
     rl_title                          = fields.Char(string="Revue de lancement (champ à supprimer)", tracking=True)
-    rl_indice                         = fields.Integer(string="Indice", tracking=True, readonly=True)
+    rl_indice                         = fields.Integer(string="Indice", tracking=True, readonly=True, default=0, required=True)
     rl_designation_rc                 = fields.Char(string="Désignation"                  , tracking=True, compute="_compute_rc", store=True, readonly=True)
     rl_client_rcid                    = fields.Many2one("res.partner", string="Client"    , tracking=True, compute="_compute_rc", store=True, readonly=True)
     rl_projet_rcid                    = fields.Many2one("is.mold.project", string="Projet", tracking=True, compute="_compute_rc", store=True, readonly=True)
@@ -134,27 +128,30 @@ class is_revue_lancement(models.Model):
     rl_date_j3                        = fields.Date(string="Date J3", tracking=True)
     rl_date_j4                        = fields.Date(string="Date J4", tracking=True)
     rl_date_j5                        = fields.Date(string="Date J5", tracking=True)
-    rl_pgrc_moule_mnt                 = fields.Float(string="Moule", tracking=True)
-    rl_pgrc_moule_cmt                 = fields.Char(string="Commentaire", tracking=True)
-    rl_pgrc_etude_mnt                 = fields.Float(string="Etude", tracking=True)
-    rl_pgrc_etude_cmt                 = fields.Char(string="Commentaire 1", tracking=True)
-    rl_pgrc_main_prehension_mnt       = fields.Float(string="Main de préhension", tracking=True)
-    rl_pgrc_main_prehension_cmt       = fields.Char(string="Commentaire  2", tracking=True)
-    rl_pgrc_barre_chaude_mnt          = fields.Float(string="Barre chaude", tracking=True)
-    rl_pgrc_barre_chaude_cmt          = fields.Char(string="Commentaire 3", tracking=True)
-    rl_pgrc_gabarit_controle_mnt      = fields.Float(string="Gabarit de contrôle", tracking=True)
-    rl_pgrc_gabarit_controle_cmt      = fields.Char(string="Commentaire 4", tracking=True)
-    rl_pgrc_machine_speciale_mnt      = fields.Float(string="Machine spéciale", tracking=True)
-    rl_pgrc_machine_speciale_cmt      = fields.Char(string="Commentaire 5", tracking=True)
-    rl_pgrc_plan_validation_mnt       = fields.Float(string="Plan de validation", tracking=True)
-    rl_pgrc_plan_validation_cmt       = fields.Char(string="Commentaire 6", tracking=True)
-    rl_pgrc_mise_point_mnt            = fields.Float(string="Mise au point", tracking=True)
-    rl_pgrc_mise_point_cmt            = fields.Char(string="Commentaire 7", tracking=True)
-    rl_pgrc_packaging_mnt             = fields.Float(string="Packaging", tracking=True)
-    rl_pgrc_packaging_cmt             = fields.Char(string="Commentaire 8", tracking=True)
-    rl_pgrc_amort_mnt                 = fields.Float(string="Amortissement", tracking=True)
-    rl_pgrc_amort_cmt                 = fields.Char(string="Commentaire 9", tracking=True)
-    rl_pgrc_total                     = fields.Float(string="Total ", compute="get_rl_pgrc_total", store=True)
+
+    rl_pgrc_moule_mnt                 = fields.Float(string="Moule.", readonly=True)
+    rl_pgrc_moule_cmt                 = fields.Char(string="Commentaire", readonly=True)
+    rl_pgrc_etude_mnt                 = fields.Float(string="Etude", readonly=True)
+    rl_pgrc_etude_cmt                 = fields.Char(string="Commentaire 1", readonly=True)
+    rl_pgrc_main_prehension_mnt       = fields.Float(string="Main de préhension", readonly=True)
+    rl_pgrc_main_prehension_cmt       = fields.Char(string="Commentaire  2", readonly=True)
+    rl_pgrc_barre_chaude_mnt          = fields.Float(string="Barre chaude", readonly=True)
+    rl_pgrc_barre_chaude_cmt          = fields.Char(string="Commentaire 3", readonly=True)
+    rl_pgrc_gabarit_controle_mnt      = fields.Float(string="Gabarit de contrôle", readonly=True)
+    rl_pgrc_gabarit_controle_cmt      = fields.Char(string="Commentaire 4", readonly=True)
+    rl_pgrc_machine_speciale_mnt      = fields.Float(string="Machine spéciale", readonly=True)
+    rl_pgrc_machine_speciale_cmt      = fields.Char(string="Commentaire 5", readonly=True)
+    rl_pgrc_plan_validation_mnt       = fields.Float(string="Plan de validation", readonly=True)
+    rl_pgrc_plan_validation_cmt       = fields.Char(string="Commentaire 6", readonly=True)
+    rl_pgrc_mise_point_mnt            = fields.Float(string="Mise au point", readonly=True)
+    rl_pgrc_mise_point_cmt            = fields.Char(string="Commentaire 7", readonly=True)
+    rl_pgrc_packaging_mnt             = fields.Float(string="Packaging", readonly=True)
+    rl_pgrc_packaging_cmt             = fields.Char(string="Commentaire 8", readonly=True)
+    rl_pgrc_amort_mnt                 = fields.Float(string="Amortissement", readonly=True)
+    rl_pgrc_amort_cmt                 = fields.Char(string="Commentaire 9", readonly=True)
+    rl_pgrc_total                     = fields.Float(string="Total ", readonly=True)
+
+
     rl_be01                           = fields.Float(string="BE01a : Nouveau moule/ Moule transféré", tracking=True)
     rl_be01b                          = fields.Float(string="BE01b : Grainage", tracking=True)
     rl_be01c                          = fields.Float(string="BE01c : Barre chaude", tracking=True)
@@ -183,8 +180,44 @@ class is_revue_lancement(models.Model):
     active      = fields.Boolean('Actif', default=True, tracking=True)
 
 
+    def write(self,vals):
+        res=super().write(vals)
+        self._rl_unique()
+        # for obj in self:
+        #     if obj.rl_pgrc_total != obj.rl_be_total:
+        #         raise ValidationError("Total moule et revue de lancement différent !")
+        return res
 
 
+    def copy(self, default=None):
+        for obj in self:
+            default = dict(default or {})
+            default['rl_indice']=obj.rl_indice+1
+            #** Recherche de la dernière revue de contrat validée *************
+            domain=[
+                ('rc_mouleid'   , '=', obj.rl_mouleid.id), 
+                ('rc_dossierfid', '=', obj.rl_dossierfid.id), 
+                ('state'        , '=', 'diffuse'), 
+            ]
+            lines = self.env['is.revue.de.contrat'].search(domain,order='rc_indice desc',limit=1)
+            for line in lines:
+                default['rl_num_rcid']=line.id
+            #******************************************************************
+            res=super().copy(default=default)
+            return res
+
+
+    @api.constrains('rl_num_rcid', 'rl_indice')
+    def _rl_unique(self):
+        for obj in self:
+            domain=[
+                ('rl_mouleid'   , '=', obj.rl_mouleid.id), 
+                ('rl_dossierfid', '=', obj.rl_dossierfid.id), 
+                ('rl_indice'    , '=', obj.rl_indice), 
+            ]
+            lines = self.env['is.revue.lancement'].search(domain)
+            if len(lines) > 1:
+                raise ValidationError("Cette revue de lancement existe déjà !")
 
 
     def lien_vers_dynacase_action(self):
@@ -214,4 +247,40 @@ class is_revue_lancement(models.Model):
                         user = getattr(obj,responsable)
                         if user:
                             doc.idresp = user.id
+
+
+    def action_vers_diffuse(self):
+        for obj in self:
+            obj.state = "rl_diffuse"
+            if obj.rl_mouleid:
+                obj.rl_mouleid.revue_lancement_id = obj.id
+            if obj.rl_dossierfid:
+                obj.rl_dossierfid.revue_lancement_id = obj.id
+
+
+    def action_vers_brouillon(self):
+        for obj in self:
+            obj.state = "rl_brouillon"
+
+
+    def copie_rc_action(self):
+        for obj in self:
+            rc = obj.rl_num_rcid
+            obj.rl_pgrc_main_prehension_mnt  = rc.rc_eiv_main_prehension
+            obj.rl_pgrc_main_prehension_cmt  = rc.rc_eiv_main_prehension_cmt
+            obj.rl_pgrc_barre_chaude_mnt     = rc.rc_eiv_barre_chaude
+            obj.rl_pgrc_barre_chaude_cmt     = rc.rc_eiv_barre_chaude_cmt
+            obj.rl_pgrc_gabarit_controle_mnt = rc.rc_eiv_gab_controle
+            obj.rl_pgrc_gabarit_controle_cmt = rc.rc_eiv_gab_controle_cmt
+            obj.rl_pgrc_machine_speciale_mnt = rc.rc_eiv_mach_spec
+            obj.rl_pgrc_machine_speciale_cmt = rc.rc_eiv_mach_spec_cmt
+            obj.rl_pgrc_plan_validation_mnt  = rc.rc_eiv_plan_valid
+            obj.rl_pgrc_plan_validation_cmt  = rc.rc_eiv_plan_valid_cmt
+            obj.rl_pgrc_mise_point_mnt       = rc.rc_eiv_mis_point
+            obj.rl_pgrc_mise_point_cmt       = rc.rc_eiv_mis_point_cmt
+            obj.rl_pgrc_packaging_mnt        = rc.rc_eiv_pack
+            obj.rl_pgrc_packaging_cmt        = rc.rc_eiv_pack_cmt
+            obj.rl_pgrc_amort_mnt            = rc.rc_eiv_amort
+            obj.rl_pgrc_amort_cmt            = rc.rc_eiv_amort_cmt
+            obj.rl_pgrc_total                = rc.rc_eiv_total
 

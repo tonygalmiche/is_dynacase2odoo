@@ -104,9 +104,9 @@ class is_revue_de_contrat(models.Model):
 
     rc_eop_date_nb                     = fields.Char(string="Nombre de pièces vendues 5", tracking=True)
     rc_nb_pce_p_jal                    = fields.Text(string="Commentaire spécifique (essais supplémentaire)", tracking=True)
-    decomposition_prix_ids             = fields.One2many("is.revue.de.contrat.decomposition.prix", "is_revue_id", tracking=True)
-    productivite_ids                   = fields.One2many("is.revue.de.contrat.decomposition.productivite", "is_revue_id", tracking=True)
-    previsions_ids                     = fields.One2many("is.revue.de.contrat.decomposition.previsions", "is_revue_id", tracking=True)
+    decomposition_prix_ids             = fields.One2many("is.revue.de.contrat.decomposition.prix", "is_revue_id", tracking=True, copy=True)
+    productivite_ids                   = fields.One2many("is.revue.de.contrat.decomposition.productivite", "is_revue_id", tracking=True, copy=True)
+    previsions_ids                     = fields.One2many("is.revue.de.contrat.decomposition.previsions", "is_revue_id", tracking=True, copy=True)
     rc_eiv_moule                       = fields.Float(string="Moule ", tracking=True)
     rc_eiv_moule_cmt                   = fields.Char(string="Commentaire", tracking=True)
     rc_eiv_etude                       = fields.Float(string="Étude", tracking=True)
@@ -241,7 +241,7 @@ class is_revue_de_contrat(models.Model):
         ("Classe 5", "Classe 5 : 600T - 700T"),
         ("Classe 6", "Classe 6 : 800T - 1000T"),
     ], string="Classe commerciale", tracking=True)
-    version_ids                        = fields.One2many("is.revue.de.contrat.version", "is_revue_id", tracking=True)
+    version_ids                        = fields.One2many("is.revue.de.contrat.version", "is_revue_id", tracking=True, copy=True)
     rc_dfi_temp_occ_pm                 = fields.Float(string="Temps occupation presse mensuelle", compute="_compute_rc_dfi_temp_occ_pm", store=True, readonly=True)
     rc_dfe_desc_proc                   = fields.Text(string="Descriptif du process et site de fabrication vendu", tracking=True)
     rc_dfe_sch_lieu_fab                = fields.Text(string="Schéma de flux vendu (Logistique) ", tracking=True)
@@ -251,7 +251,7 @@ class is_revue_de_contrat(models.Model):
     rc_df_fiche_capacitaire            = fields.Many2many("ir.attachment", "is_rc_df_fiche_capacitaire_rel"           , "rc_df_fiche_capacitaire"           , "att_id", string="PJ Fiche capacitaire")
     rc_ca_annuel                       = fields.Float(string="CA annuel", digits=(12, 2), compute="_compute_rc_ca_annuel", store=True, readonly=True)
     rc_vac                             = fields.Float(string="VAC"      , digits=(12, 2), compute="_compute_rc_ca_annuel", store=True, readonly=True)
-    dfe_version_ids                    = fields.One2many("is.revue.de.contrat.dfe.version", "is_revue_id")
+    dfe_version_ids                    = fields.One2many("is.revue.de.contrat.dfe.version", "is_revue_id", copy=True)
     dynacase_id = fields.Integer(string="Id Dynacase",index=True,copy=False)
     state = fields.Selection([
         ("brouillon", "Brouillon"),

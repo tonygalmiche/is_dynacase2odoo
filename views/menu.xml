@@ -94,10 +94,15 @@
             <field name="parent_id" eval="ref('is_gestion_commerciale_menu')"/>
             <field name="action"    ref="is_revue_lancement_action"/>
         </record>
-
+        <record id="is_inv_achat_moule_menu" model="ir.ui.menu" >
+            <field name="name">Investissement achat moule</field>
+            <field name="sequence">60</field>
+            <field name="parent_id" eval="ref('is_gestion_commerciale_menu')"/>
+            <field name="action"    ref="is_inv_achat_moule_action"/>
+        </record>
         <record id="is_fiche_codification" model="ir.ui.menu" >
             <field name="name">Fiche de codification</field>
-            <field name="sequence">60</field>
+            <field name="sequence">70</field>
             <field name="parent_id" eval="ref('is_gestion_commerciale_menu')"/>
             <field name="action"    ref="is_fiche_codification_action"/>
         </record>
