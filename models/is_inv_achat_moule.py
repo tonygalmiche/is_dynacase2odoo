@@ -4,7 +4,7 @@ from odoo.exceptions import ValidationError  # type: ignore
 
 
 #TODO : 
-#- Importer les données de Dynacase
+#- Pour les clients, projets et chef de projet, mettre un champ calculé => Appeler la fonction en XML-RPC
 #- Migrer également les ERD car lien avec
 #- name à revoir
 #- Lien avec RL

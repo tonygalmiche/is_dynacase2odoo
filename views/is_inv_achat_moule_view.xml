@@ -83,6 +83,10 @@
                     <field name="date_commande_ou_saisie" optional="hide"/>
                     <field name="fournisseurid"           optional="hide" widget="many2one_clickable"/>
                     <field name="objet_commande"          optional="hide"/>
+                    <field name="create_date" optional="hide" string="Créé le"/>
+                    <field name="create_uid"  optional="hide" string="Créé par"/>
+                    <field name="write_date"  optional="hide" string="Modifié le"/>
+                    <field name="write_uid"   optional="hide" string="Modifié par"/>
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
