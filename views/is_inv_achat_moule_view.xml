@@ -96,6 +96,25 @@
                  </tree>
             </field>
         </record>
+        <record id="is_inv_achat_moule_pivot_view" model="ir.ui.view">
+            <field name="name">is_inv_achat_moule_pivot_view</field>
+            <field name="model">is.inv.achat.moule</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="code_imputation" type="row"/>
+                </pivot>
+            </field>
+        </record>
+        <record id="is_inv_achat_moule_graph_view" model="ir.ui.view">
+            <field name="name">is_inv_achat_moule_graph_view</field>
+            <field name="model">is.inv.achat.moule</field>
+            <field name="arch" type="xml">
+                <graph>
+                    <field name="code_imputation"/>
+                </graph>
+            </field>
+        </record>
+        
         <record model="ir.ui.view" id="is_inv_achat_moule_search_view" >
             <field name="name">is_inv_achat_moule_search_view</field>
             <field name="model">is.inv.achat.moule</field>
@@ -115,7 +134,7 @@
         <record model="ir.actions.act_window" id="is_inv_achat_moule_action">
             <field name="name">Investissement achat moule</field>
             <field name="res_model">is.inv.achat.moule</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
         </record>
     </data>
 </odoo>

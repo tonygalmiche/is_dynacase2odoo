@@ -4,11 +4,13 @@ from odoo.exceptions import ValidationError  # type: ignore
 
 
 #TODO : 
-#- Pour les clients, projets et chef de projet, mettre un champ calculé => Appeler la fonction en XML-RPC
+#- Pour les clients, projets et chef de projet, mettre un champ calculé
+#- Champ nature est un compute
 #- Migrer également les ERD car lien avec
-#- name à revoir
+#- name à revoir => Mettre le montant pour afficher dans RL
 #- Lien avec RL
 #- Analyser contenu fichiers PHP de cette famille
+#- Ajouter vue tableau croisée et graph
 
 
 _CODE_IMPUTATION=[
@@ -40,7 +42,7 @@ class is_inv_achat_moule(models.Model):
     _inherit=['mail.thread']
     _description = "Investissement achat moule"
 
-    code_imputation    = fields.Selection(_CODE_IMPUTATION          , string="Code imputation"   , tracking=True, required=True)
+    code_imputation    = fields.Selection(_CODE_IMPUTATION          , string="Code imputation"   , tracking=True, required=True, index=True)
     revue_lancementid  = fields.Many2one("is.revue.lancement"       , string="Revue de lancement", tracking=True)
     num_dossierid      = fields.Many2one("is.dossier.modif.variante", string="N° de dossier"     , tracking=True)
     num_erdid          = fields.Char(string="ERD"                                                , tracking=True)
