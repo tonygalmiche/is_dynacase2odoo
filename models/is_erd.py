@@ -7,12 +7,7 @@ from odoo.exceptions import ValidationError  # type: ignore
 #- Mettre en place les droits en fonction du champ state
 #- Lien avec is_inv_achat_moule
 
-#TODO pour is_fiche_codification
-#- Ajouter les boutons du workflow
-#- Mettre en place les droits en fonction du champ state
-#- Liens avec RL
-#- Créer une fiche de coditidtion depuis RC et dossiers modif/variante
-#- Ajouter la vue de recherche
+
 
 
 class is_erd(models.Model):

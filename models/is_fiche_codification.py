@@ -1,6 +1,16 @@
 from odoo import models, fields  # type: ignore
 
 
+
+#TODO pour is_fiche_codification
+#- Importer les tableayx et les pieces jointes
+#- Ajouter les boutons du workflow
+#- Mettre en place les droits en fonction du champ state
+#- Liens avec RL
+#- Créer une fiche de coditidtion depuis RC et dossiers modif/variante
+#- Ajouter la vue de recherche
+
+
 _STATE = ([
     ('brouillon' , 'Brouillon'),
     ('transmis'  , 'Transmise'),
