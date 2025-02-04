@@ -12,6 +12,7 @@ from odoo.exceptions import ValidationError  # type: ignore
 #- Mettre en place les droits en fonction du champ state
 #- Liens avec RL
 #- Créer une fiche de coditidtion depuis RC et dossiers modif/variante
+#- Ajouter la vue de recherche
 
 
 class is_erd(models.Model):
@@ -55,8 +56,6 @@ class is_erd(models.Model):
                 'target': 'new',
             }
             
-
-
     def vers_Transmis_BE_action(self):
         for obj in self:
             obj.state='Transmis_BE'
@@ -72,33 +71,3 @@ class is_erd(models.Model):
     def vers_Gagne_action(self):
         for obj in self:
             obj.state='Gagne'
-
-                        # <button 
-                        #     name="vers_Transmis_BE_action"
-                        #     string="vers Transmis BE"
-                        #     type="object"
-                        #     attrs="{'invisible': [('state', '!=', 'Cree')]}" 
-                        #     groups="is_gestionnaire_projet_group"
-                        # />
-                        # <button 
-                        #     name="vers_Valide_BE_action"
-                        #     string="vers Validé BE"
-                        #     type="object"
-                        #     attrs="{'invisible': [('state', '!=', 'Transmis_BE')]}" 
-                        #     groups="is_gestionnaire_projet_group"
-                        # />
-                        # <button 
-                        #     name="vers_Diffuse_Client_action"
-                        #     string="vers Diffusé Client"
-                        #     type="object"
-                        #     attrs="{'invisible': [('state', '!=', 'Valide_BE')]}" 
-                        #     groups="is_gestionnaire_projet_group"
-                        # />
-                        # <button 
-                        #     name="vers_Gagne_action"
-                        #     string="vers Gagné"
-                        #     type="object"
-                        #     attrs="{'invisible': [('state', '!=', 'Diffuse_Client')]}" 
-                        #     groups="is_gestionnaire_projet_group"
-                        # />
-

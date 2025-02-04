@@ -42,13 +42,13 @@
             <field name="parent_id" eval="ref('is_doc_moule_main_menu')"/>
             <field name="action"    ref="is_gantt_copie_action"/>
         </record>
-         <record id="is_creation_doc_migration_menu" model="ir.ui.menu" >
+         <!-- <record id="is_creation_doc_migration_menu" model="ir.ui.menu" >
             <field name="name">Création documents migration</field>
             <field name="sequence">92</field>
             <field name="parent_id" eval="ref('is_doc_moule_main_menu')"/>
             <field name="action"    ref="is_creation_doc_migration_action"/>
          </record>
-
+ -->
     
 
         <record model="ir.actions.client" id="suivi_projet_actions_client">
