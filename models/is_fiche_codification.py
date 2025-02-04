@@ -12,12 +12,13 @@ class is_fiche_codification(models.Model):
     _name='is.fiche.codification'
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description="Fiche de codification"
+    _rec_name = "chrono"
 #    _order='name desc'
 
-    chrono                       = fields.Integer('Chrono', readonly=True)
-    state                        = fields.Selection(_STATE, "Etat", tracking=True)
+    chrono                       = fields.Char('Chrono', readonly=True)
+    state                        = fields.Selection(_STATE, "Etat", default=_STATE[0][0], tracking=True)
     active                       = fields.Boolean('Actif', default=True, tracking=True)
-    etabli_par_id                = fields.Many2one('res.users', 'Établi par', required=True, default=lambda self: self.env.uid)
+    etabli_par_id                = fields.Many2one('res.users', 'Établi par', required=True, default=lambda self: self.env.uid, tracking=True)
     date                         = fields.Date("Date", required=True, default=lambda *a: fields.datetime.now(), tracking=True)
     dossier_commercial_id        = fields.Many2one("is.dossier.appel.offre", string="Dossier commercial", index=True, tracking=True)
     is_mold_id                   = fields.Many2one('is.mold', 'Moule', tracking=True)
