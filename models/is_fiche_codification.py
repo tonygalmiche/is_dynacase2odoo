@@ -20,7 +20,7 @@ class is_fiche_codification(models.Model):
     active                       = fields.Boolean('Actif', default=True, tracking=True)
     etabli_par_id                = fields.Many2one('res.users', 'Établi par', required=True, default=lambda self: self.env.uid, tracking=True)
     date                         = fields.Date("Date", required=True, default=lambda *a: fields.datetime.now(), tracking=True)
-    appel_offre_id               = fields.Many2one("is.dossier.appel.offre", string="Dossier commercial", index=True, tracking=True)
+    appel_offre_id               = fields.Many2one("is.dossier.appel.offre", string="Dossier d'appel d'offre", index=True, tracking=True)
     mold_id                      = fields.Many2one('is.mold', 'Moule', tracking=True)
     dossier_modif_variante_id    = fields.Many2one('is.dossier.modif.variante', 'Dossier Modif Variante', tracking=True)
     revue_contrat_id             = fields.Many2one("is.revue.de.contrat", string="Revue de contrat", tracking=True)
