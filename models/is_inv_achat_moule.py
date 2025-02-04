@@ -30,7 +30,8 @@ _CODE_IMPUTATION=[
     ('be15' , 'BE15 : Achat matière'),
     ('be16' , 'BE16 : Achat composants'),
     ('be17' , 'BE17 : Essai injection'),
-    ('DM|DM', 'Dossier modification,ERD|ERD'),
+    ('DM'   , 'Dossier modification'),
+    ('ERD'  , 'ERD'),
 ]
 
 
