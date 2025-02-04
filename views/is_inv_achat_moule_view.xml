@@ -83,11 +83,11 @@
                     <field name="date_commande_ou_saisie" optional="hide"/>
                     <field name="fournisseurid"           optional="hide" widget="many2one_clickable"/>
                     <field name="objet_commande"          optional="hide"/>
-                    <!-- <button 
+                    <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
                         groups="base.group_system"
-                    /> -->
+                    />
                     <field name="dynacase_id" optional="hide" groups="base.group_system"/>
                  </tree>
             </field>
