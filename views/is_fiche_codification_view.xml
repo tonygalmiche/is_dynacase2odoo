@@ -18,20 +18,33 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Form">
+                    <header>
+                        <button 
+                            name="lien_vers_dynacase_action"
+                            string="Dynacase"
+                            type="object"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                            groups="base.group_system"
+                        />
+                        <field name="dynacase_id" invisible="1"/>
+                        <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                    </header>
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/> 
                         <group>
                             <group>
-                                <field name="chrono"/>
-                                <field name="state"/>
+                                <field name="chrono" readonly="1"/>
+                                <!--field name="state"/-->
                                 <field name="etabli_par_id"/>
                                 <field name="date"/>
-                                <field name="dossier_commercial"/>
+                                <field name="dossier_commercial_id"/>
                                 <field name="type_dossier"/>
                                 <field name="creation_modif"/>
                                 <field name="chef_de_projet_id"/>
-                                <field name="client_id"/>
+                                <field name="client_id" position="attributes">
+                                    <attribute name="domain">[('customer','=',True),('is_company','=',True)]</attribute>
+                                </field>
                                 <field name="project_id"/>
                                 <field name="is_mold_id"/>
                             </group>
@@ -95,34 +108,44 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="chrono"/>
-                    <field name="state"/>
-                    <field name="code_pg"/>
-                    <field name="date"/>
-                    <field name="type_dossier"/>
-                    <field name="creation_modif"/>
-                    <field name="client_id"/>
-                    <field name="project_id"/>
-                    <field name="chef_de_projet_id"/>
-                    <field name="etabli_par_id"/>
-                    <field name="duree_vie"/>
-                    <field name="dynacase_id"        optional="hide"/>
-                    <field name="dossier_commercial" optional="hide"/>
-                    <field name="type_presse"        optional="hide"/>
-                    <field name="tps_cycle"          optional="hide"/>
-                    <field name="nb_empreintes"      optional="hide"/>
-                    <field name="nb_mod"             optional="hide"/>
-                    <field name="designation"        optional="hide"/>
-                    <field name="code_client"        optional="hide"/>
-                    <field name="ref_plan"           optional="hide"/>
-                    <field name="indice_plan"        optional="hide"/>
-                    <field name="type_uc"            optional="hide"/>
-                    <field name="qt_uc"              optional="hide"/>
-                    <field name="commentaire"        optional="hide"/>
-                    <field name="prev_annuelle"      optional="hide"/>
-                    <field name="date_dms"           optional="hide"/>
-                    <field name="lot_livraison"      optional="hide"/>
-                    <field name="site_livraison"     optional="hide"/>
+                    <field name="chrono"                optional="show"/>
+                    <field name="state"                 optional="show"/>
+                    <field name="code_pg"               optional="show"/>
+                    <field name="date"                  optional="show"/>
+                    <field name="type_dossier"          optional="show"/>
+                    <field name="creation_modif"        optional="show"/>
+                    <field name="client_id"             optional="show"/>
+                    <field name="project_id"            optional="show"/>
+                    <field name="chef_de_projet_id"     optional="show"/>
+                    <field name="etabli_par_id"         optional="show"/>
+                    <field name="duree_vie"             optional="show"/>
+                    <field name="dossier_commercial_id" optional="hide"/>
+                    <field name="type_presse"           optional="hide"/>
+                    <field name="tps_cycle"             optional="hide"/>
+                    <field name="nb_empreintes"         optional="hide"/>
+                    <field name="nb_mod"                optional="hide"/>
+                    <field name="designation"           optional="hide"/>
+                    <field name="code_client"           optional="hide"/>
+                    <field name="ref_plan"              optional="hide"/>
+                    <field name="indice_plan"           optional="hide"/>
+                    <field name="type_uc"               optional="hide"/>
+                    <field name="qt_uc"                 optional="hide"/>
+                    <field name="commentaire"           optional="hide"/>
+                    <field name="prev_annuelle"         optional="hide"/>
+                    <field name="date_dms"              optional="hide"/>
+                    <field name="lot_livraison"         optional="hide"/>
+                    <field name="site_livraison"        optional="hide"/>
+                    <field name="create_date"           optional="hide"/>
+                    <field name="create_uid"            optional="hide"/>
+                    <field name="write_date"            optional="hide"/>
+                    <field name="write_uid"             optional="hide"/>
+                    <field name="dynacase_id"           optional="hide" groups="base.group_system"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+
                 </tree>
             </field>
         </record>

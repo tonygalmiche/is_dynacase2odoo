@@ -14,43 +14,53 @@ class is_fiche_codification(models.Model):
     _description="Fiche de codification"
 #    _order='name desc'
 
-    chrono             = fields.Integer('Chrono', readonly=True)
-    state              = fields.Selection(_STATE, "Etat", tracking=True)
-    active             = fields.Boolean('Actif', default=True, tracking=True)
-    etabli_par_id      = fields.Many2one('res.users', 'Établi par', required=True, default=lambda self: self.env.uid)
-    date               = fields.Date("Date", required=True, default=lambda *a: fields.datetime.now(), tracking=True)
-    dossier_commercial = fields.Many2one("is.dossier.appel.offre", string="Dossier commercial, Moule ou RC", index=True, tracking=True, required=True)
-    type_dossier       = fields.Char("Origine de la fiche", tracking=True)
-    chef_de_projet_id  = fields.Many2one('res.users', 'Chef de projet', required=True, tracking=True)
-    creation_modif     = fields.Selection([('creation', 'Création'), ('modification', 'Modification')], "Création / Modification", required=True, tracking=True)  #, default="creation")
-    client_id          = fields.Many2one('res.partner', 'Client', required=True, tracking=True)
-    project_id         = fields.Many2one('is.mold.project', 'Projet', tracking=True)
-    is_mold_id         = fields.Many2one('is.mold', 'Moule', tracking=True)
-    dynacase_id        = fields.Integer(string="Id Dynacase", index=True, copy=False)
+    chrono                       = fields.Integer('Chrono', readonly=True)
+    state                        = fields.Selection(_STATE, "Etat", tracking=True)
+    active                       = fields.Boolean('Actif', default=True, tracking=True)
+    etabli_par_id                = fields.Many2one('res.users', 'Établi par', required=True, default=lambda self: self.env.uid)
+    date                         = fields.Date("Date", required=True, default=lambda *a: fields.datetime.now(), tracking=True)
+    dossier_commercial_id        = fields.Many2one("is.dossier.appel.offre", string="Dossier commercial", index=True, tracking=True)
+    is_mold_id                   = fields.Many2one('is.mold', 'Moule', tracking=True)
+    is_dossier_modif_variante_id = fields.Many2one('is.dossier.modif.variante', 'Dossier Modif Variante', tracking=True)
+    type_dossier                 = fields.Char("Origine de la fiche", tracking=True)
+    chef_de_projet_id            = fields.Many2one('res.users', 'Chef de projet', required=True, tracking=True)
+    creation_modif               = fields.Selection([('creation', 'Création'), ('modification', 'Modification')], "Création / Modification", required=True, tracking=True)  #, default="creation")
+    client_id                    = fields.Many2one('res.partner', 'Client', required=True, tracking=True)
+    project_id                   = fields.Many2one('is.mold.project', 'Projet', tracking=True)
+    dynacase_id                  = fields.Integer(string="Id Dynacase", index=True, copy=False)
 
-    code_pg            = fields.Char("Code PG", tracking=True)
-    designation        = fields.Char("Désignation", tracking=True)
-    code_client        = fields.Char("Code client", tracking=True)
-    ref_plan           = fields.Char("Référence plan", tracking=True)
-    indice_plan        = fields.Char("Indice plan", tracking=True)
-    type_uc            = fields.Char("Type UC", tracking=True)
-    qt_uc              = fields.Char("Quantité / UC", tracking=True)
-    commentaire        = fields.Text("Commentaire", tracking=True)
+    code_pg                      = fields.Char("Code PG", tracking=True)
+    designation                  = fields.Char("Désignation", tracking=True)
+    code_client                  = fields.Char("Code client", tracking=True)
+    ref_plan                     = fields.Char("Référence plan", tracking=True)
+    indice_plan                  = fields.Char("Indice plan", tracking=True)
+    type_uc                      = fields.Char("Type UC", tracking=True)
+    qt_uc                        = fields.Char("Quantité / UC", tracking=True)
+    commentaire                  = fields.Text("Commentaire", tracking=True)
 
-    type_presse        = fields.Char("Type presse", tracking=True)
-    tps_cycle          = fields.Char("Temps de cycle", tracking=True)
-    nb_empreintes      = fields.Char("Nombre d'empreintes", tracking=True)
-    nb_mod             = fields.Char("Nombre de mod", tracking=True)
+    type_presse                  = fields.Char("Type presse", tracking=True)
+    tps_cycle                    = fields.Char("Temps de cycle", tracking=True)
+    nb_empreintes                = fields.Char("Nombre d'empreintes", tracking=True)
+    nb_mod                       = fields.Char("Nombre de mod", tracking=True)
 
-    prev_annuelle      = fields.Char("Prévisions annuelles", tracking=True)
-    date_dms           = fields.Date("Date dms", tracking=True)
-    duree_vie          = fields.Char("Durée de vie", tracking=True)
-    lot_livraison      = fields.Char("Lot de livraison", tracking=True)
-    site_livraison     = fields.Char("Site de livraison", tracking=True)
+    prev_annuelle                = fields.Char("Prévisions annuelles", tracking=True)
+    date_dms                     = fields.Date("Date dms", tracking=True)
+    duree_vie                    = fields.Char("Durée de vie", tracking=True)
+    lot_livraison                = fields.Char("Lot de livraison", tracking=True)
+    site_livraison               = fields.Char("Site de livraison", tracking=True)
 
-    nomenclature_ids   = fields.One2many('is.fiche.codification.nomenclature.line', 'codification_id', string="Nomenclature")
+    nomenclature_ids             = fields.One2many('is.fiche.codification.nomenclature.line', 'codification_id', string="Nomenclature")
 
-    decomposition_ids   = fields.One2many('is.fiche.codification.decomposition.line', 'codification_id', string="Décomposition")
+    decomposition_ids            = fields.One2many('is.fiche.codification.decomposition.line', 'codification_id', string="Décomposition")
+
+    def lien_vers_dynacase_action(self):
+        for obj in self:
+            url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
+            return {
+                'type' : 'ir.actions.act_url',
+                'url': url,
+                'target': 'new',
+            }
 
 
 class is_fiche_codification_nomenclature_line(models.Model):
@@ -63,6 +73,7 @@ class is_fiche_codification_nomenclature_line(models.Model):
     nom_code_pg        = fields.Char("Nomenclature code PG")
     nom_designation	   = fields.Char("Désignation nomenclature")
     nom_qt	           = fields.Char("Quantité")
+
 
 class is_fiche_codification_decomposition_line(models.Model):
     _name        = "is.fiche.codification.decomposition.line"
