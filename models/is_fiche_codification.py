@@ -1,22 +1,31 @@
 from odoo import models, fields  # type: ignore
 
 
+_STATE = ([
+    ('brouillon'    , 'Brouillon'),
+    ('transmis'    , 'Transmis'),
+    ('valide'    , 'Validée'),
+])
+
+
 class is_fiche_codification(models.Model):
     _name='is.fiche.codification'
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description="Fiche de codification"
 #    _order='name desc'
 
+    chrono             = fields.Integer('Chrono', readonly=True)
+    state              = fields.Selection(_STATE, "Etat", tracking=True)
     active             = fields.Boolean('Actif', default=True, tracking=True)
     etabli_par_id      = fields.Many2one('res.users', 'Établi par', required=True, default=lambda self: self.env.uid)
-    date               = fields.Date("Date", required=True, default=lambda *a: fields.datetime.now())
+    date               = fields.Date("Date", required=True, default=lambda *a: fields.datetime.now(), tracking=True)
     dossier_commercial = fields.Many2one("is.dossier.appel.offre", string="Dossier commercial, Moule ou RC", index=True, tracking=True, required=True)
     type_dossier       = fields.Char("Origine de la fiche", tracking=True)
-    chef_de_projet_id  = fields.Many2one('res.users', 'Chef de projet', required=True)
-    creation_modif     = fields.Selection([('creation', 'Création'), ('modification', 'Modification')], "Création / Modification", required=True)  #, default="creation")
-    client_id          = fields.Many2one('res.partner', 'Client', required=True)
-    project_id         = fields.Many2one('is.mold.project', 'Projet')
-    is_mold_id         = fields.Many2one('is.mold', 'Moule')
+    chef_de_projet_id  = fields.Many2one('res.users', 'Chef de projet', required=True, tracking=True)
+    creation_modif     = fields.Selection([('creation', 'Création'), ('modification', 'Modification')], "Création / Modification", required=True, tracking=True)  #, default="creation")
+    client_id          = fields.Many2one('res.partner', 'Client', required=True, tracking=True)
+    project_id         = fields.Many2one('is.mold.project', 'Projet', tracking=True)
+    is_mold_id         = fields.Many2one('is.mold', 'Moule', tracking=True)
     dynacase_id        = fields.Integer(string="Id Dynacase", index=True, copy=False)
 
     code_pg            = fields.Char("Code PG", tracking=True)
