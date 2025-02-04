@@ -23,6 +23,8 @@
                         <field name="active" invisible="1"/> 
                         <group>
                             <group>
+                                <field name="chrono"/>
+                                <field name="state"/>
                                 <field name="etabli_par_id"/>
                                 <field name="date"/>
                                 <field name="dossier_commercial"/>
@@ -93,6 +95,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree>
+                    <field name="chrono"/>
+                    <field name="state"/>
                     <field name="code_pg"/>
                     <field name="date"/>
                     <field name="type_dossier"/>
@@ -122,21 +126,6 @@
                 </tree>
             </field>
         </record>
-        <!--record model="ir.ui.view" id="is_fiche_codification_search_view" >
-            <field name="name">is_fiche_codification_search_view</field>
-            <field name="model">is.fiche.codification</field>
-            <field name="arch" type="xml">
-                <search>
-                    <field name="name"/>
-                    <field name="type_demande"/>
-                    <field name="demandeur_id"/>
-                    <field name="dest_raison_sociale"/>
-                    <field name="contact"/>
-                    <field name="enlev_raison_sociale"/>
-                    <field name="state"/>
-                </search>
-            </field>
-        </record-->
         <record model="ir.actions.act_window" id="is_fiche_codification_action">
             <field name="name">Fiche de codification</field>
             <field name="res_model">is.fiche.codification</field>
