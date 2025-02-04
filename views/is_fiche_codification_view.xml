@@ -38,9 +38,11 @@
                                 <!--field name="state"/-->
                                 <field name="etabli_par_id"/>
                                 <field name="date"/>
-                                <field name="dossier_commercial_id"/>
+                                <field name="appel_offre_id"/>
                                 <field name="dossier_modif_variante_id"/>
                                 <field name="mold_id"/>
+                                <field name="revue_contrat_id"/>
+                                <field name="dossierf_id"/>
                                 <field name="type_dossier"/>
                                 <field name="creation_modif"/>
                                 <field name="chef_de_projet_id"/>
@@ -123,10 +125,12 @@
                     <field name="chef_de_projet_id"         optional="show"/>
                     <field name="etabli_par_id"             optional="show"/>
                     <field name="duree_vie"                 optional="show"/>
-                    <field name="dossier_commercial_id"     optional="hide"/>
+                    <field name="appel_offre_id"            optional="hide"/>
                     <field name="dossier_modif_variante_id" optional="hide"/>
                     <field name="mold_id"                   optional="hide"/>
                     <field name="type_presse"               optional="hide"/>
+                    <field name="revue_contrat_id"          optional="hide"/>
+                    <field name="dossierf_id"               optional="hide"/>
                     <field name="tps_cycle"                 optional="hide"/>
                     <field name="nb_empreintes"             optional="hide"/>
                     <field name="nb_mod"                    optional="hide"/>

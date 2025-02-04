@@ -2,8 +2,8 @@ from odoo import models, fields  # type: ignore
 
 
 _STATE = ([
-    ('brouillon'    , 'Brouillon'),
-    ('transmis'    , 'Transmise'),
+    ('brouillon' , 'Brouillon'),
+    ('transmis'  , 'Transmise'),
     ('valide'    , 'Validée'),
 ])
 
@@ -20,9 +20,11 @@ class is_fiche_codification(models.Model):
     active                       = fields.Boolean('Actif', default=True, tracking=True)
     etabli_par_id                = fields.Many2one('res.users', 'Établi par', required=True, default=lambda self: self.env.uid, tracking=True)
     date                         = fields.Date("Date", required=True, default=lambda *a: fields.datetime.now(), tracking=True)
-    dossier_commercial_id        = fields.Many2one("is.dossier.appel.offre", string="Dossier commercial", index=True, tracking=True)
-    mold_id                   = fields.Many2one('is.mold', 'Moule', tracking=True)
+    appel_offre_id               = fields.Many2one("is.dossier.appel.offre", string="Dossier commercial", index=True, tracking=True)
+    mold_id                      = fields.Many2one('is.mold', 'Moule', tracking=True)
     dossier_modif_variante_id    = fields.Many2one('is.dossier.modif.variante', 'Dossier Modif Variante', tracking=True)
+    revue_contrat_id             = fields.Many2one("is.revue.de.contrat", string="Revue de contrat", tracking=True)
+    dossierf_id                  = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
     type_dossier                 = fields.Char("Origine de la fiche", tracking=True)
     chef_de_projet_id            = fields.Many2one('res.users', 'Chef de projet', required=True, tracking=True)
     creation_modif               = fields.Selection([('creation', 'Création'), ('modification', 'Modification')], "Création / Modification", required=True, tracking=True)  #, default="creation")
@@ -74,8 +76,8 @@ class is_fiche_codification_nomenclature_line(models.Model):
 
     codification_id    = fields.Many2one("is.fiche.codification", string="Codification", required=True, ondelete='cascade')
     nom_code_pg        = fields.Char("Nomenclature code PG")
-    nom_designation	   = fields.Char("Désignation nomenclature")
-    nom_qt	           = fields.Char("Quantité")
+    nom_designation    = fields.Char("Désignation nomenclature")
+    nom_qt             = fields.Char("Quantité")
 
 
 class is_fiche_codification_decomposition_line(models.Model):
@@ -83,13 +85,13 @@ class is_fiche_codification_decomposition_line(models.Model):
     _description = "Décomposition du prix de vente"
 
     codification_id    = fields.Many2one("is.fiche.codification", string="Codification", required=True, ondelete='cascade')
-    part_mat	       = fields.Float("Part mat", digits=(12, 4))
-    part_comp	       = fields.Float("Part comp", digits=(12, 4))
-    part_emb	       = fields.Float("Part emb", digits=(12, 4))
-    va_inj	           = fields.Float("VA inj", digits=(12, 4))
-    va_ass	           = fields.Float("VA ass", digits=(12, 4))
-    frais_port	       = fields.Float("Frais port", digits=(12, 4))
-    logis	           = fields.Float("Logis", digits=(12, 4))
-    amt_moule	       = fields.Float("Amt moule", digits=(12, 4))
+    part_mat           = fields.Float("Part mat", digits=(12, 4))
+    part_comp          = fields.Float("Part comp", digits=(12, 4))
+    part_emb           = fields.Float("Part emb", digits=(12, 4))
+    va_inj             = fields.Float("VA inj", digits=(12, 4))
+    va_ass             = fields.Float("VA ass", digits=(12, 4))
+    frais_port         = fields.Float("Frais port", digits=(12, 4))
+    logis              = fields.Float("Logis", digits=(12, 4))
+    amt_moule          = fields.Float("Amt moule", digits=(12, 4))
     surcout_pre_serie  = fields.Float("Surcôut pré-série", digits=(12, 4))
-    prix_vente	       = fields.Float("Prix vente", digits=(12, 4))
+    prix_vente         = fields.Float("Prix vente", digits=(12, 4))
