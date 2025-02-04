@@ -8,58 +8,98 @@
             <field name="arch" type="xml">
                 <form string="Form">  
                     <header>
+
+
+
+                        <button 
+                            name="vers_Transmis_BE_action"
+                            string="vers Transmis BE"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'Cree')]}" 
+                            groups="is_dynacase2odoo.is_gestionnaire_projet_group"
+                        />
+                        <button 
+                            name="vers_Valide_BE_action"
+                            string="vers Validé BE"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'Transmis_BE')]}" 
+                            groups="is_dynacase2odoo.is_gestionnaire_projet_group"
+                        />
+                        <button 
+                            name="vers_Diffuse_Client_action"
+                            string="vers Diffusé Client"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'Valide_BE')]}" 
+                            groups="is_dynacase2odoo.is_gestionnaire_projet_group"
+                        />
+                        <button 
+                            name="vers_Gagne_action"
+                            string="vers Gagné"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'Diffuse_Client')]}" 
+                            groups="is_dynacase2odoo.is_gestionnaire_projet_group"
+                        />
+
+
+
                         <field name="dynacase_id" invisible="1"/>
                         <button 
                             string="Dynacase" name="lien_vers_dynacase_action" type="object" class="btn btn-info"
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                             groups="base.group_system"
                         />
-                        <field name="state" widget="statusbar"/>
+                        <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/> 
+
+
+
+        <!-- 
+        ("Cree"          , "Créé"),
+        ("Transmis_BE"   , "Transmis BE"),
+        ("Valide_BE"     , "Validé BE"),
+        ("Diffuse_Client", "Diffusé Client"),
+        ("Gagne"         , "Gagné"), -->
+
+
                         <group>
                             <group>
-                                <field name="numero"/>
-                                <field name="date"/>
-                                <field name="clientid"/>
-                                <field name="designation"/>
-                                <field name="commercialid"/>
-                                <field name="date_reponse_be"/>
-                                <field name="date_reponse"/>
-                                <field name="date_lancement"/>
-                                <field name="prix_vente"/>
-                                <field name="num_commande"/>
-                                <field name="observation"/>
-                                <field name="beid"/>
+                                <field name="numero" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
+                                <field name="date" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
+                                <field name="clientid" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
+                                <field name="designation" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
+                                <field name="commercialid" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
+                                <field name="beid" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
+                            </group>
+                            <group>
+                                <field name="date_reponse_be" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
+                                <field name="date_reponse" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
+                                <field name="date_lancement" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
+                                <field name="prix_vente" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
+                                <field name="num_commande" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
+                                <field name="observation" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
                             </group>
                         </group>
-                        
-
-    <!-- 
-    numero          = fields.Char(string="N° ERD", tracking=True, required=True, index=True)
-    date            = fields.Date(string="Date", tracking=True)
-    clientid        = fields.Char(string="Client", tracking=True)
-    designation     = fields.Char(string="Désignation", tracking=True)
-    commercialid    = fields.Char(string="Commercial", tracking=True)
-    date_reponse_be = fields.Date(string="Date réponse BE", tracking=True)
-    date_reponse    = fields.Date(string="Date réponse", tracking=True)
-    date_lancement  = fields.Date(string="Date lancement", tracking=True)
-    prix_vente      = fields.Float(string="Prix de vente", tracking=True)
-    num_commande    = fields.Char(string="N° commande", tracking=True)
-    observation     = fields.Text(string="Observation", tracking=True)
-    beid            = fields.Char(string="BE", tracking=True)
-    dynacase_id     = fields.Integer(string="Id Dynacase", index=True, copy=False)
-    active          = fields.Boolean('Actif', default=True                               , tracking=True) -->
- 
-
-
+                        <group string="Pièces jointes">
+                            <field name="file_pj_commerciaux_ids" widget="many2many_binary" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
+                            <field name="file_pj_be_ids"          widget="many2many_binary" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
+                            <field name="file_cde_be_ids"         widget="many2many_binary" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
+                        </group>
                     </sheet>
-                    <div class="oe_chatter">
+                    <!-- <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
                         <field name="message_ids" widget="mail_thread"/>
+                    </div> -->
+
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" />
+                        <field name="activity_ids" />
+                        <field name="message_ids" />
                     </div>
+
+
                 </form>
             </field>
         </record>

@@ -2,15 +2,21 @@
 from odoo import models, fields, api, _      # type: ignore
 from odoo.exceptions import ValidationError  # type: ignore
 
-
 #TODO : 
+#- Ajouter les boutons du workflow
+#- Mettre en place les droits en fonction du champ state
 #- Lien avec is_inv_achat_moule
-#- Ajouter les 3 champs des pieces jointes
+
+#TODO pour is_fiche_codification
+#- Ajouter les boutons du workflow
+#- Mettre en place les droits en fonction du champ state
+#- Liens avec RL
+#- Créer une fiche de coditidtion depuis RC et dossiers modif/variante
 
 
 class is_erd(models.Model):
     _name = "is.erd"
-    _inherit=['mail.thread']
+    _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description = "ERD"
     _rec_name    = "numero"
 
@@ -35,6 +41,10 @@ class is_erd(models.Model):
         ("Diffuse_Client", "Diffusé Client"),
         ("Gagne"         , "Gagné"),
     ], default="Cree", string="État", tracking=True, copy=False)
+    file_pj_commerciaux_ids = fields.Many2many("ir.attachment", "is_erd_file_pj_commerciaux_rel", "file_pj_commerciaux", "att_id", string="Pièces jointe commerciaux")
+    file_pj_be_ids          = fields.Many2many("ir.attachment", "is_erd_file_pj_be_rel"         , "file_pj_be"         , "att_id", string="Fichiers BE")
+    file_cde_be_ids         = fields.Many2many("ir.attachment", "is_erd_file_cde_be__rel"       , "file_cde_be"        , "att_id", string="Commandes BE")
+
 
     def lien_vers_dynacase_action(self):
         for obj in self:
@@ -46,14 +56,49 @@ class is_erd(models.Model):
             }
             
 
-# gesterd_frm_pj_commerciaux		Pièces jointes commerciaux	N	N	frame
-# gesterd_ar_pj_commerciaux	gesterd_frm_pj_commerciaux		N	N	array
-# gesterd_file_pj_commerciaux	gesterd_ar_pj_commerciaux		N	N	file
-					
-					
-# gesterd_frm_pj_be		Pièces jointes BE	N	N	frame
-# gesterd_ar_pj_be	gesterd_frm_pj_be	Fichiers BE	N	N	array
-# gesterd_file_pj_be	gesterd_ar_pj_be	Fichiers BE	N	N	file
-					
-# gesterd_ar_cde_be	gesterd_frm_pj_be	Commandes BE	N	N	array
-# gesterd_file_cde_be	gesterd_ar_cde_be	Commandes BE	N	N	file
+
+    def vers_Transmis_BE_action(self):
+        for obj in self:
+            obj.state='Transmis_BE'
+
+    def vers_Valide_BE_action(self):
+        for obj in self:
+            obj.state='Valide_BE'
+
+    def vers_Diffuse_Client_action(self):
+        for obj in self:
+            obj.state='Diffuse_Client'
+
+    def vers_Gagne_action(self):
+        for obj in self:
+            obj.state='Gagne'
+
+                        # <button 
+                        #     name="vers_Transmis_BE_action"
+                        #     string="vers Transmis BE"
+                        #     type="object"
+                        #     attrs="{'invisible': [('state', '!=', 'Cree')]}" 
+                        #     groups="is_gestionnaire_projet_group"
+                        # />
+                        # <button 
+                        #     name="vers_Valide_BE_action"
+                        #     string="vers Validé BE"
+                        #     type="object"
+                        #     attrs="{'invisible': [('state', '!=', 'Transmis_BE')]}" 
+                        #     groups="is_gestionnaire_projet_group"
+                        # />
+                        # <button 
+                        #     name="vers_Diffuse_Client_action"
+                        #     string="vers Diffusé Client"
+                        #     type="object"
+                        #     attrs="{'invisible': [('state', '!=', 'Valide_BE')]}" 
+                        #     groups="is_gestionnaire_projet_group"
+                        # />
+                        # <button 
+                        #     name="vers_Gagne_action"
+                        #     string="vers Gagné"
+                        #     type="object"
+                        #     attrs="{'invisible': [('state', '!=', 'Diffuse_Client')]}" 
+                        #     groups="is_gestionnaire_projet_group"
+                        # />
+
