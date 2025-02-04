@@ -3,6 +3,11 @@ from odoo import models, fields, api, _      # type: ignore
 from odoo.exceptions import ValidationError  # type: ignore
 
 
+#TODO : 
+#- Lien avec is_inv_achat_moule
+#- Ajouter les 3 champs des pieces jointes
+
+
 class is_erd(models.Model):
     _name = "is.erd"
     _inherit=['mail.thread']
@@ -40,50 +45,6 @@ class is_erd(models.Model):
                 'target': 'new',
             }
             
-
-        # array(  "e1"=>"Cree",
-        #         "e2"=>"Transmis_BE",
-        #         "t"=>"Vers_Transmis_BE"),
-
-        # array(  "e1"=>"Transmis_BE",
-        #         "e2"=>"Valide_BE",
-        #         "t"=>"Vers_Valide_BE"),
-
-        # array(  "e1"=>"Valide_BE",
-        #         "e2"=>"Diffuse_Client",
-        #         "t"=>"Vers_Diffuse_Client"),
-
-        # array(  "e1"=>"Diffuse_Client",
-        #         "e2"=>"Valide_BE",
-        #         "t"=>"Vers_Valide_BE"),
-
-        # array(  "e1"=>"Diffuse_Client",
-        #         "e2"=>"Gagne",
-        #         "t"=>"Vers_Gagne"),
-
-        # array(  "e1"=>"Gagne",
-        #         "e2"=>"Diffuse_Client",
-        #         "t"=>"Vers_Diffuse_Client")
-
-
-
-
-# numero	        gesterd_fr_identification	N° ERD	Y	N	text
-# date	            gesterd_fr_identification	Date	N	N	date
-# clientid	        gesterd_fr_identification	Client id	N	N	docid
-# designation	    gesterd_fr_identification	Désignation	N	N	text
-# commercialid	    gesterd_fr_identification	Commercial id	N	N	docid
-# date_reponse_be	gesterd_fr_identification	Date réponse BE	N	N	date
-# date_reponse	    gesterd_fr_identification	Date réponse	N	N	date
-# date_lancement	gesterd_fr_identification	Date lancement	N	N	date
-# prix_vente	    gesterd_fr_identification	Prix de vente	N	N	money
-# num_commande	    gesterd_fr_identification	N° commande	N	N	text
-# observation	    gesterd_fr_identification	Observation	N	N	longtext 					
-# beid	            gesterd_fr_identification	BE id	N	N	docid
-
-
-
-
 
 # gesterd_frm_pj_commerciaux		Pièces jointes commerciaux	N	N	frame
 # gesterd_ar_pj_commerciaux	gesterd_frm_pj_commerciaux		N	N	array
