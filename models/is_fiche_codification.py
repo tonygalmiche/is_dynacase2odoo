@@ -3,7 +3,7 @@ from odoo import models, fields  # type: ignore
 
 _STATE = ([
     ('brouillon'    , 'Brouillon'),
-    ('transmis'    , 'Transmis'),
+    ('transmis'    , 'Transmise'),
     ('valide'    , 'Validée'),
 ])
 
@@ -13,9 +13,9 @@ class is_fiche_codification(models.Model):
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description="Fiche de codification"
     _rec_name = "chrono"
-#    _order='name desc'
+    _order='chrono desc'
 
-    chrono                       = fields.Char('Chrono', readonly=True)
+    chrono                       = fields.Integer('Chrono', readonly=True)
     state                        = fields.Selection(_STATE, "Etat", default=_STATE[0][0], tracking=True)
     active                       = fields.Boolean('Actif', default=True, tracking=True)
     etabli_par_id                = fields.Many2one('res.users', 'Établi par', required=True, default=lambda self: self.env.uid, tracking=True)
@@ -54,6 +54,8 @@ class is_fiche_codification(models.Model):
 
     decomposition_ids            = fields.One2many('is.fiche.codification.decomposition.line', 'codification_id', string="Décomposition")
 
+    piece_jointe_ids             = fields.Many2many("ir.attachment", "is_piece_jointe_rel"  , "is_fiche_codification"  , "att_id", string="Pièce jointe")
+
     def lien_vers_dynacase_action(self):
         for obj in self:
             url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
@@ -91,5 +93,3 @@ class is_fiche_codification_decomposition_line(models.Model):
     amt_moule	       = fields.Float("Amt moule", digits=(12, 4))
     surcout_pre_serie  = fields.Float("Surcôut pré-série", digits=(12, 4))
     prix_vente	       = fields.Float("Prix vente", digits=(12, 4))
-#
-#    #piece_jointe

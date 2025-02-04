@@ -3,13 +3,13 @@
 <openerp>
     <data>
         <!-- Sequence is.fiche.codification -->
-        <record id="is_fiche_codification_seq" model="ir.sequence">
+        <!--record id="is_fiche_codification_seq" model="ir.sequence">
             <field name="name">Fiche de codification</field>
             <field name="code">is.fiche.codification</field>
             <field name="prefix"></field>
             <field name="padding">5</field>
             <field name="company_id" eval="False"/>
-        </record>
+        </record-->
 
         <!-- is.fiche.codification -->
         <record model="ir.ui.view" id="is_fiche_codification_form_view">
@@ -93,6 +93,9 @@
                                 <field name="prix_vente"/>
                             </tree>
                         </field>
+                        <group string="Pièces jointes">
+                            <field name="piece_jointe_ids"   widget="many2many_binary"/>
+                        </group>
                     </sheet>
                    <div class="oe_chatter">
                         <field name="message_follower_ids" />
