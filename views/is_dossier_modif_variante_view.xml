@@ -212,10 +212,28 @@
             </field>
         </record>
 
+        <record id="is_dossier_modif_variante_pivot" model="ir.ui.view">
+            <field name="name">is_dossier_modif_variante_pivot</field>
+            <field name="model">is.dossier.modif.variante</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="demao_idclient"  type="row"/>
+                </pivot>
+            </field>
+        </record>
+        <record id="is_dossier_modif_variante_graph" model="ir.ui.view">
+            <field name="name">is_dossier_modif_variante_graph</field>
+            <field name="model">is.dossier.modif.variante</field>
+            <field name="arch" type="xml">
+                <graph>
+                    <field name="demao_idclient"  type="row"/>
+                </graph>
+            </field>
+        </record>
         <record id="is_dossier_modif_variante_action" model="ir.actions.act_window">
             <field name="name">Dossier modif/variante</field>
             <field name="res_model">is.dossier.modif.variante</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
         </record>
 
     </data>

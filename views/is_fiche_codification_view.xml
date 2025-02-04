@@ -180,10 +180,28 @@
                 </search>
             </field>
         </record>
+        <record id="is_fiche_codification_pivot" model="ir.ui.view">
+            <field name="name">is_fiche_codification_pivot</field>
+            <field name="model">is.fiche.codification</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="client_id"  type="row"/>
+                </pivot>
+            </field>
+        </record>
+        <record id="is_fiche_codification_graph" model="ir.ui.view">
+            <field name="name">is_fiche_codification_graph</field>
+            <field name="model">is.fiche.codification</field>
+            <field name="arch" type="xml">
+                <graph>
+                    <field name="client_id"  type="row"/>
+                </graph>
+            </field>
+        </record>
         <record model="ir.actions.act_window" id="is_fiche_codification_action">
             <field name="name">Fiche de codification</field>
             <field name="res_model">is.fiche.codification</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
             <field name="context">{}
             </field>
         </record>

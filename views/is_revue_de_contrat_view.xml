@@ -587,11 +587,28 @@
                 </search>
             </field>
         </record>
-
+        <record id="is_revue_de_contrat_pivot" model="ir.ui.view">
+            <field name="name">is_revue_de_contrat_pivot</field>
+            <field name="model">is.revue.de.contrat</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="rc_client"  type="row"/>
+                </pivot>
+            </field>
+        </record>
+        <record id="is_revue_de_contrat_graph" model="ir.ui.view">
+            <field name="name">is_revue_de_contrat_graph</field>
+            <field name="model">is.revue.de.contrat</field>
+            <field name="arch" type="xml">
+                <graph>
+                    <field name="rc_client"  type="row"/>
+                </graph>
+            </field>
+        </record>
         <record id="action_is_revue_de_contrat" model="ir.actions.act_window">
             <field name="name">Revue de contrat</field>
             <field name="res_model">is.revue.de.contrat</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
         </record>
 
     </data>

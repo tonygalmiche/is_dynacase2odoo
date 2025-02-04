@@ -210,11 +210,28 @@
                 </search>
             </field>
         </record>
-
+        <record id="is_revue_lancement_pivot" model="ir.ui.view">
+            <field name="name">is_revue_lancement_pivot</field>
+            <field name="model">is.revue.lancement</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="rl_client_rcid"  type="row"/>
+                </pivot>
+            </field>
+        </record>
+        <record id="is_revue_lancement_graph" model="ir.ui.view">
+            <field name="name">is_revue_lancement_graph</field>
+            <field name="model">is.revue.lancement</field>
+            <field name="arch" type="xml">
+                <graph>
+                    <field name="rl_client_rcid"  type="row"/>
+                </graph>
+            </field>
+        </record>
         <record id="is_revue_lancement_action" model="ir.actions.act_window">
             <field name="name">Revue de lancement</field>
             <field name="res_model">is.revue.lancement</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
         </record>
 
     </data>
