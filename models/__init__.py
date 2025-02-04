@@ -23,3 +23,4 @@ from . import is_dossier_article
 from . import is_indicateur_revue_jalon
 from . import is_fiche_codification
 from . import is_inv_achat_moule
+from . import is_erd

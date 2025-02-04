@@ -82,6 +82,16 @@
             name="Dossier modif/variante" id="is_dossier_modif_variante_menu" sequence="30" 
             parent="is_gestion_commerciale_menu" action="is_dossier_modif_variante_action"
         />
+
+
+        <record id="is_erd_menu" model="ir.ui.menu" >
+            <field name="name">ERD</field>
+            <field name="sequence">35</field>
+            <field name="parent_id" eval="ref('is_gestion_commerciale_menu')"/>
+            <field name="action"    ref="is_erd_action"/>
+        </record>
+
+
         <record id="is_revue_de_contrat_menu" model="ir.ui.menu" >
             <field name="name">Revue de contrat</field>
             <field name="sequence">40</field>
