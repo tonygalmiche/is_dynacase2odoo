@@ -8,9 +8,6 @@
             <field name="arch" type="xml">
                 <form string="Form">  
                     <header>
-
-
-
                         <button 
                             name="vers_Transmis_BE_action"
                             string="vers Transmis BE"
@@ -39,9 +36,6 @@
                             attrs="{'invisible': [('state', '!=', 'Diffuse_Client')]}" 
                             groups="is_dynacase2odoo.is_gestionnaire_projet_group"
                         />
-
-
-
                         <field name="dynacase_id" invisible="1"/>
                         <button 
                             string="Dynacase" name="lien_vers_dynacase_action" type="object" class="btn btn-info"
@@ -53,17 +47,6 @@
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/> 
-
-
-
-        <!-- 
-        ("Cree"          , "Créé"),
-        ("Transmis_BE"   , "Transmis BE"),
-        ("Valide_BE"     , "Validé BE"),
-        ("Diffuse_Client", "Diffusé Client"),
-        ("Gagne"         , "Gagné"), -->
-
-
                         <group>
                             <group>
                                 <field name="numero" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
@@ -88,18 +71,11 @@
                             <field name="file_cde_be_ids"         widget="many2many_binary" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
                         </group>
                     </sheet>
-                    <!-- <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </div> -->
-
                     <div class="oe_chatter">
                         <field name="message_follower_ids" />
                         <field name="activity_ids" />
                         <field name="message_ids" />
                     </div>
-
-
                 </form>
             </field>
         </record>
