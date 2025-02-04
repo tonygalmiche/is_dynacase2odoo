@@ -21,8 +21,8 @@ class is_fiche_codification(models.Model):
     etabli_par_id                = fields.Many2one('res.users', 'Établi par', required=True, default=lambda self: self.env.uid, tracking=True)
     date                         = fields.Date("Date", required=True, default=lambda *a: fields.datetime.now(), tracking=True)
     dossier_commercial_id        = fields.Many2one("is.dossier.appel.offre", string="Dossier commercial", index=True, tracking=True)
-    is_mold_id                   = fields.Many2one('is.mold', 'Moule', tracking=True)
-    is_dossier_modif_variante_id = fields.Many2one('is.dossier.modif.variante', 'Dossier Modif Variante', tracking=True)
+    mold_id                   = fields.Many2one('is.mold', 'Moule', tracking=True)
+    dossier_modif_variante_id    = fields.Many2one('is.dossier.modif.variante', 'Dossier Modif Variante', tracking=True)
     type_dossier                 = fields.Char("Origine de la fiche", tracking=True)
     chef_de_projet_id            = fields.Many2one('res.users', 'Chef de projet', required=True, tracking=True)
     creation_modif               = fields.Selection([('creation', 'Création'), ('modification', 'Modification')], "Création / Modification", required=True, tracking=True)  #, default="creation")
@@ -54,7 +54,7 @@ class is_fiche_codification(models.Model):
 
     decomposition_ids            = fields.One2many('is.fiche.codification.decomposition.line', 'codification_id', string="Décomposition")
 
-    piece_jointe_ids             = fields.Many2many("ir.attachment", "is_piece_jointe_rel"  , "is_fiche_codification"  , "att_id", string="Pièce jointe")
+    piece_jointe_ids             = fields.Many2many("ir.attachment", "is_fiche_codification_piece_jointe_rel", "piece_jointe"  , "att_id", string="Pièce jointe")
 
     def lien_vers_dynacase_action(self):
         for obj in self:
