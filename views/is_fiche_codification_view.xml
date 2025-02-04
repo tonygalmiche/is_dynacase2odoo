@@ -159,6 +159,27 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.ui.view" id="is_fiche_codification_search">
+            <field name="name">is_fiche_codification_search</field>
+            <field name="model">is.fiche.codification</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="chrono"/>
+                    <field name="state"/>
+                    <field name="code_pg"/>
+                    <field name="type_dossier"/>
+                    <field name="client_id"/>
+                    <field name="project_id"/>
+                    <field name="chef_de_projet_id"/>
+                    <field name="etabli_par_id"/>
+                    <field name="appel_offre_id" />
+                    <field name="dossier_modif_variante_id"/>
+                    <field name="revue_contrat_id"/>
+                    <field name="mold_id"/>
+                    <field name="dossierf_id"/>
+                </search>
+            </field>
+        </record>
         <record model="ir.actions.act_window" id="is_fiche_codification_action">
             <field name="name">Fiche de codification</field>
             <field name="res_model">is.fiche.codification</field>
