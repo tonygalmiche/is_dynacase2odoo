@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
         <record model="ir.ui.view" id="is_revue_lancement_form">
             <field name="name">view.is.revue.lancement.form</field>
             <field name="model">is.revue.lancement</field>
             <field name="arch" type="xml">
                 <form string="Revue de lancement">
                     <header>
-
-                        <button name="copie_rc_action" string="Copie données revue de contrat" type="object" class="btn" attrs="{'invisible': [('state', '=', 'rl_diffuse')]}" />
-
-
-                        <button name="action_vers_diffuse" string="Vers Diffusé" type="object" class="btn-primary" attrs="{'invisible': [('state', 'in', ['rl_diffuse',None,False])]}" />
-                        <button name="action_vers_brouillon" string="Vers Brouillon" type="object" class="btn-primary" attrs="{'invisible': [('state', '=', 'rl_brouillon')]}" />
+                        <button 
+                            name="copie_rc_action" 
+                            string="Copie données revue de contrat" 
+                            type="object" class="btn" 
+                            attrs="{'invisible': [('state', '=', 'rl_diffuse')]}"
+                            groups="is_dynacase2odoo.is_gestionnaire_revue_lancement_group"
+                        />
+                        <button 
+                            name="action_vers_diffuse" 
+                            string="Vers Diffusé" type="object" 
+                            class="btn-primary" 
+                            attrs="{'invisible': [('state', 'in', ['rl_diffuse',None,False])]}"
+                            groups="is_dynacase2odoo.is_gestionnaire_revue_lancement_group"
+                        />
+                        <button 
+                            name="action_vers_brouillon" 
+                            string="Vers Brouillon" 
+                            type="object" class="btn-primary" 
+                            attrs="{'invisible': [('state', '=', 'rl_brouillon')]}"
+                            groups="is_dynacase2odoo.is_gestionnaire_revue_lancement_group"
+                        />
                         <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
@@ -105,11 +119,11 @@
                                         <field name="rl_pgrc_amort_cmt"            nolabel="1" colspan="6"/>
                                     </group>
                                 </group>
-                                <group>
-                                    <group name="rl_investissement_pgrl_fr" string="Données revue de lancement">
+                                <group string="Données revue de lancement" >
+                                    <group attrs="{'invisible': [('state', '!=', 'rl_brouillon')]}" >
                                         <field name="rl_be01"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
-                                        <field name="rl_be01b"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
-                                        <field name="rl_be01c"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be01b" attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_be01c" attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                         <field name="rl_be02"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                         <field name="rl_be03"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                         <field name="rl_be04"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
@@ -126,6 +140,30 @@
                                         <field name="rl_be16"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                         <field name="rl_be17"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                         <field name="rl_be_total"/>
+                                        <field name="ecart" attrs="{'invisible':[('ecart','=',0)]}" style="background-color:orange"/>
+                                        <field name="rl_annee_inv"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                    </group>
+                                    <group attrs="{'invisible': [('state', '=', 'rl_brouillon')]}" >
+                                        <field name="rl_be01_id"/>
+                                        <field name="rl_be01b_id"/>
+                                        <field name="rl_be01c_id"/>
+                                        <field name="rl_be02_id"/>
+                                        <field name="rl_be03_id"/>
+                                        <field name="rl_be04_id"/>
+                                        <field name="rl_be05_id"/>
+                                        <field name="rl_be06_id"/>
+                                        <field name="rl_be07_id"/>
+                                        <field name="rl_be09_id"/>
+                                        <field name="rl_be10_id"/>
+                                        <field name="rl_be11_id"/>
+                                        <field name="rl_be12_id"/>
+                                        <field name="rl_be13_id"/>
+                                        <field name="rl_be14_id"/>
+                                        <field name="rl_be15_id"/>
+                                        <field name="rl_be16_id"/>
+                                        <field name="rl_be17_id"/>
+                                        <field name="rl_be_total"/>
+                                        <field name="ecart" attrs="{'invisible':[('ecart','=',0)]}" style="background-color:orange"/>
                                         <field name="rl_annee_inv"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                     </group>
                                 </group>
@@ -180,6 +218,9 @@
                     <field name="rl_date_j3" optional="hide" />
                     <field name="rl_date_j4" optional="hide" />
                     <field name="rl_date_j5" optional="hide" />
+                    <field name="rl_pgrc_total" optional="hide"/>
+                    <field name="rl_be_total"   optional="hide"/>
+                    <field name="ecart"         optional="hide"/>
                     <field 
                         name="state" optional="show" readonly="1" widget="badge" 
                         decoration-muted="state == 'rl_diffuse'" 

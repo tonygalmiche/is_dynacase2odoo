@@ -2,11 +2,6 @@
 from odoo import models, fields, api, _       # type: ignore
 from odoo.exceptions import ValidationError   # type: ignore
 
-#TODO : 
-# Ajouter les champs vers les lignes des invetissements
-# Créer et modifier automatiquement les lignes des invesittsements
-# Contrainte sur montant moule et RL à revoir
-
 
 _RESPONSABLES={
     '1' : 'rl_commercial2id',
@@ -43,26 +38,13 @@ class is_revue_lancement(models.Model):
                 "rl_be09", "rl_be10", "rl_be11", "rl_be12", "rl_be13", "rl_be14", "rl_be15", "rl_be16", "rl_be17")
     def get_rl_be_total(self):
         for record in self:
-            record.rl_be_total = record.rl_be01 + record.rl_be01b +  record.rl_be01c + record.rl_be02 + record.rl_be03 + \
+            total = record.rl_be01 + record.rl_be01b +  record.rl_be01c + record.rl_be02 + record.rl_be03 + \
                                 record.rl_be04 + record.rl_be05 + record.rl_be06 + record.rl_be07 + record.rl_be09 + \
                                 record.rl_be10 + record.rl_be11 + record.rl_be12 + record.rl_be13 + record.rl_be14 + \
                                 record.rl_be15 + record.rl_be16 + record.rl_be17
 
-
-    # @api.constrains("rl_be_total", "rl_pgrc_total", "rl_annee_inv")
-    # def _check_vals(self):
-    #     for obj in self:
-    #         if obj.rl_pgrc_total != obj.rl_be_total:
-    #             raise ValidationError(_("Données moule and revue de lancement total must be same!"))
-    #         if obj.rl_annee_inv:
-    #             try:
-    #                 rl_annee_inv = int(obj.rl_annee_inv)
-    #                 if len(str(rl_annee_inv)) != 4:
-    #                     raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
-    #                 if rl_annee_inv < 2000 or rl_annee_inv > 2099:
-    #                     raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
-    #             except Exception as e:
-    #                 raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
+            record.rl_be_total = total
+            record.ecart = record.rl_pgrc_total - total
 
 
     @api.depends("rl_num_rcid","rl_num_rcid.rc_designation","rl_num_rcid.rc_client","rl_num_rcid.rc_projetid","rl_num_rcid.rc_commercial")
@@ -149,7 +131,7 @@ class is_revue_lancement(models.Model):
     rl_pgrc_packaging_cmt             = fields.Char(string="Commentaire 8", readonly=True)
     rl_pgrc_amort_mnt                 = fields.Float(string="Amortissement", readonly=True)
     rl_pgrc_amort_cmt                 = fields.Char(string="Commentaire 9", readonly=True)
-    rl_pgrc_total                     = fields.Float(string="Total ", readonly=True)
+    rl_pgrc_total                     = fields.Float(string="Total RC", readonly=True)
 
 
     rl_be01                           = fields.Float(string="BE01a : Nouveau moule/ Moule transféré", tracking=True)
@@ -170,8 +152,32 @@ class is_revue_lancement(models.Model):
     rl_be15                           = fields.Float(string="BE15 : Achat matière ", tracking=True)
     rl_be16                           = fields.Float(string="BE16 : Achat composants ", tracking=True)
     rl_be17                           = fields.Float(string="BE17 : Essai injection ", tracking=True)
-    rl_be_total                       = fields.Float(string="Total", compute="get_rl_be_total", store=True)
+    rl_be_total                       = fields.Float(string="Total RL", compute="get_rl_be_total", store=True)
+    ecart                             = fields.Float(string="Ecart", compute="get_rl_be_total", store=True)
     rl_annee_inv                      = fields.Char(string="Année d'enregistrement des investissements", size=4, tracking=True)
+
+
+    rl_be01_id   = fields.Many2one("is.inv.achat.moule", string="BE01a: Nouveau moule/ Moule transféré", tracking=True,copy=False,readonly=True)
+    rl_be01b_id  = fields.Many2one("is.inv.achat.moule", string="BE01b: Grainage", tracking=True,copy=False,readonly=True)
+    rl_be01c_id  = fields.Many2one("is.inv.achat.moule", string="BE01c: Barre chaude", tracking=True,copy=False,readonly=True)
+    rl_be02_id   = fields.Many2one("is.inv.achat.moule", string="BE02: Etude, CAO, Rhéologie" , tracking=True,copy=False,readonly=True)
+    rl_be03_id   = fields.Many2one("is.inv.achat.moule", string="BE03: Prototype" , tracking=True,copy=False,readonly=True)
+    rl_be04_id   = fields.Many2one("is.inv.achat.moule", string="BE04: Main de préhension" , tracking=True,copy=False,readonly=True)
+    rl_be05_id   = fields.Many2one("is.inv.achat.moule", string="BE05: Gabarit de contrôle" , tracking=True,copy=False,readonly=True)
+    rl_be06_id   = fields.Many2one("is.inv.achat.moule", string="BE06: Mise au point" , tracking=True,copy=False,readonly=True)
+    rl_be07_id   = fields.Many2one("is.inv.achat.moule", string="BE07: Test" , tracking=True,copy=False,readonly=True)
+    rl_be09_id   = fields.Many2one("is.inv.achat.moule", string="BE09: Essais + divers" , tracking=True,copy=False,readonly=True)
+    rl_be10_id   = fields.Many2one("is.inv.achat.moule", string="BE10: Métrologie" , tracking=True,copy=False,readonly=True)
+    rl_be11_id   = fields.Many2one("is.inv.achat.moule", string="BE11: Transports" , tracking=True,copy=False,readonly=True)
+    rl_be12_id   = fields.Many2one("is.inv.achat.moule", string="BE12: Etude/Developpement Packaging" , tracking=True,copy=False,readonly=True)
+    rl_be13_id   = fields.Many2one("is.inv.achat.moule", string="BE13: Poste d'assemblage" , tracking=True,copy=False,readonly=True)
+    rl_be14_id   = fields.Many2one("is.inv.achat.moule", string="BE14: Developpement outillages divers ( découpe...)" , tracking=True,copy=False,readonly=True)
+    rl_be15_id   = fields.Many2one("is.inv.achat.moule", string="BE15: Achat matière" , tracking=True,copy=False,readonly=True)
+    rl_be16_id   = fields.Many2one("is.inv.achat.moule", string="BE16: Achat composants" , tracking=True,copy=False,readonly=True)
+    rl_be17_id   = fields.Many2one("is.inv.achat.moule", string="BE17: Essai injection" , tracking=True,copy=False,readonly=True)
+
+
+
     state                             = fields.Selection([
         ("rl_brouillon",  "Brouillon"),
         ("rl_diffuse",    "Diffusé"),
@@ -250,12 +256,33 @@ class is_revue_lancement(models.Model):
 
 
     def action_vers_diffuse(self):
+        self.creation_inv_achat_moule()
         for obj in self:
+            if obj.rl_pgrc_total != obj.rl_be_total:
+                raise ValidationError("Le total des données du moule et de la revue de lancement n'est pas le même !")
             obj.state = "rl_diffuse"
             if obj.rl_mouleid:
                 obj.rl_mouleid.revue_lancement_id = obj.id
             if obj.rl_dossierfid:
                 obj.rl_dossierfid.revue_lancement_id = obj.id
+
+
+
+   # @api.constrains("rl_be_total", "rl_pgrc_total", "rl_annee_inv")
+    # def _check_vals(self):
+    #     for obj in self:
+    #         if obj.rl_pgrc_total != obj.rl_be_total:
+    #             raise ValidationError(_("Données moule and revue de lancement total must be same!"))
+    #         if obj.rl_annee_inv:
+    #             try:
+    #                 rl_annee_inv = int(obj.rl_annee_inv)
+    #                 if len(str(rl_annee_inv)) != 4:
+    #                     raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
+    #                 if rl_annee_inv < 2000 or rl_annee_inv > 2099:
+    #                     raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
+    #             except Exception as e:
+    #                 raise ValidationError(_("Please enter 'Année d'enregistrement des investissements' field value between > 2000 and < 2099 !"))
+
 
 
     def action_vers_brouillon(self):
@@ -284,3 +311,47 @@ class is_revue_lancement(models.Model):
             obj.rl_pgrc_amort_cmt            = rc.rc_eiv_amort_cmt
             obj.rl_pgrc_total                = rc.rc_eiv_total
 
+
+    def creation_inv_achat_moule(self):
+        tab=[
+            "be01",
+            "be01b",
+            "be01c",
+            "be02",
+            "be03",
+            "be04",
+            "be05",
+            "be06",
+            "be07",
+            "be09",
+            "be10",
+            "be11",
+            "be12",
+            "be13",
+            "be14",
+            "be15",
+            "be16",
+            "be17"
+        ] 
+        for obj in self:
+            for key in tab:
+                field_name="rl_%s"%key
+                val = getattr(obj,field_name)
+                vals={
+                    'num_mouleid': obj.rl_mouleid.id,
+                    'revue_lancementid': obj.id,
+                    'clientid': obj.rl_client_rcid.id,
+                    'projetid': obj.rl_projet_rcid.id,
+                    'chef_projetid': obj.rl_chef_projetid.id,
+                    'annee_enregistre': obj.rl_annee_inv,
+                    'code_imputation': key,
+                    'montant_vendu': val,
+                }
+                field_name = "rl_%s_id"%key
+                doc = getattr(obj,field_name)
+                if doc:
+                    doc.write(vals) 
+                else:
+                    if val>0:
+                        doc = self.env['is.inv.achat.moule'].create(vals)
+                        setattr(obj, field_name, doc.id)

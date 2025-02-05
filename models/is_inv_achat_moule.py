@@ -41,6 +41,7 @@ class is_inv_achat_moule(models.Model):
     _name        = "is.inv.achat.moule"
     _inherit=['mail.thread']
     _description = "Investissement achat moule"
+    #_rec_name = "montant_vendu"
 
     code_imputation    = fields.Selection(_CODE_IMPUTATION          , string="Code imputation"   , tracking=True, required=True, index=True)
     revue_lancementid  = fields.Many2one("is.revue.lancement"       , string="Revue de lancement", tracking=True)
@@ -66,6 +67,17 @@ class is_inv_achat_moule(models.Model):
     objet_commande          = fields.Text(string="Objet de la commande"                          , tracking=True)
     dynacase_id             = fields.Integer(string="Id Dynacase", index=True, copy=False)
     active                  = fields.Boolean('Actif', default=True                               , tracking=True)
+
+
+
+    def name_get(self):
+        result = []
+        for obj in self:
+            name = '{0:,.2f}'.format(obj.montant_vendu).replace(',',' ').replace('.',',')
+            result.append((obj.id, name))
+        return result
+
+
 
 
     def lien_vers_dynacase_action(self):
