@@ -232,7 +232,7 @@ class is_revue_lancement(models.Model):
             ]
             lines = self.env['is.revue.lancement'].search(domain)
             if len(lines) > 1:
-                raise ValidationError("Cette revue de lancement existe déjà !")
+                raise ValidationError("Cette revue de lancement existe déjà %s %s indice %s !"%( obj.rl_mouleid.name or '', obj.rl_dossierfid.name or '',obj.rl_indice))
 
 
     def lien_vers_dynacase_action(self):
