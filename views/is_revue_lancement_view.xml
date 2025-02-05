@@ -230,6 +230,10 @@
                     <field name="rl_pgrc_total" optional="hide"/>
                     <field name="rl_be_total"   optional="hide"/>
                     <field name="ecart"         optional="hide"/>
+                    <field name="create_date" optional="hide" string="Créé le"/>
+                    <field name="create_uid"  optional="hide" string="Créé par"/>
+                    <field name="write_date"  optional="hide" string="Modifié le"/>
+                    <field name="write_uid"   optional="hide" string="Modifié par"/>
                     <field 
                         name="state" optional="show" readonly="1" widget="badge" 
                         decoration-muted="state == 'rl_diffuse'" 
