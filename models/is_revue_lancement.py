@@ -21,7 +21,7 @@ _RESPONSABLES={
 
 class is_revue_lancement(models.Model):
     _name        = "is.revue.lancement"
-    _inherit     = ['mail.thread']
+    _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description = "Revue de lancement"
 
 

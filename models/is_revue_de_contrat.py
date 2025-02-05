@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError  # type: ignore
 
 class is_revue_de_contrat(models.Model):
     _name        = "is.revue.de.contrat"
-    _inherit=['mail.thread']
+    _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description = "Revue de contrat"
 
 
