@@ -195,13 +195,13 @@ class is_revue_lancement(models.Model):
     active      = fields.Boolean('Actif', default=True, tracking=True)
 
 
-    def write(self,vals):
-        res=super().write(vals)
-        self._rl_unique()
-        # for obj in self:
-        #     if obj.rl_pgrc_total != obj.rl_be_total:
-        #         raise ValidationError("Total moule et revue de lancement différent !")
-        return res
+    # def write(self,vals):
+    #     res=super().write(vals)
+    #     self._rl_unique()
+    #     # for obj in self:
+    #     #     if obj.rl_pgrc_total != obj.rl_be_total:
+    #     #         raise ValidationError("Total moule et revue de lancement différent !")
+    #     return res
 
 
     def copy(self, default=None):
