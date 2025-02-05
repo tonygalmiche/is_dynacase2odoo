@@ -25,24 +25,32 @@ class is_revue_lancement(models.Model):
     _description = "Revue de lancement"
 
 
-    @api.depends("rl_pgrc_moule_mnt", "rl_pgrc_etude_mnt", "rl_pgrc_main_prehension_mnt", "rl_pgrc_barre_chaude_mnt",
-                 "rl_pgrc_gabarit_controle_mnt", "rl_pgrc_machine_speciale_mnt", "rl_pgrc_plan_validation_mnt",
-                 "rl_pgrc_mise_point_mnt", "rl_pgrc_packaging_mnt", "rl_pgrc_amort_mnt")
-    def get_rl_pgrc_total(self):
-        for record in self:
-            record.rl_pgrc_total = record.rl_pgrc_moule_mnt + record.rl_pgrc_etude_mnt + record.rl_pgrc_main_prehension_mnt + \
-                                   record.rl_pgrc_barre_chaude_mnt + record.rl_pgrc_gabarit_controle_mnt + record.rl_pgrc_machine_speciale_mnt + \
-                                   record.rl_pgrc_mise_point_mnt + record.rl_pgrc_plan_validation_mnt + record.rl_pgrc_packaging_mnt + record.rl_pgrc_amort_mnt
+    # @api.depends("rl_pgrc_moule_mnt", "rl_pgrc_etude_mnt", "rl_pgrc_main_prehension_mnt", "rl_pgrc_barre_chaude_mnt",
+    #              "rl_pgrc_gabarit_controle_mnt", "rl_pgrc_machine_speciale_mnt", "rl_pgrc_plan_validation_mnt",
+    #              "rl_pgrc_mise_point_mnt", "rl_pgrc_packaging_mnt", "rl_pgrc_amort_mnt")
+    # def get_rl_pgrc_total(self):
+    #     for record in self:
+    #         record.rl_pgrc_total = record.rl_pgrc_moule_mnt + record.rl_pgrc_etude_mnt + record.rl_pgrc_main_prehension_mnt + \
+    #                                record.rl_pgrc_barre_chaude_mnt + record.rl_pgrc_gabarit_controle_mnt + record.rl_pgrc_machine_speciale_mnt + \
+    #                                record.rl_pgrc_mise_point_mnt + record.rl_pgrc_plan_validation_mnt + record.rl_pgrc_packaging_mnt + record.rl_pgrc_amort_mnt
+
+
+    def compute_xml_rpc(self):
+        for obj in self:
+            obj._compute_rl_be_total()
+            obj._compute_rc()
+            obj._compute_name()
+        return True
+
 
     @api.depends("rl_be01", "rl_be01b", "rl_be01c", "rl_be02", "rl_be03", "rl_be04", "rl_be05", "rl_be06", "rl_be07",
                 "rl_be09", "rl_be10", "rl_be11", "rl_be12", "rl_be13", "rl_be14", "rl_be15", "rl_be16", "rl_be17")
-    def get_rl_be_total(self):
+    def _compute_rl_be_total(self):
         for record in self:
             total = record.rl_be01 + record.rl_be01b +  record.rl_be01c + record.rl_be02 + record.rl_be03 + \
                                 record.rl_be04 + record.rl_be05 + record.rl_be06 + record.rl_be07 + record.rl_be09 + \
                                 record.rl_be10 + record.rl_be11 + record.rl_be12 + record.rl_be13 + record.rl_be14 + \
                                 record.rl_be15 + record.rl_be16 + record.rl_be17
-
             record.rl_be_total = total
             record.ecart = record.rl_pgrc_total - total
 
@@ -54,6 +62,7 @@ class is_revue_lancement(models.Model):
             obj.rl_client_rcid     = obj.rl_num_rcid.rc_client
             obj.rl_projet_rcid     = obj.rl_num_rcid.rc_projetid
             obj.rl_commercial_rcid = obj.rl_num_rcid.rc_commercial
+
 
     @api.depends("rl_mouleid","rl_dossierfid","rl_indice")
     def _compute_name(self):
@@ -152,8 +161,8 @@ class is_revue_lancement(models.Model):
     rl_be15                           = fields.Float(string="BE15 : Achat matière ", tracking=True)
     rl_be16                           = fields.Float(string="BE16 : Achat composants ", tracking=True)
     rl_be17                           = fields.Float(string="BE17 : Essai injection ", tracking=True)
-    rl_be_total                       = fields.Float(string="Total RL", compute="get_rl_be_total", store=True)
-    ecart                             = fields.Float(string="Ecart", compute="get_rl_be_total", store=True)
+    rl_be_total                       = fields.Float(string="Total RL", compute="_compute_rl_be_total", store=True)
+    ecart                             = fields.Float(string="Ecart"   , compute="_compute_rl_be_total", store=True)
     rl_annee_inv                      = fields.Char(string="Année d'enregistrement des investissements", size=4, tracking=True)
 
 
@@ -355,3 +364,20 @@ class is_revue_lancement(models.Model):
                     if val>0:
                         doc = self.env['is.inv.achat.moule'].create(vals)
                         setattr(obj, field_name, doc.id)
+
+
+
+    def compute_project_prev(self):
+        "for xml-rpc"
+        self.update_j_prevue_action()
+        self._compute_project_prev()
+        self._compute_idproject_moule_dossierf()
+        self._compute_site_id()
+        self._compute_demao_nature()
+        self._compute_solde()
+        self._compute_actuelle()
+        self._compute_rsp_pj()
+        self._compute_coefficient_bloquant_note()
+        self._compute_color()
+        self._compute_indicateur()
+        return True
