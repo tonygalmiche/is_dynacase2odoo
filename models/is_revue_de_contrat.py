@@ -55,7 +55,7 @@ class is_revue_de_contrat(models.Model):
             if obj.rc_dossierfid:
                 name = obj.rc_dossierfid.name
             obj.name='RC-%s-%s'%(name,obj.rc_indice)
-        return True
+        #return True
 
 
     name                               = fields.Char(string="N°", compute="compute_name", store=True, readonly=True)
