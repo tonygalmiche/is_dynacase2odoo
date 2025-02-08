@@ -36,6 +36,7 @@
                                 <field name="famille"      readonly="1"/>
                                 <field name="sous_famille" readonly="1"/>
                                 <field name="categorie"    readonly="1"/>
+                                <field name="automobile"/>
                             </group>    
                         </group>
                         <notebook>
@@ -135,6 +136,7 @@
                     <field name="couleur"         optional="show"/>
                     <field name="fournisseur"     optional="show"/>
                     <field name="unite"           optional="show"/>
+                    <field name="automobile"      optional="show"/>
                     <field name="nb_a_faire"      optional="hide"/>
                     <field name="nb_crees"        optional="hide"/>
                     <field name="nb_fait"         optional="hide"/>
