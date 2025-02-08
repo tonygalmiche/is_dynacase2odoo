@@ -30,8 +30,10 @@ class is_revue_de_contrat(models.Model):
             if obj.rc_dossierfid:
                 projetid  = obj.rc_dossierfid.project.id
                 client_id = obj.rc_dossierfid.project.client_id.id
-            obj.rc_projetid = projetid
-            obj.rc_client = client_id
+            obj.rc_projetid    = projetid
+            obj.rc_client      = client_id
+            obj.rc_commercial  = obj.rc_client.user_id.id
+            obj.rc_designation = obj.rc_mouleid.designation or obj.rc_dossierfid.designation 
 
 
     @api.depends("rc_dossierfid")
@@ -68,14 +70,14 @@ class is_revue_de_contrat(models.Model):
         ("Non", "hors Automobile"),
         ("Oui", "Automobile"),
     ], string="Type automobile", tracking=True, required=True)
-    rc_projetid                        = fields.Many2one("is.mold.project", string="Projet", compute="_compute_rc_projetid", store=True, readonly=True)
+    rc_projetid                        = fields.Many2one("is.mold.project", string="Projet"     , compute="_compute_rc_projetid", store=True, readonly=True, tracking=True)
+    rc_commercial                      = fields.Many2one("res.users", string="Nom du commercial", compute="_compute_rc_projetid", store=True, readonly=True, tracking=True)
     rc_revue_contrat_assid             = fields.Many2one("is.revue.de.contrat", string="RC dossier F", readonly=True)
     rc_ass_mouleid                     = fields.Many2many("is.mold", "is_revue_mold_rel", "revue_id", "mold_id", string="Moules Dossier F", compute="_compute_rc_ass_mouleid", store=False, readonly=True)
     rc_client                          = fields.Many2one("res.partner", string="Client", compute="_compute_rc_projetid", store=True, readonly=True)
-    rc_designation                     = fields.Char(string="Désignation", tracking=True)
-    rc_num_outillageid                 = fields.Many2one("is.mold", string="N° outillage", tracking=True) 
+    rc_designation                     = fields.Char(string="Désignation"              , compute="_compute_rc_projetid", store=True, readonly=True, tracking=True)
+    rc_num_outillageid                 = fields.Many2one("is.mold", string="N° outillage => Doublon avez champ 'Moule' => A Supprimer") 
     rc_daoid                           = fields.Many2one("is.dossier.appel.offre", string="Dossier d'appel d'offre", tracking=True)
-    rc_commercial                      = fields.Many2one("res.users", string="Nom du commercial", tracking=True)
     rc_duration                        = fields.Float(string="Durée de vie", tracking=True)
     rc_product_dest                    = fields.Char(string="Destination du produit", tracking=True)
     rc_cust_wait                       = fields.Char(string="Attentes de notre client et points particuliers", tracking=True)
@@ -469,22 +471,22 @@ class is_revue_de_contrat_decomposition_prix(models.Model):
     rc_year_quantity                = fields.Integer(string="Quantité annuelle")
     rc_price_clientid               = fields.Many2one("res.partner", string="Site de livraison client")
 
-    rc_mat_part                     = fields.Float(string="Part matière"              , digits=(12, 6))
-    rc_comp_part                    = fields.Float(string="Part composant"            , digits=(12, 6))
-    rc_va_injection                 = fields.Float(string="VA injection"              , digits=(12, 6))
-    rc_va_assembly                  = fields.Float(string="VA assemblage"             , digits=(12, 6))
-    rc_emb_part                     = fields.Float(string="Part emballage"            , digits=(12, 6))
-    rc_port_fee                     = fields.Float(string="Frais port"                , digits=(12, 6))
-    rc_logistic                     = fields.Float(string="Logistique (Coût stockage)", digits=(12, 6))
-    rc_moul_amort                   = fields.Float(string="Amortissement client"      , digits=(12, 6))
-    rc_moul_amort_interne           = fields.Float(string="Amortissement interne"     , digits=(12, 6))
-    rc_moul_cagnotage               = fields.Float(string="Cagnotage"                 , digits=(12, 6))
+    rc_mat_part                     = fields.Float(string="Part matière"              , digits=(12, 4))
+    rc_comp_part                    = fields.Float(string="Part composant"            , digits=(12, 4))
+    rc_va_injection                 = fields.Float(string="VA injection"              , digits=(12, 4))
+    rc_va_assembly                  = fields.Float(string="VA assemblage"             , digits=(12, 4))
+    rc_emb_part                     = fields.Float(string="Part emballage"            , digits=(12, 4))
+    rc_port_fee                     = fields.Float(string="Frais port"                , digits=(12, 4))
+    rc_logistic                     = fields.Float(string="Logistique (Coût stockage)", digits=(12, 4))
+    rc_moul_amort                   = fields.Float(string="Amortissement client"      , digits=(12, 4))
+    rc_moul_amort_interne           = fields.Float(string="Amortissement interne"     , digits=(12, 4))
+    rc_moul_cagnotage               = fields.Float(string="Cagnotage"                 , digits=(12, 4))
     rc_moul_amort_commentaire       = fields.Char(string="Amortissement Commentaire")
-    rc_preserie_surcout             = fields.Float(string="Surcoût présérie"          , digits=(12, 6))
+    rc_preserie_surcout             = fields.Float(string="Surcoût présérie"          , digits=(12, 4))
     rc_preserie_surcout_commentaire = fields.Char(string="Surcoût présérie Commentaire")
-    rc_sell_price                   = fields.Float(string="Prix de vente"             , digits=(12, 6))
-    rc_total                        = fields.Float(string="Total", digits=(12, 6), compute="_compute_rc_total", store=False, readonly=True)
-    rc_ecart                        = fields.Float(string="Écart", digits=(12, 6), compute="_compute_rc_total", store=False, readonly=True)
+    rc_sell_price                   = fields.Float(string="Prix de vente"             , digits=(12, 4))
+    rc_total                        = fields.Float(string="Total", digits=(12, 4), compute="_compute_rc_total", store=False, readonly=True)
+    rc_ecart                        = fields.Float(string="Écart", digits=(12, 4), compute="_compute_rc_total", store=False, readonly=True)
 
     @api.depends("rc_mat_part","rc_comp_part","rc_va_injection","rc_va_assembly","rc_emb_part","rc_port_fee","rc_logistic",
                  "rc_moul_amort","rc_moul_amort_interne","rc_moul_cagnotage","rc_preserie_surcout","rc_sell_price")
@@ -502,10 +504,18 @@ class is_revue_de_contrat_decomposition_productivite(models.Model):
     _description = "Revue de contrat Productivité"
     _rec_name    = "rc_productivite_article"
 
+
+    decomposition_prix_id        = fields.Many2one("is.revue.de.contrat.decomposition.prix", string="Article décomposition de prix")
     rc_productivite_article      = fields.Char(string="Article")
     rc_productivite_annee        = fields.Char(string="Année")
     rc_productivite_productivite = fields.Char(string="Productivité")
     is_revue_id                  = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
+
+    @api.onchange('decomposition_prix_id')
+    def onchange_decomposition_prix_id(self):
+        self.rc_productivite_article = self.decomposition_prix_id.rc_price_comp_article
+
+
 
 
 class is_revue_de_contrat_decomposition_previsions(models.Model):
@@ -513,10 +523,19 @@ class is_revue_de_contrat_decomposition_previsions(models.Model):
     _description = "Revue de contrat Prévisions"
     _rec_name    = "rc_previsions_article"
 
+    decomposition_prix_id       = fields.Many2one("is.revue.de.contrat.decomposition.prix", string="Article décomposition de prix")
     rc_previsions_article      = fields.Char(string="Article")
     rc_previsions_annee        = fields.Char(string="Année")
-    rc_previsions_quantite     = fields.Char(string="Productivité")
+    rc_previsions_quantite     = fields.Char(string="Prévision")
     is_revue_id                = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
+
+
+    @api.onchange('decomposition_prix_id')
+    def onchange_decomposition_prix_id(self):
+        self.rc_previsions_article = self.decomposition_prix_id.rc_price_comp_article
+
+
+
 
 
 class is_revue_de_contrat_version(models.Model):
@@ -529,7 +548,7 @@ class is_revue_de_contrat_version(models.Model):
         ("Oui", "Oui"),
     ], string="Version")
 
-    decomposition_prix_id      = fields.Many2one("is.revue.de.contrat.decomposition.prix", string="Décomposition de prix")
+    decomposition_prix_id      = fields.Many2one("is.revue.de.contrat.decomposition.prix", string="Article décomposition de prix")
     rc_dfi_article             = fields.Char(string="Article")
 
     rc_dfi_cycle               = fields.Float(string="Cycle par pièce", digits=(12, 2))
@@ -542,20 +561,20 @@ class is_revue_de_contrat_version(models.Model):
         ("1.5", "1.5"),
         ("2", "2"),
     ], string="MOD totale pour le poste")
-    rc_dfi_taux_rebut          = fields.Float(string="Tx rebut vendu")
+    rc_dfi_taux_rebut          = fields.Float(string="Tx rebut vendu (%)")
     rc_dfi_poids_piece         = fields.Float(string="Poids pièce (en g)")
     rc_dfi_poids_carotte       = fields.Float(string="Poids carotte (en g)")
     rc_dfi_car_reb             = fields.Selection([
         ("Non", "Non"),
         ("Oui", "Oui"),
     ], string="Carotte rebroyée")
-    rc_dfi_car_reb_pourcentage = fields.Float(string="Pourcentage de rebroyé admis par le client")
+    rc_dfi_car_reb_pourcentage = fields.Float(string="% rebroyé admis par le client")
     rc_dfi_matiere             = fields.Text(string="Matière")
-    rc_dfi_mat_prix_vendu      = fields.Text(string="Prix vendu matière")
+    rc_dfi_mat_prix_vendu      = fields.Text(string="Prix et lot mat. vendu")
     rc_dfi_comp                = fields.Text(string="Composants")
-    rc_dfi_comp_prix_vendu     = fields.Text(string="Prix vendu composants")
+    rc_dfi_comp_prix_vendu     = fields.Text(string="Prix et lot comp. vendu")
     rc_dfi_sous_traitance      = fields.Text(string="Sous-traitance (description)")
-    rc_dfi_sous_traitance_prix = fields.Text(string="Prix vendu sous-traitance")
+    rc_dfi_sous_traitance_prix = fields.Text(string="Prix et lot ST vendu")
     rc_dfi_desc_emb            = fields.Text(string="Descriptif emballage")
     rc_dfi_qte_carton          = fields.Integer(string="Qt par UC")
     rc_dfi_qte_palette         = fields.Integer(string="Nb UC par palette")
@@ -584,14 +603,14 @@ class is_revue_de_contrat_dfe_version(models.Model):
         ("Oui", "Oui"),
     ], string="Version")
     rc_dfe_comp                = fields.Text(string="Composants")
-    rc_dfe_comp_pri_vendu      = fields.Text(string="Composants &#58; prix vendu")
+    rc_dfe_comp_pri_vendu      = fields.Text(string="Composants et prix vendu")
     rc_dfe_cycle               = fields.Char(string="Cycle par pièce")
     rc_dfe_mod                 = fields.Selection([
         ("1", "1"),
         ("2", "2"),
         ("3", "3"),
     ], string="MOD pour le poste")
-    rc_dfe_taux_rebut = fields.Char(string="Tx rebut vendu")
+    rc_dfe_taux_rebut = fields.Char(string="Tx rebut vendu (%)")
     rc_dfe_desc_emaballage     = fields.Text(string="Descriptif emballage")
     rc_dfe_sous_traitance      = fields.Text(string="Sous-traitance (description)")
     rc_dfe_sous_traitance_prix = fields.Text(string="Prix vendu sous-traitance")
