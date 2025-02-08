@@ -47,7 +47,7 @@ class is_revue_de_contrat(models.Model):
 
 
     @api.depends("rc_mouleid","rc_dossierfid","rc_indice")
-    def _compute_name(self):
+    def compute_name(self):
         for obj in self:
             name="x"
             if obj.rc_mouleid:
@@ -55,9 +55,10 @@ class is_revue_de_contrat(models.Model):
             if obj.rc_dossierfid:
                 name = obj.rc_dossierfid.name
             obj.name='RC-%s-%s'%(name,obj.rc_indice)
+        return True
 
 
-    name                               = fields.Char(string="N°", compute="_compute_name", store=True, readonly=True)
+    name                               = fields.Char(string="N°", compute="compute_name", store=True, readonly=True)
     rc_mouleid                         = fields.Many2one("is.mold", string="Moule", tracking=True)
     rc_dossierfid                      = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
     rc_indice                          = fields.Integer(string="Indice", readonly=True, default=0)
