@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
+        <record id="is_revue_de_contrat_actualisation_champs_calcules_action_server" model="ir.actions.server">
+            <field name="name">Actualisation champs calculés</field>
+            <field name="model_id" ref="model_is_revue_de_contrat"/>
+            <field name="binding_model_id" ref="model_is_revue_de_contrat"/>
+            <field name="state">code</field>
+            <field name="code">records.actualisation_champs_calcules_action()</field>
+            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+        </record>
         <record model="ir.ui.view" id="view_is_revue_de_contrat_form">
             <field name="name">view.is.revue.de.contrat.form</field>
             <field name="model">is.revue.de.contrat</field>
@@ -611,7 +618,7 @@
                     <field name="rc_ei_pres"               optional="hide"/>
                     <field name="rc_dms_date"              optional="hide"/>
                     <field name="rc_eop_date"              optional="hide"/>
-                    <field name="rc_eiv_total"             optional="hide"/>
+                    <field name="rc_eiv_total"             optional="hide" sum="Total"/>
                     <field name="rc_dfi_temp_occ_pm"       optional="hide"/>
                     <field name="rc_ca_annuel"             optional="hide" sum="Total"/>
                     <field name="rc_vac"                   optional="hide" sum="Total"/>

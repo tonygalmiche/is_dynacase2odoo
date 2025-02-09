@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _      # type: ignore
 from odoo.exceptions import ValidationError  # type: ignore
+import logging
+_logger = logging.getLogger(__name__)
+
 
 #TODO : 
 # Vérfier la class et la methode en PHP dans Dynacase
@@ -12,53 +15,8 @@ class is_revue_de_contrat(models.Model):
     _description = "Revue de contrat"
 
 
-    @api.depends("rc_eiv_moule", "rc_eiv_etude", "rc_eiv_main_prehension", "rc_eiv_barre_chaude" , "rc_eiv_gab_controle", "rc_eiv_mach_spec", "rc_eiv_plan_valid", "rc_eiv_mis_point" ,"rc_eiv_pack", "rc_eiv_amort")
-    def _compute_rc_eiv_total(self):
-        for record in self:
-            record.rc_eiv_total = record.rc_eiv_moule +  record.rc_eiv_etude +  record.rc_eiv_main_prehension + \
-                                  record.rc_eiv_barre_chaude + record.rc_eiv_gab_controle +record.rc_eiv_mach_spec + \
-                                  record.rc_eiv_plan_valid + record.rc_eiv_mis_point + record.rc_eiv_pack + record.rc_eiv_amort
 
-    @api.depends("rc_mouleid","rc_dossierfid","rc_mouleid.project","rc_dossierfid.project","rc_mouleid.project.client_id","rc_dossierfid.project.client_id")
-    def _compute_rc_projetid(self):
-        for obj in self:
-            projetid = False
-            client_id = False
-            if obj.rc_mouleid:
-                projetid  = obj.rc_mouleid.project.id
-                client_id = obj.rc_mouleid.project.client_id.id
-            if obj.rc_dossierfid:
-                projetid  = obj.rc_dossierfid.project.id
-                client_id = obj.rc_dossierfid.project.client_id.id
-            obj.rc_projetid    = projetid
-            obj.rc_client      = client_id
-            obj.rc_commercial  = obj.rc_client.user_id.id
-            obj.rc_designation = obj.rc_mouleid.designation or obj.rc_dossierfid.designation 
-
-
-    @api.depends("rc_dossierfid")
-    def _compute_rc_ass_mouleid(self):
-        for obj in self:
-            ids=[]
-            if obj.rc_dossierfid:
-                for mold in obj.rc_dossierfid.mold_ids:
-                    ids.append(mold.id)
-            obj.rc_ass_mouleid = ids
-
-
-    @api.depends("rc_mouleid","rc_dossierfid","rc_indice")
-    def compute_name(self):
-        for obj in self:
-            name="x"
-            if obj.rc_mouleid:
-                name = obj.rc_mouleid.name
-            if obj.rc_dossierfid:
-                name = obj.rc_dossierfid.name
-            obj.name='RC-%s-%s'%(name,obj.rc_indice)
-        #return True
-
-
-    name                               = fields.Char(string="N°", compute="compute_name", store=True, readonly=True)
+    name                               = fields.Char(string="N°", compute="_compute_name", store=True, readonly=True)
     rc_mouleid                         = fields.Many2one("is.mold", string="Moule", tracking=True)
     rc_dossierfid                      = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
     rc_indice                          = fields.Integer(string="Indice", readonly=True, default=0)
@@ -263,6 +221,69 @@ class is_revue_de_contrat(models.Model):
     active = fields.Boolean('Actif', default=True, tracking=True)
 
 
+    def actualisation_champs_calcules_action(self):
+        nb=len(self)
+        ct=1
+        for obj in self:
+            _logger.info("actualisation_champs_calcules_action : %s/%s : %s (id=%s)"%(ct,nb,obj.name,obj.id))
+            obj._compute_rc_eiv_total()
+            obj._compute_rc_projetid()
+            obj._compute_rc_ass_mouleid()
+            obj._compute_name()
+            obj._compute_rc_ca_annuel()
+            obj._compute_rc_dfi_temp_occ_pm()
+            ct+=1
+        return True
+
+
+    @api.depends("rc_eiv_moule", "rc_eiv_etude", "rc_eiv_main_prehension", "rc_eiv_barre_chaude" , "rc_eiv_gab_controle", "rc_eiv_mach_spec", "rc_eiv_plan_valid", "rc_eiv_mis_point" ,"rc_eiv_pack", "rc_eiv_amort")
+    def _compute_rc_eiv_total(self):
+        for record in self:
+            record.rc_eiv_total = record.rc_eiv_moule +  record.rc_eiv_etude +  record.rc_eiv_main_prehension + \
+                                  record.rc_eiv_barre_chaude + record.rc_eiv_gab_controle +record.rc_eiv_mach_spec + \
+                                  record.rc_eiv_plan_valid + record.rc_eiv_mis_point + record.rc_eiv_pack + record.rc_eiv_amort
+
+    @api.depends("rc_mouleid","rc_dossierfid","rc_mouleid.project","rc_dossierfid.project","rc_mouleid.project.client_id","rc_dossierfid.project.client_id")
+    def _compute_rc_projetid(self):
+        for obj in self:
+            projetid = False
+            client_id = False
+            if obj.rc_mouleid:
+                projetid  = obj.rc_mouleid.project.id
+                client_id = obj.rc_mouleid.project.client_id.id
+            if obj.rc_dossierfid:
+                projetid  = obj.rc_dossierfid.project.id
+                client_id = obj.rc_dossierfid.project.client_id.id
+            obj.rc_projetid    = projetid
+            obj.rc_client      = client_id
+            obj.rc_commercial  = obj.rc_client.user_id.id
+            obj.rc_designation = obj.rc_mouleid.designation or obj.rc_dossierfid.designation 
+
+
+    @api.depends("rc_dossierfid")
+    def _compute_rc_ass_mouleid(self):
+        for obj in self:
+            ids=[]
+            if obj.rc_dossierfid:
+                for mold in obj.rc_dossierfid.mold_ids:
+                    ids.append(mold.id)
+            obj.rc_ass_mouleid = ids
+
+
+    @api.depends("rc_mouleid","rc_dossierfid","rc_indice")
+    def _compute_name(self):
+        for obj in self:
+            name="x"
+            if obj.rc_mouleid:
+                name = obj.rc_mouleid.name
+            if obj.rc_dossierfid:
+                name = obj.rc_dossierfid.name
+            obj.name='RC-%s-%s'%(name,obj.rc_indice)
+        #return True
+
+
+
+
     @api.depends("decomposition_prix_ids","decomposition_prix_ids.rc_year_quantity","decomposition_prix_ids.rc_sell_price",
                  "decomposition_prix_ids.rc_moul_amort","decomposition_prix_ids.rc_preserie_surcout",
                  "decomposition_prix_ids.rc_va_injection","decomposition_prix_ids.rc_va_assembly")
@@ -300,14 +321,15 @@ class is_revue_de_contrat(models.Model):
     @api.constrains('rc_mouleid', 'rc_dossierfid', 'rc_indice')
     def _rc_unique(self):
         for obj in self:
-            domain=[
-                ('rc_mouleid'   , '=', obj.rc_mouleid.id), 
-                ('rc_dossierfid', '=', obj.rc_dossierfid.id), 
-                ('rc_indice'    , '=', obj.rc_indice), 
-            ]
-            lines = self.env['is.revue.de.contrat'].search(domain)
-            if len(lines) > 1:
-                raise ValidationError("Cette revue de contrat existe déjà !")
+            if obj.rc_mouleid.id or obj.rc_dossierfid.id:
+                domain=[
+                    ('rc_mouleid'   , '=', obj.rc_mouleid.id), 
+                    ('rc_dossierfid', '=', obj.rc_dossierfid.id), 
+                    ('rc_indice'    , '=', obj.rc_indice), 
+                ]
+                lines = self.env['is.revue.de.contrat'].search(domain)
+                if len(lines) > 1:
+                    raise ValidationError("Cette revue de contrat %s %s indice %s existe déjà !"%(obj.rc_mouleid.name,obj.rc_dossierfid.name,obj.rc_indice))
 
 
     def copy(self, default=None):
