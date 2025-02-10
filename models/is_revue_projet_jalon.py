@@ -55,7 +55,7 @@ class is_revue_projet_jalon(models.Model):
             obj.vers_valide_vsb = vsb
 
             vsb = False
-            if obj.state in ["rpj_directeur_technique", "rpj_directeur_site"] and obj.rpj_motif_refus:
+            if obj.state in ["rpj_directeur_technique", "rpj_directeur_site"]:
                 vsb = True
             obj.vers_refuse_vsb = vsb
 
