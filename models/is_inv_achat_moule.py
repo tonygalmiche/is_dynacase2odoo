@@ -11,6 +11,7 @@ from odoo.exceptions import ValidationError  # type: ignore
 #- Lien avec RL
 #- Analyser contenu fichiers PHP de cette famille
 #- Ajouter vue tableau croisée et graph
+#- Lien avec ERD
 
 
 _CODE_IMPUTATION=[

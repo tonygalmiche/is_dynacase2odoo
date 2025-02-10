@@ -8,32 +8,36 @@
             <field name="arch" type="xml">
                 <form string="Form">  
                     <header>
+                        <field name="vers_transmis_be_vsb" invisible="1"/>
+                        <field name="vers_valide_be_vsb" invisible="1"/>
+                        <field name="vers_diffuse_client_vsb" invisible="1"/>
+                        <field name="vers_gagne_vsb" invisible="1"/>
                         <button 
                             name="vers_Transmis_BE_action"
                             string="vers Transmis BE"
                             type="object"
-                            attrs="{'invisible': [('state', '!=', 'Cree')]}" 
+                            attrs="{'invisible': [('vers_transmis_be_vsb', '=', False)]}" 
                             groups="is_dynacase2odoo.is_gestionnaire_projet_group"
                         />
                         <button 
                             name="vers_Valide_BE_action"
                             string="vers Validé BE"
                             type="object"
-                            attrs="{'invisible': [('state', '!=', 'Transmis_BE')]}" 
+                            attrs="{'invisible': [('vers_valide_be_vsb', '=', False)]}" 
                             groups="is_dynacase2odoo.is_gestionnaire_projet_group"
                         />
                         <button 
                             name="vers_Diffuse_Client_action"
                             string="vers Diffusé Client"
                             type="object"
-                            attrs="{'invisible': [('state', '!=', 'Valide_BE')]}" 
+                            attrs="{'invisible': [('vers_diffuse_client_vsb', '=', False)]}" 
                             groups="is_dynacase2odoo.is_gestionnaire_projet_group"
                         />
                         <button 
                             name="vers_Gagne_action"
                             string="vers Gagné"
                             type="object"
-                            attrs="{'invisible': [('state', '!=', 'Diffuse_Client')]}" 
+                            attrs="{'invisible': [('vers_gagne_vsb', '=', False)]}" 
                             groups="is_dynacase2odoo.is_gestionnaire_projet_group"
                         />
                         <field name="dynacase_id" invisible="1"/>
@@ -47,28 +51,29 @@
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/> 
+                        <field name="readonly" invisible="1"/>
                         <group>
                             <group>
-                                <field name="numero" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
-                                <field name="date" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
-                                <field name="clientid" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
-                                <field name="designation" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
-                                <field name="commercialid" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
-                                <field name="beid" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
+                                <field name="numero" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                <field name="date" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                <field name="clientid" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                <field name="designation" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                <field name="commercialid" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                <field name="beid" attrs="{'readonly': [('readonly', '=', True)]}"/>
                             </group>
                             <group>
-                                <field name="date_reponse_be" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
-                                <field name="date_reponse" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
-                                <field name="date_lancement" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
-                                <field name="prix_vente" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
-                                <field name="num_commande" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
-                                <field name="observation" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
+                                <field name="date_reponse_be" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                <field name="date_reponse" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                <field name="date_lancement" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                <field name="prix_vente" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                <field name="num_commande" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                <field name="observation" attrs="{'readonly': [('readonly', '=', True)]}"/>
                             </group>
                         </group>
                         <group string="Pièces jointes">
-                            <field name="file_pj_commerciaux_ids" widget="many2many_binary" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
-                            <field name="file_pj_be_ids"          widget="many2many_binary" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
-                            <field name="file_cde_be_ids"         widget="many2many_binary" attrs="{'readonly': [('state', '!=', 'Cree')]}"/>
+                            <field name="file_pj_commerciaux_ids" widget="many2many_binary" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                            <field name="file_pj_be_ids"          widget="many2many_binary" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                            <field name="file_cde_be_ids"         widget="many2many_binary" attrs="{'readonly': [('readonly', '=', True)]}"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -101,6 +106,13 @@
                     <field name="create_uid"  optional="hide" string="Créé par"/>
                     <field name="write_date"  optional="hide" string="Modifié le"/>
                     <field name="write_uid"   optional="hide" string="Modifié par"/>
+
+                    <field 
+                        name="state" optional="show" widget="badge" 
+                        decoration-info="state in ['Diffuse_Client']" 
+                        decoration-warning="state in ['Cree','Transmis_BE','Valide_BE']"
+                        decoration-success="state in ['Gagne']"
+                    />
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
