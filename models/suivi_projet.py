@@ -362,10 +362,17 @@ class IsDocMoule(models.Model):
                         photo=''
                         if avec_photo=='Oui':
                             doc = self.env['is.doc.moule'].browse(doc_id)
+                            image=False
                             if doc and doc.idmoule:
                                 image = doc.idmoule.image
-                                if image and image!='':
-                                    photo = 'data:image/png;base64, %s'%image.decode("utf-8")
+                            if doc and doc.dossierf_id:
+                                image = doc.dossierf_id.image
+                            if image and image!='':
+                                photo = 'data:image/png;base64, %s'%image.decode("utf-8")
+
+
+
+
                         #** avancement_j **************************************
                         #j_actuelle = False
                         #avancement_j=[False,False]

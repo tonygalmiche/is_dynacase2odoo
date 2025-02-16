@@ -2,7 +2,7 @@ from odoo import models, fields, api, _  # type: ignore
 
 class IsFermetureGantt(models.Model):
     _name        = "is.fermeture.gantt"
-    _description = "Fermeture du Gantt"
+    _description = "Fermeture planning Gantt"
     _order = "name"
 
     name     = fields.Char(string="Intitulé", required=True)

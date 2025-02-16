@@ -16,7 +16,7 @@ _logger = logging.getLogger(__name__)
 
 class IsDocMoule(models.Model):
     _name        = "is.doc.moule"
-    _inherit=['mail.thread']
+    _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description = "Document moule"
     #_rec_name    = "param_project_id"
     _order = 'section_id,sequence,section_id,param_project_id'
@@ -202,8 +202,6 @@ class IsDocMoule(models.Model):
                         color='Gray'
                 if obj.etat=='F':
                     color='SpringGreen'
-
-                # if ($name_fam=="DFAB")  $color = "Lavender"; // Traitement particulier pour les dossiers de fab
             obj.color=color
 
 
@@ -214,10 +212,14 @@ class IsDocMoule(models.Model):
             for line in obj.array_ids:
                 rsp=False
                 if line.annex:
+                    rsp=[]
                     for pj in line.annex:
-                        rsp_pj.append(pj.name)
+                        rsp.append(pj.name)
+                    rsp = ', '.join(rsp)
                 if line.comment:
-                    rsp_pj.append(line.comment)
+                    rsp="%s (%s)"%(rsp or '',line.comment)
+                if rsp:
+                    rsp_pj.append(rsp)
             rsp_pj = '\n'.join(rsp_pj)
             obj.rsp_pj = rsp_pj
             obj.write({'rsp_pj':rsp_pj}) # Permet de faire fonctionner le tracking

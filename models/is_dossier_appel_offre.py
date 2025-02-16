@@ -87,7 +87,7 @@ class is_dossier_appel_offre(models.Model):
     dao_commande_client   = fields.Many2many("ir.attachment", "is_dao_commande_client_rel"  , "commande_client_id"  , "att_id", string="Commande client")
     dao_lettre_nomination = fields.Many2many("ir.attachment", "is_dao_lettre_nomination_rel", "lettre_nomination_id", "att_id", string="Lettre de nomination et contrats")
     dao_devis_achat       = fields.Many2many("ir.attachment", "is_dao_devis_achat_rel"      , "devis_achat_id"      , "att_id", string="Fichier de devis des achats")
-    fermeture_id          = fields.Many2one("is.fermeture.gantt", string="Fermeture du Gantt", tracking=True)
+    fermeture_id          = fields.Many2one("is.fermeture.gantt", string="Fermeture planning", tracking=True)
     active                = fields.Boolean('Actif', default=True, tracking=True)
 
 

@@ -43,7 +43,7 @@
             </field>
         </record>
         <record id="is_fermeture_gantt_action" model="ir.actions.act_window">
-            <field name="name">Fermetures du Gantt</field>
+            <field name="name">Fermeture planning Gantt</field>
             <field name="res_model">is.fermeture.gantt</field>
             <field name="view_mode">tree,form</field>
             <field name="limit">200</field>

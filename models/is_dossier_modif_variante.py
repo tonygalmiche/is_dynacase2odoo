@@ -172,7 +172,7 @@ class is_dossier_modif_variante(models.Model):
     vers_annule_vsb             = fields.Boolean(string="Annule", compute='_compute_vsb', readonly=True, store=False)
     dynacase_id                 = fields.Integer(string="Id Dynacase",index=True,copy=False)
     solde                       = fields.Boolean(string="Soldé", default=False, copy=False, tracking=True)
-    fermeture_id                = fields.Many2one("is.fermeture.gantt", string="Fermeture du Gantt", tracking=True)
+    fermeture_id                = fields.Many2one("is.fermeture.gantt", string="Fermeture planning", tracking=True)
     active                      = fields.Boolean('Actif', default=True, tracking=True)
 
 

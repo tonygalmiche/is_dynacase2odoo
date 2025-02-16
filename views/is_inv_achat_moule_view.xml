@@ -20,33 +20,33 @@
                         <field name="active" invisible="1"/> 
                         <group>
                             <group>
-                                <field name="code_imputation"/>
+                                <field name="code_imputation"   required="1"/>
                                 <field name="revue_lancementid"/>
-                                <field name="num_dossierid"/>
                                 <field name="num_erdid"/>
-                                <field name="nature"/>
+                                <field name="num_dossierid"/>
                                 <field name="num_mouleid"/>
+                                <field name="nature"/>
                                 <field name="clientid"/>
                                 <field name="projetid"/>
                                 <field name="chef_projetid"/>
+                                <field name="date_saisie" required="1"/>
+                                <field name="annee_saisie"/>
+                                <field name="montant_vendu" required="1"/>
+                                <field name="annee_enregistre" required="1"/>
                             </group>
                             <group>
-                                <field name="date_saisie"/>
-                                <field name="annee_saisie"/>
-                                <field name="annee_enregistre"/>
-                                <field name="montant_vendu"/>
+                                <field name="num_cde_id" required="1"/>
                                 <field name="num_cde"/>
+                                <field name="code_fournisseur"/>
+                                <field name="fournisseurid"/>
                                 <field name="date_cde"/>
+                                <field name="objet_commande"/>
                                 <field name="prix_commande"/>
                                 <field name="montant_facture"/>
                                 <field name="date_derniere_facture"/>
-                                <field name="code_fournisseur"/>
                                 <field name="date_commande_ou_saisie"/>
-                                <field name="fournisseurid"/>
-                                <field name="objet_commande"/>
                             </group>
                         </group>
-                        
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
@@ -74,6 +74,7 @@
                     <field name="annee_saisie"            optional="show"/>
                     <field name="annee_enregistre"        optional="show"/>
                     <field name="montant_vendu"           optional="show"/>
+                    <field name="num_cde_id"              optional="hide"/>
                     <field name="num_cde"                 optional="hide"/>
                     <field name="date_cde"                optional="hide"/>
                     <field name="prix_commande"           optional="hide"/>
@@ -135,6 +136,67 @@
             <field name="name">Investissement achat moule</field>
             <field name="res_model">is.inv.achat.moule</field>
             <field name="view_mode">tree,form,pivot,graph</field>
+        </record>
+
+        <record model="ir.ui.view" id="is_inv_achat_moule_po_form_view">
+            <field name="name">is_inv_achat_moule_po_form_view</field>
+            <field name="model">is.inv.achat.moule.po</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Form">  
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="soc"/>
+                                <field name="num_cde"/>
+                                <field name="date_cde"/>
+                                <field name="fournisseur_id"   optional="show"/>
+                                <field name="code_fournisseur"/>
+                                <field name="devise"/>
+                                <field name="taux_devise"/>
+                                <field name="description"/>
+                                <field name="total"/>
+                            </group>
+                        </group>
+                        
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_inv_achat_moule_po_tree_view">
+            <field name="name">is_inv_achat_moule_po_tree_view</field>
+            <field name="model">is.inv.achat.moule.po</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="soc"              optional="show"/>
+                    <field name="num_cde"          optional="show"/>
+                    <field name="date_cde"         optional="show"/>
+                    <field name="fournisseur_id"   optional="show"/>
+                    <field name="code_fournisseur" optional="show"/>
+                    <field name="devise"           optional="show"/>
+                    <field name="taux_devise"      optional="show"/>
+                    <field name="description"      optional="show"/>
+                    <field name="total"            optional="show" sum="Total"/>
+                 </tree>
+            </field>
+        </record> 
+        <record model="ir.ui.view" id="is_inv_achat_moule_po_search_view" >
+            <field name="name">is_inv_achat_moule_po_search_view</field>
+            <field name="model">is.inv.achat.moule.po</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="soc"/>
+                    <field name="num_cde"/>
+                    <field name="fournisseur_id"/>
+                    <field name="description"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_inv_achat_moule_po_action">
+            <field name="name">Commandes fournisseur</field>
+            <field name="res_model">is.inv.achat.moule.po</field>
+            <field name="view_mode">tree,form</field>
         </record>
     </data>
 </odoo>

@@ -117,11 +117,6 @@
                                             <field name="duree_convertion_pdf"  optional="hide" attrs="{'column_invisible':[('parent.ppr_transformation_pdf', '=', False)]}"/>
                                         </tree>
                                     </field>
-
-
-                                    <!-- <field name="attachment_ids" widget="many2many_binary"/> -->
-
-
                                     <field name="rsp_pj"    attrs="{'invisible': [('rsp_pj', '=', False)]}"/>
                                     <field name="rsp_date"  attrs="{'invisible': [('ppr_type_demande', 'not in', ['DATE', 'PJ_DATE'])]}"/>
                                     <field name="rsp_texte" attrs="{'invisible': [('ppr_type_demande', 'not in', ['TEXTE','PJ_TEXTE'])]}"/>
@@ -157,8 +152,9 @@
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" />
+                        <field name="activity_ids" />
+                        <field name="message_ids" />
                     </div>
                 </form>
             </field>
@@ -793,7 +789,7 @@
                     <field name="section_id" optional="show"/>
                     <field name='sequence'   optional="show"/>
                     <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
-                    <field name="param_project_id" required="1" domain="[('type_document','=',type_document)]" />
+                    <field name="param_project_id" required="1" domain="[('type_document','=','Moule')]" />
                     <field name="type_document"    optional="hide"/>
                     <field name="dossierf_id"      required="1"    widget="many2one_clickable"/>
                     <field name="idproject"        optional="show" widget="many2one_clickable"/>

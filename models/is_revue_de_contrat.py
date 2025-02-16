@@ -360,7 +360,7 @@ class is_revue_de_contrat(models.Model):
 
     def vers_diffuse_action(self):
         for obj in self:
-            if len(obj.version_ids)==0 or len(obj.dfe_version_ids)==0:
+            if len(obj.version_ids)==0 and len(obj.dfe_version_ids)==0:
                 raise ValidationError("Les versions dans l'onglet 'Données de fabrication' ne sont pas renseignées !")
             obj.state='diffuse'
             if obj.rc_mouleid:

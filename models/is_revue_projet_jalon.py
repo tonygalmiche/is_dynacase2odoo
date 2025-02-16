@@ -70,6 +70,8 @@ class is_revue_projet_jalon(models.Model):
             obj.vers_j_suivante_vsb = vsb
 
 
+
+
     def envoi_mail(self, users=[]):
         for obj in self:
             partner_ids = []
@@ -170,6 +172,13 @@ class is_revue_projet_jalon(models.Model):
             field_name="rpj_date_valide_%s"%J
             setattr(obj, field_name, date.today())
             obj.sudo().state = "rpj_valide"
+            if not obj.rpj_rcid or obj.rpj_rcid.state!='diffuse' or obj.rpj_rcid.active==False:
+                raise ValidationError("Une revue de contrat diffusée est obligatoire !")
+            if not obj.rpj_rlid or obj.rpj_rlid.state!='rl_diffuse' or obj.rpj_rlid.active==False:
+                raise ValidationError("Une revue de lancement diffusée est obligatoire !")
+            if not obj.rpj_rrid or obj.rpj_rrid.state!='rr_diffuse' or obj.rpj_rrid.active==False:
+                raise ValidationError("Une revue des risques diffusée est obligatoire !")
+
 
     def vers_refuse_action(self):
         for obj in self:

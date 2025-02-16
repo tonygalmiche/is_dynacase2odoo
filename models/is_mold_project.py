@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 class is_mold_project(models.Model):
     _inherit = 'is.mold.project'
 
-    fermeture_id = fields.Many2one("is.fermeture.gantt", string="Fermeture du Gantt")
+    fermeture_id = fields.Many2one("is.fermeture.gantt", string="Fermeture planning")
 
     def gantt_action(self):
         for obj in self:
