@@ -4,8 +4,7 @@ from odoo.exceptions import ValidationError  # type: ignore
 
 
 #TODO : 
-#- Champs de la facturation à actualiser
-#- Analyser contenu fichiers PHP de cette famille
+#- date_commande_ou_saisie => compute
 
 
 _CODE_IMPUTATION=[
@@ -59,9 +58,15 @@ class is_inv_achat_moule(models.Model):
     prix_commande      = fields.Float(string="Montant de la commande fournisseur"                , tracking=True, compute='_compute_cde',store=True, readonly=True)
     montant_facture    = fields.Float(string="Montant des factures fournisseur"                  , tracking=True, readonly=True)
     date_derniere_facture   = fields.Date(string="Date dernière facture"                         , tracking=True, readonly=True)
-    date_commande_ou_saisie = fields.Date(string="Date de commande ou de saisie"                 , tracking=True, readonly=True)
+    date_commande_ou_saisie = fields.Date(string="Date de commande ou de saisie"                 , tracking=True, compute='_compute_date',store=True, readonly=True)
     dynacase_id             = fields.Integer(string="Id Dynacase", index=True, copy=False)
     active                  = fields.Boolean('Actif', default=True                               , tracking=True)
+
+
+    @api.depends('date_saisie', 'date_cde')
+    def _compute_date(self):
+        for obj in self:
+            obj.date_commande_ou_saisie = obj.date_saisie or obj.date_cde
 
 
     @api.depends('revue_lancementid', 'num_erdid', 'num_dossierid', 'num_mouleid')
