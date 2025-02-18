@@ -71,7 +71,7 @@ class is_fiche_codification(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if "chrono" not in vals:
-                last_codif = self.env["is.fiche.codification"].search([], order="chrono desc", limit=1)
+                last_codif = self.env["is.fiche.codification"].search([('chrono', '!=', None)], order="chrono desc", limit=1)
                 if last_codif:
                     chrono = last_codif.chrono
                 else:
