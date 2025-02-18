@@ -38,7 +38,7 @@
                                 <!--field name="state"/-->
                                 <field name="etabli_par_id"/>
                                 <field name="date"/>
-                                <field name="appel_offre_id"/>
+                                <!--field name="appel_offre_id"/-->
                                 <field name="dossier_modif_variante_id"/>
                                 <field name="revue_contrat_id"/>
                                 <field name="mold_id"/>
@@ -125,7 +125,7 @@
                     <field name="chef_de_projet_id"         optional="show"/>
                     <field name="etabli_par_id"             optional="show" widget="many2one_clickable"/>
                     <field name="duree_vie"                 optional="show" widget="many2one_clickable"/>
-                    <field name="appel_offre_id"            optional="hide" widget="many2one_clickable"/>
+		    <!--field name="appel_offre_id"            optional="hide" widget="many2one_clickable"/-->
                     <field name="dossier_modif_variante_id" optional="hide" widget="many2one_clickable"/>
                     <field name="revue_contrat_id"          optional="hide" widget="many2one_clickable"/>
                     <field name="mold_id"                   optional="hide" widget="many2one_clickable"/>
@@ -172,7 +172,7 @@
                     <field name="project_id"/>
                     <field name="chef_de_projet_id"/>
                     <field name="etabli_par_id"/>
-                    <field name="appel_offre_id" />
+                    <!--field name="appel_offre_id" /-->
                     <field name="dossier_modif_variante_id"/>
                     <field name="revue_contrat_id"/>
                     <field name="mold_id"/>

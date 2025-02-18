@@ -43,6 +43,13 @@
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                             groups="base.group_system"
                         />
+                        <button 
+                            name="action_creation_fiche_codification"
+                            string="Créer une fiche de codification"
+                            type="object"
+                            attrs="{'invisible': [('state', '=', 'brouillon')]}" 
+                            groups="is_dynacase2odoo.is_gestionnaire_revue_contrat_group"
+                        />
                         <field name="state" widget="statusbar"/>
                         <field name="dynacase_id" invisible="1"/>
                     </header>
@@ -133,6 +140,49 @@
 
                                 <group string="Commentaire spécifique (essais supplémentaire)" attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}">
                                     <field name="rc_nb_pce_p_jal" colspan="2" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                </group>
+                                <group string="Fiches de codification" col="4" colspan="4">
+                                    <field name="fiche_codification_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state', '!=', 'brouillon')]}" >
+                                        <tree>
+                                            <button title="Fiche de codification" name="action_acceder_fiche_codification"  type="object" icon="fa-search-plus"/>
+                                            <field name="chrono"                    optional="show" widget="many2one_clickable"/>
+                                            <field name="state"                     optional="show"/>
+                                            <field name="code_pg"                   optional="show"/>
+                                            <field name="date"                      optional="show"/>
+                                            <field name="type_dossier"              optional="show"/>
+                                            <field name="creation_modif"            optional="show"/>
+                                            <field name="client_id"                 optional="show" widget="many2one_clickable"/>
+                                            <field name="project_id"                optional="show" widget="many2one_clickable"/>
+                                            <field name="chef_de_projet_id"         optional="show"/>
+                                            <field name="etabli_par_id"             optional="show" widget="many2one_clickable"/>
+                                            <field name="duree_vie"                 optional="show" widget="many2one_clickable"/>
+                                            <field name="appel_offre_id"            optional="hide" widget="many2one_clickable"/>
+                                            <field name="dossier_modif_variante_id" optional="hide" widget="many2one_clickable"/>
+                                            <field name="revue_contrat_id"          optional="hide" widget="many2one_clickable"/>
+                                            <field name="mold_id"                   optional="hide" widget="many2one_clickable"/>
+                                            <field name="dossierf_id"               optional="hide" widget="many2one_clickable"/>
+                                            <field name="type_presse"               optional="hide"/>
+                                            <field name="tps_cycle"                 optional="hide"/>
+                                            <field name="nb_empreintes"             optional="hide"/>
+                                            <field name="nb_mod"                    optional="hide"/>
+                                            <field name="designation"               optional="hide"/>
+                                            <field name="code_client"               optional="hide"/>
+                                            <field name="ref_plan"                  optional="hide"/>
+                                            <field name="indice_plan"               optional="hide"/>
+                                            <field name="type_uc"                   optional="hide"/>
+                                            <field name="qt_uc"                     optional="hide"/>
+                                            <field name="commentaire"               optional="hide"/>
+                                            <field name="prev_annuelle"             optional="hide"/>
+                                            <field name="date_dms"                  optional="hide"/>
+                                            <field name="lot_livraison"             optional="hide"/>
+                                            <field name="site_livraison"            optional="hide"/>
+                                            <field name="create_date"               optional="hide"/>
+                                            <field name="create_uid"                optional="hide"/>
+                                            <field name="write_date"                optional="hide"/>
+                                            <field name="write_uid"                 optional="hide"/>
+                                            <field name="dynacase_id"               optional="hide" groups="base.group_system"/>
+                                        </tree>
+                                    </field>
                                 </group>
                             </page>
                             <page name="rc_donnees_economiques_tab" string="Données économiques et de fabrication"  attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}" >

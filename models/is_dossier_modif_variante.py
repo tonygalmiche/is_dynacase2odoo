@@ -173,6 +173,9 @@ class is_dossier_modif_variante(models.Model):
     dynacase_id                 = fields.Integer(string="Id Dynacase",index=True,copy=False)
     solde                       = fields.Boolean(string="Soldé", default=False, copy=False, tracking=True)
     fermeture_id                = fields.Many2one("is.fermeture.gantt", string="Fermeture planning", tracking=True)
+
+    fiche_codification_ids       = fields.One2many("is.fiche.codification", "dossier_modif_variante_id")
+
     active                      = fields.Boolean('Actif', default=True, tracking=True)
 
 
@@ -231,4 +234,24 @@ class is_dossier_modif_variante(models.Model):
                 'target': 'new',
             }
             
-            
+    def action_creation_fiche_codification(self):
+        for obj in self:
+            project = obj.demao_idmoule.project
+            vals = {'type_dossier': 'Dossier modification',
+                    'client_id': obj.demao_idclient.id,
+                    'project_id': project.id,
+                    'chef_de_projet_id': project.chef_projet_id.id,
+                    'dossier_modif_variante_id': obj.id,
+                    #
+                    'dossierf_id': obj.dossierf_id.id,
+                    'mold_id': obj.demao_idmoule.id,
+                    }
+            doc = self.env['is.fiche.codification'].create(vals)
+            res= {
+                'name': 'Doc',
+                'view_mode': 'form',
+                'res_model': 'is.fiche.codification',
+                'res_id': doc.id,
+                'type': 'ir.actions.act_window',
+            }
+            return res

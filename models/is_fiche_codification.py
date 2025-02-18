@@ -1,5 +1,4 @@
-from odoo import models, fields  # type: ignore
-
+from odoo import models, fields, api  # type: ignore
 
 
 #TODO pour is_fiche_codification
@@ -37,7 +36,7 @@ class is_fiche_codification(models.Model):
     dossierf_id                  = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
     type_dossier                 = fields.Char("Origine de la fiche", tracking=True)
     chef_de_projet_id            = fields.Many2one('res.users', 'Chef de projet', required=True, tracking=True)
-    creation_modif               = fields.Selection([('creation', 'Création'), ('modification', 'Modification')], "Création / Modification", required=True, tracking=True)  #, default="creation")
+    creation_modif               = fields.Selection([('creation', 'Création'), ('modification', 'Modification')], "Création / Modification", required=True, tracking=True, default="creation")
     client_id                    = fields.Many2one('res.partner', 'Client', required=True, tracking=True)
     project_id                   = fields.Many2one('is.mold.project', 'Projet', tracking=True)
     dynacase_id                  = fields.Integer(string="Id Dynacase", index=True, copy=False)
@@ -68,6 +67,18 @@ class is_fiche_codification(models.Model):
 
     piece_jointe_ids             = fields.Many2many("ir.attachment", "is_fiche_codification_piece_jointe_rel", "piece_jointe"  , "att_id", string="Pièce jointe")
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if "chrono" not in vals:
+                last_codif = self.env["is.fiche.codification"].search([], order="chrono desc", limit=1)
+                if last_codif:
+                    chrono = last_codif.chrono
+                else:
+                    chrono = -1
+                vals["chrono"] = chrono + 1
+        return super().create(vals_list)
+
     def lien_vers_dynacase_action(self):
         for obj in self:
             url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
@@ -75,6 +86,17 @@ class is_fiche_codification(models.Model):
                 'type' : 'ir.actions.act_url',
                 'url': url,
                 'target': 'new',
+            }
+
+    def action_acceder_fiche_codification(self):
+        for obj in self:
+            return {
+                'name': "Fiche codification",
+                'view_mode': 'form',
+                'res_model': 'is.fiche.codification',
+                'type': 'ir.actions.act_window',
+                'res_id': obj.id,
+                'domain': '[]',
             }
 
 

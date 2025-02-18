@@ -213,6 +213,9 @@ class is_revue_de_contrat(models.Model):
     rc_ca_annuel                       = fields.Float(string="CA annuel", digits=(12, 2), compute="_compute_rc_ca_annuel", store=True, readonly=True)
     rc_vac                             = fields.Float(string="VAC"      , digits=(12, 2), compute="_compute_rc_ca_annuel", store=True, readonly=True)
     dfe_version_ids                    = fields.One2many("is.revue.de.contrat.dfe.version", "is_revue_id", copy=True)
+
+    fiche_codification_ids             = fields.One2many("is.fiche.codification", "revue_contrat_id")
+
     dynacase_id = fields.Integer(string="Id Dynacase",index=True,copy=False)
     state = fields.Selection([
         ("brouillon", "Brouillon"),
@@ -479,6 +482,29 @@ class is_revue_de_contrat(models.Model):
                     if hasattr(rc, field_name):
                         val = getattr(rc,field_name)
                         setattr(obj, field_name, val)
+
+    def action_creation_fiche_codification(self):
+        for obj in self:
+            project = obj.rc_projetid
+            vals = {'type_dossier': 'Revue de contrat',
+                    'client_id': obj.rc_client.id,
+                    'project_id': project.id,
+                    'chef_de_projet_id': project.chef_projet_id.id,
+                    'revue_contrat_id': obj.id,
+                    }
+            if obj.rc_doc_moule_assemblage == 'c1':
+                vals['dossierf_id'] = obj.rc_dossierfid.id
+            else:
+                vals['mold_id'] = obj.rc_mouleid.id
+            doc = self.env['is.fiche.codification'].create(vals)
+            res= {
+                'name': 'Doc',
+                'view_mode': 'form',
+                'res_model': 'is.fiche.codification',
+                'res_id': doc.id,
+                'type': 'ir.actions.act_window',
+            }
+            return res
 
 
 class is_revue_de_contrat_decomposition_prix(models.Model):
