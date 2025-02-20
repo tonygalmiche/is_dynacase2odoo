@@ -64,12 +64,10 @@ class is_revue_projet_jalon(models.Model):
                 if obj.rpj_j!='J6':                                       # Pas en J6
                     if obj.rpj_note>=80:                                  # Note >= 80
                         if obj.rpj_point_bloquant==0:                     # Pas de point bloquant
-                            if obj.rpj_j==obj.rpj_mouleid.j_actuelle:     # Uniquement si J moule = J CR
+                            if obj.rpj_j==(obj.rpj_mouleid.j_actuelle or obj.dossierf_id.j_actuelle):     # Uniquement si J moule = J CR
                                 if  uid in [obj.rpj_chef_projetid.id, obj.rpj_directeur_techniqueid.id]:
                                     vsb=True
             obj.vers_j_suivante_vsb = vsb
-
-
 
 
     def envoi_mail(self, users=[]):
@@ -191,10 +189,10 @@ class is_revue_projet_jalon(models.Model):
             if obj.vers_j_suivante_vsb:
                 j = int(obj.rpj_j[-1:])
                 j_suivante = j+1
-                obj.rpj_mouleid.j_actuelle = "J%s"%j_suivante
-
-
-
+                if obj.rpj_mouleid:
+                    obj.rpj_mouleid.j_actuelle = "J%s"%j_suivante
+                if obj.dossierf_id:
+                    obj.dossierf_id.j_actuelle = "J%s"%j_suivante
 
 
     rpj_mouleid                  = fields.Many2one("is.mold"    , string="Moule", tracking=True)

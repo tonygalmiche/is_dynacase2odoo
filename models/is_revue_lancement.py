@@ -217,8 +217,6 @@ class is_revue_lancement(models.Model):
             return res
 
 
-
-
     def copy(self, default=None):
         for obj in self:
             default = dict(default or {})
