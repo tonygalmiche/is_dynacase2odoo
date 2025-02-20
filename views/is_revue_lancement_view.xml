@@ -29,6 +29,13 @@
                             groups="is_dynacase2odoo.is_gestionnaire_revue_lancement_group"
                         />
                         <button 
+                            name="dupliquer_rl_action"
+                            string="Dupliquer cette RL et l'associer à la dernière RC"
+                            type="object"
+                            attrs="{'invisible': [('state', '=', 'brouillon')]}" 
+                            groups="is_dynacase2odoo.is_gestionnaire_revue_contrat_group"
+                        />
+                        <button 
                             name="voir_investissements_action" 
                             string="Voir les investissements" 
                             type="object"

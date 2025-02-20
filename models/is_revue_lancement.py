@@ -204,6 +204,21 @@ class is_revue_lancement(models.Model):
     #     return res
 
 
+    def dupliquer_rl_action(self):
+        for obj in self:
+            copy=obj.copy()
+            res= {
+                'name': 'Copie',
+                'view_mode': 'form',
+                'res_model': 'is.revue.lancement',
+                'res_id': copy.id,
+                'type': 'ir.actions.act_window',
+            }
+            return res
+
+
+
+
     def copy(self, default=None):
         for obj in self:
             default = dict(default or {})
@@ -299,6 +314,10 @@ class is_revue_lancement(models.Model):
     def copie_rc_action(self):
         for obj in self:
             rc = obj.rl_num_rcid
+            obj.rl_pgrc_moule_mnt  = rc.rc_eiv_moule
+            obj.rl_pgrc_moule_cmt  = rc.rc_eiv_moule_cmt
+            obj.rl_pgrc_etude_mnt  = rc.rc_eiv_etude
+            obj.rl_pgrc_etude_cmt  = rc.rc_eiv_etude_cmt
             obj.rl_pgrc_main_prehension_mnt  = rc.rc_eiv_main_prehension
             obj.rl_pgrc_main_prehension_cmt  = rc.rc_eiv_main_prehension_cmt
             obj.rl_pgrc_barre_chaude_mnt     = rc.rc_eiv_barre_chaude

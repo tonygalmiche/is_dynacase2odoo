@@ -282,9 +282,6 @@ class is_revue_de_contrat(models.Model):
             if obj.rc_dossierfid:
                 name = obj.rc_dossierfid.name
             obj.name='RC-%s-%s'%(name,obj.rc_indice)
-        #return True
-
-
 
 
     @api.depends("decomposition_prix_ids","decomposition_prix_ids.rc_year_quantity","decomposition_prix_ids.rc_sell_price",
