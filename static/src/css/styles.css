@@ -17,3 +17,13 @@
 .o_form_view .o_field_empty:empty {
     min-height: 1.2rem;
 } */
+
+
+
+.o_input {
+    background-color: rgb(250,250,250) !important;
+}
+
+/* .o_required_modifier .o_input {
+    background-color: red !important;
+} */
