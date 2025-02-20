@@ -71,11 +71,8 @@
                             attrs="{'invisible': [('vers_j_suivante_vsb', '!=', True)]}"
                             type="object"
                         />
-
-
-
                         <field 
-                            name="state" widget="statusbar" options="{'clickable': '1'}"
+                            name="state" widget="statusbar"
                             statusbar_visible="rpj_brouillon,rpj_directeur_technique,rpj_directeur_site,rpj_valide"
                         />
                     </header>
@@ -120,11 +117,11 @@
                             </group>
                             <group string="">
                                 <field name="logo_rs" invisible="1"/>
-                                <div colspan="2" style="text-align:center">
-                                    <field name="rpj_photo" widget="image" readonly="1" style="max-width:400px;max-height:400px" nolabel="1" colspan="2"/><br />
-                                    <img attrs="{'invisible': [('logo_rs', '!=', 'S')]}"  alt="Logo S"  src="/is_dynacase2odoo/static/src/img/logo_s.png"  style="max-width:50px"/>
+                                <div colspan="2" style="text-align:center;height:530px">
+                                    <img attrs="{'invisible': [('logo_rs', '!=', 'S')]}"  alt="Logo S"  src="/is_dynacase2odoo/static/src/img/logo_s.png"  style="max-width:50px"/><br />
                                     <img attrs="{'invisible': [('logo_rs', '!=', 'R')]}"  alt="Logo R"  src="/is_dynacase2odoo/static/src/img/logo_r.png"  style="max-width:50px"/><br />
                                     <img attrs="{'invisible': [('logo_rs', '!=', 'RS')]}" alt="Logo RS" src="/is_dynacase2odoo/static/src/img/logo_rs.png" style="max-width:50px"/><br />        
+                                    <field name="rpj_photo" widget="image" readonly="1" style="max-width:400px;max-height:400px" nolabel="1" colspan="2"/>
                                 </div>
                                 <separator string="Équipe projet" />
                                 <field name="equipe_projet_ids" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}">
@@ -248,8 +245,8 @@
                         </group>
                         <group>
                             <group>
-                                <field name="rpj_total_vente_moule" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
-                                <field name="rpj_total_achat_moule" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_total_vente_moule" readonly="1"/>
+                                <field name="rpj_total_achat_moule"/>
                                 <field name="rp_marge_brute_moule"  readonly="1"/>
                             </group>
                             <group></group>

@@ -304,11 +304,11 @@ class is_revue_projet_jalon(models.Model):
 
 
 
-    @api.constrains('rpj_total_vente_moule')
-    def rpj_total_vente_moule_constrain(self):
+    @api.constrains('rpj_total_achat_moule')
+    def rpj_total_achat_moule_constrain(self):
         for obj in self:
-            if obj.rpj_total_vente_moule <= 0 and obj.state=='rpj_brouillon':
-                raise ValidationError("Le champ 'Total vente moule' est obligatoire !")
+            if obj.rpj_total_achat_moule <= 0 and obj.state=='rpj_brouillon':
+                raise ValidationError("Le champ 'Total achat moule' est obligatoire !")
 
 
     def lien_vers_dynacase_action(self):
@@ -606,6 +606,18 @@ class is_revue_projet_jalon(models.Model):
                      }
                     bilan_ids.append([0,False,vals])     
             obj.bilan_ids   = bilan_ids
+            #******************************************************************
+
+            #** Recherche des investissements *********************************
+            rpj_total_vente_moule = 0
+            if obj.rpj_mouleid.id:
+                domain=[
+                    ('num_mouleid','=' , obj.rpj_mouleid.id),
+                ]
+                docs=self.env['is.inv.achat.moule'].search(domain)
+                for doc in docs:
+                    rpj_total_vente_moule+=doc.montant_vendu
+            obj.rpj_total_vente_moule = rpj_total_vente_moule
             #******************************************************************
 
 
