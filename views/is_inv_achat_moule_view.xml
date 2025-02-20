@@ -73,12 +73,12 @@
                     <field name="date_saisie"             optional="show"/>
                     <field name="annee_saisie"            optional="show"/>
                     <field name="annee_enregistre"        optional="show"/>
-                    <field name="montant_vendu"           optional="show"/>
+                    <field name="montant_vendu"           optional="show" sum="Total"/>
                     <field name="num_cde_id"              optional="hide"/>
                     <field name="num_cde"                 optional="hide"/>
                     <field name="date_cde"                optional="hide"/>
-                    <field name="prix_commande"           optional="hide"/>
-                    <field name="montant_facture"         optional="hide"/>
+                    <field name="prix_commande"           optional="hide" sum="Total"/>
+                    <field name="montant_facture"         optional="hide" sum="Total"/>
                     <field name="date_derniere_facture"   optional="hide"/>
                     <field name="code_fournisseur"        optional="hide"/>
                     <field name="date_commande_ou_saisie" optional="hide"/>

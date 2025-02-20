@@ -44,7 +44,21 @@
                             groups="base.group_system"
                         />
                         <button 
-                            name="action_creation_fiche_codification"
+                            name="reviser_rc_action"
+                            string="Réviser cette revue de contrat (indice)"
+                            type="object"
+                            attrs="{'invisible': [('state', '=', 'brouillon')]}" 
+                            groups="is_dynacase2odoo.is_gestionnaire_revue_contrat_group"
+                        />
+                        <button 
+                            name="creation_revue_lancement_action"
+                            string="Création revue de lancement"
+                            type="object"
+                            attrs="{'invisible': [('state', '=', 'brouillon')]}" 
+                            groups="is_dynacase2odoo.is_gestionnaire_revue_contrat_group"
+                        />
+                        <button 
+                            name="creation_fiche_codification_action"
                             string="Créer une fiche de codification"
                             type="object"
                             attrs="{'invisible': [('state', '=', 'brouillon')]}" 
@@ -118,14 +132,6 @@
                                         <field name="rc_dms_date" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                         <field name="rc_eop_date" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                     </group>
-                                    <!-- <group name="rc_presentation_tab_semaine" string="Semaine">
-                                        <field name="rc_cmd_date_semaine" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_dfn_ro_date_semaine" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_first_m_try_semaine" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_ei_pres_semaine" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_dms_date_semaine" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eop_date_semaine" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                    </group> -->
                                     <group name="rc_presentation_tab_vendues" string="Nb pièces vendues">
                                         <field name="rc_cmd_date_nb" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
                                         <field name="rc_dfn_ro_date_nb" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
@@ -135,9 +141,6 @@
                                         <field name="rc_eop_date_nb" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
                                     </group>
                                 </group>
-                                <!-- <label for="rc_nb_pce_p_jal" colspana="4" string="Commentaire spécifique (essais supplémentaire)"/>
-                                <field name="rc_nb_pce_p_jal" colspan="4" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/> -->
-
                                 <group string="Commentaire spécifique (essais supplémentaire)" attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}">
                                     <field name="rc_nb_pce_p_jal" colspan="2" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
                                 </group>
@@ -299,7 +302,7 @@
                                     <field name="version_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state', '!=', 'brouillon')]}" >
                                         <form>
                                             <group col="3">
-                                                <group>
+                                                <group string="Version">
                                                     <field name="rc_dfi_version"             attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
                                                     <field 
                                                         name="decomposition_prix_id"      
@@ -311,20 +314,30 @@
                                                     <field name="rc_dfi_nb_emp"              attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
                                                     <field name="rc_dfi_mod"                 attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
                                                     <field name="rc_dfi_taux_rebut"          attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                </group>
+                                                <group string="Matière 1">
+                                                    <field name="rc_dfi_matiere" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
                                                     <field name="rc_dfi_poids_piece"         attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
                                                     <field name="rc_dfi_poids_carotte"       attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
                                                     <field name="rc_dfi_car_reb"             attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
                                                     <field name="rc_dfi_car_reb_pourcentage" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                </group>
-                                                <group>
-                                                    <field name="rc_dfi_matiere" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
                                                     <field name="rc_dfi_mat_prix_vendu" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                </group>
+                                               <group string="Matière 2">
+                                                    <field name="rc_dfi_matiere2" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_dfi_poids_piece2"         attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_dfi_poids_carotte2"       attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_dfi_car_reb2"             attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_dfi_car_reb_pourcentage2" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_dfi_mat_prix_vendu2" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                </group>
+                                                <group string="Composants / Sous-traitance">
                                                     <field name="rc_dfi_comp" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
                                                     <field name="rc_dfi_comp_prix_vendu" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
                                                     <field name="rc_dfi_sous_traitance" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
                                                     <field name="rc_dfi_sous_traitance_prix" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
                                                 </group>
-                                                <group>
+                                                 <group string="Emballage">
                                                     <field name="rc_dfi_desc_emb" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
                                                     <field name="rc_dfi_qte_carton" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
                                                     <field name="rc_dfi_qte_palette" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
@@ -335,29 +348,38 @@
                                             </group>
                                         </form>
                                         <tree>
-                                            <field name="rc_dfi_version" optional="show"/>
+                                            <field name="rc_dfi_version"        optional="show"/>
                                             <field name="decomposition_prix_id" optional="hide"/>
-                                            <field name="rc_dfi_article" optional="show"/>
-                                            <field name="rc_dfi_cycle" optional="show"/>
-                                            <field name="rc_dfi_nb_emp" optional="show"/>
-                                            <field name="rc_dfi_mod" optional="show"/>
-                                            <field name="rc_dfi_taux_rebut" optional="hide"/>
-                                            <field name="rc_dfi_poids_piece" optional="hide"/>
-                                            <field name="rc_dfi_poids_carotte" optional="hide"/>
-                                            <field name="rc_dfi_car_reb" optional="hide"/>
-                                            <field name="rc_dfi_car_reb_pourcentage" optional="hide"/>
-                                            <field name="rc_dfi_matiere" optional="hide"/>
-                                            <field name="rc_dfi_mat_prix_vendu" optional="hide"/>
-                                            <field name="rc_dfi_comp" optional="hide"/>
-                                            <field name="rc_dfi_comp_prix_vendu" optional="hide"/>
-                                            <field name="rc_dfi_sous_traitance" optional="hide"/>
-                                            <field name="rc_dfi_sous_traitance_prix" optional="hide"/>
-                                            <field name="rc_dfi_desc_emb" optional="hide"/>
-                                            <field name="rc_dfi_qte_carton" optional="hide"/>
-                                            <field name="rc_dfi_qte_palette" optional="hide"/>
-                                            <field name="rc_dfi_lot_liv" optional="hide"/>
-                                            <field name="rc_dfi_multiple_liv" optional="hide"/>
-                                            <field name="rc_dfi_lot_fab" optional="hide"/>
+                                            <field name="rc_dfi_article"        optional="show"/>
+                                            <field name="rc_dfi_cycle"          optional="show"/>
+                                            <field name="rc_dfi_nb_emp"         optional="show"/>
+                                            <field name="rc_dfi_mod"            optional="show"/>
+                                            <field name="rc_dfi_taux_rebut"     optional="hide"/>
+ 
+                                            <field name="rc_dfi_matiere"              optional="show"/>
+                                            <field name="rc_dfi_poids_piece"          optional="show"/>
+                                            <field name="rc_dfi_poids_carotte"        optional="show"/>
+                                            <field name="rc_dfi_car_reb"              optional="show"/>
+                                            <field name="rc_dfi_car_reb_pourcentage"  optional="show"/>
+                                            <field name="rc_dfi_mat_prix_vendu"       optional="show"/>
+
+                                            <field name="rc_dfi_matiere2"             optional="hide"/>
+                                            <field name="rc_dfi_poids_piece2"         optional="hide"/>
+                                            <field name="rc_dfi_poids_carotte2"       optional="hide"/>
+                                            <field name="rc_dfi_car_reb2"             optional="hide"/>
+                                            <field name="rc_dfi_car_reb_pourcentage2" optional="hide"/>
+                                            <field name="rc_dfi_mat_prix_vendu2"      optional="hide"/>
+
+                                            <field name="rc_dfi_comp"                 optional="hide"/>
+                                            <field name="rc_dfi_comp_prix_vendu"      optional="hide"/>
+                                            <field name="rc_dfi_sous_traitance"       optional="hide"/>
+                                            <field name="rc_dfi_sous_traitance_prix"  optional="hide"/>
+                                            <field name="rc_dfi_desc_emb"             optional="hide"/>
+                                            <field name="rc_dfi_qte_carton"           optional="hide"/>
+                                            <field name="rc_dfi_qte_palette"          optional="hide"/>
+                                            <field name="rc_dfi_lot_liv"              optional="hide"/>
+                                            <field name="rc_dfi_multiple_liv"         optional="hide"/>
+                                            <field name="rc_dfi_lot_fab"              optional="hide"/>
                                         </tree>
                                     </field>
                                 </group>

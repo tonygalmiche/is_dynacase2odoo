@@ -332,7 +332,7 @@ class is_revue_de_contrat(models.Model):
                 ]
                 lines = self.env['is.revue.de.contrat'].search(domain)
                 if len(lines) > 1:
-                    raise ValidationError("Cette revue de contrat %s %s indice %s existe déjà !"%(obj.rc_mouleid.name,obj.rc_dossierfid.name,obj.rc_indice))
+                    raise ValidationError("La revue de contrat %s %s indice %s existe déjà !"%(obj.rc_mouleid.name or '',obj.rc_dossierfid.name or '',obj.rc_indice))
 
 
     def copy(self, default=None):
@@ -365,6 +365,9 @@ class is_revue_de_contrat(models.Model):
         for obj in self:
             if len(obj.version_ids)==0 and len(obj.dfe_version_ids)==0:
                 raise ValidationError("Les versions dans l'onglet 'Données de fabrication' ne sont pas renseignées !")
+            for line in obj.decomposition_prix_ids:
+                if line.rc_ecart!=0:
+                    raise ValidationError("Il y a un écart dans les décompositions de prix !")
             obj.state='diffuse'
             if obj.rc_mouleid:
                 obj.rc_mouleid.revue_contrat_id = obj.id
@@ -483,7 +486,48 @@ class is_revue_de_contrat(models.Model):
                         val = getattr(rc,field_name)
                         setattr(obj, field_name, val)
 
-    def action_creation_fiche_codification(self):
+
+    def reviser_rc_action(self):
+        for obj in self:
+            copy=obj.copy()
+            res= {
+                'name': 'Copie',
+                'view_mode': 'form',
+                'res_model': 'is.revue.de.contrat',
+                'res_id': copy.id,
+                'type': 'ir.actions.act_window',
+            }
+            return res
+
+
+    def creation_revue_lancement_action(self):
+        for obj in self:
+            indice=0
+            domain=[
+                ('rl_mouleid','=',obj.rc_mouleid.id),
+                ('rl_dossierfid','=',obj.rc_dossierfid.id),
+                ('state','=','rl_diffuse'),
+            ]
+            lines=self.env['is.revue.lancement'].search(domain, order='rl_indice desc', limit=1)
+            for line in lines:
+                indice = line.rl_indice+1
+            vals={
+                'rl_num_rcid': obj.id,
+                'rl_indice'  : indice,
+            }           
+            rl = self.env['is.revue.lancement'].create(vals)
+            rl.copie_rc_action()
+            res= {
+                'name': 'RL',
+                'view_mode': 'form',
+                'res_model': 'is.revue.lancement',
+                'res_id': rl.id,
+                'type': 'ir.actions.act_window',
+            }
+            return res
+
+
+    def creation_fiche_codification_action(self):
         for obj in self:
             project = obj.rc_projetid
             vals = {'type_dossier': 'Revue de contrat',
@@ -611,15 +655,29 @@ class is_revue_de_contrat_version(models.Model):
         ("2", "2"),
     ], string="MOD totale pour le poste")
     rc_dfi_taux_rebut          = fields.Float(string="Tx rebut vendu (%)")
-    rc_dfi_poids_piece         = fields.Float(string="Poids pièce (en g)")
-    rc_dfi_poids_carotte       = fields.Float(string="Poids carotte (en g)")
+
+    rc_dfi_matiere             = fields.Text(string="Matière 1")
+    rc_dfi_poids_piece         = fields.Float(string="Poids pièce mat 1 (en g)")
+    rc_dfi_poids_carotte       = fields.Float(string="Poids carotte mat 1 (en g)")
     rc_dfi_car_reb             = fields.Selection([
         ("Non", "Non"),
         ("Oui", "Oui"),
-    ], string="Carotte rebroyée")
-    rc_dfi_car_reb_pourcentage = fields.Float(string="% rebroyé admis par le client")
-    rc_dfi_matiere             = fields.Text(string="Matière")
-    rc_dfi_mat_prix_vendu      = fields.Text(string="Prix et lot mat. vendu")
+    ], string="Carotte rebroyée mat 1")
+    rc_dfi_car_reb_pourcentage = fields.Float(string="% rebroyé mat 1 admis par le client")
+    rc_dfi_mat_prix_vendu      = fields.Text(string="Prix et lot mat 1. vendu")
+
+    #** Ajout matière 2 du 20/02/2025 *****************************************
+    rc_dfi_matiere2             = fields.Text(string="Matière 2")
+    rc_dfi_poids_piece2         = fields.Float(string="Poids pièce mat 2 (en g)")
+    rc_dfi_poids_carotte2       = fields.Float(string="Poids carotte mat 2 (en g)")
+    rc_dfi_car_reb2             = fields.Selection([
+        ("Non", "Non"),
+        ("Oui", "Oui"),
+    ], string="Carotte rebroyée mat 2")
+    rc_dfi_car_reb_pourcentage2 = fields.Float(string="% rebroyé mat 2 admis par le client")
+    rc_dfi_mat_prix_vendu2      = fields.Text(string="Prix et lot mat 2 vendu")
+    #**************************************************************************
+
     rc_dfi_comp                = fields.Text(string="Composants")
     rc_dfi_comp_prix_vendu     = fields.Text(string="Prix et lot comp. vendu")
     rc_dfi_sous_traitance      = fields.Text(string="Sous-traitance (description)")
@@ -631,6 +689,21 @@ class is_revue_de_contrat_version(models.Model):
     rc_dfi_multiple_liv        = fields.Integer(string="Multiple de livraison")
     rc_dfi_lot_fab             = fields.Integer(string="Lot de fabrication (en pièces)")
     is_revue_id                = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
+
+
+# Matière => Matière 1
+# Poids pièce en g matière 1
+# Poids carotte matière 1
+# Carotte rebroyée matière 1
+# Prix et lot vendu matière 1
+
+
+# Ajouter : 
+# Matière 2
+# Poids matière en g matière 2
+# Poids carotte matière 2
+# Carotte rebroyée matière 2
+# Prix et lot vendu matière 2
 
 
 
