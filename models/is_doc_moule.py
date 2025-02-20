@@ -355,10 +355,6 @@ class IsDocMoule(models.Model):
 
 
     def write(self,vals):
-
-        #print('TEST',self,vals)
-
-
         nb=len(self)
         if nb==1:
             mem_date_debut_gantt = self.date_debut_gantt

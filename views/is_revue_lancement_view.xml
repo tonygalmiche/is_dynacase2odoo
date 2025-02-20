@@ -29,6 +29,13 @@
                             groups="is_dynacase2odoo.is_gestionnaire_revue_lancement_group"
                         />
                         <button 
+                            name="voir_investissements_action" 
+                            string="Voir les investissements" 
+                            type="object"
+                            attrs="{'invisible': [('state', '=', 'rl_brouillon')]}"
+                            groups="is_dynacase2odoo.is_gestionnaire_revue_lancement_group"
+                        />
+                        <button 
                             name="lien_vers_dynacase_action"
                             string="Dynacase"
                             type="object"

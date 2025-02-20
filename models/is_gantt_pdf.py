@@ -63,11 +63,6 @@ class IsGanttPdf(models.Model):
     def onchange_moule(self):
         for obj in self:
             items,titre,jour_fermeture_ids,markers = obj.get_taches()
-
-
-            print(jour_fermeture_ids)
-
-
             lines=[]
             ids=[]
             for item in items:
@@ -159,11 +154,6 @@ class IsGanttPdf(models.Model):
             titre="%s du %s"%(titre,now)
             if domain!=[]:
                 res=self.env['is.doc.moule'].get_dhtmlx(domain=domain)
-
-
-                print('TEST',res['jour_fermeture_ids'])
-
-
                 items              = res['items']
                 jour_fermeture_ids = res['jour_fermeture_ids']
                 markers            = res['markers']

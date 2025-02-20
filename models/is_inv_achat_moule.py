@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _      # type: ignore
 from odoo.exceptions import ValidationError  # type: ignore
-
-
-#TODO : 
-#- date_commande_ou_saisie => compute
+from datetime import datetime, timedelta, date
 
 
 _CODE_IMPUTATION=[
@@ -55,12 +52,31 @@ class is_inv_achat_moule(models.Model):
     code_fournisseur   = fields.Char(string="Code fournisseur"                                   , tracking=True, compute='_compute_cde',store=True, readonly=True)
     date_cde           = fields.Date(string="Date commande"                                      , tracking=True, compute='_compute_cde',store=True, readonly=True)
     objet_commande     = fields.Text(string="Objet de la commande"                               , tracking=True, compute='_compute_cde',store=True, readonly=True)
-    prix_commande      = fields.Float(string="Montant de la commande fournisseur"                , tracking=True, compute='_compute_cde',store=True, readonly=True)
+    prix_commande      = fields.Float(string="Montant de la commande fournisseur"                , tracking=True, compute='_compute_cde',store=True, readonly=False)
     montant_facture    = fields.Float(string="Montant des factures fournisseur"                  , tracking=True, readonly=True)
     date_derniere_facture   = fields.Date(string="Date dernière facture"                         , tracking=True, readonly=True)
     date_commande_ou_saisie = fields.Date(string="Date de commande ou de saisie"                 , tracking=True, compute='_compute_date',store=True, readonly=True)
     dynacase_id             = fields.Integer(string="Id Dynacase", index=True, copy=False)
     active                  = fields.Boolean('Actif', default=True                               , tracking=True)
+
+
+    @api.onchange('revue_lancementid')
+    def onchange_revue_lancementid(self):
+        for obj in self:
+            obj.num_mouleid = obj.revue_lancementid.rl_mouleid.id
+
+
+    @api.onchange('num_dossierid')
+    def onchange_num_dossierid(self):
+        for obj in self:
+            obj.num_mouleid = obj.num_dossierid.demao_idmoule.id
+
+
+    @api.onchange('code_imputation')
+    def onchange_code_imputation(self):
+        for obj in self:
+            obj.date_saisie      = date.today()
+            obj.annee_enregistre = date.today().strftime("%Y")
 
 
     @api.depends('date_saisie', 'date_cde')
