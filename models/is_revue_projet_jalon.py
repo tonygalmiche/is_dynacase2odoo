@@ -540,6 +540,20 @@ class is_revue_projet_jalon(models.Model):
                     }
                     revue_de_contrat_ids.append([0,False,vals])     
             obj.revue_de_contrat_ids = revue_de_contrat_ids
+
+            #** Suppression ligne si article vide *****************************
+            domain=[
+                ('is_revue_project_jalon_id','=',obj.id),
+                ('rpj_de2_article','=','')
+            ]
+            lines=self.env['is.revue.projet.jalon.revue.de.projet.jalon'].search(domain)
+            for line in obj.revue_de_projet_jalon_ids:
+                article = line.rpj_de2_article.strip()
+                if article=='':
+                    line.unlink()
+            #******************************************************************
+
+            #** Ajout des lignes **********************************************
             if obj.rpj_rcid and not obj.revue_de_projet_jalon_ids:
                 revue_de_projet_jalon_ids=[]
                 for line in obj.rpj_rcid.version_ids:
