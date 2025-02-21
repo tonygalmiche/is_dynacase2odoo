@@ -160,7 +160,7 @@ class IsGanttCopie(models.Model):
     def generer_copie_action(self):
         for obj in self:
             if obj.type_document=='Moule' and not obj.revue_lancement_id:
-                raise ValidationError("La revue de lancement est obligaoire sur le moule de destinattion")
+                raise ValidationError("La revue de lancement est obligatoire sur le moule de destination")
 
             budgets=[]
             rl = obj.revue_lancement_id
