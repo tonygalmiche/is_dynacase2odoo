@@ -188,6 +188,10 @@
                                     </field>
                                 </group>
                             </page>
+
+
+
+
                             <page name="rc_donnees_economiques_tab" string="Données économiques et de fabrication"  attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}" >
                                 <group name="rc_donnees_economiques_tab" string="Décomposition prix" col="4" colspan="4">
                                     <field name="decomposition_prix_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state', '!=', 'brouillon')]}" >
@@ -249,6 +253,9 @@
                                         <field name="rc_vac"/>
                                     </group>
                                 </group>
+
+
+
                                 <group name="rc_productivite_fr" string="Productivité" col="4" colspan="4">
                                     <field name="productivite_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state', '!=', 'brouillon')]}" >
                                         <tree editable="bottom">
@@ -277,6 +284,10 @@
                                         </tree>
                                     </field>
                                 </group>
+
+
+
+
                                 <group name="rc_donnees_fabrication_fr" string="Données de fabrication" attrs="{'invisible': [('rc_doc_moule_assemblage', 'not in', ('c2','c3'))]}">
                                     <field name="rc_site_fabrication" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                     <field 
@@ -293,11 +304,21 @@
                                     <field name="rc_stock_securite" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                     <field name="rc_stock_securite_commentaire" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                 </group>
+
+                              
+
+
+
                                 <group name="rc_df_d_injection" string="Dossier injection" attrs="{'invisible': [('rc_doc_moule_assemblage', 'not in', ('c2','c3'))]}">
                                     <field name="rc_dfi_process_fab" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                     <field name="rc_dfi_schema_lieu_fab" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                     <field name="rc_dfi_classe_comrc" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                 </group>
+
+
+
+
+
                                 <group name="rc_ar_version" string="Versions" col="4" colspan="4"  attrs="{'invisible': [('rc_doc_moule_assemblage', 'not in', ('c2','c3'))]}">
                                     <field name="version_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state', '!=', 'brouillon')]}" >
                                         <form>
@@ -503,7 +524,23 @@
                                         </tree>
                                     </field>
                                 </group>
+                                 
+
+
+
+
                             </page>
+
+
+
+
+
+
+
+
+
+
+
                             <page name="rc_specificites_tab" string="Spécificités et Éléments qualités" attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}" >
                                 <group name="rc_specificites_tab" string="Spécificités">
                                     <group>

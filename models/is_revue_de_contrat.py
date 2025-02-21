@@ -187,6 +187,9 @@ class is_revue_de_contrat(models.Model):
         ("1500T", "1500T"),
         ("2000T", "2000T"),
     ], string="Tonnage presse vendu", tracking=True)
+
+    # rc_tonnage_presse_vendu_char = fields.Char(string="Tonnage presse vendu", tracking=True)
+
     rc_stock_securite                  = fields.Selection([
         ("Non", "Non"),
         ("Oui", "Oui"),
@@ -235,9 +238,38 @@ class is_revue_de_contrat(models.Model):
             obj._compute_name()
             obj._compute_rc_ca_annuel()
             obj._compute_rc_dfi_temp_occ_pm()
+            obj.update_decomposition_prix_id()
             ct+=1
         return True
 
+
+    def update_decomposition_prix_id(self):
+        for obj in self:
+            articles={}
+            for line in obj.decomposition_prix_ids:
+                if line.rc_price_comp_article:
+                    articles[line.rc_price_comp_article] = line
+            for line in obj.productivite_ids:
+                article = line.rc_productivite_article
+                if article:
+                    if article in articles:
+                        line.decomposition_prix_id = articles[article].id
+            for line in obj.previsions_ids:
+                article = line.rc_previsions_article
+                if article:
+                    if article in articles:
+                        line.decomposition_prix_id = articles[article].id
+            for line in obj.version_ids:
+                article = line.rc_dfi_article or ''
+                if article in articles:
+                    line.decomposition_prix_id = articles[article].id
+                article = article.replace(" ","").strip()
+                if article=="":
+                    if len(articles)>0:
+                        key = list(articles)[0]
+                        line.rc_dfi_article = key
+                        line.decomposition_prix_id = articles[key].id
+ 
 
     @api.depends("rc_eiv_moule", "rc_eiv_etude", "rc_eiv_main_prehension", "rc_eiv_barre_chaude" , "rc_eiv_gab_controle", "rc_eiv_mach_spec", "rc_eiv_plan_valid", "rc_eiv_mis_point" ,"rc_eiv_pack", "rc_eiv_amort")
     def _compute_rc_eiv_total(self):
@@ -710,6 +742,7 @@ class is_revue_de_contrat_version(models.Model):
 
 
 
+    # dfe_version_ids                    = fields.One2many("is.revue.de.contrat.dfe.version", "is_revue_id", copy=True)
 
 
 class is_revue_de_contrat_dfe_version(models.Model):
