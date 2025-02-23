@@ -117,7 +117,7 @@
                                             attrs="{'invisible': [('state', '!=', 'rl_brouillon')]}"
                                         />
                                     </group>
-                                    <group string="Dates revue de lancement">
+                                    <group string="Dates revue de contrat">
                                         <field name="cmd_date"/>
                                         <field name="dfn_ro_date"/>
                                         <field name="first_m_try"/>
