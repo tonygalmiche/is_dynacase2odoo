@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <record id="is_revue_lancement_copie_dates_action_server" model="ir.actions.server">
+            <field name="name">Copie dates revue de contrat</field>
+            <field name="model_id" ref="model_is_revue_lancement"/>
+            <field name="binding_model_id" ref="model_is_revue_lancement"/>
+            <field name="state">code</field>
+            <field name="code">records.copie_dates_rc_action()</field>
+            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+        </record>
         <record model="ir.ui.view" id="is_revue_lancement_form">
             <field name="name">view.is.revue.lancement.form</field>
             <field name="model">is.revue.lancement</field>
@@ -86,7 +94,7 @@
                                 </group>
                             </page>
                             <page name="rl_eq_projet_tab" string="Gestion projet" attrs="{'invisible': [('rl_num_rcid', '=', False)]}" >
-                                <group>
+                                <group col="3">
                                     <group name="rl_eq_projet_fr" string="Equipe projet">
                                         <field name="rl_chef_projetid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                         <field name="rl_expert_injectionid"   attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
@@ -108,6 +116,14 @@
                                             type="object" colspan="2" class="btn-primary"
                                             attrs="{'invisible': [('state', '!=', 'rl_brouillon')]}"
                                         />
+                                    </group>
+                                    <group string="Dates revue de lancement">
+                                        <field name="cmd_date"/>
+                                        <field name="dfn_ro_date"/>
+                                        <field name="first_m_try"/>
+                                        <field name="ei_pres"/>
+                                        <field name="dms_date"/>
+                                        <field name="eop_date"/>
                                     </group>
                                     <group name="rl_fr_date_jalon" string="Dates des jalons">
                                         <field name="rl_date_j0"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />

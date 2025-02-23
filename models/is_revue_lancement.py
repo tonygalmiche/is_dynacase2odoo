@@ -113,6 +113,14 @@ class is_revue_lancement(models.Model):
     rl_responsable_projetid           = fields.Many2one("res.users", string="Responsable projets", tracking=True)
     rl_directeur_siteid               = fields.Many2one("res.users", string="Directeur site de production", tracking=True)
     rl_directeur_techniqueid          = fields.Many2one("res.users", string="Directeur technique", tracking=True)
+
+    cmd_date                          = fields.Date(string="Date de la commande"        , tracking=True, readonly=True)
+    dfn_ro_date                       = fields.Date(string="Date de la DFN RO"          , tracking=True, readonly=True)
+    first_m_try                       = fields.Date(string="Date 1er essai moule (IOD) ", tracking=True, readonly=True)
+    ei_pres                           = fields.Date(string="Date Présentation EI"       , tracking=True, readonly=True)
+    dms_date                          = fields.Date(string="Date DMS"                   , tracking=True, readonly=True)
+    eop_date                          = fields.Date(string="Date EOP (Fin de vie)"      , tracking=True, readonly=True)
+
     rl_date_j0                        = fields.Date(string="Date J0", tracking=True)
     rl_date_j1                        = fields.Date(string="Date J1", tracking=True)
     rl_date_j2                        = fields.Date(string="Date J2", tracking=True)
@@ -333,6 +341,7 @@ class is_revue_lancement(models.Model):
             obj.rl_pgrc_amort_mnt            = rc.rc_eiv_amort
             obj.rl_pgrc_amort_cmt            = rc.rc_eiv_amort_cmt
             obj.rl_pgrc_total                = rc.rc_eiv_total
+            obj.copie_dates_rc_action()
 
 
     def creation_inv_achat_moule(self):
@@ -380,7 +389,6 @@ class is_revue_lancement(models.Model):
                         setattr(obj, field_name, doc.id)
 
 
-
     def compute_project_prev(self):
         "for xml-rpc"
         self.update_j_prevue_action()
@@ -395,3 +403,15 @@ class is_revue_lancement(models.Model):
         self._compute_color()
         self._compute_indicateur()
         return True
+
+
+    def copie_dates_rc_action(self):
+        for obj in self:
+            rc = obj.rl_num_rcid
+            if rc:
+               obj.cmd_date    = rc.rc_cmd_date
+               obj.dfn_ro_date = rc.rc_dfn_ro_date
+               obj.first_m_try = rc.rc_first_m_try
+               obj.ei_pres     = rc.rc_ei_pres
+               obj.dms_date    = rc.rc_dms_date
+               obj.eop_date    = rc.rc_eop_date
