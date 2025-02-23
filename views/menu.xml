@@ -98,6 +98,15 @@
             <field name="parent_id" eval="ref('is_gestion_commerciale_menu')"/>
             <field name="action"    ref="action_is_revue_de_contrat"/>
         </record>
+        <record id="is_revue_de_contrat_version_menu" model="ir.ui.menu" >
+            <field name="name">Revue de contrat - Versions</field>
+            <field name="sequence">45</field>
+            <field name="parent_id" eval="ref('is_gestion_commerciale_menu')"/>
+            <field name="action"    ref="is_revue_de_contrat_version_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('base.group_system'),
+            ])]"/>
+        </record>
         <record id="is_revue_lancement_menu" model="ir.ui.menu" >
             <field name="name">Revue de lancement</field>
             <field name="sequence">50</field>

@@ -24,7 +24,7 @@ class is_revue_de_contrat(models.Model):
         ("c1", "La revue de contrat est attachée à un dossier d'assemblage"),
         ("c2", "La revue de contrat est attachée à un moule autonome"),
         ("c3", "La revue de contrat est attachée à un moule appartenant à un dossier d'assemblage"),
-    ], string="Dossier moule ou assemblage", tracking=True, required=True)
+    ], string="Dossier moule ou assemblage", tracking=True, required=False)
     rc_type_automobile                 = fields.Selection([
         ("Non", "hors Automobile"),
         ("Oui", "Automobile"),

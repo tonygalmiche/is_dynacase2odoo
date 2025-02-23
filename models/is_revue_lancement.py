@@ -76,7 +76,7 @@ class is_revue_lancement(models.Model):
 
 
     name                              = fields.Char(string="N°", compute="_compute_name", store=True, readonly=True)
-    rl_num_rcid                       = fields.Many2one("is.revue.de.contrat", string="Revue de contrat", required=True, tracking=True)
+    rl_num_rcid                       = fields.Many2one("is.revue.de.contrat", string="Revue de contrat", required=False, tracking=True)
     rl_mouleid                        = fields.Many2one(related='rl_num_rcid.rc_mouleid')
     rl_dossierfid                     = fields.Many2one(related='rl_num_rcid.rc_dossierfid')
     rl_title                          = fields.Char(string="Revue de lancement (champ à supprimer)", tracking=True)

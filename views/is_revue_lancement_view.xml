@@ -59,7 +59,13 @@
                             <page name="rl_initial_tab" string="Données d'entrée">
                                 <group>
                                     <field name="name"               attrs="{'invisible': [('rl_num_rcid'  , '=', False)]}"/>
-                                    <field name="rl_num_rcid"        attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                    <field 
+                                        name="rl_num_rcid"        
+                                        attrs="{
+                                            'readonly': [('state', '!=', 'rl_brouillon')],
+                                            'required': [('state', '=', 'rl_brouillon')],
+                                        }"
+                                    />
                                     <field name="rl_indice"          attrs="{'invisible': [('rl_num_rcid'  , '=', False)]}"/>
                                     <field name="rl_mouleid"         attrs="{'invisible': [('rl_mouleid'   , '=', False)]}"/>
                                     <field name="rl_dossierfid"      attrs="{'invisible': [('rl_dossierfid', '=', False)]}"/>
