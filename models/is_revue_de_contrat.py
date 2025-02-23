@@ -249,16 +249,29 @@ class is_revue_de_contrat(models.Model):
             for line in obj.decomposition_prix_ids:
                 if line.rc_price_comp_article:
                     articles[line.rc_price_comp_article] = line
+
             for line in obj.productivite_ids:
-                article = line.rc_productivite_article
-                if article:
-                    if article in articles:
-                        line.decomposition_prix_id = articles[article].id
+                article = line.rc_productivite_article or ''
+                if article in articles:
+                    line.decomposition_prix_id = articles[article].id
+                article = article.replace(" ","").strip()
+                if article=="":
+                    if len(articles)>0:
+                        key = list(articles)[0]
+                        line.rc_productivite_article = key
+                        line.decomposition_prix_id = articles[key].id
+
             for line in obj.previsions_ids:
-                article = line.rc_previsions_article
-                if article:
-                    if article in articles:
-                        line.decomposition_prix_id = articles[article].id
+                article = line.rc_previsions_article or ''
+                if article in articles:
+                    line.decomposition_prix_id = articles[article].id
+                article = article.replace(" ","").strip()
+                if article=="":
+                    if len(articles)>0:
+                        key = list(articles)[0]
+                        line.rc_previsions_article = key
+                        line.decomposition_prix_id = articles[key].id
+
             for line in obj.version_ids:
                 article = line.rc_dfi_article or ''
                 if article in articles:
