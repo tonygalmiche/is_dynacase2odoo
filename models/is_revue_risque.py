@@ -100,6 +100,10 @@ class is_revue_risque(models.Model):
     rr_engagement_qualite_comment         = fields.Char(string="Engagement qualité (PPM) ", tracking=True)
     rr_securite_produit                   = fields.Selection(_SELECT_RISQUE, string="Sécurité du produit (protection de l'utilisateur final) + information au PSR", tracking=True)
     rr_securite_produit_comment           = fields.Char(string="Sécurité du produit (protection de l'utilisateur final) + information au PSR ", tracking=True)
+
+    rr_impact_environnement               = fields.Selection(_SELECT_RISQUE, string="Impact Environnement", tracking=True)
+    rr_impact_environnement_comment       = fields.Char(string="Impact Environnement.", tracking=True)
+
     rr_rentabilite                        = fields.Selection(_SELECT_RISQUE, string="Rentabilité", tracking=True)
     rr_rentabilite_comment                = fields.Char(string="Rentabilité.", tracking=True)
     rr_investissement_necessaire          = fields.Selection(_SELECT_RISQUE, string="Investissements nécessaires", tracking=True)
@@ -168,14 +172,14 @@ class is_revue_risque(models.Model):
             obj.rr_risques_risque_supply_chain = risque_supply_chain
 
 
-    @api.depends('rr_modification_csr','rr_critere_acceptation','rr_exigence_reglementaire','rr_engagement_qualite','rr_securite_produit')
+    @api.depends('rr_modification_csr','rr_critere_acceptation','rr_exigence_reglementaire','rr_engagement_qualite','rr_securite_produit','rr_impact_environnement')
     def _compute_risque_qualite(self):
         for obj in self:
             risque_qualite      = 0
-            list=['rr_modification_csr','rr_critere_acceptation','rr_exigence_reglementaire','rr_engagement_qualite','rr_securite_produit']
+            list=['rr_modification_csr','rr_critere_acceptation','rr_exigence_reglementaire','rr_engagement_qualite','rr_securite_produit','rr_impact_environnement']
             for name_field in list:
                 risque_qualite+=obj._get_val_risque(name_field)
-            obj.rr_risques_risque_qualite      = risque_qualite
+            obj.rr_risques_risque_qualite = risque_qualite
 
  
     @api.depends('rr_rentabilite','rr_investissement_necessaire','rr_competence_effectif')
@@ -223,7 +227,7 @@ class is_revue_risque(models.Model):
         'rr_retour_experience','rr_exigence_specifique','rr_planning_previsionnel','rr_plan_piece','rr_norme_applicable','rr_conception_piece',
         'rr_injection','rr_design_moule','rr_methode_mesure','rr_composant','rr_machine_speciale','rr_decoration','rr_parachevement',
         'rr_capacitaire','rr_conditionnement','rr_identification_tracabilite','rr_validation_fournisseur','rr_capacitaire_fournisseur','rr_presse_substitution',
-        'rr_modification_csr','rr_critere_acceptation','rr_exigence_reglementaire','rr_engagement_qualite','rr_securite_produit',
+        'rr_modification_csr','rr_critere_acceptation','rr_exigence_reglementaire','rr_engagement_qualite','rr_securite_produit','rr_impact_environnement',
         'rr_rentabilite','rr_investissement_necessaire','rr_competence_effectif',
     )
     def _compute_rr_bilan_ar(self):

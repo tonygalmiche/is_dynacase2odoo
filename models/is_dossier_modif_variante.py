@@ -144,7 +144,7 @@ class is_dossier_modif_variante(models.Model):
         ("7", "abandon Plastigray"),
     ], string="Motif ", tracking=True)
     demao_idbe                  = fields.Many2one("res.users", string="BE", tracking=True)
-    demao_annexcom              = fields.Many2many("ir.attachment", "is_dmv_annexcom_rel", "annexcom_id", "att_id", string="Fichiers commercial", tracking=True)
+    demao_annexcom              = fields.Many2many("ir.attachment", "is_dmv_annexcom_rel", "annexcom_id", "att_id", string="Fichiers commerciaux", tracking=True)
     demao_annex                 = fields.Many2many("ir.attachment", "is_dmv_annex_rel", "annex_id", "att_id", string="Fichiers BE", tracking=True)
     demao_cde_be                = fields.Many2many("ir.attachment", "is_dmv_cde_be_rel", "cde_be_id", "att_id", string="Commandes BE", tracking=True)
     state                       = fields.Selection([

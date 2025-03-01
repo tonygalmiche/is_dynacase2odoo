@@ -140,6 +140,8 @@
                     <field name="nb_a_faire"      optional="hide"/>
                     <field name="nb_crees"        optional="hide"/>
                     <field name="nb_fait"         optional="hide"/>
+                    <field name="mfr"             optional="hide"/>
+                    <field name="mvr"             optional="hide"/>
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
