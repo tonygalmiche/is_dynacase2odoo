@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+        <!-- Sequence is.fiche.information.prospect -->
+        <!--record id="is_fiche_information_prospect_seq" model="ir.sequence">
+            <field name="name">Fiche information prospect</field>
+            <field name="code">is.fiche.information.prospect</field>
+            <field name="prefix"></field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record-->
+
+        <!-- is.fiche.information.prospect -->
+        <record model="ir.ui.view" id="is_fiche_information_prospect_form_view">
+            <field name="name">is_fiche_information_prospect_form_view</field>
+            <field name="model">is.fiche.information.prospect</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Form">
+                    <header>
+                        <button 
+                            name="lien_vers_dynacase_action"
+                            string="Dynacase"
+                            type="object"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                            groups="base.group_system"
+                        />
+                        <field name="dynacase_id" invisible="1"/>
+                        <field name="etat" widget="statusbar" options="{'clickable': '1'}"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="charge_affaire_id"/>
+                            <field name="date_ouverture"/>
+                            <field name="nom_prospect"/>
+                            <field name="activite"/>
+                            <field name="secteur_activite"/>
+                            <field name="effectif"/>
+                            <field name="ca"/>
+                            <field name="adresse"/>
+                            <field name="departement"/>
+                            <field name="telephone"/>
+                            <field name="fax"/>
+                            <field name="site_internet"/>
+                            <!--field name="etat"/-->
+                            <field name="appel_offre_id"/>
+                        </group>
+                        <field name="contacts_ids" nolabel="1" colspan="2">
+                            <tree editable="bottom">
+                                <field name="contacts_nom"/>
+                                <field name="contacts_prenom"/>
+                                <field name="conatcts_fonction"/>
+                                <field name="contacts_telephone"/>
+                                <field name="contacts_portable"/>
+                                <field name="contacts_fax"/>
+                                <field name="contacts_mail"/>
+                            </tree>
+                        </field>
+                        <field name="suivi_ids" nolabel="1" colspan="2">
+                            <tree editable="bottom">
+                                <field name="suivi_date"/>
+                                <field name="suivi_nature_contact"/>
+                                <field name="suivi_objet"/>
+                                <field name="suivi_decision"/>
+                                <field name="suivi_date_relance"/>
+                            </tree>
+                        </field>
+                        <group string="Pièces jointes">
+                            <field name="piece_jointe_ids"   widget="many2many_binary"/>
+                        </group>
+                    </sheet>
+                   <div class="oe_chatter">
+                        <field name="message_follower_ids" />
+                        <field name="activity_ids" />
+                        <field name="message_ids" />
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_fiche_information_prospect_tree_view">
+            <field name="name">is_fiche_information_prospect_tree_view</field>
+            <field name="model">is.fiche.information.prospect</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="charge_affaire_id"         optional="show" widget="many2one_clickable"/>
+                    <field name="date_ouverture"            optional="show"/>
+                    <field name="nom_prospect"              optional="show"/>
+                    <field name="activite"                  optional="show"/>
+                    <field name="secteur_activite"          optional="show"/>
+                    <field name="effectif"                  optional="show"/>
+                    <field name="ca"                        optional="show"/>
+                    <field name="adresse"                   optional="show"/>
+                    <field name="departement"               optional="show"/>
+                    <field name="telephone"                 optional="show"/>
+                    <field name="fax"                       optional="show"/>
+                    <field name="site_internet"             optional="show"/>
+                    <field name="etat"                      optional="show"/>
+                    <field name="appel_offre_id"            optional="show" widget="many2one_clickable"/>
+                    <field name="dynacase_id"               optional="hide" groups="base.group_system"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_fiche_information_prospect_search">
+            <field name="name">is_fiche_information_prospect_search</field>
+            <field name="model">is.fiche.information.prospect</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="charge_affaire_id"/>
+                    <field name="date_ouverture"/>
+                    <field name="nom_prospect"/>
+                    <field name="activite"/>
+                    <field name="secteur_activite"/>
+                    <field name="effectif"/>
+                    <field name="ca"/>
+                    <field name="adresse"/>
+                    <field name="departement"/>
+                    <field name="telephone"/>
+                    <field name="fax"/>
+                    <field name="site_internet"/>
+                    <field name="etat"/>
+                    <field name="appel_offre_id"/>
+                </search>
+            </field>
+        </record>
+        <!--record id="is_fiche_information_prospect_pivot" model="ir.ui.view">
+            <field name="name">is_fiche_information_prospect_pivot</field>
+            <field name="model">is.fiche.information.prospect</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="client_id"  type="row"/>
+                </pivot>
+            </field>
+        </record-->
+        <!--record id="is_fiche_information_prospect_graph" model="ir.ui.view">
+            <field name="name">is_fiche_information_prospect_graph</field>
+            <field name="model">is.fiche.information.prospect</field>
+            <field name="arch" type="xml">
+                <graph>
+                    <field name="client_id"  type="row"/>
+                </graph>
+            </field>
+        </record-->
+        <record model="ir.actions.act_window" id="is_fiche_information_prospect_action">
+            <field name="name">Fiche information prospect</field>
+            <field name="res_model">is.fiche.information.prospect</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
+            <field name="context">{}
+            </field>
+        </record>
+  </data>
+</openerp>

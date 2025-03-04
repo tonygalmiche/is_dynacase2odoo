@@ -74,6 +74,12 @@
             name="Clients"  id="is_client_menu" sequence="10"
             parent="is_gestion_commerciale_menu" action="is_plastigray16.res_partner_client_action"
         />
+        <record id="is_fiche_information_prospect" model="ir.ui.menu" >
+            <field name="name">Fiche information prospect</field>
+            <field name="sequence">15</field>
+            <field name="parent_id" eval="ref('is_gestion_commerciale_menu')"/>
+            <field name="action"    ref="is_fiche_information_prospect_action"/>
+        </record>
         <menuitem 
             name="Dossier appels d'offres"  id="is_dossier_appel_offre_menu" sequence="20"
             parent="is_gestion_commerciale_menu" action="is_dossier_appel_offre_action"
