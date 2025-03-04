@@ -1,4 +1,4 @@
-from odoo import models, fields, api  # type: ignore
+from odoo import models, fields  # type: ignore
 
 _STATE = ([
     ('Active', 'Active'),
@@ -6,17 +6,16 @@ _STATE = ([
     ('Consultation', 'Consultation'),
 ])
 
-# FIXME piece jointe ?
-
 
 class is_fiche_information_prospect(models.Model):
     _name='is.fiche.information.prospect'
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description="Fiche information prospect"
-#    _rec_name = "frm_identification"
-#    _order='frm_identification desc'
+    _rec_name = "nom_prospect"
+    _order='nom_prospect'
 
     charge_affaire_id          = fields.Many2one('res.users', 'Charge affaire', required=True, default=lambda self: self.env.uid, tracking=True)
+    active                     = fields.Boolean('Actif', default=True, tracking=True)
     date_ouverture             = fields.Date("Date d'ouverture", tracking=True)
     nom_prospect               = fields.Char("Nom du prospect", required=True, tracking=True)
     activite                   = fields.Char("Activité", required=True, tracking=True)
@@ -36,7 +35,7 @@ class is_fiche_information_prospect(models.Model):
 
     suivi_ids                  = fields.One2many('is.fiche.information.prospect.suivi.line', 'information_prospect_id', string="Suivi")
 
-    piece_jointe_ids             = fields.Many2many("ir.attachment", "is_fiche_information_prospect_piece_jointe_rel", "piece_jointe"  , "att_id", string="Pièce jointe")
+    piece_jointe_ids           = fields.Many2many("ir.attachment", "is_fiche_information_prospect_piece_jointe_rel", "piece_jointe"  , "att_id", string="Pièce jointe")
 
     def lien_vers_dynacase_action(self):
         for obj in self:
