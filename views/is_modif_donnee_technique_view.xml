@@ -4,7 +4,7 @@
     <data>
         <!-- Sequence is.modif.donnee.technique -->
         <!--record id="is_modif_donnee_technique_seq" model="ir.sequence">
-            <field name="name">Fiche information prospect</field>
+            <field name="name">Demande modification donnée technique</field>
             <field name="code">is.modif.donnee.technique</field>
             <field name="prefix"></field>
             <field name="padding">5</field>
@@ -33,7 +33,6 @@
                         <field name="active" invisible="1"/> 
                         <group>
                             <field name="num_demande"/>
-                            <field name="active"/>
                             <field name="moule_id"/>
                             <field name="dossierf_id"/>
                             <field name="codepg"/>
@@ -73,7 +72,6 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="num_demande"              optional="show"/>
-                    <field name="active"                   optional="show"/>
                     <field name="moule_id"                 optional="show" widget="many2one_clickable"/>
                     <field name="dossierf_id"              optional="show" widget="many2one_clickable"/>
                     <field name="codepg"                   optional="show"/>
@@ -103,20 +101,15 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="num_demande"/>
-                    <field name="active"/>
                     <field name="moule_id"/>
                     <field name="dossierf_id"/>
                     <field name="codepg"/>
                     <field name="designation"/>
                     <field name="demandeur"/>
-                    <field name="date_demande"/>
                     <field name="responsable_action"/>
                     <field name="article"/>
-                    <field name="article_commentaire"/>
                     <field name="nomenclature"/>
-                    <field name="nomenclature_commentaire"/>
                     <field name="gamme_article"/>
-                    <field name="gamme_commentaire"/>
                 </search>
             </field>
         </record>
@@ -139,7 +132,7 @@
             </field>
         </record-->
         <record model="ir.actions.act_window" id="is_modif_donnee_technique_action">
-            <field name="name">Fiche information prospect</field>
+            <field name="name">Demande modification donnée technique</field>
             <field name="res_model">is.modif.donnee.technique</field>
             <field name="view_mode">tree,form,pivot,graph</field>
             <field name="context">{}
