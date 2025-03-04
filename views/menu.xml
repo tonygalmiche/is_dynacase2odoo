@@ -140,6 +140,12 @@
             <field name="parent_id" eval="ref('is_gestion_commerciale_menu')"/>
             <field name="action"    ref="is_fiche_codification_action"/>
         </record>
+        <record id="is_modif_donnee_technique" model="ir.ui.menu" >
+            <field name="name">Demande modification donnée technique</field>
+            <field name="sequence">85</field>
+            <field name="parent_id" eval="ref('is_gestion_commerciale_menu')"/>
+            <field name="action"    ref="is_modif_donnee_technique_action"/>
+        </record>
 
         <!-- BDT -->
         <record id="is_bdt_menu" model="ir.ui.menu" >

@@ -65,7 +65,7 @@ class is_fiche_codification(models.Model):
 
     decomposition_ids            = fields.One2many('is.fiche.codification.decomposition.line', 'codification_id', string="Décomposition")
 
-    piece_jointe_ids             = fields.Many2many("ir.attachment", "is_fiche_codification_piece_jointe_rel", "piece_jointe"  , "att_id", string="Pièce jointe")
+    piece_jointe_ids             = fields.Many2many("ir.attachment", "is_fiche_codification_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
 
     @api.model_create_multi
     def create(self, vals_list):

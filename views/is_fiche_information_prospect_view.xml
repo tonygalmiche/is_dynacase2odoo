@@ -27,7 +27,6 @@
                             groups="base.group_system"
                         />
                         <field name="dynacase_id" invisible="1"/>
-                        <field name="etat" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
@@ -45,7 +44,7 @@
                             <field name="telephone"/>
                             <field name="fax"/>
                             <field name="site_internet"/>
-                            <!--field name="etat"/-->
+                            <field name="etat"/>
                             <field name="appel_offre_id"/>
                         </group>
                         <field name="contacts_ids" nolabel="1" colspan="2">

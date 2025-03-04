@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+        <!-- Sequence is.modif.donnee.technique -->
+        <!--record id="is_modif_donnee_technique_seq" model="ir.sequence">
+            <field name="name">Fiche information prospect</field>
+            <field name="code">is.modif.donnee.technique</field>
+            <field name="prefix"></field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record-->
+
+        <!-- is.modif.donnee.technique -->
+        <record model="ir.ui.view" id="is_modif_donnee_technique_form_view">
+            <field name="name">is_modif_donnee_technique_form_view</field>
+            <field name="model">is.modif.donnee.technique</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Form">
+                    <header>
+                        <button 
+                            name="lien_vers_dynacase_action"
+                            string="Dynacase"
+                            type="object"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                            groups="base.group_system"
+                        />
+                        <field name="dynacase_id" invisible="1"/>
+                    </header>
+                    <sheet>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active" invisible="1"/> 
+                        <group>
+                            <field name="num_demande"/>
+                            <field name="active"/>
+                            <field name="moule_id"/>
+                            <field name="dossierf_id"/>
+                            <field name="codepg"/>
+                            <field name="designation"/>
+                            <field name="demandeur"/>
+                            <field name="date_demande"/>
+                            <field name="responsable_action"/>
+                        </group>
+                        <group string="Article">
+                            <field name="article"/>
+                            <field name="article_commentaire"/>
+                            <field name="article_piece_jointe_ids"   widget="many2many_binary"/>
+                            <!--field name="article_piece_jointe"   widget="many2many_binary"/-->
+                        </group>
+                        <group string="Nomenclature">
+                            <field name="nomenclature"/>
+                            <field name="nomenclature_commentaire"/>
+                            <field name="nomenclature_piece_jointe_ids"  widget="many2many_binary"/>
+                        </group>
+                        <group string="Gamme">
+                            <field name="gamme_article"/>
+                            <field name="gamme_commentaire"/>
+                        </group>
+                    </sheet>
+                   <div class="oe_chatter">
+                        <field name="message_follower_ids" />
+                        <field name="activity_ids" />
+                        <field name="message_ids" />
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_modif_donnee_technique_tree_view">
+            <field name="name">is_modif_donnee_technique_tree_view</field>
+            <field name="model">is.modif.donnee.technique</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="num_demande"              optional="show"/>
+                    <field name="active"                   optional="show"/>
+                    <field name="moule_id"                 optional="show" widget="many2one_clickable"/>
+                    <field name="dossierf_id"              optional="show" widget="many2one_clickable"/>
+                    <field name="codepg"                   optional="show"/>
+                    <field name="designation"              optional="show"/>
+                    <field name="demandeur"                optional="show"/>
+                    <field name="date_demande"             optional="show"/>
+                    <field name="responsable_action"       optional="show"/>
+                    <field name="article"                  optional="show"/>
+                    <field name="article_commentaire"      optional="show"/>
+                    <field name="nomenclature"             optional="show"/>
+                    <field name="nomenclature_commentaire" optional="show"/>
+                    <field name="gamme_article"                    optional="show"/>
+                    <field name="gamme_commentaire"        optional="show"/>
+                    <field name="dynacase_id"              optional="hide" groups="base.group_system"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_modif_donnee_technique_search">
+            <field name="name">is_modif_donnee_technique_search</field>
+            <field name="model">is.modif.donnee.technique</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="num_demande"/>
+                    <field name="active"/>
+                    <field name="moule_id"/>
+                    <field name="dossierf_id"/>
+                    <field name="codepg"/>
+                    <field name="designation"/>
+                    <field name="demandeur"/>
+                    <field name="date_demande"/>
+                    <field name="responsable_action"/>
+                    <field name="article"/>
+                    <field name="article_commentaire"/>
+                    <field name="nomenclature"/>
+                    <field name="nomenclature_commentaire"/>
+                    <field name="gamme_article"/>
+                    <field name="gamme_commentaire"/>
+                </search>
+            </field>
+        </record>
+        <!--record id="is_modif_donnee_technique_pivot" model="ir.ui.view">
+            <field name="name">is_modif_donnee_technique_pivot</field>
+            <field name="model">is.modif.donnee.technique</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="client_id"  type="row"/>
+                </pivot>
+            </field>
+        </record-->
+        <!--record id="is_modif_donnee_technique_graph" model="ir.ui.view">
+            <field name="name">is_modif_donnee_technique_graph</field>
+            <field name="model">is.modif.donnee.technique</field>
+            <field name="arch" type="xml">
+                <graph>
+                    <field name="client_id"  type="row"/>
+                </graph>
+            </field>
+        </record-->
+        <record model="ir.actions.act_window" id="is_modif_donnee_technique_action">
+            <field name="name">Fiche information prospect</field>
+            <field name="res_model">is.modif.donnee.technique</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
+            <field name="context">{}
+            </field>
+        </record>
+  </data>
+</openerp>
