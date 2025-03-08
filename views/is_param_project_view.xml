@@ -40,6 +40,7 @@
                                 <field name="ppr_responsable"        attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="ppr_revue_lancement"    attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="ppr_moule_hors_auto"    attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
+                                <field name="plan_piece"             attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                             </group>
                             <group>
                                 <field name="ppr_icon" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;ppr_icon&quot;, &quot;size&quot;: [90, 90]}" />

@@ -85,8 +85,13 @@
             parent="is_gestion_commerciale_menu" action="is_dossier_appel_offre_action"
         />
         <menuitem
-            name="Dossier modif/variante" id="is_dossier_modif_variante_menu" sequence="30" 
-            parent="is_gestion_commerciale_menu" action="is_dossier_modif_variante_action"
+            name="Dossier modification" id="is_dossier_modification_menu" sequence="30" 
+            parent="is_gestion_commerciale_menu" action="is_dossier_modification_action"
+        />
+
+        <menuitem
+            name="Dossier variante" id="is_dossier_variante_menu" sequence="32" 
+            parent="is_gestion_commerciale_menu" action="is_dossier_variante_action"
         />
 
 

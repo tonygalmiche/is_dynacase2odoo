@@ -20,7 +20,7 @@
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                             groups="base.group_system"
                         />
-                        <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                        <field name="state" widget="statusbar"/>
                         <field name="dynacase_id" invisible="1"/>
                     </header>
                     <sheet>
@@ -31,39 +31,48 @@
                                 <field name="dao_num"/>
                                 <field name="dao_date"/>
                                 <field name="dao_annee"/>
-                                <field name="dao_client"/>
+                                <field name="client_id"/>
+                                <field name="prospect"/>
                                 <field name="dao_typeclient"/>
-                                <field name="dao_sectclient"/>
-                                <field name="dao_commercial"/>
+                                <field name="secteur_activite"/>
+                                <field name="commercial_id"/>
                                 <field name="dao_desig"/>
                                 <field name="dao_ref"/>
-                                <field name="dao_datedms"/>
                                 <field name="dao_ca"/>
                                 <field name="dao_vacom"/>
                                 <field name="dao_pourcentva"/>
                                 <field name="dao_camoule"/>
                              </group>
                             <group>
-                                <field name="dao_be"/>
-                                <field name="dao_dirbe"/>
+                                <field name="chef_projet_id"/>
+                                <field name="directeur_technique_id"/>
                                 <field name="dao_daterepbe"/>
+                                <field name="dao_date_relance"/>
                                 <field name="dao_daterepplast"/>
                                 <field name="dao_rsplast"/>
                                 <field name="dao_daterepcli"/>
-                                <field name="dao_comment"/>
-                                <field name="dao_motif"/>
+                                <field name="dao_offre_decrochee"/>
                                 <field name="dao_avancement"/>
+                                <field name="dao_comment"/>
                                 <field name="fermeture_id"/>    
-                                <field name="dynacase_id"/>
                             </group>
                         </group>
                         <group>
+                            <separator string="Motif de la non validation"/>
+                            <field name="dao_motif"/>
+                            <separator string="Consultation initiale client"/>
                             <field name="dao_consult_initial"   widget="many2many_binary"/>
+                            <separator string="Fichiers commerciaux"/>
                             <field name="dao_annexcom"          widget="many2many_binary"/>
+                            <separator string="Fiches de devis du BE"/>
                             <field name="dao_annex"             widget="many2many_binary"/>
+                            <separator string="Dernière offre validée par le client"/>
                             <field name="dao_offre_validee"     widget="many2many_binary"/>
+                            <separator string="Commande client"/>
                             <field name="dao_commande_client"   widget="many2many_binary"/>
+                            <separator string="Lettre de nomination et contrats"/>
                             <field name="dao_lettre_nomination" widget="many2many_binary"/>
+                            <separator string="Fichier de devis des achats"/>
                             <field name="dao_devis_achat"       widget="many2many_binary"/>
                          </group>
                     </sheet>
@@ -83,19 +92,19 @@
                     <field name="dao_num" optional="show"/>
                     <field name="dao_date" optional="show"/>
                     <field name="dao_annee" optional="show"/>
-                    <field name="dao_client" optional="show"/>
+                    <field name="client_id" optional="show"/>
+                    <field name="prospect" optional="show"/>
                     <field name="dao_typeclient" optional="show"/>
-                    <field name="dao_sectclient" optional="show"/>
-                    <field name="dao_commercial" optional="show"/>
+                    <field name="secteur_activite" optional="show"/>
+                    <field name="commercial_id" optional="show"/>
                     <field name="dao_desig" optional="show"/>
                     <field name="dao_ref" optional="show"/>
-                    <field name="dao_datedms" optional="show"/>
                     <field name="dao_ca" optional="show"      sum="Total"/>
                     <field name="dao_vacom" optional="show"   sum="Total"/>
                     <field name="dao_pourcentva" optional="show"/>
                     <field name="dao_camoule" optional="show" sum="Total"/>
-                    <field name="dao_be" optional="show"/>
-                    <field name="dao_dirbe" optional="show"/>
+                    <field name="chef_projet_id" optional="show"/>
+                    <field name="directeur_technique_id" optional="show"/>
                     <field name="dao_daterepbe" optional="show"/>
                     <field name="dao_daterepplast" optional="show"/>
                     <field name="dao_rsplast" optional="show"/>
@@ -121,14 +130,13 @@
                 <search>
                     <field name="dao_num"/>
                     <field name="dao_annee"/>
-                    <field name="dao_client"/>
+                    <field name="client_id"/>
+                    <field name="prospect"/>
                     <field name="dao_typeclient"/>
-                    <field name="dao_sectclient"/>
-                    <field name="dao_commercial"/>
+                    <field name="secteur_activite"/>
+                    <field name="commercial_id"/>
                     <field name="dao_desig"/>
                     <field name="dao_ref"/>
-                    <field name="dao_be"/>
-                    <field name="dao_dirbe"/>
                     <field name="dao_rsplast"/>
                     <field name="dao_comment"/>
                     <field name="dao_motif"/>

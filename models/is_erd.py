@@ -1,27 +1,36 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _      # type: ignore
 from odoo.exceptions import ValidationError  # type: ignore
+from datetime import datetime, timedelta, date
+
 
 class is_erd(models.Model):
     _name = "is.erd"
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description = "ERD"
     _rec_name    = "numero"
+    _order = "date desc"
 
-    numero          = fields.Char(string="N° ERD", tracking=True, required=True, index=True)
-    date            = fields.Date(string="Date", tracking=True)
-    clientid        = fields.Many2one("res.partner", string="Client"            , tracking=True)
-    designation     = fields.Char(string="Désignation", tracking=True)
-    commercialid    = fields.Many2one("res.users", string="Commercial"    , tracking=True)
-    date_reponse_be = fields.Date(string="Date réponse BE", tracking=True)
-    date_reponse    = fields.Date(string="Date réponse"   , tracking=True)
-    date_lancement  = fields.Date(string="Date lancement" , tracking=True)
-    prix_vente      = fields.Float(string="Prix de vente" , tracking=True)
-    num_commande    = fields.Char(string="N° commande"    , tracking=True)
-    observation     = fields.Text(string="Observation"    , tracking=True)
-    beid            = fields.Many2one("res.users", string="BE", tracking=True)
-    dynacase_id     = fields.Integer(string="Id Dynacase", index=True, copy=False)
-    active          = fields.Boolean('Actif', default=True, tracking=True)
+
+    @api.depends('clientid')
+    def _compute_commercialid(self):
+        for obj in self:
+            obj.commercialid = obj.clientid.user_id.id
+
+
+    numero          = fields.Char(string="N° ERD"                     , tracking=True, readonly=True, copy=False, index=True)
+    date            = fields.Date(string="Date"                       , tracking=True, default=fields.Date.context_today,required=True, copy=False)
+    clientid        = fields.Many2one("res.partner", string="Client"  , tracking=True, domain=[("is_company","=",True), ("customer","=",True)])
+    designation     = fields.Char(string="Désignation"                , tracking=True)
+    commercialid    = fields.Many2one("res.users", string="Commercial", tracking=True, compute="_compute_commercialid",store=True, readonly=True)
+    date_reponse_be = fields.Date(string="Date réponse BE"            , tracking=True)
+    date_reponse    = fields.Date(string="Date réponse"               , tracking=True)
+    date_lancement  = fields.Date(string="Date lancement"             , tracking=True)
+    prix_vente      = fields.Float(string="Prix de vente"             , tracking=True)
+    num_commande    = fields.Char(string="N° commande"                , tracking=True)
+    observation     = fields.Text(string="Observation"                , tracking=True)
+    beid            = fields.Many2one("res.users", string="BE"        , tracking=True)
+    active          = fields.Boolean('Actif', default=True            , tracking=True)
     state = fields.Selection([
         ("Cree"          , "Créé"),
         ("Transmis_BE"   , "Transmis BE"),
@@ -37,6 +46,28 @@ class is_erd(models.Model):
     vers_diffuse_client_vsb = fields.Boolean(string="vers_Diffuse_Client_action", compute='_compute_vsb', readonly=True, store=False)
     vers_gagne_vsb          = fields.Boolean(string="vers_Gagne_action"         , compute='_compute_vsb', readonly=True, store=False)
     readonly                = fields.Boolean(string="readonly"                  , compute='_compute_vsb', readonly=True, store=False)
+    dynacase_id             = fields.Integer(string="Id Dynacase", index=True, copy=False)
+
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            ladate = vals.get("date") or date.today()
+            annee = str(ladate)[0:4]
+            aa = annee[-2:]
+            domain = [('numero', 'like', 'ERD '),('date', '>', '2025-01-01')]
+            lines=self.env['is.erd'].search(domain,order='numero desc', limit=1)
+            for line in lines:
+                print(line.numero,line.numero[4:7],annee,aa)
+                num=int(line.numero[4:7])+1
+                num = ("000%s"%num)[-3:]
+                numero="ERD %s.%s"%(num,aa)
+                vals['numero'] = numero
+        return super().create(vals_list)
+
+
+
+
 
 
     @api.depends("state")

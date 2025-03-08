@@ -103,6 +103,26 @@
                                 <field name="indicateur"     attrs="{'readonly': 1}" force_save="1"/>
                             </group>
                         </group>
+                        <group string="Plan pièce" attrs="{'invisible': [('plan_piece', '!=', True)]}">
+                            <group>
+                                <field name="plan_piece" invisible="1"/>
+                                <label for="pp_revue_plan"/>
+                                <div class="o_row no-gutters d-flex">
+                                    <field name="pp_revue_plan"             class="oe_inline" nolabel="1" />
+                                    <field name="pp_revue_plan_commentaire" class="oe_inline" nolabel="1"/>  
+                                </div>
+                                <label for="pp_equipe_projet"/>
+                                <div class="o_row no-gutters d-flex">
+                                    <field name="pp_equipe_projet"             class="oe_inline" nolabel="1" />
+                                    <field name="pp_equipe_projet_commentaire" class="oe_inline" nolabel="1"/>  
+                                </div>
+                                <label for="pp_maj_odoo"/>
+                                <div class="o_row no-gutters d-flex">
+                                    <field name="pp_maj_odoo"             class="oe_inline" nolabel="1" />
+                                    <field name="pp_maj_odoo_commentaire" class="oe_inline" nolabel="1"/>  
+                                </div>
+                            </group>
+                        </group>
                         <notebook>
                             <page string="Réponse à la demande">
                                 <group>
@@ -271,6 +291,12 @@
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="gantt_pdf"           optional="hide"/>
                     <field name="suivi_projet"        optional="hide"/>
+                    <field name="pp_revue_plan"                optional="hide"/>
+                    <field name="pp_revue_plan_commentaire"    optional="hide"/>
+                    <field name="pp_equipe_projet"             optional="hide"/>
+                    <field name="pp_equipe_projet_commentaire" optional="hide"/>
+                    <field name="pp_maj_odoo"                  optional="hide"/>
+                    <field name="pp_maj_odoo_commentaire"      optional="hide"/>
                     <field name="create_date"         optional="hide" string="Créé le"/>
                     <field name="create_uid"          optional="hide" string="Créé par"/>
                     <field name="write_date"          optional="hide" string="Modifié le"/>
@@ -786,30 +812,33 @@
             <field name="priority" eval="90"/>
             <field name="arch" type="xml">
                 <tree editable="top">
-                    <field name="section_id" optional="show"/>
-                    <field name='sequence'   optional="show"/>
+                    <field name="section_id"       optional="show"/>
+                    <field name='sequence'/>
                     <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
-                    <field name="param_project_id" required="1" domain="[('type_document','=','Moule')]" />
+                    <field name="param_project_id" required="1" domain="[('type_document','=',type_document)]" />
                     <field name="type_document"    optional="hide"/>
+                    <field name="j_prevue"         optional="show"/>
                     <field name="dossierf_id"      required="1"    widget="many2one_clickable"/>
+                    <field name="moule_dossierf"   optional="hide" />
+                    <field name="site_id"          optional="hide" />
                     <field name="idproject"        optional="show" widget="many2one_clickable"/>
                     <field name="client_id"        optional="show" widget="many2one_clickable"/>
                     <field name="idresp"/>
                     <field name="ppr_type_demande" optional="hide"/>
-                    <field name="demande"         optional="show"/>
+                    <field name="demande"/>
                     <field name="etat"/>
                     <field name="rsp_date" optional="hide"/>
-                    <field name="duree"/>
-                    <field name="duree_gantt"      optional="hide" force_save="1"/>
-                    <field name="date_debut_gantt"/>
-                    <field name="date_fin_gantt"      optional="show" force_save="1" />
                     <field name="duree_attente_avant" optional="hide"/>
+                    <field name="duree"/>
+                    <field name="duree_gantt"         optional="hide" force_save="1"/>
+                    <field name="date_debut_gantt"/>
+                    <field name="date_fin_gantt"                      force_save="1"/>
                     <field name="dependance_id"       optional="hide" domain="[('dossierf_id','=',dossierf_id)]"/>
                     <field name="indicateur"          optional="hide"/>
                     <field name="gantt_pdf"           optional="hide"/>
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
-                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                         groups="base.group_system"
                     />
                     <field name="dynacase_id"  optional="hide" groups="base.group_system"/>

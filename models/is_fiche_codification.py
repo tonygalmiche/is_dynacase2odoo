@@ -1,13 +1,11 @@
-from odoo import models, fields, api  # type: ignore
+from odoo import models, fields, api         # type: ignore
+from odoo.exceptions import ValidationError  # type: ignore
 
 
 #TODO pour is_fiche_codification
 #- Importer les tableayx et les pieces jointes
 #- Ajouter les boutons du workflow
 #- Mettre en place les droits en fonction du champ state
-#- Liens avec RL
-#- Créer une fiche de coditidtion depuis RC et dossiers modif/variante
-#- Ajouter la vue de recherche
 
 
 _STATE = ([
@@ -32,15 +30,14 @@ class is_fiche_codification(models.Model):
     appel_offre_id               = fields.Many2one("is.dossier.appel.offre", string="Dossier d'appel d'offre", index=True, tracking=True)
     dossier_modif_variante_id    = fields.Many2one('is.dossier.modif.variante', 'Dossier Modif Variante', tracking=True)
     revue_contrat_id             = fields.Many2one("is.revue.de.contrat", string="Revue de contrat", tracking=True)
-    mold_id                      = fields.Many2one('is.mold', 'Moule', tracking=True)
-    dossierf_id                  = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
-    type_dossier                 = fields.Char("Origine de la fiche", tracking=True)
-    chef_de_projet_id            = fields.Many2one('res.users', 'Chef de projet', required=True, tracking=True)
+    mold_id                      = fields.Many2one('is.mold', 'Moule'               , tracking=True, compute="_compute", store=True, readonly=True)
+    dossierf_id                  = fields.Many2one("is.dossierf", string="Dossier F", tracking=True, compute="_compute", store=True, readonly=True)
+    project_id                   = fields.Many2one('is.mold.project', 'Projet'      , tracking=True, compute="_compute", store=True, readonly=True)
+    chef_de_projet_id            = fields.Many2one('res.users', 'Chef de projet'    , tracking=True, compute="_compute", store=True, readonly=True)
+    client_id                    = fields.Many2one('res.partner', 'Client'          , tracking=True, compute="_compute", store=True, readonly=True)
+    type_dossier                 = fields.Char("Origine de la fiche", tracking=True, readonly=True)
     creation_modif               = fields.Selection([('creation', 'Création'), ('modification', 'Modification')], "Création / Modification", required=True, tracking=True, default="creation")
-    client_id                    = fields.Many2one('res.partner', 'Client', required=True, tracking=True)
-    project_id                   = fields.Many2one('is.mold.project', 'Projet', tracking=True)
     dynacase_id                  = fields.Integer(string="Id Dynacase", index=True, copy=False)
-
     code_pg                      = fields.Char("Code PG", tracking=True)
     designation                  = fields.Char("Désignation", tracking=True)
     code_client                  = fields.Char("Code client", tracking=True)
@@ -49,23 +46,55 @@ class is_fiche_codification(models.Model):
     type_uc                      = fields.Char("Type UC", tracking=True)
     qt_uc                        = fields.Char("Quantité / UC", tracking=True)
     commentaire                  = fields.Text("Commentaire", tracking=True)
-
     type_presse                  = fields.Char("Type presse", tracking=True)
     tps_cycle                    = fields.Char("Temps de cycle", tracking=True)
     nb_empreintes                = fields.Char("Nombre d'empreintes", tracking=True)
     nb_mod                       = fields.Char("Nombre de mod", tracking=True)
-
     prev_annuelle                = fields.Char("Prévisions annuelles", tracking=True)
     date_dms                     = fields.Date("Date dms", tracking=True)
     duree_vie                    = fields.Char("Durée de vie", tracking=True)
     lot_livraison                = fields.Char("Lot de livraison", tracking=True)
     site_livraison               = fields.Char("Site de livraison", tracking=True)
-
     nomenclature_ids             = fields.One2many('is.fiche.codification.nomenclature.line', 'codification_id', string="Nomenclature")
-
     decomposition_ids            = fields.One2many('is.fiche.codification.decomposition.line', 'codification_id', string="Décomposition")
-
     piece_jointe_ids             = fields.Many2many("ir.attachment", "is_fiche_codification_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
+
+
+    @api.constrains('dossier_modif_variante_id', 'revue_contrat_id')
+    def _dossier_modif_variante_ou_revue_contrat(self):
+        for obj in self:
+            if obj.dossier_modif_variante_id.id and obj.revue_contrat_id.id:
+                raise ValidationError("Il ne faut pas saisir une revue de contrat en même temps qu'un dossier modif")
+
+
+    @api.depends('dossier_modif_variante_id', 'revue_contrat_id')
+    def _compute(self):
+        for obj in self:
+            mold = dossierf = mold_id = dossierf_id = project_id = chef_de_projet_id = client_id = False
+            if obj.dossier_modif_variante_id.demao_idmoule:
+                mold = obj.dossier_modif_variante_id.demao_idmoule
+            if obj.dossier_modif_variante_id.dossierf_id:
+                dossierf = obj.dossier_modif_variante_id.dossierf_id
+            if obj.revue_contrat_id.rc_mouleid:
+                mold = obj.revue_contrat_id.rc_mouleid
+            if obj.revue_contrat_id.rc_dossierfid:
+                dossierf = obj.revue_contrat_id.rc_dossierfid
+            if mold:
+                mold_id           = mold.id
+                chef_de_projet_id = mold.chef_projet_id.id
+                project_id        = mold.project.id
+                client_id         = mold.project.client_id.id
+            if dossierf:
+                dossierf_id       = dossierf.id
+                chef_de_projet_id = dossierf.chef_projet_id.id
+                project_id        = dossierf.project.id
+                client_id         = dossierf.project.client_id.id
+            obj.mold_id           = mold_id
+            obj.dossierf_id       = dossierf_id
+            obj.project_id        = project_id
+            obj.chef_de_projet_id = chef_de_projet_id
+            obj.client_id         = client_id
+            
 
     @api.model_create_multi
     def create(self, vals_list):

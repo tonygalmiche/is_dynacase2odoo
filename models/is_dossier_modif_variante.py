@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _      # type: ignore
+from odoo.exceptions import ValidationError  # type: ignore
 from datetime import datetime
 import logging
 _logger = logging.getLogger(__name__)
-
 
 
 class is_dossier_modif_variante(models.Model):
@@ -11,90 +11,110 @@ class is_dossier_modif_variante(models.Model):
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description = "Dossier modif/variante"
     _rec_name    = "demao_num"
+    _order = "demao_date desc"
+
 
     @api.depends("state")
     def _compute_vsb(self):
         for obj in self:
             vsb = False
-            if obj.state in ["cree", "transmis_be"]:
+            if obj.state in ["plascreate", "plastransbe"]:
                 vsb = True
             obj.vers_analyse_vsb = vsb
             vsb = False
-            if obj.state in ["analyse", "analyse_be", "relance_client", "diffuse_client"]:
+            if obj.state in ["plasanalysed", "Analyse_BE", "plasrelancecli", "plasdiffusedcli"]:
                 vsb = True
             obj.vers_transmis_be_vsb = vsb
             vsb = False
-            if obj.state in ["transmis_be", "vali_de_be"]:
+            if obj.state in ["plastransbe", "plasvalidbe"]:
                 vsb = True
             obj.vers_analyse_be_vsb = vsb
             vsb = False
-            if obj.state in ["analyse_be"]:
+            if obj.state in ["Analyse_BE"]:
                 vsb = True
             obj.vers_vali_de_be_vsb = vsb
             vsb = False
-            if obj.state in ["vali_de_be"]:
+            if obj.state in ["plasvalidbe"]:
                 vsb = True
             obj.vers_vali_de_commercial_vsb = vsb
             vsb = False
-            if obj.state in ["vali_de_commercial", "analyse", "perdu", "gagne", "annule"]:
+            if obj.state in ["plasvalidcom", "plasanalysed", "plasloosed", "plaswinned", "plascancelled"]:
                 vsb = True
             obj.vers_diffuse_client_vsb = vsb
             vsb = False
-            if obj.state in ["diffuse_client"]:
+            if obj.state in ["plasdiffusedcli"]:
                 vsb = True
             obj.vers_relance_client_vsb = vsb
             vsb = False
-            if obj.state in ["relance_client", "diffuse_client"]:
+            if obj.state in ["plasrelancecli", "plasdiffusedcli"]:
                 vsb = True
             obj.vers_perdu_vsb = vsb
             vsb = False
-            if obj.state in ["relance_client", "diffuse_client"]:
+            if obj.state in ["plasrelancecli", "plasdiffusedcli"]:
                 vsb = True
             obj.vers_gagne_vsb = vsb
             vsb = False
-            if obj.state in ["relance_client", "diffuse_client"]:
+            if obj.state in ["plasrelancecli", "diffuse_client"]:
                 vsb = True
             obj.vers_annule_vsb = vsb
 
+
+
+
+        # ("plascreate",      "Créé"),
+        # ("plasanalysed",    "Analysé"),
+        # ("plastransbe",     "Transmis BE"),
+        # ("Analyse_BE",      "Analysé BE"),
+        # ("plasvalidbe",     "Validé BE"),
+        # ("plasvalidcom",    "Validé Commercial"),
+        # ("plasdiffusedcli", "Diffusé Client"),
+        # ("plasrelancecli",  "Relance Client"),
+        # ("plasloosed",      "Perdu"),
+        # ("plaswinned",      "Gagné"),
+        # ("plascancelled",   "Annulé"),
+
+
+
+
     def vers_analyse_action(self):
         for obj in self:
-            obj.sudo().state = "analyse"
+            obj.sudo().state = "plasanalysed"
 
     def vers_transmis_be_action(self):
         for obj in self:
-            obj.sudo().state = "transmis_be"
+            obj.sudo().state = "plastransbe"
 
     def vers_vers_analyse_be_vsb_action(self):
         for obj in self:
-            obj.sudo().state = "analyse_be"
+            obj.sudo().state = "Analyse_BE"
 
     def vers_vali_de_be_vsb_action(self):
         for obj in self:
-            obj.sudo().state = "vali_de_be"
+            obj.sudo().state = "plasvalidbe"
 
     def vers_vali_de_commercial_vsb_action(self):
         for obj in self:
-            obj.sudo().state = "vali_de_commercial"
+            obj.sudo().state = "plasvalidcom"
 
     def vers_diffuse_client_vsb_action(self):
         for obj in self:
-            obj.sudo().state = "diffuse_client"
+            obj.sudo().state = "plasdiffusedcli"
 
     def vers_relance_client_vsb_action(self):
         for obj in self:
-            obj.sudo().state = "relance_client"
+            obj.sudo().state = "plasrelancecli"
 
     def vers_perdu_vsb_action(self):
         for obj in self:
-            obj.sudo().state = "perdu"
+            obj.sudo().state = "plasloosed"
 
     def vers_gagne_vsb_action(self):
         for obj in self:
-            obj.sudo().state = "gagne"
+            obj.sudo().state = "plaswinned"
 
     def vers_annule_vsb_action(self):
         for obj in self:
-            obj.sudo().state = "annule"
+            obj.sudo().state = "plascancelled"
 
 
     @api.depends('demao_idmoule.is_database_id', 'dossierf_id.is_database_id')
@@ -114,19 +134,50 @@ class is_dossier_modif_variante(models.Model):
         return True
 
 
+    @api.depends('demao_idmoule.dossier_appel_offre_id', 'dossierf_id.dossier_appel_offre_id')
+    def _compute_dossier_appel_offre_id(self):
+        for obj in self:
+            dossier_id = False
+            if obj.demao_idmoule.dossier_appel_offre_id:
+                dossier_id = obj.demao_idmoule.dossier_appel_offre_id.id
+            if obj.dossierf_id.dossier_appel_offre_id:
+                dossier_id = obj.dossierf_id.dossier_appel_offre_id.id
+            obj.dossier_appel_offre_id = dossier_id
+
+
+    @api.depends('demao_idmoule','dossierf_id', 'demao_idmoule.client_id.user_id', 'dossierf_id.client_id.user_id')
+    def _compute_demao_idcommercial(self):
+        for obj in self:
+            client = client_id = user_id = desig = False
+            if obj.demao_idmoule.designation:
+                desig = obj.demao_idmoule.designation
+            if obj.dossierf_id.designation:
+                desig = obj.dossierf_id.designation
+            if obj.demao_idmoule.client_id:
+                client = obj.demao_idmoule.client_id
+            if obj.dossierf_id.client_id:
+                client = obj.dossierf_id.client_id
+            if client:
+                client_id = client.id
+                user_id   = client.user_id.id
+            obj.demao_idclient     = client_id
+            obj.demao_idcommercial = user_id
+            obj.demao_desig        = desig
+
+
     demao_type                  = fields.Selection([
         ("modification", "Modification"),
         ("variante",     "Variante"),
     ], string="Type", required=True, tracking=True)
     demao_num                   = fields.Char(string="N° ordre", required=True)
-    demao_dao                   = fields.Char(string="Dossier AO", tracking=True)
     demao_date                  = fields.Date(string="Date", default=fields.Date.context_today, required=False, tracking=True)
-    demao_idclient              = fields.Many2one("res.partner", string="Client", required=False, domain=[("is_company","=",True), ("customer","=",True)], tracking=True)
-    demao_idcommercial          = fields.Many2one("res.users", string="Commercial", default=lambda self: self.env.user, required=False, tracking=True)
     demao_idmoule               = fields.Many2one("is.mold", string="Moule", tracking=True)
     dossierf_id                 = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
+    dossier_appel_offre_id      = fields.Many2one("is.dossier.appel.offre", string="Dossier appel d'offre", tracking=True, compute='_compute_dossier_appel_offre_id', readonly=True, store=True)
+    demao_idclient              = fields.Many2one("res.partner", string="Client"  , tracking=True, compute='_compute_demao_idcommercial', readonly=False, store=True, domain=[("is_company","=",True), ("customer","=",True)])
+    demao_idcommercial          = fields.Many2one("res.users", string="Commercial", tracking=True, compute='_compute_demao_idcommercial', readonly=False, store=True)
+    demao_desig                 = fields.Char(string="Désignation pièce"          , tracking=True, compute='_compute_demao_idcommercial', readonly=False, store=True)
     site_id                     = fields.Many2one('is.database', "Site", compute='_compute_site_id', readonly=True, store=True)
-    demao_desig                 = fields.Char(string="Désignation pièce", required=False, tracking=True)
     demao_nature                = fields.Char(string="Nature", required=False, tracking=True)
     demao_ref                   = fields.Char(string="Référence", tracking=True)
     demao_daterep               = fields.Date(string="Date réponse", tracking=True)
@@ -173,10 +224,15 @@ class is_dossier_modif_variante(models.Model):
     dynacase_id                 = fields.Integer(string="Id Dynacase",index=True,copy=False)
     solde                       = fields.Boolean(string="Soldé", default=False, copy=False, tracking=True)
     fermeture_id                = fields.Many2one("is.fermeture.gantt", string="Fermeture planning", tracking=True)
-
-    fiche_codification_ids       = fields.One2many("is.fiche.codification", "dossier_modif_variante_id")
-
+    fiche_codification_ids       = fields.One2many("is.fiche.codification", "dossier_modif_variante_id", readonly=True)
     active                      = fields.Boolean('Actif', default=True, tracking=True)
+
+
+    @api.constrains('demao_idmoule', 'dossierf_id')
+    def _demao_idmoule_dossierf_id(self):
+        for obj in self:
+            if obj.demao_idmoule.id and obj.dossierf_id.id:
+                raise ValidationError("Il ne faut pas saisir un moule et un dossier F en même temps")
 
 
     def update_client_action(self):

@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<openerp>
+<odoo>
     <data>
-        <!-- Sequence is.fiche.codification -->
-        <!--record id="is_fiche_codification_seq" model="ir.sequence">
-            <field name="name">Fiche de codification</field>
-            <field name="code">is.fiche.codification</field>
-            <field name="prefix"></field>
-            <field name="padding">5</field>
-            <field name="company_id" eval="False"/>
-        </record-->
-
         <!-- is.fiche.codification -->
         <record model="ir.ui.view" id="is_fiche_codification_form_view">
             <field name="name">is_fiche_codification_form_view</field>
@@ -35,54 +25,50 @@
                         <group>
                             <group>
                                 <field name="chrono" readonly="1"/>
-                                <!--field name="state"/-->
-                                <field name="etabli_par_id"/>
-                                <field name="date"/>
-                                <!--field name="appel_offre_id"/-->
-                                <field name="dossier_modif_variante_id"/>
-                                <field name="revue_contrat_id"/>
-                                <field name="mold_id"/>
-                                <field name="dossierf_id"/>
-                                <field name="type_dossier"/>
-                                <field name="creation_modif"/>
-                                <field name="chef_de_projet_id"/>
-                                <field name="client_id" position="attributes">
-                                    <attribute name="domain">[('customer','=',True),('is_company','=',True)]</attribute>
-                                </field>
+                                <field name="etabli_par_id"             attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="date"                      attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="dossier_modif_variante_id" attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="revue_contrat_id"          attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="mold_id"                   attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="dossierf_id"               attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="type_dossier"              attrs="{'invisible': [('type_dossier','=',False)]}"/>
+                                <field name="creation_modif"            attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="chef_de_projet_id"         attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="client_id"                 attrs="{'readonly': [('state','!=','brouillon')]}"/>
                                 <field name="project_id"/>
                             </group>
                             <group string="Gamme">
-                                <field name="type_presse"/>
-                                <field name="tps_cycle"/>
-                                <field name="nb_empreintes"/>
-                                <field name="nb_mod"/>
+                                <field name="type_presse"   attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="tps_cycle"     attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="nb_empreintes" attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="nb_mod"        attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             </group>
                             <group string="Codification">
-                                <field name="code_pg"/>
-                                <field name="designation"/>
-                                <field name="code_client"/>
-                                <field name="ref_plan"/>
-                                <field name="indice_plan"/>
-                                <field name="type_uc"/>
-                                <field name="qt_uc"/>
-                                <field name="commentaire"/>
+                                <field name="code_pg"     attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="designation" attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="code_client" attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="ref_plan"    attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="indice_plan" attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="type_uc"     attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="qt_uc"       attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="commentaire" attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             </group>
                             <group string="Livraison">
-                                <field name="prev_annuelle"/>
-                                <field name="date_dms"/>
-                                <field name="duree_vie"/>
-                                <field name="lot_livraison"/>
-                                <field name="site_livraison"/>
+                                <field name="prev_annuelle"  attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="date_dms"       attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="duree_vie"      attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="lot_livraison"  attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="site_livraison" attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             </group>
                         </group>
-                        <field name="nomenclature_ids" nolabel="1" colspan="2">
+                        <field name="nomenclature_ids" nolabel="1" colspan="2" attrs="{'readonly': [('state','!=','brouillon')]}">
                             <tree editable="bottom">
                                 <field name="nom_code_pg"/>
                                 <field name="nom_designation"/>
                                 <field name="nom_qt"/>
                             </tree>
                         </field>
-                        <field name="decomposition_ids" nolabel="1" colspan="2">
+                        <field name="decomposition_ids" nolabel="1" colspan="2" attrs="{'readonly': [('state','!=','brouillon')]}">
                             <tree editable="bottom">
                                 <field name="part_mat"/>
                                 <field name="part_comp"/>
@@ -97,7 +83,7 @@
                             </tree>
                         </field>
                         <group string="Pièces jointes">
-                            <field name="piece_jointe_ids"   widget="many2many_binary"/>
+                            <field name="piece_jointe_ids"   widget="many2many_binary" attrs="{'readonly': [('state','!=','brouillon')]}"/>
                         </group>
                     </sheet>
                    <div class="oe_chatter">
@@ -125,7 +111,6 @@
                     <field name="chef_de_projet_id"         optional="show"/>
                     <field name="etabli_par_id"             optional="show" widget="many2one_clickable"/>
                     <field name="duree_vie"                 optional="show" widget="many2one_clickable"/>
-		    <!--field name="appel_offre_id"            optional="hide" widget="many2one_clickable"/-->
                     <field name="dossier_modif_variante_id" optional="hide" widget="many2one_clickable"/>
                     <field name="revue_contrat_id"          optional="hide" widget="many2one_clickable"/>
                     <field name="mold_id"                   optional="hide" widget="many2one_clickable"/>
@@ -172,7 +157,6 @@
                     <field name="project_id"/>
                     <field name="chef_de_projet_id"/>
                     <field name="etabli_par_id"/>
-                    <!--field name="appel_offre_id" /-->
                     <field name="dossier_modif_variante_id"/>
                     <field name="revue_contrat_id"/>
                     <field name="mold_id"/>
@@ -205,5 +189,5 @@
             <field name="context">{}
             </field>
         </record>
-  </data>
-</openerp>
+    </data>
+</odoo>

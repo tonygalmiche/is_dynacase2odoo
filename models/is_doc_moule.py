@@ -14,6 +14,12 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+_OK_NOK=([
+    ('OK' , 'OK'),
+    ('nOK', 'nOK'),
+])
+
+
 class IsDocMoule(models.Model):
     _name        = "is.doc.moule"
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
@@ -157,7 +163,15 @@ class IsDocMoule(models.Model):
     suivi_projet        = fields.Boolean(string="Suivi des projets", default=True, tracking=True, help="Indique si c'est ce document qui doit être affiché dans le suivi des projets dans le cas où il y a plusieurs documents de la même famille")
 
 
-    # attachment_ids      = fields.One2many("ir.attachment", "is_doc_moule_id", string="Pièces-jointes")
+    #** Ajout du 08/03/2025 => Famille 'Plan pièce'
+    plan_piece       = fields.Boolean(related="param_project_id.plan_piece")
+    pp_revue_plan    = fields.Selection(_OK_NOK, string="Revue de plan"          , tracking=True)
+    pp_equipe_projet = fields.Selection(_OK_NOK, string="Diffusion équipe projet", tracking=True)
+    pp_maj_odoo      = fields.Selection(_OK_NOK, string="Mise à jour odoo"       , tracking=True)
+
+    pp_revue_plan_commentaire    = fields.Char(string="Revue de plan commentaire"          , tracking=True)
+    pp_equipe_projet_commentaire = fields.Char(string="Diffusion équipe projet commentaire", tracking=True)
+    pp_maj_odoo_commentaire      = fields.Char(string="Mise à jour odoo commentaire"       , tracking=True)
 
 
 

@@ -76,7 +76,6 @@
                                     <group name="rc_initial_tab" string="Données d'initialisation">
                                         <field name="name"      attrs="{'invisible': [('rc_designation', '=', False)]}"/>
                                         <field name="rc_indice" attrs="{'invisible': [('rc_designation', '=', False)]}"/>
-                                        <field name="rc_daoid" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
                                         <field 
                                             name="rc_doc_moule_assemblage" 
                                             attrs="{
@@ -109,6 +108,7 @@
                                                 'invisible': [('rc_doc_moule_assemblage', '=', False)]
                                             }" 
                                         />
+                                        <field name="rc_daoid"/>
                                         <field name="rc_projetid" readonly="1"  attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}" />
                                         <field 
                                             name="rc_revue_contrat_assid" 
@@ -150,8 +150,10 @@
                                 <group string="Commentaire spécifique (essais supplémentaire)" attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}">
                                     <field name="rc_nb_pce_p_jal" colspan="2" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
                                 </group>
-                                <group string="Fiches de codification" col="4" colspan="4">
-                                    <field name="fiche_codification_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state', '!=', 'brouillon')]}" >
+
+
+                                <group string="Fiches de codification" col="4" colspan="4" attrs="{'invisible': [('fiche_codification_ids', '=', [])]}">
+                                    <field name="fiche_codification_ids" nolabel="1" colspan="4" readonly="1" >
                                         <tree>
                                             <button title="Fiche de codification" name="action_acceder_fiche_codification"  type="object" icon="fa-search-plus"/>
                                             <field name="chrono"                    optional="show" widget="many2one_clickable"/>
@@ -325,7 +327,7 @@
 
 
 
-                                <group name="rc_ar_version" string="Versions" col="4" colspan="4"  attrs="{'invisible': [('rc_doc_moule_assemblage', 'not in', ('c2','c3'))]}">
+                                <group name="rc_ar_version" string="Versions Moule" col="4" colspan="4"  attrs="{'invisible': [('rc_doc_moule_assemblage', 'not in', ('c2','c3'))]}">
                                     <field name="version_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state', '!=', 'brouillon')]}" >
                                         <form>
                                             <group col="3">
@@ -417,6 +419,47 @@
                                     <field name="rc_dfe_desc_proc" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                     <field name="rc_dfe_sch_lieu_fab" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
                                 </group>
+
+
+
+                                <group name="rc_ar_dfe_version" string="Versions Dossier F" col="4" colspan="4" attrs="{'invisible': [('rc_doc_moule_assemblage', 'not in', ('c1'))]}">
+                                    <field name="dfe_version_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state', '!=', 'brouillon')]}" >
+                                        <form>
+                                            <group>
+                                                <field name="rc_dfe_version" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
+                                                <field name="rc_dfe_comp" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
+                                                <field name="rc_dfe_comp_pri_vendu" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
+                                                <field name="rc_dfe_cycle" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
+                                                <field name="rc_dfe_mod" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
+                                                <field name="rc_dfe_taux_rebut" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
+                                                <field name="rc_dfe_desc_emaballage" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
+                                                <field name="rc_dfe_sous_traitance" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
+                                                <field name="rc_dfe_sous_traitance_prix" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
+                                                <field name="rc_dfe_qte_carton" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
+                                                <field name="rc_dfe_qte_palette" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
+                                                <field name="rc_dfe_lot_livraison" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
+                                                <field name="rc_dfe_multiple_liv" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
+                                                <field name="rc_dfe_lot_fab" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
+                                            </group>
+                                        </form>
+                                        <tree>
+                                            <field name="rc_dfe_version" optional="show"/>
+                                            <field name="rc_dfe_comp" optional="show"/>
+                                            <field name="rc_dfe_comp_pri_vendu" optional="show"/>
+                                            <field name="rc_dfe_cycle" optional="show"/>
+                                            <field name="rc_dfe_mod" optional="show"/>
+                                            <field name="rc_dfe_taux_rebut" optional="hide"/>
+                                            <field name="rc_dfe_desc_emaballage" optional="hide"/>
+                                            <field name="rc_dfe_sous_traitance" optional="hide"/>
+                                            <field name="rc_dfe_sous_traitance_prix" optional="hide"/>
+                                            <field name="rc_dfe_qte_carton" optional="hide"/>
+                                            <field name="rc_dfe_qte_palette" optional="hide"/>
+                                            <field name="rc_dfe_lot_livraison" optional="hide"/>
+                                            <field name="rc_dfe_multiple_liv" optional="hide"/>
+                                            <field name="rc_dfe_lot_fab" optional="hide"/>
+                                        </tree>
+                                    </field>
+                                </group>
                                 <group name="rc_df_fr_pieces_jointes" string="Pièces jointes">
                                     <field name="rc_df_engagement_faisabilite" widget="many2many_binary" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
                                 </group>
@@ -426,6 +469,65 @@
                                 <group>
                                     <field name="rc_df_fiche_capacitaire" widget="many2many_binary" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
                                 </group>
+
+                                <group name="rc_eiv_fr" string="Enveloppe investissement vendue">
+                                    <label for="rc_eiv_moule"            attrs="{'invisible': [('rc_doc_moule_assemblage','=','c1')]}"/>
+                                    <div class="o_row no-gutters d-flex" attrs="{'invisible': [('rc_doc_moule_assemblage','=','c1')]}">
+                                        <field name="rc_eiv_moule"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                        <field name="rc_eiv_moule_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                    </div>
+                                    <label for="rc_eiv_etude"/>
+                                    <div class="o_row no-gutters d-flex">
+                                        <field name="rc_eiv_etude"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                        <field name="rc_eiv_etude_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                    </div>
+                                    <label for="rc_eiv_main_prehension"  attrs="{'invisible': [('rc_doc_moule_assemblage','=','c1')]}"/>
+                                    <div class="o_row no-gutters d-flex" attrs="{'invisible': [('rc_doc_moule_assemblage','=','c1')]}">
+                                        <field name="rc_eiv_main_prehension"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                        <field name="rc_eiv_main_prehension_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                    </div>
+                                    <label for="rc_eiv_barre_chaude"     attrs="{'invisible': [('rc_doc_moule_assemblage','=','c1')]}"/>
+                                    <div class="o_row no-gutters d-flex" attrs="{'invisible': [('rc_doc_moule_assemblage','=','c1')]}">
+                                        <field name="rc_eiv_barre_chaude"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                        <field name="rc_eiv_barre_chaude_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                    </div>
+                                    <label for="rc_eiv_gab_controle"/>
+                                    <div class="o_row no-gutters d-flex">
+                                        <field name="rc_eiv_gab_controle"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                        <field name="rc_eiv_gab_controle_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                    </div>
+                                    <label for="rc_eiv_mach_spec"/>
+                                    <div class="o_row no-gutters d-flex">
+                                        <field name="rc_eiv_mach_spec"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                        <field name="rc_eiv_mach_spec_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                    </div>
+                                    <label for="rc_eiv_plan_valid"/>
+                                    <div class="o_row no-gutters d-flex">
+                                        <field name="rc_eiv_plan_valid"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                        <field name="rc_eiv_plan_valid_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                    </div>
+                                    <label for="rc_eiv_mis_point"/>
+                                    <div class="o_row no-gutters d-flex">
+                                        <field name="rc_eiv_mis_point"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                        <field name="rc_eiv_mis_point_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                    </div>
+                                    <label for="rc_eiv_pack"/>
+                                    <div class="o_row no-gutters d-flex">
+                                        <field name="rc_eiv_pack"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                        <field name="rc_eiv_pack_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                    </div>
+                                    <label for="rc_eiv_amort"/>
+                                    <div class="o_row no-gutters d-flex">
+                                        <field name="rc_eiv_amort"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                        <field name="rc_eiv_amort_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                    </div>
+                                    <label for="rc_eiv_total"/>
+                                    <div class="o_row no-gutters d-flex">
+                                        <field name="rc_eiv_total"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                    </div>
+                                </group>
+
+                                <!-- 
                                 <group name="rc_eiv_fr" string="Enveloppe investissement vendue" col="6" >
                                     <group>
                                         <field 
@@ -492,59 +594,8 @@
                                         <field name="rc_eiv_amort_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
                                     </group>
                                 </group>
-                                <group name="rc_ar_dfe_version" string="Versions" col="4" colspan="4" attrs="{'invisible': [('rc_doc_moule_assemblage', 'not in', ('c1'))]}">
-                                    <field name="dfe_version_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state', '!=', 'brouillon')]}" >
-                                        <form>
-                                            <group>
-                                                <field name="rc_dfe_version" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_comp" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_comp_pri_vendu" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_cycle" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_mod" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_taux_rebut" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_desc_emaballage" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_sous_traitance" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_sous_traitance_prix" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_qte_carton" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_qte_palette" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_lot_livraison" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_multiple_liv" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_lot_fab" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                            </group>
-                                        </form>
-                                        <tree>
-                                            <field name="rc_dfe_version" optional="show"/>
-                                            <field name="rc_dfe_comp" optional="show"/>
-                                            <field name="rc_dfe_comp_pri_vendu" optional="show"/>
-                                            <field name="rc_dfe_cycle" optional="show"/>
-                                            <field name="rc_dfe_mod" optional="show"/>
-                                            <field name="rc_dfe_taux_rebut" optional="hide"/>
-                                            <field name="rc_dfe_desc_emaballage" optional="hide"/>
-                                            <field name="rc_dfe_sous_traitance" optional="hide"/>
-                                            <field name="rc_dfe_sous_traitance_prix" optional="hide"/>
-                                            <field name="rc_dfe_qte_carton" optional="hide"/>
-                                            <field name="rc_dfe_qte_palette" optional="hide"/>
-                                            <field name="rc_dfe_lot_livraison" optional="hide"/>
-                                            <field name="rc_dfe_multiple_liv" optional="hide"/>
-                                            <field name="rc_dfe_lot_fab" optional="hide"/>
-                                        </tree>
-                                    </field>
-                                </group>
-                                 
-
-
-
-
+                                -->
                             </page>
-
-
-
-
-
-
-
-
-
 
 
                             <page name="rc_specificites_tab" string="Spécificités et Éléments qualités" attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}" >

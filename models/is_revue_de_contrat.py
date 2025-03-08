@@ -29,14 +29,15 @@ class is_revue_de_contrat(models.Model):
         ("Non", "hors Automobile"),
         ("Oui", "Automobile"),
     ], string="Type automobile", tracking=True, required=True)
-    rc_projetid                        = fields.Many2one("is.mold.project", string="Projet"     , compute="_compute_rc_projetid", store=True, readonly=True, tracking=True)
-    rc_commercial                      = fields.Many2one("res.users", string="Nom du commercial", compute="_compute_rc_projetid", store=True, readonly=True, tracking=True)
+
+    rc_daoid                           = fields.Many2one("is.dossier.appel.offre", string="Dossier d'appel d'offre", compute="_compute_rc_projetid", store=True, readonly=True, tracking=True)
+    rc_projetid                        = fields.Many2one("is.mold.project", string="Projet"                        , compute="_compute_rc_projetid", store=True, readonly=True, tracking=True)
+    rc_commercial                      = fields.Many2one("res.users", string="Nom du commercial"                   , compute="_compute_rc_projetid", store=True, readonly=True, tracking=True)
     rc_revue_contrat_assid             = fields.Many2one("is.revue.de.contrat", string="RC dossier F", readonly=True)
     rc_ass_mouleid                     = fields.Many2many("is.mold", "is_revue_mold_rel", "revue_id", "mold_id", string="Moules Dossier F", compute="_compute_rc_ass_mouleid", store=False, readonly=True)
     rc_client                          = fields.Many2one("res.partner", string="Client", compute="_compute_rc_projetid", store=True, readonly=True)
     rc_designation                     = fields.Char(string="Désignation"              , compute="_compute_rc_projetid", store=True, readonly=True, tracking=True)
     rc_num_outillageid                 = fields.Many2one("is.mold", string="N° outillage => Doublon avez champ 'Moule' => A Supprimer") 
-    rc_daoid                           = fields.Many2one("is.dossier.appel.offre", string="Dossier d'appel d'offre", tracking=True)
     rc_duration                        = fields.Float(string="Durée de vie", tracking=True)
     rc_product_dest                    = fields.Char(string="Destination du produit", tracking=True)
     rc_cust_wait                       = fields.Char(string="Attentes de notre client et points particuliers", tracking=True)
@@ -127,7 +128,7 @@ class is_revue_de_contrat(models.Model):
     rc_edl_at_rapport_ctrl             = fields.Boolean(string="Rapport de contrôle", tracking=True)
     rc_edl_at_cap                      = fields.Boolean(string="Capabilité", tracking=True)
     rc_edl_at_plan_m_ctrl              = fields.Boolean(string="Plan du moyen de contrôle", tracking=True)
-    rc_edl_at_moy_ctrl                 = fields.Boolean(string="R&amp;R Moyen de contrôle", tracking=True)
+    rc_edl_at_moy_ctrl                 = fields.Boolean(string="R&R Moyen de contrôle", tracking=True)
     rc_edl_at_ut_moy_ctrl              = fields.Boolean(string="Utilisation moyen de contrôle ", tracking=True)
     rc_edl_at_plan_valid               = fields.Boolean(string="Plan de validation ", tracking=True)
     rc_edl_at_rap_ess_lab              = fields.Boolean(string="Rapport essai laboratoire", tracking=True)
@@ -205,7 +206,7 @@ class is_revue_de_contrat(models.Model):
         ("Classe 5", "Classe 5 : 600T - 700T"),
         ("Classe 6", "Classe 6 : 800T - 1000T"),
     ], string="Classe commerciale", tracking=True)
-    version_ids                        = fields.One2many("is.revue.de.contrat.version", "is_revue_id", tracking=True, copy=True)
+    version_ids                        = fields.One2many("is.revue.de.contrat.version", "is_revue_id", tracking=True, copy=True, string="Versions Moule")
     rc_dfi_temp_occ_pm                 = fields.Float(string="Temps occupation presse mensuelle", compute="_compute_rc_dfi_temp_occ_pm", store=True, readonly=True)
     rc_dfe_desc_proc                   = fields.Text(string="Descriptif du process et site de fabrication vendu", tracking=True)
     rc_dfe_sch_lieu_fab                = fields.Text(string="Schéma de flux vendu (Logistique) ", tracking=True)
@@ -215,7 +216,7 @@ class is_revue_de_contrat(models.Model):
     rc_df_fiche_capacitaire            = fields.Many2many("ir.attachment", "is_rc_df_fiche_capacitaire_rel"           , "rc_df_fiche_capacitaire"           , "att_id", string="PJ Fiche capacitaire")
     rc_ca_annuel                       = fields.Float(string="CA annuel", digits=(12, 2), compute="_compute_rc_ca_annuel", store=True, readonly=True)
     rc_vac                             = fields.Float(string="VAC"      , digits=(12, 2), compute="_compute_rc_ca_annuel", store=True, readonly=True)
-    dfe_version_ids                    = fields.One2many("is.revue.de.contrat.dfe.version", "is_revue_id", copy=True)
+    dfe_version_ids                    = fields.One2many("is.revue.de.contrat.dfe.version", "is_revue_id", copy=True, string="Versions Dossier F")
 
     fiche_codification_ids             = fields.One2many("is.fiche.codification", "revue_contrat_id")
 
@@ -296,14 +297,19 @@ class is_revue_de_contrat(models.Model):
         for obj in self:
             projetid = False
             client_id = False
+            dao_id = False
             if obj.rc_mouleid:
                 projetid  = obj.rc_mouleid.project.id
                 client_id = obj.rc_mouleid.project.client_id.id
+                dao_id    = obj.rc_mouleid.dossier_appel_offre_id.id
             if obj.rc_dossierfid:
                 projetid  = obj.rc_dossierfid.project.id
                 client_id = obj.rc_dossierfid.project.client_id.id
+                dao_id    = obj.rc_dossierfid.dossier_appel_offre_id.id
+
             obj.rc_projetid    = projetid
             obj.rc_client      = client_id
+            obj.rc_daoid       = dao_id
             obj.rc_commercial  = obj.rc_client.user_id.id
             obj.rc_designation = obj.rc_mouleid.designation or obj.rc_dossierfid.designation 
 
@@ -337,9 +343,22 @@ class is_revue_de_contrat(models.Model):
             ca = vac = 0
             for line in obj.decomposition_prix_ids:
                 ca+= line.rc_year_quantity * (line.rc_sell_price - line.rc_moul_amort - line.rc_preserie_surcout)
-                vac+=line.rc_year_quantity * (line.rc_va_injection - line.rc_va_assembly)
+                vac+=line.rc_year_quantity * (line.rc_va_injection + line.rc_va_assembly)
             obj.rc_ca_annuel = ca
             obj.rc_vac       = vac
+
+
+    # //** vac *******************************************************************
+    # $va_injection     = $this->getTValue('rc_va_injection');
+    # $va_assembly      = $this->getTValue('rc_va_assembly');
+    #     for ($i=0;$i<count($sell_price);$i++) {
+    #         $vac = $vac + ($va_injection[$i] + $va_assembly[$i])*$qte_annuelle[$i];
+    #     }
+    #     if ($vac==0) $vac=" ";
+    # $this->setValue('rc_vac', $vac);
+    # //**************************************************************************
+
+
 
 
     #Exemple avec 4 lignes sur RC 3139

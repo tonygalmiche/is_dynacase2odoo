@@ -104,7 +104,6 @@
                             attrs="{'invisible': [('state', '!=', 'plaswinned')]}"
                             type="object"
                         />
-                    <!--    groups="is_dynacase2odoo.is_gestionnaire_revue_contrat_group"-->
                         <field name="state" widget="statusbar" />
                         <field name="dynacase_id" invisible="1"/>
                     </header>
@@ -113,15 +112,15 @@
                         <field name="active" invisible="1"/> 
                         <group string="Caractéristiques">
                             <group>
-                                <field name="demao_type" />
+                                <field name="demao_type" readonly="1" force_save="1"/>
                                 <field name="demao_num" />
-                                <field name="demao_dao" />
                                 <field name="demao_date" />
-                                <field name="demao_idclient" />
-                                <field name="demao_idcommercial" />
                                 <field name="demao_idmoule" />
                                 <field name="dossierf_id" />
-                                <field name="demao_desig" />
+                                <field name="demao_idclient"         required="1"/>
+                                <field name="demao_idcommercial"     required="1"/>
+                                <field name="dossier_appel_offre_id"/>
+                                <field name="demao_desig"            required="1"/>
                             </group>
                             <group>
                                 <field name="site_id" />
@@ -132,25 +131,22 @@
                                 <field name="demao_pxvente" />
                                 <field name="demao_numcmd" />
                                 <field name="demao_obs" />    
-                                <field name="fermeture_id"/>    
-                                <field name="solde"/>    
                             </group>
                          </group>
-                         <group>
-                            <group string="BE">
-                                <field name="demao_idbe" />
-                                <field name="demao_annex" widget="many2many_binary"/>
-                            </group>
-                            <group string="Commercial">
-                                <field name="demao_annexcom" widget="many2many_binary"/>
-                            </group>
-
-                         </group>
-                         <group string="Commandes BE">
+                        <group >
+                            <separator string="BE"/>
+                            <field name="demao_idbe" />
+                            <field name="fermeture_id"/>    
+                            <field name="solde"/>    
+                            <separator string="Fichiers commerciaux"/>
+                            <field name="demao_annexcom" widget="many2many_binary"/>
+                            <separator string="Fichiers BE"/>
+                            <field name="demao_annex" widget="many2many_binary"/>
+                            <separator string="Commandes BE"/>
                             <field name="demao_cde_be" widget="many2many_binary"/>
                         </group>
-                        <group string="Fiches de codification" col="4" colspan="4">
-                            <field name="fiche_codification_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state', '!=', 'brouillon')]}" >
+                        <group string="Fiches de codification" col="4" colspan="4" attrs="{'invisible': [('fiche_codification_ids', '=', [])]}">
+                            <field name="fiche_codification_ids" nolabel="1" colspan="4">
                                 <tree>
                                     <button title="Fiche de codification" name="action_acceder_fiche_codification"  type="object" icon="fa-search-plus"/>
                                     <field name="chrono"                    optional="show" widget="many2one_clickable"/>
@@ -184,10 +180,10 @@
                                     <field name="date_dms"                  optional="hide"/>
                                     <field name="lot_livraison"             optional="hide"/>
                                     <field name="site_livraison"            optional="hide"/>
-                                    <field name="create_date"               optional="hide"/>
-                                    <field name="create_uid"                optional="hide"/>
-                                    <field name="write_date"                optional="hide"/>
-                                    <field name="write_uid"                 optional="hide"/>
+                                    <field name="create_date"               optional="hide" string="Créé le"/>
+                                    <field name="create_uid"                optional="hide" string="Créé par"/>
+                                    <field name="write_date"                optional="hide" string="Modifié le"/>
+                                    <field name="write_uid"                 optional="hide" string="Modifié par"/>
                                     <field name="dynacase_id"               optional="hide" groups="base.group_system"/>
                                 </tree>
                             </field>
@@ -206,28 +202,32 @@
             <field name="model">is.dossier.modif.variante</field>
             <field name="arch" type="xml">
                 <tree string="Dossier modif/variante">
-                    <field name="site_id" optional="show"/>
-                    <field name="demao_type" optional="show"/>
-                    <field name="demao_num"  optional="show"/>
-                    <field name="demao_dao"  optional="show"/>
-                    <field name="demao_date" optional="show"/>
-                    <field name="demao_idclient" optional="show" widget="many2one_clickable"/>
-                    <field name="demao_idcommercial" optional="show"/>
-                    <field name="demao_idmoule" optional="show" widget="many2one_clickable"/>
-                    <field name="dossierf_id" optional="show" widget="many2one_clickable"/>
-                    <field name="demao_desig" optional="show"/>
-                    <field name="demao_nature" optional="hide"/>
-                    <field name="demao_ref" optional="hide"/>
-                    <field name="demao_daterep" optional="show"/>
-                    <field name="demao_datelanc" optional="show"/>
-                    <field name="demao_pxvente" optional="hide"/>
-                    <field name="demao_numcmd" optional="hide"/>
-                    <field name="demao_obs" optional="hide"/>
-                    <field name="demao_motif" optional="hide"/>
-                    <field name="demao_idbe" optional="hide"/>
-                    <field name="solde" optional="show"/>
-                    <field name="state" optional="show"/>
-                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
+                    <field name="site_id"                 optional="show"/>
+                    <field name="demao_type"              optional="hide"/>
+                    <field name="demao_num"               optional="show"/>
+                    <field name="demao_date"              optional="show"/>
+                    <field name="demao_idclient"          optional="show" widget="many2one_clickable"/>
+                    <field name="demao_idcommercial"      optional="show"/>
+                    <field name="demao_idmoule"           optional="show" widget="many2one_clickable"/>
+                    <field name="dossierf_id"             optional="show" widget="many2one_clickable"/>
+                    <field name="dossier_appel_offre_id"  optional="hide" widget="many2one_clickable"/>
+                    <field name="demao_desig"             optional="show"/>
+                    <field name="demao_nature"            optional="hide"/>
+                    <field name="demao_ref"               optional="hide"/>
+                    <field name="demao_daterep"           optional="show"/>
+                    <field name="demao_datelanc"          optional="show"/>
+                    <field name="demao_pxvente"           optional="hide"/>
+                    <field name="demao_numcmd"            optional="hide"/>
+                    <field name="demao_obs"               optional="hide"/>
+                    <field name="demao_motif"             optional="hide"/>
+                    <field name="demao_idbe"              optional="hide"/>
+                    <field name="solde"                   optional="show"/>
+                    <field name="state"                   optional="show"/>
+                    <field name="create_date"             optional="hide" string="Créé le"/>
+                    <field name="create_uid"              optional="hide" string="Créé par"/>
+                    <field name="write_date"              optional="hide" string="Modifié le"/>
+                    <field name="write_uid"               optional="hide" string="Modifié par"/>
+                    <field name="dynacase_id"             optional="hide" groups="base.group_system"/>
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
@@ -242,21 +242,17 @@
             <field name="arch" type="xml">
                 <search string="Dossier modif/variante">
                     <field name="site_id" />
-                    <field name="demao_type" />
                     <field name="demao_num" />
-                    <field name="demao_dao" />
+                    <field name="dossier_appel_offre_id" />
                     <field name="demao_idclient" />
-                    <field name="demao_idcommercial" />
                     <field name="demao_idmoule" />
                     <field name="dossierf_id" />
                     <field name="demao_desig" />
                     <field name="demao_nature" />
                     <field name="demao_ref" />
-                    <field name="demao_pxvente" />
                     <field name="demao_numcmd" />
                     <field name="demao_obs" />
                     <field name="demao_motif" />
-                    <field name="demao_idbe" />
                 </search>
             </field>
         </record>
@@ -279,10 +275,19 @@
                 </graph>
             </field>
         </record>
-        <record id="is_dossier_modif_variante_action" model="ir.actions.act_window">
-            <field name="name">Dossier modif/variante</field>
+        <record id="is_dossier_modification_action" model="ir.actions.act_window">
+            <field name="name">Dossier modification</field>
             <field name="res_model">is.dossier.modif.variante</field>
             <field name="view_mode">tree,form,pivot,graph</field>
+            <field name="domain">[('demao_type','=','modification')]</field>
+            <field name="context">{'default_demao_type': 'modification'}</field>
+        </record>
+        <record id="is_dossier_variante_action" model="ir.actions.act_window">
+            <field name="name">Dossier variante</field>
+            <field name="res_model">is.dossier.modif.variante</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
+            <field name="domain">[('demao_type','=','variante')]</field>
+            <field name="context">{'default_demao_type': 'variante'}</field>
         </record>
 
     </data>

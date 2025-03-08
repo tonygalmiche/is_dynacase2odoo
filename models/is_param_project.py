@@ -158,12 +158,8 @@ class IsParamProject(models.Model):
     gantt_pdf           = fields.Boolean("Gantt PDF", default=True, help="Afficher dans Gantt PDF", tracking=True)
     array_ids           = fields.One2many('is.param.project.array', 'param_project_id')
     array_html          = fields.Html(string="Gestion des J", compute='_compute_array_html',store=True, readonly=True, tracking=True)
+    plan_piece          = fields.Boolean("Afficher les champs de la famille 'Plan Pièce'", default=False, tracking=True)
     active              = fields.Boolean('Actif', default=True, tracking=True)
-
-
-    # def write(self,vals):
-    #     res=super(IsParamProject, self).write(vals)
-    #     return res
 
 
     @api.depends('array_ids','array_ids.ppr_irv','array_ids.ppr_bloquant')
