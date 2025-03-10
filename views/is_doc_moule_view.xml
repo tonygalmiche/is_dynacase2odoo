@@ -101,6 +101,9 @@
                                 <field name="fin_derogation" attrs="{'invisible': [('etat', '!=', 'D')], 'required': [('etat', '=', 'D')]}"/>
                                 <field name="conforme"       attrs="{'invisible': [('type_document', '!=', 'Article')]}"/>
                                 <field name="indicateur"     attrs="{'readonly': 1}" force_save="1"/>
+
+
+
                             </group>
                         </group>
                         <group string="Plan pièce" attrs="{'invisible': [('plan_piece', '!=', True)]}">
@@ -137,6 +140,12 @@
                                             <field name="duree_convertion_pdf"  optional="hide" attrs="{'column_invisible':[('parent.ppr_transformation_pdf', '=', False)]}"/>
                                         </tree>
                                     </field>
+                                    <field name="recopie_reponse_vsb" invisible="1"/>
+                                    <button 
+                                        string="Recopie réponse précédente" name="recopie_reponse_action" 
+                                        type="object" class="btn btn-info" colspan="2"
+                                        attrs="{'invisible': [('recopie_reponse_vsb', '=', False)]}"
+                                    />
                                     <field name="rsp_pj"    attrs="{'invisible': [('rsp_pj', '=', False)]}"/>
                                     <field name="rsp_date"  attrs="{'invisible': [('ppr_type_demande', 'not in', ['DATE', 'PJ_DATE'])]}"/>
                                     <field name="rsp_texte" attrs="{'invisible': [('ppr_type_demande', 'not in', ['TEXTE','PJ_TEXTE'])]}"/>

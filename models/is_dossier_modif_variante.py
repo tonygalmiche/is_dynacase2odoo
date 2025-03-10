@@ -59,23 +59,6 @@ class is_dossier_modif_variante(models.Model):
             obj.vers_annule_vsb = vsb
 
 
-
-
-        # ("plascreate",      "Créé"),
-        # ("plasanalysed",    "Analysé"),
-        # ("plastransbe",     "Transmis BE"),
-        # ("Analyse_BE",      "Analysé BE"),
-        # ("plasvalidbe",     "Validé BE"),
-        # ("plasvalidcom",    "Validé Commercial"),
-        # ("plasdiffusedcli", "Diffusé Client"),
-        # ("plasrelancecli",  "Relance Client"),
-        # ("plasloosed",      "Perdu"),
-        # ("plaswinned",      "Gagné"),
-        # ("plascancelled",   "Annulé"),
-
-
-
-
     def vers_analyse_action(self):
         for obj in self:
             obj.sudo().state = "plasanalysed"

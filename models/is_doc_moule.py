@@ -173,6 +173,30 @@ class IsDocMoule(models.Model):
     pp_equipe_projet_commentaire = fields.Char(string="Diffusion équipe projet commentaire", tracking=True)
     pp_maj_odoo_commentaire      = fields.Char(string="Mise à jour odoo commentaire"       , tracking=True)
 
+    recopie_reponse_vsb = fields.Boolean(string="Recopie réponse vsb", compute='_compute_recopie_reponse_vsbf',store=False, readonly=True)
+
+
+    @api.depends('etat','array_ids')
+    def _compute_recopie_reponse_vsbf(self):
+        for obj in self:
+            vsb = True
+            if len(obj.array_ids)>0:
+                vsb=False
+            if obj.etat=='F':
+                vsb=False
+            if vsb and obj._origin.id:
+                domain=[
+                    ('id','!=',obj._origin.id),
+                    ('etat','=','F'),
+                    ('param_project_id','=',obj.param_project_id.id),
+                    ('idmoule'         ,'=',obj.idmoule.id),
+                    ('dossierf_id'     ,'=',obj.dossierf_id.id),
+                ]
+                docs=self.env['is.doc.moule'].search(domain,order='j_prevue desc',limit=1)
+                for doc in docs:
+                    if len(doc.array_ids)==0:
+                        vsb=False
+            obj.recopie_reponse_vsb = vsb
 
 
     @api.onchange('etat')
@@ -314,21 +338,6 @@ class IsDocMoule(models.Model):
             obj.indicateur = html
 
 
-    # @api.depends('note','coefficient','etat','action','array_ids.annex','rsp_date','rsp_texte')
-    # def _compute_etat(self):
-    #     for obj in self:
-    #         etat='AF'
-    #         reponses=obj.get_doc_reponse()
-    #         if reponses[0] or reponses[1] or reponses[2]:
-    #             etat='F'
-    #         if etat!='F':
-    #             if obj.etat=='D' and obj.fin_derogation:
-    #                 etat='D'
-    #         if etat=='F':
-    #             obj.fin_derogation=False
-    #         obj.etat=etat
-
-
     def _compute_acces_chef_projet(self):
         for obj in self:
             acces=False
@@ -389,14 +398,16 @@ class IsDocMoule(models.Model):
             if delta:
                 self.move_task_lier(delta)
 
-
         if 'etat' in vals:
             if vals['etat']=='F':
                 reponses=self.get_doc_reponse()
                 type_demande = dict(self._fields['ppr_type_demande'].get_description(self.env).get('selection')).get(self.ppr_type_demande)
                 if not reponses[0] and not reponses[1] and not reponses[2] and self.ppr_type_demande!='AUTO':
                     raise ValidationError("Impossbile de passer à l'état 'Fait' car aucune réponse n'est fournie (%s) !"%type_demande)
-                
+                for obj in self:
+                    if obj.plan_piece:
+                        if not obj.pp_revue_plan or not obj.pp_equipe_projet or not obj.pp_maj_odoo:
+                            raise ValidationError("Impossbile de passer à l'état 'Fait' car il est nécessaire de renseigner les champs 'Plan pièce' !")                
         for obj in self:
             if not obj.acces_chef_projet:
                 champs_interdit=[
@@ -604,6 +615,28 @@ class IsDocMoule(models.Model):
 
             ct+=1
         return []
+
+
+    def recopie_reponse_action(self):
+        for obj in self:
+            domain=[
+                ('id','!=',obj.id),
+                ('etat','=','F'),
+                ('param_project_id','=',obj.param_project_id.id),
+                ('idmoule'         ,'=',obj.idmoule.id),
+                ('dossierf_id'     ,'=',obj.dossierf_id.id),
+            ]
+            docs=self.env['is.doc.moule'].search(domain,order='j_prevue desc',limit=1)
+            for doc in docs:
+                for line in doc.array_ids:
+                    vals={
+                        'is_doc_id': obj.id,
+                        'annex'    : line.annex,
+                        'comment'  : line.comment,
+                    }
+                    self.env['is.doc.moule.array'].create(vals)
+                obj.etat='F'
+                doc.array_ids.unlink()
 
 
     @api.onchange('date_debut_gantt','duree')

@@ -591,7 +591,7 @@ class is_revue_de_contrat(models.Model):
     def creation_fiche_codification_action(self):
         for obj in self:
             project = obj.rc_projetid
-            vals = {'type_dossier': 'Revue de contrat',
+            vals = {'type_dossier': 'Créer suivant données issues de la revue de contrat et de la revue de lancement',
                     'client_id': obj.rc_client.id,
                     'project_id': project.id,
                     'chef_de_projet_id': project.chef_projet_id.id,
