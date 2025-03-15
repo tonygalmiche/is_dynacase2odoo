@@ -824,7 +824,7 @@
                     <field name="section_id"       optional="show"/>
                     <field name='sequence'/>
                     <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus"/>
-                    <field name="param_project_id" required="1" domain="[('type_document','=',type_document)]" />
+                    <field name="param_project_id" required="1" domain="[('type_document','=','Moule')]" />
                     <field name="type_document"    optional="hide"/>
                     <field name="j_prevue"         optional="show"/>
                     <field name="dossierf_id"      required="1"    widget="many2one_clickable"/>
