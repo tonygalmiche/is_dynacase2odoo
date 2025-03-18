@@ -35,7 +35,6 @@
                             <field name="pieces_stck"/>
                             <field name="date_outillage"/>
                             <field name="date_retour_outillage"/>
-                            <field name="state"/>
                         </group>
                     </sheet>
                    <div class="oe_chatter">
@@ -63,7 +62,6 @@
                     <field name="pieces_stck"               optional="show"/>
                     <field name="date_outillage"            optional="show"/>
                     <field name="date_retour_outillage"     optional="show"/>
-                    <field name="state"                     optional="show"/>
                     <field name="dynacase_id"               optional="hide" groups="base.group_system"/>
                     <field name="create_date"               optional="hide"/>
                     <field name="create_uid"                optional="hide"/>
@@ -111,7 +109,7 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="is_prise_avance_action">
-            <field name="name">Fiche information prospect</field>
+            <field name="name">Prise d'avance</field>
             <field name="res_model">is.prise.avance</field>
             <field name="view_mode">tree,form,pivot,graph</field>
             <field name="context">{}
