@@ -68,9 +68,17 @@ class IsGanttCopie(models.Model):
     dst_nb_taches                 = fields.Integer("Nb tâches actuellement", compute='_compute_nb_taches')
     section_ids                   = fields.One2many('is.gantt.copie.section', 'gantt_copie_id')
     active                        = fields.Boolean('Actif', default=True, tracking=True)
-    revue_lancement_id            = fields.Many2one(related="dst_idmoule.revue_lancement_id")
     j_actuelle                    = fields.Selection(related="dst_idmoule.j_actuelle")
     copier_sup_j_actuelle         = fields.Boolean('Ne copier que les tâches >= J actuelle', default=True, tracking=True)
+
+    revue_lancement_id            = fields.Many2one("is.revue.lancement", string="Revue de lancement", compute='_compute_revue_lancement_id', store=False, readonly=True)
+    #revue_lancement_id            = fields.Many2one(related="dst_idmoule.revue_lancement_id")
+
+
+    @api.depends('dst_idmoule', 'dst_dossierf_id')
+    def _compute_revue_lancement_id(self):
+        for obj in self:
+            obj.revue_lancement_id = obj.dst_idmoule.revue_lancement_id.id or obj.dst_dossierf_id.revue_lancement_id.id
 
 
     def get_budgets_revue_lancement(self,rl):
@@ -159,8 +167,8 @@ class IsGanttCopie(models.Model):
 
     def generer_copie_action(self):
         for obj in self:
-            if obj.type_document=='Moule' and not obj.revue_lancement_id:
-                raise ValidationError("La revue de lancement est obligatoire sur le moule de destination")
+            if obj.type_document in ('Moule', 'Dossier F') and not obj.revue_lancement_id:
+                raise ValidationError("La revue de lancement est obligatoire sur le moule ou dossier F de destination")
 
             budgets=[]
             rl = obj.revue_lancement_id
@@ -253,10 +261,9 @@ class IsGanttCopie(models.Model):
                         dst_doc.actualisation_indicateur_action()
 
 
+            if obj.revue_lancement_id:
+                obj.revue_lancement_id.initialiser_responsable_doc_action()
 
-            if obj.type_document=='Moule':
-                if obj.dst_idmoule.revue_lancement_id:
-                    obj.dst_idmoule.revue_lancement_id.initialiser_responsable_doc_action()
 
             type_document = dict(TYPE_DOCUMENT)[obj.type_document]
             vals={
