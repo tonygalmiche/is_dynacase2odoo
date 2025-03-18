@@ -18,15 +18,15 @@
                             groups="is_plastigray16.is_chef_projet_group"
                         />
                         <button 
-                            name="vers_realise_action"
-                            string="vers Réalisé"
+                            name="vers_diffuse_action"
+                            string="vers Diffusé"
                             type="object"
                             attrs="{'invisible': [('state', '=', 'realise')]}" 
                             groups="is_plastigray16.is_chef_projet_group"
                         />
                         <button 
-                            name="vers_diffuse_action"
-                            string="vers Diffusé"
+                            name="vers_realise_action"
+                            string="vers Réalisé"
                             type="object"
                             attrs="{'invisible': [('state', '!=', 'realise')]}" 
                             groups="is_plastigray16.is_chef_projet_group"

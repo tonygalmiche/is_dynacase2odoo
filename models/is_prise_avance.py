@@ -2,8 +2,8 @@ from odoo import models, fields  # type: ignore
 
 _STATE = ([
     ('brouillon', 'Brouillon'),
-    ('realise', 'Réalisé'),
     ('diffuse', 'Diffusé'),
+    ('realise', 'Réalisé'),
 ])
 
 
