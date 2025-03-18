@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
-        <!-- Sequence is.prise.avance -->
-        <!--record id="is_prise_avance_seq" model="ir.sequence">
-            <field name="name">Fiche information prospect</field>
-            <field name="code">is.prise.avance</field>
-            <field name="prefix"></field>
-            <field name="padding">5</field>
-            <field name="company_id" eval="False"/>
-        </record-->
-
         <!-- is.prise.avance -->
         <record model="ir.ui.view" id="is_prise_avance_form_view">
             <field name="name">is_prise_avance_form_view</field>
@@ -29,21 +20,22 @@
                         <field name="dynacase_id" invisible="1"/>
                     </header>
                     <sheet>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active" invisible="1"/>
                         <group>
-                            <field name="pa"/>
                             <field name="num_moule_id"/>
                             <field name="designation"/>
                             <field name="user_id"/>
                             <field name="resp_prise_avance_id"/>
                             <field name="motif_prise_avance"/>
                             <field name="immobilisation"/>
-                            <field name="prieces_modif"/>
+                            <field name="pieces_modif"/>
                             <field name="duree_immobilisation"/>
                             <field name="nb_jours"/>
                             <field name="pieces_stck"/>
                             <field name="date_outillage"/>
                             <field name="date_retour_outillage"/>
-                            <field name="etat"/>
+                            <field name="state"/>
                         </group>
                     </sheet>
                    <div class="oe_chatter">
@@ -60,21 +52,25 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="pa"                        optional="show"/>
                     <field name="num_moule_id"              optional="show" widget="many2one_clickable"/>
                     <field name="designation"               optional="show"/>
-                    <field name="user_id"                   optional="show" widget="many2one_clickable"/>
-                    <field name="resp_prise_avance_id"      optional="show" widget="many2one_clickable"/>
+                    <field name="user_id"                   optional="show"/>
+                    <field name="resp_prise_avance_id"      optional="show"/>
                     <field name="motif_prise_avance"        optional="show"/>
                     <field name="immobilisation"            optional="show"/>
-                    <field name="prieces_modif"             optional="show"/>
+                    <field name="pieces_modif"              optional="show"/>
                     <field name="duree_immobilisation"      optional="show"/>
                     <field name="nb_jours"                  optional="show"/>
                     <field name="pieces_stck"               optional="show"/>
                     <field name="date_outillage"            optional="show"/>
                     <field name="date_retour_outillage"     optional="show"/>
-                    <field name="etat"                      optional="show"/>
+                    <field name="state"                     optional="show"/>
                     <field name="dynacase_id"               optional="hide" groups="base.group_system"/>
+                    <field name="create_date"               optional="hide"/>
+                    <field name="create_uid"                optional="hide"/>
+                    <field name="write_date"                optional="hide"/>
+                    <field name="write_uid"                 optional="hide"/>
+
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
@@ -89,41 +85,33 @@
             <field name="model">is.prise.avance</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name="pa"/>
                     <field name="num_moule_id"/>
                     <field name="designation"/>
                     <field name="user_id"/>
                     <field name="resp_prise_avance_id"/>
                     <field name="motif_prise_avance"/>
-                    <field name="immobilisation"/>
-                    <field name="prieces_modif"/>
-                    <field name="duree_immobilisation"/>
-                    <field name="nb_jours"/>
-                    <field name="pieces_stck"/>
-                    <field name="date_outillage"/>
-                    <field name="date_retour_outillage"/>
-                    <field name="etat"/>
+                    <field name="state"/>
                 </search>
             </field>
         </record>
-        <!--record id="is_prise_avance_pivot" model="ir.ui.view">
+        <record id="is_prise_avance_pivot" model="ir.ui.view">
             <field name="name">is_prise_avance_pivot</field>
             <field name="model">is.prise.avance</field>
             <field name="arch" type="xml">
                 <pivot>
-                    <field name="client_id"  type="row"/>
+                    <field name="user_id"  type="row"/>
                 </pivot>
             </field>
-        </record-->
-        <!--record id="is_prise_avance_graph" model="ir.ui.view">
+        </record>
+        <record id="is_prise_avance_graph" model="ir.ui.view">
             <field name="name">is_prise_avance_graph</field>
             <field name="model">is.prise.avance</field>
             <field name="arch" type="xml">
                 <graph>
-                    <field name="client_id"  type="row"/>
+                    <field name="user_id"  type="row"/>
                 </graph>
             </field>
-        </record-->
+        </record>
         <record model="ir.actions.act_window" id="is_prise_avance_action">
             <field name="name">Fiche information prospect</field>
             <field name="res_model">is.prise.avance</field>
@@ -132,4 +120,4 @@
             </field>
         </record>
   </data>
-</openerp>
+</odoo>
