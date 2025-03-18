@@ -18,13 +18,13 @@
                             groups="base.group_system"
                         />
                         <field name="dynacase_id" invisible="1"/>
+                        <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
                         <group>
                             <field name="num_moule_id"/>
-                            <field name="designation"/>
                             <field name="user_id"/>
                             <field name="resp_prise_avance_id"/>
                             <field name="motif_prise_avance"/>
@@ -53,7 +53,6 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="num_moule_id"              optional="show" widget="many2one_clickable"/>
-                    <field name="designation"               optional="show"/>
                     <field name="user_id"                   optional="show"/>
                     <field name="resp_prise_avance_id"      optional="show"/>
                     <field name="motif_prise_avance"        optional="show"/>
@@ -86,7 +85,6 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="num_moule_id"/>
-                    <field name="designation"/>
                     <field name="user_id"/>
                     <field name="resp_prise_avance_id"/>
                     <field name="motif_prise_avance"/>

@@ -10,14 +10,13 @@ _STATE = ([
 class is_prise_avance(models.Model):
     _name='is.prise.avance'
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
-    _description="Prise avance"
+    _description="Prise d'avance"
     _rec_name = "num_moule_id"
     _order='num_moule_id'
 
-    num_moule_id                = fields.Many2one('is.mold', 'Numéro du moule', tracking=True)
-    active                     = fields.Boolean('Actif', default=True, tracking=True)
-    designation                 = fields.Char('Désignation', tracking=True)
-    user_id                     = fields.Many2one('res.users', 'Demandeur', tracking=True)
+    num_moule_id                = fields.Many2one('is.mold', 'Numéro du moule', required=True, tracking=True)
+    active                      = fields.Boolean('Actif', default=True, tracking=True)
+    user_id                     = fields.Many2one('res.users', 'Demandeur', tracking=True, default=lambda self: self.env.uid)
     resp_prise_avance_id        = fields.Many2one('res.users', "Responsable de la prise d'avance", tracking=True)
     motif_prise_avance          = fields.Selection([('m', 'Modification outillage'), ('t', 'Transfert outillage')], "Motif de la prise d'avance", tracking=True)
     immobilisation              = fields.Boolean("Immobilisation complète", tracking=True)

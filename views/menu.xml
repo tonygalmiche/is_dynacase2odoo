@@ -228,7 +228,7 @@
             <field name="action"    ref="is_revue_projet_jalon_action"/>
         </record>
         <record id="is_prise_avance_menu" model="ir.ui.menu" >
-            <field name="name">Prise avance</field>
+            <field name="name">Prise d'avance</field>
             <field name="sequence">55</field>
             <field name="parent_id" eval="ref('is_projet_moule_menu')"/>
             <field name="action"    ref="is_prise_avance_action"/>
