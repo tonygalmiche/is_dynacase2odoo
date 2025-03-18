@@ -167,11 +167,11 @@ class IsDocMoule(models.Model):
     plan_piece       = fields.Boolean(related="param_project_id.plan_piece")
     pp_revue_plan    = fields.Selection(_OK_NOK, string="Revue de plan"          , tracking=True)
     pp_equipe_projet = fields.Selection(_OK_NOK, string="Diffusion équipe projet", tracking=True)
-    pp_maj_odoo      = fields.Selection(_OK_NOK, string="Mise à jour odoo"       , tracking=True)
+    pp_maj_odoo      = fields.Selection(_OK_NOK, string="Mise à jour Article / Nomenclature", tracking=True)
 
     pp_revue_plan_commentaire    = fields.Char(string="Revue de plan commentaire"          , tracking=True)
     pp_equipe_projet_commentaire = fields.Char(string="Diffusion équipe projet commentaire", tracking=True)
-    pp_maj_odoo_commentaire      = fields.Char(string="Mise à jour odoo commentaire"       , tracking=True)
+    pp_maj_odoo_commentaire      = fields.Char(string="Mise à jour Article / Nomenclature commentaire", tracking=True)
 
     recopie_reponse_vsb = fields.Boolean(string="Recopie réponse vsb", compute='_compute_recopie_reponse_vsbf',store=False, readonly=True)
 

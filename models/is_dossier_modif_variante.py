@@ -165,7 +165,7 @@ class is_dossier_modif_variante(models.Model):
     demao_ref                   = fields.Char(string="Référence", tracking=True)
     demao_daterep               = fields.Date(string="Date réponse", tracking=True)
     demao_datelanc              = fields.Date(string="Date lancement", tracking=True)
-    demao_pxvente               = fields.Char(string="Prix de vente", tracking=True)
+    demao_pxvente               = fields.Float(string="Prix de vente", tracking=True)
     demao_numcmd                = fields.Char(string="N° commande", tracking=True)
     demao_obs                   = fields.Char(string="Observation", tracking=True)
     demao_motif                 = fields.Selection([
