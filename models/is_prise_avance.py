@@ -2,8 +2,8 @@ from odoo import models, fields  # type: ignore
 
 _STATE = ([
     ('brouillon', 'Brouillon'),
-    ('diffuse', 'Diffusé'),
     ('realise', 'Réalisé'),
+    ('diffuse', 'Diffusé'),
 ])
 
 
@@ -28,6 +28,18 @@ class is_prise_avance(models.Model):
     date_retour_outillage       = fields.Date("Date de retour souhaité de l'outillage", tracking=True)
     state                       = fields.Selection(_STATE, "Etat", default=_STATE[0][0], required=True, tracking=True)
     dynacase_id                 = fields.Integer(string="Id Dynacase", index=True, copy=False)
+
+    def vers_diffuse_action(self):
+        for obj in self:
+            obj.state='diffuse'
+
+    def vers_realise_action(self):
+        for obj in self:
+            obj.state='realise'
+
+    def vers_brouillon_action(self):
+        for obj in self:
+            obj.state='brouillon'
 
     def lien_vers_dynacase_action(self):
         for obj in self:

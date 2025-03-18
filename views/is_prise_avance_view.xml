@@ -11,6 +11,27 @@
                 <form string="Form">
                     <header>
                         <button 
+                            name="vers_brouillon_action"
+                            string="vers Brouillon"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'realise')]}" 
+                            groups="is_plastigray16.is_chef_projet_group"
+                        />
+                        <button 
+                            name="vers_realise_action"
+                            string="vers Réalisé"
+                            type="object"
+                            attrs="{'invisible': [('state', '=', 'realise')]}" 
+                            groups="is_plastigray16.is_chef_projet_group"
+                        />
+                        <button 
+                            name="vers_diffuse_action"
+                            string="vers Diffusé"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'realise')]}" 
+                            groups="is_plastigray16.is_chef_projet_group"
+                        />
+                        <button 
                             name="lien_vers_dynacase_action"
                             string="Dynacase"
                             type="object"
@@ -18,23 +39,23 @@
                             groups="base.group_system"
                         />
                         <field name="dynacase_id" invisible="1"/>
-                        <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                        <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
                         <group>
-                            <field name="num_moule_id"/>
-                            <field name="user_id"/>
-                            <field name="resp_prise_avance_id"/>
-                            <field name="motif_prise_avance"/>
-                            <field name="immobilisation"/>
-                            <field name="pieces_modif"/>
-                            <field name="duree_immobilisation"/>
-                            <field name="nb_jours"/>
-                            <field name="pieces_stck"/>
-                            <field name="date_outillage"/>
-                            <field name="date_retour_outillage"/>
+                            <field name="num_moule_id"          attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                            <field name="user_id"               attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                            <field name="resp_prise_avance_id"  attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                            <field name="motif_prise_avance"    attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                            <field name="immobilisation"        attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                            <field name="pieces_modif"          attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                            <field name="duree_immobilisation"  attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                            <field name="nb_jours"              attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                            <field name="pieces_stck"           attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                            <field name="date_outillage"        attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                            <field name="date_retour_outillage" attrs="{'readonly': [('state','!=','brouillon')]}"/>
                         </group>
                     </sheet>
                    <div class="oe_chatter">
