@@ -36,7 +36,7 @@ class is_fiche_codification(models.Model):
     chef_de_projet_id            = fields.Many2one('res.users', 'Chef de projet'    , tracking=True, compute="_compute", store=True, readonly=True)
     client_id                    = fields.Many2one('res.partner', 'Client'          , tracking=True, compute="_compute", store=True, readonly=True)
     type_dossier                 = fields.Char("Origine de la fiche", tracking=True, readonly=True)
-    creation_modif               = fields.Selection([('creation', 'Création'), ('modification', 'Modification')], "Création / Modification", required=True, tracking=True, default="creation")
+    creation_modif               = fields.Selection([('creation', 'Création'), ('modification', 'Modification')], "Création / Modification", tracking=True)
     dynacase_id                  = fields.Integer(string="Id Dynacase", index=True, copy=False)
     code_pg                      = fields.Char("Code PG", tracking=True)
     designation                  = fields.Char("Désignation", tracking=True)
