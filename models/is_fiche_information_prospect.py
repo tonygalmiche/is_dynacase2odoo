@@ -73,5 +73,4 @@ class is_fiche_information_prospect_suivi_line(models.Model):
     suivi_objet                = fields.Char("Objet")
     suivi_decision             = fields.Char("Décision")
     suivi_date_relance         = fields.Date("Date de relance")
-
-#    suivi_fichier_joint        = "Fichier joint"
+    suivi_fichier_joint_ids    = fields.Many2many("ir.attachment", "is_fiche_information_prospect_suivi_line_fichier_joint_rel", "suivi_fichier_joint"  , "att_id", string="Pièce jointe")

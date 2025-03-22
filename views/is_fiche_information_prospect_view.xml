@@ -2,15 +2,6 @@
 
 <openerp>
     <data>
-        <!-- Sequence is.fiche.information.prospect -->
-        <!--record id="is_fiche_information_prospect_seq" model="ir.sequence">
-            <field name="name">Fiche information prospect</field>
-            <field name="code">is.fiche.information.prospect</field>
-            <field name="prefix"></field>
-            <field name="padding">5</field>
-            <field name="company_id" eval="False"/>
-        </record-->
-
         <!-- is.fiche.information.prospect -->
         <record model="ir.ui.view" id="is_fiche_information_prospect_form_view">
             <field name="name">is_fiche_information_prospect_form_view</field>
@@ -49,22 +40,23 @@
                         </group>
                         <field name="contacts_ids" nolabel="1" colspan="2">
                             <tree editable="bottom">
-                                <field name="contacts_nom"/>
-                                <field name="contacts_prenom"/>
-                                <field name="conatcts_fonction"/>
-                                <field name="contacts_telephone"/>
-                                <field name="contacts_portable"/>
-                                <field name="contacts_fax"/>
-                                <field name="contacts_mail"/>
+                                <field name="contacts_nom"       optional="show"/>
+                                <field name="contacts_prenom"    optional="show"/>
+                                <field name="conatcts_fonction"  optional="show"/>
+                                <field name="contacts_telephone" optional="show"/>
+                                <field name="contacts_portable"  optional="show"/>
+                                <field name="contacts_fax"       optional="show"/>
+                                <field name="contacts_mail"      optional="show"/>
                             </tree>
                         </field>
                         <field name="suivi_ids" nolabel="1" colspan="2">
                             <tree editable="bottom">
-                                <field name="suivi_date"/>
-                                <field name="suivi_nature_contact"/>
-                                <field name="suivi_objet"/>
-                                <field name="suivi_decision"/>
-                                <field name="suivi_date_relance"/>
+                                <field name="suivi_date"              optional="show"/>
+                                <field name="suivi_nature_contact"    optional="show"/>
+                                <field name="suivi_objet"             optional="show"/>
+                                <field name="suivi_decision"          optional="show"/>
+                                <field name="suivi_date_relance"      optional="show"/>
+                                <field name="suivi_fichier_joint_ids" optional="show"   widget="many2many_binary"/>
                             </tree>
                         </field>
                         <group string="Pièces jointes">
@@ -131,24 +123,24 @@
                 </search>
             </field>
         </record>
-        <!--record id="is_fiche_information_prospect_pivot" model="ir.ui.view">
+        <record id="is_fiche_information_prospect_pivot" model="ir.ui.view">
             <field name="name">is_fiche_information_prospect_pivot</field>
             <field name="model">is.fiche.information.prospect</field>
             <field name="arch" type="xml">
                 <pivot>
-                    <field name="client_id"  type="row"/>
+                    <field name="charge_affaire_id"  type="row"/>
                 </pivot>
             </field>
-        </record-->
-        <!--record id="is_fiche_information_prospect_graph" model="ir.ui.view">
+        </record>
+        <record id="is_fiche_information_prospect_graph" model="ir.ui.view">
             <field name="name">is_fiche_information_prospect_graph</field>
             <field name="model">is.fiche.information.prospect</field>
             <field name="arch" type="xml">
                 <graph>
-                    <field name="client_id"  type="row"/>
+                    <field name="charge_affaire_id"  type="row"/>
                 </graph>
             </field>
-        </record-->
+        </record>
         <record model="ir.actions.act_window" id="is_fiche_information_prospect_action">
             <field name="name">Fiche information prospect</field>
             <field name="res_model">is.fiche.information.prospect</field>
