@@ -68,6 +68,7 @@ class is_fiche_information_prospect_suivi_line(models.Model):
     _description = "Lignes de suivi"
 
     information_prospect_id    = fields.Many2one("is.fiche.information.prospect", string="Fiche information prospect", required=True, ondelete='cascade')
+    lig                        = fields.Integer("Lig")
     suivi_date                 = fields.Date("Date")
     suivi_nature_contact       = fields.Char("Nature du contact")
     suivi_objet                = fields.Char("Objet")

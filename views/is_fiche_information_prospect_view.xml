@@ -51,6 +51,7 @@
                         </field>
                         <field name="suivi_ids" nolabel="1" colspan="2">
                             <tree editable="bottom">
+                                <field name="lig"                     optional="hide"/>
                                 <field name="suivi_date"              optional="show"/>
                                 <field name="suivi_nature_contact"    optional="show"/>
                                 <field name="suivi_objet"             optional="show"/>
