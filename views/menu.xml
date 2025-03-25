@@ -292,12 +292,17 @@
 	<!-- Gestion des achats -->
         <menuitem id="gestion_des_achats_menu"  sequence="5"  name="Gestion des achats"/>
         <record id="is_demande_modif_compte_fournisseur_menu" model="ir.ui.menu" >
-            <field name="name">Demande de création ou de modification d'un compte Fournisseur</field>
-            <field name="sequence">20</field>
+           <field name="name">Demande de création ou de modification d'un compte Fournisseur</field>
+           <field name="sequence">20</field>
+           <field name="parent_id" eval="ref('gestion_des_achats_menu')"/>
+           <field name="action"    ref="is_demande_modif_compte_fournisseur_action"/>
+        </record>
+        <record id="is_demande_modif_tarif_fournisseur_menu" model="ir.ui.menu" >
+            <field name="name">Demande de création ou de modification d'un tarif Fournisseur</field>
+            <field name="sequence">30</field>
             <field name="parent_id" eval="ref('gestion_des_achats_menu')"/>
-            <field name="action"    ref="is_demande_modif_compte_fournisseur_action"/>
-         </record>
- 
+            <field name="action"    ref="is_demande_modif_tarif_fournisseur_action"/>
+        </record>
 
         <!-- Indicateurs -->
         <record id="is_indicateur_bei_menu" model="ir.ui.menu" >

@@ -5,11 +5,6 @@ _STATE = ([
     ('diffuse', 'Diffusé'),
     ('termine', 'Terminé'),
 ])
-_SOC = ([
-    ('Gray', 'Gray'),
-    ('Plasti-kay', 'Plasti-kay'),
-    ('ST-Brice', 'ST-Brice'),
-    ])
 
 
 class is_demande_modif_compte_fournisseur(models.Model):
