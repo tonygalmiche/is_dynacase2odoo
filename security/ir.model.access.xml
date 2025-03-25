@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Dossier d'appel d'offre -->
+        <record id="access_is_dossier_appel_offre_create"  model="ir.model.access" >
+            <field name="name">Accès en création au groupe 'Responsable des ventes - Commerciaux'</field>
+            <field name="model_id"    eval="ref('model_is_dossier_appel_offre')"/>
+            <field name="group_id"    eval="ref('is_plastigray16.is_commerciaux_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record id="access_is_dossier_appel_offre_write"  model="ir.model.access" >
+            <field name="name">Accès en modification au groupe 'Gestionnaire des projets'</field>
+            <field name="model_id"    eval="ref('model_is_dossier_appel_offre')"/>
+            <field name="group_id"    eval="ref('is_dynacase2odoo.is_gestionnaire_projet_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record id="access_is_dossier_appel_offre_read"  model="ir.model.access" >
+            <field name="name">Accès en lecture au groupe 'Membres équipe projet'</field>
+            <field name="model_id"    eval="ref('model_is_dossier_appel_offre')"/>
+            <field name="group_id"    eval="ref('is_dynacase2odoo.is_membre_equipe_projet_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Dossier modif/variante -->
+        <record id="access_is_dossier_modif_create"  model="ir.model.access" >
+            <field name="name">Accès en création au groupe 'Responsable des ventes - Commerciaux'</field>
+            <field name="model_id"    eval="ref('model_is_dossier_modif_variante')"/>
+            <field name="group_id"    eval="ref('is_plastigray16.is_commerciaux_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record id="access_is_dossier_modif_write"  model="ir.model.access" >
+            <field name="name">Accès en modification au groupe 'Gestionnaire des projets'</field>
+            <field name="model_id"    eval="ref('model_is_dossier_modif_variante')"/>
+            <field name="group_id"    eval="ref('is_dynacase2odoo.is_gestionnaire_projet_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record id="access_is_dossier_modif_read"  model="ir.model.access" >
+            <field name="name">Accès en lecture au groupe 'Membres équipe projet'</field>
+            <field name="model_id"    eval="ref('model_is_dossier_modif_variante')"/>
+            <field name="group_id"    eval="ref('is_dynacase2odoo.is_membre_equipe_projet_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+       <!-- ERD -->
+        <record id="access_is_erd_create"  model="ir.model.access" >
+            <field name="name">Accès en création au groupe 'Responsable des ventes - Commerciaux'</field>
+            <field name="model_id"    eval="ref('model_is_erd')"/>
+            <field name="group_id"    eval="ref('is_plastigray16.is_commerciaux_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record id="access_is_erd_write"  model="ir.model.access" >
+            <field name="name">Accès en modification au groupe 'Gestionnaire des projets'</field>
+            <field name="model_id"    eval="ref('model_is_erd')"/>
+            <field name="group_id"    eval="ref('is_dynacase2odoo.is_gestionnaire_projet_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+       
+        <!-- Revue de contrat -->
+        <record id="access_is_revue_de_contrat_create"  model="ir.model.access" >
+            <field name="name">Accès en création au groupe 'Responsable des ventes - Commerciaux'</field>
+            <field name="model_id"    eval="ref('model_is_revue_de_contrat')"/>
+            <field name="group_id"    eval="ref('is_plastigray16.is_commerciaux_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record id="access_is_revue_de_contrat_read"  model="ir.model.access" >
+            <field name="name">Accès en lecture au groupe 'Membres équipe projet'</field>
+            <field name="model_id"    eval="ref('model_is_revue_de_contrat')"/>
+            <field name="group_id"    eval="ref('is_dynacase2odoo.is_membre_equipe_projet_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record id="access_is_revue_de_contrat_decomposition_prix"  model="ir.model.access" >
+            <field name="name">Accès complet tableau revue de contrat</field>
+            <field name="model_id"    eval="ref('model_is_revue_de_contrat_decomposition_prix')"/>
+            <field name="group_id"    eval="ref('base.group_user')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="access_is_revue_de_contrat_decomposition_productivite"  model="ir.model.access" >
+            <field name="name">Accès complet tableau revue de contrat</field>
+            <field name="model_id"    eval="ref('model_is_revue_de_contrat_decomposition_productivite')"/>
+            <field name="group_id"    eval="ref('base.group_user')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="access_is_revue_de_contrat_decomposition_previsions"  model="ir.model.access" >
+            <field name="name">Accès complet tableau revue de contrat</field>
+            <field name="model_id"    eval="ref('model_is_revue_de_contrat_decomposition_previsions')"/>
+            <field name="group_id"    eval="ref('base.group_user')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="access_is_revue_de_contrat_versio"  model="ir.model.access" >
+            <field name="name">Accès complet tableau revue de contrat</field>
+            <field name="model_id"    eval="ref('model_is_revue_de_contrat_version')"/>
+            <field name="group_id"    eval="ref('base.group_user')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="access_is_revue_de_contrat_dfe_version"  model="ir.model.access" >
+            <field name="name">Accès complet tableau revue de contrat</field>
+            <field name="model_id"    eval="ref('model_is_revue_de_contrat_dfe_version')"/>
+            <field name="group_id"    eval="ref('base.group_user')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Revue de lancement -->
+        <record id="access_is_revue_lancement_create"  model="ir.model.access" >
+            <field name="name">Accès en création au groupe 'Gestionnaire des projets'</field>
+            <field name="model_id"    eval="ref('model_is_revue_lancement')"/>
+            <field name="group_id"    eval="ref('is_dynacase2odoo.is_gestionnaire_projet_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record id="access_is_revue_lancement_read"  model="ir.model.access" >
+            <field name="name">Accès en lecture au groupe 'Membres équipe projet'</field>
+            <field name="model_id"    eval="ref('model_is_revue_lancement')"/>
+            <field name="group_id"    eval="ref('is_dynacase2odoo.is_membre_equipe_projet_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record id="access_is_revue_lancement_read_cial"  model="ir.model.access" >
+            <field name="name">Accès en lecture au groupe 'Responsable des ventes - Commerciaux'</field>
+            <field name="model_id"    eval="ref('model_is_revue_lancement')"/>
+            <field name="group_id"    eval="ref('is_plastigray16.is_commerciaux_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+    
+        <!-- Fiche information prospect -->
+        <record id="is_fiche_information_prospect_create"  model="ir.model.access" >
+            <field name="name">Accès en création au groupe 'Responsable des ventes - Commerciaux'</field>
+            <field name="model_id"    eval="ref('model_is_fiche_information_prospect')"/>
+            <field name="group_id"    eval="ref('is_plastigray16.is_commerciaux_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record id="is_fiche_information_prospect_read"  model="ir.model.access" >
+            <field name="name">Accès en lecture au groupe 'Gestionnaire des projets'</field>
+            <field name="model_id"    eval="ref('model_is_fiche_information_prospect')"/>
+            <field name="group_id"    eval="ref('is_dynacase2odoo.is_gestionnaire_projet_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record id="access_is_fiche_information_prospect_suivi_line"  model="ir.model.access" >
+            <field name="name">Accès complet tableau Fiche information prospect </field>
+            <field name="model_id"    eval="ref('model_is_fiche_information_prospect_suivi_line')"/>
+            <field name="group_id"    eval="ref('base.group_user')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

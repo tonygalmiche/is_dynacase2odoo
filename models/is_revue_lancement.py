@@ -55,16 +55,16 @@ class is_revue_lancement(models.Model):
             record.ecart = record.rl_pgrc_total - total
 
 
-    @api.depends("rl_num_rcid","rl_num_rcid.rc_designation","rl_num_rcid.rc_client","rl_num_rcid.rc_projetid","rl_num_rcid.rc_commercial")
+    @api.depends("rl_num_rcid","rl_num_rcid.rc_designation","rl_num_rcid.rc_client","rl_num_rcid.rc_projetid","rl_num_rcid.rc_commercial","dossierf_id")
     def _compute_rc(self):
         for obj in self:
             obj.rl_designation_rc  = obj.rl_num_rcid.rc_designation
-            obj.rl_client_rcid     = obj.rl_num_rcid.rc_client
-            obj.rl_projet_rcid     = obj.rl_num_rcid.rc_projetid
-            obj.rl_commercial_rcid = obj.rl_num_rcid.rc_commercial
+            obj.rl_client_rcid     = obj.rl_num_rcid.rc_client     or obj.dossierf_id.client_id.id
+            obj.rl_projet_rcid     = obj.rl_num_rcid.rc_projetid   or obj.dossierf_id.project.id
+            obj.rl_commercial_rcid = obj.rl_num_rcid.rc_commercial or obj.dossierf_id.client_id.user_id.id
 
 
-    @api.depends("rl_mouleid","rl_dossierfid","rl_indice")
+    @api.depends("rl_mouleid","rl_dossierfid","rl_indice","dossierf_id")
     def _compute_name(self):
         for obj in self:
             name="x"
@@ -72,13 +72,16 @@ class is_revue_lancement(models.Model):
                 name = obj.rl_mouleid.name
             if obj.rl_dossierfid:
                 name = obj.rl_dossierfid.name
+            if obj.dossierf_id:
+                name = obj.dossierf_id.name
             obj.name='RL-%s-%s'%(name,obj.rl_indice)
 
 
     name                              = fields.Char(string="N°", compute="_compute_name", store=True, readonly=True)
     rl_num_rcid                       = fields.Many2one("is.revue.de.contrat", string="Revue de contrat", required=False, tracking=True)
+    dossierf_id                       = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
     rl_mouleid                        = fields.Many2one(related='rl_num_rcid.rc_mouleid')
-    rl_dossierfid                     = fields.Many2one(related='rl_num_rcid.rc_dossierfid')
+    rl_dossierfid                     = fields.Many2one(related='rl_num_rcid.rc_dossierfid', string="Dossier F RC")
     rl_title                          = fields.Char(string="Revue de lancement (champ à supprimer)", tracking=True)
     rl_indice                         = fields.Integer(string="Indice", tracking=True, readonly=True, default=0, required=True)
     rl_designation_rc                 = fields.Char(string="Désignation"                  , tracking=True, compute="_compute_rc", store=True, readonly=True)
@@ -201,6 +204,13 @@ class is_revue_lancement(models.Model):
     ], string="État", tracking=True, default="rl_brouillon")
     dynacase_id = fields.Integer(string="Id Dynacase",index=True,copy=False)
     active      = fields.Boolean('Actif', default=True, tracking=True)
+
+
+    @api.constrains('rl_num_rcid', 'dossierf_id')
+    def _rl_num_rcid_dossierf_id_constrain(self):
+        for obj in self:
+            if obj.rl_num_rcid.id and obj.dossierf_id.id:
+                raise ValidationError("Il ne faut pas saisir une revue de contrat et un dossier F en même temps")
 
 
     # def write(self,vals):

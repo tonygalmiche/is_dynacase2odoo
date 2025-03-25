@@ -19,7 +19,7 @@
                             name="copie_rc_action" 
                             string="Copie données revue de contrat" 
                             type="object" class="btn" 
-                            attrs="{'invisible': [('state', '=', 'rl_diffuse')]}"
+                            attrs="{'invisible': ['|',('state', '=', 'rl_diffuse'),('rl_num_rcid','=',False)]}"
                             groups="is_dynacase2odoo.is_gestionnaire_revue_lancement_group"
                         />
                         <button 
@@ -40,7 +40,7 @@
                             name="dupliquer_rl_action"
                             string="Dupliquer cette RL et l'associer à la dernière RC"
                             type="object"
-                            attrs="{'invisible': [('state', '=', 'brouillon')]}" 
+                            attrs="{'invisible': ['|',('state', '=', 'brouillon'),('rl_num_rcid','=',False)]}" 
                             groups="is_dynacase2odoo.is_gestionnaire_revue_contrat_group"
                         />
                         <button 
@@ -66,24 +66,29 @@
                         <notebook>
                             <page name="rl_initial_tab" string="Données d'entrée">
                                 <group>
-                                    <field name="name"               attrs="{'invisible': [('rl_num_rcid'  , '=', False)]}"/>
+                                    <field name="name" attrs="{'invisible': [('rl_num_rcid', '=', False),('dossierf_id','=',False)]}"/>
                                     <field 
                                         name="rl_num_rcid"        
                                         attrs="{
                                             'readonly': [('state', '!=', 'rl_brouillon')],
-                                            'required': [('state', '=', 'rl_brouillon')],
                                         }"
                                     />
-                                    <field name="rl_indice"          attrs="{'invisible': [('rl_num_rcid'  , '=', False)]}"/>
+                                    <field 
+                                        name="dossierf_id"        
+                                        attrs="{
+                                            'readonly': [('state', '!=', 'rl_brouillon')],
+                                        }"
+                                    />
+                                    <field name="rl_indice"          attrs="{'invisible': [('rl_num_rcid', '=', False),('dossierf_id','=',False)]}"/>
                                     <field name="rl_mouleid"         attrs="{'invisible': [('rl_mouleid'   , '=', False)]}"/>
                                     <field name="rl_dossierfid"      attrs="{'invisible': [('rl_dossierfid', '=', False)]}"/>
-                                    <field name="rl_designation_rc"  attrs="{'invisible': [('rl_num_rcid'  , '=', False)]}"/>
-                                    <field name="rl_client_rcid"     attrs="{'invisible': [('rl_num_rcid'  , '=', False)]}"/>
-                                    <field name="rl_projet_rcid"     attrs="{'invisible': [('rl_num_rcid'  , '=', False)]}"/>
-                                    <field name="rl_commercial_rcid" attrs="{'invisible': [('rl_num_rcid'  , '=', False)]}"/>
+                                    <field name="rl_designation_rc"  attrs="{'invisible': [('rl_num_rcid', '=', False)]}"/>
+                                    <field name="rl_client_rcid"     attrs="{'invisible': [('rl_num_rcid', '=', False),('dossierf_id','=',False)]}"/>
+                                    <field name="rl_projet_rcid"     attrs="{'invisible': [('rl_num_rcid', '=', False),('dossierf_id','=',False)]}"/>
+                                    <field name="rl_commercial_rcid" attrs="{'invisible': [('rl_num_rcid', '=', False),('dossierf_id','=',False)]}"/>
                                 </group>
                             </page>
-                            <page name="rl_choix_industriel_tab" string="Choix industriel" attrs="{'invisible': [('rl_num_rcid', '=', False)]}" >
+                            <page name="rl_choix_industriel_tab" string="Choix industriel" attrs="{'invisible': [('rl_num_rcid', '=', False),('dossierf_id','=',False)]}" >
                                 <group name="rl_choix_industriel_fr" string="Choix industriel">
                                     <field name="rl_lieu_production"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                     <field name="rl_nom_soutraitant"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
@@ -93,7 +98,7 @@
                                     <field name="rl_validation_capacitaire_comment"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                 </group>
                             </page>
-                            <page name="rl_eq_projet_tab" string="Gestion projet" attrs="{'invisible': [('rl_num_rcid', '=', False)]}" >
+                            <page name="rl_eq_projet_tab" string="Gestion projet" attrs="{'invisible': [('rl_num_rcid', '=', False),('dossierf_id','=',False)]}" >
                                 <group col="3">
                                     <group name="rl_eq_projet_fr" string="Equipe projet">
                                         <field name="rl_chef_projetid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
@@ -135,7 +140,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page name="rl_investissement_tab" string="Investissement" attrs="{'invisible': [('rl_num_rcid', '=', False)]}" >
+                            <page name="rl_investissement_tab" string="Investissement" attrs="{'invisible': [('rl_num_rcid', '=', False),('dossierf_id','=',False)]}" >
                                 <group name="rl_investissement_pgrc_fr" string="Données moule" col="4">
                                     <group string="Designation - Montant">
                                         <field name="rl_pgrc_moule_mnt"/>
@@ -230,6 +235,7 @@
                 <tree string="Revue de lancement">
                     <field name="name"/>
                     <field name="rl_num_rcid"               optional="show" widget="many2one_clickable"/>
+                    <field name="dossierf_id"               optional="show" widget="many2one_clickable"/>
                     <field name="rl_indice"                 optional="show"/>
                     <field name="rl_mouleid"                optional="hide" widget="many2one_clickable"/>
                     <field name="rl_dossierfid"             optional="hide" widget="many2one_clickable"/>

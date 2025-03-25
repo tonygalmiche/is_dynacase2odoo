@@ -3,7 +3,7 @@ from odoo import models, fields, api  # type: ignore
 class is_modif_donnee_technique(models.Model):
     _name='is.modif.donnee.technique'
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
-    _description="Demande modification donnée technique"
+    _description="Demande modification données techniques"
     _rec_name = "num_demande"
     _order='num_demande'
 

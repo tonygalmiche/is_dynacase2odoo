@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
-        <!-- Sequence is.modif.donnee.technique -->
-        <!--record id="is_modif_donnee_technique_seq" model="ir.sequence">
-            <field name="name">Demande modification donnée technique</field>
-            <field name="code">is.modif.donnee.technique</field>
-            <field name="prefix"></field>
-            <field name="padding">5</field>
-            <field name="company_id" eval="False"/>
-        </record-->
-
         <!-- is.modif.donnee.technique -->
         <record model="ir.ui.view" id="is_modif_donnee_technique_form_view">
             <field name="name">is_modif_donnee_technique_form_view</field>
@@ -45,7 +36,6 @@
                             <field name="article"/>
                             <field name="article_commentaire"/>
                             <field name="article_piece_jointe_ids"   widget="many2many_binary"/>
-                            <!--field name="article_piece_jointe"   widget="many2many_binary"/-->
                         </group>
                         <group string="Nomenclature">
                             <field name="nomenclature"/>
@@ -113,30 +103,30 @@
                 </search>
             </field>
         </record>
-        <!--record id="is_modif_donnee_technique_pivot" model="ir.ui.view">
+        <record id="is_modif_donnee_technique_pivot" model="ir.ui.view">
             <field name="name">is_modif_donnee_technique_pivot</field>
             <field name="model">is.modif.donnee.technique</field>
             <field name="arch" type="xml">
                 <pivot>
-                    <field name="client_id"  type="row"/>
+                    <field name="demandeur"  type="row"/>
                 </pivot>
             </field>
-        </record-->
-        <!--record id="is_modif_donnee_technique_graph" model="ir.ui.view">
+        </record>
+        <record id="is_modif_donnee_technique_graph" model="ir.ui.view">
             <field name="name">is_modif_donnee_technique_graph</field>
             <field name="model">is.modif.donnee.technique</field>
             <field name="arch" type="xml">
                 <graph>
-                    <field name="client_id"  type="row"/>
+                    <field name="demandeur"  type="row"/>
                 </graph>
             </field>
-        </record-->
+        </record>
         <record model="ir.actions.act_window" id="is_modif_donnee_technique_action">
-            <field name="name">Demande modification donnée technique</field>
+            <field name="name">Demande modification données techniques</field>
             <field name="res_model">is.modif.donnee.technique</field>
             <field name="view_mode">tree,form,pivot,graph</field>
             <field name="context">{}
             </field>
         </record>
   </data>
-</openerp>
+</odoo>

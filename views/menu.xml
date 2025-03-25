@@ -68,7 +68,7 @@
             <field name="action"    ref="is_fiche_codification_action"/>
         </record>
         <record id="is_modif_donnee_technique" model="ir.ui.menu" >
-            <field name="name">Demande modification donnée technique</field>
+            <field name="name">Demande modification données techniques</field>
             <field name="sequence">20</field>
             <field name="parent_id" eval="ref('is_fiches_commerciales_menu')"/>
             <field name="action"    ref="is_modif_donnee_technique_action"/>
@@ -227,43 +227,61 @@
             <field name="parent_id" eval="ref('is_projet_moule_menu')"/>
             <field name="action"    ref="is_revue_projet_jalon_action"/>
         </record>
+        <record id="is_modif_donnee_technique_projet_menu" model="ir.ui.menu" >
+            <field name="name">Demande modification données techniques</field>
+            <field name="sequence">60</field>
+            <field name="parent_id" eval="ref('is_projet_moule_menu')"/>
+            <field name="action"    ref="is_modif_donnee_technique_action"/>
+        </record>
+
         <record id="is_prise_avance_menu" model="ir.ui.menu" >
             <field name="name">Prise d'avance</field>
-            <field name="sequence">55</field>
+            <field name="sequence">70</field>
             <field name="parent_id" eval="ref('is_projet_moule_menu')"/>
             <field name="action"    ref="is_prise_avance_action"/>
         </record>
 
 
+
         <record id="is_projet_menu" model="ir.ui.menu" >
             <field name="name">Projets</field>
-            <field name="sequence">60</field>
+            <field name="sequence">80</field>
             <field name="parent_id" eval="ref('is_projet_moule_menu')"/>
             <field name="action"    ref="is_plastigray16.is_mold_project_action"/>
         </record>
         <record id="is_mold_menu" model="ir.ui.menu" >
             <field name="name">Moules</field>
-            <field name="sequence">70</field>
+            <field name="sequence">90</field>
             <field name="parent_id" eval="ref('is_projet_moule_menu')"/>
             <field name="action"    ref="is_plastigray16.is_mold_action"/>
         </record>
-
-
         <record id="is_dossierf_menu" model="ir.ui.menu" >
             <field name="name">Dossier F</field>
-            <field name="sequence">80</field>
+            <field name="sequence">100</field>
             <field name="parent_id" eval="ref('is_projet_moule_menu')"/>
             <field name="action"    ref="is_plastigray16.is_dossierf_action"/>
         </record>
+        <record id="is_dossier_modification_projet_menu" model="ir.ui.menu" >
+            <field name="name">Dossier modification</field>
+            <field name="sequence">110</field>
+            <field name="parent_id" eval="ref('is_projet_moule_menu')"/>
+            <field name="action"    ref="is_dossier_modification_action"/>
+        </record>
+        <record id="is_dossier_variante_projet_menu" model="ir.ui.menu" >
+            <field name="name">Dossier variante</field>
+            <field name="sequence">120</field>
+            <field name="parent_id" eval="ref('is_projet_moule_menu')"/>
+            <field name="action"    ref="is_dossier_variante_action"/>
+        </record>
         <record id="is_inv_achat_moule_menu" model="ir.ui.menu" >
             <field name="name">Investissement achat moule</field>
-            <field name="sequence">90</field>
+            <field name="sequence">130</field>
             <field name="parent_id" eval="ref('is_projet_moule_menu')"/>
             <field name="action"    ref="is_inv_achat_moule_action"/>
         </record>
         <record id="is_inv_achat_moule_po_menu" model="ir.ui.menu" >
             <field name="name">Investissement achat moule - Commandes fournisseur</field>
-            <field name="sequence">100</field>
+            <field name="sequence">140</field>
             <field name="parent_id" eval="ref('is_projet_moule_menu')"/>
             <field name="action"    ref="is_inv_achat_moule_po_action"/>
             <field name="groups_id" eval="[(6,0,[
