@@ -34,18 +34,18 @@ class is_demande_modif_compte_fournisseur(models.Model):
     state                     = fields.Selection(_STATE, "Etat", default=_STATE[0][0], required=True, tracking=True)
     dynacase_id               = fields.Integer(string="Id Dynacase", index=True, copy=False)
 
-#
-#    def vers_diffuse_action(self):
-#        for obj in self:
-#            obj.state='diffuse'
-#
-#    def vers_realise_action(self):
-#        for obj in self:
-#            obj.state='realise'
-#
-#    def vers_brouillon_action(self):
-#        for obj in self:
-#            obj.state='brouillon'
+
+    def vers_diffuse_action(self):
+        for obj in self:
+            obj.state='diffuse'
+
+    def vers_termine_action(self):
+        for obj in self:
+            obj.state='termine'
+
+    def vers_brouillon_action(self):
+        for obj in self:
+            obj.state='brouillon'
             
     @api.model_create_multi
     def create(self, vals_list):

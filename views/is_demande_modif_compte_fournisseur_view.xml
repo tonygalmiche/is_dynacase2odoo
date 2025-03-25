@@ -10,6 +10,34 @@
                 <form string="Form">
                     <header>
                         <button 
+                            name="vers_brouillon_action"
+                            string="vers Brouillon"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'termine')]}" 
+                            groups="base.group_system"
+                        />
+                        <button 
+                            name="vers_diffuse_action"
+                            string="vers Diffusé"
+                            type="object"
+                            attrs="{'invisible': [('state', '=', 'termine')]}" 
+                            groups="base.group_system"
+                        />
+                        <button 
+                            name="vers_termine_action"
+                            string="vers Réalisé"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'termine')]}" 
+                            groups="base.group_system"
+                        />
+                        <button 
+                            name="lien_vers_dynacase_action"
+                            string="Dynacase"
+                            type="object"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                            groups="base.group_system"
+                        />
+                        <button 
                             name="lien_vers_dynacase_action"
                             string="Dynacase"
                             type="object"
