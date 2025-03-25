@@ -25,5 +25,6 @@ from . import is_fiche_codification
 from . import is_fiche_information_prospect
 from . import is_modif_donnee_technique
 from . import is_prise_avance
+from . import is_demande_modif_compte_fournisseur
 from . import is_inv_achat_moule
 from . import is_erd
