@@ -22,13 +22,9 @@
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/> 
-                        <field name="societe_ids" nolabel="1" colspan="2">
-                            <tree editable="bottom">
-                                <field name="societe"/>
-                            </tree>
-                        </field>
                         <group>
                             <field name="titre"                     readonly="1"/>
+                            <field name="societe_ids"               widget="many2many_tags"/>
                             <field name="num_ordre"                 readonly="1"/>
                             <field name="fournisseur_id"            attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="fournisseur_autre"         attrs="{'readonly': [('state','!=','brouillon')]}"/>

@@ -16,16 +16,16 @@ class is_demande_modif_compte_fournisseur(models.Model):
     _name='is.demande.modif.compte.fournisseur'
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description="Prise d'avance"
-    #_rec_name = "titre"
-    #_order='titre'
+    _rec_name = "titre"
+    _order='num_ordre desc'
 
-    titre                     = fields.Char(string="Titre du document", tracking=True, compute='_compute_title', readonly=True)
+    titre                     = fields.Char(string="Titre du document", tracking=True, compute='_compute_title', readonly=True, store=True)
     active                    = fields.Boolean('Actif', default=True, tracking=True, readonly=True)
     num_ordre                 = fields.Integer(string="Numéro d'ordre de la demande", tracking=True)
-    societe_ids               = fields.One2many('is.demande.modif.compte.fournisseur.societe.line', 'societe_id', string="Société")
+    societe_ids               = fields.Many2many('is.database','demande_modif_compte_fournisseur_database_rel','demande_modif_compte_fournisseur_id','database_id', string="Société", tracking=True)
     fournisseur_id            = fields.Many2one('res.partner', 'Nom du fournisseur', tracking=True)
     fournisseur_autre         = fields.Char(string="Nom du fournisseur (Autre pour création)", tracking=True)
-    code_fournisseur          = fields.Integer("Code fournisseur", tracking=True, compute="_compute_fournisseur", readonly=True)
+    code_fournisseur          = fields.Integer("Code fournisseur", tracking=True, compute="_compute_fournisseur", readonly=True, store=True)
     code_fournisseur_creation = fields.Char(string="Code fournisseur (si création)", tracking=True)
     date_creation             = fields.Date("Date de création de la demande", tracking=True, default=lambda *a: fields.datetime.now())
     createur_id               = fields.Many2one('res.users', "Créateur de la demande", tracking=True, default=lambda self: self.env.uid)
@@ -65,7 +65,7 @@ class is_demande_modif_compte_fournisseur(models.Model):
             title = f"{obj.num_ordre} - "
             if obj.fournisseur_id:
                 title += obj.fournisseur_id.name
-            else:
+            elif obj.fournisseur_autre:
                 title += obj.fournisseur_autre
             obj.titre = title
 
@@ -82,10 +82,3 @@ class is_demande_modif_compte_fournisseur(models.Model):
                 'url': url,
                 'target': 'new',
             }
-
-class is_demande_modif_compte_fournisseur_societe_line(models.Model):
-    _name        = "is.demande.modif.compte.fournisseur.societe.line"
-    _description = "Lignes société"
-
-    societe_id    = fields.Many2one("is.demande.modif.compte.fournisseur", string="Société", required=True, ondelete='cascade')
-    societe               = fields.Selection(_SOC, "Société", default=_SOC[0][0], required=True, tracking=True)
