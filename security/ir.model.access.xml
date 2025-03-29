@@ -202,6 +202,16 @@
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
+        <record id="access_is_fiche_information_prospect_contact_line"  model="ir.model.access" >
+            <field name="name">Accès complet tableau Fiche information prospect </field>
+            <field name="model_id"    eval="ref('model_is_fiche_information_prospect_contact_line')"/>
+            <field name="group_id"    eval="ref('base.group_user')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
 
         <!-- Fiche de codification -->
         <record id="access_is_fiche_codification_create"  model="ir.model.access" >

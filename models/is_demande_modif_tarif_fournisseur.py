@@ -69,7 +69,7 @@ class is_demande_modif_tarif_fournisseur(models.Model):
     delai_appro                    = fields.Integer(string="Délai d'approvisionnement (en semaines)", tracking=True)
     modif_article                  = fields.Boolean("Modification fiche article", tracking=True)
     code_article_desactiver        = fields.Char(string="Code Article à désactiver", tracking=True) 
-    designation_article_desactiver = fields.Char(string="Désignation", tracking=True) 
+    designation_article_desactiver = fields.Char(string="Désignation article désactivé", tracking=True) 
     code_fournisseur_desactiver_id = fields.Many2one('res.partner', 'Code fournisseur', tracking=True)
     commentaire                    = fields.Char(string="Commentaires", tracking=True) 
 
