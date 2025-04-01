@@ -133,7 +133,6 @@ class IsDocMoule(models.Model):
     indicateur          = fields.Html(string="Indicateur"       , compute='_compute_indicateur'               ,store=True, readonly=True)
     datecreate          = fields.Date(string="Date de création", default=fields.Date.context_today)
     dateend             = fields.Date(string="Date fin dynacase (Ne plus utiliser)", readonly=True, help="Remplacé par date_fin_gantt le 05/12/2024")
-    array_ids           = fields.One2many("is.doc.moule.array", "is_doc_id", string="Pièce-jointe de réponse à la demande")
     dynacase_id         = fields.Integer(string="Id Dynacase",index=True,copy=False)
     duree               = fields.Integer(string="Durée (J)"      , help="Durée en jours ouvrés"         , default=1, tracking=True)
     duree_gantt         = fields.Integer(string="Durée Gantt (J)", help="Durée calendaire pour le Gantt", default=1, tracking=True, readonly=True)
@@ -175,6 +174,17 @@ class IsDocMoule(models.Model):
 
     recopie_reponse_vsb = fields.Boolean(string="Recopie réponse vsb", compute='_compute_recopie_reponse_vsbf',store=False, readonly=True)
 
+    array_ids    = fields.One2many("is.doc.moule.array", "is_doc_id", string="Pièce-jointe de réponse à la demande")
+    array_ids_ro = fields.Boolean(string="Pièce-jointe de réponse à la demande readonly", compute='_compute_array_ids_ro', readonly=True, store=False)
+
+
+    def _compute_array_ids_ro(self):
+        for obj in self:
+            ro = True
+            if obj.etat=='AF':
+                ro=False
+            obj.array_ids_ro = ro
+
 
     @api.depends('etat','array_ids')
     def _compute_recopie_reponse_vsbf(self):
@@ -182,7 +192,7 @@ class IsDocMoule(models.Model):
             vsb = True
             if len(obj.array_ids)>0:
                 vsb=False
-            if obj.etat=='F':
+            if obj.etat!='AF':
                 vsb=False
             if vsb and obj._origin.id:
                 domain=[
@@ -618,7 +628,7 @@ class IsDocMoule(models.Model):
 
 
     def recopie_reponse_action(self):
-        for obj in self:
+        for obj in self:        
             domain=[
                 ('id','!=',obj.id),
                 ('etat','=','F'),
@@ -629,14 +639,25 @@ class IsDocMoule(models.Model):
             docs=self.env['is.doc.moule'].search(domain,order='j_prevue desc',limit=1)
             for doc in docs:
                 for line in doc.array_ids:
-                    vals={
-                        'is_doc_id': obj.id,
-                        'annex'    : line.annex,
-                        'comment'  : line.comment,
-                    }
-                    self.env['is.doc.moule.array'].create(vals)
-                obj.etat='F'
-                doc.array_ids.unlink()
+                    copy = line.copy()
+                    copy.is_doc_id = obj.id
+                vals={
+                    'body'      : "Copie de la réponse de %s sur %s"%(doc.j_prevue, obj.j_prevue),
+                    'model'     : self._name,
+                    'res_id'    : obj.id
+                }
+                self.env['mail.message'].create(vals)
+                vals['res_id'] = doc.id
+                self.env['mail.message'].create(vals)
+            obj.etat='F'
+                #     vals={
+                #         'is_doc_id': obj.id,
+                #         'annex'    : line.annex,
+                #         'comment'  : line.comment,
+                #     }
+                #     self.env['is.doc.moule.array'].create(vals)
+                # obj.etat='F'
+                # doc.array_ids.unlink()
 
 
     @api.onchange('date_debut_gantt','duree')

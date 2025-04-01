@@ -186,25 +186,19 @@
                                     decoration-success="rpj_doc_etat=='F'" 
                                 >
                                     <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus" attrs="{'invisible': [('rpj_doc_documentid', '=', False)]}"/>
-                                    <field name="rpj_doc_documentid" optional="hide" readonly="1" widget="many2one_clickable"/>
-                                    <field name="rpj_doc_document"   optional="hide" readonly="1"/>
-                                    <!-- <field 
-                                        name="rpj_doc_action" optional="show" readonly="1" widget="badge" 
-                                        decoration-info="rpj_doc_action == 'I'" 
-                                        decoration-warning="rpj_doc_action == 'R'"
-                                        decoration-danger="rpj_doc_action == 'V'"
-                                    /> -->
-                                    <field name="rpj_doc_action"     optional="show" readonly="1" widget="badge" />
-                                    <field name="rpj_doc_bloquant"   optional="show" readonly="1"/>
-                                    <field name="rpj_doc_respid"     optional="show" readonly="1"/>
+                                    <field name="rpj_doc_documentid" readonly="1" widget="many2one_clickable"/>
+                                    <field name="rpj_doc_document"   readonly="1"/>
+                                    <field name="rpj_doc_action"     readonly="1" widget="badge" />
+                                    <field name="rpj_doc_bloquant"   readonly="1"/>
+                                    <field name="rpj_doc_respid"     readonly="1"/>
                                     <field 
-                                        name="rpj_doc_etat" optional="show" readonly="1" widget="badge" 
+                                        name="rpj_doc_etat" readonly="1" widget="badge" 
                                         decoration-success="rpj_doc_etat == 'F'" 
                                         decoration-warning="rpj_doc_etat == 'D'"
                                         decoration-danger="rpj_doc_etat == 'AF'"
                                     />
-                                    <field name="rpj_doc_coeff"      optional="show" readonly="1" sum="Total"/>
-                                    <field name="rpj_doc_note"       optional="show" readonly="1" sum="Total"/>
+                                    <field name="rpj_doc_coeff" readonly="1" sum="Total"/>
+                                    <field name="rpj_doc_note" readonly="1" sum="Total"/>
                                 </tree>
                             </field>
                         </group>

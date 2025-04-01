@@ -129,7 +129,14 @@
                         <notebook>
                             <page string="Réponse à la demande">
                                 <group>
-                                    <field name="array_ids" nolabel="1" colspan="2" attrs="{'invisible': [('ppr_type_demande', 'not in', ['PJ', 'PJ_TEXTE', 'PJ_DATE'] )] }">
+                                    <field name="array_ids_ro" invisible="1"/>
+                                    <field 
+                                        name="array_ids" nolabel="1" colspan="2" 
+                                        attrs="{
+                                            'invisible': [('ppr_type_demande', 'not in', ['PJ', 'PJ_TEXTE', 'PJ_DATE'] )],
+                                            'readonly': [('array_ids_ro', '=', True)]
+                                        }"
+                                    >
                                         <tree editable="bottom">
                                             <field name="lig" invisible="1"/>
                                             <field name="annex_pdf"                             attrs="{'column_invisible':[('parent.ppr_transformation_pdf', '=', False)]}" widget="many2many_binary" readonly="1"/>
