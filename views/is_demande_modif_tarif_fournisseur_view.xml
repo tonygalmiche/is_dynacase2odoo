@@ -113,7 +113,7 @@
                     <field name="date_creation"                  optional="show"/>
                     <field name="createur_id"                    optional="show" widget="many2one_clickable"/>
                     <field name="responsable_action_id"          optional="show" widget="many2one_clickable"/>
-                    <field name="motif"                          optional="show"/>
+                    <field name="motif"                          optional="hide"/>
                     <field name="date_application"               optional="show"/>
                     <field name="type_commande"                  optional="hide"/>
                     <field name="gestionnaire"                   optional="hide"/>

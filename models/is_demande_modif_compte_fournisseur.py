@@ -10,7 +10,7 @@ _STATE = ([
 class is_demande_modif_compte_fournisseur(models.Model):
     _name='is.demande.modif.compte.fournisseur'
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
-    _description="Prise d'avance"
+    _description="Demande de création ou de modification d'un compte Fournisseur"
     _rec_name = "titre"
     _order='num_ordre desc'
 
@@ -28,7 +28,7 @@ class is_demande_modif_compte_fournisseur(models.Model):
     state                     = fields.Selection(_STATE, "Etat", default=_STATE[0][0], required=True, tracking=True)
     dynacase_id               = fields.Integer(string="Id Dynacase", index=True, copy=False)
     piece_jointe_ids          = fields.Many2many("ir.attachment", "is_demande_modif_compte_fournisseur_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
-    active                     = fields.Boolean('Actif', default=True, tracking=True)
+    active                    = fields.Boolean('Actif', default=True, tracking=True)
 
 
     def vers_diffuse_action(self):

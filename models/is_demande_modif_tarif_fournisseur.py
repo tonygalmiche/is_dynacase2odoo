@@ -35,12 +35,11 @@ _UNITE = ([
 class is_demande_modif_tarif_fournisseur(models.Model):
     _name='is.demande.modif.tarif.fournisseur'
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
-    _description="Prise d'avance"
+    _description="Demande de création ou de modification d'un tarif Fournisseur"
     _rec_name = "titre"
     _order='num_ordre desc'
 
     titre                          = fields.Char(string="Titre du document", tracking=True, compute='_compute_title', readonly=True, store=True)
-    active                         = fields.Boolean('Actif', default=True, tracking=True, readonly=True)
     num_ordre                      = fields.Integer(string="Numéro d'ordre de la demande", tracking=True)
     societe_ids                    = fields.Many2many('is.database','is_demande_modif_tarif_fournisseur_database_rel','demande_modif_tarif_fournisseur_id','database_id', string="Société", tracking=True)
     type_tarif                     = fields.Selection(_TARIF, "Type tarif", default=_TARIF[0][0], required=True, tracking=True)
@@ -50,7 +49,7 @@ class is_demande_modif_tarif_fournisseur(models.Model):
     responsable_action_id          = fields.Many2one("res.users", "Responsable de l'action", tracking=True, required=True)
     motif                          = fields.Text(string="Motif", tracking=True, required=True)
     date_application               = fields.Date("Date d'application", tracking=True)
-    type_commande                  = fields.Selection(_TYPE_COMMANDE, "Type de commande", default=_TYPE_COMMANDE[0][0], required=True, tracking=True)
+    type_commande                  = fields.Selection(_TYPE_COMMANDE, "Type de commande", tracking=True)
     gestionnaire                   = fields.Selection(_GESTIONNAIRE, "Gestionnaire", default=_GESTIONNAIRE[0][0], required=True, tracking=True)
     code_douanier                  = fields.Char(string="Code douanier", tracking=True)
     origine                        = fields.Char(string="Origine", tracking=True)
@@ -77,6 +76,7 @@ class is_demande_modif_tarif_fournisseur(models.Model):
 
     state                          = fields.Selection(_STATE, "Etat", default=_STATE[0][0], required=True, tracking=True)
     dynacase_id                    = fields.Integer(string="Id Dynacase", index=True, copy=False)
+    active                         = fields.Boolean('Actif', default=True, tracking=True)
 
 
     def vers_diffuse_action(self):
