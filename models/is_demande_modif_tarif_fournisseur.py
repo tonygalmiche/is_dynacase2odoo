@@ -42,7 +42,7 @@ class is_demande_modif_tarif_fournisseur(models.Model):
     titre                          = fields.Char(string="Titre du document", tracking=True, compute='_compute_title', readonly=True, store=True)
     active                         = fields.Boolean('Actif', default=True, tracking=True, readonly=True)
     num_ordre                      = fields.Integer(string="Numéro d'ordre de la demande", tracking=True)
-    societe_ids                    = fields.Many2many('is.database','demande_modif_tarif_fournisseur_database_rel','demande_modif_tarif_fournisseur_id','database_id', string="Société", tracking=True)
+    societe_ids                    = fields.Many2many('is.database','is_demande_modif_tarif_fournisseur_database_rel','demande_modif_tarif_fournisseur_id','database_id', string="Société", tracking=True)
     type_tarif                     = fields.Selection(_TARIF, "Type tarif", default=_TARIF[0][0], required=True, tracking=True)
     fournisseur_id                 = fields.Many2one('res.partner', 'Nom du fournisseur', tracking=True)
     date_creation                  = fields.Date("Date de création de la demande", tracking=True, default=lambda *a: fields.datetime.now())
@@ -108,11 +108,6 @@ class is_demande_modif_tarif_fournisseur(models.Model):
             if obj.fournisseur_id:
                 title += obj.fournisseur_id.name
             obj.titre = title
-
-    @api.depends('fournisseur_id')
-    def _compute_fournisseur(self):
-        for obj in self:
-            obj.code_fournisseur = obj.fournisseur_id.is_code
 
     def lien_vers_dynacase_action(self):
         for obj in self:
