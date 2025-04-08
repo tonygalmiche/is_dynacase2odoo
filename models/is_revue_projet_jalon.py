@@ -326,12 +326,13 @@ class is_revue_projet_jalon(models.Model):
         for obj in self:
             logo_rs = False
             if obj.rpj_rcid:
-                if obj.rpj_rcid.rc_sp_piece_reglem:
-                    logo_rs='R'
-                if obj.rpj_rcid.rc_sp_piece_sec:
-                    logo_rs='S'
-                if obj.rpj_rcid.rc_sp_piece_reglem and obj.rpj_rcid.rc_sp_piece_sec:
-                    logo_rs='RS'
+                logo_rs = obj.rpj_rcid.get_logo_rs()
+                # if obj.rpj_rcid.rc_sp_piece_reglem:
+                #     logo_rs='R'
+                # if obj.rpj_rcid.rc_sp_piece_sec:
+                #     logo_rs='S'
+                # if obj.rpj_rcid.rc_sp_piece_reglem and obj.rpj_rcid.rc_sp_piece_sec:
+                #     logo_rs='RS'
             obj.logo_rs = logo_rs
 
 

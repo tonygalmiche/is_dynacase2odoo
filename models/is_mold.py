@@ -1,4 +1,4 @@
-from odoo import models, fields # type: ignore
+from odoo import models, fields, api # type: ignore
 from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J, TYPE_DOCUMENT # type: ignore
 
 
@@ -15,6 +15,17 @@ class is_mold(models.Model):
     date_fin_be            = fields.Date(string="Date fin BE"                                        , copy=False)
     article_ids            = fields.One2many('is.mold.dossierf.article', 'mold_id')
     fermeture_id           = fields.Many2one("is.fermeture.gantt", string="Fermeture planning")
+    logo_rs                = fields.Char(string="Logo RS", compute='_compute_logo_rs', readonly=True, store=False)
+
+
+    @api.depends('revue_contrat_id')
+    def _compute_logo_rs(self):
+        for obj in self:
+            logo_rs = False
+            if obj.revue_contrat_id:
+                logo_rs = obj.revue_contrat_id.get_logo_rs()
+            print('TEST', obj,logo_rs)
+            obj.logo_rs = logo_rs
 
 
     def gantt_action(self):
