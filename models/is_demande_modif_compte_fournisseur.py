@@ -15,7 +15,6 @@ class is_demande_modif_compte_fournisseur(models.Model):
     _order='num_ordre desc'
 
     titre                     = fields.Char(string="Titre du document", tracking=True, compute='_compute_title', readonly=True, store=True)
-    active                    = fields.Boolean('Actif', default=True, tracking=True, readonly=True)
     num_ordre                 = fields.Integer(string="Numéro d'ordre de la demande", tracking=True)
     societe_ids               = fields.Many2many('is.database','is_demande_modif_compte_fournisseur_database_rel','demande_modif_compte_fournisseur_id','database_id', string="Société", tracking=True)
     fournisseur_id            = fields.Many2one('res.partner', 'Nom du fournisseur', tracking=True)
@@ -29,6 +28,7 @@ class is_demande_modif_compte_fournisseur(models.Model):
     state                     = fields.Selection(_STATE, "Etat", default=_STATE[0][0], required=True, tracking=True)
     dynacase_id               = fields.Integer(string="Id Dynacase", index=True, copy=False)
     piece_jointe_ids          = fields.Many2many("ir.attachment", "is_demande_modif_compte_fournisseur_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
+    active                     = fields.Boolean('Actif', default=True, tracking=True)
 
 
     def vers_diffuse_action(self):
