@@ -139,6 +139,7 @@
                     <field name="write_date"                     optional="hide" string="Modifié le"/>
                     <field name="write_uid"                      optional="hide" string="Modifié par"/>
                     <field name="dynacase_id"                    optional="hide" groups="base.group_system"/>
+                    <field name="state"                          optional="hide"/>
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
