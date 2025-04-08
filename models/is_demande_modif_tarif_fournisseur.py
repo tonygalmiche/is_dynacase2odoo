@@ -50,7 +50,7 @@ class is_demande_modif_tarif_fournisseur(models.Model):
     motif                          = fields.Text(string="Motif", tracking=True, required=True)
     date_application               = fields.Date("Date d'application", tracking=True)
     type_commande                  = fields.Selection(_TYPE_COMMANDE, "Type de commande", tracking=True)
-    gestionnaire                   = fields.Selection(_GESTIONNAIRE, "Gestionnaire", default=_GESTIONNAIRE[0][0], required=True, tracking=True)
+    gestionnaire                   = fields.Selection(_GESTIONNAIRE, "Gestionnaire", tracking=True)
     code_douanier                  = fields.Char(string="Code douanier", tracking=True)
     origine                        = fields.Char(string="Origine", tracking=True)
     maj_cde                        = fields.Boolean('Mise à jour des commandes', tracking=True)
