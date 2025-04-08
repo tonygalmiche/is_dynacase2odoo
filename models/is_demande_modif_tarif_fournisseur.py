@@ -59,7 +59,7 @@ class is_demande_modif_tarif_fournisseur(models.Model):
 
     code_article                   = fields.Char(string="Code article", tracking=True)
     designation                    = fields.Char(string="Désignation", tracking=True)
-    unite_tarif                    = fields.Selection(_UNITE, "Unité tarif", default=_UNITE[0][0], required=True, tracking=True)
+    unite_tarif                    = fields.Selection(_UNITE, "Unité tarif", tracking=True)
     unite_tarif_autre              = fields.Char(string="Unité tarif (autre)", tracking=True)
     conditionnement                = fields.Char(string="Conditionnement", tracking=True)
     lot_approvisionnement          = fields.Integer(string="Lot d'approvisionnement minimum", tracking=True)
