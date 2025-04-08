@@ -250,13 +250,8 @@ class IsDocMoule(models.Model):
                         color='Gray'
                 if obj.etat=='F':
                     color='SpringGreen'
-
-                print('TEST',obj.etat,obj.fin_derogation,now)
-
                 if obj.etat=='D' and obj.fin_derogation and obj.fin_derogation<=now:
                     color='Orange'
-
-
             obj.color=color
 
 

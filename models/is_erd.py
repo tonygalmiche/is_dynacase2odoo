@@ -58,7 +58,6 @@ class is_erd(models.Model):
             domain = [('numero', 'like', 'ERD '),('date', '>', '2025-01-01')]
             lines=self.env['is.erd'].search(domain,order='numero desc', limit=1)
             for line in lines:
-                print(line.numero,line.numero[4:7],annee,aa)
                 num=int(line.numero[4:7])+1
                 num = ("000%s"%num)[-3:]
                 numero="ERD %s.%s"%(num,aa)

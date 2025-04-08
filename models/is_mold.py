@@ -24,7 +24,6 @@ class is_mold(models.Model):
             logo_rs = False
             if obj.revue_contrat_id:
                 logo_rs = obj.revue_contrat_id.get_logo_rs()
-            print('TEST', obj,logo_rs)
             obj.logo_rs = logo_rs
 
 

@@ -30,16 +30,12 @@
                 <group name="identification" position="after">
                     <group>
                         <field name="logo_rs" invisible="1"/>
-                        <!-- <div colspan="2" style="text-align:center;height:530px">
+                        <div colspan="2" style="text-align:center;height:530px">
                             <img attrs="{'invisible': [('logo_rs', '!=', 'S')]}"  alt="Logo S"  src="/is_dynacase2odoo/static/src/img/logo_s.png"  style="max-width:50px"/><br />
                             <img attrs="{'invisible': [('logo_rs', '!=', 'R')]}"  alt="Logo R"  src="/is_dynacase2odoo/static/src/img/logo_r.png"  style="max-width:50px"/><br />
                             <img attrs="{'invisible': [('logo_rs', '!=', 'RS')]}" alt="Logo RS" src="/is_dynacase2odoo/static/src/img/logo_rs.png" style="max-width:50px"/><br />        
-                            <field name="image" widget="image" readonly="1" style="max-width:300px;max-height:300px" nolabel="1" colspan="2"/>
-                        </div> -->
-
-
-
-                        <field name="image" widget="image" style="max-width:300px;max-height:300px;float:right" nolabel="1" colspan="2"/>
+                            <field name="image" widget="image" style="max-width:300px;max-height:300px" nolabel="1" colspan="2"/>
+                        </div>
                     </group>
                 </group>
                 <xpath expr="//notebook" position="inside">
