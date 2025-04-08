@@ -56,9 +56,9 @@
                             <field name="responsable_action_id"     attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="motif"                     attrs="{'readonly': [('state','!=','brouillon')]}"/>
                         </group>
-                        <!--group string="Pièces jointes">
+                        <group string="Pièces jointes">
                             <field name="piece_jointe_ids"   widget="many2many_binary" attrs="{'readonly': [('state','!=','brouillon')]}"/>
-                        </group-->
+                        </group>
                     </sheet>
                    <div class="oe_chatter">
                         <field name="message_follower_ids" />
@@ -84,10 +84,10 @@
                     <field name="createur_id"               optional="show" widget="many2one_clickable"/>
                     <field name="responsable_action_id"     optional="show" widget="many2one_clickable"/>
                     <field name="motif"                     optional="hide"/>
-                    <field name="create_date"               optional="hide"/>
-                    <field name="create_uid"                optional="hide"/>
-                    <field name="write_date"                optional="hide"/>
-                    <field name="write_uid"                 optional="hide"/>
+                    <field name="create_date"               optional="hide" string="Créé le"/>
+                    <field name="create_uid"                optional="hide" string="Créé par"/>
+                    <field name="write_date"                optional="hide" string="Modifié le"/>
+                    <field name="write_uid"                 optional="hide" string="Modifié par"/>
                     <field name="dynacase_id"               optional="hide" groups="base.group_system"/>
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
