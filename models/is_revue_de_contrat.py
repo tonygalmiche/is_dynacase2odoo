@@ -612,6 +612,18 @@ class is_revue_de_contrat(models.Model):
             return res
 
 
+    def get_logo_rs(self):
+        for obj in self:
+            logo_rs = False
+            if obj.rc_sp_piece_reglem:
+                logo_rs='R'
+            if obj.rc_sp_piece_sec:
+                logo_rs='S'
+            if obj.rc_sp_piece_reglem and obj.rc_sp_piece_sec:
+                logo_rs='RS'
+            return logo_rs
+
+
 class is_revue_de_contrat_decomposition_prix(models.Model):
     _name        = "is.revue.de.contrat.decomposition.prix"
     _description = "Revue de contrat Décomposition prix"
