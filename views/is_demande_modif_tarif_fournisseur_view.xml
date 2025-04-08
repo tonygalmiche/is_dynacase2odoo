@@ -13,28 +13,21 @@
                             name="vers_brouillon_action"
                             string="vers Brouillon"
                             type="object"
-                            attrs="{'invisible': [('state', '!=', 'termine')]}" 
+                            attrs="{'invisible': [('state', '!=', 'diffuse')]}" 
                             groups="base.group_system"
                         />
                         <button 
                             name="vers_diffuse_action"
                             string="vers Diffusé"
                             type="object"
-                            attrs="{'invisible': [('state', '=', 'termine')]}" 
+                            attrs="{'invisible': [('state', '==', 'diffuse')]}" 
                             groups="base.group_system"
                         />
                         <button 
                             name="vers_termine_action"
-                            string="vers Réalisé"
+                            string="vers Terminé"
                             type="object"
-                            attrs="{'invisible': [('state', '!=', 'termine')]}" 
-                            groups="base.group_system"
-                        />
-                        <button 
-                            name="lien_vers_dynacase_action"
-                            string="Dynacase"
-                            type="object"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                            attrs="{'invisible': [('state', '!=', 'diffuse')]}" 
                             groups="base.group_system"
                         />
                         <button 
@@ -45,7 +38,7 @@
                             groups="base.group_system"
                         />
                         <field name="dynacase_id" invisible="1"/>
-                        <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                        <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
@@ -141,6 +134,10 @@
                     <field name="designation_article_desactiver" optional="hide"/>
                     <field name="code_fournisseur_desactiver_id" optional="hide" widget="many2one_clickable"/>
                     <field name="commentaire"                    optional="hide"/>
+                    <field name="create_date"                    optional="hide"/>
+                    <field name="create_uid"                     optional="hide"/>
+                    <field name="write_date"                     optional="hide"/>
+                    <field name="write_uid"                      optional="hide"/>
                     <field name="dynacase_id"                    optional="hide" groups="base.group_system"/>
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 

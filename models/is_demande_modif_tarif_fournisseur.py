@@ -6,12 +6,12 @@ _STATE = ([
     ('termine', 'Terminé'),
 ])
 _TARIF = ([
-    ('creation', 'Créateur'),
+    ('creation', 'Création'),
     ('modification', 'Modification'),
 ])
 _TYPE_COMMANDE = ([
-     ('Commande ouverte', 'Commande ouverte'),
-     ('Commande ferme uniquement', 'Commande ferme uniquement'),
+     ('commande ouverte', 'Commande ouverte'),
+     ('commande ferme uniquement', 'Commande ferme uniquement'),
      ('commande ferme avec horizon', 'Commande ferme avec horizon'),
     ])
 _GESTIONNAIRE = ([
@@ -22,13 +22,13 @@ _GESTIONNAIRE = ([
      ('18', '18 - MATIERES-COMPOSANTS ACHETES VIA LE SERVICE ACHAT'),
 ])
 _EVOLUTION = ([
-     ('Hausse', 'Hausse'),
-     ('Baisse', 'Baisse'),
+     ('hausse', 'Hausse'),
+     ('baisse', 'Baisse'),
 ])
 _UNITE = ([
-    ('Tonne', 'Tonne'),
-    ('Mille', 'Mille'),
-    ('Unitaire', 'Unitaire'),
+    ('tonne', 'Tonne'),
+    ('mille', 'Mille'),
+    ('unitaire', 'Unitaire'),
 ])
 
 
@@ -72,6 +72,8 @@ class is_demande_modif_tarif_fournisseur(models.Model):
     designation_article_desactiver = fields.Char(string="Désignation article désactivé", tracking=True) 
     code_fournisseur_desactiver_id = fields.Many2one('res.partner', 'Code fournisseur', tracking=True)
     commentaire                    = fields.Char(string="Commentaires", tracking=True) 
+
+    piece_jointe_ids               = fields.Many2many("ir.attachment", "is_demande_modif_tarif_fournisseur_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
 
     state                          = fields.Selection(_STATE, "Etat", default=_STATE[0][0], required=True, tracking=True)
     dynacase_id                    = fields.Integer(string="Id Dynacase", index=True, copy=False)

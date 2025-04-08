@@ -28,6 +28,7 @@ class is_demande_modif_compte_fournisseur(models.Model):
     motif                     = fields.Text(string="Motif", tracking=True, required=True)
     state                     = fields.Selection(_STATE, "Etat", default=_STATE[0][0], required=True, tracking=True)
     dynacase_id               = fields.Integer(string="Id Dynacase", index=True, copy=False)
+    piece_jointe_ids          = fields.Many2many("ir.attachment", "is_demande_modif_compte_fournisseur_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
 
 
     def vers_diffuse_action(self):
