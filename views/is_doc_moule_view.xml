@@ -569,6 +569,7 @@
             <field name="res_model">is.doc.moule</field>
             <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
             <field name="domain">[('type_document','=','Moule'),('idmoule','!=',False)]</field>
+            <field name="context">{'default_type_document': 'Moule'}</field>
             <field name="view_id" ref="is_doc_moule_moule_tree"/>
         </record>
 
@@ -630,6 +631,7 @@
             <field name="res_model">is.doc.moule</field>
             <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
             <field name="domain">[('type_document','=','Dossier F'),('dossierf_id','!=',False)]</field>
+            <field name="context">{'default_type_document': 'Dossier F'}</field>
             <field name="view_id" ref="is_doc_moule_dossierf_tree"/>
         </record>
 
@@ -678,6 +680,7 @@
             <field name="res_model">is.doc.moule</field>
             <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
             <field name="domain">[('type_document','=','Article'),('dossier_article_id','!=',False)]</field>
+            <field name="context">{'default_type_document': 'Article'}</field>
             <field name="view_id" ref="is_doc_moule_article_tree"/>
             <field name="search_view_id" ref="is_doc_moule_article_search"/>
         </record>
@@ -734,6 +737,7 @@
             <field name="res_model">is.doc.moule</field>
             <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
             <field name="domain">[('type_document','=','dossier_appel_offre'),('dossier_appel_offre_id','!=',False)]</field>
+            <field name="context">{'default_type_document': 'dossier_appel_offre'}</field>
             <field name="view_id" ref="is_doc_moule_dao_tree"/>
         </record>
 
@@ -793,6 +797,7 @@
             <field name="res_model">is.doc.moule</field>
             <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
             <field name="domain">[('type_document','=','Dossier Modif Variante'),('dossier_modif_variante_id','!=',False)]</field>
+            <field name="context">{'default_type_document': 'Dossier Modif Variante'}</field>
             <field name="view_id" ref="is_doc_moule_dmv_tree"/>
         </record>
 

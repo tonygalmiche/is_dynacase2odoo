@@ -220,7 +220,7 @@ class IsDocMoule(models.Model):
                     obj.rsp_date=False
 
 
-    @api.depends('etat','date_fin_gantt','date_j_prevue')
+    @api.depends('etat','date_fin_gantt','date_j_prevue','fin_derogation')
     def _compute_color(self):
         "Retourne la couleur de l'indicateur en fonction de différent paramètres"
         for obj in self:
@@ -250,6 +250,13 @@ class IsDocMoule(models.Model):
                         color='Gray'
                 if obj.etat=='F':
                     color='SpringGreen'
+
+                print('TEST',obj.etat,obj.fin_derogation,now)
+
+                if obj.etat=='D' and obj.fin_derogation and obj.fin_derogation<=now:
+                    color='Orange'
+
+
             obj.color=color
 
 
@@ -308,7 +315,7 @@ class IsDocMoule(models.Model):
             obj.note        = note
 
 
-    @api.depends('note','coefficient','etat','action','array_ids.annex','rsp_date','rsp_texte','date_fin_gantt')
+    @api.depends('note','coefficient','etat','action','array_ids.annex','rsp_date','rsp_texte','date_fin_gantt','fin_derogation')
     def _compute_indicateur(self):
         for obj in self:
             color = obj.color
@@ -348,6 +355,7 @@ class IsDocMoule(models.Model):
             obj.indicateur = html
 
 
+    @api.depends('type_document')
     def _compute_acces_chef_projet(self):
         for obj in self:
             acces=False
@@ -425,7 +433,7 @@ class IsDocMoule(models.Model):
                     'param_project_id',
                     'idresp',
                     'date_debut_gantt',
-                    'date_fin_gantt',
+                    #'date_fin_gantt',
                     'duree',
                     'j_prevue',
                     'demande',
