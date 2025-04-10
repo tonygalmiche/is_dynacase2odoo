@@ -279,20 +279,22 @@ class is_revue_lancement(models.Model):
     def initialiser_responsable_doc_action(self):
         for obj in self:
             moule_id    = obj.rl_num_rcid.rc_mouleid.id
-            dossierf_id = obj.rl_num_rcid.rc_dossierfid.id
+            dossierf_id = obj.rl_num_rcid.rc_dossierfid.id or obj.dossierf_id.id
+            domain=False
             if moule_id:
                 domain=[('idmoule', '=', moule_id)]
             if dossierf_id:
                 domain=[('dossierf_id', '=', dossierf_id)]
-            docs = self.env['is.doc.moule'].search(domain)
-            for doc in docs:
-                ppr_responsable = doc.param_project_id.ppr_responsable
-                if ppr_responsable:
-                    responsable = _RESPONSABLES.get(ppr_responsable)          
-                    if hasattr(obj, responsable):
-                        user = getattr(obj,responsable)
-                        if user:
-                            doc.idresp = user.id
+            if domain:
+                docs = self.env['is.doc.moule'].search(domain)
+                for doc in docs:
+                    ppr_responsable = doc.param_project_id.ppr_responsable
+                    if ppr_responsable:
+                        responsable = _RESPONSABLES.get(ppr_responsable)          
+                        if hasattr(obj, responsable):
+                            user = getattr(obj,responsable)
+                            if user:
+                                doc.idresp = user.id
 
 
     def action_vers_diffuse(self):
