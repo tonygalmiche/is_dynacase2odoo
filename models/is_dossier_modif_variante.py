@@ -17,6 +17,11 @@ class is_dossier_modif_variante(models.Model):
     @api.depends("state")
     def _compute_vsb(self):
         for obj in self:
+            readonly=False
+            if obj.state in ('plasrelancecli','plaswinned','plasloosed','plascancelled'):
+                readonly=True
+            obj.readonly_vsb = readonly
+
             vsb = False
             if obj.state in ["plascreate", "plastransbe"]:
                 vsb = True
@@ -207,8 +212,9 @@ class is_dossier_modif_variante(models.Model):
     dynacase_id                 = fields.Integer(string="Id Dynacase",index=True,copy=False)
     solde                       = fields.Boolean(string="Soldé", default=False, copy=False, tracking=True)
     fermeture_id                = fields.Many2one("is.fermeture.gantt", string="Fermeture planning", tracking=True)
-    fiche_codification_ids       = fields.One2many("is.fiche.codification", "dossier_modif_variante_id", readonly=True)
+    fiche_codification_ids      = fields.One2many("is.fiche.codification", "dossier_modif_variante_id", readonly=True)
     active                      = fields.Boolean('Actif', default=True, tracking=True)
+    readonly_vsb                = fields.Boolean(string="Accès en lecture seule", compute='_compute_vsb', readonly=True, store=False)
 
 
     @api.constrains('demao_idmoule', 'dossierf_id')

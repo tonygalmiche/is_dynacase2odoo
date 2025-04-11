@@ -73,11 +73,19 @@ class is_erd(models.Model):
     def _compute_vsb(self):
         commercial  = self.env['res.users'].has_group('is_plastigray16.is_commerciaux_group')
         chef_projet = self.env['res.users'].has_group('is_plastigray16.is_chef_projet_group')
+
+
+
         for obj in self:
             vsb = False
             if (commercial or chef_projet) and obj.state=='Cree':
                 vsb=True
             obj.vers_transmis_be_vsb = vsb
+
+            print(commercial,chef_projet,vsb)
+
+
+
 
             vsb = False
             if (commercial or chef_projet) and obj.state in ('Transmis_BE','Diffuse_Client'):

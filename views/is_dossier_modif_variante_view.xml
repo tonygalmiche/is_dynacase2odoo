@@ -104,46 +104,51 @@
                             attrs="{'invisible': [('state', '!=', 'plaswinned')]}"
                             type="object"
                         />
-                        <field name="state" widget="statusbar" />
+                        <field name="state" widget="statusbar" statusbar_visible="plascreate,plasanalysed,plastransbe,Analyse_BE,plasvalidbe,plasvalidcom,plasdiffusedcli"/>
+
+
+
+
                         <field name="dynacase_id" invisible="1"/>
                     </header>
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/> 
+                        <field name="readonly_vsb" invisible="1"/>
                         <group string="Caractéristiques">
                             <group>
                                 <field name="demao_type" readonly="1" force_save="1"/>
-                                <field name="demao_num" />
-                                <field name="demao_date" />
-                                <field name="demao_idmoule" />
-                                <field name="dossierf_id" />
-                                <field name="demao_idclient"         required="1"/>
-                                <field name="demao_idcommercial"     required="1"/>
+                                <field name="demao_num"  attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                                <field name="demao_date"  attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                                <field name="demao_idmoule" attrs="{'readonly': [('readonly_vsb','=',True)]}" />
+                                <field name="dossierf_id"  attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                                <field name="demao_idclient"  attrs="{'readonly': [('readonly_vsb','=',True)]}"        required="1"/>
+                                <field name="demao_idcommercial"   attrs="{'readonly': [('readonly_vsb','=',True)]}"   required="1"/>
                                 <field name="dossier_appel_offre_id"/>
-                                <field name="demao_desig"            required="1"/>
+                                <field name="demao_desig"    attrs="{'readonly': [('readonly_vsb','=',True)]}"         required="1"/>
                             </group>
                             <group>
-                                <field name="site_id" />
-                                <field name="demao_nature" />
-                                <field name="demao_ref" />
-                                <field name="demao_daterep" />
-                                <field name="demao_datelanc" />
-                                <field name="demao_pxvente" />
-                                <field name="demao_numcmd" />
-                                <field name="demao_obs" />    
+                                <field name="site_id"  attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                                <field name="demao_nature"  attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                                <field name="demao_ref"  attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                                <field name="demao_daterep"  attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                                <field name="demao_datelanc"  attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                                <field name="demao_pxvente"  attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                                <field name="demao_numcmd"  attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                                <field name="demao_obs"  attrs="{'readonly': [('readonly_vsb','=',True)]}"/>    
                             </group>
                          </group>
                         <group >
                             <separator string="BE"/>
-                            <field name="demao_idbe" />
-                            <field name="fermeture_id"/>    
-                            <field name="solde"/>    
+                            <field name="demao_idbe"  attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                            <field name="fermeture_id" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>    
+                            <field name="solde" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>    
                             <separator string="Fichiers commerciaux"/>
-                            <field name="demao_annexcom" widget="many2many_binary"/>
+                            <field name="demao_annexcom" widget="many2many_binary" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                             <separator string="Fichiers BE"/>
-                            <field name="demao_annex" widget="many2many_binary"/>
+                            <field name="demao_annex" widget="many2many_binary" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                             <separator string="Commandes BE"/>
-                            <field name="demao_cde_be" widget="many2many_binary"/>
+                            <field name="demao_cde_be" widget="many2many_binary" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                         </group>
                         <group string="Fiches de codification" col="4" colspan="4" attrs="{'invisible': [('fiche_codification_ids', '=', [])]}">
                             <field name="fiche_codification_ids" nolabel="1" colspan="4">
@@ -221,8 +226,13 @@
                     <field name="demao_obs"               optional="hide"/>
                     <field name="demao_motif"             optional="hide"/>
                     <field name="demao_idbe"              optional="hide"/>
-                    <field name="solde"                   optional="show"/>
-                    <field name="state"                   optional="show"/>
+                    <field name="solde"                   optional="hide"/>
+                    <field 
+                        name="state" optional="show" widget="badge" 
+                        decoration-info="state in ['plasdiffusedcli','plasrelancecli']" 
+                        decoration-warning="state in ['plascreate','plasanalysed','plastransbe','Analyse_BE','plasvalidbe','plasvalidcom']"
+                        decoration-success="state in ['plaswinned']"
+                    />
                     <field name="create_date"             optional="hide" string="Créé le"/>
                     <field name="create_uid"              optional="hide" string="Créé par"/>
                     <field name="write_date"              optional="hide" string="Modifié le"/>

@@ -18,33 +18,67 @@
                             groups="base.group_system"
                         />
                         <field name="dynacase_id" invisible="1"/>
+
+                        <button 
+                            name="vers_brouillon_action"
+                            string="vers Brouillon"
+                            type="object"
+                            attrs="{'invisible': [('vers_brouillon_vsb', '!=', True)]}" 
+                        />
+                        <field name="vers_brouillon_vsb" invisible="1" />
+
+                        <button 
+                            name="vers_diffuse_action"
+                            string="vers Diffusé"
+                            type="object"
+                            attrs="{'invisible': [('vers_diffuse_vsb', '!=', True)]}" 
+                        />
+                        <field name="vers_diffuse_vsb" invisible="1" />
+
+                        <button 
+                            name="vers_termine_action"
+                            string="vers Terminé"
+                            type="object"
+                            attrs="{'invisible': [('vers_termine_vsb', '!=', True)]}" 
+                        />
+                        <field name="vers_termine_vsb" invisible="1" />
+
+                        <button 
+                            name="vers_refuse_action"
+                            string="vers Refusé"
+                            type="object"
+                            attrs="{'invisible': [('vers_refuse_vsb', '!=', True)]}" 
+                        />
+                        <field name="vers_refuse_vsb" invisible="1" />
+                        <field name="state" widget="statusbar" statusbar_visible="mdt_brouillon,mdt_diffuse,mdt_termine"/>
                     </header>
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/> 
+                        <field name="readonly_vsb" invisible="1"/>
                         <group>
                             <field name="num_demande"/>
-                            <field name="moule_id"/>
-                            <field name="dossierf_id"/>
-                            <field name="codepg"/>
-                            <field name="designation"/>
-                            <field name="demandeur"/>
-                            <field name="date_demande"/>
-                            <field name="responsable_action"/>
+                            <field name="moule_id" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                            <field name="dossierf_id" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                            <field name="codepg" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                            <field name="designation" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                            <field name="demandeur" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                            <field name="date_demande" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                            <field name="responsable_action" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                         </group>
                         <group string="Article">
-                            <field name="article"/>
-                            <field name="article_commentaire"/>
-                            <field name="article_piece_jointe_ids"   widget="many2many_binary"/>
+                            <field name="article" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                            <field name="article_commentaire" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                            <field name="article_piece_jointe_ids"  attrs="{'readonly': [('readonly_vsb','=',True)]}"  widget="many2many_binary"/>
                         </group>
                         <group string="Nomenclature">
-                            <field name="nomenclature"/>
-                            <field name="nomenclature_commentaire"/>
-                            <field name="nomenclature_piece_jointe_ids"  widget="many2many_binary"/>
+                            <field name="nomenclature" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                            <field name="nomenclature_commentaire" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                            <field name="nomenclature_piece_jointe_ids" attrs="{'readonly': [('readonly_vsb','=',True)]}"  widget="many2many_binary"/>
                         </group>
                         <group string="Gamme">
-                            <field name="gamme_article"/>
-                            <field name="gamme_commentaire"/>
+                            <field name="gamme_article" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                            <field name="gamme_commentaire" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                         </group>
                     </sheet>
                    <div class="oe_chatter">
@@ -70,18 +104,27 @@
                     <field name="date_demande"             optional="show"/>
                     <field name="responsable_action"       optional="show"/>
                     <field name="article"                  optional="show"/>
-                    <field name="article_commentaire"      optional="show"/>
+                    <field name="article_commentaire"      optional="hide"/>
                     <field name="nomenclature"             optional="show"/>
-                    <field name="nomenclature_commentaire" optional="show"/>
-                    <field name="gamme_article"                    optional="show"/>
-                    <field name="gamme_commentaire"        optional="show"/>
+                    <field name="nomenclature_commentaire" optional="hide"/>
+                    <field name="gamme_article"            optional="show"/>
+                    <field name="gamme_commentaire"        optional="hide"/>
+                    <field name="create_date" optional="hide" string="Créé le"/>
+                    <field name="create_uid"  optional="hide" string="Créé par"/>
+                    <field name="write_date"  optional="hide" string="Modifié le"/>
+                    <field name="write_uid"   optional="hide" string="Modifié par"/>
+                    <field 
+                        name="state" optional="show" widget="badge" 
+                        decoration-warning="state in ['mdt_brouillon']"
+                        decoration-info="state in ['mdt_diffuse']" 
+                        decoration-success="state in ['mdt_termine']"
+                    />
                     <field name="dynacase_id"              optional="hide" groups="base.group_system"/>
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
                         groups="base.group_system"
                     />
-
                 </tree>
             </field>
         </record>

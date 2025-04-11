@@ -17,28 +17,24 @@
                             string="vers Transmis BE"
                             type="object"
                             attrs="{'invisible': [('vers_transmis_be_vsb', '=', False)]}" 
-                            groups="is_dynacase2odoo.is_gestionnaire_projet_group"
                         />
                         <button 
                             name="vers_Valide_BE_action"
                             string="vers Validé BE"
                             type="object"
                             attrs="{'invisible': [('vers_valide_be_vsb', '=', False)]}" 
-                            groups="is_dynacase2odoo.is_gestionnaire_projet_group"
                         />
                         <button 
                             name="vers_Diffuse_Client_action"
                             string="vers Diffusé Client"
                             type="object"
                             attrs="{'invisible': [('vers_diffuse_client_vsb', '=', False)]}" 
-                            groups="is_dynacase2odoo.is_gestionnaire_projet_group"
                         />
                         <button 
                             name="vers_Gagne_action"
                             string="vers Gagné"
                             type="object"
                             attrs="{'invisible': [('vers_gagne_vsb', '=', False)]}" 
-                            groups="is_dynacase2odoo.is_gestionnaire_projet_group"
                         />
                         <field name="dynacase_id" invisible="1"/>
                         <button 
@@ -46,7 +42,7 @@
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                             groups="base.group_system"
                         />
-                        <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                        <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>

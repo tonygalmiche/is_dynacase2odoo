@@ -2,12 +2,6 @@ from odoo import models, fields, api         # type: ignore
 from odoo.exceptions import ValidationError  # type: ignore
 
 
-#TODO pour is_fiche_codification
-#- Importer les tableayx et les pieces jointes
-#- Ajouter les boutons du workflow
-#- Mettre en place les droits en fonction du champ state
-
-
 _STATE = ([
     ('brouillon' , 'Brouillon'),
     ('transmis'  , 'Transmise'),
@@ -58,6 +52,42 @@ class is_fiche_codification(models.Model):
     nomenclature_ids             = fields.One2many('is.fiche.codification.nomenclature.line', 'codification_id', string="Nomenclature")
     decomposition_ids            = fields.One2many('is.fiche.codification.decomposition.line', 'codification_id', string="Décomposition")
     piece_jointe_ids             = fields.Many2many("ir.attachment", "is_fiche_codification_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
+    vers_brouillon_vsb           = fields.Boolean(string="vers Brouillon"        , compute='_compute_vsb', readonly=True, store=False)
+    vers_transmis_vsb            = fields.Boolean(string="vers Transmise"        , compute='_compute_vsb', readonly=True, store=False)
+    vers_valide_vsb              = fields.Boolean(string="vers Validée"          , compute='_compute_vsb', readonly=True, store=False)
+
+
+    def vers_brouillon_action(self):
+        for obj in self:
+            obj.state='brouillon'
+
+    def vers_transmis_action(self):
+        for obj in self:
+            obj.state='transmis'
+
+    def vers_valide_action(self):
+        for obj in self:
+            obj.state='valide'
+
+
+    @api.depends("state")
+    def _compute_vsb(self):
+        for obj in self:
+            commercial = self.env.user.has_group('is_plastigray16.is_commerciaux_group')        
+            vsb = False
+            if commercial and obj.state in ('transmis'):
+                vsb=True
+            obj.vers_brouillon_vsb = vsb
+
+            vsb = False
+            if commercial and obj.state in ('brouillon','valide'):
+                vsb=True
+            obj.vers_transmis_vsb = vsb
+
+            vsb = False
+            if commercial and obj.state in ('transmis'):
+                vsb=True
+            obj.vers_valide_vsb = vsb
 
 
     @api.constrains('dossier_modif_variante_id', 'revue_contrat_id')

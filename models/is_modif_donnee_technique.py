@@ -1,5 +1,14 @@
 from odoo import models, fields, api  # type: ignore
 
+
+_STATE = ([
+    ('mdt_brouillon', 'Brouillon'),
+    ('mdt_diffuse'  , 'Diffusé'),
+    ('mdt_termine'  , 'Terminé'),
+    ('mdt_refuse'   , 'Refusé'),
+])
+
+
 class is_modif_donnee_technique(models.Model):
     _name='is.modif.donnee.technique'
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
@@ -16,19 +25,71 @@ class is_modif_donnee_technique(models.Model):
     demandeur                     = fields.Many2one("res.users", "Demandeur", default=lambda self: self.env.uid, tracking=True)
     date_demande                  = fields.Date("Date demande", tracking=True, default=lambda *a: fields.datetime.now())
     responsable_action            = fields.Many2one("res.users", "Responsable de l'action", tracking=True, required=True)
-
     article                       = fields.Boolean("Modification Article", tracking=True)
     article_commentaire           = fields.Text("Commentaire article", tracking=True)
     article_piece_jointe_ids      = fields.Many2many("ir.attachment", "is_modif_donnee_technique_article_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe article")
-
     nomenclature                  = fields.Boolean("Modification Nomenclature", tracking=True)
     nomenclature_commentaire      = fields.Text("Commentaire nomenclature", tracking=True)
     nomenclature_piece_jointe_ids = fields.Many2many("ir.attachment", "is_modif_donnee_technique_nomenclature_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe nomenclature")
-
     gamme_article                 = fields.Boolean("Modification Gamme", tracking=True)
     gamme_commentaire             = fields.Text("Commentaire", tracking=True)
-
     dynacase_id                   = fields.Integer(string="Id Dynacase", index=True, copy=False)
+    state                         = fields.Selection(_STATE, "État", tracking=True, default='mdt_brouillon')
+    vers_brouillon_vsb            = fields.Boolean(string="vers Brouillon"        , compute='_compute_vsb', readonly=True, store=False)
+    vers_diffuse_vsb              = fields.Boolean(string="vers Diffusé"          , compute='_compute_vsb', readonly=True, store=False)
+    vers_termine_vsb              = fields.Boolean(string="vers Terminé"          , compute='_compute_vsb', readonly=True, store=False)
+    vers_refuse_vsb               = fields.Boolean(string="vers Refusé"           , compute='_compute_vsb', readonly=True, store=False)
+    readonly_vsb                  = fields.Boolean(string="Accès en lecture seule", compute='_compute_vsb', readonly=True, store=False)
+
+
+
+    @api.depends("state")
+    def _compute_vsb(self):
+        for obj in self:
+            commercial = self.env.user.has_group('is_plastigray16.is_commerciaux_group')
+
+            readonly=False
+            if obj.state in ('mdt_termine','mdt_refuse'):
+                readonly=True
+            obj.readonly_vsb = readonly
+
+            vsb = False
+            if commercial and obj.state in ('mdt_diffuse'):
+                vsb=True
+            obj.vers_brouillon_vsb = vsb
+
+            vsb = False
+            if commercial and obj.state in ('mdt_brouillon','mdt_termine','mdt_refuse'):
+                vsb=True
+            obj.vers_diffuse_vsb = vsb
+
+            vsb = False
+            if commercial and obj.state in ('mdt_diffuse'):
+                vsb=True
+            obj.vers_termine_vsb = vsb
+
+            vsb = False
+            if commercial and obj.state in ('mdt_diffuse'):
+                vsb=True
+            obj.vers_refuse_vsb = vsb
+
+
+    def vers_brouillon_action(self):
+        for obj in self:
+            obj.state='mdt_brouillon'
+
+    def vers_diffuse_action(self):
+        for obj in self:
+            obj.state='mdt_diffuse'
+
+    def vers_termine_action(self):
+        for obj in self:
+            obj.state='mdt_termine'
+
+    def vers_refuse_action(self):
+        for obj in self:
+            obj.state='mdt_refuse'
+
 
     def lien_vers_dynacase_action(self):
         for obj in self:
