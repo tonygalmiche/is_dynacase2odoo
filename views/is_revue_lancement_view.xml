@@ -15,6 +15,14 @@
             <field name="arch" type="xml">
                 <form string="Revue de lancement">
                     <header>
+                        <field name="dynacase_id" invisible="1"/>
+                        <button 
+                            name="lien_vers_dynacase_action"
+                            string="Dynacase"
+                            type="object" class="btn btn-info"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                            groups="base.group_system"
+                        />
                         <button 
                             name="copie_rc_action" 
                             string="Copie données revue de contrat" 
@@ -50,15 +58,8 @@
                             attrs="{'invisible': [('state', '=', 'rl_brouillon')]}"
                             groups="is_dynacase2odoo.is_gestionnaire_revue_lancement_group"
                         />
-                        <button 
-                            name="lien_vers_dynacase_action"
-                            string="Dynacase"
-                            type="object"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
-                            groups="base.group_system"
-                        />
+                     
                         <field name="state" widget="statusbar" />
-                        <field name="dynacase_id" invisible="1"/>
                     </header>
                     <sheet>
                         <field name="active" invisible="1"/>

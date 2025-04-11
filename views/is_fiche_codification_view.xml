@@ -12,7 +12,7 @@
                         <button 
                             name="lien_vers_dynacase_action"
                             string="Dynacase"
-                            type="object"
+                            type="object" class="btn btn-info"
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                             groups="base.group_system"
                         />
@@ -124,7 +124,6 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="chrono"                    optional="show"/>
-                    <field name="state"                     optional="show"/>
                     <field name="code_pg"                   optional="show"/>
                     <field name="date"                      optional="show"/>
                     <field name="type_dossier"              optional="show"/>
@@ -157,23 +156,18 @@
                     <field name="create_uid"                optional="hide"/>
                     <field name="write_date"                optional="hide"/>
                     <field name="write_uid"                 optional="hide"/>
-
                     <field 
                         name="state" optional="show" widget="badge" 
                         decoration-warning="state in ['brouillon']"
                         decoration-info="state in ['transmis']" 
                         decoration-success="state in ['valide']"
                     />
-
-
-
                     <field name="dynacase_id"               optional="hide" groups="base.group_system"/>
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
                         groups="base.group_system"
                     />
-
                 </tree>
             </field>
         </record>

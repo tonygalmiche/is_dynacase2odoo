@@ -8,6 +8,13 @@
             <field name="arch" type="xml">
                 <form string="Form">  
                     <header>
+                        <field name="dynacase_id" invisible="1"/>
+                        <button 
+                            string="Dynacase" name="lien_vers_dynacase_action"
+                            type="object" class="btn btn-info"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                            groups="base.group_system"
+                        />
                         <field name="vers_transmis_be_vsb" invisible="1"/>
                         <field name="vers_valide_be_vsb" invisible="1"/>
                         <field name="vers_diffuse_client_vsb" invisible="1"/>
@@ -35,12 +42,6 @@
                             string="vers Gagné"
                             type="object"
                             attrs="{'invisible': [('vers_gagne_vsb', '=', False)]}" 
-                        />
-                        <field name="dynacase_id" invisible="1"/>
-                        <button 
-                            string="Dynacase" name="lien_vers_dynacase_action" type="object" class="btn btn-info"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
-                            groups="base.group_system"
                         />
                         <field name="state" widget="statusbar"/>
                     </header>

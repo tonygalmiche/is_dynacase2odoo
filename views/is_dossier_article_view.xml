@@ -18,7 +18,8 @@
                     <header>
                         <field name="dynacase_id" invisible="1"/>
                         <button 
-                            string="Dynacase" name="lien_vers_dynacase_action" type="object" class="btn btn-info"
+                            string="Dynacase" name="lien_vers_dynacase_action" 
+                            type="object" class="btn btn-info"
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                             groups="base.group_system"
                         />

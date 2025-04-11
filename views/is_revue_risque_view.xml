@@ -8,10 +8,11 @@
             <field name="arch" type="xml">
                 <form string="Revue des risques projet">
                     <header>
+                        <field name="dynacase_id" invisible="1"/>
                         <button 
                             name="lien_vers_dynacase_action"
                             string="Dynacase"
-                            type="object"
+                            type="object" class="btn btn-info"
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                             groups="base.group_system"
                         />
@@ -22,7 +23,6 @@
                             groups="is_plastigray16.is_chef_projet_group"
                         />
                         <field name="state" widget="statusbar" />
-                        <field name="dynacase_id" invisible="1"/>
                     </header>
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>

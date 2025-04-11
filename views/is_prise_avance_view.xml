@@ -10,6 +10,14 @@
             <field name="arch" type="xml">
                 <form string="Form">
                     <header>
+                        <field name="dynacase_id" invisible="1"/>
+                        <button 
+                            name="lien_vers_dynacase_action"
+                            string="Dynacase"
+                            type="object" class="btn btn-info"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                            groups="base.group_system"
+                        />
                         <button 
                             name="vers_brouillon_action"
                             string="vers Brouillon"
@@ -31,14 +39,7 @@
                             attrs="{'invisible': [('state', '!=', 'realise')]}" 
                             groups="is_plastigray16.is_chef_projet_group"
                         />
-                        <button 
-                            name="lien_vers_dynacase_action"
-                            string="Dynacase"
-                            type="object"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
-                            groups="base.group_system"
-                        />
-                        <field name="dynacase_id" invisible="1"/>
+                       
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>

@@ -8,20 +8,19 @@
             <field name="arch" type="xml">
                 <form string="Form" create="1">
                     <header>
-                        <button 
-                            name="gantt_action"
-                            string="Gantt"
-                            type="object"
-                        />
+                        <field name="dynacase_id" invisible="1"/>
                         <button 
                             name="lien_vers_dynacase_action"
                             string="Dynacase"
-                            type="object"
+                            type="object" class="btn btn-info"
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                             groups="base.group_system"
                         />
-
-
+                        <button 
+                            name="gantt_action"
+                            string="Gantt"
+                            type="object" class="btn-success"
+                        />
                         <button 
                             name="vers_analyse_action"
                             string="vers Analysé"
@@ -103,7 +102,6 @@
                         <field name="vers_annule_vsb" invisible="1" />
 
                         <field name="state" widget="statusbar" statusbar_visible="plascreate,plasanalysed,plastransbe,Analyse_BE,plasvalidbe,plasvalidcom,plasdiffusedcli"/>
-                        <field name="dynacase_id" invisible="1"/>
                     </header>
                     <sheet>
                         <field name="active" invisible="1"/>

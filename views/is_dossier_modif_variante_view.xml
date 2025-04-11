@@ -16,6 +16,19 @@
             <field name="arch" type="xml">
                 <form string="Dossier modif/variante">
                     <header>
+                        <field name="dynacase_id" invisible="1"/>
+                        <button 
+                            name="lien_vers_dynacase_action"
+                            string="Dynacase"
+                            type="object" class="btn btn-info"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                            groups="base.group_system"
+                        />
+                        <button 
+                            name="gantt_action"
+                            string="Gantt"
+                            type="object" class="btn-success"
+                        />
                         <field name="vers_analyse_vsb" invisible="1" />
                         <button
                             name="vers_analyse_action"
@@ -87,29 +100,12 @@
                             type="object"
                         />
                         <button 
-                            name="gantt_action"
-                            string="Gantt"
-                            type="object"
-                        />
-                        <button 
-                            name="lien_vers_dynacase_action"
-                            string="Dynacase"
-                            type="object"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
-                            groups="base.group_system"
-                        />
-                        <button 
                             name="action_creation_fiche_codification"
                             string="Créer une fiche de codification"
                             attrs="{'invisible': [('state', '!=', 'plaswinned')]}"
                             type="object"
                         />
                         <field name="state" widget="statusbar" statusbar_visible="plascreate,plasanalysed,plastransbe,Analyse_BE,plasvalidbe,plasvalidcom,plasdiffusedcli"/>
-
-
-
-
-                        <field name="dynacase_id" invisible="1"/>
                     </header>
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
