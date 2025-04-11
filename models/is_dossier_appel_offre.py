@@ -153,7 +153,124 @@ class is_dossier_appel_offre(models.Model):
     active                 = fields.Boolean('Actif', default=True, tracking=True)
     dynacase_id            = fields.Integer("id Dynacase",index=True,copy=False)
 
+    vers_analyse_vsb           = fields.Boolean(string="vers Analysé"          , compute='_compute_vsb', readonly=True, store=False)
+    vers_transmis_be_vsb       = fields.Boolean(string="vers Transmis BE"      , compute='_compute_vsb', readonly=True, store=False)
+    vers_analyse_be_vsb        = fields.Boolean(string="vers Analysé BE"       , compute='_compute_vsb', readonly=True, store=False)
+    vers_valide_be_vsb         = fields.Boolean(string="vers Validé BE"        , compute='_compute_vsb', readonly=True, store=False)
+    vers_valide_commercial_vsb = fields.Boolean(string="vers Validé commercial", compute='_compute_vsb', readonly=True, store=False)
+    vers_diffuse_client_vsb    = fields.Boolean(string="vers Diffusé client"   , compute='_compute_vsb', readonly=True, store=False)
+    vers_relance_client_vsb    = fields.Boolean(string="vers Relance client"   , compute='_compute_vsb', readonly=True, store=False)
+    vers_gagne_vsb             = fields.Boolean(string="vers Gagné"            , compute='_compute_vsb', readonly=True, store=False)
+    vers_perdu_vsb             = fields.Boolean(string="vers Perdu"            , compute='_compute_vsb', readonly=True, store=False)
+    vers_annule_vsb            = fields.Boolean(string="vers Annulé"           , compute='_compute_vsb', readonly=True, store=False)
+    readonly_vsb               = fields.Boolean(string="Accès en lecture seule", compute='_compute_vsb', readonly=True, store=False)
 
+
+    @api.depends("state")
+    def _compute_vsb(self):
+        for obj in self:
+            uid = self._uid
+            gestionnaire_projet = self.env.user.has_group('is_dynacase2odoo.is_gestionnaire_projet_group')
+            commercial          = self.env.user.has_group('is_plastigray16.is_commerciaux_group')
+            group_ok = gestionnaire_projet or commercial
+
+            readonly=False
+            if obj.state in ('plasrelancecli','plaswinned','plasloosed','plascancelled'):
+                readonly=True
+            obj.readonly_vsb = readonly
+
+            vsb = False
+            if commercial and obj.state in ('plascreate','plastransbe'):
+                vsb=True
+            obj.vers_analyse_vsb = vsb
+
+            vsb = False
+            if group_ok and obj.state in ('plasanalysed','Analyse_BE','plasdiffusedcli','plasrelancecli'):
+                vsb=True
+            obj.vers_transmis_be_vsb = vsb
+
+            vsb = False
+            if group_ok and obj.state in ('plastransbe','plasvalidbe'):
+                vsb=True
+            obj.vers_analyse_be_vsb = vsb
+
+            vsb = False
+            if group_ok and obj.state in ('Analyse_BE'):
+                vsb=True
+            obj.vers_valide_be_vsb = vsb
+
+            vsb = False
+            if commercial and obj.state in ('plasvalidbe'):
+                vsb=True
+            obj.vers_valide_commercial_vsb = vsb
+
+            vsb = False
+            if commercial and obj.state in ('plasvalidcom','plascancelled','plasloosed','plaswinned','plasanalysed'):
+                vsb=True
+            obj.vers_diffuse_client_vsb = vsb
+
+            vsb = False
+            if commercial and obj.state in ('plasdiffusedcli'):
+                vsb=True
+            obj.vers_relance_client_vsb = vsb
+
+            vsb = False
+            if commercial and obj.state in ('plasdiffusedcli','plasrelancecli'):
+                vsb=True
+            obj.vers_gagne_vsb = vsb
+
+            vsb = False
+            if commercial and obj.state in ('plasdiffusedcli','plasrelancecli'):
+                vsb=True
+            obj.vers_perdu_vsb = vsb
+
+            vsb = False
+            if commercial and obj.state in ('plasdiffusedcli','plasrelancecli'):
+                vsb=True
+            obj.vers_annule_vsb = vsb
+
+
+    def vers_analyse_action(self):
+        for obj in self:
+            obj.state='plasanalysed'
+
+    def vers_transmis_be_action(self):
+        for obj in self:
+            obj.state='plastransbe'
+
+    def vers_analyse_be_action(self):
+        for obj in self:
+            obj.state='Analyse_BE'
+
+    def vers_valide_be_action(self):
+        for obj in self:
+            obj.state='plasvalidbe'
+
+    def vers_valide_commercial_action(self):
+        for obj in self:
+            obj.state='plasvalidcom'
+
+    def vers_diffuse_client_action(self):
+        for obj in self:
+            obj.state='plasdiffusedcli'
+
+    def vers_relance_client_action(self):
+        for obj in self:
+            obj.state='plasrelancecli'
+
+    def vers_gagne_action(self):
+        for obj in self:
+            obj.state='plaswinned'
+
+    def vers_perdu_action(self):
+        for obj in self:
+            obj.state='plasloosed'
+
+    def vers_annule_action(self):
+        for obj in self:
+            obj.state='plascancelled'
+
+ 
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
