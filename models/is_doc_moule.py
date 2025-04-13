@@ -245,12 +245,12 @@ class IsDocMoule(models.Model):
                 if obj.date_fin_gantt:
                     if now>obj.date_fin_gantt:
                         color='Red'
-                if obj.etat in ('AF','D') and obj.date_j_prevue and obj.date_fin_gantt:
-                    if obj.date_fin_gantt> obj.date_j_prevue:
-                        color='Gray'
+                #if obj.etat in ('AF','D') and obj.date_j_prevue and obj.date_fin_gantt:
+                #    if obj.date_fin_gantt> obj.date_j_prevue:
+                #        color='Gray'
                 if obj.etat=='F':
                     color='SpringGreen'
-                if obj.etat=='D' and obj.fin_derogation and obj.fin_derogation<=now:
+                if obj.etat=='D' and obj.fin_derogation and obj.fin_derogation>=now:
                     color='Orange'
             obj.color=color
 

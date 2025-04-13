@@ -36,8 +36,10 @@
                     <td>A Faire</td>
                     <td><div style="background-color:red;color:red;margin:5px;margin-left:20px">X</div></td>
                     <td>En retard</td>
+                    <!-- 
                     <td><div style="background-color:black;color:black;margin:5px;margin-left:20px">X</div></td>
-                    <td>En retard par rapport à la J prévue</td>
+                    <td>En retard par rapport à la J prévue</td> 
+                    -->
                     <td><div style="background-color:springgreen;color:springgreen;margin:5px;margin-left:20px">X</div></td>
                     <td>FAIT</td>
                 </tr>

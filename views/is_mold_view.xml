@@ -47,9 +47,10 @@
                                 <field name="dossier_appel_offre_id"/>
                                 <field name="revue_contrat_id"/>
                                 <field name="revue_lancement_id"/>
-                                <field name="revue_risque_id"        readonly="1"/>    
-                                <field name="j_actuelle"             readonly="1"/>
-                                <field name="j_avancement"           readonly="1"/>
+                                <field name="revue_risque_id" readonly="1"/>    
+                                <field name="j_actuelle_rw"   invisible="1"/>
+                                <field name="j_actuelle"      attrs="{'readonly': [('j_actuelle_rw', '=', False)]}"/>
+                                <field name="j_avancement"    readonly="1"/>
                                 <field name="date_fin_be"/>    
                             </group>
                             <group string="Articles liés à ce moule">

@@ -41,8 +41,9 @@
                             <field name="revue_contrat_id"/>
                             <field name="revue_lancement_id"/>
                             <field name="revue_risque_id"/>   
-                            <field name="j_actuelle"/>
-                            <field name="j_avancement"/>
+                            <field name="j_actuelle_rw"   invisible="1"/>
+                            <field name="j_actuelle"      attrs="{'readonly': [('j_actuelle_rw', '=', False)]}"/>
+                        <field name="j_avancement"/>
                             <field name="date_fin_be"/>                            
                         </group>
                         <group string="Articles liés à ce moule">

@@ -1,4 +1,4 @@
-from odoo import models, fields # type: ignore
+from odoo import models, fields, api # type: ignore
 from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J, TYPE_DOCUMENT # type: ignore
 from datetime import datetime, timedelta, date
 
@@ -11,11 +11,22 @@ class is_dossierf(models.Model):
     revue_contrat_id       = fields.Many2one("is.revue.de.contrat"   , string="Revue de contrat"     , copy=False, tracking=True)
     revue_lancement_id     = fields.Many2one("is.revue.lancement"    , string="Revue de lancement"   , copy=False, tracking=True)
     revue_risque_id        = fields.Many2one("is.revue.risque"       , string="Revue des risques"    , copy=False, tracking=True)
-    j_actuelle             = fields.Selection(GESTION_J              , string="J Actuelle"           , copy=False, tracking=True)
+    j_actuelle             = fields.Selection(GESTION_J              , string="J Actuelle"           , copy=False, tracking=True, default='J0')
     j_avancement           = fields.Integer(string="Avancement J (%)"                                , copy=False, tracking=True)
     date_fin_be            = fields.Date(string="Date fin BE"                                        , copy=False, tracking=True)
     article_ids            = fields.One2many('is.mold.dossierf.article', 'dossierf_id'               , copy=False)
     fermeture_id           = fields.Many2one("is.fermeture.gantt", string="Fermeture planning")
+    j_actuelle_rw          = fields.Boolean(string="J Actuelle rw", compute='_compute_j_actuelle_rw', store=False, readonly=True)
+
+
+    @api.depends('j_actuelle')
+    def _compute_j_actuelle_rw(self):
+        admin = self.env.user.has_group('base.group_system')
+        for obj in self:
+            rw = False
+            if admin:
+                rw=True
+            obj.j_actuelle_rw = rw
 
 
     def lien_vers_dynacase_action(self):

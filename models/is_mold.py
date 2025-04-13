@@ -10,12 +10,34 @@ class is_mold(models.Model):
     revue_contrat_id       = fields.Many2one("is.revue.de.contrat"   , string="Revue de contrat"     , copy=False, tracking=True)
     revue_lancement_id     = fields.Many2one("is.revue.lancement"    , string="Revue de lancement"   , copy=False, tracking=True)
     revue_risque_id        = fields.Many2one("is.revue.risque"       , string="Revue des risques"    , copy=False, tracking=True)
-    j_actuelle             = fields.Selection(GESTION_J, string="J Actuelle"                         , copy=False, tracking=True)
+    j_actuelle             = fields.Selection(GESTION_J, string="J Actuelle", default="J0"           , copy=False, tracking=True)
     j_avancement           = fields.Integer(string="Avancement J (%)"                                , copy=False, tracking=True)
     date_fin_be            = fields.Date(string="Date fin BE"                                        , copy=False)
     article_ids            = fields.One2many('is.mold.dossierf.article', 'mold_id')
     fermeture_id           = fields.Many2one("is.fermeture.gantt", string="Fermeture planning")
-    logo_rs                = fields.Char(string="Logo RS", compute='_compute_logo_rs', readonly=True, store=False)
+    logo_rs                = fields.Char(string="Logo RS"         , compute='_compute_logo_rs'      , store=False, readonly=True)
+    j_actuelle_rw          = fields.Boolean(string="J Actuelle rw", compute='_compute_j_actuelle_rw', store=False, readonly=True)
+
+
+    @api.depends('j_actuelle')
+    def _compute_j_actuelle_rw(self):
+        admin = self.env.user.has_group('base.group_system')
+        for obj in self:
+            rw = False
+            if admin:
+                rw=True
+            obj.j_actuelle_rw = rw
+
+
+    @api.depends('revue_contrat_id')
+    def _compute_logo_rs(self):
+        for obj in self:
+            logo_rs = False
+            if obj.revue_contrat_id:
+                logo_rs = obj.revue_contrat_id.get_logo_rs()
+            obj.logo_rs = logo_rs
+
+
 
 
     @api.depends('revue_contrat_id')
