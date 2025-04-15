@@ -90,7 +90,7 @@
             parent="is_gestion_commerciale_menu" action="is_plan_action_action"
         />
         <menuitem 
-            name="Revu et plan d'amélioration continu"  id="is_plan_amelioration_continu_menu" sequence="60"
+            name="Revue et plan d'amélioration continu"  id="is_plan_amelioration_continu_menu" sequence="60"
             parent="is_gestion_commerciale_menu" action="is_plan_amelioration_continu_action"
         />
 

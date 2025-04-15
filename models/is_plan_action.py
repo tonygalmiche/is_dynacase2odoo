@@ -20,7 +20,7 @@ class is_plan_action(models.Model):
     num_int             = fields.Integer('Numéro interne', tracking=True)
     state               = fields.Selection(_STATE, "Etat", default=_STATE[0][0], tracking=True)
     active              = fields.Boolean('Actif', default=True, tracking=True)
-    client_id           = fields.Many2one('res.partner', 'Client', tracking=True)
+    client_id           = fields.Many2one('res.partner', 'Client', tracking=True, domain=[("is_company","=",True), ("customer","=",True)])
     moule_id            = fields.Many2one('is.mold', 'Moule', tracking=True)
     dossierf_id         = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
     pilot_id            = fields.Many2one('res.users', 'Pilote', required=True, default=lambda self: self.env.uid, tracking=True)

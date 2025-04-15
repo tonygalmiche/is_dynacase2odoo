@@ -31,6 +31,9 @@
                             <field name="annee"/>
                             <field name="mois"/>
                         </group>
+                        <group string="Accès en consultation">
+                            <field name="groupe_acces_id"/>
+                        </group>
                         <group string="Contenu">
                             <field name="plan_action_ids"/>
                             <field name="piece_jointe_ids"   widget="many2many_binary"/>
@@ -50,15 +53,20 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="numero"       optional="show"/>
-                    <field name="type"         optional="show"/>
-                    <field name="createur_id"  optional="show"/>
-                    <field name="site_id"      optional="show"/>
-                    <field name="service_id"   optional="show"/>
-                    <field name="processus_id" optional="show"/>
-                    <field name="annee"        optional="show"/>
-                    <field name="mois"         optional="show"/>
-                    <field name="dynacase_id"               optional="hide" groups="base.group_system"/>
+                    <field name="numero"          optional="show"/>
+                    <field name="type"            optional="show"/>
+                    <field name="createur_id"     optional="show" widget="many2one_clickable"/>
+                    <field name="site_id"         optional="show" widget="many2one_clickable"/>
+                    <field name="service_id"      optional="show" widget="many2one_clickable"/>
+                    <field name="processus_id"    optional="show" widget="many2one_clickable"/>
+                    <field name="annee"           optional="show"/>
+                    <field name="mois"            optional="show"/>
+                    <field name="groupe_acces_id" optional="show" widget="many2one_clickable"/>
+                    <field name="create_date"     optional="hide"/>
+                    <field name="create_uid"      optional="hide"/>
+                    <field name="write_date"      optional="hide"/>
+                    <field name="write_uid"       optional="hide"/>
+                    <field name="dynacase_id"     optional="hide" groups="base.group_system"/>
                     <button
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
@@ -72,19 +80,20 @@
             <field name="model">is.plan.amelioration.continu</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name="numero"      />
-                    <field name="type"        />
-                    <field name="createur_id" />
-                    <field name="site_id"     />
-                    <field name="service_id"  />
-                    <field name="processus_id"/>
-                    <field name="annee"       />
-                    <field name="mois"        />
+                    <field name="numero"         />
+                    <field name="type"           />
+                    <field name="createur_id"    />
+                    <field name="site_id"        />
+                    <field name="service_id"     />
+                    <field name="processus_id"   />
+                    <field name="annee"          />
+                    <field name="mois"           />
+                    <field name="groupe_acces_id"/>
                 </search>
             </field>
         </record>
         <record model="ir.actions.act_window" id="is_plan_amelioration_continu_action">
-            <field name="name">Revu et plan d'amelioration continu</field>
+            <field name="name">Revue et plan d'amelioration continu</field>
             <field name="res_model">is.plan.amelioration.continu</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{}
