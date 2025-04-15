@@ -22,6 +22,7 @@ class is_plan_action(models.Model):
     active              = fields.Boolean('Actif', default=True, tracking=True)
     client_id           = fields.Many2one('res.partner', 'Client', tracking=True)
     moule_id            = fields.Many2one('is.mold', 'Moule', tracking=True)
+    dossierf_id         = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
     pilot_id            = fields.Many2one('res.users', 'Pilote', required=True, default=lambda self: self.env.uid, tracking=True)
     group_id            = fields.Many2one('res.groups', "Groupe d'accès en consultation", tracking=True)
     obj                 = fields.Text('Objectif', tracking=True)

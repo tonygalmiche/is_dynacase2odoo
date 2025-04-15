@@ -32,7 +32,7 @@
                             <field name="mois"/>
                         </group>
                         <group string="Contenu">
-                            <field name="plan_action_id"/>
+                            <field name="plan_action_ids"/>
                             <field name="piece_jointe_ids"   widget="many2many_binary"/>
                         </group>
                     </sheet>

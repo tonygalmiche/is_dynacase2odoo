@@ -49,6 +49,7 @@
                                 <field name="title"   attrs="{'readonly': [('state','!=','actif')]}"/>
                                 <field name="client_id"   attrs="{'readonly': [('state','!=','actif')]}"/>
                                 <field name="moule_id"    attrs="{'readonly': [('state','!=','actif')]}"/>
+                                <field name="dossierf_id"    attrs="{'readonly': [('state','!=','actif')]}"/>
                             </group>
                             <group string="Pilote">
                                 <field name="pilot_id"    attrs="{'readonly': [('state','!=','actif')]}"/>
@@ -87,6 +88,7 @@
                     <field name="title"            optional="show"/>
                     <field name="client_id"        optional="show"/>
                     <field name="moule_id"         optional="show"/>
+                    <field name="dossierf_id"         optional="show"/>
                     <field name="pilot_id"         optional="show"/>
                     <field name="group_id"         optional="show"/>
                     <field name="obj"              optional="show" widget="many2one_clickable"/>
@@ -121,6 +123,7 @@
                     <field name="title"      />
                     <field name="client_id"  />
                     <field name="moule_id"   />
+                    <field name="dossierf_id"   />
                     <field name="pilot_id"   />
                     <field name="group_id"   />
                     <field name="obj"        />
