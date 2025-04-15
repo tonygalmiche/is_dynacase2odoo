@@ -5,16 +5,17 @@
             <field name="name">Dossier appels d'offres</field>
             <field name="model_id" ref="is_dynacase2odoo.model_is_dossier_appel_offre"/>
             <field name="subject">[DAO][{{ object.dao_num }}] état '{{ object.state_name }}'</field>
-            <!-- <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') }}</field> -->
-            <!-- <field name="email_to">{{ (object.email and '"%s" &lt;%s&gt;' % (object.name, object.email) or object.partner_id.email_formatted or '') }}</field> -->
             <field name="description">Dossier appels d'offres</field>
             <field name="body_html" type="html">
+                <t t-set="website_url" t-value="object.get_base_url()"></t>
                 <div>
                     <p>Bonjour,</p> 
-                    <p>{{object.user_id}} vient de passer le '{{object._description}}'  
-                    <a href='%s'>%s</a> à l'état '{{ object.state_name }}'.</p> 
+                    <p>
+                        <t t-out="user.name"/> vient de passer le '<t t-out="object._description"/>' 
+                        <a t-att-href="website_url"><t t-out="object.dao_num"/></a> à l'état '<t t-out="object.state_name"/>'.
+                    </p> 
                     <p>Merci d'en prendre connaissance.</p> 
-                    <p><i>(Destinataires : {{ object.destinataires_name }})</i></p>
+                    <p><i>(Destinataires : <t t-out="object.destinataires_name"/>)</i></p>
                 </div>
             </field>
             <field name="auto_delete" eval="False"/>
