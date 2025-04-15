@@ -227,6 +227,7 @@
                     <field name="prospect"/>
                     <field name="dao_typeclient"/>
                     <field name="secteur_activite"/>
+                    <field name="dao_sectclient"/>
                     <field name="commercial_id"/>
                     <field name="dao_desig"/>
                     <field name="dao_ref"/>
