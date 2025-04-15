@@ -162,7 +162,7 @@ class is_dossier_appel_offre(models.Model):
     readonly_vsb               = fields.Boolean(string="Accès en lecture seule", compute='_compute_vsb', readonly=True, store=False)
     state              = fields.Selection(_STATE, "Etat"                , tracking=True, default='plascreate')
     state_name         = fields.Char("Etat name", compute='_compute_state_name', readonly=True, store=False)
-    destinataires_ids  = fields.Many2many('res.users', compute='_compute_destinataires_ids')
+    destinataires_ids  = fields.Many2many('res.partner', compute='_compute_destinataires_ids')
     destinataires_name  = fields.Char('Destinataires', compute='_compute_destinataires_ids')
     mail_copy           = fields.Char('Mail copy'    , compute='_compute_destinataires_ids')
 
@@ -171,30 +171,6 @@ class is_dossier_appel_offre(models.Model):
     def _compute_state_name(self):
         for obj in self:
             obj.state_name = dict(_STATE).get(obj.state)
-
-
-    @api.depends("state")
-    def _compute_destinataires_ids(self):
-        company = self.env['res.users'].browse(self._uid).company_id
-        for obj in self:
-            mail_copy = False
-            users=[]
-            ids=[]
-            name=[]
-            if obj.state=='plastransbe':
-                users.append(obj.chef_projet_id)
-                mail_copy = company.is_directeur_technique_id.name
-            if obj.state=='Analyse_BE':
-                users.append(company.is_directeur_technique_id)
-
-
-
-            for user in users:
-                if user.id:
-                    ids.append(user.id)
-                    name.append(user.name)
-            obj.destinataires_ids  = ids
-            obj.destinataires_name = ', '.join(name)
 
 
     @api.depends("state")
@@ -261,6 +237,48 @@ class is_dossier_appel_offre(models.Model):
             obj.vers_annule_vsb = vsb
 
 
+
+
+# _STATE=([
+#     ('plascreate'     , 'Créé'),
+#     ('plasanalysed'   , 'Analysé'),
+#     ('plastransbe'    , 'Transmis BE'),
+#     ('Analyse_BE'     , 'Analysé BE'),
+#     ('plasvalidbe'    , 'Validé BE'),
+#     ('plasvalidcom'   , 'Validé commercial'),
+#     ('plasdiffusedcli', 'Diffusé client'),
+#     ('plasrelancecli' , 'Relance client'),
+#     ('plaswinned'     , 'Gagné'),
+#     ('plasloosed'     , 'Perdu'),
+#     ('plascancelled'  , 'Annulé'),
+# ])
+
+
+
+    @api.depends("state")
+    def _compute_destinataires_ids(self):
+        company = self.env['res.users'].browse(self._uid).company_id
+        for obj in self:
+            mail_copy = False
+            users=[]
+            ids=[]
+            name=[]
+            if obj.state=='plastransbe':
+                users.append(obj.chef_projet_id)
+                mail_copy = company.is_directeur_technique_id.email
+            if obj.state=='Analyse_BE':
+                users.append(company.is_directeur_technique_id)
+            # if obj.state=='plasvalidbe':
+            #     users.append(obj.commercial_id)
+            for user in users:
+                if user.id:
+                    ids.append(user.partner_id.id)
+                    name.append(user.name)
+            obj.destinataires_ids  = ids
+            obj.destinataires_name = ', '.join(name)
+            obj.mail_copy          = mail_copy
+
+
     def vers_analyse_action(self):
         for obj in self:
             obj.state='plasanalysed'
@@ -268,16 +286,20 @@ class is_dossier_appel_offre(models.Model):
     def vers_transmis_be_action(self):
         for obj in self:
             obj.state='plastransbe'
+            obj.envoi_mail()
+
 
     def vers_analyse_be_action(self):
         for obj in self:
             obj.state='Analyse_BE'
-            company = self.env['res.users'].browse(self._uid).company_id
-            obj.envoi_mail(users=[company.is_directeur_technique_id])
+            obj.envoi_mail()
 
     def vers_valide_be_action(self):
         for obj in self:
             obj.state='plasvalidbe'
+            destinataires_ids = [obj.commercial_id]
+            obj.envoi_mail(destinataires_ids = destinataires_ids)
+
 
     def vers_valide_commercial_action(self):
         for obj in self:
@@ -302,6 +324,25 @@ class is_dossier_appel_offre(models.Model):
     def vers_annule_action(self):
         for obj in self:
             obj.state='plascancelled'
+
+
+    def envoi_mail(self, destinataires_ids=False):
+        template = self.env.ref('is_dynacase2odoo.is_dossier_appel_offre_mail_template').sudo()     
+
+        recipient_ids = destinataires_ids or self.destinataires_ids
+
+        email_values = {
+            'email_cc': self.mail_copy,
+            'auto_delete': False,
+            'recipient_ids': recipient_ids,
+            'scheduled_date': False,
+        }
+        template.send_mail(self.id, force_send=True, raise_exception=False, email_values=email_values)
+
+
+
+
+
 
  
     @api.model_create_multi
@@ -364,158 +405,9 @@ class is_dossier_appel_offre(models.Model):
             }
             
 
-
     def get_base_url(self):
         for obj in self:
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
             url = base_url + '/web#id=%s' '&view_type=form&model=%s'%(obj.id,self._name)
             return url
 
-
-
-
-
-    def envoi_mail(self, users=[]):
-        for obj in self:
-
-            template_id = self.env.ref('is_dynacase2odoo.is_dossier_appel_offre_mail_template').id
-
-            print(template_id)
-
-            partner_ids = []
-            for user in users:
-                if user.id:
-                    partner_ids.append(user.partner_id.id)
-
-
-            composition_mode = 'comment'
-
-
-            vals={
-                "model"           : self._name,
-                #"subject"        : 'test',
-                #"body"           : 'test',
-                "partner_ids"     : partner_ids,
-                "composition_mode": composition_mode,
-
-            }
-
-
-            # if not kwargs.get('composition_mode'):
-            #     kwargs['composition_mode'] = 'comment' if len(self.ids) == 1 else 'mass_mail'
-            # if not kwargs.get('message_type'):
-            #     kwargs['message_type'] = 'notification'
-            # res_id = kwargs.get('res_id', self.ids and self.ids[0] or 0)
-            # res_ids = kwargs.get('res_id') and [kwargs['res_id']] or self.ids
-
-            # Create the composer
-
-
-            composer = self.env['mail.compose.message'].with_context(
-                active_id=obj.id,
-                active_ids=[obj.id],
-                active_model=self._name,
-                default_composition_mode=composition_mode,
-                default_email_layout_xmlid=template_id,
-                default_model=self._name,
-                default_res_id=obj.id,
-                default_template_id=template_id,
-            ).create(vals)
-            # Simulate the onchange (like trigger in form the view) only
-            # when having a template in single-email mode
-            print(composer,composer.body, composer.partner_ids)
-            update_values = composer._onchange_template_id(template_id, composition_mode, self._name, obj.id)['value']
-            print(update_values)
-            composer.write(update_values)
-            return composer._action_send_mail(auto_commit=True)
-
-
-
-
-
-
-
-
-
-
-
-            # vals={
-            #     "model"         : self._name,
-            #     "subject"       : 'test',
-            #     "body"          : 'test',
-            #     "partner_ids"   : partner_ids,
-            # }
-            # ctx = dict(
-            #     default_model=self._name,
-            #     default_res_model=self._name,
-            #     default_res_id=obj.id,
-            #     default_use_template = True,
-            #     default_template_id = template_id,
-            #     default_composition_mode='comment',
-            #     #custom_layout='mail.mail_notification_light', # Permet de définir la mise en page du mail
-            #     force_email=True,
-            #     active_ids=[obj.id],
-            # )
-
-            # print(vals,ctx)
-
-
-            # # ctx = dict(
-            # #     default_email_layout_xmlid="mail.mail_notification_layout_with_responsible_signature",
-            # #     model_description=self.with_context(lang=lang).type_name,
-            # #     force_email=True,
-            # #     active_ids=self.ids,
-            # # )
-
-
-
-            # wizard = self.env['mail.compose.message'].with_context(ctx).create(vals)
-
-            # print()
-
-
-            # wizard.action_send_mail()
-
-
-
-
-
-
-
-
-            # partner_ids = []
-            # destinataires_name = []
-            # for user in users:
-            #     if user.id:
-            #         destinataires_name.append(user.name)
-            #         partner_ids.append(user.partner_id.id)
-            # if len(partner_ids)>0:
-            #     etat = dict(self._fields['state'].get_description(self.env).get('selection')).get(self.state)
-            #     user          = self.env['res.users'].browse(self._uid)
-            #     nom           = user.name
-            #     subject       = "[DAO] %s état '%s'"%(obj.dao_num, etat)
-            #     base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            #     url = base_url + '/web#id=%s' '&view_type=form&model=%s'%(obj.id,self._name)
-            #     destinataires_name = ', '.join(destinataires_name)
-            #     body = """ 
-            #         <p>Bonjour,</p> 
-            #         <p>%s vient de passer le '%s'  
-            #         <a href='%s'>%s</a> à l'état '%s'.</p> 
-            #         <p>Merci d'en prendre connaissance.</p> 
-            #         <p><i>(Destinataires : %s)</i></p>
-            #     """%(nom, self._description,url,obj.dao_num,etat,destinataires_name)
-            #     vals={
-            #         "model"         : self._name,
-            #         "subject"       : subject,
-            #         "body"          : body,
-            #         "partner_ids"   : partner_ids,
-            #     }
-            #     ctx = dict(
-            #         default_model=self._name,
-            #         default_res_id=obj.id,
-            #         default_composition_mode='comment',
-            #         custom_layout='mail.mail_notification_light', # Permet de définir la mise en page du mail
-            #     )
-            #     wizard = self.env['mail.compose.message'].with_context(ctx).create(vals)
-            #     wizard.action_send_mail()
- 

@@ -5,6 +5,7 @@
             <field name="name">Dossier appels d'offres</field>
             <field name="model_id" ref="is_dynacase2odoo.model_is_dossier_appel_offre"/>
             <field name="subject">[DAO][{{ object.dao_num }}] état '{{ object.state_name }}'</field>
+            <field name="email_cc">{{ object.mail_copy }}</field>
             <field name="description">Dossier appels d'offres</field>
             <field name="body_html" type="html">
                 <t t-set="website_url" t-value="object.get_base_url()"></t>
@@ -226,8 +227,8 @@
                         decoration-warning="state in ['plascreate','plasanalysed','plastransbe','Analyse_BE','plasvalidbe','plasvalidcom']"
                         decoration-success="state in ['plaswinned']"
                     />
-                    <field name="destinataires_ids"  widget="many2many_tags" optional="hide"/>    
-                    <field name="destinataires_name" optional="hide"/>    
+                    <field name="destinataires_ids" optional="hide" widget="many2many_tags"/>    
+                    <field name="mail_copy"         optional="hide"/>    
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
