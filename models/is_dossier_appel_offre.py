@@ -117,7 +117,7 @@ class is_dossier_appel_offre(models.Model):
     client_id        = fields.Many2one("res.partner", string="Client" , tracking=True, domain=[("is_company","=",True), ("customer","=",True)])
     prospect         = fields.Char("Prospect / Suspect"               , tracking=True)
     dao_typeclient   = fields.Char("Type client"                      , tracking=True, compute="_compute_dao_typeclient",store=True, readonly=True)
-    #dao_sectclient  = fields.Char("Section client"                   , tracking=True)
+    dao_sectclient   = fields.Char("Section client (Dynacase)"        , readonly=True)
     secteur_activite = fields.Many2one('is.secteur.activite', "Secteur d'activité", tracking=True, compute="_compute_secteur_activite",store=True, readonly=False)
     commercial_id    = fields.Many2one("res.users", string="Commercial"           , tracking=True, compute="_compute_secteur_activite",store=True, readonly=False)
     #dao_commercial  = fields.Char("Commercial"                       , tracking=True)

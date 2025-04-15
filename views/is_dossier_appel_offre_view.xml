@@ -116,6 +116,7 @@
                                 <field name="prospect" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                                 <field name="dao_typeclient" />
                                 <field name="secteur_activite" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                                <field name="dao_sectclient" />
                                 <field name="commercial_id" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                                 <field name="dao_desig" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                                 <field name="dao_ref" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
@@ -177,6 +178,7 @@
                     <field name="prospect" optional="show"/>
                     <field name="dao_typeclient" optional="show"/>
                     <field name="secteur_activite" optional="show"/>
+                    <field name="dao_sectclient" optional="hide"/>
                     <field name="commercial_id" optional="show"/>
                     <field name="dao_desig" optional="show"/>
                     <field name="dao_ref" optional="show"/>
