@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- is.plan.action -->
+        <record model="ir.ui.view" id="is_plan_action_form_view">
+            <field name="name">is_plan_action_form_view</field>
+            <field name="model">is.plan.action</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Form">
+                    <header>
+                        <button
+                            name="lien_vers_dynacase_action"
+                            string="Dynacase"
+                            type="object" class="btn btn-info"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                            groups="base.group_system"
+                        />
+                        <field name="dynacase_id" invisible="1"/>
+                        <button
+                            name="vers_actif_action"
+                            string="vers Actif"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'solde')]}"
+                            groups="base.group_system"
+                        />
+                        <button
+                            name="vers_solde_action"
+                            string="vers Soldé"
+                            type="object"
+                            attrs="{'invisible': [('state', '==', 'solde')]}"
+                            groups="base.group_system"
+                        />
+                        <button
+                            name="vers_annule_action"
+                            string="vers Annulé"
+                            type="object"
+                            attrs="{'invisible': [('state', '==', 'annule')]}"
+                            groups="base.group_system"
+                        />
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active" invisible="1"/>
+                        <group>
+                            <group string="Caractéristiques">
+                                <field name="num_int"     readonly="1"/>
+                                <field name="title"   attrs="{'readonly': [('state','!=','actif')]}"/>
+                                <field name="client_id"   attrs="{'readonly': [('state','!=','actif')]}"/>
+                                <field name="moule_id"    attrs="{'readonly': [('state','!=','actif')]}"/>
+                            </group>
+                            <group string="Pilote">
+                                <field name="pilot_id"    attrs="{'readonly': [('state','!=','actif')]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Accès en consultation">
+                                <field name="group_id"    attrs="{'readonly': [('state','!=','actif')]}"/>
+                            </group>
+                            <group string="Plan d'action">
+                                <field name="obj"         attrs="{'readonly': [('state','!=','actif')]}"/>
+                                <field name="date_beg"    attrs="{'readonly': [('state','!=','actif')]}"/>
+                                <field name="date_end"    attrs="{'readonly': [('state','!=','actif')]}"/>
+                                <field name="action_prev" attrs="{'readonly': [('state','!=','actif')]}"/>
+                            </group>
+                        </group>
+                        <group string="Pièces jointes">
+                            <field name="piece_jointe_ids"   widget="many2many_binary" attrs="{'readonly': [('state','!=','actif')]}"/>
+                        </group>
+                    </sheet>
+                   <div class="oe_chatter">
+                        <field name="message_follower_ids" />
+                        <field name="activity_ids" />
+                        <field name="message_ids" />
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_plan_action_tree_view">
+            <field name="name">is_plan_action_tree_view</field>
+            <field name="model">is.plan.action</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="num_int"          optional="show"/>
+                    <field name="title"            optional="show"/>
+                    <field name="client_id"        optional="show"/>
+                    <field name="moule_id"         optional="show"/>
+                    <field name="pilot_id"         optional="show"/>
+                    <field name="group_id"         optional="show"/>
+                    <field name="obj"              optional="show" widget="many2one_clickable"/>
+                    <field name="date_beg"         optional="show" widget="many2one_clickable"/>
+                    <field name="date_end"         optional="show"/>
+                    <field name="action_prev"      optional="show" widget="many2one_clickable"/>
+                    <field name="create_date"      optional="hide"/>
+                    <field name="create_uid"       optional="hide"/>
+                    <field name="write_date"       optional="hide"/>
+                    <field name="write_uid"        optional="hide"/>
+                    <field
+                        name="state" optional="show" widget="badge"
+                        decoration-warning="state in ['annule']"
+                        decoration-info="state in ['actif']"
+                        decoration-success="state in ['solde']"
+                    />
+                    <field name="dynacase_id"               optional="hide" groups="base.group_system"/>
+                    <button
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_plan_action_search">
+            <field name="name">is_plan_action_search</field>
+            <field name="model">is.plan.action</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="num_int"    />
+                    <field name="title"      />
+                    <field name="client_id"  />
+                    <field name="moule_id"   />
+                    <field name="pilot_id"   />
+                    <field name="group_id"   />
+                    <field name="obj"        />
+                    <field name="date_beg"   />
+                    <field name="date_end"   />
+                    <field name="action_prev"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_plan_action_action">
+            <field name="name">Plan d'action</field>
+            <field name="res_model">is.plan.action</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}
+            </field>
+        </record>
+    </data>
+</odoo>

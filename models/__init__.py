@@ -27,5 +27,7 @@ from . import is_modif_donnee_technique
 from . import is_prise_avance
 from . import is_demande_modif_compte_fournisseur
 from . import is_demande_modif_tarif_fournisseur
+from . import is_plan_action
+from . import is_plan_amelioration_continu
 from . import is_inv_achat_moule
 from . import is_erd

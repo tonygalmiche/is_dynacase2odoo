@@ -85,6 +85,14 @@
             name="Clients"  id="is_client_menu" sequence="50"
             parent="is_gestion_commerciale_menu" action="is_plastigray16.res_partner_client_action"
         />
+        <menuitem 
+            name="Plan d'action"  id="is_plan_action_menu" sequence="60"
+            parent="is_gestion_commerciale_menu" action="is_plan_action_action"
+        />
+        <menuitem 
+            name="Revu et plan d'amélioration continu"  id="is_plan_amelioration_continu_menu" sequence="60"
+            parent="is_gestion_commerciale_menu" action="is_plan_amelioration_continu_action"
+        />
 
 
         <menuitem id="gestion_des_projets_menu"  sequence="5"  name="Gestion des projets"/>
