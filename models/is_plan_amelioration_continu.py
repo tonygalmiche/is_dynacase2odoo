@@ -14,7 +14,7 @@ class is_plan_amelioration_continu(models.Model):
     active              = fields.Boolean('Actif', default=True, tracking=True)
     type                = fields.Selection([('pac', 'PAC'), ('revue', 'Revue')], "Type", required=True, tracking=True)
     createur_id         = fields.Many2one('res.users', 'Créateur', required=True, default=lambda self: self.env.uid, tracking=True)
-    site_id             = fields.Many2one('is.database', "Site", required=True, tracking=True)
+    site_id             = fields.Many2one('is.database', "Site", tracking=True)
     service_id          = fields.Many2one('res.groups', "Service", tracking=True)
     processus_id        = fields.Char('Processus', tracking=True)
     annee               = fields.Char('Année', default=lambda self: datetime.now().year, store=True, tracking=True)
