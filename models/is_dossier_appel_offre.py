@@ -183,7 +183,7 @@ class is_dossier_appel_offre(models.Model):
             name=[]
             if obj.state=='plastransbe':
                 users.append(obj.chef_projet_id)
-                mail_copy = company.is_directeur_technique_id()
+                mail_copy = company.is_directeur_technique_id.name
             if obj.state=='Analyse_BE':
                 users.append(company.is_directeur_technique_id)
 
