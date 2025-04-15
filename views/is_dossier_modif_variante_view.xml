@@ -138,7 +138,7 @@
                             <separator string="BE"/>
                             <field name="demao_idbe"  attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                             <field name="fermeture_id" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>    
-                            <field name="solde" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>    
+                            <field name="solde"/>    
                             <separator string="Fichiers commerciaux"/>
                             <field name="demao_annexcom" widget="many2many_binary" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                             <separator string="Fichiers BE"/>
