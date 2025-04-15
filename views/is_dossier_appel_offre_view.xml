@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+
+
+
+        <record id="is_dossier_appel_offre_mail_template" model="mail.template">
+            <field name="name">Dossier appels d'offres</field>
+            <field name="model_id" ref="is_dynacase2odoo.model_is_dossier_appel_offre"/>
+            <field name="subject">[DAO][{{ object.dao_num }}] état '{{ object.state }}'</field>
+            <!-- <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') }}</field> -->
+            <!-- <field name="email_to">{{ (object.email and '"%s" &lt;%s&gt;' % (object.name, object.email) or object.partner_id.email_formatted or '') }}</field> -->
+            <field name="description">Dossier appels d'offres</field>
+            <field name="body_html" type="html">
+<div>
+
+
+    <p>Bonjour,</p> 
+    <p>%s vient de passer le '%s'  
+    <a href='%s'>%s</a> à l'état '%s'.</p> 
+    <p>Merci d'en prendre connaissance.</p> 
+    <p><i>(Destinataires : %s)</i></p>
+
+
+
+    Dear <t t-out="object.dao_num or ''">Oscar Morgan</t>,<br/>
+    Thank you for your inquiry.<br/>
+    If you have any questions, please let us know.
+    <br/><br/>
+    Thank you,
+</div></field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+
+
+
         <record model="ir.ui.view" id="is_dossier_appel_offre_form_view">
             <field name="name">is_dossier_appel_offre_form_view</field>
             <field name="model">is.dossier.appel.offre</field>
@@ -207,6 +240,12 @@
                         decoration-warning="state in ['plascreate','plasanalysed','plastransbe','Analyse_BE','plasvalidbe','plasvalidcom']"
                         decoration-success="state in ['plaswinned']"
                     />
+
+                    <field name="state_name"/>    
+                    <field name="destinataires_ids" widget="many2many_tags"/>    
+
+                    
+
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"

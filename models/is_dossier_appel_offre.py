@@ -55,7 +55,7 @@ class is_dossier_appel_offre(models.Model):
     _name = "is.dossier.appel.offre"
     _inherit=['mail.thread']
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
-    _description="is_dossier_appel_offre"
+    _description="Dossier appels d'offres"
     _order = "dao_date desc"
     _rec_name = 'dao_num'
 
@@ -120,7 +120,6 @@ class is_dossier_appel_offre(models.Model):
     dao_sectclient   = fields.Char("Section client (Dynacase)"        , readonly=True)
     secteur_activite = fields.Many2one('is.secteur.activite', "Secteur d'activité", tracking=True, compute="_compute_secteur_activite",store=True, readonly=False)
     commercial_id    = fields.Many2one("res.users", string="Commercial"           , tracking=True, compute="_compute_secteur_activite",store=True, readonly=False)
-    #dao_commercial  = fields.Char("Commercial"                       , tracking=True)
     dao_desig        = fields.Char("Désignation"                      , tracking=True)
     dao_ref          = fields.Char("Référence"                        , tracking=True)
     dao_datedms      = fields.Date("Date DMS"                         , tracking=True)
@@ -128,8 +127,6 @@ class is_dossier_appel_offre(models.Model):
     dao_vacom        = fields.Float("VA commerciale"                  , tracking=True)
     dao_pourcentva   = fields.Integer("% VA"                          , tracking=True, compute="_compute_dao_pourcentva",store=True, readonly=True)
     dao_camoule      = fields.Float("CA Moule"                        , tracking=True)
-    #dao_be                = fields.Char("Chef de projet"                   , tracking=True)
-    #dao_dirbe             = fields.Char("Directeur technique"              , tracking=True)
     chef_projet_id         = fields.Many2one("res.users", string="Chef de projet"     , tracking=True)
     directeur_technique_id = fields.Many2one("res.users", string="Directeur technique", tracking=True)
     dao_daterepbe          = fields.Date("Date réponse BE souhaitée"        , tracking=True)
@@ -141,7 +138,6 @@ class is_dossier_appel_offre(models.Model):
     dao_rsplast            = fields.Selection(_DAO_RSPLAST, "Rsp Plastigray", tracking=True)
     dao_motif              = fields.Selection(_DAO_MOTIF, "Motif"           , tracking=True)
     dao_avancement         = fields.Selection(_DAO_AVANCEMENT, "Avancement" , tracking=True)
-    state                  = fields.Selection(_STATE, "Etat"                , tracking=True, default='plascreate')
     dao_consult_initial    = fields.Many2many("ir.attachment", "is_dao_consult_initial_rel"  , "consult_initial_id"  , "att_id", string="Consultation initiale client")
     dao_annexcom           = fields.Many2many("ir.attachment", "is_dao_annexcom_rel"         , "annexcom_id"         , "att_id", string="Fichiers commerciaux")
     dao_annex              = fields.Many2many("ir.attachment", "is_dao_annex_rel"            , "annex_id"            , "att_id", string="Fiches de devis du BE")
@@ -164,6 +160,28 @@ class is_dossier_appel_offre(models.Model):
     vers_perdu_vsb             = fields.Boolean(string="vers Perdu"            , compute='_compute_vsb', readonly=True, store=False)
     vers_annule_vsb            = fields.Boolean(string="vers Annulé"           , compute='_compute_vsb', readonly=True, store=False)
     readonly_vsb               = fields.Boolean(string="Accès en lecture seule", compute='_compute_vsb', readonly=True, store=False)
+    state             = fields.Selection(_STATE, "Etat"                , tracking=True, default='plascreate')
+    state_name        = fields.Char("Etat name", compute='_compute_state_name', readonly=True, store=False)
+    destinataires_ids = fields.Many2many('res.users', compute='_compute_destinataires_ids')
+
+
+    @api.depends("state")
+    def _compute_state_name(self):
+        for obj in self:
+            obj.state_name = dict(_STATE).get(obj.state)
+
+
+    @api.depends("state")
+    def _compute_destinataires_ids(self):
+        company = self.env['res.users'].browse(self._uid).company_id
+        for obj in self:
+            ids=False
+            if obj.state=='plastransbe':
+                ids = [obj.chef_projet_id.id]
+            if obj.state=='Analyse_BE':
+                ids = [company.is_directeur_technique_id.id]
+            obj.destinataires_ids=ids
+
 
 
     @api.depends("state")
@@ -241,6 +259,8 @@ class is_dossier_appel_offre(models.Model):
     def vers_analyse_be_action(self):
         for obj in self:
             obj.state='Analyse_BE'
+            company = self.env['res.users'].browse(self._uid).company_id
+            obj.envoi_mail(users=[company.is_directeur_technique_id])
 
     def vers_valide_be_action(self):
         for obj in self:
@@ -321,7 +341,6 @@ class is_dossier_appel_offre(models.Model):
             }
 
 
-
     def lien_vers_dynacase_action(self):
         for obj in self:
             url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
@@ -332,3 +351,41 @@ class is_dossier_appel_offre(models.Model):
             }
             
             
+    def envoi_mail(self, users=[]):
+        for obj in self:
+            partner_ids = []
+            destinataires_name = []
+            for user in users:
+                if user.id:
+                    destinataires_name.append(user.name)
+                    partner_ids.append(user.partner_id.id)
+            if len(partner_ids)>0:
+                etat = dict(self._fields['state'].get_description(self.env).get('selection')).get(self.state)
+                user          = self.env['res.users'].browse(self._uid)
+                nom           = user.name
+                subject       = "[DAO] %s état '%s'"%(obj.dao_num, etat)
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                url = base_url + '/web#id=%s' '&view_type=form&model=%s'%(obj.id,self._name)
+                destinataires_name = ', '.join(destinataires_name)
+                body = """ 
+                    <p>Bonjour,</p> 
+                    <p>%s vient de passer le '%s'  
+                    <a href='%s'>%s</a> à l'état '%s'.</p> 
+                    <p>Merci d'en prendre connaissance.</p> 
+                    <p><i>(Destinataires : %s)</i></p>
+                """%(nom, self._description,url,obj.dao_num,etat,destinataires_name)
+                vals={
+                    "model"         : self._name,
+                    "subject"       : subject,
+                    "body"          : body,
+                    "partner_ids"   : partner_ids,
+                }
+                ctx = dict(
+                    default_model=self._name,
+                    default_res_id=obj.id,
+                    default_composition_mode='comment',
+                    custom_layout='mail.mail_notification_light', # Permet de définir la mise en page du mail
+                )
+                wizard = self.env['mail.compose.message'].with_context(ctx).create(vals)
+                wizard.action_send_mail()
+ 
