@@ -163,14 +163,9 @@ class is_dossier_appel_offre(models.Model):
     state              = fields.Selection(_STATE, "Etat"                , tracking=True, default='plascreate')
     state_name         = fields.Char("Etat name", compute='_compute_state_name', readonly=True, store=False)
     destinataires_ids  = fields.Many2many('res.partner', compute='_compute_destinataires_ids')
-    destinataires_name  = fields.Char('Destinataires', compute='_compute_destinataires_ids')
-    mail_copy           = fields.Char('Mail copy'    , compute='_compute_destinataires_ids')
+    destinataires_name  = fields.Char('Destinataires'  , compute='_compute_destinataires_name')
+    mail_copy           = fields.Char('Mail copy'      , compute='_compute_destinataires_ids')
 
-
-    @api.depends("state")
-    def _compute_state_name(self):
-        for obj in self:
-            obj.state_name = dict(_STATE).get(obj.state)
 
 
     @api.depends("state")
@@ -239,43 +234,50 @@ class is_dossier_appel_offre(models.Model):
 
 
 
-# _STATE=([
-#     ('plascreate'     , 'Créé'),
-#     ('plasanalysed'   , 'Analysé'),
-#     ('plastransbe'    , 'Transmis BE'),
-#     ('Analyse_BE'     , 'Analysé BE'),
-#     ('plasvalidbe'    , 'Validé BE'),
-#     ('plasvalidcom'   , 'Validé commercial'),
-#     ('plasdiffusedcli', 'Diffusé client'),
-#     ('plasrelancecli' , 'Relance client'),
-#     ('plaswinned'     , 'Gagné'),
-#     ('plasloosed'     , 'Perdu'),
-#     ('plascancelled'  , 'Annulé'),
-# ])
 
+    @api.depends("state")
+    def _compute_state_name(self):
+        for obj in self:
+            obj.state_name = dict(_STATE).get(obj.state)
+
+
+    @api.depends("state")
+    def _compute_destinataires_name(self):
+        for obj in self:
+            name=[]
+            for partner in obj.destinataires_ids:
+                name.append(partner.name)
+            obj.destinataires_name = ', '.join(name)
 
 
     @api.depends("state")
     def _compute_destinataires_ids(self):
-        company = self.env['res.users'].browse(self._uid).company_id
+        user = self.env['res.users'].browse(self._uid)
+        company = user.company_id
         for obj in self:
+            directeur_technique = obj.directeur_technique_id or company.is_directeur_technique_id
             mail_copy = False
             users=[]
             ids=[]
-            name=[]
             if obj.state=='plastransbe':
                 users.append(obj.chef_projet_id)
-                mail_copy = company.is_directeur_technique_id.email
+                mail_copy = directeur_technique.email
             if obj.state=='Analyse_BE':
-                users.append(company.is_directeur_technique_id)
-            # if obj.state=='plasvalidbe':
-            #     users.append(obj.commercial_id)
+                users.append(directeur_technique)
+            if obj.state=='plasvalidbe':
+                users.append(obj.commercial_id)
+            if obj.state=='plasdiffusedcli':
+                users.append(user)
+            if obj.state=='plaswinned':
+                users.append(directeur_technique)
+                users.append(obj.chef_projet_id)
+                mail_copy = user.email
+            if obj.state=='plasanalysed':
+                users.append(obj.commercial_id)
             for user in users:
                 if user.id:
                     ids.append(user.partner_id.id)
-                    name.append(user.name)
             obj.destinataires_ids  = ids
-            obj.destinataires_name = ', '.join(name)
             obj.mail_copy          = mail_copy
 
 
@@ -288,7 +290,6 @@ class is_dossier_appel_offre(models.Model):
             obj.state='plastransbe'
             obj.envoi_mail()
 
-
     def vers_analyse_be_action(self):
         for obj in self:
             obj.state='Analyse_BE'
@@ -297,9 +298,7 @@ class is_dossier_appel_offre(models.Model):
     def vers_valide_be_action(self):
         for obj in self:
             obj.state='plasvalidbe'
-            destinataires_ids = [obj.commercial_id]
-            obj.envoi_mail(destinataires_ids = destinataires_ids)
-
+            obj.envoi_mail()
 
     def vers_valide_commercial_action(self):
         for obj in self:
@@ -308,6 +307,7 @@ class is_dossier_appel_offre(models.Model):
     def vers_diffuse_client_action(self):
         for obj in self:
             obj.state='plasdiffusedcli'
+            obj.envoi_mail()
 
     def vers_relance_client_action(self):
         for obj in self:
@@ -316,6 +316,7 @@ class is_dossier_appel_offre(models.Model):
     def vers_gagne_action(self):
         for obj in self:
             obj.state='plaswinned'
+            obj.envoi_mail()
 
     def vers_perdu_action(self):
         for obj in self:
