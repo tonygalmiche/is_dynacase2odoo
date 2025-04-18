@@ -2,6 +2,29 @@
 <odoo>
     <data>
 
+        <record id="is_dossier_modif_variante_mail_template" model="mail.template">
+            <field name="name">Dossier modif/variante</field>
+            <field name="model_id" ref="is_dynacase2odoo.model_is_dossier_modif_variante"/>
+            <field name="subject">[DMV][{{ object.demao_num }}] état '{{ object.state_name }}'</field>
+            <field name="email_cc">{{ object.mail_copy }}</field>
+            <field name="description">Dossier modif/variante</field>
+            <field name="body_html" type="html">
+                <t t-set="website_url" t-value="object.get_base_url()"></t>
+                <div style="background-color:#f7f9f9">
+                    <p>Bonjour,</p> 
+                    <p>
+                        <t t-out="user.name"/> vient de passer le '<t t-out="object._description"/>' 
+                        <a t-att-href="website_url"><t t-out="object.demao_num"/></a> à l'état '<t t-out="object.state_name"/>'.
+                    </p> 
+                    <p>Merci d'en prendre connaissance.</p> 
+                    <div><i>Destinataires : <t t-out="object.destinataires_name"/></i></div>
+                    <div t-if="object.mail_copy"><i>Copie : <t t-out="object.mail_copy"/></i></div>
+                </div>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+
+
         <record id="update_client_action_server" model="ir.actions.server">
             <field name="name">Mise à jour du client</field>
            <field name="model_id" ref="model_is_dossier_modif_variante"/>
@@ -45,56 +68,56 @@
                         />
                         <field name="vers_analyse_be_vsb" invisible="1"/>
                         <button
-                            name="vers_vers_analyse_be_vsb_action"
+                            name="vers_analyse_be_action"
                             string="Analyse BE"
                             attrs="{'invisible': [('vers_analyse_be_vsb', '!=', True)]}"
                             type="object"
                         />
                         <field name="vers_vali_de_be_vsb" invisible="1"/>
                         <button
-                            name="vers_vali_de_be_vsb_action"
-                            string="Vali de BE"
+                            name="vers_valide_be_action"
+                            string="Valide BE"
                             attrs="{'invisible': [('vers_vali_de_be_vsb', '!=', True)]}"
                             type="object"
                         />
                         <field name="vers_vali_de_commercial_vsb" invisible="1"/>
                         <button
-                            name="vers_vali_de_commercial_vsb_action"
-                            string="Vali de Commercial"
+                            name="vers_valide_commercial_action"
+                            string="Valide Commercial"
                             attrs="{'invisible': [('vers_vali_de_commercial_vsb', '!=', True)]}"
                             type="object"
                         />
                         <field name="vers_diffuse_client_vsb" invisible="1"/>
                         <button
-                            name="vers_diffuse_client_vsb_action"
+                            name="vers_diffuse_client_action"
                             string="Diffuse Client"
                             attrs="{'invisible': [('vers_diffuse_client_vsb', '!=', True)]}"
                             type="object"
                         />
                         <field name="vers_relance_client_vsb" invisible="1"/>
                         <button
-                            name="vers_relance_client_vsb_action"
+                            name="vers_relance_client_action"
                             string="Relance Client"
                             attrs="{'invisible': [('vers_relance_client_vsb', '!=', True)]}"
                             type="object"
                         />
                         <field name="vers_perdu_vsb" invisible="1"/>
                         <button
-                            name="vers_perdu_vsb_action"
+                            name="vers_perdu_action"
                             string="Perdu"
                             attrs="{'invisible': [('vers_perdu_vsb', '!=', True)]}"
                             type="object"
                         />
                         <field name="vers_gagne_vsb" invisible="1"/>
                         <button
-                            name="vers_gagne_vsb_action"
+                            name="vers_gagne_action"
                             string="Gagne"
                             attrs="{'invisible': [('vers_gagne_vsb', '!=', True)]}"
                             type="object"
                         />
                         <field name="vers_annule_vsb" invisible="1"/>
                         <button
-                            name="vers_annule_vsb_action"
+                            name="vers_annule_action"
                             string="Annule"
                             attrs="{'invisible': [('vers_annule_vsb', '!=', True)]}"
                             type="object"

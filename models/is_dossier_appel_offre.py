@@ -160,12 +160,11 @@ class is_dossier_appel_offre(models.Model):
     vers_perdu_vsb             = fields.Boolean(string="vers Perdu"            , compute='_compute_vsb', readonly=True, store=False)
     vers_annule_vsb            = fields.Boolean(string="vers Annulé"           , compute='_compute_vsb', readonly=True, store=False)
     readonly_vsb               = fields.Boolean(string="Accès en lecture seule", compute='_compute_vsb', readonly=True, store=False)
-    state              = fields.Selection(_STATE, "Etat"                , tracking=True, default='plascreate')
-    state_name         = fields.Char("Etat name", compute='_compute_state_name', readonly=True, store=False)
-    destinataires_ids  = fields.Many2many('res.partner', compute='_compute_destinataires_ids')
+    state               = fields.Selection(_STATE, "Etat"                , tracking=True, default='plascreate')
+    state_name          = fields.Char("Etat name", compute='_compute_state_name', readonly=True, store=False)
+    destinataires_ids   = fields.Many2many('res.partner', string="destinataires_ids", compute='_compute_destinataires_ids')
     destinataires_name  = fields.Char('Destinataires'  , compute='_compute_destinataires_name')
     mail_copy           = fields.Char('Mail copy'      , compute='_compute_destinataires_ids')
-
 
 
     @api.depends("state")

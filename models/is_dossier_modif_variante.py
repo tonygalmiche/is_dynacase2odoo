@@ -6,6 +6,21 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+_STATE=([
+    ('plascreate'     , 'Créé'),
+    ('plasanalysed'   , 'Analysé'),
+    ('plastransbe'    , 'Transmis BE'),
+    ('Analyse_BE'     , 'Analysé BE'),
+    ('plasvalidbe'    , 'Validé BE'),
+    ('plasvalidcom'   , 'Validé commercial'),
+    ('plasdiffusedcli', 'Diffusé client'),
+    ('plasrelancecli' , 'Relance client'),
+    ('plaswinned'     , 'Gagné'),
+    ('plasloosed'     , 'Perdu'),
+    ('plascancelled'  , 'Annulé'),
+])
+
+
 class is_dossier_modif_variante(models.Model):
     _name        = "is.dossier.modif.variante"
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
@@ -64,45 +79,106 @@ class is_dossier_modif_variante(models.Model):
             obj.vers_annule_vsb = vsb
 
 
+    # def vers_analyse_action(self):
+    #     for obj in self:
+    #         obj.sudo().state = "plasanalysed"
+
+    # def vers_transmis_be_action(self):
+    #     for obj in self:
+    #         obj.sudo().state = "plastransbe"
+
+    # def vers_vers_analyse_be_vsb_action(self):
+    #     for obj in self:
+    #         obj.sudo().state = "Analyse_BE"
+
+    # def vers_vali_de_be_vsb_action(self):
+    #     for obj in self:
+    #         obj.sudo().state = "plasvalidbe"
+
+    # def vers_vali_de_commercial_vsb_action(self):
+    #     for obj in self:
+    #         obj.sudo().state = "plasvalidcom"
+
+    # def vers_diffuse_client_vsb_action(self):
+    #     for obj in self:
+    #         obj.sudo().state = "plasdiffusedcli"
+
+    # def vers_relance_client_vsb_action(self):
+    #     for obj in self:
+    #         obj.sudo().state = "plasrelancecli"
+
+    # def vers_perdu_vsb_action(self):
+    #     for obj in self:
+    #         obj.sudo().state = "plasloosed"
+
+    # def vers_gagne_vsb_action(self):
+    #     for obj in self:
+    #         obj.sudo().state = "plaswinned"
+
+    # def vers_annule_vsb_action(self):
+    #     for obj in self:
+    #         obj.sudo().state = "plascancelled"
+
+
+
+
+
     def vers_analyse_action(self):
         for obj in self:
-            obj.sudo().state = "plasanalysed"
+            obj.state='plasanalysed'
 
     def vers_transmis_be_action(self):
         for obj in self:
-            obj.sudo().state = "plastransbe"
+            obj.state='plastransbe'
+            obj.envoi_mail()
 
-    def vers_vers_analyse_be_vsb_action(self):
+    def vers_analyse_be_action(self):
         for obj in self:
-            obj.sudo().state = "Analyse_BE"
+            obj.state='Analyse_BE'
+            obj.envoi_mail()
 
-    def vers_vali_de_be_vsb_action(self):
+    def vers_valide_be_action(self):
         for obj in self:
-            obj.sudo().state = "plasvalidbe"
+            obj.state='plasvalidbe'
+            obj.envoi_mail()
 
-    def vers_vali_de_commercial_vsb_action(self):
+    def vers_valide_commercial_action(self):
         for obj in self:
-            obj.sudo().state = "plasvalidcom"
+            obj.state='plasvalidcom'
 
-    def vers_diffuse_client_vsb_action(self):
+    def vers_diffuse_client_action(self):
         for obj in self:
-            obj.sudo().state = "plasdiffusedcli"
+            obj.state='plasdiffusedcli'
+            obj.envoi_mail()
 
-    def vers_relance_client_vsb_action(self):
+    def vers_relance_client_action(self):
         for obj in self:
-            obj.sudo().state = "plasrelancecli"
+            obj.state='plasrelancecli'
 
-    def vers_perdu_vsb_action(self):
+    def vers_gagne_action(self):
         for obj in self:
-            obj.sudo().state = "plasloosed"
+            obj.state='plaswinned'
+            obj.envoi_mail()
 
-    def vers_gagne_vsb_action(self):
+    def vers_perdu_action(self):
         for obj in self:
-            obj.sudo().state = "plaswinned"
+            obj.state='plasloosed'
 
-    def vers_annule_vsb_action(self):
+    def vers_annule_action(self):
         for obj in self:
-            obj.sudo().state = "plascancelled"
+            obj.state='plascancelled'
+
+
+    def envoi_mail(self, destinataires_ids=False):
+        template = self.env.ref('is_dynacase2odoo.is_dossier_modif_variante_mail_template').sudo()     
+        recipient_ids = destinataires_ids or self.destinataires_ids
+        email_values = {
+            'email_cc': self.mail_copy,
+            'auto_delete': False,
+            'recipient_ids': recipient_ids,
+            'scheduled_date': False,
+        }
+        template.send_mail(self.id, force_send=True, raise_exception=False, email_values=email_values)
 
 
     @api.depends('demao_idmoule.is_database_id', 'dossierf_id.is_database_id')
@@ -186,19 +262,7 @@ class is_dossier_modif_variante(models.Model):
     demao_annexcom              = fields.Many2many("ir.attachment", "is_dmv_annexcom_rel", "annexcom_id", "att_id", string="Fichiers commerciaux", tracking=True)
     demao_annex                 = fields.Many2many("ir.attachment", "is_dmv_annex_rel", "annex_id", "att_id", string="Fichiers BE", tracking=True)
     demao_cde_be                = fields.Many2many("ir.attachment", "is_dmv_cde_be_rel", "cde_be_id", "att_id", string="Commandes BE", tracking=True)
-    state                       = fields.Selection([
-        ("plascreate",      "Créé"),
-        ("plasanalysed",    "Analysé"),
-        ("plastransbe",     "Transmis BE"),
-        ("Analyse_BE",      "Analysé BE"),
-        ("plasvalidbe",     "Validé BE"),
-        ("plasvalidcom",    "Validé Commercial"),
-        ("plasdiffusedcli", "Diffusé Client"),
-        ("plasrelancecli",  "Relance Client"),
-        ("plasloosed",      "Perdu"),
-        ("plaswinned",      "Gagné"),
-        ("plascancelled",   "Annulé"),
-    ], string="Etat", default="plascreate", tracking=True)
+    state                       = fields.Selection(_STATE, string="Etat", default="plascreate", tracking=True)
     vers_analyse_vsb            = fields.Boolean(string="Vers Cree", compute='_compute_vsb', readonly=True, store=False)
     vers_transmis_be_vsb        = fields.Boolean(string="Vers Transmis BE", compute='_compute_vsb', readonly=True, store=False)
     vers_analyse_be_vsb         = fields.Boolean(string="Vers Analyse BE", compute='_compute_vsb', readonly=True, store=False)
@@ -215,6 +279,56 @@ class is_dossier_modif_variante(models.Model):
     fiche_codification_ids      = fields.One2many("is.fiche.codification", "dossier_modif_variante_id", readonly=True)
     active                      = fields.Boolean('Actif', default=True, tracking=True)
     readonly_vsb                = fields.Boolean(string="Accès en lecture seule", compute='_compute_vsb', readonly=True, store=False)
+    state_name          = fields.Char("Etat name", compute='_compute_state_name', readonly=True, store=False)
+    destinataires_ids   = fields.Many2many('res.partner', string="destinataires_ids", compute='_compute_destinataires_ids')
+    destinataires_name  = fields.Char('Destinataires', compute='_compute_destinataires_name')
+    mail_copy           = fields.Char('Mail copy'    , compute='_compute_destinataires_ids')
+
+
+    @api.depends("state")
+    def _compute_state_name(self):
+        for obj in self:
+            obj.state_name = dict(_STATE).get(obj.state)
+
+
+    @api.depends("state")
+    def _compute_destinataires_name(self):
+        for obj in self:
+            name=[]
+            for partner in obj.destinataires_ids:
+                name.append(partner.name)
+            obj.destinataires_name = ', '.join(name)
+
+
+    @api.depends("state")
+    def _compute_destinataires_ids(self):
+        user = self.env['res.users'].browse(self._uid)
+        company = user.company_id
+        for obj in self:
+            directeur_technique = company.is_directeur_technique_id
+            mail_copy = False
+            users=[]
+            ids=[]
+            if obj.state=='plastransbe':
+                users.append(obj.demao_idbe)
+                mail_copy = directeur_technique.email
+            if obj.state=='Analyse_BE':
+                users.append(directeur_technique)
+            if obj.state=='plasvalidbe':
+                users.append(obj.demao_idcommercial)
+            if obj.state=='plasdiffusedcli':
+                users.append(user)
+            if obj.state=='plaswinned':
+                users.append(directeur_technique)
+                users.append(obj.demao_idbe)
+                mail_copy = user.email
+            if obj.state=='plasanalysed':
+                users.append(obj.demao_idcommercial)
+            for user in users:
+                if user.id:
+                    ids.append(user.partner_id.id)
+            obj.destinataires_ids  = ids
+            obj.mail_copy          = mail_copy
 
 
     @api.constrains('demao_idmoule', 'dossierf_id')
