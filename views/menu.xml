@@ -362,6 +362,17 @@
             <field name="parent_id" eval="ref('is_parametrage_menu')"/>
             <field name="action"    ref="is_plastigray16.action_is_head_model_form"/>
         </record>
+        <record id="is_liste_diffusion_mail_menu" model="ir.ui.menu" >
+            <field name="name">Liste de diffusion des mails</field>
+            <field name="sequence">50</field>
+            <field name="parent_id" eval="ref('is_parametrage_menu')"/>
+            <field name="action"    ref="is_liste_diffusion_mail_action"/>
+        </record>
+
+
+
+        
+
 
         <!-- Données technique / Dossier article -->
         <record id="is_dossier_article_menu" model="ir.ui.menu" >

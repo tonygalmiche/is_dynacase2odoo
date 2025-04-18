@@ -31,3 +31,4 @@ from . import is_plan_action
 from . import is_plan_amelioration_continu
 from . import is_inv_achat_moule
 from . import is_erd
+from . import is_liste_diffusion_mail
