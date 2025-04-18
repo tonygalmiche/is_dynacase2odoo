@@ -228,6 +228,11 @@ class is_revue_de_contrat(models.Model):
     active = fields.Boolean('Actif', default=True, tracking=True)
 
 
+
+
+
+
+
     def actualisation_champs_calcules_action(self):
         nb=len(self)
         ct=1
@@ -348,19 +353,6 @@ class is_revue_de_contrat(models.Model):
             obj.rc_vac       = vac
 
 
-    # //** vac *******************************************************************
-    # $va_injection     = $this->getTValue('rc_va_injection');
-    # $va_assembly      = $this->getTValue('rc_va_assembly');
-    #     for ($i=0;$i<count($sell_price);$i++) {
-    #         $vac = $vac + ($va_injection[$i] + $va_assembly[$i])*$qte_annuelle[$i];
-    #     }
-    #     if ($vac==0) $vac=" ";
-    # $this->setValue('rc_vac', $vac);
-    # //**************************************************************************
-
-
-
-
     #Exemple avec 4 lignes sur RC 3139
     @api.depends("decomposition_prix_ids","decomposition_prix_ids.rc_year_quantity","version_ids","version_ids.rc_dfi_cycle")
     def _compute_rc_dfi_temp_occ_pm(self):
@@ -422,6 +414,35 @@ class is_revue_de_contrat(models.Model):
             }
             
 
+    def get_state_name(self):
+        for obj in self:
+            return dict(self._fields['state'].selection).get(self.state)
+
+
+    def get_destinataires_name(self):
+        for obj in self:
+            return self.env['is.liste.diffusion.mail'].get_destinataires_name('is.revue.de.contrat','to')
+        
+
+    def get_base_url(self):
+        for obj in self:
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            url = base_url + '/web#id=%s' '&view_type=form&model=%s'%(obj.id,self._name)
+            return url
+
+
+    def envoi_mail(self):
+        destinataires_ids = self.env['is.liste.diffusion.mail'].get_partners_ids('is.revue.de.contrat','to')
+        template = self.env.ref('is_dynacase2odoo.is_revue_de_contrat_mail_template').sudo()     
+        email_values = {
+            'email_cc'      : False,
+            'auto_delete'   : False,
+            'recipient_ids' : destinataires_ids,
+            'scheduled_date': False,
+        }
+        template.send_mail(self.id, force_send=True, raise_exception=False, email_values=email_values)
+
+
     def vers_diffuse_action(self):
         for obj in self:
             if len(obj.version_ids)==0 and len(obj.dfe_version_ids)==0:
@@ -430,6 +451,7 @@ class is_revue_de_contrat(models.Model):
                 if line.rc_ecart!=0:
                     raise ValidationError("Il y a un écart dans les décompositions de prix !")
             obj.state='diffuse'
+            obj.envoi_mail()
             if obj.rc_mouleid:
                 obj.rc_mouleid.revue_contrat_id = obj.id
             if obj.rc_dossierfid:

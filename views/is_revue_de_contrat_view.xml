@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+
+        <record id="is_revue_de_contrat_mail_template" model="mail.template">
+            <field name="name">Revue de contrat</field>
+            <field name="model_id" ref="is_dynacase2odoo.model_is_revue_de_contrat"/>
+            <field name="subject">[Revue de contrat][{{ object.name }}] état '{{ object.get_state_name() }}'</field>
+            <field name="description">Revue de contrat</field>
+            <field name="body_html" type="html">
+                <div style="background-color:#f7f9f9">
+                    <p>Bonjour,</p> 
+                    <p>
+                        <t t-out="user.name"/> vient de passer la '<t t-out="object._description"/>' 
+                        <a t-att-href="object.get_base_url()"><t t-out="object.name"/></a> à l'état '<t t-out="object.get_state_name()"/>'.
+                    </p> 
+                    <p>Merci d'en prendre connaissance.</p> 
+                    <div><i>Destinataires : <t t-out="object.get_destinataires_name()"/></i></div>
+                </div>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+
+
         <record id="is_revue_de_contrat_actualisation_champs_calcules_action_server" model="ir.actions.server">
             <field name="name">Actualisation champs calculés</field>
             <field name="model_id" ref="model_is_revue_de_contrat"/>

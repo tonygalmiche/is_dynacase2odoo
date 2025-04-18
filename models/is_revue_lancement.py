@@ -297,17 +297,6 @@ class is_revue_lancement(models.Model):
                                 doc.idresp = user.id
 
 
-    def action_vers_diffuse(self):
-        self.creation_inv_achat_moule()
-        for obj in self:
-            if obj.rl_pgrc_total != obj.rl_be_total:
-                raise ValidationError("Le total des données du moule et de la revue de lancement n'est pas le même !")
-            obj.state = "rl_diffuse"
-            if obj.rl_mouleid:
-                obj.rl_mouleid.revue_lancement_id = obj.id
-            if obj.rl_dossierfid:
-                obj.rl_dossierfid.revue_lancement_id = obj.id
-
 
     def voir_investissements_action(self):
         for obj in self:
@@ -323,11 +312,6 @@ class is_revue_lancement(models.Model):
             }
             return res
         
-
-    def action_vers_brouillon(self):
-        for obj in self:
-            obj.state = "rl_brouillon"
-
 
     def copie_rc_action(self):
         for obj in self:
@@ -427,3 +411,96 @@ class is_revue_lancement(models.Model):
                obj.ei_pres     = rc.rc_ei_pres
                obj.dms_date    = rc.rc_dms_date
                obj.eop_date    = rc.rc_eop_date
+
+
+    def action_vers_brouillon(self):
+        for obj in self:
+            obj.state = "rl_brouillon"
+
+
+    def action_vers_diffuse(self):
+        self.creation_inv_achat_moule()
+        for obj in self:
+            if obj.rl_pgrc_total != obj.rl_be_total:
+                raise ValidationError("Le total des données du moule et de la revue de lancement n'est pas le même !")
+            obj.state = "rl_diffuse"            
+            obj.envoi_mail()
+            if obj.rl_mouleid:
+                obj.rl_mouleid.revue_lancement_id = obj.id
+            if obj.rl_dossierfid:
+                obj.rl_dossierfid.revue_lancement_id = obj.id
+
+
+    def get_state_name(self):
+        for obj in self:
+            return dict(self._fields['state'].selection).get(self.state)
+
+
+    def get_base_url(self):
+        for obj in self:
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            url = base_url + '/web#id=%s' '&view_type=form&model=%s'%(obj.id,self._name)
+            return url
+
+
+    def get_users(self):
+        for obj in self:
+            equipe=[
+                "rl_chef_projetid", 
+                "rl_methode_injectionid", 
+                "rl_methode_assemblageid", 
+                "rl_qualite_devid", 
+                "rl_qualite_usineid", 
+                "rl_achatsid", 
+                "rl_logistiqueid", 
+                "rl_commercial2id",
+                "rl_responsable_outillageid",
+                "rl_directeur_siteid",
+                "rl_directeur_techniqueid",
+            ]
+            users=[]
+            for key in equipe:
+                user = getattr(obj,key)
+                if user and user not in users:
+                    users.append(user)
+            return users
+
+   
+    def get_destinataires_name(self):
+        for obj in self:
+            users = obj.get_users()
+            if users:
+                mydict=[]
+                for user in users:
+                    if user.email and user.email not in mydict:
+                        name=user.email
+                        mydict.append(name)
+                destinataires_name=', '.join(mydict)
+            return destinataires_name
+
+
+    def get_partners_ids(self):
+        for obj in self:
+            partners_ids=False
+            users = obj.get_users()
+            if users:
+                partners_ids=[]
+                for user in users:
+                    partners_ids.append(user.partner_id.id)
+            return partners_ids
+
+
+    def get_copie(self):
+        return self.env['is.liste.diffusion.mail'].get_destinataires_name('is.revue.lancement','cc')
+
+
+    def envoi_mail(self):
+        template = self.env.ref('is_dynacase2odoo.is_revue_lancement_mail_template').sudo()     
+        email_values = {
+            'email_cc'      : self.get_copie(),
+            'auto_delete'   : False,
+            'recipient_ids' : self.get_partners_ids(),
+            'scheduled_date': False,
+        }
+        template.send_mail(self.id, force_send=True, raise_exception=False, email_values=email_values)
+
