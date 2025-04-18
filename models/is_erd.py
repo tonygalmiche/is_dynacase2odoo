@@ -4,6 +4,16 @@ from odoo.exceptions import ValidationError  # type: ignore
 from datetime import datetime, timedelta, date
 
 
+_STATE=([
+    ("Cree"          , "Créé"),
+    ("Transmis_BE"   , "Transmis BE"),
+    ("Valide_BE"     , "Validé BE"),
+    ("Diffuse_Client", "Diffusé Client"),
+    ("Gagne"         , "Gagné"),
+])
+
+
+
 class is_erd(models.Model):
     _name = "is.erd"
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
@@ -31,13 +41,7 @@ class is_erd(models.Model):
     observation     = fields.Text(string="Observation"                , tracking=True)
     beid            = fields.Many2one("res.users", string="BE"        , tracking=True)
     active          = fields.Boolean('Actif', default=True            , tracking=True)
-    state = fields.Selection([
-        ("Cree"          , "Créé"),
-        ("Transmis_BE"   , "Transmis BE"),
-        ("Valide_BE"     , "Validé BE"),
-        ("Diffuse_Client", "Diffusé Client"),
-        ("Gagne"         , "Gagné"),
-    ], default="Cree", string="État", tracking=True, copy=False)
+    state = fields.Selection(_STATE, default="Cree", string="État", tracking=True, copy=False)
     file_pj_commerciaux_ids = fields.Many2many("ir.attachment", "is_erd_file_pj_commerciaux_rel", "file_pj_commerciaux", "att_id", string="Pièces jointe commerciaux")
     file_pj_be_ids          = fields.Many2many("ir.attachment", "is_erd_file_pj_be_rel"         , "file_pj_be"         , "att_id", string="Fichiers BE")
     file_cde_be_ids         = fields.Many2many("ir.attachment", "is_erd_file_cde_be__rel"       , "file_cde_be"        , "att_id", string="Commandes BE")
@@ -47,6 +51,10 @@ class is_erd(models.Model):
     vers_gagne_vsb          = fields.Boolean(string="vers_Gagne_action"         , compute='_compute_vsb', readonly=True, store=False)
     readonly                = fields.Boolean(string="readonly"                  , compute='_compute_vsb', readonly=True, store=False)
     dynacase_id             = fields.Integer(string="Id Dynacase", index=True, copy=False)
+    state_name          = fields.Char("Etat name", compute='_compute_state_name', readonly=True, store=False)
+    destinataires_ids   = fields.Many2many('res.partner', string="destinataires_ids", compute='_compute_destinataires_ids')
+    destinataires_name  = fields.Char('Destinataires', compute='_compute_destinataires_name')
+    mail_copy           = fields.Char('Mail copy'    , compute='_compute_destinataires_ids')
 
 
     @api.model_create_multi
@@ -65,27 +73,15 @@ class is_erd(models.Model):
         return super().create(vals_list)
 
 
-
-
-
-
     @api.depends("state")
     def _compute_vsb(self):
         commercial  = self.env['res.users'].has_group('is_plastigray16.is_commerciaux_group')
         chef_projet = self.env['res.users'].has_group('is_plastigray16.is_chef_projet_group')
-
-
-
         for obj in self:
             vsb = False
             if (commercial or chef_projet) and obj.state=='Cree':
                 vsb=True
             obj.vers_transmis_be_vsb = vsb
-
-            print(commercial,chef_projet,vsb)
-
-
-
 
             vsb = False
             if (commercial or chef_projet) and obj.state in ('Transmis_BE','Diffuse_Client'):
@@ -120,15 +116,87 @@ class is_erd(models.Model):
     def vers_Transmis_BE_action(self):
         for obj in self:
             obj.state='Transmis_BE'
+            obj.envoi_mail()
+
 
     def vers_Valide_BE_action(self):
         for obj in self:
             obj.state='Valide_BE'
+            obj.envoi_mail()
+
 
     def vers_Diffuse_Client_action(self):
         for obj in self:
             obj.state='Diffuse_Client'
+            obj.envoi_mail()
+
 
     def vers_Gagne_action(self):
         for obj in self:
             obj.state='Gagne'
+            obj.envoi_mail()
+
+
+
+    def envoi_mail(self, destinataires_ids=False):
+        template = self.env.ref('is_dynacase2odoo.is_erd_mail_template').sudo()     
+        recipient_ids = destinataires_ids or self.destinataires_ids
+        email_values = {
+            'email_cc': self.mail_copy,
+            'auto_delete': False,
+            'recipient_ids': recipient_ids,
+            'scheduled_date': False,
+        }
+        template.send_mail(self.id, force_send=True, raise_exception=False, email_values=email_values)
+
+
+    @api.depends("state")
+    def _compute_state_name(self):
+        for obj in self:
+            obj.state_name = dict(_STATE).get(obj.state)
+
+
+    @api.depends("state")
+    def _compute_destinataires_name(self):
+        for obj in self:
+            name=[]
+            for partner in obj.destinataires_ids:
+                name.append(partner.name)
+            obj.destinataires_name = ', '.join(name)
+
+
+    @api.depends("state")
+    def _compute_destinataires_ids(self):
+        user = self.env['res.users'].browse(self._uid)
+        company = user.company_id
+        for obj in self:
+            directeur_technique = company.is_directeur_technique_id
+            mail_copy = False
+            users=[]
+            ids=[]
+            if obj.state=='Transmis_BE':
+                users.append(obj.beid)
+                mail_copy = directeur_technique.email
+            if obj.state=='Valide_BE':
+                users.append(obj.commercialid)
+            if obj.state=='Diffuse_Client':
+                users.append(user)
+            if obj.state=='Gagne':
+                users.append(user)
+            for user in users:
+                if user.id:
+                    ids.append(user.partner_id.id)
+            obj.destinataires_ids  = ids
+            obj.mail_copy          = mail_copy
+
+
+
+        
+
+    def get_base_url(self):
+        for obj in self:
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            url = base_url + '/web#id=%s' '&view_type=form&model=%s'%(obj.id,self._name)
+            return url
+
+

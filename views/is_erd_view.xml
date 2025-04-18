@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>     
+    <data>   
+        <record id="is_erd_mail_template" model="mail.template">
+            <field name="name">ERD</field>
+            <field name="model_id" ref="is_dynacase2odoo.model_is_erd"/>
+            <field name="subject">[ERD][{{ object.numero }}] état '{{ object.state_name }}'</field>
+            <field name="email_cc">{{ object.mail_copy }}</field>
+            <field name="description">ERD</field>
+            <field name="body_html" type="html">
+                <t t-set="website_url" t-value="object.get_base_url()"></t>
+                <div style="background-color:#f7f9f9">
+                    <p>Bonjour,</p> 
+                    <p>
+                        <t t-out="user.name"/> vient de passer le '<t t-out="object._description"/>' 
+                        <a t-att-href="website_url"><t t-out="object.numero"/></a> à l'état '<t t-out="object.state_name"/>'.
+                    </p> 
+                    <p>Merci d'en prendre connaissance.</p> 
+                    <div><i>Destinataires : <t t-out="object.destinataires_name"/></i></div>
+                    <div t-if="object.mail_copy"><i>Copie : <t t-out="object.mail_copy"/></i></div>
+                </div>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
         <record model="ir.ui.view" id="is_erd_form_view">
             <field name="name">is_erd_form_view</field>
             <field name="model">is.erd</field>
