@@ -2,6 +2,27 @@
 <odoo>
     <data>
         <!-- is.fiche.codification -->
+        <record id="is_fiche_codification_mail_template" model="mail.template">
+            <field name="name">Fiche de codification</field>
+            <field name="model_id" ref="is_dynacase2odoo.model_is_fiche_codification"/>
+            <field name="subject">[Fiche de codification][{{ object.chrono }}] état '{{ object.get_state_name() }}'</field>
+            <field name="email_cc">{{ object.users2mail(object.mail_cc_ids) }}</field>
+            <field name="description">Fiche de codification</field>
+            <field name="body_html" type="html">
+                <t t-set="website_url" t-value="object.get_base_url()"></t>
+                <div style="background-color:#f7f9f9">
+                    <p>Bonjour,</p> 
+                    <p>
+                        <t t-out="user.name"/> vient de passer la '<t t-out="object._description"/>' 
+                        <a t-att-href="website_url"><t t-out="object.chrono"/></a> à l'état '<t t-out="object.get_state_name()"/>'.
+                    </p> 
+                    <p>Merci d'en prendre connaissance.</p> 
+                    <div><i>Destinataires : <t t-out="object.users2mail(object.mail_to_ids)"/></i></div>
+                    <div t-if="object.users2mail(object.mail_cc_ids)"><i>Copie : <t t-out="object.users2mail(object.mail_cc_ids)"/></i></div>
+                </div>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
         <record model="ir.ui.view" id="is_fiche_codification_form_view">
             <field name="name">is_fiche_codification_form_view</field>
             <field name="model">is.fiche.codification</field>
@@ -152,6 +173,10 @@
                     <field name="date_dms"                  optional="hide"/>
                     <field name="lot_livraison"             optional="hide"/>
                     <field name="site_livraison"            optional="hide"/>
+
+                    <field name="mail_to_ids"               optional="hide" widget="many2many_tags"/>
+                    <field name="mail_cc_ids"               optional="hide" widget="many2many_tags"/>
+
                     <field name="create_date"               optional="hide"/>
                     <field name="create_uid"                optional="hide"/>
                     <field name="write_date"                optional="hide"/>

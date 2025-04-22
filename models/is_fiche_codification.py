@@ -55,6 +55,50 @@ class is_fiche_codification(models.Model):
     vers_brouillon_vsb           = fields.Boolean(string="vers Brouillon"        , compute='_compute_vsb', readonly=True, store=False)
     vers_transmis_vsb            = fields.Boolean(string="vers Transmise"        , compute='_compute_vsb', readonly=True, store=False)
     vers_valide_vsb              = fields.Boolean(string="vers Validée"          , compute='_compute_vsb', readonly=True, store=False)
+    mail_to_ids   = fields.Many2many('res.users', compute='_compute_mail_to_cc_ids', string="Mail To")
+    mail_cc_ids   = fields.Many2many('res.users', compute='_compute_mail_to_cc_ids', string="Mail Cc")
+
+
+    def get_state_name(self):
+        for obj in self:
+            return dict(self._fields['state'].selection).get(self.state)
+
+
+    @api.depends("state")
+    def _compute_mail_to_cc_ids(self):
+        user = self.env['res.users'].browse(self._uid)
+        company = user.company_id
+        for obj in self:
+            to_ids=[]
+            cc_ids=[]
+            if obj.state=='transmis':
+                to_ids = self.env['is.liste.diffusion.mail'].get_users('is.fiche.codification','transmis')
+            if obj.state=='valide':
+                directeur_technique = company.is_directeur_technique_id
+                to_ids.append(obj.chef_de_projet_id)
+                if directeur_technique!=obj.chef_de_projet_id:
+                    cc_ids.append(directeur_technique)
+            obj.mail_to_ids = self.env['is.liste.diffusion.mail'].get_users_ids(users=to_ids)
+            obj.mail_cc_ids = self.env['is.liste.diffusion.mail'].get_users_ids(users=cc_ids)
+
+
+    def users2mail(self,users):
+        return self.env['is.liste.diffusion.mail'].users2mail(users=users)
+      
+
+    def users2partner_ids(self,users):
+        return self.env['is.liste.diffusion.mail'].users2partner_ids(users=users)
+
+
+    def envoi_mail(self):
+        template = self.env.ref('is_dynacase2odoo.is_fiche_codification_mail_template').sudo()     
+        email_values = {
+            'email_cc'      : self.users2mail(self.mail_cc_ids),
+            'auto_delete'   : False,
+            'recipient_ids' : self.users2partner_ids(self.mail_to_ids),
+            'scheduled_date': False,
+        }
+        template.send_mail(self.id, force_send=True, raise_exception=False, email_values=email_values)
 
 
     def vers_brouillon_action(self):
@@ -64,10 +108,12 @@ class is_fiche_codification(models.Model):
     def vers_transmis_action(self):
         for obj in self:
             obj.state='transmis'
+            obj.envoi_mail()
 
     def vers_valide_action(self):
         for obj in self:
             obj.state='valide'
+            obj.envoi_mail()
 
 
     @api.depends("state")

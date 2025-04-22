@@ -19,11 +19,24 @@ class is_liste_diffusion_mail(models.Model):
         users=False
         lines = self.env['ir.model'].search([('model','=',model)],limit=1)
         for line in lines:
-            listes = self.env['is.liste.diffusion.mail'].search([('model_id','=',line.id),('code','=',code)],limit=1)
-            for liste in listes:
-                users = liste.user_ids
-        return users
+            res = self.env['is.liste.diffusion.mail'].search([('model_id','=',line.id),('code','=',code)],limit=1)
+            if len(res)>0:
+                users=[]
+                for l in res:
+                    for user in l.user_ids:
+                        if user.email:
+                            users.append(user)
+            return users
        
+
+    def get_users_ids(self,users=False):
+        ids=[]
+        for user in users:
+            if user.email:
+                if user.id not in ids:
+                    ids.append(user.id)
+        return ids
+
 
     def get_partners_ids(self,model,code):
         partners_ids=False
@@ -48,3 +61,20 @@ class is_liste_diffusion_mail(models.Model):
             destinataires_name=', '.join(mydict)
         return destinataires_name
 
+
+    def users2mail(self,users):
+        name=False
+        liste=[]
+        for user in users:
+            if user.email and user.email not in liste:
+                liste.append(user.email)
+            name=', '.join(liste)
+        return name
+
+
+    def users2partner_ids(self,users):
+        ids=[]
+        for user in users:
+            if user.email and user.partner_id.id not in ids:
+                ids.append(user.partner_id.id)
+        return ids
