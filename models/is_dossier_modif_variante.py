@@ -31,12 +31,15 @@ class is_dossier_modif_variante(models.Model):
 
     @api.depends("state")
     def _compute_vsb(self):
+        gestionnaire_projet = self.env.user.has_group('is_dynacase2odoo.is_gestionnaire_projet_group')
+        commercial          = self.env.user.has_group('is_plastigray16.is_commerciaux_group')
         for obj in self:
             readonly=False
             if obj.state in ('plasrelancecli','plaswinned','plasloosed','plascancelled'):
                 readonly=True
+            if commercial:
+                readonly=False
             obj.readonly_vsb = readonly
-
             vsb = False
             if obj.state in ["plascreate", "plastransbe"]:
                 vsb = True
@@ -77,50 +80,6 @@ class is_dossier_modif_variante(models.Model):
             if obj.state in ["plasrelancecli", "diffuse_client"]:
                 vsb = True
             obj.vers_annule_vsb = vsb
-
-
-    # def vers_analyse_action(self):
-    #     for obj in self:
-    #         obj.sudo().state = "plasanalysed"
-
-    # def vers_transmis_be_action(self):
-    #     for obj in self:
-    #         obj.sudo().state = "plastransbe"
-
-    # def vers_vers_analyse_be_vsb_action(self):
-    #     for obj in self:
-    #         obj.sudo().state = "Analyse_BE"
-
-    # def vers_vali_de_be_vsb_action(self):
-    #     for obj in self:
-    #         obj.sudo().state = "plasvalidbe"
-
-    # def vers_vali_de_commercial_vsb_action(self):
-    #     for obj in self:
-    #         obj.sudo().state = "plasvalidcom"
-
-    # def vers_diffuse_client_vsb_action(self):
-    #     for obj in self:
-    #         obj.sudo().state = "plasdiffusedcli"
-
-    # def vers_relance_client_vsb_action(self):
-    #     for obj in self:
-    #         obj.sudo().state = "plasrelancecli"
-
-    # def vers_perdu_vsb_action(self):
-    #     for obj in self:
-    #         obj.sudo().state = "plasloosed"
-
-    # def vers_gagne_vsb_action(self):
-    #     for obj in self:
-    #         obj.sudo().state = "plaswinned"
-
-    # def vers_annule_vsb_action(self):
-    #     for obj in self:
-    #         obj.sudo().state = "plascancelled"
-
-
-
 
 
     def vers_analyse_action(self):

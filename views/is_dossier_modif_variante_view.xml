@@ -169,7 +169,10 @@
                             <separator string="Commandes BE"/>
                             <field name="demao_cde_be" widget="many2many_binary" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                         </group>
-                        <group string="Fiches de codification" col="4" colspan="4" attrs="{'invisible': [('fiche_codification_ids', '=', [])]}">
+                        <group 
+                            string="Fiches de codification" col="4" colspan="4" 
+                            attrs="{'invisible': [('fiche_codification_ids', '=', [])]}" 
+                            groups="is_dynacase2odoo.is_membre_equipe_projet_group">
                             <field name="fiche_codification_ids" nolabel="1" colspan="4">
                                 <tree>
                                     <button title="Fiche de codification" name="action_acceder_fiche_codification"  type="object" icon="fa-search-plus"/>

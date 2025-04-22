@@ -178,6 +178,8 @@ class is_dossier_appel_offre(models.Model):
             readonly=False
             if obj.state in ('plasrelancecli','plaswinned','plasloosed','plascancelled'):
                 readonly=True
+            if commercial:
+                readonly=False
             obj.readonly_vsb = readonly
 
             vsb = False
