@@ -3,6 +3,27 @@
 <odoo>
     <data>
         <!-- is.modif.donnee.technique -->
+        <record id="is_modif_donnee_technique_mail_template" model="mail.template">
+            <field name="name">Modification données techniques</field>
+            <field name="model_id" ref="is_dynacase2odoo.model_is_modif_donnee_technique"/>
+            <field name="subject">[Modif données techniques][{{ object.num_demande }}] état '{{ object.get_state_name() }}'</field>
+            <field name="email_cc">{{ object.users2mail(object.mail_cc_ids) }}</field>
+            <field name="description">Modification données techniques</field>
+            <field name="body_html" type="html">
+                <t t-set="website_url" t-value="object.get_base_url()"></t>
+                <div style="background-color:#f7f9f9">
+                    <p>Bonjour,</p> 
+                    <p>
+                        <t t-out="user.name"/> vient de passer la demande de modification des données techniques 
+                        <a t-att-href="website_url"><t t-out="object.num_demande"/></a> à l'état '<t t-out="object.get_state_name()"/>'.
+                    </p> 
+                    <p>Merci d'en prendre connaissance.</p> 
+                    <div><i>Destinataires : <t t-out="object.users2mail(object.mail_to_ids)"/></i></div>
+                    <div t-if="object.users2mail(object.mail_cc_ids)"><i>Copie : <t t-out="object.users2mail(object.mail_cc_ids)"/></i></div>
+                </div>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
         <record model="ir.ui.view" id="is_modif_donnee_technique_form_view">
             <field name="name">is_modif_donnee_technique_form_view</field>
             <field name="model">is.modif.donnee.technique</field>
