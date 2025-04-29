@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>   
+        <record model="ir.ui.view" id="is_facture_outillage_form_view">
+            <field name="name">is_facture_outillage_form_view</field>
+            <field name="model">is.facture.outillage</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Form">  
+                    <style>
+                        .o_form_label{
+                            white-space: nowrap;
+                        }
+                        .o_form_view.o_xxl_form_view .o_form_sheet_bg > .o_form_sheet {
+                            max-width: 1800px;
+                        }
+                    </style>
+                    <header>
+                        <field name="dynacase_id" invisible="1"/>
+                        <button 
+                            string="Dynacase" name="lien_vers_dynacase_action" 
+                            type="object" class="btn btn-info"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
+                            groups="base.group_system"
+                        />
+                        <button 
+                            string="Actualiser" name="actualiser_action" 
+                            type="object"
+                        />
+                </header>
+                    <sheet>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active" invisible="1"/> 
+                        <group string="Identification">
+                            <group>
+                                <field name="type_dossier"/>
+                                <field name="revue_lancement_id"         attrs="{'invisible': [('type_dossier', '!=', 'RL')]}"/>
+                                <field name="dossier_modif_variante_id"  attrs="{'invisible': [('type_dossier', 'not in', ('Modif','Variante'))]}"/>
+                                <field name="moule_id"                   attrs="{'invisible': [('type_dossier', '!=', 'Moule')]}"/>
+                                <field name="dossierf_id"                attrs="{'invisible': [('type_dossier', '!=', 'Dossier F')]}"/>
+                                <field name="erd_id"                     attrs="{'invisible': [('type_dossier', '!=', 'ERD')]}"/>
+                                <field name="designation"/>
+                                <field name="client_id"/>
+                            </group>
+                            <group>
+                                <field name="commercial_id"/>
+                                <field name="chef_projet_id"/>
+                            </group>
+                        </group>
+                        <group string="Facturation">
+                            <group>
+                                <field name="montant_global"/>
+                                <field name="numero_commande_client"/>
+                                <field name="date_reception"/>
+                                <field name="montant_dossier"/>    
+                            </group>
+                            <group>
+                                <field name="piece_jointe_ids" widget="many2many_binary"/>
+                            </group>
+                         </group>
+                        <field name="ligne_ids">
+                            <tree editable="bottom">
+                                <field name="type_facture"/>
+                                <field name="num_facture"/>
+                                <field name="montant_ht"      sum="Total"/>
+                                <field name="montant_ttc"     sum="Total"/>
+                                <field name="montant_paye_ht" sum="Total"/>
+                                <field name="num_bl"/>
+                                <field name="date_facture_prev"/>
+                                <field name="date_facture"/>
+                                <field name="date_echeance"/>
+                                <field name="date_reglement"/>
+                                <field name="commentaire"/>
+                            </tree>
+                        </field>
+                        <group>
+                            <group>
+                                <field name="total_facture"/>
+                                <field name="ecart_commande_facture"/>
+                                <field name="ecart_ttc"/>
+                            </group>
+                            <group>
+                                <field name="solde"/>
+                            </group>
+                        </group>
+                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" />
+                        <field name="activity_ids" />
+                        <field name="message_ids" />
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_facture_outillage_tree_view">
+            <field name="name">is_facture_outillage_tree_view</field>
+            <field name="model">is.facture.outillage</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="type_dossier"              optional="show"/>
+                    <field name="revue_lancement_id"        optional="hide" widget="many2one_clickable"/>
+                    <field name="dossier_modif_variante_id" optional="hide" widget="many2one_clickable"/>
+                    <field name="moule_id"                  optional="hide" widget="many2one_clickable"/>
+                    <field name="dossierf_id"               optional="hide" widget="many2one_clickable"/>
+                    <field name="erd_id"                    optional="hide" widget="many2one_clickable"/>
+                    <field name="designation"               optional="show"/>
+                    <field name="client_id" optional="show" widget="many2one_clickable"/>
+                    <field name="commercial_id" optional="show"/>
+                    <field name="chef_projet_id" optional="show"/>
+                    <field name="montant_global" optional="show" sum="Total"/>
+                    <field name="numero_commande_client" optional="show"/>
+                    <field name="piece_jointe_ids" optional="show"/>
+                    <field name="montant_commande_client" optional="show" sum="Total"/>
+                    <field name="date_reception" optional="show"/>
+                    <field name="montant_dossier" optional="show" sum="Total"/>
+                    <field name="total_facture" optional="show" sum="Total"/>
+                    <field name="ecart_commande_facture" optional="show" sum="Total"/>
+                    <field name="ecart_ttc" optional="show" sum="Total"/>
+                    <field name="create_date"               optional="hide" string="Créé le"/>
+                    <field name="create_uid"                optional="hide" string="Créé par"/>
+                    <field name="write_date"                optional="hide" string="Modifié le"/>
+                    <field name="write_uid"                 optional="hide" string="Modifié par"/>
+                    <field name="dynacase_id"               optional="hide" groups="base.group_system"/>
+                    <field 
+                        name="solde" optional="show" widget="badge" 
+                        decoration-warning="solde=='non'"
+                        decoration-success="solde=='oui'"
+                    />
+                    <field name="dynacase_id" optional="show"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
+                 </tree>
+            </field>
+        </record>
+        <record id="is_facture_outillage_pivot_view" model="ir.ui.view">
+            <field name="name">is_facture_outillage_pivot_view</field>
+            <field name="model">is.facture.outillage</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="client_id" type="row"/>
+                </pivot>
+            </field>
+        </record>
+        <record id="is_facture_outillage_graph_view" model="ir.ui.view">
+            <field name="name">is_facture_outillage_graph_view</field>
+            <field name="model">is.facture.outillage</field>
+            <field name="arch" type="xml">
+                <graph>
+                    <field name="client_id"/>
+                </graph>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_facture_outillage_search_view" >
+            <field name="name">is_facture_outillage_search_view</field>
+            <field name="model">is.facture.outillage</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="type_dossier"/>
+                    <field name="revue_lancement_id"/>
+                    <field name="dossier_modif_variante_id"/>
+                    <field name="moule_id"/>
+                    <field name="dossierf_id"/>
+                    <field name="client_id"/>
+                    <field name="commercial_id"/>
+                    <field name="chef_projet_id"/>
+                    <field name="designation"/>
+                    <field name="numero_commande_client"/>
+                    <field name="solde"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_facture_outillage_action">
+            <field name="name">Facture outillage</field>
+            <field name="res_model">is.facture.outillage</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
+        </record>
+    </data>
+</odoo>
