@@ -137,11 +137,12 @@
                         <group string="Caractéristiques">
                             <group>
                                 <field name="demao_type" readonly="1" force_save="1"/>
-                                <field name="demao_num"  attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
-                                <field name="demao_date"  attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
-                                <field name="demao_idmoule" attrs="{'readonly': [('readonly_vsb','=',True)]}" />
-                                <field name="dossierf_id"  attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
-                                <field name="demao_idclient"  attrs="{'readonly': [('readonly_vsb','=',True)]}"        required="1"/>
+                                <field name="demao_num"            attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                                <field name="demao_date"           attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                                <field name="demao_idmoule"        attrs="{'readonly': [('readonly_vsb','=',True)]}" />
+                                <field name="dossierf_id"          attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                                <field name="demao_idclient"       attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                                <field name="client_autre"         attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                                 <field name="demao_idcommercial"   attrs="{'readonly': [('readonly_vsb','=',True)]}"   required="1"/>
                                 <field name="dossier_appel_offre_id"/>
                                 <field name="demao_desig"    attrs="{'readonly': [('readonly_vsb','=',True)]}"         required="1"/>
@@ -234,6 +235,7 @@
                     <field name="demao_num"               optional="show"/>
                     <field name="demao_date"              optional="show"/>
                     <field name="demao_idclient"          optional="show" widget="many2one_clickable"/>
+                    <field name="client_autre"            optional="show"/>
                     <field name="demao_idcommercial"      optional="show"/>
                     <field name="demao_idmoule"           optional="show" widget="many2one_clickable"/>
                     <field name="dossierf_id"             optional="show" widget="many2one_clickable"/>
@@ -277,6 +279,7 @@
                     <field name="demao_num" />
                     <field name="dossier_appel_offre_id" />
                     <field name="demao_idclient" />
+                    <field name="client_autre" />
                     <field name="demao_idmoule" />
                     <field name="dossierf_id" />
                     <field name="demao_desig" />

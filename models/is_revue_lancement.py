@@ -426,9 +426,9 @@ class is_revue_lancement(models.Model):
             obj.state = "rl_diffuse"            
             obj.envoi_mail()
             if obj.rl_mouleid:
-                obj.rl_mouleid.revue_lancement_id = obj.id
+                obj.sudo().rl_mouleid.revue_lancement_id = obj.id
             if obj.rl_dossierfid:
-                obj.rl_dossierfid.revue_lancement_id = obj.id
+                obj.sudo().rl_dossierfid.revue_lancement_id = obj.id
 
 
     def get_state_name(self):

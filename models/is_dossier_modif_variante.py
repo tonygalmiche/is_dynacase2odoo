@@ -198,6 +198,7 @@ class is_dossier_modif_variante(models.Model):
     dossierf_id                 = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
     dossier_appel_offre_id      = fields.Many2one("is.dossier.appel.offre", string="Dossier appel d'offre", tracking=True, compute='_compute_dossier_appel_offre_id', readonly=True, store=True)
     demao_idclient              = fields.Many2one("res.partner", string="Client"  , tracking=True, compute='_compute_demao_idcommercial', readonly=False, store=True, domain=[("is_company","=",True), ("customer","=",True)])
+    client_autre                = fields.Char(string="Client (autre)", tracking=True)
     demao_idcommercial          = fields.Many2one("res.users", string="Commercial", tracking=True, compute='_compute_demao_idcommercial', readonly=False, store=True)
     demao_desig                 = fields.Char(string="Désignation pièce"          , tracking=True, compute='_compute_demao_idcommercial', readonly=False, store=True)
     site_id                     = fields.Many2one('is.database', "Site", compute='_compute_site_id', readonly=True, store=True)

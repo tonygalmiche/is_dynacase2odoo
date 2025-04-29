@@ -100,8 +100,8 @@ class is_erd(models.Model):
             obj.vers_gagne_vsb = vsb
 
             readonly=False
-            if obj.state in ('Diffuse_Client','Gagne'):
-                readonly=True
+            #if obj.state in ('Diffuse_Client','Gagne'):
+            #    readonly=True
             obj.readonly=readonly
 
 

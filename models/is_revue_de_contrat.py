@@ -453,9 +453,9 @@ class is_revue_de_contrat(models.Model):
             obj.state='diffuse'
             obj.envoi_mail()
             if obj.rc_mouleid:
-                obj.rc_mouleid.revue_contrat_id = obj.id
+                obj.sudo().rc_mouleid.revue_contrat_id = obj.id
             if obj.rc_dossierfid:
-                obj.rc_dossierfid.revue_contrat_id = obj.id
+                obj.sudo().rc_dossierfid.revue_contrat_id = obj.id
 
 
     def vers_brouillon_action(self):

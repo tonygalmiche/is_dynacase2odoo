@@ -86,31 +86,34 @@ class is_modif_donnee_technique(models.Model):
 
     @api.depends("state")
     def _compute_vsb(self):
+        uid = self._uid
         for obj in self:
-            commercial = self.env.user.has_group('is_plastigray16.is_commerciaux_group')
-
             readonly=False
             if obj.state in ('mdt_termine','mdt_refuse'):
+                readonly=True
+            if uid!=obj.responsable_action.id and obj.state in ('mdt_diffuse','mdt_refuse'):
                 readonly=True
             obj.readonly_vsb = readonly
 
             vsb = False
-            if commercial and obj.state in ('mdt_diffuse'):
+            if uid in (obj.responsable_action.id, obj.demandeur.id) and obj.state in ('mdt_diffuse'):
                 vsb=True
             obj.vers_brouillon_vsb = vsb
 
             vsb = False
-            if commercial and obj.state in ('mdt_brouillon','mdt_termine','mdt_refuse'):
+            if obj.state in ('mdt_brouillon'):
+                vsb=True
+            if uid==obj.responsable_action.id and obj.state in ('mdt_termine','mdt_refuse'):
                 vsb=True
             obj.vers_diffuse_vsb = vsb
 
             vsb = False
-            if commercial and obj.state in ('mdt_diffuse'):
+            if uid==obj.responsable_action.id and obj.state in ('mdt_diffuse'):
                 vsb=True
             obj.vers_termine_vsb = vsb
 
             vsb = False
-            if commercial and obj.state in ('mdt_diffuse'):
+            if uid==obj.responsable_action.id and obj.state in ('mdt_diffuse'):
                 vsb=True
             obj.vers_refuse_vsb = vsb
 
