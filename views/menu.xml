@@ -145,7 +145,7 @@
             parent="is_doc_moule_main_menu" action="is_doc_moule_action"
         />
         <record id="is_gantt_pdf_menu" model="ir.ui.menu" >
-            <field name="name">Gantt PDF</field>
+            <field name="name">Gantt PDF/Excel</field>
             <field name="sequence">70</field>
             <field name="parent_id" eval="ref('is_doc_moule_main_menu')"/>
             <field name="action"    ref="is_gantt_pdf_action"/>
@@ -320,38 +320,8 @@
             ])]"/>
         </record>
 
-	<!-- Gestion des achats -->
-        <menuitem id="gestion_des_achats_menu"  sequence="5"  name="Gestion des achats"/>
-        <record id="is_demande_modif_compte_fournisseur_menu" model="ir.ui.menu" >
-           <field name="name">Demande de création ou de modification d'un compte Fournisseur</field>
-           <field name="sequence">20</field>
-           <field name="parent_id" eval="ref('gestion_des_achats_menu')"/>
-           <field name="action"    ref="is_demande_modif_compte_fournisseur_action"/>
-        </record>
-        <record id="is_demande_modif_tarif_fournisseur_menu" model="ir.ui.menu" >
-            <field name="name">Demande de création ou de modification d'un tarif Fournisseur</field>
-            <field name="sequence">30</field>
-            <field name="parent_id" eval="ref('gestion_des_achats_menu')"/>
-            <field name="action"    ref="is_demande_modif_tarif_fournisseur_action"/>
-        </record>
 
-        <!-- Indicateurs -->
-        <record id="is_indicateur_bei_menu" model="ir.ui.menu" >
-            <field name="name">Indicateurs</field>
-            <field name="sequence">60</field>
-            <field name="parent_id" eval="ref('gestion_des_projets_menu')"/>
-        </record>
-        <record id="is_indicateur_revue_jalon_menu" model="ir.ui.menu" >
-            <field name="name">Indicateur Revue Jalon</field>
-            <field name="sequence">10</field>
-            <field name="parent_id" eval="ref('is_indicateur_bei_menu')"/>
-            <field name="action"    ref="is_indicateur_revue_jalon_action"/>
-            <field name="groups_id" eval="[(6,0,[
-                ref('is_plastigray16.is_chef_projet_group'),
-            ])]"/>
-        </record>
-        
-        <!-- Paramétrage -->
+        <!-- Gestion de projets / Paramétrage -->
         <record id="is_parametrage_menu" model="ir.ui.menu" >
             <field name="name">Paramétrage</field>
             <field name="sequence">900</field>
@@ -391,9 +361,55 @@
             <field name="parent_id" eval="ref('is_parametrage_menu')"/>
             <field name="action"    ref="is_liste_diffusion_mail_action"/>
         </record>
+        <record id="is_gantt_pdf_excel_menu" model="ir.ui.menu" >
+            <field name="name">Modèle Excel pour Gantt</field>
+            <field name="sequence">60</field>
+            <field name="parent_id" eval="ref('is_parametrage_menu')"/>
+            <field name="action"    ref="is_gantt_pdf_excel_action"/>
+        </record>
 
 
 
+        
+
+
+
+
+
+
+
+
+
+	<!-- Gestion des achats -->
+        <menuitem id="gestion_des_achats_menu"  sequence="5"  name="Gestion des achats"/>
+        <record id="is_demande_modif_compte_fournisseur_menu" model="ir.ui.menu" >
+           <field name="name">Demande de création ou de modification d'un compte Fournisseur</field>
+           <field name="sequence">20</field>
+           <field name="parent_id" eval="ref('gestion_des_achats_menu')"/>
+           <field name="action"    ref="is_demande_modif_compte_fournisseur_action"/>
+        </record>
+        <record id="is_demande_modif_tarif_fournisseur_menu" model="ir.ui.menu" >
+            <field name="name">Demande de création ou de modification d'un tarif Fournisseur</field>
+            <field name="sequence">30</field>
+            <field name="parent_id" eval="ref('gestion_des_achats_menu')"/>
+            <field name="action"    ref="is_demande_modif_tarif_fournisseur_action"/>
+        </record>
+
+        <!-- Indicateurs -->
+        <record id="is_indicateur_bei_menu" model="ir.ui.menu" >
+            <field name="name">Indicateurs</field>
+            <field name="sequence">60</field>
+            <field name="parent_id" eval="ref('gestion_des_projets_menu')"/>
+        </record>
+        <record id="is_indicateur_revue_jalon_menu" model="ir.ui.menu" >
+            <field name="name">Indicateur Revue Jalon</field>
+            <field name="sequence">10</field>
+            <field name="parent_id" eval="ref('is_indicateur_bei_menu')"/>
+            <field name="action"    ref="is_indicateur_revue_jalon_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray16.is_chef_projet_group'),
+            ])]"/>
+        </record>
         
 
 
