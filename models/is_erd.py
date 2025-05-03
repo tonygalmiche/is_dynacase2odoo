@@ -170,6 +170,7 @@ class is_erd(models.Model):
     def _compute_destinataires_ids(self):
         user = self.env['res.users'].browse(self._uid)
         company = user.company_id
+        assistante_commerciale = company.is_assistante_commerciale_id
         for obj in self:
             directeur_technique = company.is_directeur_technique_id
             mail_copy = False
@@ -181,9 +182,9 @@ class is_erd(models.Model):
             if obj.state=='Valide_BE':
                 users.append(obj.commercialid)
             if obj.state=='Diffuse_Client':
-                users.append(user)
+                users.append(assistante_commerciale)
             if obj.state=='Gagne':
-                users.append(user)
+                users.append(assistante_commerciale)
             for user in users:
                 if user.id:
                     ids.append(user.partner_id.id)

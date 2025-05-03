@@ -127,7 +127,8 @@
                     <field name="create_uid"      optional="hide" string="Créé par"/>
                     <field name="write_date"      optional="hide" string="Modifié le"/>
                     <field name="write_uid"       optional="hide" string="Modifié par"/>
-
+                    <field name="destinataires_ids" optional="hide" groups="base.group_system" widget="many2many_tags"/>   
+                    <field name="mail_copy"         optional="hide" groups="base.group_system"/>    
                     <field 
                         name="state" optional="show" widget="badge" 
                         decoration-info="state in ['Diffuse_Client']" 

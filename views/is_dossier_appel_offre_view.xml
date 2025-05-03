@@ -228,8 +228,8 @@
                         decoration-warning="state in ['plascreate','plasanalysed','plastransbe','Analyse_BE','plasvalidbe','plasvalidcom']"
                         decoration-success="state in ['plaswinned']"
                     />
-                    <!-- <field name="destinataires_ids" optional="hide" widget="many2many_tags"/>     -->
-                    <!-- <field name="mail_copy"         optional="hide"/>     -->
+                    <field name="destinataires_ids" optional="hide" groups="base.group_system" widget="many2many_tags"/>   
+                    <field name="mail_copy"         optional="hide" groups="base.group_system"/>    
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"

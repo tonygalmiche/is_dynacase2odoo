@@ -264,6 +264,7 @@ class is_dossier_modif_variante(models.Model):
     def _compute_destinataires_ids(self):
         user = self.env['res.users'].browse(self._uid)
         company = user.company_id
+        assistante_commerciale = company.is_assistante_commerciale_id
         for obj in self:
             directeur_technique = company.is_directeur_technique_id
             mail_copy = False
@@ -277,11 +278,11 @@ class is_dossier_modif_variante(models.Model):
             if obj.state=='plasvalidbe':
                 users.append(obj.demao_idcommercial)
             if obj.state=='plasdiffusedcli':
-                users.append(user)
+                users.append(assistante_commerciale)
             if obj.state=='plaswinned':
                 users.append(directeur_technique)
                 users.append(obj.demao_idbe)
-                mail_copy = user.email
+                mail_copy = assistante_commerciale.email
             if obj.state=='plasanalysed':
                 users.append(obj.demao_idcommercial)
             for user in users:

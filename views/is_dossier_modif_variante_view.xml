@@ -251,6 +251,8 @@
                     <field name="demao_motif"             optional="hide"/>
                     <field name="demao_idbe"              optional="hide"/>
                     <field name="solde"                   optional="hide"/>
+                    <field name="destinataires_ids"       optional="hide" groups="base.group_system" widget="many2many_tags"/>   
+                    <field name="mail_copy"               optional="hide" groups="base.group_system"/>    
                     <field 
                         name="state" optional="show" widget="badge" 
                         decoration-info="state in ['plasdiffusedcli','plasrelancecli']" 
