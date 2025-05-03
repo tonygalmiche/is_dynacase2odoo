@@ -112,11 +112,17 @@
                             <page name="rl_choix_industriel_tab" string="Choix industriel" attrs="{'invisible': [('rl_num_rcid', '=', False),('dossierf_id','=',False)]}" >
                                 <group name="rl_choix_industriel_fr" string="Choix industriel">
                                     <field name="rl_lieu_production"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
-                                    <field name="rl_nom_soutraitant"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                    <field 
+                                        name="rl_nom_soutraitant"  
+                                        attrs="{'readonly': [('state', '!=', 'rl_brouillon')], 'invisible': [('rl_lieu_production', '!=', 'st')]}"
+                                    />
                                     <field name="rl_affectation_presse"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                     <field name="rl_choix_industriel"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                     <field name="rl_validation_capacitaire"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
-                                    <field name="rl_validation_capacitaire_comment"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                    <field 
+                                        name="rl_validation_capacitaire_comment"  
+                                        attrs="{'readonly': [('state', '!=', 'rl_brouillon')], 'invisible': [('rl_validation_capacitaire', '!=', 'NOK')]}"
+                                    />
                                 </group>
                             </page>
                             <page name="rl_eq_projet_tab" string="Gestion projet" attrs="{'invisible': [('rl_num_rcid', '=', False),('dossierf_id','=',False)]}" >
