@@ -28,6 +28,9 @@
                         <button name="gantt_action" string="Gantt" type="object" class="btn-success"/>
                     </header>
                 </sheet>
+                <field name="name" position="after">
+                    <field name="dossier_appel_offre_id"/>
+                </field>
                 <group name="identification" position="after">
                     <group>
                         <field name="image" widget="image" style="max-width:300px;max-height:300px;float:right" nolabel="1" colspan="2"/>
@@ -37,7 +40,6 @@
                     <group>
                         <group string="Gestion des J">
                             <field name="fermeture_id"/>
-                            <field name="dossier_appel_offre_id"/>
                             <field name="revue_contrat_id"/>
                             <field name="revue_lancement_id"/>
                             <field name="revue_risque_id"/>   
