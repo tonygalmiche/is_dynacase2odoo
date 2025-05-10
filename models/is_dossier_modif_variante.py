@@ -34,11 +34,12 @@ class is_dossier_modif_variante(models.Model):
         gestionnaire_projet = self.env.user.has_group('is_dynacase2odoo.is_gestionnaire_projet_group')
         commercial          = self.env.user.has_group('is_plastigray16.is_commerciaux_group')
         for obj in self:
+            # readonly=False
+            # if obj.state in ('plasrelancecli','plaswinned','plasloosed','plascancelled'):
+            #     readonly=True
+            # if commercial:
+            #     readonly=False
             readonly=False
-            if obj.state in ('plasrelancecli','plaswinned','plasloosed','plascancelled'):
-                readonly=True
-            if commercial:
-                readonly=False
             obj.readonly_vsb = readonly
             vsb = False
             if obj.state in ["plascreate", "plastransbe"]:
