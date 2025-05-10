@@ -133,6 +133,7 @@ class is_fiche_codification(models.Model):
 
     @api.depends("state")
     def _compute_vsb(self):
+        user = self.env['res.users'].browse(self._uid)
         for obj in self:
             commercial = self.env.user.has_group('is_plastigray16.is_commerciaux_group')        
             vsb = False
@@ -144,9 +145,9 @@ class is_fiche_codification(models.Model):
             if commercial and obj.state in ('brouillon','valide'):
                 vsb=True
             obj.vers_transmis_vsb = vsb
-
+            
             vsb = False
-            if commercial and obj.state in ('transmis'):
+            if obj.state in ('transmis') and user in obj.mail_to_ids:
                 vsb=True
             obj.vers_valide_vsb = vsb
 

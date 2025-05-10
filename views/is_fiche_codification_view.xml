@@ -175,6 +175,7 @@
                     <field name="date_dms"                  optional="hide"/>
                     <field name="lot_livraison"             optional="hide"/>
                     <field name="site_livraison"            optional="hide"/>
+                    <field name="mail_to_ids"               optional="hide" widget="many2many_tags"/>
                     <field name="create_date"               optional="hide"/>
                     <field name="create_uid"                optional="hide"/>
                     <field name="write_date"                optional="hide"/>
