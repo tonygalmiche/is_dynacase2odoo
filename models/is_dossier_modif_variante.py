@@ -379,7 +379,7 @@ class is_dossier_modif_variante(models.Model):
 
         
 
-    def get_base_url(self):
+    def get_doc_url(self):
         for obj in self:
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
             url = base_url + '/web#id=%s' '&view_type=form&model=%s'%(obj.id,self._name)

@@ -12,7 +12,7 @@
                     <p>Bonjour,</p> 
                     <p>
                         <t t-out="user.name"/> vient de passer la '<t t-out="object._description"/>' 
-                        <a t-att-href="object.get_base_url()"><t t-out="object.name"/></a> à l'état '<t t-out="object.get_state_name()"/>'.
+                        <a t-att-href="object.get_doc_url()"><t t-out="object.name"/></a> à l'état '<t t-out="object.get_state_name()"/>'.
                     </p> 
                     <p>Merci d'en prendre connaissance.</p> 
                     <div><i>Destinataires : <t t-out="object.get_destinataires_name()"/></i></div>

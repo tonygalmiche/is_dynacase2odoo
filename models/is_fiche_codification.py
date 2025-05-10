@@ -59,7 +59,7 @@ class is_fiche_codification(models.Model):
     mail_cc_ids   = fields.Many2many('res.users', compute='_compute_mail_to_cc_ids', string="Mail Cc")
 
 
-    def get_base_url(self):
+    def get_doc_url(self):
         for obj in self:
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
             url = base_url + '/web#id=%s' '&view_type=form&model=%s'%(obj.id,self._name)

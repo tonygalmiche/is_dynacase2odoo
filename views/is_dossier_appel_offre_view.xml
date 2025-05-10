@@ -8,7 +8,7 @@
             <field name="email_cc">{{ object.mail_copy }}</field>
             <field name="description">Dossier appels d'offres</field>
             <field name="body_html" type="html">
-                <t t-set="website_url" t-value="object.get_base_url()"></t>
+                <t t-set="website_url" t-value="object.get_doc_url()"></t>
                 <div style="background-color:#f7f9f9">
                     <p>Bonjour,</p> 
                     <p>

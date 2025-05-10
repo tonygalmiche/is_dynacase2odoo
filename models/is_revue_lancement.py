@@ -436,7 +436,7 @@ class is_revue_lancement(models.Model):
             return dict(self._fields['state'].selection).get(self.state)
 
 
-    def get_base_url(self):
+    def get_doc_url(self):
         for obj in self:
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
             url = base_url + '/web#id=%s' '&view_type=form&model=%s'%(obj.id,self._name)
