@@ -13,7 +13,7 @@ class is_fiche_codification(models.Model):
     _name='is.fiche.codification'
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description="Fiche de codification"
-    _rec_name = "chrono"
+    _rec_name = "dossier"
     _order='chrono desc'
 
     chrono                       = fields.Integer('Chrono', readonly=True)
@@ -26,6 +26,7 @@ class is_fiche_codification(models.Model):
     revue_contrat_id             = fields.Many2one("is.revue.de.contrat", string="Revue de contrat", tracking=True)
     mold_id                      = fields.Many2one('is.mold', 'Moule'               , tracking=True, compute="_compute", store=True, readonly=True)
     dossierf_id                  = fields.Many2one("is.dossierf", string="Dossier F", tracking=True, compute="_compute", store=True, readonly=True)
+    dossier                      = fields.Char(string="Dossier", compute='_compute_dossier', readonly=True, store=True)
     project_id                   = fields.Many2one('is.mold.project', 'Projet'      , tracking=True, compute="_compute", store=True, readonly=True)
     chef_de_projet_id            = fields.Many2one('res.users', 'Chef de projet'    , tracking=True, compute="_compute", store=True, readonly=True)
     client_id                    = fields.Many2one('res.partner', 'Client'          , tracking=True, compute="_compute", store=True, readonly=True)
@@ -57,6 +58,13 @@ class is_fiche_codification(models.Model):
     vers_valide_vsb              = fields.Boolean(string="vers Validée"          , compute='_compute_vsb', readonly=True, store=False)
     mail_to_ids   = fields.Many2many('res.users', compute='_compute_mail_to_cc_ids', string="Mail To")
     mail_cc_ids   = fields.Many2many('res.users', compute='_compute_mail_to_cc_ids', string="Mail Cc")
+
+
+    @api.depends("dossier_modif_variante_id","revue_contrat_id","mold_id","dossierf_id")
+    def _compute_dossier(self):
+        for obj in self:
+            dossier=obj.dossier_modif_variante_id.demao_num or obj.revue_contrat_id.name or obj.mold_id.name or obj.dossierf_id.name
+            obj.dossier = dossier
 
 
     def get_doc_url(self):

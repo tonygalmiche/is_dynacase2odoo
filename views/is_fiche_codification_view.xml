@@ -5,7 +5,7 @@
         <record id="is_fiche_codification_mail_template" model="mail.template">
             <field name="name">Fiche de codification</field>
             <field name="model_id" ref="is_dynacase2odoo.model_is_fiche_codification"/>
-            <field name="subject">[Fiche de codification][{{ object.chrono }}] état '{{ object.get_state_name() }}'</field>
+            <field name="subject">[Fiche de codification][{{ object.dossier }}] état '{{ object.get_state_name() }}'</field>
             <field name="email_cc">{{ object.users2mail(object.mail_cc_ids) }}</field>
             <field name="description">Fiche de codification</field>
             <field name="body_html" type="html">
@@ -14,7 +14,7 @@
                     <p>Bonjour,</p> 
                     <p>
                         <t t-out="user.name"/> vient de passer la '<t t-out="object._description"/>' 
-                        <a t-att-href="website_url"><t t-out="object.chrono"/></a> à l'état '<t t-out="object.get_state_name()"/>'.
+                        <a t-att-href="website_url"><t t-out="object.dossier"/></a> à l'état '<t t-out="object.get_state_name()"/>'.
                     </p> 
                     <p>Merci d'en prendre connaissance.</p> 
                     <div><i>Destinataires : <t t-out="object.users2mail(object.mail_to_ids)"/></i></div>
@@ -75,6 +75,7 @@
                                 <field name="revue_contrat_id"          attrs="{'readonly': [('state','!=','brouillon')]}"/>
                                 <field name="mold_id"                   attrs="{'readonly': [('state','!=','brouillon')]}"/>
                                 <field name="dossierf_id"               attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                                <field name="dossier"/>
                                 <field name="type_dossier"              attrs="{'invisible': [('type_dossier','=',False)]}"/>
                                 <field name="creation_modif"            attrs="{'readonly': [('state','!=','brouillon')]}"/>
                                 <field name="chef_de_projet_id"         attrs="{'readonly': [('state','!=','brouillon')]}"/>
@@ -148,6 +149,7 @@
                     <field name="code_pg"                   optional="show"/>
                     <field name="date"                      optional="show"/>
                     <field name="type_dossier"              optional="show"/>
+                    <field name="dossier"                   optional="show"/>
                     <field name="creation_modif"            optional="show"/>
                     <field name="client_id"                 optional="show" widget="many2one_clickable"/>
                     <field name="project_id"                optional="show" widget="many2one_clickable"/>
@@ -197,6 +199,7 @@
             <field name="model">is.fiche.codification</field>
             <field name="arch" type="xml">
                 <search>
+                    <field name="dossier"/>
                     <field name="chrono"/>
                     <field name="state"/>
                     <field name="code_pg"/>
