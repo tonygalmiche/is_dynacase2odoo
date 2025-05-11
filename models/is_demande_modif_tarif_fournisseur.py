@@ -14,13 +14,6 @@ _TYPE_COMMANDE_TARIF = ([
      ('commande_ferme_uniquement'  , 'Commande ferme uniquement'),
      ('commande_ferme_avec_horizon', 'Commande ferme avec horizon'),
 ])
-# _GESTIONNAIRE = ([
-#      ('02', '2 - Matières/Composants série'),
-#      ('09', '09 - Matières/Composants fournis par le client'),
-#      ('16', '16 - Achats en stock dépôt consignation'),
-#      ('17', '17 - Achats leviers'),
-#      ('18', '18 - MATIERES-COMPOSANTS ACHETES VIA LE SERVICE ACHAT'),
-# ])
 _EVOLUTION = ([
      ('hausse', 'Hausse'),
      ('baisse', 'Baisse'),
@@ -50,17 +43,16 @@ class is_demande_modif_tarif_fournisseur(models.Model):
     motif                          = fields.Text(string="Motif", tracking=True, required=True)
     date_application               = fields.Date("Date d'application", tracking=True)
     type_commande                  = fields.Selection(_TYPE_COMMANDE_TARIF, "Type de commande", tracking=True)
-    #gestionnaire                   = fields.Selection(_GESTIONNAIRE, "Gestionnaire", tracking=True)
     gestionnaire_id                = fields.Many2one('is.gestionnaire', 'Gestionnaire', tracking=True)
     code_douanier                  = fields.Char(string="Code douanier", tracking=True)
     origine                        = fields.Char(string="Origine", tracking=True)
     maj_cde                        = fields.Boolean('Mise à jour des commandes', tracking=True)
     productivite                   = fields.Boolean('Productivité annuelle', tracking=True)
-    evolution_tarif                = fields.Selection(_EVOLUTION, "Evolution tarif", tracking=True)
+    #evolution_tarif                = fields.Selection(_EVOLUTION, "Evolution tarif", tracking=True)
 
     code_article                   = fields.Char(string="Code article", tracking=True)
     designation                    = fields.Char(string="Désignation", tracking=True)
-    unite_tarif                    = fields.Selection(_UNITE, "Unité tarif", tracking=True)
+    #unite_tarif                    = fields.Selection(_UNITE, "Unité tarif", tracking=True)
     unite_tarif_autre              = fields.Char(string="Unité tarif (autre)", tracking=True)
     conditionnement                = fields.Char(string="Conditionnement", tracking=True)
     lot_approvisionnement          = fields.Integer(string="Lot d'approvisionnement minimum", tracking=True)
