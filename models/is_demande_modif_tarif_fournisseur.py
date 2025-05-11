@@ -45,13 +45,17 @@ class is_demande_modif_tarif_fournisseur(models.Model):
     type_commande                  = fields.Selection(_TYPE_COMMANDE_TARIF, "Type de commande", tracking=True)
     gestionnaire_id                = fields.Many2one('is.gestionnaire', 'Gestionnaire', tracking=True)
     code_douanier                  = fields.Char(string="Code douanier", tracking=True)
-    origine                        = fields.Char(string="Origine", tracking=True)
+    origine                        = fields.Char(string="Origine (Dynacase)", readonly=True)
+    origine_id                     = fields.Many2one('res.country', 'Origine', tracking=True, domain=[])
     maj_cde                        = fields.Boolean('Mise à jour des commandes', tracking=True)
     productivite                   = fields.Boolean('Productivité annuelle', tracking=True)
     evolution_tarif                = fields.Selection(_EVOLUTION, "Evolution tarif", tracking=True)
 
-    code_article                   = fields.Char(string="Code article", tracking=True)
-    designation                    = fields.Char(string="Désignation", tracking=True)
+    article_id                     = fields.Many2one('is.article', 'Article', tracking=True)
+    #code_article                   = fields.Char(string="Code article", tracking=True)
+    #designation                    = fields.Char(string="Désignation", tracking=True)
+
+
     unite_tarif                    = fields.Selection(_UNITE, "Unité tarif", tracking=True)
     unite_tarif_autre              = fields.Char(string="Unité tarif (autre)", tracking=True)
     conditionnement                = fields.Char(string="Conditionnement", tracking=True)
@@ -60,9 +64,12 @@ class is_demande_modif_tarif_fournisseur(models.Model):
 
     delai_appro                    = fields.Integer(string="Délai d'approvisionnement (en semaines)", tracking=True)
     modif_article                  = fields.Boolean("Modification fiche article", tracking=True)
-    code_article_desactiver        = fields.Char(string="Code Article à désactiver", tracking=True) 
-    designation_article_desactiver = fields.Char(string="Désignation article désactivé", tracking=True) 
-    code_fournisseur_desactiver_id = fields.Many2one('res.partner', 'Code fournisseur', tracking=True)
+
+    article_desactiver_id          = fields.Many2one('is.article', 'Article à désactiver', tracking=True)
+    # code_article_desactiver        = fields.Char(string="Code Article à désactiver", tracking=True) 
+    # designation_article_desactiver = fields.Char(string="Désignation article désactivé", tracking=True) 
+
+    code_fournisseur_desactiver_id = fields.Many2one('res.partner', 'Code fournisseur', tracking=True, domain=[("is_company","=",True), ("supplier","=",True)])
     commentaire                    = fields.Char(string="Commentaires", tracking=True) 
 
     piece_jointe_ids               = fields.Many2many("ir.attachment", "is_demande_modif_tarif_fournisseur_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")

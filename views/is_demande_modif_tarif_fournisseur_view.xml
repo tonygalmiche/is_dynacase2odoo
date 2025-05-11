@@ -58,14 +58,14 @@
                             <field name="type_commande"          attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="gestionnaire_id"        attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="code_douanier"          attrs="{'readonly': [('state','!=','brouillon')]}"/>
-                            <field name="origine"                attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                            <field name="origine"                attrs="{'invisible': [('origine','=',False)]}"/>
+                            <field name="origine_id"             attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="maj_cde"                attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="productivite"           attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="evolution_tarif"        attrs="{'readonly': [('state','!=','brouillon')]}"/>
                         </group>
                         <group string="Tarif">
-                            <field name="code_article"           attrs="{'readonly': [('state','!=','brouillon')]}"/>
-                            <field name="designation"            attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                            <field name="article_id"             attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="unite_tarif"            attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="unite_tarif_autre"      attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="conditionnement"        attrs="{'readonly': [('state','!=','brouillon')]}"/>
@@ -84,8 +84,7 @@
                             <field name="modif_article"                  attrs="{'readonly': [('state','!=','brouillon')]}"/>
                         </group>
                         <group string="Tarif à désactiver">
-                            <field name="code_article_desactiver"        attrs="{'readonly': [('state','!=','brouillon')]}"/>
-                            <field name="designation_article_desactiver" attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                            <field name="article_desactiver_id"          attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="code_fournisseur_desactiver_id" attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="commentaire"                    attrs="{'readonly': [('state','!=','brouillon')]}"/>
                         </group>
@@ -120,19 +119,18 @@
                     <field name="gestionnaire_id"                optional="hide"/>
                     <field name="code_douanier"                  optional="hide"/>
                     <field name="origine"                        optional="hide"/>
+                    <field name="origine_id"                     optional="hide"/>
                     <field name="maj_cde"                        optional="hide"/>
                     <field name="productivite"                   optional="hide"/>
                     <field name="evolution_tarif"                optional="hide"/>
-                    <field name="code_article"                   optional="hide"/>
-                    <field name="designation"                    optional="hide"/>
+                    <field name="article_id"                     optional="hide"/>
                     <field name="unite_tarif"                    optional="hide"/>
                     <field name="unite_tarif_autre"              optional="hide"/>
                     <field name="conditionnement"                optional="hide"/>
                     <field name="lot_approvisionnement"          optional="hide"/>
                     <field name="delai_appro"                    optional="hide"/>
                     <field name="modif_article"                  optional="hide"/>
-                    <field name="code_article_desactiver"        optional="hide"/>
-                    <field name="designation_article_desactiver" optional="hide"/>
+                    <field name="article_desactiver_id"          optional="hide"/>
                     <field name="code_fournisseur_desactiver_id" optional="hide" widget="many2one_clickable"/>
                     <field name="commentaire"                    optional="hide"/>
                     <field name="create_date"                    optional="hide" string="Créé le"/>
@@ -173,19 +171,18 @@
                     <field name="gestionnaire_id"                />
                     <field name="code_douanier"                  />
                     <field name="origine"                        />
+                    <field name="origine_id"                     />
                     <field name="maj_cde"                        />
                     <field name="productivite"                   />
                     <field name="evolution_tarif"                />
-                    <field name="code_article"                   />
-                    <field name="designation"                    />
+                    <field name="article_id"                     />
                     <field name="unite_tarif"                    />
                     <field name="unite_tarif_autre"              />
                     <field name="conditionnement"                />
                     <field name="lot_approvisionnement"          />
                     <field name="delai_appro"                    />
                     <field name="modif_article"                  />
-                    <field name="code_article_desactiver"        />
-                    <field name="designation_article_desactiver" />
+                    <field name="article_desactiver_id"        />
                     <field name="code_fournisseur_desactiver_id" />
                     <field name="commentaire"                    />
                 </search>
