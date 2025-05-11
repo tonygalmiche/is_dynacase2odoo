@@ -49,7 +49,7 @@ class is_demande_modif_tarif_fournisseur(models.Model):
     responsable_action_id          = fields.Many2one("res.users", "Responsable de l'action", tracking=True, required=True)
     motif                          = fields.Text(string="Motif", tracking=True, required=True)
     date_application               = fields.Date("Date d'application", tracking=True)
-    type_commande                  = fields.Selection(_TYPE_COMMANDE_TARIF, "Type de commande", tracking=True)
+  #  type_commande                  = fields.Selection(_TYPE_COMMANDE_TARIF, "Type de commande", tracking=True)
     gestionnaire                   = fields.Selection(_GESTIONNAIRE, "Gestionnaire", tracking=True)
     code_douanier                  = fields.Char(string="Code douanier", tracking=True)
     origine                        = fields.Char(string="Origine", tracking=True)
