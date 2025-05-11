@@ -106,12 +106,15 @@ class is_inv_achat_moule(models.Model):
     @api.depends('num_cde_id')
     def _compute_cde(self):
         for obj in self:
+            taux_devise =  obj.num_cde_id.taux_devise or 1
+            if taux_devise==0:
+                taux_devise=1
             obj.num_cde          = obj.num_cde_id.num_cde
             obj.fournisseurid    = obj.num_cde_id.fournisseur_id.id
             obj.code_fournisseur = obj.num_cde_id.code_fournisseur
             obj.date_cde         = obj.num_cde_id.date_cde
             obj.objet_commande   = obj.num_cde_id.description
-            obj.prix_commande    = obj.num_cde_id.total
+            obj.prix_commande    = obj.num_cde_id.total/taux_devise
 
 
     def name_get(self):
@@ -148,48 +151,3 @@ class is_inv_achat_moule_po(models.Model):
     description      = fields.Text(string="Description")
     total            = fields.Float(string="Total")
 
-
-    # //** Recherche dans Odoo ***************************************************
-    # $Socs=array(1,4);
-    # foreach($Socs as $Soc) {
-    #     $dbname="dy-odoo16-".$Soc;
-    #     $cnx = pg_connect("host=127.0.0.1 port=5432 dbname=$dbname user=odoo2dynacase password=RY04JU34");
-    #     $SQL="
-    #         select 
-    #             po.name           numcde,
-    #             rp.is_code        code_fournisseur,
-    #             rc.name           devise,
-    #             max(pol.name)     description,
-    #             sum(pol.product_qty*pol.price_unit) total
-    #         from purchase_order po inner join purchase_order_line pol on pol.order_id=po.id
-    #                                inner join res_currency         rc on po.currency_id=rc.id
-    #                                inner join res_partner          rp on po.partner_id=rp.id 
-    #         where po.id>0
-    #     ";
-    #     if ($Cde<>'')   $SQL="$SQL and po.name like '%$Cde%' ";
-    #     $SQL="$SQL group by po.name,rp.is_code,rc.name order by po.name limit 20 ";
-    #     $result = pg_query($cnx, $SQL);
-    #     while($row = pg_fetch_object($result)) {
-    #         $taux=1;
-    #         if ($row->devise!='EUR') {
-    #             $SQL="
-    #                 select rcr.id,rcr.rate,rc.name 
-    #                 from res_currency_rate rcr inner join res_currency rc on rcr.currency_id=rc.id 
-    #                 where rc.name='USD' 
-    #                 order by rcr.id desc limit 1
-    #             ";
-    #             $result2 = pg_query($cnx, $SQL);
-    #             while($row2 = pg_fetch_object($result2)) {
-    #                 $taux=$row2->rate;
-    #             }
-    #         }
-    #         $tab[]=array(
-    #             $row->numcde." : ".$row->devise,
-    #             round($row->total/$taux,2),
-    #             $row->code_fournisseur,
-    #             $row->numcde,
-    #             $row->description,
-    #         );
-    #     }
-    # }
-    # //**************************************************************************
