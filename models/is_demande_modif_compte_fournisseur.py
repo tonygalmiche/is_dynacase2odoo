@@ -19,7 +19,7 @@ class is_demande_modif_compte_fournisseur(models.Model):
     societe_ids               = fields.Many2many('is.database','is_demande_modif_compte_fournisseur_database_rel','demande_modif_compte_fournisseur_id','database_id', string="Société", tracking=True)
     fournisseur_id            = fields.Many2one('res.partner', 'Nom du fournisseur', tracking=True, domain=[("is_company","=",True), ("supplier","=",True)])
     fournisseur_autre         = fields.Char(string="Nom du fournisseur (Autre pour création)", tracking=True)
-    code_fournisseur          = fields.Integer("Code fournisseur", tracking=True, compute="_compute_fournisseur", readonly=True, store=True)
+    code_fournisseur          = fields.Char("Code fournisseur", tracking=True, compute="_compute_fournisseur", readonly=True, store=True)
     code_fournisseur_creation = fields.Char(string="Code fournisseur (si création)", tracking=True)
     date_creation             = fields.Date("Date de création de la demande", tracking=True, default=lambda *a: fields.datetime.now())
     createur_id               = fields.Many2one('res.users', "Créateur de la demande", tracking=True, default=lambda self: self.env.uid)
