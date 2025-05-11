@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="is_inv_achat_moule_template">
+            <t t-set="company" t-value="res_company"/>
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <h2>Investissement achat moule</h2>
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th><strong>Moule</strong></th>
+                                <th><strong>Projet</strong></th>
+                                <th><strong>Année</strong></th>
+                                <th><strong>Code imputation</strong></th>
+                                <th><strong>Désignation</strong></th>
+                                <th class="text-right"><strong>Montant vendu</strong></th>
+                                <th><strong>Date commande</strong></th>
+                                <th><strong>N°commande</strong></th>
+                                <th><strong>Objet de la commande</strong></th>
+                                <th><strong>Fournisseur</strong></th>
+                                <th class="text-right"><strong>Montant commande</strong></th>
+                                <th class="text-right"><strong>Montant facture</strong></th>
+                                <th><strong>Date dernière facture</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="docs" t-as="o">
+                                <td><span t-field="o.num_mouleid"/> </td>
+                                <td><span t-field="o.projetid"/> </td>
+                                <td><span t-field="o.annee_enregistre"/> </td>
+                                <td><span t-field="o.code_imputation"/> </td>
+                                <td style="font-size:8pt"><span t-field="o.nature"/> </td>
+                                <td class="text-right"><span t-field="o.montant_vendu"/> </td>
+                                <td><span t-field="o.date_cde"/> </td>
+                                <td><span t-field="o.num_cde"/> </td>
+                                <td style="font-size:8pt"><span t-field="o.objet_commande"/> </td>
+                                <td><span t-field="o.fournisseurid"/> </td>
+                                <td class="text-right"><span t-field="o.prix_commande"/> </td>
+                                <td class="text-right"><span t-field="o.montant_facture"/> </td>
+                                <td><span t-field="o.date_derniere_facture"/> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </template>
+        <record id="is_inv_achat_moule_report" model="ir.actions.report">
+            <field name="name">Investissement achat moule</field>
+            <field name="model">is.inv.achat.moule</field>
+            <field name="binding_model_id" ref="model_is_inv_achat_moule"/>
+            <field name="paperformat_id" ref="is_plastigray16.landscape_paperformat"/>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">is_dynacase2odoo.is_inv_achat_moule_template</field>
+            <field name="report_file">is_dynacase2odoo.is_inv_achat_moule_template</field>
+        </record>
+    </data>
+</odoo>

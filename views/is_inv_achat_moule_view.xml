@@ -130,6 +130,9 @@
                     <field name="num_mouleid"/>
                     <field name="clientid"/>
                     <field name="projetid"/>
+                    <filter string="2024" name="2024" domain="[('annee_enregistre','=','2024')]"/>
+                    <filter string="2025" name="2025" domain="[('annee_enregistre','=','2025')]"/>
+                    <filter string="2026" name="2026" domain="[('annee_enregistre','=','2026')]"/>
                 </search>
             </field>
         </record>
