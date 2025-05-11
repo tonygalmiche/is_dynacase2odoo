@@ -9,11 +9,11 @@ _TARIF = ([
     ('creation', 'Création'),
     ('modification', 'Modification'),
 ])
-_TYPE_COMMANDE = ([
-     ('commande ouverte', 'Commande ouverte'),
-     ('commande ferme uniquement', 'Commande ferme uniquement'),
-     ('commande ferme avec horizon', 'Commande ferme avec horizon'),
-    ])
+_TYPE_COMMANDE_TARIF = ([
+     ('commande_ouverte'           , 'Commande ouverte'),
+     ('commande_ferme_uniquement'  , 'Commande ferme uniquement'),
+     ('commande_ferme_avec_horizon', 'Commande ferme avec horizon'),
+])
 _GESTIONNAIRE = ([
      ('02', '2 - Matières/Composants série'),
      ('09', '09 - Matières/Composants fournis par le client'),
@@ -43,13 +43,13 @@ class is_demande_modif_tarif_fournisseur(models.Model):
     num_ordre                      = fields.Integer(string="Numéro d'ordre de la demande", tracking=True)
     societe_ids                    = fields.Many2many('is.database','is_demande_modif_tarif_fournisseur_database_rel','demande_modif_tarif_fournisseur_id','database_id', string="Société", tracking=True)
     type_tarif                     = fields.Selection(_TARIF, "Type tarif", default=_TARIF[0][0], required=True, tracking=True)
-    fournisseur_id                 = fields.Many2one('res.partner', 'Nom du fournisseur', tracking=True)
+    fournisseur_id                 = fields.Many2one('res.partner', 'Nom du fournisseur', tracking=True, domain=[("is_company","=",True), ("supplier","=",True)])
     date_creation                  = fields.Date("Date de création de la demande", tracking=True, default=lambda *a: fields.datetime.now())
     createur_id                    = fields.Many2one('res.users', "Créateur de la demande", tracking=True, default=lambda self: self.env.uid)
     responsable_action_id          = fields.Many2one("res.users", "Responsable de l'action", tracking=True, required=True)
     motif                          = fields.Text(string="Motif", tracking=True, required=True)
     date_application               = fields.Date("Date d'application", tracking=True)
-    type_commande                  = fields.Selection(_TYPE_COMMANDE, "Type de commande", tracking=True)
+    type_commande                  = fields.Selection(_TYPE_COMMANDE_TARIF, "Type de commande", tracking=True)
     gestionnaire                   = fields.Selection(_GESTIONNAIRE, "Gestionnaire", tracking=True)
     code_douanier                  = fields.Char(string="Code douanier", tracking=True)
     origine                        = fields.Char(string="Origine", tracking=True)
