@@ -17,7 +17,7 @@ class is_demande_modif_compte_fournisseur(models.Model):
     titre                     = fields.Char(string="Titre du document", tracking=True, compute='_compute_title', readonly=True, store=True)
     num_ordre                 = fields.Integer(string="Numéro d'ordre de la demande", tracking=True)
     societe_ids               = fields.Many2many('is.database','is_demande_modif_compte_fournisseur_database_rel','demande_modif_compte_fournisseur_id','database_id', string="Société", tracking=True)
-    fournisseur_id            = fields.Many2one('res.partner', 'Nom du fournisseur', tracking=True)
+    fournisseur_id            = fields.Many2one('res.partner', 'Nom du fournisseur', tracking=True, domain=[("is_company","=",True), ("supplier","=",True)])
     fournisseur_autre         = fields.Char(string="Nom du fournisseur (Autre pour création)", tracking=True)
     code_fournisseur          = fields.Integer("Code fournisseur", tracking=True, compute="_compute_fournisseur", readonly=True, store=True)
     code_fournisseur_creation = fields.Char(string="Code fournisseur (si création)", tracking=True)
