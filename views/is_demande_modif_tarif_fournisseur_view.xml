@@ -56,7 +56,7 @@
                             <field name="motif"                  attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="date_application"       attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="type_commande"          attrs="{'readonly': [('state','!=','brouillon')]}"/>
-                            <field name="gestionnaire"           attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                            <field name="gestionnaire_id"        attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="code_douanier"          attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="origine"                attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="maj_cde"                attrs="{'readonly': [('state','!=','brouillon')]}"/>
@@ -117,7 +117,7 @@
                     <field name="motif"                          optional="hide"/>
                     <field name="date_application"               optional="show"/>
                     <field name="type_commande"                  optional="hide"/>
-                    <field name="gestionnaire"                   optional="hide"/>
+                    <field name="gestionnaire_id"                optional="hide"/>
                     <field name="code_douanier"                  optional="hide"/>
                     <field name="origine"                        optional="hide"/>
                     <field name="maj_cde"                        optional="hide"/>
@@ -140,7 +140,12 @@
                     <field name="write_date"                     optional="hide" string="Modifié le"/>
                     <field name="write_uid"                      optional="hide" string="Modifié par"/>
                     <field name="dynacase_id"                    optional="hide" groups="base.group_system"/>
-                    <field name="state"                          optional="hide"/>
+                    <field 
+                        name="state" optional="show" widget="badge" 
+                        decoration-info="state in ['brouillon']" 
+                        decoration-warning="state in ['diffuse']"
+                        decoration-success="state in ['termine']"
+                    />
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
@@ -165,7 +170,7 @@
                     <field name="motif"                          />
                     <field name="date_application"               />
                     <field name="type_commande"                  />
-                    <field name="gestionnaire"                   />
+                    <field name="gestionnaire_id"                />
                     <field name="code_douanier"                  />
                     <field name="origine"                        />
                     <field name="maj_cde"                        />

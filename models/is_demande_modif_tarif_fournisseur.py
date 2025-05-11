@@ -14,13 +14,13 @@ _TYPE_COMMANDE_TARIF = ([
      ('commande_ferme_uniquement'  , 'Commande ferme uniquement'),
      ('commande_ferme_avec_horizon', 'Commande ferme avec horizon'),
 ])
-_GESTIONNAIRE = ([
-     ('02', '2 - Matières/Composants série'),
-     ('09', '09 - Matières/Composants fournis par le client'),
-     ('16', '16 - Achats en stock dépôt consignation'),
-     ('17', '17 - Achats leviers'),
-     ('18', '18 - MATIERES-COMPOSANTS ACHETES VIA LE SERVICE ACHAT'),
-])
+# _GESTIONNAIRE = ([
+#      ('02', '2 - Matières/Composants série'),
+#      ('09', '09 - Matières/Composants fournis par le client'),
+#      ('16', '16 - Achats en stock dépôt consignation'),
+#      ('17', '17 - Achats leviers'),
+#      ('18', '18 - MATIERES-COMPOSANTS ACHETES VIA LE SERVICE ACHAT'),
+# ])
 _EVOLUTION = ([
      ('hausse', 'Hausse'),
      ('baisse', 'Baisse'),
@@ -37,7 +37,7 @@ class is_demande_modif_tarif_fournisseur(models.Model):
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description="Demande de création ou de modification d'un tarif Fournisseur"
     _rec_name = "titre"
-    _order='num_ordre desc'
+    _order='id desc'
 
     titre                          = fields.Char(string="Titre du document", tracking=True, compute='_compute_title', readonly=True, store=True)
     num_ordre                      = fields.Integer(string="Numéro d'ordre de la demande", tracking=True)
@@ -50,7 +50,8 @@ class is_demande_modif_tarif_fournisseur(models.Model):
     motif                          = fields.Text(string="Motif", tracking=True, required=True)
     date_application               = fields.Date("Date d'application", tracking=True)
     type_commande                  = fields.Selection(_TYPE_COMMANDE_TARIF, "Type de commande", tracking=True)
-    gestionnaire                   = fields.Selection(_GESTIONNAIRE, "Gestionnaire", tracking=True)
+    #gestionnaire                   = fields.Selection(_GESTIONNAIRE, "Gestionnaire", tracking=True)
+    gestionnaire_id                = fields.Many2one('is.gestionnaire', 'Gestionnaire', tracking=True)
     code_douanier                  = fields.Char(string="Code douanier", tracking=True)
     origine                        = fields.Char(string="Origine", tracking=True)
     maj_cde                        = fields.Boolean('Mise à jour des commandes', tracking=True)
