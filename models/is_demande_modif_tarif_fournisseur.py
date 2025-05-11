@@ -48,11 +48,11 @@ class is_demande_modif_tarif_fournisseur(models.Model):
     origine                        = fields.Char(string="Origine", tracking=True)
     maj_cde                        = fields.Boolean('Mise à jour des commandes', tracking=True)
     productivite                   = fields.Boolean('Productivité annuelle', tracking=True)
-    #evolution_tarif                = fields.Selection(_EVOLUTION, "Evolution tarif", tracking=True)
+    evolution_tarif                = fields.Selection(_EVOLUTION, "Evolution tarif", tracking=True)
 
     code_article                   = fields.Char(string="Code article", tracking=True)
     designation                    = fields.Char(string="Désignation", tracking=True)
-    #unite_tarif                    = fields.Selection(_UNITE, "Unité tarif", tracking=True)
+    unite_tarif                    = fields.Selection(_UNITE, "Unité tarif", tracking=True)
     unite_tarif_autre              = fields.Char(string="Unité tarif (autre)", tracking=True)
     conditionnement                = fields.Char(string="Conditionnement", tracking=True)
     lot_approvisionnement          = fields.Integer(string="Lot d'approvisionnement minimum", tracking=True)

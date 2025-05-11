@@ -61,12 +61,12 @@
                             <field name="origine"                attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="maj_cde"                attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="productivite"           attrs="{'readonly': [('state','!=','brouillon')]}"/>
-                            <!-- <field name="evolution_tarif"        attrs="{'readonly': [('state','!=','brouillon')]}"/> -->
+                            <field name="evolution_tarif"        attrs="{'readonly': [('state','!=','brouillon')]}"/>
                         </group>
                         <group string="Tarif">
                             <field name="code_article"           attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="designation"            attrs="{'readonly': [('state','!=','brouillon')]}"/>
-                            <!-- <field name="unite_tarif"            attrs="{'readonly': [('state','!=','brouillon')]}"/> -->
+                            <field name="unite_tarif"            attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="unite_tarif_autre"      attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="conditionnement"        attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="lot_approvisionnement"  attrs="{'readonly': [('state','!=','brouillon')]}"/>
@@ -122,10 +122,10 @@
                     <field name="origine"                        optional="hide"/>
                     <field name="maj_cde"                        optional="hide"/>
                     <field name="productivite"                   optional="hide"/>
-                    <!-- <field name="evolution_tarif"                optional="hide"/> -->
+                    <field name="evolution_tarif"                optional="hide"/>
                     <field name="code_article"                   optional="hide"/>
                     <field name="designation"                    optional="hide"/>
-                    <!-- <field name="unite_tarif"                    optional="hide"/> -->
+                    <field name="unite_tarif"                    optional="hide"/>
                     <field name="unite_tarif_autre"              optional="hide"/>
                     <field name="conditionnement"                optional="hide"/>
                     <field name="lot_approvisionnement"          optional="hide"/>
@@ -175,10 +175,10 @@
                     <field name="origine"                        />
                     <field name="maj_cde"                        />
                     <field name="productivite"                   />
-                    <!-- <field name="evolution_tarif"                /> -->
+                    <field name="evolution_tarif"                />
                     <field name="code_article"                   />
                     <field name="designation"                    />
-                    <!-- <field name="unite_tarif"                    /> -->
+                    <field name="unite_tarif"                    />
                     <field name="unite_tarif_autre"              />
                     <field name="conditionnement"                />
                     <field name="lot_approvisionnement"          />
