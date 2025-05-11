@@ -55,7 +55,7 @@
                             <field name="responsable_action_id"  attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="motif"                  attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="date_application"       attrs="{'readonly': [('state','!=','brouillon')]}"/>
-                            <!-- <field name="type_commande"          attrs="{'readonly': [('state','!=','brouillon')]}"/> -->
+                            <field name="type_commande"          attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="gestionnaire"           attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="code_douanier"          attrs="{'readonly': [('state','!=','brouillon')]}"/>
                             <field name="origine"                attrs="{'readonly': [('state','!=','brouillon')]}"/>
@@ -116,7 +116,7 @@
                     <field name="responsable_action_id"          optional="show" widget="many2one_clickable"/>
                     <field name="motif"                          optional="hide"/>
                     <field name="date_application"               optional="show"/>
-                    <!-- <field name="type_commande"                  optional="hide"/> -->
+                    <field name="type_commande"                  optional="hide"/>
                     <field name="gestionnaire"                   optional="hide"/>
                     <field name="code_douanier"                  optional="hide"/>
                     <field name="origine"                        optional="hide"/>
@@ -164,7 +164,7 @@
                     <field name="responsable_action_id"          />
                     <field name="motif"                          />
                     <field name="date_application"               />
-                    <!-- <field name="type_commande"                  /> -->
+                    <field name="type_commande"                  />
                     <field name="gestionnaire"                   />
                     <field name="code_douanier"                  />
                     <field name="origine"                        />
