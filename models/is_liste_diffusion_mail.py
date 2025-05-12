@@ -31,10 +31,11 @@ class is_liste_diffusion_mail(models.Model):
 
     def get_users_ids(self,users=False):
         ids=[]
-        for user in users:
-            if user.email:
-                if user.id not in ids:
-                    ids.append(user.id)
+        if users:
+            for user in users:
+                if user.email:
+                    if user.id not in ids:
+                        ids.append(user.id)
         return ids
 
 
