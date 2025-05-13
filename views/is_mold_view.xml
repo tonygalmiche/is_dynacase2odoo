@@ -65,7 +65,7 @@
                             </group>    
                         </group>
                     </page>
-                    <page string="Exportation moule">
+                    <page string="Exportation/Importation moule">
                         <group>
                             <group string="Exportation moule">
                                 <field name="date_export"/>
@@ -74,20 +74,16 @@
                                 <field name="valeur_declaree_export"/>
                                 <field name="commentaire_export"/>
                             </group>
-                            <group string="Pièces jointes">
+                            <group string="Pièces jointes exportation">
                                 <field name="pj_export_ids"   widget="many2many_binary"/>
                             </group>
-                        </group>
-                    </page>
-                    <page string="Importation moule">
-                        <group>
                             <group string="Importation moule">
                                 <field name="date_import"/>
                                 <field name="type_import"/>
                                 <field name="date_taxation_import"/>
                                 <field name="commentaire_import"/>
                             </group>
-                            <group string="Pièces jointes">
+                            <group string="Pièces jointes importation">
                                 <field name="pj_import_ids"   widget="many2many_binary"/>
                             </group>
                         </group>

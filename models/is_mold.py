@@ -36,14 +36,14 @@ class is_mold(models.Model):
     type_export            = fields.Selection(TYPE_EXPORT, string="Type d'exportation", tracking=True)
     marche_ce_export       = fields.Boolean(string="Outillage pour marché CE", tracking=True)
     valeur_declaree_export = fields.Float("Valeur déclarée", tracking=True)
-    commentaire_export     = fields.Text("Commentaire", tracking=True)
-    pj_export_ids          = fields.Many2many("ir.attachment", "is_mold_pj_export_rel", "piece_jointe", "att_id", string="Pièce jointe")
+    commentaire_export     = fields.Text("Commentaire exportation", tracking=True)
+    pj_export_ids          = fields.Many2many("ir.attachment", "is_mold_pj_export_rel", "piece_jointe", "att_id", string="Pièce jointe exportation")
 
     date_import            = fields.Date(string="Date d'importation", tracking=True)
     type_import            = fields.Selection(TYPE_IMPORT, string="Type d'importation", tracking=True)
     date_taxation_import   = fields.Date(string="Date taxation moule", tracking=True)
-    commentaire_import     = fields.Text("Commentaire", tracking=True)
-    pj_import_ids          = fields.Many2many("ir.attachment", "is_mold_pj_import_rel", "piece_jointe", "att_id", string="Pièce jointe")
+    commentaire_import     = fields.Text("Commentaire importation", tracking=True)
+    pj_import_ids          = fields.Many2many("ir.attachment", "is_mold_pj_import_rel", "piece_jointe", "att_id", string="Pièce jointe importation")
 
 
     @api.depends('j_actuelle')
