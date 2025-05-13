@@ -111,6 +111,12 @@
                     <field name="create_uid"                optional="hide"/>
                     <field name="write_date"                optional="hide"/>
                     <field name="write_uid"                 optional="hide"/>
+                    <field 
+                        name="state" optional="show" widget="badge" 
+                        decoration-info="state in ['brouillon']" 
+                        decoration-warning="state in ['diffuse']"
+                        decoration-success="state in ['realise']"
+                    />
 
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
