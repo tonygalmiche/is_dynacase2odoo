@@ -20,7 +20,7 @@ class is_prise_avance(models.Model):
     num_moule_id                = fields.Many2one('is.mold', 'Numéro du moule', required=True, tracking=True)
     num_moule_id_ro             = fields.Boolean('num_moule_ro', compute='_compute_ro', readonly=True, store=False)
     active                      = fields.Boolean('Actif', default=True, tracking=True)
-    user_id                     = fields.Many2one('res.users', 'Demandeur', tracking=True, default=lambda self: self.env.uid)
+    user_id                     = fields.Many2one('res.users', 'Demandeur', tracking=True, default=lambda self: self.env.uid, copy=False)
     user_id_ro                  = fields.Boolean('user_id_ro', compute='_compute_ro', readonly=True, store=False)
     user_id_vsb                 = fields.Boolean('user_id_vsb', compute='_compute_vsb', readonly=True, store=False)
     resp_prise_avance_id        = fields.Many2one('res.users', "Responsable de la prise d'avance", tracking=True)
@@ -64,7 +64,7 @@ class is_prise_avance(models.Model):
                 obj.immobilisation_ro = False
                 obj.duree_immobilisation_ro = True
                 obj.pieces_modif_ro = False
-                obj.nb_jours_ro = False
+                obj.duree_immobilisation_ro = False
                 obj.pieces_stck_ro = True
                 obj.date_outillage_ro = True
                 obj.date_retour_outillage_ro = True
