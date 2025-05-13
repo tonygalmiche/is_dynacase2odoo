@@ -127,13 +127,11 @@
                         decoration-warning="solde=='non'"
                         decoration-success="solde=='oui'"
                     />
-                    <field name="dynacase_id" optional="show"/>
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
                         groups="base.group_system"
                     />
-                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
                  </tree>
             </field>
         </record>

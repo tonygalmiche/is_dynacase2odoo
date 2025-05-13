@@ -33,7 +33,7 @@ class is_facture_outillage(models.Model):
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description = "Facture outillage"
     _rec_name    = "designation"
-    _order = "id desc"
+    _order = "create_date desc"
 
     type_dossier              = fields.Selection(_TYPE_DOSSIER             , string="Type"                    , tracking=True, required=True)
     revue_lancement_id        = fields.Many2one("is.revue.lancement"       , string="Revue de lancement"      , tracking=True)
