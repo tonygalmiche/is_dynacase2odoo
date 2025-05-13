@@ -65,6 +65,33 @@
                             </group>    
                         </group>
                     </page>
+                    <page string="Exportation moule">
+                        <group>
+                            <group string="Exportation moule">
+                                <field name="date_export"/>
+                                <field name="type_export"/>
+                                <field name="marche_ce_export"/>
+                                <field name="valeur_declaree_export"/>
+                                <field name="commentaire_export"/>
+                            </group>
+                            <group string="Pièces jointes">
+                                <field name="pj_export_ids"   widget="many2many_binary"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Importation moule">
+                        <group>
+                            <group string="Importation moule">
+                                <field name="date_import"/>
+                                <field name="type_import"/>
+                                <field name="date_taxation_import"/>
+                                <field name="commentaire_import"/>
+                            </group>
+                            <group string="Pièces jointes">
+                                <field name="pj_import_ids"   widget="many2many_binary"/>
+                            </group>
+                        </group>
+                    </page>
                 </xpath>
             </field>
         </record>
@@ -86,6 +113,15 @@
                     <field name="j_actuelle"             optional="show"/>
                     <field name="j_avancement"           optional="show"/>
                     <field name="date_fin_be"            optional="show"/>                            
+                    <field name="date_export"            optional="hide"/>
+                    <field name="type_export"            optional="hide"/>
+                    <field name="marche_ce_export"       optional="hide"/>
+                    <field name="valeur_declaree_export" optional="hide"/>
+                    <field name="commentaire_export"     optional="hide"/>
+                    <field name="date_import"            optional="hide"/>
+                    <field name="type_import"            optional="hide"/>
+                    <field name="date_taxation_import"   optional="hide"/>
+                    <field name="commentaire_import"     optional="hide"/>
                 </field>
                 <field name="is_database_origine_id" position="after">
                     <button 
