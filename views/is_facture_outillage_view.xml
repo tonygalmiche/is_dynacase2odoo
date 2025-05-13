@@ -121,7 +121,7 @@
                     <field name="create_uid"                optional="hide" string="Créé par"/>
                     <field name="write_date"                optional="hide" string="Modifié le"/>
                     <field name="write_uid"                 optional="hide" string="Modifié par"/>
-                    <field name="dynacase_id"               optional="hide" groups="base.group_system"/>
+                    <field name="dynacase_id"               optional="hide"/>
                     <field 
                         name="solde" optional="show" widget="badge" 
                         decoration-warning="solde=='non'"
@@ -130,6 +130,7 @@
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
                     />
                  </tree>
             </field>
