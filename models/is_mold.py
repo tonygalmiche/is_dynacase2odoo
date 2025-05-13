@@ -2,13 +2,19 @@ from odoo import models, fields, api # type: ignore
 from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J, TYPE_DOCUMENT # type: ignore
 
 
-TYPE_EXPORT =[
+TYPE_EXPORT = [
     ("definitif", "Définitif"),
     ("temporaire", "Temporaire"),
 ]
 
 
-TYPE_IMPORT =[
+OUI_NON = [
+    ("oui", "Oui"),
+    ("non", "Non"),
+    ]
+
+
+TYPE_IMPORT = [
     ("retour_definitif", "Retour définitif"),
     ("admission_temporaire_reparation", "Admission temporaire réparation"),
     ("perfectionnement_actifi_reparation", "Perfectionnement actif réparation"),
@@ -34,7 +40,7 @@ class is_mold(models.Model):
 
     date_export            = fields.Date("Date d'exportation", tracking=True)
     type_export            = fields.Selection(TYPE_EXPORT, string="Type d'exportation", tracking=True)
-    marche_ce_export       = fields.Boolean(string="Outillage pour marché CE", tracking=True)
+    marche_ce_export       = fields.Selection(OUI_NON, string="Outillage pour marché CE", tracking=True)
     valeur_declaree_export = fields.Float("Valeur déclarée", tracking=True)
     commentaire_export     = fields.Text("Commentaire exportation", tracking=True)
     pj_export_ids          = fields.Many2many("ir.attachment", "is_mold_pj_export_rel", "piece_jointe", "att_id", string="Pièce jointe exportation")

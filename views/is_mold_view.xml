@@ -138,6 +138,8 @@
                     <field name="is_database_id"/>
                     <field name="j_actuelle"/>
                     <filter string="Moules BE en cours" name="moules_be_en_cours" domain="[('date_fin_be','=',False)]"/>
+                    <filter string="Liste des moules à taxer" name="moules_a_taxer" domain="[('marche_ce_export','=','oui'),('date_taxation_import','=', None)]"/>
+                    <filter string="Liste des moules exportés temporairement" name="moules_exportes_temporairement" domain="[('date_export','!=', None),('type_export','=','temporaire')]"/>
                 </field>
             </field>
         </record>
