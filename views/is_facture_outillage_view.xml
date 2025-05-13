@@ -130,7 +130,6 @@
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                        groups="base.group_system"
                     />
                  </tree>
             </field>
