@@ -38,6 +38,7 @@ class is_inv_achat_moule(models.Model):
     num_erdid          = fields.Many2one("is.erd"                   , string="ERD"               , tracking=True)
     num_dossierid      = fields.Many2one("is.dossier.modif.variante", string="N° de dossier"     , tracking=True)
     num_mouleid        = fields.Many2one("is.mold"                  , string="Moule"             , tracking=True)
+    dossierf_id        = fields.Many2one("is.dossierf"              , string="Dossier F"         , tracking=True)
     nature             = fields.Char(string="Nature DM / Désignation ERD"                        , tracking=True, compute='_compute',store=True, readonly=True)
     clientid           = fields.Many2one("res.partner"              , string="Client"            , tracking=True, compute='_compute',store=True, readonly=True)
     projetid           = fields.Many2one("is.mold.project"          , string="Projet"            , tracking=True, compute='_compute',store=True, readonly=True)

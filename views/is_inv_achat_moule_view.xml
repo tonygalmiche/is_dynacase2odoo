@@ -26,6 +26,7 @@
                                 <field name="num_erdid"/>
                                 <field name="num_dossierid"/>
                                 <field name="num_mouleid"/>
+                                <field name="dossierf_id"/>
                                 <field name="nature"/>
                                 <field name="clientid"/>
                                 <field name="projetid"/>
@@ -68,6 +69,7 @@
                     <field name="num_erdid"               optional="show" widget="many2one_clickable"/>
                     <field name="nature"                  optional="show"/>
                     <field name="num_mouleid"             optional="show" widget="many2one_clickable"/>
+                    <field name="dossierf_id"             optional="show" widget="many2one_clickable"/>
                     <field name="clientid"                optional="show" widget="many2one_clickable"/>
                     <field name="projetid"                optional="show" widget="many2one_clickable"/>
                     <field name="chef_projetid"           optional="hide"/>
@@ -122,14 +124,15 @@
             <field name="model">is.inv.achat.moule</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name="code_imputation"/>
-                    <field name="revue_lancementid"/>
-                    <field name="num_dossierid"/>
-                    <field name="num_erdid"/>
-                    <field name="nature"/>
                     <field name="num_mouleid"/>
-                    <field name="clientid"/>
+                    <field name="dossierf_id"/>
+                    <field name="num_erdid"/>
+                    <field name="num_dossierid"/>
+                    <field name="revue_lancementid"/>
                     <field name="projetid"/>
+                    <field name="clientid"/>
+                    <field name="code_imputation"/>
+                    <field name="nature"/>
                     <filter string="2024" name="2024" domain="[('annee_enregistre','=','2024')]"/>
                     <filter string="2025" name="2025" domain="[('annee_enregistre','=','2025')]"/>
                     <filter string="2026" name="2026" domain="[('annee_enregistre','=','2026')]"/>

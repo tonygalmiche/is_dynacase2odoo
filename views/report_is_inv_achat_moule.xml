@@ -9,7 +9,7 @@
                     <table class="table table-condensed">
                         <thead>
                             <tr>
-                                <th><strong>Moule</strong></th>
+                                <th><strong>Dossier</strong></th>
                                 <th><strong>Projet</strong></th>
                                 <th><strong>Année</strong></th>
                                 <th><strong>Code imputation</strong></th>
@@ -25,8 +25,17 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <t t-set="total_prix_commande" t-value="0"/>
+                            <t t-set="total_montant_facture" t-value="0"/>
                             <tr t-foreach="docs" t-as="o">
-                                <td><span t-field="o.num_mouleid"/> </td>
+                                <t t-set="total_prix_commande"   t-value="total_montant_facture + o.prix_commande"/>
+                                <t t-set="total_montant_facture" t-value="total_montant_facture + o.montant_facture"/>
+                                <td>
+                                    <div t-if="o.num_mouleid"   t-field="o.num_mouleid"/> 
+                                    <div t-if="o.dossierf_id"   t-field="o.dossierf_id"/> 
+                                    <div t-if="o.num_dossierid" t-field="o.num_dossierid"/> 
+                                    <div t-if="o.num_erdid"     t-field="o.num_erdid"/> 
+                                </td>
                                 <td><span t-field="o.projetid"/> </td>
                                 <td><span t-field="o.annee_enregistre"/> </td>
                                 <td><span t-field="o.code_imputation"/> </td>
@@ -39,6 +48,12 @@
                                 <td class="text-right"><span t-field="o.prix_commande"/> </td>
                                 <td class="text-right"><span t-field="o.montant_facture"/> </td>
                                 <td><span t-field="o.date_derniere_facture"/> </td>
+                            </tr>
+                            <tr>
+                                <th colspan="10" class="text-right"><strong>Total : </strong></th>
+                                <th style="white-space: nowrap"><strong><span t-esc='"{:,.2f}".format(total_prix_commande).replace(","," ").replace(".",",")'/></strong></th>
+                                <th style="white-space: nowrap"><strong><span t-esc='"{:,.2f}".format(total_montant_facture).replace(","," ").replace(".",",")'/></strong></th>
+                                <th></th>
                             </tr>
                         </tbody>
                     </table>
