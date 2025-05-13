@@ -62,9 +62,9 @@ class is_prise_avance(models.Model):
                 obj.resp_prise_avance_id_ro = False
                 obj.motif_prise_avance_ro = False
                 obj.immobilisation_ro = False
-                obj.pieces_modif_ro = True
+                obj.pieces_modif_ro = False
                 obj.duree_immobilisation_ro = False
-                obj.nb_jours_ro = False
+                obj.nb_jours_ro = True
                 obj.pieces_stck_ro = True
                 obj.date_outillage_ro = True
                 obj.date_retour_outillage_ro = True
