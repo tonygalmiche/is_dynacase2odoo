@@ -14,6 +14,9 @@ class is_prise_avance(models.Model):
     _rec_name = "num_moule_id"
     _order='num_moule_id'
 
+    vers_brouillon_vsb          = fields.Boolean('vers_brouillon_vsb', compute='_compute_vsb', readonly=True, store=False)
+    vers_diffuse_vsb            = fields.Boolean('vers_diffuse_vsb', compute='_compute_vsb', readonly=True, store=False)
+    vers_realise_vsb            = fields.Boolean('vers_realise_vsb', compute='_compute_vsb', readonly=True, store=False)
     num_moule_id                = fields.Many2one('is.mold', 'Numéro du moule', required=True, tracking=True)
     num_moule_id_ro             = fields.Boolean('num_moule_ro', compute='_compute_ro', readonly=True, store=False)
     active                      = fields.Boolean('Actif', default=True, tracking=True)
@@ -50,39 +53,22 @@ class is_prise_avance(models.Model):
 
     @api.depends("state")
     def _compute_ro(self):
-        is_commerciaux = self.env['res.users'].has_group('is_plastigray16.is_commerciaux_group')
-#        is_chef_projet = self.env['res.users'].has_group('is_plastigray16.is_chef_projet_group')
         for obj in self:
-            is_new = not isinstance(obj.id, int)
-            print('============')
-            if is_new:
-                print(1)
+            is_user = self.env.user == obj.user_id
+            is_resp = self.env.user == obj.resp_prise_avance_id
+            if (is_user or is_resp) and obj.state in 'brouillon':
                 obj.num_moule_id_ro = False
                 obj.user_id_ro = True
                 obj.resp_prise_avance_id_ro = False
                 obj.motif_prise_avance_ro = False
-                obj.immobilisation_ro = True
-                obj.duree_immobilisation_ro = True
-                obj.pieces_modif_ro = True
-                obj.nb_jours_ro = True
-                obj.pieces_stck_ro = True
-                obj.date_outillage_ro = True
-                obj.date_retour_outillage_ro = True
-            elif is_commerciaux and obj.state in 'brouillon':
-                print(2)
-                obj.num_moule_id_ro = True
-                obj.user_id_ro = True
-                obj.resp_prise_avance_id_ro = True
-                obj.motif_prise_avance_ro = False
                 obj.immobilisation_ro = False
-                obj.duree_immobilisation_ro = False
+                obj.duree_immobilisation_ro = True
                 obj.pieces_modif_ro = False
                 obj.nb_jours_ro = False
                 obj.pieces_stck_ro = True
                 obj.date_outillage_ro = True
                 obj.date_retour_outillage_ro = True
-            elif is_commerciaux and obj.state in 'diffuse':
-                print(3)
+            elif is_resp and obj.state in 'diffuse':
                 obj.num_moule_id_ro = True
                 obj.user_id_ro = True
                 obj.resp_prise_avance_id_ro = True
@@ -95,7 +81,6 @@ class is_prise_avance(models.Model):
                 obj.date_outillage_ro = False
                 obj.date_retour_outillage_ro = False
             else:
-                print(4)
                 obj.num_moule_id_ro = True
                 obj.user_id_ro = True
                 obj.resp_prise_avance_id_ro = True
@@ -110,46 +95,42 @@ class is_prise_avance(models.Model):
 
     @api.depends("state")
     def _compute_vsb(self):
-#        commercial  = self.env['res.users'].has_group('is_plastigray16.is_commerciaux_group')
-#        chef_projet = self.env['res.users'].has_group('is_plastigray16.is_chef_projet_group')
         for obj in self:
-            is_new = not isinstance(obj.id, int)
-            if is_new:
-                print("1a")
+            is_user = self.env.user == obj.user_id
+            is_resp = self.env.user == obj.resp_prise_avance_id
+            if obj.state == 'brouillon':
+                obj.vers_brouillon_vsb = False
+                obj.vers_diffuse_vsb = is_user or is_resp
+                obj.vers_realise_vsb = False
                 obj.user_id_vsb = False
-                obj.immobilisation_vsb = False
-                obj.pieces_modif_vsb = False
+                obj.immobilisation_vsb = True
                 obj.duree_immobilisation_vsb = False
-                obj.nb_jours_vsb = False
-                obj.pieces_stck_vsb = True
-                obj.date_outillage_vsb = True
+                obj.pieces_modif_vsb = True
+                obj.nb_jours_vsb = True
+                obj.pieces_stck_vsb = False
+                obj.date_outillage_vsb = False
                 obj.date_retour_outillage_vsb = False
-            elif obj.state == 'brouillon':
-                obj.user_id_vsb = True
-                obj.immobilisation_vsb = True
-                obj.pieces_modif_vsb = True
-                obj.duree_immobilisation_vsb = True
-                obj.nb_jours_vsb = False
-                obj.pieces_stck_vsb = True
-                obj.date_outillage_vsb = True
-                obj.date_retour_outillage_vsb = True
             elif obj.state == 'diffuse':
-                print("3a", obj.state)
+                obj.vers_brouillon_vsb = is_user or is_resp
+                obj.vers_diffuse_vsb = False
+                obj.vers_realise_vsb = is_resp
                 obj.user_id_vsb = True
                 obj.immobilisation_vsb = True
-                obj.pieces_modif_vsb = True
                 obj.duree_immobilisation_vsb = True
-                obj.nb_jours_vsb = False
+                obj.pieces_modif_vsb = True
+                obj.nb_jours_vsb = True
                 obj.pieces_stck_vsb = True
                 obj.date_outillage_vsb = True
                 obj.date_retour_outillage_vsb = True
             else:
-                print("4a", obj.state)
+                obj.vers_brouillon_vsb = False
+                obj.vers_diffuse_vsb = is_resp
+                obj.vers_realise_vsb = False
                 obj.user_id_vsb = True
                 obj.immobilisation_vsb = True
-                obj.pieces_modif_vsb = True
                 obj.duree_immobilisation_vsb = True
-                obj.nb_jours_vsb = False
+                obj.pieces_modif_vsb = True
+                obj.nb_jours_vsb = True
                 obj.pieces_stck_vsb = True
                 obj.date_outillage_vsb = True
                 obj.date_retour_outillage_vsb = True
