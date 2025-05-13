@@ -22,21 +22,21 @@
                             name="vers_brouillon_action"
                             string="vers Brouillon"
                             type="object"
-                            attrs="{'invisible': [('state', '!=', 'realise')]}" 
+                            attrs="{'invisible': [('state', '!=', 'diffuse')]}" 
                             groups="is_plastigray16.is_chef_projet_group"
                         />
                         <button 
                             name="vers_diffuse_action"
                             string="vers Diffusé"
                             type="object"
-                            attrs="{'invisible': [('state', '=', 'realise')]}" 
+                            attrs="{'invisible': [('state', '=', 'diffuse')]}" 
                             groups="is_plastigray16.is_chef_projet_group"
                         />
                         <button 
                             name="vers_realise_action"
                             string="vers Réalisé"
                             type="object"
-                            attrs="{'invisible': [('state', '!=', 'realise')]}" 
+                            attrs="{'invisible': [('state', '!=', 'diffuse')]}" 
                             groups="is_plastigray16.is_chef_projet_group"
                         />
                        
@@ -46,17 +46,36 @@
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
                         <group>
-                            <field name="num_moule_id"          attrs="{'readonly': [('state','!=','brouillon')]}"/>
-                            <field name="user_id"               attrs="{'readonly': [('state','!=','brouillon')]}"/>
-                            <field name="resp_prise_avance_id"  attrs="{'readonly': [('state','!=','brouillon')]}"/>
-                            <field name="motif_prise_avance"    attrs="{'readonly': [('state','!=','brouillon')]}"/>
-                            <field name="immobilisation"        attrs="{'readonly': [('state','!=','brouillon')]}"/>
-                            <field name="pieces_modif"          attrs="{'readonly': [('state','!=','brouillon')]}"/>
-                            <field name="duree_immobilisation"  attrs="{'readonly': [('state','!=','brouillon')]}"/>
-                            <field name="nb_jours"              attrs="{'readonly': [('state','!=','brouillon')]}"/>
-                            <field name="pieces_stck"           attrs="{'readonly': [('state','!=','brouillon')]}"/>
-                            <field name="date_outillage"        attrs="{'readonly': [('state','!=','brouillon')]}"/>
-                            <field name="date_retour_outillage" attrs="{'readonly': [('state','!=','brouillon')]}"/>
+                            <field name="num_moule_id"              attrs="{'readonly': [('num_moule_id_ro','=',True)]}"/>
+                            <field name="num_moule_id_ro"           invisible="1"/>
+                            <field name="user_id"                   attrs="{'readonly': [('user_id_ro','=',True)], 'invisible': [('user_id_vsb','!=',True)]}"/>
+                            <field name="user_id_ro"                invisible="1"/>
+                            <field name="user_id_vsb"               invisible="1"/>
+                            <field name="resp_prise_avance_id"      attrs="{'readonly': [('resp_prise_avance_id_ro','=',True)]}"/>
+                            <field name="resp_prise_avance_id_ro"   invisible="1"/>
+                            <field name="motif_prise_avance"        attrs="{'readonly': [('motif_prise_avance_ro','=',True)]}"/>
+                            <field name="motif_prise_avance_ro"     invisible="1"/>
+                            <field name="immobilisation"            attrs="{'readonly': [('immobilisation_ro','=',True)], 'invisible': [('immobilisation_vsb','!=',True)]}"/>
+                            <field name="immobilisation_ro"         invisible="1"/>
+                            <field name="immobilisation_vsb"        invisible="1"/>
+                            <field name="pieces_modif"              attrs="{'readonly': [('pieces_modif_ro','=',True)], 'invisible': [('pieces_modif_vsb','!=',True)]}"/>
+                            <field name="pieces_modif_ro"           invisible="1"/>
+                            <field name="pieces_modif_vsb"          invisible="1"/>
+                            <field name="duree_immobilisation"      attrs="{'readonly': [('duree_immobilisation_ro','=',True)], 'invisible': [('duree_immobilisation_vsb','!=',True)]}"/>
+                            <field name="duree_immobilisation_ro"   invisible="1"/>
+                            <field name="duree_immobilisation_vsb"  invisible="1"/>
+                            <field name="nb_jours"                  attrs="{'readonly': [('nb_jours_ro','=',True)], 'invisible': [('nb_jours_vsb','!=',True)]}"/>
+                            <field name="nb_jours_ro"               invisible="1"/>
+                            <field name="nb_jours_vsb"              invisible="1"/>
+                            <field name="pieces_stck"               attrs="{'readonly': [('pieces_stck_ro','=',True)], 'invisible': [('pieces_stck_vsb','!=',True)]}"/>
+                            <field name="pieces_stck_ro"            invisible="1"/>
+                            <field name="pieces_stck_vsb"           invisible="1"/>
+                            <field name="date_outillage"            attrs="{'readonly': [('date_outillage_ro','=',True)], 'invisible': [('date_outillage_vsb','!=',True)]}"/>
+                            <field name="date_outillage_ro"         invisible="1"/>
+                            <field name="date_outillage_vsb"        invisible="1"/>
+                            <field name="date_retour_outillage"     attrs="{'readonly': [('date_retour_outillage_ro','=',True)], 'invisible': [('date_retour_outillage_vsb','!=',True)]}"/>
+                            <field name="date_retour_outillage_ro"  invisible="1"/>
+                            <field name="date_retour_outillage_vsb" invisible="1"/>
                         </group>
                     </sheet>
                    <div class="oe_chatter">
