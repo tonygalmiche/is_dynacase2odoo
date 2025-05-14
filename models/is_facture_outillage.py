@@ -158,7 +158,7 @@ class is_facture_outillage_ligne(models.Model):
                     raise ValidationError("Commande externe '%s' non trouvée !"%name)
                 for cde in cdes:
                     commande = cde.commande.replace("#type_facture", obj.type_facture)
-                    commande = cde.commande.replace("#num_facture" , obj.num_facture)
+                    commande = commande.replace("#num_facture" , obj.num_facture)
                     p = Popen(commande, shell=True, stdout=PIPE, stderr=PIPE)
                     stdout, stderr = p.communicate()
                     _logger.info("%s => %s"%(commande,stdout))
