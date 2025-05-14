@@ -23,7 +23,7 @@ class is_prise_avance(models.Model):
     user_id                     = fields.Many2one('res.users', 'Demandeur', tracking=True, default=lambda self: self.env.uid, copy=False)
     user_id_ro                  = fields.Boolean('user_id_ro', compute='_compute_ro', readonly=True, store=False)
     user_id_vsb                 = fields.Boolean('user_id_vsb', compute='_compute_vsb', readonly=True, store=False)
-    resp_prise_avance_id        = fields.Many2one('res.users', "Responsable de la prise d'avance", tracking=True)
+    resp_prise_avance_id        = fields.Many2one('res.users', "Responsable de la prise d'avance", help="Membres du groupe <Chef d'équipe et assistante logistique>", domain=lambda self: [( "groups_id", "=", self.env.ref("is_plastigray16.is_chef_equipe_group").id)], tracking=True)
     resp_prise_avance_id_ro     = fields.Boolean('resp_prise_avance_id_ro', compute="_compute_ro", readonly=True, store=False)
     motif_prise_avance          = fields.Selection([('m', 'Modification outillage'), ('t', 'Transfert outillage')], "Motif de la prise d'avance", tracking=True)
     motif_prise_avance_ro       = fields.Boolean('motif_prise_avance_ro', compute="_compute_ro", readonly=True, store=False)
@@ -110,7 +110,7 @@ class is_prise_avance(models.Model):
                 obj.immobilisation_ro = False
                 obj.pieces_modif_ro = False
                 obj.duree_immobilisation_ro = False
-                obj.nb_jours_ro = True
+                obj.nb_jours_ro = False
                 obj.pieces_stck_ro = True
                 obj.date_outillage_ro = True
                 obj.date_retour_outillage_ro = True
@@ -122,7 +122,7 @@ class is_prise_avance(models.Model):
                 obj.immobilisation_ro = True
                 obj.duree_immobilisation_ro = True
                 obj.pieces_modif_ro = True
-                obj.nb_jours_ro = True
+                obj.nb_jours_ro = False
                 obj.pieces_stck_ro = False
                 obj.date_outillage_ro = False
                 obj.date_retour_outillage_ro = False
@@ -144,15 +144,17 @@ class is_prise_avance(models.Model):
         for obj in self:
             is_user = self.env.user == obj.user_id
             is_resp = self.env.user == obj.resp_prise_avance_id
+
+            obj.duree_immobilisation_vsb = True
+            obj.immobilisation_vsb       = True
+            obj.pieces_modif_vsb         = True
+            obj.nb_jours_vsb             = True
+
             if obj.state == 'brouillon':
                 obj.vers_brouillon_vsb = False
                 obj.vers_diffuse_vsb = is_user or is_resp
                 obj.vers_realise_vsb = False
                 obj.user_id_vsb = False
-                obj.immobilisation_vsb = True
-                obj.duree_immobilisation_vsb = False
-                obj.pieces_modif_vsb = True
-                obj.nb_jours_vsb = True
                 obj.pieces_stck_vsb = False
                 obj.date_outillage_vsb = False
                 obj.date_retour_outillage_vsb = False
@@ -161,10 +163,6 @@ class is_prise_avance(models.Model):
                 obj.vers_diffuse_vsb = False
                 obj.vers_realise_vsb = is_resp
                 obj.user_id_vsb = True
-                obj.immobilisation_vsb = True
-                obj.duree_immobilisation_vsb = True
-                obj.pieces_modif_vsb = True
-                obj.nb_jours_vsb = True
                 obj.pieces_stck_vsb = True
                 obj.date_outillage_vsb = True
                 obj.date_retour_outillage_vsb = True
@@ -173,10 +171,6 @@ class is_prise_avance(models.Model):
                 obj.vers_diffuse_vsb = is_resp
                 obj.vers_realise_vsb = False
                 obj.user_id_vsb = True
-                obj.immobilisation_vsb = True
-                obj.duree_immobilisation_vsb = True
-                obj.pieces_modif_vsb = True
-                obj.nb_jours_vsb = True
                 obj.pieces_stck_vsb = True
                 obj.date_outillage_vsb = True
                 obj.date_retour_outillage_vsb = True
