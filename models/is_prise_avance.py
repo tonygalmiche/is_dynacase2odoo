@@ -144,25 +144,23 @@ class is_prise_avance(models.Model):
         for obj in self:
             is_user = self.env.user == obj.user_id
             is_resp = self.env.user == obj.resp_prise_avance_id
-
             obj.duree_immobilisation_vsb = True
             obj.immobilisation_vsb       = True
             obj.pieces_modif_vsb         = True
             obj.nb_jours_vsb             = True
-
+            obj.user_id_vsb              = True
             if obj.state == 'brouillon':
                 obj.vers_brouillon_vsb = False
                 obj.vers_diffuse_vsb = is_user or is_resp
                 obj.vers_realise_vsb = False
-                obj.user_id_vsb = False
                 obj.pieces_stck_vsb = False
                 obj.date_outillage_vsb = False
                 obj.date_retour_outillage_vsb = False
+                obj.nb_jours_vsb = False
             elif obj.state == 'diffuse':
                 obj.vers_brouillon_vsb = is_user or is_resp
                 obj.vers_diffuse_vsb = False
                 obj.vers_realise_vsb = is_resp
-                obj.user_id_vsb = True
                 obj.pieces_stck_vsb = True
                 obj.date_outillage_vsb = True
                 obj.date_retour_outillage_vsb = True
@@ -170,7 +168,6 @@ class is_prise_avance(models.Model):
                 obj.vers_brouillon_vsb = False
                 obj.vers_diffuse_vsb = is_resp
                 obj.vers_realise_vsb = False
-                obj.user_id_vsb = True
                 obj.pieces_stck_vsb = True
                 obj.date_outillage_vsb = True
                 obj.date_retour_outillage_vsb = True
