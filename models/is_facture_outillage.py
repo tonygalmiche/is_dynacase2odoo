@@ -135,21 +135,10 @@ class is_facture_outillage_ligne(models.Model):
     commentaire       = fields.Text("Commentaire")
    
 
-
-
-    # @api.onchange('num_facture')
-    # def onchange_etat(self):
-    #     for obj in self:
-    #         res = obj.get_values()
-    #         print(obj,obj.num_facture)
-          
-
-
     @api.onchange('num_facture')
     def actualiser_ligne_action(self):
         for obj in self:
             res = obj.get_values()
-            print(obj.num_facture,res)
             if len(res)==6:
                 obj.montant_ht      = res[0]
                 obj.montant_ttc     = res[1]
@@ -168,15 +157,13 @@ class is_facture_outillage_ligne(models.Model):
                 if len(cdes)==0:
                     raise ValidationError("Commande externe '%s' non trouvée !"%name)
                 for cde in cdes:
-                    print(cde,cde.commande)
-                    commande = cde.commande.replace("#num_facture"  , obj.num_facture)
+                    commande = cde.commande.replace("#type_facture", obj.type_facture)
+                    commande = cde.commande.replace("#num_facture" , obj.num_facture)
                     p = Popen(commande, shell=True, stdout=PIPE, stderr=PIPE)
                     stdout, stderr = p.communicate()
                     _logger.info("%s => %s"%(commande,stdout))
                     if stderr:
                         raise ValidationError("Erreur dans commande externe '%s' => %s"%(commande,stderr))
-                    print(commande,stdout)
-
                     res = stdout.decode("utf-8").strip().split('|')
             return res
             
