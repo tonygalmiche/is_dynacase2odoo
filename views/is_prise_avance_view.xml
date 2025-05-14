@@ -3,6 +3,27 @@
 <odoo>
     <data>
         <!-- is.prise.avance -->
+        <record id="is_prise_avance_mail_template" model="mail.template">
+            <field name="name">Prise d'avance</field>
+            <field name="model_id" ref="is_dynacase2odoo.model_is_prise_avance"/>
+            <field name="subject">[Prise d'avance][{{ object.num_moule_id.name }}] état '{{ object.get_state_name() }}'</field>
+            <field name="email_cc">{{ object.users2mail(object.mail_cc_ids) }}</field>
+            <field name="description">Prise d'avance</field>
+            <field name="body_html" type="html">
+                <t t-set="website_url" t-value="object.get_doc_url()"></t>
+                <div style="background-color:#f7f9f9">
+                    <p>Bonjour,</p> 
+                    <p>
+                        <t t-out="user.name"/> vient de passer la prise d'avance 
+                        <a t-att-href="website_url"><t t-out="object.num_moule_id.name"/></a> à l'état '<t t-out="object.get_state_name()"/>'.
+                    </p> 
+                    <p>Merci d'en prendre connaissance.</p> 
+                    <div><i>Destinataires : <t t-out="object.users2mail(object.mail_to_ids)"/></i></div>
+                    <div t-if="object.users2mail(object.mail_cc_ids)"><i>Copie : <t t-out="object.users2mail(object.mail_cc_ids)"/></i></div>
+                </div>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
         <record model="ir.ui.view" id="is_prise_avance_form_view">
             <field name="name">is_prise_avance_form_view</field>
             <field name="model">is.prise.avance</field>
@@ -111,6 +132,8 @@
                     <field name="create_uid"                optional="hide"/>
                     <field name="write_date"                optional="hide"/>
                     <field name="write_uid"                 optional="hide"/>
+                    <field name="mail_to_ids"               optional="hide" widget="many2many_tags"/>
+                    <field name="mail_cc_ids"               optional="hide" widget="many2many_tags"/>
                     <field 
                         name="state" optional="show" widget="badge" 
                         decoration-info="state in ['brouillon']" 
