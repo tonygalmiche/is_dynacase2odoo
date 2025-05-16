@@ -12,7 +12,7 @@ class is_demande_modif_compte_fournisseur(models.Model):
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description="Demande de création ou de modification d'un compte Fournisseur"
     _rec_name = "titre"
-    _order='num_ordre desc'
+    _order='id desc'
 
     titre                     = fields.Char(string="Titre du document", tracking=True, compute='_compute_title', readonly=True, store=True)
     num_ordre                 = fields.Integer(string="Numéro d'ordre de la demande", tracking=True,copy=False)

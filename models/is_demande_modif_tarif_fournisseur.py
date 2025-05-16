@@ -161,12 +161,12 @@ class is_demande_modif_tarif_fournisseur(models.Model):
                 vals["num_ordre"] = num_ordre + 1
         return super().create(vals_list)
 
-    @api.depends('num_ordre', 'fournisseur_id')
+    @api.depends('num_ordre', 'article_id')
     def _compute_title(self):
         for obj in self:
-            title = f"{obj.num_ordre} - "
-            if obj.fournisseur_id:
-                title += obj.fournisseur_id.name
+            title = f"{obj.num_ordre} - {obj.article_id.name or ''}"
+            # if obj.article_id:
+            #     title += obj.article_id.name
             obj.titre = title
 
     def lien_vers_dynacase_action(self):
