@@ -86,13 +86,13 @@ class is_inv_achat_moule(models.Model):
             obj.date_commande_ou_saisie = obj.date_saisie or obj.date_cde
 
 
-    @api.depends('revue_lancementid', 'num_erdid', 'num_dossierid', 'num_mouleid')
+    @api.depends('revue_lancementid', 'num_erdid', 'num_dossierid', 'num_mouleid','dossierf_id')
     def _compute(self):
         for obj in self:
-            obj.nature   = obj.revue_lancementid.rl_designation_rc or obj.num_erdid.designation or obj.num_dossierid.demao_desig       or obj.num_mouleid.designation
-            obj.clientid = obj.revue_lancementid.rl_client_rcid.id or obj.num_erdid.clientid.id or obj.num_dossierid.demao_idclient.id or obj.num_mouleid.client_id.id
-            obj.projetid = obj.revue_lancementid.rl_projet_rcid.id or obj.num_mouleid.project.id
-            obj.chef_projetid = obj.revue_lancementid.rl_projet_rcid.chef_projet_id.id or obj.num_mouleid.project.chef_projet_id.id
+            obj.nature   = obj.revue_lancementid.rl_designation_rc or obj.num_erdid.designation or obj.num_dossierid.demao_desig       or obj.dossierf_id.designation  or obj.num_mouleid.designation
+            obj.clientid = obj.revue_lancementid.rl_client_rcid.id or obj.num_erdid.clientid.id or obj.num_dossierid.demao_idclient.id or obj.dossierf_id.client_id.id or obj.num_mouleid.client_id.id
+            obj.projetid = obj.revue_lancementid.rl_projet_rcid.id or obj.dossierf_id.project.id or obj.num_mouleid.project.id
+            obj.chef_projetid = obj.revue_lancementid.rl_projet_rcid.chef_projet_id.id or obj.dossierf_id.project.chef_projet_id.id or obj.num_mouleid.project.chef_projet_id.id
           
 
     @api.depends('date_saisie')

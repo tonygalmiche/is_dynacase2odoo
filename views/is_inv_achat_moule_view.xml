@@ -27,10 +27,10 @@
                                 <field name="num_dossierid"/>
                                 <field name="num_mouleid"/>
                                 <field name="dossierf_id"/>
-                                <field name="nature"/>
-                                <field name="clientid"/>
-                                <field name="projetid"/>
-                                <field name="chef_projetid"/>
+                                <field name="nature"         force_save="1"/>
+                                <field name="clientid"       force_save="1"/>
+                                <field name="projetid"       force_save="1"/>
+                                <field name="chef_projetid"  force_save="1"/>
                                 <field name="date_saisie" required="1"/>
                                 <field name="annee_saisie"/>
                                 <field name="montant_vendu" required="1"/>
@@ -38,15 +38,15 @@
                             </group>
                             <group>
                                 <field name="num_cde_id"/>
-                                <field name="num_cde"/>
-                                <field name="code_fournisseur"/>
-                                <field name="fournisseurid"/>
-                                <field name="date_cde"/>
-                                <field name="objet_commande"/>
-                                <field name="prix_commande"/>
-                                <field name="montant_facture"/>
-                                <field name="date_derniere_facture"/>
-                                <field name="date_commande_ou_saisie"/>
+                                <field name="num_cde"                 force_save="1"/>
+                                <field name="code_fournisseur"        force_save="1"/>
+                                <field name="fournisseurid"           force_save="1"/>
+                                <field name="date_cde"                force_save="1"/>
+                                <field name="objet_commande"          force_save="1"/>
+                                <field name="prix_commande"           force_save="1"/>
+                                <field name="montant_facture"         force_save="1"/>
+                                <field name="date_derniere_facture"   force_save="1"/>
+                                <field name="date_commande_ou_saisie" force_save="1"/>
                             </group>
                         </group>
                     </sheet>
