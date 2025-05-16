@@ -33,7 +33,7 @@ class is_demande_modif_tarif_fournisseur(models.Model):
     _order='id desc'
 
     titre                          = fields.Char(string="Titre du document", tracking=True, compute='_compute_title', readonly=True, store=True)
-    num_ordre                      = fields.Integer(string="Numéro d'ordre de la demande", tracking=True)
+    num_ordre                      = fields.Integer(string="Numéro d'ordre de la demande", tracking=True,copy=False)
     societe_ids                    = fields.Many2many('is.database','is_demande_modif_tarif_fournisseur_database_rel','demande_modif_tarif_fournisseur_id','database_id', string="Société", tracking=True)
     type_tarif                     = fields.Selection(_TARIF, "Type tarif", default=_TARIF[0][0], required=True, tracking=True)
     fournisseur_id                 = fields.Many2one('res.partner', 'Nom du fournisseur', tracking=True, domain=[("is_company","=",True), ("supplier","=",True)])
@@ -55,7 +55,7 @@ class is_demande_modif_tarif_fournisseur(models.Model):
     unite_tarif_autre              = fields.Char(string="Unité tarif (autre)", tracking=True)
     conditionnement                = fields.Char(string="Conditionnement", tracking=True)
     lot_approvisionnement          = fields.Integer(string="Lot d'approvisionnement minimum", tracking=True)
-    lot_ids                        = fields.One2many('is.demande.modif.tarif.fournisseur.lot.line', 'demande_id', string="Tarif par Lot")
+    lot_ids                        = fields.One2many('is.demande.modif.tarif.fournisseur.lot.line', 'demande_id', string="Tarif par Lot",copy=True)
     delai_appro                    = fields.Integer(string="Délai d'approvisionnement (en semaines)", tracking=True)
     modif_article                  = fields.Boolean("Modification fiche article", tracking=True)
     article_desactiver_id          = fields.Many2one('is.article', 'Article à désactiver', tracking=True)
