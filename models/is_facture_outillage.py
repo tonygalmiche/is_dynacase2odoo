@@ -42,6 +42,7 @@ class is_facture_outillage(models.Model):
     dossierf_id               = fields.Many2one("is.dossierf"              , string="Dossier F"               , tracking=True)
     erd_id                    = fields.Many2one("is.erd"                   , string="ERD"                     , tracking=True)
     client_id                 = fields.Many2one("res.partner"              , string="Client"                  , tracking=True)
+    client_autre              = fields.Char("Client (autre)"                                                  , tracking=True)
     commercial_id             = fields.Many2one("res.users"                , string="Commercial"              , tracking=True, compute="_compute_designation", store=True, readonly=True)
     chef_projet_id            = fields.Many2one("res.users"                , string="Chef de projet"          , tracking=True, compute="_compute_designation", store=True, readonly=True)
     designation               = fields.Char("Désignation"                                                     , tracking=True, compute="_compute_designation", store=True, readonly=True)

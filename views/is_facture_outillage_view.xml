@@ -41,6 +41,7 @@
                                 <field name="erd_id"                     attrs="{'invisible': [('type_dossier', '!=', 'ERD')]}"/>
                                 <field name="designation"/>
                                 <field name="client_id"/>
+                                <field name="client_autre"/>
                             </group>
                             <group>
                                 <field name="commercial_id"/>
@@ -105,8 +106,9 @@
                     <field name="dossierf_id"               optional="hide" widget="many2one_clickable"/>
                     <field name="erd_id"                    optional="hide" widget="many2one_clickable"/>
                     <field name="designation"               optional="show"/>
-                    <field name="client_id" optional="show" widget="many2one_clickable"/>
-                    <field name="commercial_id" optional="show"/>
+                    <field name="client_id"      optional="show" widget="many2one_clickable"/>
+                    <field name="client_autre"   optional="hide"/>
+                    <field name="commercial_id"  optional="show"/>
                     <field name="chef_projet_id" optional="show"/>
                     <field name="montant_global" optional="show" sum="Total"/>
                     <field name="numero_commande_client" optional="show"/>
@@ -163,6 +165,7 @@
                     <field name="moule_id"/>
                     <field name="dossierf_id"/>
                     <field name="client_id"/>
+                    <field name="client_autre"/>
                     <field name="commercial_id"/>
                     <field name="chef_projet_id"/>
                     <field name="designation"/>
