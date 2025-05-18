@@ -175,55 +175,53 @@ class is_facture_outillage_ligne(models.Model):
 
     @api.onchange('num_facture')
     def actualiser_ligne_action(self):
-        cr_cegid = cr_odoo1 = False
-        company = self.env.user.company_id
-
-        #** Connexion à Odoo 1 ************************************************
-        databases=self.env['is.database'].search([('name','=', 'Gray')])
-        for database in databases:
-            host     = database.ip_server or ''
-            dbname   = database.database  or ''
-            user     = database.login     or ''
-            password = database.password  or ''
-            try:
-                cnx_odoo1 = psycopg2.connect("host='%s' dbname='%s' user='%s' password='%s'"%(host,dbname,user,password))
-                cr_odoo1  = cnx_odoo1.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            except Exception as err:
-                msg="La connexion à Odoo1 sur la base '%s' et le serveur '%s' a échouée !"%(dbname,host)
-                msg="%s\n[%s] %s"%(msg,type(err),err)
-                _logger.error(msg)
-                raise ValidationError(msg)
-        #**********************************************************************
-
-        ##** Connexion à CEGID ************************************************
-        SERVER   = company.is_cegid_ip    or ''
-        UID      = company.is_cegid_login or ''
-        PWD      = company.is_cegid_mdp   or ''
-        DATABASE = company.is_cegid_base  or ''
-        try:
-            cnx = 'DRIVER={FreeTDS};SERVER=%s;PORT=1433;UID=%s;PWD=%s;DATABASE=%s;UseNTLMv2=yes;TDS_Version=8.0;Trusted_Domain=domain.local;'%(
-                SERVER,
-                UID,
-                PWD,
-                DATABASE
-            )
-            cnx_cegid = pyodbc.connect(cnx)
-            cr_cegid = cnx_cegid.cursor()
-        except Exception as err:
-            msg="La connexion à CEGID sur la base '%s' et le serveur '%s' a échouée !"%(DATABASE,SERVER)
-            msg="%s\n[%s] %s"%(msg,type(err),err)
-            _logger.error(msg)
-            raise ValidationError(msg)
-        #**********************************************************************
-
         for obj in self:
-            type_facture = sys.argv[1]
-            num_facture  = sys.argv[2]
-
+            type_facture = obj.type_facture
+            num_facture  = obj.num_facture
             montant_ht = montant_ttc = montant_paye_ht = 0
             date_facture = date_reglement = date_echeance = ''
-
             if type_facture in ('Facture','Avoir'):
+                cr_cegid = cr_odoo1 = False
+                company = self.env.user.company_id
+
+                #** Connexion à Odoo 1 ************************************************
+                databases=self.env['is.database'].search([('name','=', 'Gray')])
+                for database in databases:
+                    host     = company.is_postgres_host or ''
+                    dbname   = database.database        or ''
+                    user     = company.is_postgres_user or ''
+                    password = company.is_postgres_pwd  or ''
+                    try:
+                        cnx_odoo1 = psycopg2.connect("host='%s' dbname='%s' user='%s' password='%s'"%(host,dbname,user,password))
+                        cr_odoo1  = cnx_odoo1.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+                    except Exception as err:
+                        msg="La connexion à Odoo1 sur la base '%s' et le serveur '%s' a échouée !"%(dbname,host)
+                        msg="%s\n[%s] %s"%(msg,type(err),err)
+                        _logger.error(msg)
+                        raise ValidationError(msg)
+                #**********************************************************************
+
+                ##** Connexion à CEGID ************************************************
+                SERVER   = company.is_cegid_ip    or ''
+                UID      = company.is_cegid_login or ''
+                PWD      = company.is_cegid_mdp   or ''
+                DATABASE = company.is_cegid_base  or ''
+                try:
+                    cnx = 'DRIVER={FreeTDS};SERVER=%s;PORT=1433;UID=%s;PWD=%s;DATABASE=%s;UseNTLMv2=yes;TDS_Version=8.0;Trusted_Domain=domain.local;'%(
+                        SERVER,
+                        UID,
+                        PWD,
+                        DATABASE
+                    )
+                    cnx_cegid = pyodbc.connect(cnx)
+                    cr_cegid = cnx_cegid.cursor()
+                except Exception as err:
+                    msg="La connexion à CEGID sur la base '%s' et le serveur '%s' a échouée !"%(DATABASE,SERVER)
+                    msg="%s\n[%s] %s"%(msg,type(err),err)
+                    _logger.error(msg)
+                    raise ValidationError(msg)
+                #**********************************************************************
+
                 if type_facture=="Facture":
                     move_type='out_invoice'
                 if type_facture=="Avoir":
@@ -236,7 +234,7 @@ class is_facture_outillage_ligne(models.Model):
                 """
                 cr_odoo1.execute(SQL,[move_type,num_facture])
                 rows = cr_odoo1.fetchall()
-                for row in rows:
+                for row in rows:                
                     montant_ht  = row['amount_untaxed_signed']
                     montant_ttc = row['amount_total_signed']
                     
@@ -295,7 +293,8 @@ class is_facture_outillage_ligne(models.Model):
                     """%num_facture
                     rows_cegid = cr_cegid.execute(SQL)
                     for row_cegid in rows_cegid:
-                        montant_paye_ht += row_cegid[0]
+                        print(row_cegid)
+                        montant_paye_ht += row_cegid[0] / 10000
                     #***************************************************************************
 
             if type_facture=='Proforma':
@@ -313,9 +312,9 @@ class is_facture_outillage_ligne(models.Model):
                     montant_ttc  = row['total'];
                     date_facture = row['date_facture']
 
-                obj.montant_ht      = montant_ht
-                obj.montant_ttc     = montant_ttc
-                obj.montant_paye_ht = montant_paye_ht
-                obj.date_facture    = date_facture
-                obj.date_echeance   = date_echeance
-                obj.date_reglement  = date_reglement
+            obj.montant_ht      = montant_ht
+            obj.montant_ttc     = montant_ttc
+            obj.montant_paye_ht = montant_paye_ht
+            obj.date_facture    = date_facture
+            obj.date_echeance   = date_echeance
+            obj.date_reglement  = date_reglement
