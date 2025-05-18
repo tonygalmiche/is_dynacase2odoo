@@ -111,8 +111,8 @@
                     <field name="commercial_id"  optional="show"/>
                     <field name="chef_projet_id" optional="show"/>
                     <field name="montant_global" optional="show" sum="Total"/>
-                    <field name="numero_commande_client" optional="show"/>
-                    <field name="piece_jointe_ids" optional="show"/>
+                    <field name="numero_commande_client"  optional="show"/>
+                    <field name="piece_jointe_ids"        optional="show"  widget="many2many_binary" />
                     <field name="montant_commande_client" optional="show" sum="Total"/>
                     <field name="date_reception" optional="show"/>
                     <field name="montant_dossier" optional="show" sum="Total"/>

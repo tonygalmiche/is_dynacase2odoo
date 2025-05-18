@@ -3,6 +3,10 @@ from odoo import models, fields, api, _      # type: ignore
 from odoo.exceptions import ValidationError  # type: ignore
 from datetime import datetime, timedelta, date
 from subprocess import PIPE, Popen
+import sys
+import psycopg2        # type: ignore
+import psycopg2.extras # type: ignore
+import pyodbc          # type: ignore
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -136,35 +140,182 @@ class is_facture_outillage_ligne(models.Model):
     commentaire       = fields.Text("Commentaire")
    
 
+    # @api.onchange('num_facture')
+    # def actualiser_ligne_action(self):
+    #     for obj in self:
+    #         res = obj.get_values()
+    #         if len(res)==6:
+    #             obj.montant_ht      = res[0]
+    #             obj.montant_ttc     = res[1]
+    #             obj.montant_paye_ht = res[2]
+    #             obj.date_facture    = res[3]
+    #             obj.date_echeance   = res[4]
+    #             obj.date_reglement  = res[5]
+
+
+    # def get_values(self):
+    #     for obj in self:
+    #         res=[]
+    #         if obj.num_facture:
+    #             name = "actualiser-facture-outillage"
+    #             cdes = self.env['is.commande.externe'].search([('name','=',name)])
+    #             if len(cdes)==0:
+    #                 raise ValidationError("Commande externe '%s' non trouvée !"%name)
+    #             for cde in cdes:
+    #                 commande = cde.commande.replace("#type_facture", obj.type_facture)
+    #                 commande = commande.replace("#num_facture" , obj.num_facture)
+    #                 p = Popen(commande, shell=True, stdout=PIPE, stderr=PIPE)
+    #                 stdout, stderr = p.communicate()
+    #                 _logger.info("%s => %s"%(commande,stdout))
+    #                 if stderr:
+    #                     raise ValidationError("Erreur dans commande externe '%s' => %s"%(commande,stderr))
+    #                 res = stdout.decode("utf-8").strip().split('|')
+    #         return res
+            
+
     @api.onchange('num_facture')
     def actualiser_ligne_action(self):
-        for obj in self:
-            res = obj.get_values()
-            if len(res)==6:
-                obj.montant_ht      = res[0]
-                obj.montant_ttc     = res[1]
-                obj.montant_paye_ht = res[2]
-                obj.date_facture    = res[3]
-                obj.date_echeance   = res[4]
-                obj.date_reglement  = res[5]
+        cr_cegid = cr_odoo1 = False
+        company = self.env.user.company_id
 
+        #** Connexion à Odoo 1 ************************************************
+        databases=self.env['is.database'].search([('name','=', 'Gray')])
+        for database in databases:
+            host     = database.ip_server or ''
+            dbname   = database.database  or ''
+            user     = database.login     or ''
+            password = database.password  or ''
+            try:
+                cnx_odoo1 = psycopg2.connect("host='%s' dbname='%s' user='%s' password='%s'"%(host,dbname,user,password))
+                cr_odoo1  = cnx_odoo1.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            except Exception as err:
+                msg="La connexion à Odoo1 sur la base '%s' et le serveur '%s' a échouée !"%(dbname,host)
+                msg="%s\n[%s] %s"%(msg,type(err),err)
+                _logger.error(msg)
+                raise ValidationError(msg)
+        #**********************************************************************
 
-    def get_values(self):
+        ##** Connexion à CEGID ************************************************
+        SERVER   = company.is_cegid_ip    or ''
+        UID      = company.is_cegid_login or ''
+        PWD      = company.is_cegid_mdp   or ''
+        DATABASE = company.is_cegid_base  or ''
+        try:
+            cnx = 'DRIVER={FreeTDS};SERVER=%s;PORT=1433;UID=%s;PWD=%s;DATABASE=%s;UseNTLMv2=yes;TDS_Version=8.0;Trusted_Domain=domain.local;'%(
+                SERVER,
+                UID,
+                PWD,
+                DATABASE
+            )
+            cnx_cegid = pyodbc.connect(cnx)
+            cr_cegid = cnx_cegid.cursor()
+        except Exception as err:
+            msg="La connexion à CEGID sur la base '%s' et le serveur '%s' a échouée !"%(DATABASE,SERVER)
+            msg="%s\n[%s] %s"%(msg,type(err),err)
+            _logger.error(msg)
+            raise ValidationError(msg)
+        #**********************************************************************
+
         for obj in self:
-            res=[]
-            if obj.num_facture:
-                name = "actualiser-facture-outillage"
-                cdes = self.env['is.commande.externe'].search([('name','=',name)])
-                if len(cdes)==0:
-                    raise ValidationError("Commande externe '%s' non trouvée !"%name)
-                for cde in cdes:
-                    commande = cde.commande.replace("#type_facture", obj.type_facture)
-                    commande = commande.replace("#num_facture" , obj.num_facture)
-                    p = Popen(commande, shell=True, stdout=PIPE, stderr=PIPE)
-                    stdout, stderr = p.communicate()
-                    _logger.info("%s => %s"%(commande,stdout))
-                    if stderr:
-                        raise ValidationError("Erreur dans commande externe '%s' => %s"%(commande,stderr))
-                    res = stdout.decode("utf-8").strip().split('|')
-            return res
-            
+            type_facture = sys.argv[1]
+            num_facture  = sys.argv[2]
+
+            montant_ht = montant_ttc = montant_paye_ht = 0
+            date_facture = date_reglement = date_echeance = ''
+
+            if type_facture in ('Facture','Avoir'):
+                if type_facture=="Facture":
+                    move_type='out_invoice'
+                if type_facture=="Avoir":
+                    move_type = 'out_refund'
+                SQL="""
+                    select id,name,amount_untaxed_signed,amount_total_signed 
+                    from account_move 
+                    where state='posted' and move_type=%s and name=%s
+                    order by name desc limit 1
+                """
+                cr_odoo1.execute(SQL,[move_type,num_facture])
+                rows = cr_odoo1.fetchall()
+                for row in rows:
+                    montant_ht  = row['amount_untaxed_signed']
+                    montant_ttc = row['amount_total_signed']
+                    
+                    #** Recherche Date Facture dans CEGID **************************************
+                    SQL="""
+                        select E_DATECOMPTABLE
+                        from ECRITURE
+                        where 
+                            E_GENERAL='411000' and
+                            E_JOURNAL='VTE' and 
+                            E_REFINTERNE='%s'
+                    """%num_facture
+                    rows_cegid = cr_cegid.execute(SQL)
+                    for row_cegid in rows_cegid:
+                        date_facture = row_cegid[0]
+                    #***************************************************************************
+
+                    #** Recherche Date Réglement dans CEGID ************************************
+                    SQL="""
+                        select E_DATECOMPTABLE
+                        from ECRITURE
+                        where 
+                            E_GENERAL='411000' and
+                            E_JOURNAL!='VTE' and 
+                            E_REFINTERNE='%s' and
+                            E_DATECOMPTABLE>'2024-01-01'
+                    """%num_facture
+                    rows_cegid = cr_cegid.execute(SQL)
+                    for row_cegid in rows_cegid:
+                        date_reglement = row_cegid[0]
+                    #***************************************************************************
+
+                    #** Recherche Date Echéance dans CEGID *************************************
+                    SQL="""
+                        select E_DATPER
+                        from ECRITURE
+                        where 
+                            E_GENERAL='411000' and
+                            E_JOURNAL!='VTE' and 
+                            E_REFINTERNE='%s'
+                    """%num_facture
+                    rows_cegid = cr_cegid.execute(SQL)
+                    for row_cegid in rows_cegid:
+                        date_echeance = row_cegid[0]
+                    #***************************************************************************
+
+                    #** Montant payé CEGID *****************************************************
+                    SQL="""
+                        select E_CREDIT,E_GENERAL
+                        from ECRITURE
+                        where 
+                            E_JOURNAL<>'VTE' and 
+                            E_REFINTERNE='%s' and 
+                            E_AUXILIAIRE>='C500000' and 
+                            E_AUXILIAIRE<='C509999'
+                    """%num_facture
+                    rows_cegid = cr_cegid.execute(SQL)
+                    for row_cegid in rows_cegid:
+                        montant_paye_ht += row_cegid[0]
+                    #***************************************************************************
+
+            if type_facture=='Proforma':
+                SQL="""
+                    select e.id,e.name,e.num_cde, e.date_facture, sum(l.total) total
+                    from is_facture_proforma_outillage e join is_facture_proforma_outillage_line l on e.id=l.proforma_id
+                    where e.name=%s
+                    group by e.name, e.id,e.num_cde, e.date_facture 
+                    order by e.name desc limit 1
+                """
+                cr_odoo1.execute(SQL,[num_facture])
+                rows = cr_odoo1.fetchall()
+                for row in rows:
+                    montant_ht   = row['total'];
+                    montant_ttc  = row['total'];
+                    date_facture = row['date_facture']
+
+                obj.montant_ht      = montant_ht
+                obj.montant_ttc     = montant_ttc
+                obj.montant_paye_ht = montant_paye_ht
+                obj.date_facture    = date_facture
+                obj.date_echeance   = date_echeance
+                obj.date_reglement  = date_reglement
