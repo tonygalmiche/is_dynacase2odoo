@@ -65,6 +65,12 @@ class is_facture_outillage(models.Model):
     ligne_ids                 = fields.One2many('is.facture.outillage.ligne', 'facture_id', string="Lignes")
 
 
+    def compute_xml_rpc(self):
+        "for xml-rpc"
+        self._compute_designation()
+        return True
+
+
     @api.depends('ligne_ids','ligne_ids.montant_ht','montant_dossier')
     def _compute_montant(self):
         for obj in self:
@@ -76,7 +82,7 @@ class is_facture_outillage(models.Model):
             obj.ecart_commande_facture = ecart
             obj.ecart_ttc = ecart
 
-			
+
     @api.depends('type_dossier','revue_lancement_id','dossier_modif_variante_id','moule_id','dossierf_id','erd_id')
     def _compute_designation(self):
         for obj in self:
