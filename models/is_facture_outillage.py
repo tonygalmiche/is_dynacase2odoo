@@ -63,31 +63,51 @@ class is_facture_outillage(models.Model):
     active                    = fields.Boolean('Actif', default=True, tracking=True)
     dynacase_id               = fields.Integer(string="Id Dynacase", index=True, copy=False)
     ligne_ids                 = fields.One2many('is.facture.outillage.ligne', 'facture_id', string="Lignes")
-    ligne_html                = fields.Html(string="Tableau des lignes", compute='_compute_ligne_html',store=True, readonly=True, tracking=True)
+    num_facture               = fields.Text(string="N° facture"    , compute='_compute_ligne',store=True, readonly=True, tracking=True)
+    montant_ht                = fields.Text(string="Montant HT"    , compute='_compute_ligne',store=True, readonly=True, tracking=True)
+    date_facture_prev         = fields.Text(string="Date prév."    , compute='_compute_ligne',store=True, readonly=True, tracking=True)
+    date_facture              = fields.Text(string="Date facture"  , compute='_compute_ligne',store=True, readonly=True, tracking=True)
+    date_reglement            = fields.Text(string="Date règlement", compute='_compute_ligne',store=True, readonly=True, tracking=True)
 
 
     @api.depends('ligne_ids','ligne_ids.type_facture','ligne_ids.num_facture','ligne_ids.date_facture_prev','ligne_ids.date_facture','ligne_ids.date_reglement')
-    def _compute_ligne_html(self):
+    def _compute_ligne(self):
         for obj in self:
-            html='<table style="width:400px">'
+            num_facture=[]
+            montant_ht=[]
+            date_facture_prev=[]
+            date_facture=[]
+            date_reglement=[]
+            
+            # html='<table style="width:400px">'
             for line in obj.ligne_ids:
-                html+="""
-                    <tr>
-                        <td style="width:20%%;border:1px;text-align:left">%s</td>
-                        <td style="width:20%%;border:1px;text-align:right">%s</td>
-                        <td style="width:20%%;border:1px;text-align:center">%s</td>
-                        <td style="width:20%%;border:1px;text-align:center">%s</td>
-                        <td style="width:20%%;border:1px;text-align:center">%s</td>
-                    </tr>
-                """%(
-                    line.num_facture or '',
-                    '{0:,.2f}'.format(line.montant_ht).replace(',',' ').replace('.',','),
-                    (line.date_facture_prev and line.date_facture_prev.strftime('%d/%m/%Y')) or '',
-                    (line.date_facture      and line.date_facture.strftime('%d/%m/%Y')) or '',
-                    (line.date_reglement    and line.date_reglement.strftime('%d/%m/%Y')) or '',
-                )
-            html+='</table>'
-            obj.ligne_html = html
+                num_facture.append(line.num_facture or '')
+                montant_ht.append('{0:,.2f}'.format(line.montant_ht).replace(',',' ').replace('.',','))
+                date_facture_prev.append((line.date_facture_prev and line.date_facture_prev.strftime('%d/%m/%Y')) or '')
+                date_facture.append((line.date_facture and line.date_facture.strftime('%d/%m/%Y')) or '')
+                date_reglement.append((line.date_reglement and line.date_reglement.strftime('%d/%m/%Y')) or '')
+            #     html+="""
+            #         <tr>
+            #             <td style="width:20%%;border:1px;text-align:left">%s</td>
+            #             <td style="width:20%%;border:1px;text-align:right">%s</td>
+            #             <td style="width:20%%;border:1px;text-align:center">%s</td>
+            #             <td style="width:20%%;border:1px;text-align:center">%s</td>
+            #             <td style="width:20%%;border:1px;text-align:center">%s</td>
+            #         </tr>
+            #     """%(
+            #         line.num_facture or '',
+            #         '{0:,.2f}'.format(line.montant_ht).replace(',',' ').replace('.',','),
+            #         (line.date_facture_prev and line.date_facture_prev.strftime('%d/%m/%Y')) or '',
+            #         (line.date_facture      and line.date_facture.strftime('%d/%m/%Y')) or '',
+            #         (line.date_reglement    and line.date_reglement.strftime('%d/%m/%Y')) or '',
+            #     )
+            # html+='</table>'
+            # obj.ligne_html = html
+            obj.num_facture = '\n'.join(num_facture)
+            obj.montant_ht = '\n'.join(montant_ht)
+            obj.date_facture_prev = '\n'.join(date_facture_prev)
+            obj.date_facture = '\n'.join(date_facture)
+            obj.date_reglement = '\n'.join(date_reglement)
 
 
     def compute_xml_rpc(self):

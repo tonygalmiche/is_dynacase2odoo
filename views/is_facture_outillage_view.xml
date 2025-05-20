@@ -112,8 +112,11 @@
                     <field name="chef_projet_id"            optional="show"/>
                     <field name="numero_commande_client"    optional="show"/>
                     <field name="montant_dossier"           optional="show" sum="Total"/>
-                    <field name="ligne_html"                optional="show"/>
-
+                    <field name="num_facture"               optional="show"/>
+                    <field name="montant_ht"                optional="show"/>
+                    <field name="date_facture_prev"         optional="show"/>
+                    <field name="date_facture"              optional="show"/>
+                    <field name="date_reglement"            optional="show"/>
                     <field name="montant_global"            optional="hide" sum="Total"/>
                     <field name="piece_jointe_ids"          optional="hide"  widget="many2many_binary" />
                     <field name="montant_commande_client"   optional="hide" sum="Total"/>
@@ -162,7 +165,7 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="designation"/>
-                    <field name="ligne_html"/>
+                    <field name="date_facture_prev"/>
                     <field name="type_dossier"/>
                     <field name="revue_lancement_id"/>
                     <field name="dossier_modif_variante_id"/>
