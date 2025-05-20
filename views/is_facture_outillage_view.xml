@@ -100,25 +100,27 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="type_dossier"              optional="show"/>
+                    <field name="designation"               optional="show"/>
                     <field name="revue_lancement_id"        optional="hide" widget="many2one_clickable"/>
                     <field name="dossier_modif_variante_id" optional="hide" widget="many2one_clickable"/>
                     <field name="moule_id"                  optional="hide" widget="many2one_clickable"/>
                     <field name="dossierf_id"               optional="hide" widget="many2one_clickable"/>
                     <field name="erd_id"                    optional="hide" widget="many2one_clickable"/>
-                    <field name="designation"               optional="show"/>
-                    <field name="client_id"      optional="show" widget="many2one_clickable"/>
-                    <field name="client_autre"   optional="hide"/>
-                    <field name="commercial_id"  optional="show"/>
-                    <field name="chef_projet_id" optional="show"/>
-                    <field name="montant_global" optional="show" sum="Total"/>
-                    <field name="numero_commande_client"  optional="show"/>
-                    <field name="piece_jointe_ids"        optional="show"  widget="many2many_binary" />
-                    <field name="montant_commande_client" optional="show" sum="Total"/>
-                    <field name="date_reception" optional="show"/>
-                    <field name="montant_dossier" optional="show" sum="Total"/>
-                    <field name="total_facture" optional="show" sum="Total"/>
-                    <field name="ecart_commande_facture" optional="show" sum="Total"/>
-                    <field name="ecart_ttc" optional="show" sum="Total"/>
+                    <field name="client_id"                 optional="show" widget="many2one_clickable"/>
+                    <field name="client_autre"              optional="hide"/>
+                    <field name="commercial_id"             optional="hide"/>
+                    <field name="chef_projet_id"            optional="show"/>
+                    <field name="numero_commande_client"    optional="show"/>
+                    <field name="montant_dossier"           optional="show" sum="Total"/>
+                    <field name="ligne_html"                optional="show"/>
+
+                    <field name="montant_global"            optional="hide" sum="Total"/>
+                    <field name="piece_jointe_ids"          optional="hide"  widget="many2many_binary" />
+                    <field name="montant_commande_client"   optional="hide" sum="Total"/>
+                    <field name="date_reception"            optional="hide"/>
+                    <field name="total_facture"             optional="hide" sum="Total"/>
+                    <field name="ecart_commande_facture"    optional="hide" sum="Total"/>
+                    <field name="ecart_ttc"                 optional="hide" sum="Total"/>
                     <field name="create_date"               optional="hide" string="Créé le"/>
                     <field name="create_uid"                optional="hide" string="Créé par"/>
                     <field name="write_date"                optional="hide" string="Modifié le"/>
@@ -159,6 +161,8 @@
             <field name="model">is.facture.outillage</field>
             <field name="arch" type="xml">
                 <search>
+                    <field name="designation"/>
+                    <field name="ligne_html"/>
                     <field name="type_dossier"/>
                     <field name="revue_lancement_id"/>
                     <field name="dossier_modif_variante_id"/>

@@ -63,11 +63,37 @@ class is_facture_outillage(models.Model):
     active                    = fields.Boolean('Actif', default=True, tracking=True)
     dynacase_id               = fields.Integer(string="Id Dynacase", index=True, copy=False)
     ligne_ids                 = fields.One2many('is.facture.outillage.ligne', 'facture_id', string="Lignes")
+    ligne_html                = fields.Html(string="Tableau des lignes", compute='_compute_ligne_html',store=True, readonly=True, tracking=True)
+
+
+    @api.depends('ligne_ids','ligne_ids.type_facture','ligne_ids.num_facture','ligne_ids.date_facture_prev','ligne_ids.date_facture','ligne_ids.date_reglement')
+    def _compute_ligne_html(self):
+        for obj in self:
+            html='<table style="width:400px">'
+            for line in obj.ligne_ids:
+                html+="""
+                    <tr>
+                        <td style="width:20%%;border:1px;text-align:left">%s</td>
+                        <td style="width:20%%;border:1px;text-align:right">%s</td>
+                        <td style="width:20%%;border:1px;text-align:center">%s</td>
+                        <td style="width:20%%;border:1px;text-align:center">%s</td>
+                        <td style="width:20%%;border:1px;text-align:center">%s</td>
+                    </tr>
+                """%(
+                    line.num_facture or '',
+                    '{0:,.2f}'.format(line.montant_ht).replace(',',' ').replace('.',','),
+                    (line.date_facture_prev and line.date_facture_prev.strftime('%d/%m/%Y')) or '',
+                    (line.date_facture      and line.date_facture.strftime('%d/%m/%Y')) or '',
+                    (line.date_reglement    and line.date_reglement.strftime('%d/%m/%Y')) or '',
+                )
+            html+='</table>'
+            obj.ligne_html = html
 
 
     def compute_xml_rpc(self):
         "for xml-rpc"
         self._compute_designation()
+        self._compute_ligne_html()
         return True
 
 
