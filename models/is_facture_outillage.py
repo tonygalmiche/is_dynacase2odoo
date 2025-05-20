@@ -113,7 +113,7 @@ class is_facture_outillage(models.Model):
     def compute_xml_rpc(self):
         "for xml-rpc"
         self._compute_designation()
-        self._compute_ligne_html()
+        self._compute_ligne()
         return True
 
 
