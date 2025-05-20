@@ -59,7 +59,7 @@ class is_facture_outillage(models.Model):
     total_facture             = fields.Float(string="Total facturé"                                           , tracking=True, compute="_compute_montant"  , store=True, readonly=True)
     ecart_commande_facture    = fields.Float(string="Ecart Montant dossier / Montant HT factures"             , tracking=True, compute="_compute_montant"  , store=True, readonly=True)
     ecart_ttc                 = fields.Float(string="Ecart Montant TTC payé / Ecart TTC"                      , tracking=True, compute="_compute_montant"  , store=True, readonly=True)
-    #solde                     = fields.Selection(_OUI_NON, string="Soldé", default='Non'                      , tracking=True)
+    solde                     = fields.Selection(_OUI_NON, string="Soldé", default='Non'                      , tracking=True)
     active                    = fields.Boolean('Actif', default=True, tracking=True)
     dynacase_id               = fields.Integer(string="Id Dynacase", index=True, copy=False)
     ligne_ids                 = fields.One2many('is.facture.outillage.ligne', 'facture_id', string="Lignes")

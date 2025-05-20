@@ -81,7 +81,7 @@
                                 <field name="ecart_ttc"/>
                             </group>
                             <group>
-                                <!-- <field name="solde"/> -->
+                                <field name="solde"/>
                             </group>
                         </group>
                      </sheet>
@@ -129,11 +129,11 @@
                     <field name="write_date"                optional="hide" string="Modifié le"/>
                     <field name="write_uid"                 optional="hide" string="Modifié par"/>
                     <field name="dynacase_id"               optional="hide"/>
-                    <!-- <field 
+                    <field 
                         name="solde" optional="show" widget="badge" 
                         decoration-warning="solde=='Non'"
                         decoration-success="solde=='Oui'"
-                    /> -->
+                    />
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
@@ -177,7 +177,7 @@
                     <field name="chef_projet_id"/>
                     <field name="designation"/>
                     <field name="numero_commande_client"/>
-                    <!-- <field name="solde"/> -->
+                    <field name="solde"/>
                 </search>
             </field>
         </record>
