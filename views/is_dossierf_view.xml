@@ -2,6 +2,23 @@
 <odoo>
     <data>
         <!-- is.dossierf -->
+        <record id="is_dossierf_mail_template" model="mail.template">
+            <field name="name">Dossier F</field>
+            <field name="model_id" ref="is_dynacase2odoo.model_is_dossierf"/>
+            <field name="subject">[Dossier F][{{ object.name }}] créé'</field>
+            <field name="description">Dossier F</field>
+            <field name="body_html" type="html">
+                <div style="background-color:#f7f9f9">
+                    <p>Bonjour,</p> 
+                    <p>
+                        <t t-out="user.name"/> vient de créer le 'Dossier F' <a t-att-href="object.get_doc_url()"><t t-out="object.name"/></a>.
+                    </p> 
+                    <p>Merci d'en prendre connaissance.</p> 
+                    <div><i>Destinataires : <t t-out="object.get_email_to()"/></i></div>
+                </div>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
         <record id="archiver_documents_dossierf_action_server" model="ir.actions.server">
              <field name="name">Archiver les documents de ce Dossier F</field>
             <field name="model_id" ref="model_is_dossierf"/>

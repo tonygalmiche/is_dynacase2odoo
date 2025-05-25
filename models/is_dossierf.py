@@ -19,6 +19,67 @@ class is_dossierf(models.Model):
     j_actuelle_rw          = fields.Boolean(string="J Actuelle rw", compute='_compute_j_actuelle_rw', store=False, readonly=True)
 
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        res=super().create(vals_list)
+        company = self.env.user.company_id
+        if company.is_base_principale:
+            res.envoi_mail()
+        return res
+
+
+    def envoi_mail(self):
+        template = self.env.ref('is_dynacase2odoo.is_dossierf_mail_template').sudo()     
+        email_values = {
+            'email_to'      : self.get_email_to(),
+            'auto_delete'   : False,
+            'scheduled_date': False,
+        }
+        template.send_mail(self.id, force_send=True, raise_exception=False, email_values=email_values)
+
+
+    def get_users(self):
+        for obj in self:
+            users=[]
+            users.append(self.env.user)
+            if obj.chef_projet_id:
+                users.append(obj.chef_projet_id)
+            if obj.client_id.user_id:
+                users.append(obj.client_id.user_id)
+            return users
+
+
+    def get_email_to(self):
+        for obj in self:
+            email_to=False
+            users = obj.get_users()
+            if users:
+                email_to=[]
+                for user in users:
+                    email_to.append(user.partner_id.email)
+                email_to = ', '.join(email_to)
+            return email_to
+
+
+    def get_doc_url(self):
+        for obj in self:
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            url = base_url + '/web#id=%s' '&view_type=form&model=%s'%(obj.id,self._name)
+            return url
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @api.depends('j_actuelle')
     def _compute_j_actuelle_rw(self):
         admin = self.env.user.has_group('base.group_system')
