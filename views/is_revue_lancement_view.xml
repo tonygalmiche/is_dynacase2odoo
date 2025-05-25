@@ -69,7 +69,7 @@
                             string="Dupliquer cette RL et l'associer à la dernière RC"
                             type="object"
                             attrs="{'invisible': ['|',('state', '=', 'brouillon'),('rl_num_rcid','=',False)]}" 
-                            groups="is_dynacase2odoo.is_gestionnaire_revue_contrat_group"
+                            groups="is_dynacase2odoo.is_gestionnaire_revue_lancement_group"
                         />
                         <button 
                             name="voir_investissements_action" 
