@@ -295,7 +295,7 @@ class is_revue_de_contrat(models.Model):
         for record in self:
             record.rc_eiv_total = record.rc_eiv_moule +  record.rc_eiv_etude +  record.rc_eiv_main_prehension + \
                                   record.rc_eiv_barre_chaude + record.rc_eiv_gab_controle +record.rc_eiv_mach_spec + \
-                                  record.rc_eiv_plan_valid + record.rc_eiv_mis_point + record.rc_eiv_pack + record.rc_eiv_amort
+                                  record.rc_eiv_plan_valid + record.rc_eiv_mis_point + record.rc_eiv_pack # + record.rc_eiv_amort
 
     @api.depends("rc_mouleid","rc_dossierfid","rc_mouleid.project","rc_dossierfid.project","rc_mouleid.project.client_id","rc_dossierfid.project.client_id")
     def _compute_rc_projetid(self):

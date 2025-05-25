@@ -25,16 +25,6 @@ class is_revue_lancement(models.Model):
     _description = "Revue de lancement"
 
 
-    # @api.depends("rl_pgrc_moule_mnt", "rl_pgrc_etude_mnt", "rl_pgrc_main_prehension_mnt", "rl_pgrc_barre_chaude_mnt",
-    #              "rl_pgrc_gabarit_controle_mnt", "rl_pgrc_machine_speciale_mnt", "rl_pgrc_plan_validation_mnt",
-    #              "rl_pgrc_mise_point_mnt", "rl_pgrc_packaging_mnt", "rl_pgrc_amort_mnt")
-    # def get_rl_pgrc_total(self):
-    #     for record in self:
-    #         record.rl_pgrc_total = record.rl_pgrc_moule_mnt + record.rl_pgrc_etude_mnt + record.rl_pgrc_main_prehension_mnt + \
-    #                                record.rl_pgrc_barre_chaude_mnt + record.rl_pgrc_gabarit_controle_mnt + record.rl_pgrc_machine_speciale_mnt + \
-    #                                record.rl_pgrc_mise_point_mnt + record.rl_pgrc_plan_validation_mnt + record.rl_pgrc_packaging_mnt + record.rl_pgrc_amort_mnt
-
-
     def compute_xml_rpc(self):
         for obj in self:
             obj._compute_rl_be_total()
