@@ -469,15 +469,27 @@ class is_revue_lancement(models.Model):
             return destinataires_name
 
 
-    def get_partners_ids(self):
+    # def get_partners_ids(self):
+    #     for obj in self:
+    #         partners_ids=False
+    #         users = obj.get_users()
+    #         if users:
+    #             partners_ids=[]
+    #             for user in users:
+    #                 partners_ids.append(user.partner_id.id)
+    #         return partners_ids
+
+
+    def get_email_to(self):
         for obj in self:
-            partners_ids=False
+            email_to=False
             users = obj.get_users()
             if users:
-                partners_ids=[]
+                email_to=[]
                 for user in users:
-                    partners_ids.append(user.partner_id.id)
-            return partners_ids
+                    email_to.append(user.partner_id.email)
+                email_to = ', '.join(email_to)
+            return email_to
 
 
     def get_copie(self):
@@ -487,9 +499,10 @@ class is_revue_lancement(models.Model):
     def envoi_mail(self):
         template = self.env.ref('is_dynacase2odoo.is_revue_lancement_mail_template').sudo()     
         email_values = {
+            'email_to'      : self.get_email_to(),
             'email_cc'      : self.get_copie(),
             'auto_delete'   : False,
-            'recipient_ids' : self.get_partners_ids(),
+            #'recipient_ids' : self.get_partners_ids(),
             'scheduled_date': False,
         }
         template.send_mail(self.id, force_send=True, raise_exception=False, email_values=email_values)
