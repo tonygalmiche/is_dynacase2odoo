@@ -48,35 +48,35 @@
                             string="Copie données revue de contrat" 
                             type="object" class="btn" 
                             attrs="{'invisible': ['|',('state', '=', 'rl_diffuse'),('rl_num_rcid','=',False)]}"
-                            groups="is_dynacase2odoo.is_gestionnaire_revue_lancement_group"
+                            groups="is_dynacase2odoo.is_gestionnaire_projet_group"
                         />
                         <button 
                             name="action_vers_diffuse" 
                             string="Vers Diffusé" type="object" 
                             class="btn-primary" 
                             attrs="{'invisible': [('state', 'in', ['rl_diffuse',None,False])]}"
-                            groups="is_dynacase2odoo.is_gestionnaire_revue_lancement_group"
+                            groups="is_dynacase2odoo.is_gestionnaire_projet_group"
                         />
                         <button 
                             name="action_vers_brouillon" 
                             string="Vers Brouillon" 
                             type="object" class="btn-primary" 
                             attrs="{'invisible': [('state', '=', 'rl_brouillon')]}"
-                            groups="is_dynacase2odoo.is_gestionnaire_revue_lancement_group"
+                            groups="is_dynacase2odoo.is_gestionnaire_projet_group"
                         />
                         <button 
                             name="dupliquer_rl_action"
                             string="Dupliquer cette RL et l'associer à la dernière RC"
                             type="object"
                             attrs="{'invisible': ['|',('state', '=', 'brouillon'),('rl_num_rcid','=',False)]}" 
-                            groups="is_dynacase2odoo.is_gestionnaire_revue_lancement_group"
+                            groups="is_dynacase2odoo.is_gestionnaire_projet_group"
                         />
                         <button 
                             name="voir_investissements_action" 
                             string="Voir les investissements" 
                             type="object"
                             attrs="{'invisible': [('state', '=', 'rl_brouillon')]}"
-                            groups="is_dynacase2odoo.is_gestionnaire_revue_lancement_group"
+                            groups="is_dynacase2odoo.is_gestionnaire_projet_group"
                         />
                      
                         <field name="state" widget="statusbar" />

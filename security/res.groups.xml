@@ -17,11 +17,11 @@
         <field name="comment"></field>
         <field name="category_id" ref="is_plastigray16.is_groupe_plastigray_module_category"/>
     </record>
-    <record model="res.groups" id="is_gestionnaire_revue_lancement_group" >
+    <!-- <record model="res.groups" id="is_gestionnaire_revue_lancement_group" >
         <field name="name">Gestionnaire des revues de lancement</field>
         <field name="comment"></field>
         <field name="category_id" ref="is_plastigray16.is_groupe_plastigray_module_category"/>
-    </record>
+    </record> -->
 
     <record model="res.groups" id="is_gestionnaire_facture_outillage_group" >
         <field name="name">Gestionnaire facture outillage</field>
