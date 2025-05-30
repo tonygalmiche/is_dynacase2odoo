@@ -93,6 +93,7 @@
                                         <field name="caracteristique_specifique"/>
                                         <field name="controle_qualite"/>
                                         <field name="conditions_stockage"/>
+                                        <field name="empreinte_carbonne"/>
                                     </group>
                                 </group>
                             </page>
@@ -145,6 +146,7 @@
                     <field name="mfr"             optional="hide"/>
                     <field name="mvr"             optional="hide"/>
                     <field name="caracteristique_specifique" optional="hide"/>
+                    <field name="empreinte_carbonne"         optional="hide"/>
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
