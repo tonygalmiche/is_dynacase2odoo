@@ -178,7 +178,7 @@ class is_facture_outillage_ligne(models.Model):
             cr_odoo1,test = self.get_cr_odoo1()
             url=False
             if obj.type_facture in ['Facture','Avoir']:
-                SQL="SELECT id from account_move where name=%s"
+                SQL="SELECT id from account_move where name=%s and move_type in ('out_invoice','out_refund')"
                 cr_odoo1.execute(SQL,[obj.num_facture])
                 rows = cr_odoo1.fetchall()
                 for row in rows:    
