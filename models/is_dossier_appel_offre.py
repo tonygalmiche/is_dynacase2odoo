@@ -51,6 +51,12 @@ _OFFRE_DECROCHEE=([
 ])
 
 
+_TYPE_PROJET=([
+    ('developpement', 'Projet en développement'),
+    ('transfert'    , 'Projet en transfert'),
+])
+
+
 class is_dossier_appel_offre(models.Model):
     _name = "is.dossier.appel.offre"
     _inherit=['mail.thread']
@@ -111,12 +117,17 @@ class is_dossier_appel_offre(models.Model):
         return res
 
 
+
+# dao_typeprojet
+ #| ,Projet en développement|Projet en développement,Projet en transfert|Projet en transfert
+
     dao_num          = fields.Char("Numéro"                           , tracking=True, readonly=True, copy=False)
     dao_date         = fields.Date("Date consultation"                , tracking=True, default=fields.Date.context_today,required=True, copy=False)
     dao_annee        = fields.Char("Année consultation"               , tracking=True, compute="_compute_dao_annee",store=True, readonly=True)
     client_id        = fields.Many2one("res.partner", string="Client" , tracking=True, domain=[("is_company","=",True), ("customer","=",True)])
     prospect         = fields.Char("Prospect / Suspect"               , tracking=True)
     dao_typeclient   = fields.Char("Type client"                      , tracking=True, compute="_compute_dao_typeclient",store=True, readonly=True)
+    dao_typeprojet   = fields.Selection(_TYPE_PROJET, "Type de projet", tracking=True)
     dao_sectclient   = fields.Char("Section client (Dynacase)"        , readonly=True)
     secteur_activite = fields.Many2one('is.secteur.activite', "Secteur d'activité", tracking=True, compute="_compute_secteur_activite",store=True, readonly=False)
     commercial_id    = fields.Many2one("res.users", string="Commercial"           , tracking=True, compute="_compute_secteur_activite",store=True, readonly=False)
