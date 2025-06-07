@@ -606,6 +606,27 @@ class IsDocMoule(models.Model):
         for obj in self:
             if obj.ppr_type_demande=='AUTO':
                 rsp_auto=False
+                if obj.param_project_id.ppr_famille=="Fiche technique matière":
+                    if obj.idmoule:
+                        #** Recherche des articles liés au moule **************
+                        for line in obj.idmoule.article_ids:
+                            code_pg = line.article_id.code_pg or ''
+                            if code_pg[0:2]=='50':
+                                domain=[
+                                    ('ppr_famille'  ,'=', 'Caractéristiques technique'),
+                                    ('type_document','=', 'Article'),
+                                ]
+                                familles=self.env['is.param.project'].search(domain,limit=1)
+                                for famille in familles:
+                                    domain=[
+                                        ('etat','=','F'),
+                                        ('param_project_id'  ,'=',famille.id),
+                                        ('dossier_article_id','=',line.article_id.id),
+                                    ]
+                                    docs=self.env['is.doc.moule'].search(domain,order='j_prevue desc',limit=1)
+                                    for doc in docs:
+                                        rsp_auto = doc.rsp_pj
+
                 dao = obj.idmoule.dossier_appel_offre_id or obj.dossierf_id.dossier_appel_offre_id
                 if dao:
                     if obj.param_project_id.ppr_famille=="Dossier commercial":
@@ -624,8 +645,6 @@ class IsDocMoule(models.Model):
                     obj.etat='F'
                 obj.rsp_auto = rsp_auto
                 _logger.info("actualisation_famille_automatique_action : %s/%s : %s : rsp_auto=%s"%(ct,nb,obj.param_project_id.ppr_famille,rsp_auto))
-
-
             ct+=1
         return []
 
