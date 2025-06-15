@@ -37,6 +37,7 @@
                 <form string="Revue de contrat">
                     <header>
                         <field name="dynacase_id" invisible="1"/>
+                        <field name="readonly"    invisible="1"/>
                         <button 
                             name="lien_vers_dynacase_action"
                             string="Dynacase"
@@ -101,7 +102,7 @@
                                         <field 
                                             name="rc_doc_moule_assemblage" 
                                             attrs="{
-                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'readonly': [('readonly', '=', True)],
                                                 'required': [('state', '=', 'brouillon')]
                                             }"
                                         />
@@ -126,7 +127,7 @@
                                         <field 
                                             name="rc_type_automobile" 
                                             attrs="{
-                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'readonly': [('readonly', '=', True)],
                                                 'invisible': [('rc_doc_moule_assemblage', '=', False)]
                                             }" 
                                         />
@@ -145,32 +146,32 @@
                                                 'invisible': [('rc_client', '=', False)]
                                             }" 
                                         />
-                                        <field name="rc_duration" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_product_dest" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_cust_wait" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_done_study" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_duration" attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_product_dest" attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_cust_wait" attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_done_study" attrs="{'readonly': [('readonly', '=', True)]}" />
                                     </group>
                                 </group>
                                 <group col="2" name="rc_presentation_tab" string="Principales dates" attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}" >
                                     <group name="rc_presentation_tab_date" string="Date">
-                                        <field name="rc_cmd_date" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_dfn_ro_date" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_first_m_try" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_ei_pres" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_dms_date" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_eop_date" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_cmd_date" attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_dfn_ro_date" attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_first_m_try" attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_ei_pres" attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_dms_date" attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_eop_date" attrs="{'readonly': [('readonly', '=', True)]}" />
                                     </group>
                                     <group name="rc_presentation_tab_vendues" string="Nb pièces vendues">
-                                        <field name="rc_cmd_date_nb" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_dfn_ro_date_nb" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_first_m_try_nb" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_ei_pres_nb" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_dms_date_nb" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eop_date_nb" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                        <field name="rc_cmd_date_nb" nolabel="1" colspan="2" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_dfn_ro_date_nb" nolabel="1" colspan="2" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_first_m_try_nb" nolabel="1" colspan="2" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_ei_pres_nb" nolabel="1" colspan="2" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_dms_date_nb" nolabel="1" colspan="2" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_eop_date_nb" nolabel="1" colspan="2" attrs="{'readonly': [('readonly', '=', True)]}"/>
                                     </group>
                                 </group>
                                 <group string="Commentaire spécifique (essais supplémentaire)" attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}">
-                                    <field name="rc_nb_pce_p_jal" colspan="2" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                    <field name="rc_nb_pce_p_jal" colspan="2" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>
                                 </group>
 
 
@@ -224,57 +225,57 @@
 
                             <page name="rc_donnees_economiques_tab" string="Données économiques et de fabrication"  attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}" >
                                 <group name="rc_donnees_economiques_tab" string="Décomposition prix" col="4" colspan="4">
-                                    <field name="decomposition_prix_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state', '!=', 'brouillon')]}" >
+                                    <field name="decomposition_prix_ids" nolabel="1" colspan="4" attrs="{'readonly': [('readonly', '=', True)]}" >
                                         <form>
                                             <group col="3">
                                                 <group>
-                                                    <field name="rc_price_comp_article" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                    <field name="rc_reference_client" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_year_quantity" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_price_clientid" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_price_comp_article" attrs="{'readonly': [('parent.readonly', '=', True)]}"  />
+                                                    <field name="rc_reference_client" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_year_quantity" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_price_clientid" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
                                                 </group>
                                                 <group>
-                                                    <field name="rc_mat_part"  attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                                    <field name="rc_comp_part" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_va_injection"  attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                                    <field name="rc_va_assembly" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_emb_part" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_port_fee" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_logistic" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
+                                                    <field name="rc_mat_part"  attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                                    <field name="rc_comp_part" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_va_injection"  attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                                    <field name="rc_va_assembly" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_emb_part" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_port_fee" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_logistic" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
                                                 </group>
                                                 <group>
-                                                    <field name="rc_moul_amort" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_moul_amort_interne" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_moul_cagnotage"  attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                                    <field name="rc_moul_amort_commentaire" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_preserie_surcout" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_preserie_surcout_commentaire" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_sell_price"  attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_moul_amort" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_moul_amort_interne" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_moul_cagnotage"  attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                                    <field name="rc_moul_amort_commentaire" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_preserie_surcout" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_preserie_surcout_commentaire" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_sell_price"  attrs="{'readonly': [('parent.readonly', '=', True)]}" />
                                                     <field name="rc_total"/>
                                                     <field name="rc_ecart" attrs="{'invisible':[('rc_ecart','=',0)]}" style="background-color:orange"/>
                                                 </group>
                                             </group>
                                         </form>
                                         <tree>
-                                            <field name="rc_price_comp_article" optional="show" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                            <field name="rc_reference_client" optional="show" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                            <field name="rc_year_quantity" optional="show" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                            <field name="rc_price_clientid" optional="show" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                            <field name="rc_mat_part" optional="hide" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                            <field name="rc_comp_part" optional="hide" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                            <field name="rc_va_injection" optional="hide" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                            <field name="rc_va_assembly" optional="hide" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                            <field name="rc_emb_part" optional="hide" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                            <field name="rc_port_fee" optional="hide" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                            <field name="rc_logistic" optional="hide" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                            <field name="rc_moul_amort" optional="hide" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                            <field name="rc_moul_amort_interne" optional="hide" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                            <field name="rc_moul_cagnotage" optional="hide" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                            <field name="rc_moul_amort_commentaire" optional="hide" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                            <field name="rc_preserie_surcout" optional="hide" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                            <field name="rc_preserie_surcout_commentaire" optional="hide" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
+                                            <field name="rc_price_comp_article" optional="show" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                            <field name="rc_reference_client" optional="show" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                            <field name="rc_year_quantity" optional="show" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                            <field name="rc_price_clientid" optional="show" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                            <field name="rc_mat_part" optional="hide" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                            <field name="rc_comp_part" optional="hide" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                            <field name="rc_va_injection" optional="hide" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                            <field name="rc_va_assembly" optional="hide" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                            <field name="rc_emb_part" optional="hide" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                            <field name="rc_port_fee" optional="hide" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                            <field name="rc_logistic" optional="hide" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                            <field name="rc_moul_amort" optional="hide" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                            <field name="rc_moul_amort_interne" optional="hide" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                            <field name="rc_moul_cagnotage" optional="hide" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                            <field name="rc_moul_amort_commentaire" optional="hide" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                            <field name="rc_preserie_surcout" optional="hide" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                            <field name="rc_preserie_surcout_commentaire" optional="hide" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
                                             <field name="rc_total" optional="show"/>
-                                            <field name="rc_sell_price" optional="show" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
+                                            <field name="rc_sell_price" optional="show" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
                                             <field name="rc_ecart" optional="show"/>
                                         </tree>
                                     </field>
@@ -287,30 +288,30 @@
 
 
                                 <group name="rc_productivite_fr" string="Productivité" col="4" colspan="4">
-                                    <field name="productivite_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state', '!=', 'brouillon')]}" >
+                                    <field name="productivite_ids" nolabel="1" colspan="4" attrs="{'readonly': [('readonly', '=', True)]}" >
                                         <tree editable="bottom">
                                             <field 
                                                 name="decomposition_prix_id"      
-                                                attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" 
+                                                attrs="{'readonly': [('parent.readonly', '=', True)]}" 
                                                 domain="[('id', 'in', parent.decomposition_prix_ids)]"
                                             />
                                             <field name="rc_productivite_article"      readonly="1" force_save="1" optional="hide"/>
-                                            <field name="rc_productivite_annee"        attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                            <field name="rc_productivite_productivite" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                            <field name="rc_productivite_annee"        attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                            <field name="rc_productivite_productivite" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
                                         </tree>
                                     </field>
                                 </group>
                                 <group name="rc_previsions_fr" string="Prévisions" col="4" colspan="4">
-                                    <field name="previsions_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state', '!=', 'brouillon')]}" >
+                                    <field name="previsions_ids" nolabel="1" colspan="4" attrs="{'readonly': [('readonly', '=', True)]}" >
                                         <tree editable="bottom">
                                            <field 
                                                 name="decomposition_prix_id"      
-                                                attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" 
+                                                attrs="{'readonly': [('parent.readonly', '=', True)]}" 
                                                 domain="[('id', 'in', parent.decomposition_prix_ids)]"
                                             />
                                             <field name="rc_previsions_article"  readonly="1" force_save="1" optional="hide"/>
-                                            <field name="rc_previsions_annee"    attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                            <field name="rc_previsions_quantite" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                            <field name="rc_previsions_annee"    attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                            <field name="rc_previsions_quantite" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
                                         </tree>
                                     </field>
                                 </group>
@@ -319,20 +320,20 @@
 
 
                                 <group name="rc_donnees_fabrication_fr" string="Données de fabrication" attrs="{'invisible': [('rc_doc_moule_assemblage', 'not in', ('c2','c3'))]}">
-                                    <field name="rc_site_fabrication" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                    <field name="rc_site_fabrication" attrs="{'readonly': [('readonly', '=', True)]}" />
                                     <field 
                                         name="rc_site_fabrication_autre" 
                                         attrs="{
-                                            'readonly': [('state', '!=', 'brouillon')],
+                                            'readonly': [('readonly', '=', True)],
                                             'invisible': [('rc_site_fabrication', '!=', 'autre')],
                                         }"
                                     />
-                                    <field name="rc_process_fabrication"  attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                    <field name="rc_nb_empreintes_moule" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                    <field name="rc_moulage_sur" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                    <field name="rc_tonnage_presse_vendu" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                    <field name="rc_stock_securite" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                    <field name="rc_stock_securite_commentaire" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                    <field name="rc_process_fabrication"  attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                    <field name="rc_nb_empreintes_moule" attrs="{'readonly': [('readonly', '=', True)]}" />
+                                    <field name="rc_moulage_sur" attrs="{'readonly': [('readonly', '=', True)]}" />
+                                    <field name="rc_tonnage_presse_vendu" attrs="{'readonly': [('readonly', '=', True)]}" />
+                                    <field name="rc_stock_securite" attrs="{'readonly': [('readonly', '=', True)]}" />
+                                    <field name="rc_stock_securite_commentaire" attrs="{'readonly': [('readonly', '=', True)]}" />
                                 </group>
 
                               
@@ -340,9 +341,9 @@
 
 
                                 <group name="rc_df_d_injection" string="Dossier injection" attrs="{'invisible': [('rc_doc_moule_assemblage', 'not in', ('c2','c3'))]}">
-                                    <field name="rc_dfi_process_fab" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                    <field name="rc_dfi_schema_lieu_fab" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                    <field name="rc_dfi_classe_comrc" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                    <field name="rc_dfi_process_fab" attrs="{'readonly': [('readonly', '=', True)]}" />
+                                    <field name="rc_dfi_schema_lieu_fab" attrs="{'readonly': [('readonly', '=', True)]}" />
+                                    <field name="rc_dfi_classe_comrc" attrs="{'readonly': [('readonly', '=', True)]}" />
                                 </group>
 
 
@@ -350,51 +351,51 @@
 
 
                                 <group name="rc_ar_version" string="Versions Moule" col="4" colspan="4"  attrs="{'invisible': [('rc_doc_moule_assemblage', 'not in', ('c2','c3'))]}">
-                                    <field name="version_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state', '!=', 'brouillon')]}" >
+                                    <field name="version_ids" nolabel="1" colspan="4" attrs="{'readonly': [('readonly', '=', True)]}" >
                                         <form>
                                             <group col="3">
                                                 <group string="Version">
-                                                    <field name="rc_dfi_version"             attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_dfi_version"             attrs="{'readonly': [('parent.readonly', '=', True)]}" />
                                                     <field 
                                                         name="decomposition_prix_id"      
-                                                        attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" 
+                                                        attrs="{'readonly': [('parent.readonly', '=', True)]}" 
                                                         domain="[('id', 'in', parent.decomposition_prix_ids)]"
                                                     />
                                                     <field name="rc_dfi_article" readonly="1" force_save="1"/>
-                                                    <field name="rc_dfi_cycle"               attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_nb_emp"              attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_mod"                 attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_taux_rebut"          attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_dfi_cycle"               attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_nb_emp"              attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_mod"                 attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_taux_rebut"          attrs="{'readonly': [('parent.readonly', '=', True)]}" />
                                                 </group>
                                                 <group string="Matière 1">
-                                                    <field name="rc_dfi_matiere" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_poids_piece"         attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_poids_carotte"       attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_car_reb"             attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_car_reb_pourcentage" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_mat_prix_vendu" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_dfi_matiere" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_poids_piece"         attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_poids_carotte"       attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_car_reb"             attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_car_reb_pourcentage" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_mat_prix_vendu" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
                                                 </group>
                                                <group string="Matière 2">
-                                                    <field name="rc_dfi_matiere2" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_poids_piece2"         attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_poids_carotte2"       attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_car_reb2"             attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_car_reb_pourcentage2" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_mat_prix_vendu2" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_dfi_matiere2" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_poids_piece2"         attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_poids_carotte2"       attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_car_reb2"             attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_car_reb_pourcentage2" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_mat_prix_vendu2" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
                                                 </group>
                                                 <group string="Composants / Sous-traitance">
-                                                    <field name="rc_dfi_comp" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_comp_prix_vendu" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                                                    <field name="rc_dfi_sous_traitance" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_sous_traitance_prix" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_dfi_comp" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_comp_prix_vendu" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                                                    <field name="rc_dfi_sous_traitance" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_sous_traitance_prix" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
                                                 </group>
                                                  <group string="Emballage">
-                                                    <field name="rc_dfi_desc_emb" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_qte_carton" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_qte_palette" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_lot_liv" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_multiple_liv" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                                                    <field name="rc_dfi_lot_fab" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                                                    <field name="rc_dfi_desc_emb" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_qte_carton" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_qte_palette" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_lot_liv" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_multiple_liv" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                                                    <field name="rc_dfi_lot_fab" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
                                                 </group>
                                             </group>
                                         </form>
@@ -435,33 +436,33 @@
                                     </field>
                                 </group>
                                 <group>
-                                    <field name="rc_dfi_temp_occ_pm" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                    <field name="rc_dfi_temp_occ_pm" attrs="{'readonly': [('readonly', '=', True)]}" />
                                 </group>
                                 <group name="rc_df_d_emballage" string="Dossier assemblage" attrs="{'invisible': [('rc_doc_moule_assemblage', 'not in', ('c1'))]}">
-                                    <field name="rc_dfe_desc_proc" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                    <field name="rc_dfe_sch_lieu_fab" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                    <field name="rc_dfe_desc_proc" attrs="{'readonly': [('readonly', '=', True)]}" />
+                                    <field name="rc_dfe_sch_lieu_fab" attrs="{'readonly': [('readonly', '=', True)]}" />
                                 </group>
 
 
 
                                 <group name="rc_ar_dfe_version" string="Versions Dossier F" col="4" colspan="4" attrs="{'invisible': [('rc_doc_moule_assemblage', 'not in', ('c1'))]}">
-                                    <field name="dfe_version_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state', '!=', 'brouillon')]}" >
+                                    <field name="dfe_version_ids" nolabel="1" colspan="4" attrs="{'readonly': [('readonly', '=', True)]}" >
                                         <form>
                                             <group>
-                                                <field name="rc_dfe_version" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_comp" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_comp_pri_vendu" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_cycle" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_mod" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_taux_rebut" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_desc_emaballage" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_sous_traitance" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_sous_traitance_prix" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_qte_carton" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_qte_palette" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_lot_livraison" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_multiple_liv" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
-                                                <field name="rc_dfe_lot_fab" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"  />
+                                                <field name="rc_dfe_version" attrs="{'readonly': [('parent.readonly', '=', True)]}"  />
+                                                <field name="rc_dfe_comp" attrs="{'readonly': [('parent.readonly', '=', True)]}"  />
+                                                <field name="rc_dfe_comp_pri_vendu" attrs="{'readonly': [('parent.readonly', '=', True)]}"  />
+                                                <field name="rc_dfe_cycle" attrs="{'readonly': [('parent.readonly', '=', True)]}"  />
+                                                <field name="rc_dfe_mod" attrs="{'readonly': [('parent.readonly', '=', True)]}"  />
+                                                <field name="rc_dfe_taux_rebut" attrs="{'readonly': [('parent.readonly', '=', True)]}"  />
+                                                <field name="rc_dfe_desc_emaballage" attrs="{'readonly': [('parent.readonly', '=', True)]}"  />
+                                                <field name="rc_dfe_sous_traitance" attrs="{'readonly': [('parent.readonly', '=', True)]}"  />
+                                                <field name="rc_dfe_sous_traitance_prix" attrs="{'readonly': [('parent.readonly', '=', True)]}"  />
+                                                <field name="rc_dfe_qte_carton" attrs="{'readonly': [('parent.readonly', '=', True)]}"  />
+                                                <field name="rc_dfe_qte_palette" attrs="{'readonly': [('parent.readonly', '=', True)]}"  />
+                                                <field name="rc_dfe_lot_livraison" attrs="{'readonly': [('parent.readonly', '=', True)]}"  />
+                                                <field name="rc_dfe_multiple_liv" attrs="{'readonly': [('parent.readonly', '=', True)]}"  />
+                                                <field name="rc_dfe_lot_fab" attrs="{'readonly': [('parent.readonly', '=', True)]}"  />
                                             </group>
                                         </form>
                                         <tree>
@@ -483,13 +484,13 @@
                                     </field>
                                 </group>
                                 <group name="rc_df_fr_pieces_jointes" string="Pièces jointes">
-                                    <field name="rc_df_engagement_faisabilite" widget="many2many_binary" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                    <field name="rc_df_engagement_faisabilite" widget="many2many_binary" attrs="{'readonly': [('readonly', '=', True)]}"/>
                                 </group>
                                 <group name="rc_df_engagement_faisabilite_autre_ar" string="Engagement de faisabilité (Autres)">
-                                    <field name="rc_df_engagement_faisabilite_autre" widget="many2many_binary" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                    <field name="rc_df_engagement_faisabilite_autre" widget="many2many_binary" attrs="{'readonly': [('readonly', '=', True)]}"/>
                                 </group>
                                 <group>
-                                    <field name="rc_df_fiche_capacitaire" widget="many2many_binary" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                    <field name="rc_df_fiche_capacitaire" widget="many2many_binary" attrs="{'readonly': [('readonly', '=', True)]}"/>
                                 </group>
 
 
@@ -497,57 +498,57 @@
                                 <group name="rc_eiv_fr" string="Enveloppe investissement vendue">
                                     <label for="rc_eiv_moule"            attrs="{'invisible': [('rc_doc_moule_assemblage','=','c1')]}"/>
                                     <div class="o_row no-gutters d-flex" attrs="{'invisible': [('rc_doc_moule_assemblage','=','c1')]}">
-                                        <field name="rc_eiv_moule"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_moule_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                        <field name="rc_eiv_moule"        class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_eiv_moule_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>  
                                     </div>
                                     <label for="rc_eiv_etude"/>
                                     <div class="o_row no-gutters d-flex">
-                                        <field name="rc_eiv_etude"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_etude_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                        <field name="rc_eiv_etude"        class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_eiv_etude_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>  
                                     </div>
                                     <label for="rc_eiv_main_prehension"  attrs="{'invisible': [('rc_doc_moule_assemblage','=','c1')]}"/>
                                     <div class="o_row no-gutters d-flex" attrs="{'invisible': [('rc_doc_moule_assemblage','=','c1')]}">
-                                        <field name="rc_eiv_main_prehension"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_main_prehension_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                        <field name="rc_eiv_main_prehension"        class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_eiv_main_prehension_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>  
                                     </div>
                                     <label for="rc_eiv_barre_chaude"     attrs="{'invisible': [('rc_doc_moule_assemblage','=','c1')]}"/>
                                     <div class="o_row no-gutters d-flex" attrs="{'invisible': [('rc_doc_moule_assemblage','=','c1')]}">
-                                        <field name="rc_eiv_barre_chaude"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_barre_chaude_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                        <field name="rc_eiv_barre_chaude"        class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_eiv_barre_chaude_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>  
                                     </div>
                                     <label for="rc_eiv_gab_controle"/>
                                     <div class="o_row no-gutters d-flex">
-                                        <field name="rc_eiv_gab_controle"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_gab_controle_cmt"    class="oe_inline width100" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                        <field name="rc_eiv_gab_controle"        class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_eiv_gab_controle_cmt"    class="oe_inline width100" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>  
                                     </div>
                                     <label for="rc_eiv_mach_spec"/>
                                     <div class="o_row no-gutters d-flex">
-                                        <field name="rc_eiv_mach_spec"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_mach_spec_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                        <field name="rc_eiv_mach_spec"        class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_eiv_mach_spec_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>  
                                     </div>
                                     <label for="rc_eiv_plan_valid"/>
                                     <div class="o_row no-gutters d-flex">
-                                        <field name="rc_eiv_plan_valid"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_plan_valid_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                        <field name="rc_eiv_plan_valid"        class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_eiv_plan_valid_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>  
                                     </div>
                                     <label for="rc_eiv_mis_point"/>
                                     <div class="o_row no-gutters d-flex">
-                                        <field name="rc_eiv_mis_point"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_mis_point_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                        <field name="rc_eiv_mis_point"        class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_eiv_mis_point_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>  
                                     </div>
                                     <label for="rc_eiv_pack"/>
                                     <div class="o_row no-gutters d-flex">
-                                        <field name="rc_eiv_pack"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_pack_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                        <field name="rc_eiv_pack"        class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_eiv_pack_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>  
                                     </div>
                                     <label for="rc_eiv_amort"/>
                                     <div class="o_row no-gutters d-flex">
-                                        <field name="rc_eiv_amort"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_amort_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>  
+                                        <field name="rc_eiv_amort"        class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_eiv_amort_cmt"    class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>  
                                     </div>
                                     <label for="rc_eiv_total"/>
                                     <div class="o_row no-gutters d-flex">
-                                        <field name="rc_eiv_total"        class="oe_inline" nolabel="1" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                        <field name="rc_eiv_total"        class="oe_inline" nolabel="1" attrs="{'readonly': [('readonly', '=', True)]}"/>
                                     </div>
                                 </group> 
                                 -->
@@ -555,53 +556,53 @@
                                 <group name="rc_eiv_fr" string="Enveloppe investissement vendue"/>
                                 <group col="6" attrs="{'invisible': [('rc_doc_moule_assemblage','=','c1')]}">
                                     <group><label for="rc_eiv_moule"      colspan="2"/></group>
-                                    <group><field name="rc_eiv_moule"     colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
-                                    <group><field name="rc_eiv_moule_cmt" colspan="8" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_moule"     colspan="2" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_moule_cmt" colspan="8" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
                                 </group>
                                 <group col="6">
                                     <group><label for="rc_eiv_etude"      colspan="2"/></group>
-                                    <group><field name="rc_eiv_etude"     colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
-                                    <group><field name="rc_eiv_etude_cmt" colspan="8" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_etude"     colspan="2" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_etude_cmt" colspan="8" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
                                 </group>
                                 <group col="6" attrs="{'invisible': [('rc_doc_moule_assemblage','=','c1')]}">
                                     <group><label for="rc_eiv_main_prehension"      colspan="2"/></group>
-                                    <group><field name="rc_eiv_main_prehension"     colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
-                                    <group><field name="rc_eiv_main_prehension_cmt" colspan="8" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_main_prehension"     colspan="2" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_main_prehension_cmt" colspan="8" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
                                 </group>
                                 <group col="6" attrs="{'invisible': [('rc_doc_moule_assemblage','=','c1')]}">
                                     <group><label for="rc_eiv_barre_chaude"      colspan="2"/></group>
-                                    <group><field name="rc_eiv_barre_chaude"     colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
-                                    <group><field name="rc_eiv_barre_chaude_cmt" colspan="8" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_barre_chaude"     colspan="2" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_barre_chaude_cmt" colspan="8" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
                                 </group>
                                 <group col="6">
                                     <group><label for="rc_eiv_gab_controle"      colspan="2"/></group>
-                                    <group><field name="rc_eiv_gab_controle"     colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
-                                    <group><field name="rc_eiv_gab_controle_cmt" colspan="8" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_gab_controle"     colspan="2" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_gab_controle_cmt" colspan="8" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
                                 </group>
                                 <group col="6">
                                     <group><label for="rc_eiv_mach_spec"      colspan="2"/></group>
-                                    <group><field name="rc_eiv_mach_spec"     colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
-                                    <group><field name="rc_eiv_mach_spec_cmt" colspan="8" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_mach_spec"     colspan="2" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_mach_spec_cmt" colspan="8" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
                                 </group>
                                 <group col="6">
                                     <group><label for="rc_eiv_plan_valid"      colspan="2"/></group>
-                                    <group><field name="rc_eiv_plan_valid"     colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
-                                    <group><field name="rc_eiv_plan_valid_cmt" colspan="8" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_plan_valid"     colspan="2" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_plan_valid_cmt" colspan="8" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
                                 </group>
                                 <group col="6">
                                     <group><label for="rc_eiv_mis_point"      colspan="2"/></group>
-                                    <group><field name="rc_eiv_mis_point"     colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
-                                    <group><field name="rc_eiv_mis_point_cmt" colspan="8" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_mis_point"     colspan="2" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_mis_point_cmt" colspan="8" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
                                 </group>
                                 <group col="6">
                                     <group><label for="rc_eiv_pack"      colspan="2"/></group>
-                                    <group><field name="rc_eiv_pack"     colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
-                                    <group><field name="rc_eiv_pack_cmt" colspan="8" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_pack"     colspan="2" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_pack_cmt" colspan="8" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
                                 </group>
                                 <group col="6">
                                     <group><label for="rc_eiv_amort"      colspan="2"/></group>
-                                    <group><field name="rc_eiv_amort"     colspan="2" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
-                                    <group><field name="rc_eiv_amort_cmt" colspan="8" attrs="{'readonly': [('state', '!=', 'brouillon')]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_amort"     colspan="2" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
+                                    <group><field name="rc_eiv_amort_cmt" colspan="8" attrs="{'readonly': [('readonly', '=', True)]}" nolabel="1"/></group>
                                 </group>
                                 <group col="6">
                                     <group><label for="rc_eiv_total"  colspan="2"/></group>
@@ -616,31 +617,31 @@
                                         <field 
                                             name="rc_eiv_moule"  
                                             attrs="{
-                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'readonly': [('readonly', '=', True)],
                                                 'invisible': [('rc_doc_moule_assemblage','=','c1')]
                                             }"
                                         />
-                                        <field name="rc_eiv_etude" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_eiv_etude" attrs="{'readonly': [('readonly', '=', True)]}" />
                                        <field 
                                             name="rc_eiv_main_prehension"  
                                             attrs="{
-                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'readonly': [('readonly', '=', True)],
                                                 'invisible': [('rc_doc_moule_assemblage','=','c1')]
                                             }"
                                         />
                                        <field 
                                             name="rc_eiv_barre_chaude"  
                                             attrs="{
-                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'readonly': [('readonly', '=', True)],
                                                 'invisible': [('rc_doc_moule_assemblage','=','c1')]
                                             }"
                                         />
-                                        <field name="rc_eiv_gab_controle" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_eiv_mach_spec"    attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_eiv_plan_valid"   attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_mis_point"    attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_eiv_pack"         attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_eiv_amort"        attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_eiv_gab_controle" attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_eiv_mach_spec"    attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_eiv_plan_valid"   attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_eiv_mis_point"    attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_eiv_pack"         attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_eiv_amort"        attrs="{'readonly': [('readonly', '=', True)]}" />
                                         <field name="rc_eiv_total"/>
                                     </group>
                                     <group>
@@ -648,16 +649,16 @@
                                             name="rc_eiv_moule_cmt"  
                                             nolabel="1" colspan="10"
                                             attrs="{
-                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'readonly': [('readonly', '=', True)],
                                                 'invisible': [('rc_doc_moule_assemblage','=','c1')]
                                             }"
                                         />
-                                        <field name="rc_eiv_etude_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                        <field name="rc_eiv_etude_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('readonly', '=', True)]}"/>
                                         <field 
                                             name="rc_eiv_main_prehension_cmt"  
                                             nolabel="1" colspan="10"
                                             attrs="{
-                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'readonly': [('readonly', '=', True)],
                                                 'invisible': [('rc_doc_moule_assemblage','=','c1')]
                                             }"
                                         />
@@ -665,16 +666,16 @@
                                             name="rc_eiv_barre_chaude_cmt"  
                                             nolabel="1" colspan="10"
                                             attrs="{
-                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'readonly': [('readonly', '=', True)],
                                                 'invisible': [('rc_doc_moule_assemblage','=','c1')]
                                             }"
                                         />
-                                        <field name="rc_eiv_gab_controle_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_mach_spec_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_plan_valid_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_mis_point_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_pack_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
-                                        <field name="rc_eiv_amort_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('state', '!=', 'brouillon')]}"/>
+                                        <field name="rc_eiv_gab_controle_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_eiv_mach_spec_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_eiv_plan_valid_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_eiv_mis_point_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_eiv_pack_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                                        <field name="rc_eiv_amort_cmt" nolabel="1" colspan="10" attrs="{'readonly': [('readonly', '=', True)]}"/>
                                     </group>
                                 </group>
                                 -->
@@ -684,9 +685,9 @@
                             <page name="rc_specificites_tab" string="Spécificités et Éléments qualités" attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}" >
                                 <group name="rc_specificites_tab" string="Spécificités">
                                     <group>
-                                        <field name="rc_sp_type_piece" widget="radio" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_sp_aspect" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_sp_piece_technique"  attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_sp_type_piece" widget="radio" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_sp_aspect" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_sp_piece_technique"  attrs="{'readonly': [('readonly', '=', True)]}" />
                                     </group>
                                     <group>
                                     </group>
@@ -694,77 +695,77 @@
                                 <group>
                                     <label for="rc_sp_piece_reglem" />
                                     <div>
-                                        <field name="rc_sp_piece_reglem" class="oe_no_button" style="width: 20%" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_sp_piece_reglem" class="oe_no_button" style="width: 20%" attrs="{'readonly': [('readonly', '=', True)]}" />
                                         <field 
                                             name="rc_sp_piece_reglem_cmt" class="oe_no_button" style="width: 80%" widget="char" 
                                             attrs="{
-                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'readonly': [('readonly', '=', True)],
                                                 'required': [('rc_sp_piece_reglem', '=', True)]
                                             }" 
                                         />
                                     </div>
                                     <label for="rc_sp_piece_sec" />
                                     <div>
-                                        <field name="rc_sp_piece_sec" class="oe_no_button" style="width: 20%" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_sp_piece_sec" class="oe_no_button" style="width: 20%" attrs="{'readonly': [('readonly', '=', True)]}" />
                                         <field 
                                             name="rc_sp_piece_sec_cmt" class="oe_no_button" style="width: 80%" widget="char" 
                                             attrs="{
-                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'readonly': [('readonly', '=', True)],
                                                 'required': [('rc_sp_piece_sec', '=', True)]
                                             }"
                                         />
                                     </div>
                                     <label for="rc_sp_piece_sec2" />
                                     <div>
-                                        <field name="rc_sp_piece_sec2" class="oe_no_button" style="width: 20%" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_sp_piece_sec2" class="oe_no_button" style="width: 20%" attrs="{'readonly': [('readonly', '=', True)]}" />
                                         <field 
                                             name="rc_sp_piece_sec2_cmt" class="oe_no_button" style="width: 80%" widget="char" 
                                             attrs="{
-                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'readonly': [('readonly', '=', True)],
                                                 'required': [('rc_sp_piece_sec2', '=', True)]
                                             }"
                                         />
                                     </div>
                                     <label for="rc_sp_com_exig_part" />
                                     <div>
-                                        <field name="rc_sp_com_exig_part" class="oe_no_button" style="width: 20%" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_sp_com_exig_part" class="oe_no_button" style="width: 20%" attrs="{'readonly': [('readonly', '=', True)]}" />
                                         <field 
                                             name="rc_sp_com_exig_part_cmt" class="oe_no_button" style="width: 80%" widget="char" 
                                             attrs="{
-                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'readonly': [('readonly', '=', True)],
                                                 'required': [('rc_sp_com_exig_part', '=', True)]
                                             }" 
                                         />
                                     </div>
                                     <label for="rc_sp_crs" />
                                     <div>
-                                        <field name="rc_sp_crs" class="oe_no_button" style="width: 20%" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_sp_crs" class="oe_no_button" style="width: 20%" attrs="{'readonly': [('readonly', '=', True)]}" />
                                         <field 
                                             name="rc_sp_crs_cmt" class="oe_no_button" style="width: 80%" widget="char" 
                                             attrs="{
-                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'readonly': [('readonly', '=', True)],
                                                 'required': [('rc_sp_crs', '=', True)]
                                             }"
                                         />
                                     </div>
                                     <label for="rc_sp_carac_spec" />
                                     <div>
-                                        <field name="rc_sp_carac_spec" class="oe_no_button" style="width: 20%" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_sp_carac_spec" class="oe_no_button" style="width: 20%" attrs="{'readonly': [('readonly', '=', True)]}" />
                                         <field 
                                             name="rc_sp_carac_spec_cmt" class="oe_no_button" style="width: 80%" widget="char" 
                                             attrs="{
-                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'readonly': [('readonly', '=', True)],
                                                 'required': [('rc_sp_carac_spec', '=', True)]
                                             }" 
                                         />
                                     </div>
                                     <label for="rc_sp_mat_con_pg" />
                                     <div>
-                                        <field name="rc_sp_mat_con_pg" class="oe_no_button" style="width: 20%" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_sp_mat_con_pg" class="oe_no_button" style="width: 20%" attrs="{'readonly': [('readonly', '=', True)]}" />
                                         <field 
                                             name="rc_sp_mat_con_pg_cmt" class="oe_no_button" style="width: 80%" widget="char"
                                             attrs="{
-                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'readonly': [('readonly', '=', True)],
                                                 'required': [('rc_sp_mat_con_pg', '=', True)]
                                             }"
                                         />
@@ -772,59 +773,59 @@
                                 </group>
                                 <group>
                                     <group name="rc_edl_at_fr" string="Liste modele auto" attrs="{'invisible': [('rc_type_automobile', '!=', 'Oui')]}">
-                                        <field name="rc_edl_at_n_ppm" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_at_eng_fais" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_at_syn_am_proc" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_at_synop_fabr"  attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_edl_at_plan_surv" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_at_car_spec" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_at_plan_piece" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_at_pres_util" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_at_fiche_tech_mat" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_edl_at_rapport_ctrl" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_at_cap" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_at_plan_m_ctrl"  attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_edl_at_moy_ctrl" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_at_ut_moy_ctrl"  attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_edl_at_plan_valid" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_at_rap_ess_lab" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_at_acc_mont" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_at_acc_style"  attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_edl_at_fic_cond" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_at_dec_idms" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_at_fic_cap" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_at_aud_proc" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_at_acc_ei" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
+                                        <field name="rc_edl_at_n_ppm" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_at_eng_fais" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_at_syn_am_proc" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_at_synop_fabr"  attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_edl_at_plan_surv" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_at_car_spec" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_at_plan_piece" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_at_pres_util" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_at_fiche_tech_mat" attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_edl_at_rapport_ctrl" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_at_cap" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_at_plan_m_ctrl"  attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_edl_at_moy_ctrl" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_at_ut_moy_ctrl"  attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_edl_at_plan_valid" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_at_rap_ess_lab" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_at_acc_mont" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_at_acc_style"  attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_edl_at_fic_cond" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_at_dec_idms" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_at_fic_cap" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_at_aud_proc" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_at_acc_ei" attrs="{'readonly': [('readonly', '=', True)]}"  />
                                     </group>
                                     <group name="rc_edl_n_at_fr" string="Liste modele hors auto" attrs="{'invisible': [('rc_type_automobile', '!=', 'Non')]}">
-                                        <field name="rc_edl_n_at_n_ppm" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_n_at_synt_amdec_proc"  attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_edl_n_at_syn_fab" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_n_at_plan_surv"  attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_edl_n_at_carac_spec"  attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_edl_n_at_plan_piece"  attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_edl_n_at_prec_ut" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_n_at_f_t_mat"  attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_edl_n_at_rprt_ctrl" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_n_at_cap" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_n_at_fic_cond"  attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
-                                        <field name="rc_edl_n_at_aud_proc" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_edl_n_at_acc_ei" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
+                                        <field name="rc_edl_n_at_n_ppm" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_n_at_synt_amdec_proc"  attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_edl_n_at_syn_fab" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_n_at_plan_surv"  attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_edl_n_at_carac_spec"  attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_edl_n_at_plan_piece"  attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_edl_n_at_prec_ut" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_n_at_f_t_mat"  attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_edl_n_at_rprt_ctrl" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_n_at_cap" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_n_at_fic_cond"  attrs="{'readonly': [('readonly', '=', True)]}" />
+                                        <field name="rc_edl_n_at_aud_proc" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_edl_n_at_acc_ei" attrs="{'readonly': [('readonly', '=', True)]}"  />
                                     </group>
                                     <group string="Exigences qualité supplémentaires"  attrs="{'invisible': [('rc_doc_moule_assemblage', '=', False)]}">
                                         <field 
                                             name="rc_synthese_amdec_process_choix" 
                                             attrs="{
-                                                'readonly': [('state', '!=', 'brouillon')],
+                                                'readonly': [('readonly', '=', True)],
                                                 'invisible': [('rc_edl_at_syn_am_proc', '=', False),('rc_edl_n_at_synt_amdec_proc', '=', False)]
                                             }"  
                                         />
-                                        <field name="rc_num_plan" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_num_dfn" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_num_cdc" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
-                                        <field name="rc_eqs_comment" attrs="{'readonly': [('state', '!=', 'brouillon')]}"  />
+                                        <field name="rc_num_plan" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_num_dfn" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_num_cdc" attrs="{'readonly': [('readonly', '=', True)]}"  />
+                                        <field name="rc_eqs_comment" attrs="{'readonly': [('readonly', '=', True)]}"  />
                                         <separator string="Insertion de pièces jointes" />
-                                        <field name="rc_eqs_pj" widget="many2many_binary" attrs="{'readonly': [('state', '!=', 'brouillon')]}" />
+                                        <field name="rc_eqs_pj" widget="many2many_binary" attrs="{'readonly': [('readonly', '=', True)]}" />
                                     </group>
                                 </group>
                             </page>
@@ -980,47 +981,47 @@
                 <form>
                     <group col="3">
                         <group string="Version">
-                            <field name="rc_dfi_version"             attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                            <field name="rc_dfi_version"             attrs="{'readonly': [('parent.readonly', '=', True)]}" />
                             <field 
                                 name="decomposition_prix_id"      
-                                attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" 
+                                attrs="{'readonly': [('parent.readonly', '=', True)]}" 
                                 domain="[('id', 'in', parent.decomposition_prix_ids)]"
                             />
                             <field name="rc_dfi_article" readonly="1" force_save="1"/>
-                            <field name="rc_dfi_cycle"               attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_nb_emp"              attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_mod"                 attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_taux_rebut"          attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                            <field name="rc_dfi_cycle"               attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_nb_emp"              attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_mod"                 attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_taux_rebut"          attrs="{'readonly': [('parent.readonly', '=', True)]}" />
                         </group>
                         <group string="Matière 1">
-                            <field name="rc_dfi_matiere" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_poids_piece"         attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_poids_carotte"       attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_car_reb"             attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_car_reb_pourcentage" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_mat_prix_vendu" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                            <field name="rc_dfi_matiere" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_poids_piece"         attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_poids_carotte"       attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_car_reb"             attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_car_reb_pourcentage" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_mat_prix_vendu" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
                         </group>
                         <group string="Matière 2">
-                            <field name="rc_dfi_matiere2" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_poids_piece2"         attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_poids_carotte2"       attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_car_reb2"             attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_car_reb_pourcentage2" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_mat_prix_vendu2" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                            <field name="rc_dfi_matiere2" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_poids_piece2"         attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_poids_carotte2"       attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_car_reb2"             attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_car_reb_pourcentage2" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_mat_prix_vendu2" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
                         </group>
                         <group string="Composants / Sous-traitance">
-                            <field name="rc_dfi_comp" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_comp_prix_vendu" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}"/>
-                            <field name="rc_dfi_sous_traitance" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_sous_traitance_prix" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                            <field name="rc_dfi_comp" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_comp_prix_vendu" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
+                            <field name="rc_dfi_sous_traitance" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_sous_traitance_prix" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
                         </group>
                             <group string="Emballage">
-                            <field name="rc_dfi_desc_emb" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_qte_carton" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_qte_palette" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_lot_liv" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_multiple_liv" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
-                            <field name="rc_dfi_lot_fab" attrs="{'readonly': [('parent.state', '!=', 'brouillon')]}" />
+                            <field name="rc_dfi_desc_emb" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_qte_carton" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_qte_palette" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_lot_liv" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_multiple_liv" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
+                            <field name="rc_dfi_lot_fab" attrs="{'readonly': [('parent.readonly', '=', True)]}" />
                         </group>
                     </group>
                 </form>

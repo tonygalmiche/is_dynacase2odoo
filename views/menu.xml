@@ -3,7 +3,13 @@
     <data>
 
         <!-- Gestion commcerciale -->
-        <menuitem name="Gestion commerciale" id="is_gestion_commerciale_menu" sequence="4" />
+        <record id="is_gestion_commerciale_menu" model="ir.ui.menu" >
+            <field name="name">Gestion commerciale</field>
+            <field name="sequence">4</field>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray16.is_employes_hors_production_group'),
+            ])]"/>
+        </record>
 
         <!-- Gestion commcerciale / Dossiers -->
         <menuitem 
@@ -118,7 +124,17 @@
 
 
 
-        <menuitem id="gestion_des_projets_menu"  sequence="5"  name="Gestion des projets"/>
+        <!-- Gestion des projets -->
+        <record id="gestion_des_projets_menu" model="ir.ui.menu" >
+            <field name="name">Gestion des projets</field>
+            <field name="sequence">5</field>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray16.is_employes_hors_production_group'),
+            ])]"/>
+        </record>
+
+
+
         <!-- Doc -->
         <menuitem 
             id="is_doc_moule_main_menu" sequence="10" name="Doc" 
@@ -371,17 +387,14 @@
 
 
         
-
-
-
-
-
-
-
-
-
-	<!-- Gestion des achats -->
-        <menuitem id="gestion_des_achats_menu"  sequence="5"  name="Gestion des achats"/>
+	    <!-- Gestion des achats -->
+        <record id="gestion_des_achats_menu" model="ir.ui.menu" >
+            <field name="name">Gestion des achats</field>
+            <field name="sequence">5</field>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray16.is_employes_hors_production_group'),
+            ])]"/>
+        </record>
         <record id="is_demande_modif_compte_fournisseur_menu" model="ir.ui.menu" >
            <field name="name">Demande de création ou de modification d'un compte Fournisseur</field>
            <field name="sequence">20</field>

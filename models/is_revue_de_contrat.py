@@ -225,12 +225,19 @@ class is_revue_de_contrat(models.Model):
         ("brouillon", "Brouillon"),
         ("diffuse"  , "Diffusé"),
     ], string="État", default='brouillon', copy=False, tracking=True)
-    active = fields.Boolean('Actif', default=True, tracking=True)
+    active   = fields.Boolean('Actif', default=True, tracking=True)
+    readonly = fields.Boolean('Readonly', default=False, compute="_compute_readonly", store=False, readonly=True)
 
 
-
-
-
+    def _compute_readonly(self):
+        for obj in self:
+            readonly = False
+            user = self.env.user
+            if obj.state != 'brouillon':
+                readonly = True
+            if user.has_group('base.group_system'):
+                readonly = False
+            obj.readonly = readonly
 
 
     def actualisation_champs_calcules_action(self):

@@ -13,9 +13,9 @@
             <field name="perm_unlink" eval="False"/>
         </record>
         <record id="access_is_dossier_appel_offre_write"  model="ir.model.access" >
-            <field name="name">Accès en modification au groupe 'Gestionnaire des projets'</field>
+            <field name="name">Accès en modification au groupe 'Modification dossier d’appel d’offre'</field>
             <field name="model_id"    eval="ref('model_is_dossier_appel_offre')"/>
-            <field name="group_id"    eval="ref('is_dynacase2odoo.is_gestionnaire_projet_group')"/>
+            <field name="group_id"    eval="ref('is_dynacase2odoo.is_modif_dossier_appel_offre')"/>
             <field name="perm_read"   eval="True"/>
             <field name="perm_write"  eval="True"/>
             <field name="perm_create" eval="False"/>
