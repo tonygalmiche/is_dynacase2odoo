@@ -194,6 +194,8 @@ class IsDocMoule(models.Model):
                 vsb=False
             if obj.etat!='AF':
                 vsb=False
+            if obj.ppr_type_demande == 'AUTO':
+                vsb=False
             if vsb and obj._origin.id:
                 domain=[
                     ('id','!=',obj._origin.id),
@@ -641,6 +643,9 @@ class IsDocMoule(models.Model):
                         rsp_auto=obj.get_pj(rc.rc_df_engagement_faisabilite)
                     if obj.param_project_id.ppr_famille=="Fiche capacitaire":
                         rsp_auto=obj.get_pj(rc.rc_df_fiche_capacitaire)
+                if obj.param_project_id.ppr_famille=="Obtenir la Commande client":
+                    if obj.dossier_modif_variante_id:
+                        rsp_auto = obj.dossier_modif_variante_id.demao_numcmd
                 if rsp_auto:
                     obj.etat='F'
                 obj.rsp_auto = rsp_auto
