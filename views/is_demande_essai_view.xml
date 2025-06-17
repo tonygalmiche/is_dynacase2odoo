@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="is_demande_essai_form_view">
+            <field name="name">is_demande_essai_form_view</field>
+            <field name="model">is.demande.essai</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Form">
+                    <header>
+                        <button
+                            name="lien_vers_dynacase_action"
+                            string="Dynacase"
+                            type="object" class="btn btn-info"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                            groups="base.group_system"
+                        />
+                        <field name="dynacase_id" invisible="1"/>
+                        <field name="state_readonly" invisible="1"/>
+                        <button
+                            name="vers_brouillon_action"
+                            string="vers Brouillon"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'diffuse')]}"
+                            groups="base.group_system"
+                        />
+                        <button
+                            name="vers_diffuse_action"
+                            string="vers Diffusé Planning"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'brouillon'), ('state', '!=', 'planifie')]}"
+                            groups="base.group_system"
+                        />
+                        <button
+                            name="vers_planifie_action"
+                            string="vers Planifié"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'diffuse'), ('state', '!=', 'cr')]}"
+                            groups="base.group_system"
+                        />
+                        <button
+                            name="vers_cr_action"
+                            string="vers CR Essai à faire"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'planifie'), ('state', '!=', 'metrologie'), ('state', '!=', 'termine')]}"
+                            groups="base.group_system"
+                        />
+                        <button
+                            name="vers_metrologie_action"
+                            string="vers Métrologie à faire"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'cr'), ('state', '!=', 'termine')]}"
+                            groups="base.group_system"
+                        />
+                        <button
+                            name="vers_termine_action"
+                            string="vers Terminé"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'cr'), ('state', '!=', 'metrologie'), ('state', '!=', 'solde')]}"
+                            groups="base.group_system"
+                        />
+                        <button
+                            name="vers_solde_action"
+                            string="vers Soldé"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'termine')]}"
+                            groups="base.group_system"
+                        />
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group string="Identification">
+                                <field name="langue"                      attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="type_essai"                  attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <!--field name="num_seq"/-->
+                                <!--field name="num_essai"/-->
+                                <!--field name="date"/-->
+                                <!--field name="user_id"/-->
+                                <field name="moule_id"                    attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('type_essai','!=','moule')]}"/>
+                                <field name="dossierf_id"                 attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('type_essai','!=','assemblage')]}"/>
+                                <field name="num_erd_id"                  attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('type_essai','!=','erd')]}"/>
+                                <!--field name="designation"/-->
+                                <field name="outillage_dispo"             attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="date_disp_out"               attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="etat_stock"                  attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="lieu_essai_id"               attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="lieu_essai_autre"            attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="resp_essai_id"               attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="resp_planning_id"            attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="ident_commentaire"           attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="autres_personnes_ids"        attrs="{'readonly': [('state_readonly','==',True)]}" widget="many2many_tags"/>
+                                <field name="semaine_essai"               attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="identification_cmt"          attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="temp_immob"                  attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <!--field name="nb_pieces_par_empreinte"/-->
+                                <field name="nb_pieces_client"            attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="nb_pieces_metrologie"        attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="nb_pieces_chef_projet"       attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <!--field name="nb_pieces_total"/-->
+                                <field name="nb_pieces_comenntaire"       attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="identification_particuliere" attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="besoin_mod"                  attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="piece_jointe_ids"            attrs="{'readonly': [('state_readonly','==',True)]}" widget="many2many_binary"/>
+                                <field name="images_ids"                  attrs="{'readonly': [('state_readonly','==',True)]}" widget="many2many_binary"/>
+                            </group>
+                            <group string="Matière / Colorant">
+                                <field name="code_matiere"                attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="code_matiere_recyclage"      attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="lieu_stockage_matiere"       attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="mat_disp"                    attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="mat_date_disp"               attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('mat_disp', '=', False)]}"/>
+                                <field name="code_matiere2"               attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="code_matiere_recyclage2"     attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="lieu_stockage_matiere2"      attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="mat_disp2"                   attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="mat_date_disp2"              attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('mat_disp2', '=', False)]}"/>
+                                <field name="code_colorant"               attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="lieu_stockage_colorant"      attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="pourcent_colorant"           attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="colorant_disp"               attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="colorant_date_disp"          attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('colorant_disp', '=', False)]}"/>
+                                <field name="fiche_tech_mat_ids"          attrs="{'readonly': [('state_readonly','==',True)]}" widget="many2many_binary"/>
+                                <field name="te_piece_jointe_ids"         attrs="{'readonly': [('state_readonly','==',True)]}" widget="many2many_binary" readonly="1"/>
+                            </group>
+                            <group string="Documents générés">
+                                <field name="demande_essai_pdf_ids"       attrs="{'readonly': [('state_readonly','==',True)]}" widget="many2many_binary"/>
+                                <field name="etiquette_pdf_ids"           attrs="{'readonly': [('state_readonly','==',True)]}" widget="many2many_binary"/>
+                                <field name="dynacase_id"                 attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                            </group>
+                            <group string="Données économiques">
+                                <field name="tps_cycle_standard"          attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="tps_cycle_objectif"          attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="tps_cycle_resultat"          attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="poids_piece_standard"        attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="poids_piece_objectif"        attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="poids_piece_resultat"        attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="presse_standard_id"          attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="presse_objectif_id"          attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="presse_resultat_id"          attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="nb_mo_standard"              attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="nb_mo_objectif"              attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="nb_mo_resultat"              attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="de_piece_jointe_ids"         attrs="{'readonly': [('state_readonly','==',True)]}" widget="many2many_binary"/>
+                                <field name="de_commentaire_deroulement"  attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                            </group>
+                            <group string="Métrologie">
+                                <field name="resp_metrologie_id"          attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="metro_rapport_controle"      attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="metro_rc_complet"            attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="metro_rc_partiel"            attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <!--field name="metro_gamme_geometrique"/-->
+                                <field name="metro_couleur"               attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <!--field name="metro_aspect"/-->
+                                <!--field name="metro_controle_visuel"/-->
+                                <field name="metro_brillance"             attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="metro_choc"                  attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="metro_capabilite"            attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="metro_capa30"                attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('metro_capabilite', '=', False)]}"/>
+                                <field name="metro_capa50"                attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('metro_capabilite', '=', False)]}"/>
+                                <field name="metro_commentaire"           attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                            </group>
+                            <group string="Rapport de contrôle">
+                                <field name="rapport_de_controle_ids"     attrs="{'readonly': [('state_readonly','==',True)]}" widget="many2many_binary"/>
+                                <field name="rapport_cote_conforme"       attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="rapport_commentaire"         attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                            </group>
+                            <group string="Planning">
+                                <field name="date_planifiee"              attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="date_realisation"            attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                            </group>
+                        </group>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active" invisible="1"/>
+                    </sheet>
+                   <div class="oe_chatter">
+                        <field name="message_follower_ids" />
+                        <field name="activity_ids" />
+                        <field name="message_ids" />
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_demande_essai_tree_view">
+            <field name="name">is_demande_essai_tree_view</field>
+            <field name="model">is.demande.essai</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="langue"                      optional="show"/>
+                    <field name="type_essai"                  optional="show"/>
+                    <field name="num_essai"                   optional="show"/>
+                    <field name="date"                        optional="show"/>
+                    <field name="user_id"                     optional="show"/>
+                    <field name="moule_id"                    optional="show"/>
+                    <field name="dossierf_id"                 optional="show"/>
+                    <field name="num_erd_id"                  optional="show"/>
+                    <field name="designation"                 optional="show"/>
+                    <field name="outillage_dispo"             optional="show"/>
+                    <field name="date_disp_out"               optional="show"/>
+                    <field name="etat_stock"                  optional="show"/>
+                    <field name="lieu_essai_id"               optional="show"/>
+                    <field name="lieu_essai_autre"            optional="show"/>
+                    <field name="resp_essai_id"               optional="show"/>
+                    <field name="resp_planning_id"            optional="hide"/>
+                    <field name="ident_commentaire"           optional="hide"/>
+                    <field name="autres_personnes_ids"        optional="hide"/>
+                    <field name="semaine_essai"               optional="hide"/>
+                    <field name="identification_cmt"          optional="hide"/>
+                    <field name="temp_immob"                  optional="hide"/>
+                    <!--field name="nb_pieces_par_empreinte"/-->
+                    <field name="nb_pieces_client"            optional="hide"/>
+                    <field name="nb_pieces_metrologie"        optional="hide"/>
+                    <field name="nb_pieces_chef_projet"       optional="hide"/>
+                    <!--field name="nb_pieces_total"/-->
+                    <field name="nb_pieces_comenntaire"       optional="hide"/>
+                    <field name="identification_particuliere" optional="hide"/>
+                    <field name="besoin_mod"                  optional="hide"/>
+                    <field name="code_matiere"                optional="hide"/>
+                    <field name="code_matiere_recyclage"      optional="hide"/>
+                    <field name="lieu_stockage_matiere"       optional="hide"/>
+                    <field name="mat_disp"                    optional="hide"/>
+                    <field name="mat_date_disp"               optional="hide"/>
+                    <field name="code_matiere2"               optional="hide"/>
+                    <field name="code_matiere_recyclage2"     optional="hide"/>
+                    <field name="lieu_stockage_matiere2"      optional="hide"/>
+                    <field name="mat_disp2"                   optional="hide"/>
+                    <field name="mat_date_disp2"              optional="hide"/>
+                    <field name="code_colorant"               optional="hide"/>
+                    <field name="lieu_stockage_colorant"      optional="hide"/>
+                    <field name="pourcent_colorant"           optional="hide"/>
+                    <field name="colorant_disp"               optional="hide"/>
+                    <field name="colorant_date_disp"          optional="hide"/>
+                    <field name="fiche_tech_mat_ids"          optional="hide"/>
+                    <field name="piece_jointe_ids"            optional="hide"/>
+                    <field name="images_ids"                  optional="hide"/>
+                    <field name="te_piece_jointe_ids"         optional="hide"/>
+                    <field name="tps_cycle_standard"          optional="hide"/>
+                    <field name="tps_cycle_objectif"          optional="hide"/>
+                    <field name="tps_cycle_resultat"          optional="hide"/>
+                    <field name="poids_piece_standard"        optional="hide"/>
+                    <field name="poids_piece_objectif"        optional="hide"/>
+                    <field name="poids_piece_resultat"        optional="hide"/>
+                    <field name="presse_standard_id"          optional="hide"/>
+                    <field name="presse_objectif_id"          optional="hide"/>
+                    <field name="presse_resultat_id"          optional="hide"/>
+                    <field name="nb_mo_standard"              optional="hide"/>
+                    <field name="nb_mo_objectif"              optional="hide"/>
+                    <field name="nb_mo_resultat"              optional="hide"/>
+                    <field name="de_piece_jointe_ids"         optional="hide"/>
+                    <field name="de_commentaire_deroulement"  optional="hide"/>
+                    <field name="resp_metrologie_id"          optional="hide"/>
+                    <field name="metro_rapport_controle"      optional="hide"/>
+                    <field name="metro_rc_complet"            optional="hide"/>
+                    <field name="metro_rc_partiel"            optional="hide"/>
+                    <!--field name="metro_gamme_geometrique"/-->
+                    <field name="metro_couleur"               optional="hide"/>
+                    <!--field name="metro_aspect"/-->
+                    <!--field name="metro_controle_visuel"/-->
+                    <field name="metro_brillance"             optional="hide"/>
+                    <field name="metro_choc"                  optional="hide"/>
+                    <field name="metro_capabilite"            optional="hide"/>
+                    <field name="metro_capa30"                optional="hide"/>
+                    <field name="metro_capa50"                optional="hide"/>
+                    <field name="metro_commentaire"           optional="hide"/>
+                    <field name="rapport_de_controle_ids"     optional="hide"/>
+                    <field name="rapport_cote_conforme"       optional="hide"/>
+                    <field name="rapport_commentaire"         optional="hide"/>
+                    <field name="date_planifiee"              optional="hide"/>
+                    <field name="date_realisation"            optional="hide"/>
+                    <field name="demande_essai_pdf_ids"       optional="hide"/>
+                    <field name="etiquette_pdf_ids"           optional="hide"/>
+                    <field name="dynacase_id"                 optional="hide"/>
+                    <field
+                        name="state" optional="show" widget="badge"
+                        decoration-warning="state in ['annule']"
+                        decoration-info="state in ['actif']"
+                        decoration-success="state in ['solde']"
+                    />
+                    <field name="dynacase_id"               optional="hide" groups="base.group_system"/>
+                </tree>
+            </field>
+        </record>
+        <!--record model="ir.ui.view" id="is_demande_essai_search">
+            <field name="name">is_demande_essai_search</field>
+            <field name="model">is.demande.essai</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="num_int"    />
+                    <field name="title"      />
+                    <field name="client_id"  />
+                    <field name="moule_id"   />
+                    <field name="dossierf_id"   />
+                    <field name="pilot_id"   />
+                    <field name="group_id"   />
+                    <field name="obj"        />
+                    <field name="date_beg"   />
+                    <field name="date_end"   />
+                    <field name="action_prev"/>
+                </search>
+            </field>
+        </record-->
+        <record model="ir.actions.act_window" id="is_demande_essai_action">
+            <field name="name">Demande d'essai</field>
+            <field name="res_model">is.demande.essai</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}
+            </field>
+        </record>
+    </data>
+</odoo>
