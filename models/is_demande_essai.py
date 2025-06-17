@@ -115,21 +115,21 @@ class is_demande_essai(models.Model):
     besoin_mod                  = fields.Boolean('Besoin MOD', default=False, tracking=True)
 
 #    matiere_colorant_fr
-    code_matiere                = fields.Many2one("product.product", "Code matière", tracking=True)
+    code_matiere                = fields.Many2one("is.dossier.article", "Code matière", tracking=True)
 #    designation_mat
     code_matiere_recyclage      = fields.Char("Code recyclage", tracking=True)  # readonly
     lieu_stockage_matiere       = fields.Selection(_LIEN_STOCK_MAT, "Lieu de stockage de la matière", tracking=True)
     mat_disp                    = fields.Boolean('Matière disponible', tracking=True)
     mat_date_disp               = fields.Date("Date de disponibilité de la matière", tracking=True)
 
-    code_matiere2               = fields.Many2one("product.product", "Code matière 2", tracking=True)
+    code_matiere2               = fields.Many2one("is.dossier.article", "Code matière 2", tracking=True)
 #    designation_mat2
     code_matiere_recyclage2     = fields.Char("Code recyclage 2", tracking=True)  # readonly
     lieu_stockage_matiere2      = fields.Selection(_LIEN_STOCK_MAT, "Lieu de stockage de la matière 2", tracking=True)
     mat_disp2                   = fields.Boolean('Matière disponible 2', tracking=True)
     mat_date_disp2              = fields.Date("Date de disponibilité de la matière 2", tracking=True)
 
-    code_colorant               = fields.Many2one("product.product", "Code colorant", tracking=True)
+    code_colorant               = fields.Many2one("is.dossier.article", "Code colorant", tracking=True)
 #    designation_col
     lieu_stockage_colorant      = fields.Selection(_LIEN_STOCK_MAT, "Lieu de stockage du colorant", tracking=True)
     pourcent_colorant           = fields.Char("% de colorant", tracking=True)
