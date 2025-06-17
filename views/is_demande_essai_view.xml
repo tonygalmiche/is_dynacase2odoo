@@ -69,6 +69,8 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active" invisible="1"/>
                         <group>
                             <group string="Identification">
                                 <field name="langue"                      attrs="{'readonly': [('state_readonly','==',True)]}"/>
@@ -170,8 +172,6 @@
                                 <field name="date_realisation"            attrs="{'readonly': [('state_readonly','==',True)]}"/>
                             </group>
                         </group>
-                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                        <field name="active" invisible="1"/>
                     </sheet>
                    <div class="oe_chatter">
                         <field name="message_follower_ids" />
