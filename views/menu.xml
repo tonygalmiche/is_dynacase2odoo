@@ -274,6 +274,12 @@
             <field name="parent_id" eval="ref('is_projet_moule_menu')"/>
             <field name="action"    ref="is_revue_projet_jalon_action"/>
         </record>
+        <record id="is_demande_essai_menu" model="ir.ui.menu" >
+            <field name="name">Demande d'essai</field>
+            <field name="sequence">55</field>
+            <field name="parent_id" eval="ref('is_projet_moule_menu')"/>
+            <field name="action"    ref="is_demande_essai_action"/>
+        </record>
         <record id="is_modif_donnee_technique_projet_menu" model="ir.ui.menu" >
             <field name="name">Demande modification données techniques</field>
             <field name="sequence">60</field>
