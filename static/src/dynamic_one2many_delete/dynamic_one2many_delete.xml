@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+   
+
+
+    <t t-inherit="web.ListRenderer.RecordRow" t-inherit-mode="extension">
+        <xpath expr="//td[contains(@class, 'o_list_record_remove')]" position="replace">
+
+            <td class="o_list_record_remove text-center"
+                t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)"
+                t-on-click.stop="() => this.onDeleteRecord(record)"
+                tabindex="-1"
+            >
+                toto
+
+                <!-- <t t-esc="JSON.stringify(props)" /> -->
+
+                <t t-foreach="Object.keys(props)" t-as="prop" t-key="prop">
+                    <div>
+                        <span><t t-esc="prop"/></span>: <span><t t-esc="props[prop]"/></span>
+                    </div>
+                </t>
+
+                <button class="fa"
+                    t-att-class="{
+                        'fa-trash-o': !useUnlink and activeActions.delete,
+                        'fa-times': useUnlink and activeActions.unlink,
+                    }"
+                    name="delete"
+                    aria-label="Delete row"
+                    tabindex="-1"
+                />
+            </td>
+        </xpath> 
+    </t>
+
+
+</templates>
+
+
+<!-- 
+
+            <t t-if="!props.list.props.record.data.array_ids_ro">
+
+
+                <td class="o_list_record_remove text-center"
+                    t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
+                    t-on-click.stop="() => this.onDeleteRecord(record)"
+                    tabindex="-1"
+                >
+                    <button class="fa"
+                        t-att-class="{
+                            'fa-trash-o': !useUnlink && activeActions.delete,
+                            'fa-times': useUnlink && activeActions.unlink,
+                        }"
+                        name="delete"
+                        aria-label="Delete row"
+                        tabindex="-1"
+                    />
+                </td>
+                
+                            </t>
+
+                -->
+            <!-- <t t-else="">
+                <td tabindex="-1"></td> -
+            </t>->
+    </t>
+                -->

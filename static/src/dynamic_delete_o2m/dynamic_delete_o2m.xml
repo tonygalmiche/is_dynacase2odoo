@@ -1,0 +1,17 @@
+<t t-name="DynamicDeleteO2M" owl="1">
+    <div>
+
+        <t t-foreach="props.value.records" t-as="line" t-key="line.id">
+            <div>
+                <span t-esc="line.data.name"/>
+
+                toto
+                <t t-if="canDelete">
+                    <button type="button" t-on-click="() => this.deleteRecord(line)">
+                        Supprimer
+                    </button>
+                </t>
+            </div>
+        </t>
+    </div>
+</t>

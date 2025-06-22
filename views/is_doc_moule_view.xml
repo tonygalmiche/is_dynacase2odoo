@@ -134,15 +134,15 @@
                                     <field 
                                         name="array_ids" nolabel="1" colspan="2" 
                                         attrs="{
-                                            'invisible': [('ppr_type_demande', 'not in', ['PJ', 'PJ_TEXTE', 'PJ_DATE'] )]
-                                        }"
-                                        widget="conditional_tree"
-
+                                            'invisible': [('ppr_type_demande', 'not in', ['PJ', 'PJ_TEXTE', 'PJ_DATE'] )],
+                                            'readonly': [('array_ids_ro', '=', True)]
+                                        }"    
                                     >
-                                        <!-- options="{'no_create': array_ids_ro, 'no_delete': array_ids_ro}" -->
-                                        <!-- options="{'no_create': context.get('array_ids_ro', False), 'no_delete': context.get('array_ids_ro', False)}" -->
-                                         
-                                        <tree editable="bottom">
+                                    <!-- widget="one2many_no_click"  -->
+
+
+
+                                        <tree editable="bottom"  options="{'no_open': True}">
                                             <field name="lig" invisible="1"/>
                                             <field name="annex_pdf"                             attrs="{'column_invisible':[('parent.ppr_transformation_pdf', '=', False)]}" widget="many2many_binary" readonly="1"/>
                                             <field name="annex" widget="many2many_binary"       attrs="{'readonly':[('parent.array_ids_ro', '=', True)]}"/>

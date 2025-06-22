@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="is_doc_moule_form">
+            <field name="name">is_doc_moule_form</field>
+            <field name="model">is.doc.moule</field>
+            <field name="priority" eval="1" />
+            <field name="arch" type="xml">
+                <form string="Document moule">
+                    <sheet>
+                        <notebook>
+                            <page string="Réponse à la demande">
+                                <field name="array_ids_ro" invisible="1"/>
+                                <group>
+                                    <field 
+                                        name="array_ids" nolabel="1" colspan="2" 
+                                        attrs="{
+                                            'readonly': [('array_ids_ro', '=', True)]
+                                        }"
+                                    >
+                                        <tree editable="bottom">
+                                            <field name="annex"/>
+                                            <field name="comment"/>
+                                        </tree>
+                                    </field>
+                                 </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                  
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
