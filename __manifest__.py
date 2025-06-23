@@ -11,6 +11,7 @@ Module Odoo 16 pour Plastigray pour migrer les développements de Dynacase dans 
     "maintainer" : "InfoSaône",
     "website"    : "http://www.infosaone.com",
     "depends"    : [
+        "web",
         "utm",
         "is_plastigray16",
     ],
@@ -57,9 +58,7 @@ Module Odoo 16 pour Plastigray pour migrer les développements de Dynacase dans 
     ],
     "assets": {
         'web.assets_backend': [
-
             #'is_dynacase2odoo/static/src/js/custom_one2many_widget.js',
-
 
             'is_dynacase2odoo/static/src/css/*',
             'is_dynacase2odoo/static/lib/dhtmlxGantt/*',

@@ -140,8 +140,6 @@
                                     >
                                     <!-- widget="one2many_no_click"  -->
 
-
-
                                         <tree editable="bottom"  options="{'no_open': True}">
                                             <field name="lig" invisible="1"/>
                                             <field name="annex_pdf"                             attrs="{'column_invisible':[('parent.ppr_transformation_pdf', '=', False)]}" widget="many2many_binary" readonly="1"/>
