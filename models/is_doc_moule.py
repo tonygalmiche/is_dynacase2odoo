@@ -9,6 +9,7 @@ from datetime import datetime, timedelta, date
 from time import time
 from random import *
 from subprocess import PIPE, Popen
+import html
 import base64
 import logging
 _logger = logging.getLogger(__name__)
@@ -177,7 +178,90 @@ class IsDocMoule(models.Model):
     array_ids    = fields.One2many("is.doc.moule.array", "is_doc_id", string="Pièce-jointe de réponse à la demande")
     array_ids_ro = fields.Boolean(string="Pièce-jointe de réponse à la demande readonly", compute='_compute_array_ids_ro', readonly=True, store=False)
 
+    array_ids_html = fields.Html(string="Pièces Jointes", compute='_compute_array_ids_html', sanitize=False)
 
+
+
+    @api.depends('array_ids', 'array_ids.annex_pdf', 'array_ids.annex', 'array_ids.comment', 'array_ids.demandmodif', 'array_ids.maj_amdec')
+    def _compute_array_ids_html(self):
+        for rec in self:
+            html_out = """
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+            """
+            if rec.ppr_transformation_pdf:
+                html_out+="<th>Fichiers PDF</th>"
+            html_out+=""""
+                        <th>Fichiers</th>
+                        <th>Commentaire</th>
+                    </tr>
+                </thead>
+                <tbody>
+            """
+            for line in rec.array_ids:
+                def render_attachments(attachments):
+                    res = ''
+                    for att in attachments:
+                        mimetype = att.mimetype or ""
+                        ext = (att.name or "").split(".")[-1].lower() if att.name and "." in att.name else ""
+                        url = f"/web/content/{att.id}?download=true"
+                        name = html.escape(att.name or "")
+                        res += f"""
+<div class="o_attachment o_attachment_many2many" title="{name}">
+  <div class="o_attachment_wrap">
+    <div class="o_image_box float-start" data-tooltip="Download {name}">
+      <a aria-label="Download" download="" href="{url}">
+        <span class="o_image o_hover" role="img" data-mimetype="{mimetype}" data-ext="{ext}"></span>
+      </a>
+    </div>
+    <div class="caption">
+      <a class="ml4" download="" data-tooltip="Download {name}" href="{url}">{name}</a>
+    </div>
+    <div class="caption small">
+      <a class="ml4 small text-uppercase" href="{url}"><b>{ext}</b></a>
+    </div>
+    <div class="o_attachment_uploaded">
+      <i class="text-success fa fa-check" role="img" aria-label="Uploaded" title="Téléchargé"></i>
+    </div>
+  </div>
+</div>
+                        """
+                    return res or ""
+                
+                if rec.ppr_transformation_pdf:
+                    annex_pdf_html = render_attachments(line.annex_pdf)
+                annex_html = render_attachments(line.annex)
+                #demandmodif = html.escape(str(line.demandmodif) if line.demandmodif else "")
+                #maj_amdec = html.escape(str(line.maj_amdec) if line.maj_amdec else "")
+                comment = html.escape(line.comment or "")
+
+                html_out += "<tr>"    
+                if rec.ppr_transformation_pdf:
+                    html_out += f"<td>{annex_pdf_html}</td>"
+                html_out += f"""
+                        <td>{annex_html}</td>
+                        <td>{comment}</td>
+                    </tr>
+                """
+            html_out += "</tbody></table>"
+            rec.array_ids_html = html_out
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @api.depends('etat')
     def _compute_array_ids_ro(self):
         for obj in self:
             ro = True
