@@ -249,19 +249,8 @@ class IsDocMoule(models.Model):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    @api.depends('etat')
+    #TODO : Il ne faut pas mettre de depends sur le champ etat sinon la Pièce-jointe n'est pas enregistrée    
+    # @api.depends('etat')
     def _compute_array_ids_ro(self):
         for obj in self:
             ro = True
