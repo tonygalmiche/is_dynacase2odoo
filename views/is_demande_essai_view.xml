@@ -107,17 +107,17 @@
                                 <field name="images_ids"                  attrs="{'readonly': [('state_readonly','==',True)]}" widget="many2many_binary"/>
                             </group>
                             <group string="Matière / Colorant">
-                                <field name="code_matiere"                attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="code_matiere_id"             attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                 <field name="code_matiere_recyclage"      attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                 <field name="lieu_stockage_matiere"       attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                 <field name="mat_disp"                    attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                 <field name="mat_date_disp"               attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('mat_disp', '=', False)]}"/>
-                                <field name="code_matiere2"               attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="code_matiere2_id"            attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                 <field name="code_matiere_recyclage2"     attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                 <field name="lieu_stockage_matiere2"      attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                 <field name="mat_disp2"                   attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                 <field name="mat_date_disp2"              attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('mat_disp2', '=', False)]}"/>
-                                <field name="code_colorant"               attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                <field name="code_colorant_id"            attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                 <field name="lieu_stockage_colorant"      attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                 <field name="pourcent_colorant"           attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                 <field name="colorant_disp"               attrs="{'readonly': [('state_readonly','==',True)]}"/>
@@ -216,17 +216,17 @@
                     <field name="nb_pieces_comenntaire"       optional="hide"/>
                     <field name="identification_particuliere" optional="hide"/>
                     <field name="besoin_mod"                  optional="hide"/>
-                    <field name="code_matiere"                optional="hide"/>
+                    <field name="code_matiere_id"                optional="hide"/>
                     <field name="code_matiere_recyclage"      optional="hide"/>
                     <field name="lieu_stockage_matiere"       optional="hide"/>
                     <field name="mat_disp"                    optional="hide"/>
                     <field name="mat_date_disp"               optional="hide"/>
-                    <field name="code_matiere2"               optional="hide"/>
+                    <field name="code_matiere2_id"               optional="hide"/>
                     <field name="code_matiere_recyclage2"     optional="hide"/>
                     <field name="lieu_stockage_matiere2"      optional="hide"/>
                     <field name="mat_disp2"                   optional="hide"/>
                     <field name="mat_date_disp2"              optional="hide"/>
-                    <field name="code_colorant"               optional="hide"/>
+                    <field name="code_colorant_id"               optional="hide"/>
                     <field name="lieu_stockage_colorant"      optional="hide"/>
                     <field name="pourcent_colorant"           optional="hide"/>
                     <field name="colorant_disp"               optional="hide"/>
