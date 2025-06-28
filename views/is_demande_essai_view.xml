@@ -204,7 +204,7 @@
                     <field name="resp_essai_id"               optional="show"/>
                     <field name="resp_planning_id"            optional="hide"/>
                     <field name="ident_commentaire"           optional="hide"/>
-                    <field name="autres_personnes_ids"        optional="hide"/>
+                    <field name="autres_personnes_ids"        optional="hide" widget="many2many_tags" />
                     <field name="semaine_essai"               optional="hide"/>
                     <field name="identification_cmt"          optional="hide"/>
                     <field name="temp_immob"                  optional="hide"/>
