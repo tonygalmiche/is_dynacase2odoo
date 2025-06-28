@@ -27,6 +27,9 @@ _TYPE_ESSAI = ([
     ('erd' , 'ERD'),
 ])
 
+
+
+
 _ETAT_STOCK = ([
     ('' , ''),
     ('obsolete' , 'Obsolètes => INFORMER le service qualité pour la destruction'),
@@ -97,7 +100,7 @@ class is_demande_essai(models.Model):
 
     ident_commentaire           = fields.Text('Commentaire Traçabilité')
 
-    autres_personnes_ids        = fields.Many2many("res.users", "is_demande_essai_autres_personnes_rel", "autres_personnes", "att_id", string="Autres personnes à informer", tracking=True)
+    autres_personnes_ids        = fields.Many2many("res.users", "is_demande_essai_autres_personnes_rel", "demande_essai_id", "user_id", string="Autres personnes à informer", tracking=True)
 
     semaine_essai               = fields.Char("Semaine ou jour de réalisation de l'essai", tracking=True)
     identification_cmt          = fields.Text("Commentaire", tracking=True)
