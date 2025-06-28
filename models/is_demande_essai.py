@@ -1,6 +1,8 @@
 from odoo import models, fields, api         # type: ignore
 
 
+
+
 _STATE = ([
     ('brouillon', 'Brouillon'),
     ('diffuse', 'Diffusé Planning'),

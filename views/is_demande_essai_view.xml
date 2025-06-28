@@ -278,28 +278,29 @@
                         decoration-success="state in ['solde']"
                     />
                     <field name="dynacase_id"               optional="hide" groups="base.group_system"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
                 </tree>
             </field>
         </record>
-        <!--record model="ir.ui.view" id="is_demande_essai_search">
+        <record model="ir.ui.view" id="is_demande_essai_search">
             <field name="name">is_demande_essai_search</field>
             <field name="model">is.demande.essai</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name="num_int"    />
-                    <field name="title"      />
-                    <field name="client_id"  />
-                    <field name="moule_id"   />
-                    <field name="dossierf_id"   />
-                    <field name="pilot_id"   />
-                    <field name="group_id"   />
-                    <field name="obj"        />
-                    <field name="date_beg"   />
-                    <field name="date_end"   />
-                    <field name="action_prev"/>
+                    <field name="type_essai"/>
+                    <field name="num_essai"/>
+                    <field name="user_id"/>
+                    <field name="moule_id"/>
+                    <field name="dossierf_id"/>
+                    <field name="num_erd_id"/>
+                    <field name="designation"/>
                 </search>
             </field>
-        </record-->
+        </record>
         <record model="ir.actions.act_window" id="is_demande_essai_action">
             <field name="name">Demande d'essai</field>
             <field name="res_model">is.demande.essai</field>
