@@ -68,12 +68,6 @@ class is_demande_essai(models.Model):
             num_seq = 1
             num_essai = False
             designation = False
-            if obj.moule_id:
-                designation = obj.moule_id.designation
-            if obj.dossierf_id:
-                designation = obj.dossierf_id.designation
-            if obj.num_erd_id:
-                designation = obj.num_erd_id.designation
             if obj.id:
                 domain=[
                     ('type_essai','=',obj.type_essai),
@@ -85,12 +79,16 @@ class is_demande_essai(models.Model):
                 docs=self.env['is.demande.essai'].search(domain,order='num_seq desc',limit=1)
                 for doc in docs:
                     num_seq = doc.num_seq + 1
-                    if obj.moule_id:
-                        num_essai = "%s-%s" % (obj.moule_id.name, f"{num_seq:03d}")
-                    if obj.dossierf_id:
-                        num_essai = "%s-%s" % (obj.dossierf_id.name, f"{num_seq:03d}")
-                    if obj.num_erd_id:
-                        num_essai = "%s-%s" % (obj.num_erd_id.numero, f"{num_seq:03d}")
+            if obj.moule_id:
+                num_essai = "%s-%s" % (obj.moule_id.name, f"{num_seq:03d}")
+                designation = obj.moule_id.designation
+            if obj.dossierf_id:
+                num_essai = "%s-%s" % (obj.dossierf_id.name, f"{num_seq:03d}")
+                designation = obj.dossierf_id.designation
+            if obj.num_erd_id:
+                num_essai = "%s-%s" % (obj.num_erd_id.numero, f"{num_seq:03d}")
+                designation = obj.num_erd_id.designation
+
             obj.num_seq     = num_seq
             obj.num_essai   = num_essai
             obj.designation = designation
