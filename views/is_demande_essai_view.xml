@@ -76,10 +76,10 @@
                             <page string="Identification">
                                 <group string="Identification">
                                     <group>
-                                        <field name="langue"                      attrs="{'readonly': [('state_readonly','==',True)]}"/>
-                                        <field name="type_essai"                  attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                         <field name="num_essai"/>
                                         <field name="date"/>
+                                        <field name="langue"                      attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="type_essai"                  attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                         <field name="user_id"/>
                                         <field name="moule_id"                    attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('type_essai','!=','moule')]}"/>
                                         <field name="dossierf_id"                 attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('type_essai','!=','assemblage')]}"/>

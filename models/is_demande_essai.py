@@ -13,13 +13,11 @@ _STATE = ([
 
 
 _LANG = ([
-    ('' , ''),
     ('FR' , 'Français'),
     ('EN' , 'Anglais'),
 ])
 
 _TYPE_ESSAI = ([
-    ('' , ''),
     ('moule' , 'Moule'),
     ('assemblage' , 'Assemblage'),
     ('erd' , 'ERD'),
@@ -29,14 +27,12 @@ _TYPE_ESSAI = ([
 
 
 _ETAT_STOCK = ([
-    ('' , ''),
     ('obsolete' , 'Obsolètes => INFORMER le service qualité pour la destruction'),
     ('livrable' , 'Livrable'),
     ('non-applicable' , 'Non Applicable'),
 ])
 
 _TEMPS_IMMOB = ([
-    ('' , ''),
     ('4' , '4H'),
     ('8' , '8H'),
     ('12' , '12H'),
@@ -44,13 +40,11 @@ _TEMPS_IMMOB = ([
 ])
 
 _LIEN_STOCK_MAT = ([
-    ('' , ''),
     ('stock_usine' , 'Stock usine'),
     ('stock_be' , 'Stock BE'),
 ])
 
 _NB_MO = ([
-    ('' , ''),
     ('25' , '0.25'),
     ('50' , '0.50'),
     ('75' , '0.75'),
@@ -73,6 +67,13 @@ class is_demande_essai(models.Model):
         for obj in self:
             num_seq = 1
             num_essai = False
+            designation = False
+            if obj.moule_id:
+                designation = obj.moule_id.designation
+            if obj.dossierf_id:
+                designation = obj.dossierf_id.designation
+            if obj.num_erd_id:
+                designation = obj.num_erd_id.designation
             if obj.id:
                 domain=[
                     ('type_essai','=',obj.type_essai),
@@ -86,16 +87,20 @@ class is_demande_essai(models.Model):
                     num_seq = doc.num_seq + 1
                     if obj.moule_id:
                         num_essai = "%s-%s" % (obj.moule_id.name, f"{num_seq:03d}")
-            obj.num_seq   = num_seq
-            obj.num_essai = num_essai
-
+                    if obj.dossierf_id:
+                        num_essai = "%s-%s" % (obj.dossierf_id.name, f"{num_seq:03d}")
+                    if obj.num_erd_id:
+                        num_essai = "%s-%s" % (obj.num_erd_id.numero, f"{num_seq:03d}")
+            obj.num_seq     = num_seq
+            obj.num_essai   = num_essai
+            obj.designation = designation
 
 
     state                       = fields.Selection(_STATE, "Etat", default=_STATE[0][0], tracking=True)
     state_readonly              = fields.Boolean("Etat dont les variables sont en lecture seule", compute='_compute_state_readonly', store=False, readonly=True, copy=False)
     active                      = fields.Boolean('Actif', default=True, tracking=True)
-    langue                      = fields.Selection(_LANG, "Langue", tracking=True)
-    type_essai                  = fields.Selection(_TYPE_ESSAI, "Type essai", tracking=True)
+    langue                      = fields.Selection(_LANG, "Langue", tracking=True, default='FR')
+    type_essai                  = fields.Selection(_TYPE_ESSAI, "Type essai", default='moule', tracking=True)
     num_seq                     = fields.Integer('Numéro séquentiel', tracking=True, compute="_compute_num_essai", readonly=True, store=True)
     num_essai                   = fields.Char('N° essai'            , tracking=True, compute="_compute_num_essai", readonly=True, store=True)
     date                        = fields.Date("Date", default=lambda *a: fields.datetime.now(), tracking=True)
