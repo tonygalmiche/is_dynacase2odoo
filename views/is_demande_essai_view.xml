@@ -227,9 +227,9 @@
                     <field name="num_seq"                     optional="hide"/>
                     <field name="date"                        optional="show"/>
                     <field name="user_id"                     optional="show"/>
-                    <field name="moule_id"                    optional="show"/>
-                    <field name="dossierf_id"                 optional="show"/>
-                    <field name="num_erd_id"                  optional="show"/>
+                    <field name="moule_id"                    optional="show" widget="many2one_clickable"/>
+                    <field name="dossierf_id"                 optional="show" widget="many2one_clickable"/>
+                    <field name="num_erd_id"                  optional="show" widget="many2one_clickable"/>
                     <field name="designation"                 optional="show"/>
                     <field name="outillage_dispo"             optional="hide"/>
                     <field name="date_disp_out"               optional="hide"/>
@@ -251,19 +251,19 @@
                     <field name="nb_pieces_comenntaire"       optional="hide"/>
                     <field name="identification_particuliere" optional="hide"/>
                     <field name="besoin_mod"                  optional="hide"/>
-                    <field name="code_matiere_id"             optional="hide"/>
+                    <field name="code_matiere_id"             optional="hide" widget="many2one_clickable"/>
                     <field name="designation_mat"             optional="hide"/>
                     <field name="code_matiere_recyclage"      optional="hide"/>
                     <field name="lieu_stockage_matiere"       optional="hide"/>
                     <field name="mat_disp"                    optional="hide"/>
                     <field name="mat_date_disp"               optional="hide"/>
-                    <field name="code_matiere2_id"            optional="hide"/>
+                    <field name="code_matiere2_id"            optional="hide" widget="many2one_clickable"/>
                     <field name="designation_mat2"            optional="hide"/>
                     <field name="code_matiere_recyclage2"     optional="hide"/>
                     <field name="lieu_stockage_matiere2"      optional="hide"/>
                     <field name="mat_disp2"                   optional="hide"/>
                     <field name="mat_date_disp2"              optional="hide"/>
-                    <field name="code_colorant_id"            optional="hide"/>
+                    <field name="code_colorant_id"            optional="hide" widget="many2one_clickable"/>
                     <field name="designation_col"             optional="hide"/>
                     <field name="lieu_stockage_colorant"      optional="hide"/>
                     <field name="pourcent_colorant"           optional="hide"/>
@@ -279,9 +279,9 @@
                     <field name="poids_piece_standard"        optional="hide"/>
                     <field name="poids_piece_objectif"        optional="hide"/>
                     <field name="poids_piece_resultat"        optional="hide"/>
-                    <field name="presse_standard_id"          optional="hide"/>
-                    <field name="presse_objectif_id"          optional="hide"/>
-                    <field name="presse_resultat_id"          optional="hide"/>
+                    <field name="presse_standard_id"          optional="hide" widget="many2one_clickable"/>
+                    <field name="presse_objectif_id"          optional="hide" widget="many2one_clickable"/>
+                    <field name="presse_resultat_id"          optional="hide" widget="many2one_clickable"/>
                     <field name="nb_mo_standard"              optional="hide"/>
                     <field name="nb_mo_objectif"              optional="hide"/>
                     <field name="nb_mo_resultat"              optional="hide"/>
