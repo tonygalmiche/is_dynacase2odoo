@@ -146,7 +146,6 @@
                                 <group string="Documents générés">
                                     <field name="demande_essai_pdf_ids"       attrs="{'readonly': [('state_readonly','==',True)]}" widget="many2many_binary"/>
                                     <field name="etiquette_pdf_ids"           attrs="{'readonly': [('state_readonly','==',True)]}" widget="many2many_binary"/>
-                                    <field name="dynacase_id"                 attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                 </group>
                             </page>
                             <page string="Données économiques">
@@ -225,6 +224,7 @@
                     <field name="langue"                      optional="show"/>
                     <field name="type_essai"                  optional="show"/>
                     <field name="num_essai"                   optional="show"/>
+                    <field name="num_seq"                     optional="show"/>
                     <field name="date"                        optional="show"/>
                     <field name="user_id"                     optional="show"/>
                     <field name="moule_id"                    optional="show"/>

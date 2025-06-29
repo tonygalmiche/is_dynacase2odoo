@@ -64,17 +64,41 @@ class is_demande_essai(models.Model):
     _name='is.demande.essai'
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description="Demande d'essai"
-#    _rec_name = "num_int"
-#    _order='num_int desc'
+    _rec_name = "num_essai"
+    _order='create_date desc'
+
+
+    @api.depends("type_essai","moule_id","dossierf_id","num_erd_id")
+    def _compute_num_essai(self):
+        for obj in self:
+            num_seq = 1
+            num_essai = False
+            if obj.id:
+                domain=[
+                    ('type_essai','=',obj.type_essai),
+                    ('moule_id','=',obj.moule_id.id),
+                    ('dossierf_id','=',obj.dossierf_id.id),
+                    ('num_erd_id','=',obj.num_erd_id.id),
+                    ('id','!=',obj.id),
+                ]
+                docs=self.env['is.demande.essai'].search(domain,order='num_seq desc',limit=1)
+                for doc in docs:
+                    num_seq = doc.num_seq + 1
+                    if obj.moule_id:
+                        num_essai = "%s-%s" % (obj.moule_id.name, f"{num_seq:03d}")
+            obj.num_seq   = num_seq
+            obj.num_essai = num_essai
+
+
 
     state                       = fields.Selection(_STATE, "Etat", default=_STATE[0][0], tracking=True)
     state_readonly              = fields.Boolean("Etat dont les variables sont en lecture seule", compute='_compute_state_readonly', store=False, readonly=True, copy=False)
     active                      = fields.Boolean('Actif', default=True, tracking=True)
     langue                      = fields.Selection(_LANG, "Langue", tracking=True)
     type_essai                  = fields.Selection(_TYPE_ESSAI, "Type essai", tracking=True)
-    # FIXME
-    num_seq                     = fields.Integer('Numéro séquentiel', tracking=True)
-    num_essai                   = fields.Char('N° essai', tracking=True)
+
+    num_seq                     = fields.Integer('Numéro séquentiel', tracking=True, compute="_compute_num_essai", readonly=True, store=True)
+    num_essai                   = fields.Char('N° essai'            , tracking=True, compute="_compute_num_essai", readonly=True, store=True)
 
     date                        = fields.Date("Date", default=lambda *a: fields.datetime.now(), tracking=True)
 
