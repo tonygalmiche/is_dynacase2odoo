@@ -84,6 +84,7 @@
                                         <field name="moule_id"                    attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('type_essai','!=','moule')]}"/>
                                         <field name="dossierf_id"                 attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('type_essai','!=','assemblage')]}"/>
                                         <field name="num_erd_id"                  attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('type_essai','!=','erd')]}"/>
+                                        <field name="designation"/>
                                         <field name="outillage_dispo"             attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                         <field name="date_disp_out"               attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                         <field name="etat_stock"                  attrs="{'readonly': [('state_readonly','==',True)]}"/>
@@ -230,11 +231,11 @@
                     <field name="dossierf_id"                 optional="show"/>
                     <field name="num_erd_id"                  optional="show"/>
                     <field name="designation"                 optional="show"/>
-                    <field name="outillage_dispo"             optional="show"/>
-                    <field name="date_disp_out"               optional="show"/>
-                    <field name="etat_stock"                  optional="show"/>
+                    <field name="outillage_dispo"             optional="hide"/>
+                    <field name="date_disp_out"               optional="hide"/>
+                    <field name="etat_stock"                  optional="hide"/>
                     <field name="lieu_essai_id"               optional="show"/>
-                    <field name="lieu_essai_autre"            optional="show"/>
+                    <field name="lieu_essai_autre"            optional="hide"/>
                     <field name="resp_essai_id"               optional="show"/>
                     <field name="resp_planning_id"            optional="hide"/>
                     <field name="ident_commentaire"           optional="hide"/>

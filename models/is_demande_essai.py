@@ -103,7 +103,7 @@ class is_demande_essai(models.Model):
     moule_id                    = fields.Many2one('is.mold', string="Moule", tracking=True)
     dossierf_id                 = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
     num_erd_id                  = fields.Many2one('is.erd', string='Numéro erd', tracking=True)
-    designation                 = fields.Char("Désignation", tracking=True)
+    designation                 = fields.Char("Désignation", tracking=True, compute="_compute_num_essai", readonly=True, store=True)
     outillage_dispo             = fields.Boolean('Outillage disponible', default=False, tracking=True)
     date_disp_out               = fields.Date("Date de disponibilité de l'outillage", tracking=True)
     etat_stock                  = fields.Selection(_ETAT_STOCK, string="Etat des produits en stock", tracking=True)
