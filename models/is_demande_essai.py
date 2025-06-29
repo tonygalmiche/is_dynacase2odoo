@@ -1,8 +1,6 @@
 from odoo import models, fields, api         # type: ignore
 
 
-
-
 _STATE = ([
     ('brouillon', 'Brouillon'),
     ('diffuse', 'Diffusé Planning'),
@@ -120,18 +118,24 @@ class is_demande_essai(models.Model):
     besoin_mod                  = fields.Boolean('Besoin MOD', default=False, tracking=True)
 
     code_matiere_id             = fields.Many2one("is.dossier.article", "Code matière", tracking=True)
+    designation_mat             = fields.Char("Désignation matière", tracking=True)
+
     code_matiere_recyclage      = fields.Char("Code recyclage", tracking=True)  # readonly
     lieu_stockage_matiere       = fields.Selection(_LIEN_STOCK_MAT, "Lieu de stockage de la matière", tracking=True)
     mat_disp                    = fields.Boolean('Matière disponible', tracking=True)
     mat_date_disp               = fields.Date("Date de disponibilité de la matière", tracking=True)
 
     code_matiere2_id            = fields.Many2one("is.dossier.article", "Code matière 2", tracking=True)
+    designation_mat2             = fields.Char("Désignation matière 2", tracking=True)
+
     code_matiere_recyclage2     = fields.Char("Code recyclage 2", tracking=True)  # readonly
     lieu_stockage_matiere2      = fields.Selection(_LIEN_STOCK_MAT, "Lieu de stockage de la matière 2", tracking=True)
     mat_disp2                   = fields.Boolean('Matière disponible 2', tracking=True)
     mat_date_disp2              = fields.Date("Date de disponibilité de la matière 2", tracking=True)
 
     code_colorant_id            = fields.Many2one("is.dossier.article", "Code colorant", tracking=True)
+    designation_col             = fields.Char("Désignation colorant", tracking=True)
+
     lieu_stockage_colorant      = fields.Selection(_LIEN_STOCK_MAT, "Lieu de stockage du colorant", tracking=True)
     pourcent_colorant           = fields.Char("% de colorant", tracking=True)
     colorant_disp               = fields.Boolean('Colorant disponible', tracking=True)
@@ -237,3 +241,21 @@ class is_demande_essai(models.Model):
     def vers_solde_action(self):
         for obj in self:
             obj.state='solde'
+
+
+    @api.onchange('code_matiere_id')
+    def onchange_code_matiere_id(self):
+        for obj in self:
+            obj.designation_mat = obj.code_matiere_id.designation
+
+
+    @api.onchange('code_matiere2_id')
+    def onchange_code_matiere2_id(self):
+        for obj in self:
+            obj.designation_mat2 = obj.code_matiere2_id.designation
+
+
+    @api.onchange('code_colorant_id')
+    def onchange_code_colorant_id(self):
+        for obj in self:
+            obj.designation_col = obj.code_colorant_id.designation
