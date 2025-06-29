@@ -96,34 +96,23 @@ class is_demande_essai(models.Model):
     active                      = fields.Boolean('Actif', default=True, tracking=True)
     langue                      = fields.Selection(_LANG, "Langue", tracking=True)
     type_essai                  = fields.Selection(_TYPE_ESSAI, "Type essai", tracking=True)
-
     num_seq                     = fields.Integer('Numéro séquentiel', tracking=True, compute="_compute_num_essai", readonly=True, store=True)
     num_essai                   = fields.Char('N° essai'            , tracking=True, compute="_compute_num_essai", readonly=True, store=True)
-
     date                        = fields.Date("Date", default=lambda *a: fields.datetime.now(), tracking=True)
-
     user_id                     = fields.Many2one("res.users", string="Demandeur", default=lambda self: self.env.uid, tracking=True)
-
     moule_id                    = fields.Many2one('is.mold', string="Moule", tracking=True)
     dossierf_id                 = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
-
     num_erd_id                  = fields.Many2one('is.erd', string='Numéro erd', tracking=True)
-
     designation                 = fields.Char("Désignation", tracking=True)
     outillage_dispo             = fields.Boolean('Outillage disponible', default=False, tracking=True)
     date_disp_out               = fields.Date("Date de disponibilité de l'outillage", tracking=True)
     etat_stock                  = fields.Selection(_ETAT_STOCK, string="Etat des produits en stock", tracking=True)
     lieu_essai_id               = fields.Many2one('is.database', string="Lieu essai", tracking=True)
     lieu_essai_autre            = fields.Char('Autre', tracking=True)
-
     resp_essai_id               = fields.Many2one("res.users", string="Responsable de l'essai", tracking=True)
-
     resp_planning_id            = fields.Many2one("res.users", string="Responsable du planning", tracking=True)
-
     ident_commentaire           = fields.Text('Commentaire Traçabilité')
-
     autres_personnes_ids        = fields.Many2many("res.users", "is_demande_essai_autres_personnes_rel", "demande_essai_id", "user_id", string="Autres personnes à informer", tracking=True)
-
     semaine_essai               = fields.Char("Semaine ou jour de réalisation de l'essai", tracking=True)
     identification_cmt          = fields.Text("Commentaire", tracking=True)
     temp_immob                  = fields.Selection(_TEMPS_IMMOB, "Temps d'immobilisation", tracking=True)
@@ -133,6 +122,7 @@ class is_demande_essai(models.Model):
     nb_pieces_client            = fields.Char("Nombre de pièces pour le client", tracking=True)
     nb_pieces_metrologie        = fields.Char("Nombre de pièces pour la métrologie", tracking=True)
     nb_pieces_chef_projet       = fields.Char("Nombre de pièces pour le chef de projet", tracking=True)
+
     # FIXME
     nb_pieces_total             = fields.Char("Nombre de pièces total", tracking=True)
     nb_pieces_comenntaire       = fields.Text("Commentaire sur le nombre de pièces demandées (versions...)", tracking=True)

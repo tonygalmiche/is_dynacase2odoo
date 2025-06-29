@@ -78,7 +78,6 @@
                                     <group>
                                         <field name="langue"                      attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                         <field name="type_essai"                  attrs="{'readonly': [('state_readonly','==',True)]}"/>
-                                        <field name="num_seq"/>
                                         <field name="num_essai"/>
                                         <field name="date"/>
                                         <field name="user_id"/>
@@ -224,7 +223,7 @@
                     <field name="langue"                      optional="show"/>
                     <field name="type_essai"                  optional="show"/>
                     <field name="num_essai"                   optional="show"/>
-                    <field name="num_seq"                     optional="show"/>
+                    <field name="num_seq"                     optional="hide"/>
                     <field name="date"                        optional="show"/>
                     <field name="user_id"                     optional="show"/>
                     <field name="moule_id"                    optional="show"/>
@@ -308,6 +307,10 @@
                     <field name="date_realisation"            optional="hide"/>
                     <field name="demande_essai_pdf_ids"       optional="hide"/>
                     <field name="etiquette_pdf_ids"           optional="hide"/>
+                    <field name="create_date"                 optional="hide" string="Créé le"/>
+                    <field name="create_uid"                  optional="hide" string="Créé par"/>
+                    <field name="write_date"                  optional="hide" string="Modifié le"/>
+                    <field name="write_uid"                   optional="hide" string="Modifié par"/>
                     <field name="dynacase_id"                 optional="hide"/>
                     <field
                         name="state" optional="show" widget="badge"
