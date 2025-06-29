@@ -77,25 +77,24 @@
                                 <group string="Identification">
                                     <group>
                                         <field name="num_essai"/>
-                                        <field name="date"/>
-                                        <field name="langue"                      attrs="{'readonly': [('state_readonly','==',True)]}"/>
-                                        <field name="type_essai"                  attrs="{'readonly': [('state_readonly','==',True)]}"/>
-                                        <field name="user_id"/>
-                                        <field name="moule_id"                    attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('type_essai','!=','moule')]}"/>
-                                        <field name="dossierf_id"                 attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('type_essai','!=','assemblage')]}"/>
-                                        <field name="num_erd_id"                  attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('type_essai','!=','erd')]}"/>
-                                        <field name="designation"/>
-                                        <field name="outillage_dispo"             attrs="{'readonly': [('state_readonly','==',True)]}"/>
-                                        <field name="date_disp_out"               attrs="{'readonly': [('state_readonly','==',True)]}"/>
-                                        <field name="etat_stock"                  attrs="{'readonly': [('state_readonly','==',True)]}"/>
-                                        <field name="lieu_essai_id"               attrs="{'readonly': [('state_readonly','==',True)]}"/>
-                                        <field name="lieu_essai_autre"            attrs="{'readonly': [('state_readonly','==',True)]}"/>
-                                        <field name="resp_essai_id"               attrs="{'readonly': [('state_readonly','==',True)]}"/>
-                                        <field name="resp_planning_id"            attrs="{'readonly': [('state_readonly','==',True)]}"/>
-                                        <field name="ident_commentaire"           attrs="{'readonly': [('state_readonly','==',True)]}"/>
-                                        <field name="autres_personnes_ids"        attrs="{'readonly': [('state_readonly','==',True)]}" widget="many2many_tags"/>
+                                        <field name="date"             required="1" attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="langue"           required="1" attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="type_essai"       required="1" attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="user_id"          required="1" attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="moule_id"                      attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('type_essai','!=','moule')]}"/>
+                                        <field name="dossierf_id"                   attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('type_essai','!=','assemblage')]}"/>
+                                        <field name="num_erd_id"                    attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('type_essai','!=','erd')]}"/>
+                                        <field name="designation"      required="1" force_save="1"/>
+                                        <field name="outillage_dispo"               attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="date_disp_out"                 attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="etat_stock"       required="1" attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="lieu_essai_id"                 attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="lieu_essai_autre"              attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="resp_essai_id"    required="1" attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="resp_planning_id" required="1" attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="ident_commentaire"             attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="autres_personnes_ids"          attrs="{'readonly': [('state_readonly','==',True)]}" widget="many2many_tags"/>
                                     </group>
-    
                                     <group>
                                         <field name="semaine_essai"               attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                         <field name="identification_cmt"          attrs="{'readonly': [('state_readonly','==',True)]}"/>
@@ -112,12 +111,12 @@
                                 </group>
                                 <group string="Matière / Colorant" col="3">
                                     <group string="Matière">
-                                        <field name="code_matiere_id"             attrs="{'readonly': [('state_readonly','==',True)]}"/>
-                                        <field name="designation_mat"             attrs="{'readonly': [('state_readonly','==',True)]}"/>
-                                        <field name="code_matiere_recyclage"      attrs="{'readonly': [('state_readonly','==',True)]}"/>
-                                        <field name="lieu_stockage_matiere"       attrs="{'readonly': [('state_readonly','==',True)]}"/>
-                                        <field name="mat_disp"                    attrs="{'readonly': [('state_readonly','==',True)]}"/>
-                                        <field name="mat_date_disp"               attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('mat_disp', '=', False)]}"/>
+                                        <field name="code_matiere_id"              attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="designation_mat" required="1" attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="code_matiere_recyclage"       attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="lieu_stockage_matiere"        attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="mat_disp"                     attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="mat_date_disp"                attrs="{'readonly': [('state_readonly','==',True)], 'invisible': [('mat_disp', '=', False)]}"/>
                                     </group>
                                     <group string="Matière 2">
                                         <field name="code_matiere2_id"            attrs="{'readonly': [('state_readonly','==',True)]}"/>
@@ -312,7 +311,6 @@
                     <field name="create_uid"                  optional="hide" string="Créé par"/>
                     <field name="write_date"                  optional="hide" string="Modifié le"/>
                     <field name="write_uid"                   optional="hide" string="Modifié par"/>
-                    <field name="dynacase_id"                 optional="hide"/>
                     <field
                         name="state" optional="show" widget="badge"
                         decoration-warning="state in ['annule']"
