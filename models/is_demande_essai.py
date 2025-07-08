@@ -1,6 +1,35 @@
 from odoo import models, fields, api         # type: ignore
 
 
+   # FIXME nb_pieces_total => Champ calculé
+
+    #FIXME Mettre cette liste de choix pour identification_particuliere
+    # $t=array(
+    #     "01 - YELLOW (jaune)",            
+    #     "02 - BLUE (bleu)",            
+    #     "03 - BLACK (noir)",            
+    #     "04 - WHITE (blanc)",            
+    #     "05 - PURPLE (violet)",            
+    #     "06 - GREY (gris)",            
+    #     "07 - BROWN (brun)",            
+    #     "08 - PINK (rose)",            
+    #     "09 - YELLOW (jaune)",            
+    #     "10 - BLUE (bleu)",            
+    #     "11 - BLACK (noir)",            
+    #     "12 - WHITE (blanc)",            
+    #     "13 - PURPLE (violet)",            
+    #     "14 - GREY (gris)",            
+    #     "15 - BROWN (brun)",            
+    #     "16 - PINK (rose)",            
+    #     "17 - YELLOW (jaune)",            
+    # );
+
+
+
+
+
+
+
 _STATE = ([
     ('brouillon', 'Brouillon'),
     ('diffuse', 'Diffusé Planning'),
@@ -119,54 +148,42 @@ class is_demande_essai(models.Model):
     semaine_essai               = fields.Char("Semaine ou jour de réalisation de l'essai", tracking=True)
     identification_cmt          = fields.Text("Commentaire", tracking=True)
     temp_immob                  = fields.Selection(_TEMPS_IMMOB, "Temps d'immobilisation", tracking=True)
-
-    # FIXME
     nb_pieces_par_empreinte     = fields.Char("Nombre de pièces de chaque empreinte", tracking=True)
     nb_pieces_client            = fields.Char("Nombre de pièces pour le client", tracking=True)
     nb_pieces_metrologie        = fields.Char("Nombre de pièces pour la métrologie", tracking=True)
     nb_pieces_chef_projet       = fields.Char("Nombre de pièces pour le chef de projet", tracking=True)
 
-    # FIXME
+    # FIXME => Champ calculé
     nb_pieces_total             = fields.Char("Nombre de pièces total", tracking=True)
+
     nb_pieces_comenntaire       = fields.Text("Commentaire sur le nombre de pièces demandées (versions...)", tracking=True)
 
     # FIXME
     identification_particuliere = fields.Char("Identification particulière", tracking=True)
-    besoin_mod                  = fields.Boolean('Besoin MOD', default=False, tracking=True)
 
+    besoin_mod                  = fields.Boolean('Besoin MOD', default=False, tracking=True)
     code_matiere_id             = fields.Many2one("is.dossier.article", "Code matière", tracking=True)
     designation_mat             = fields.Char("Désignation matière", tracking=True)
-
     code_matiere_recyclage      = fields.Char("Code recyclage", tracking=True)  # readonly
     lieu_stockage_matiere       = fields.Selection(_LIEN_STOCK_MAT, "Lieu de stockage de la matière", tracking=True)
     mat_disp                    = fields.Boolean('Matière disponible', tracking=True)
     mat_date_disp               = fields.Date("Date de disponibilité de la matière", tracking=True)
-
     code_matiere2_id            = fields.Many2one("is.dossier.article", "Code matière 2", tracking=True)
-    designation_mat2             = fields.Char("Désignation matière 2", tracking=True)
-
+    designation_mat2            = fields.Char("Désignation matière 2", tracking=True)
     code_matiere_recyclage2     = fields.Char("Code recyclage 2", tracking=True)  # readonly
     lieu_stockage_matiere2      = fields.Selection(_LIEN_STOCK_MAT, "Lieu de stockage de la matière 2", tracking=True)
     mat_disp2                   = fields.Boolean('Matière disponible 2', tracking=True)
     mat_date_disp2              = fields.Date("Date de disponibilité de la matière 2", tracking=True)
-
     code_colorant_id            = fields.Many2one("is.dossier.article", "Code colorant", tracking=True)
     designation_col             = fields.Char("Désignation colorant", tracking=True)
-
     lieu_stockage_colorant      = fields.Selection(_LIEN_STOCK_MAT, "Lieu de stockage du colorant", tracking=True)
     pourcent_colorant           = fields.Char("% de colorant", tracking=True)
     colorant_disp               = fields.Boolean('Colorant disponible', tracking=True)
     colorant_date_disp          = fields.Date("Date de disponibilité du colorant", tracking=True)
-
     fiche_tech_mat_ids          = fields.Many2many("ir.attachment", "is_demande_essai_fiche_tech_mat_rel", "fiche_tech_mat", "att_id", string="Fiche technique matière")
-
     piece_jointe_ids            = fields.Many2many("ir.attachment", "is_demande_essai_pieces_jointes_rel", "piece_jointe", "att_id", string="Pièce jointe")
-
     images_ids                  = fields.Many2many("ir.attachment", "is_demande_essai_images_rel", "images", "att_id", string="Images")
-
-
     te_piece_jointe_ids         = fields.Many2many("ir.attachment", "is_demande_essai_te_pieces_jointes_rel", "te_piece_jointe", "att_id", string="Compte-rendu")
-
     tps_cycle_standard          = fields.Char("Tps cycle standard", tracking=True)
     tps_cycle_objectif          = fields.Char("Tps cycle objectif", tracking=True)
     tps_cycle_resultat          = fields.Char("Tps cycle résultat", tracking=True)
@@ -181,17 +198,13 @@ class is_demande_essai(models.Model):
     nb_mo_resultat              = fields.Selection(_NB_MO, "Nombre mo résultat", tracking=True)
     de_piece_jointe_ids         = fields.Many2many("ir.attachment", "is_demande_essai_de_pieces_jointes_rel", "de_piece_jointe", "att_id", string="Pièce jointe DE")
     de_commentaire_deroulement  = fields.Text('Commentaire déroulement essai', tracking=True)
-
     resp_metrologie_id          = fields.Many2one("res.users", "Responsable métrologie", tracking=True)
     metro_rapport_controle      = fields.Boolean("Rapport de contrôle", tracking=True)
     metro_rc_complet            = fields.Boolean("RC Complet", tracking=True)
     metro_rc_partiel            = fields.Boolean("RC Partiel", tracking=True)
-    # FIXME
     metro_gamme_geometrique     = fields.Boolean("Gamme géométrique", tracking=True)
     metro_couleur               = fields.Boolean("Couleur", tracking=True)
-    # FIXME
     metro_aspect                = fields.Boolean("Aspect", tracking=True)
-    # FIXME
     metro_controle_visuel       = fields.Boolean("Contrôle visuel", tracking=True)
     metro_brillance             = fields.Boolean("Brillance", tracking=True)
     metro_choc                  = fields.Boolean("Choc", tracking=True)
@@ -199,20 +212,15 @@ class is_demande_essai(models.Model):
     metro_capa30                = fields.Boolean("Capabilité 30 pièces", tracking=True)
     metro_capa50                = fields.Boolean("Capabilité 50 pièces", tracking=True)
     metro_commentaire           = fields.Text('Commentaire métrologie', tracking=True)
-
     rapport_de_controle_ids    = fields.Many2many("ir.attachment", "is_demande_essai_rapport_de_controle_rel", "rapport_de_controle", "att_id", string="Fichier rapport de contrôle")
-
     rapport_cote_conforme      = fields.Integer("% cote conforme", tracking=True)
     rapport_commentaire        = fields.Text("Commentaire rapport métrologie", tracking=True)
-
     date_planifiee             = fields.Date("Date planifiée", tracking=True)
     date_realisation           = fields.Date("Date de réalisation de l'essai", tracking=True)  # readonly
-
-
     demande_essai_pdf_ids      = fields.Many2many("ir.attachment", "is_demande_essai_demande_essai_pdf_rel", "demande_essai_pdf", "att_id", string="Demande d'essai PDF")
     etiquette_pdf_ids          = fields.Many2many("ir.attachment", "is_demande_essai_etiquette_pdf_rel", "etiquette_pdf", "att_id", string="Etiquette PDF")
-
     dynacase_id         = fields.Integer(string="Id Dynacase", index=True, copy=False)
+
 
     def lien_vers_dynacase_action(self):
         for obj in self:
@@ -259,18 +267,15 @@ class is_demande_essai(models.Model):
         for obj in self:
             obj.state='solde'
 
-
     @api.onchange('code_matiere_id')
     def onchange_code_matiere_id(self):
         for obj in self:
             obj.designation_mat = obj.code_matiere_id.designation
 
-
     @api.onchange('code_matiere2_id')
     def onchange_code_matiere2_id(self):
         for obj in self:
             obj.designation_mat2 = obj.code_matiere2_id.designation
-
 
     @api.onchange('code_colorant_id')
     def onchange_code_colorant_id(self):
