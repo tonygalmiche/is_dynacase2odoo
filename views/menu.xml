@@ -94,7 +94,11 @@
 
         <!-- Gestion commcerciale / Plan d'acttion -->
         <menuitem 
-            name="Plan d'action"  id="is_plan_action_menu" sequence="60"
+            name="Action"  id="is_action_menu" sequence="60"
+            parent="is_gestion_commerciale_menu" action="is_action_action"
+        />
+        <menuitem 
+            name="Plan d'action"  id="is_plan_action_menu" sequence="61"
             parent="is_gestion_commerciale_menu" action="is_plan_action_action"
         />
 
