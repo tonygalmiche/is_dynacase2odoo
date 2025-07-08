@@ -5,7 +5,7 @@
         <record id="is_fiche_codification_mail_template" model="mail.template">
             <field name="name">Fiche de codification</field>
             <field name="model_id" ref="is_dynacase2odoo.model_is_fiche_codification"/>
-            <field name="subject">[Fiche de codification][{{ object.dossier }}] état '{{ object.get_state_name() }}'</field>
+            <field name="subject">[Fiche de codification][{{ object.chrono }}][{{ object.dossier }}] état '{{ object.get_state_name() }}'</field>
             <field name="email_cc">{{ object.users2mail(object.mail_cc_ids) }}</field>
             <field name="description">Fiche de codification</field>
             <field name="body_html" type="html">
