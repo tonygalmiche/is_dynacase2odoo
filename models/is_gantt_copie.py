@@ -90,6 +90,10 @@ class IsGanttCopie(models.Model):
                     v = getattr(rl,key)
                     if v>0:
                         budgets.append(key)
+                    key_cmt = "%s_cmt"%key
+                    v = getattr(rl,key_cmt)
+                    if v:
+                        budgets.append(key)
             return budgets
 
 

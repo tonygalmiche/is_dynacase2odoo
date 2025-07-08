@@ -185,6 +185,29 @@ class is_revue_lancement(models.Model):
     rl_be16_id   = fields.Many2one("is.inv.achat.moule", string="BE16: Achat composants"                               , tracking=True, readonly=True)
     rl_be17_id   = fields.Many2one("is.inv.achat.moule", string="BE17: Essai injection"                                , tracking=True, readonly=True)
 
+    rl_be01_cmt  = fields.Char(string="BE01a", tracking=True)
+    rl_be01b_cmt = fields.Char(string="BE01b", tracking=True)
+    rl_be01c_cmt = fields.Char(string="BE01c", tracking=True)
+    rl_be02_cmt  = fields.Char(string="BE02", tracking=True)
+    rl_be03_cmt  = fields.Char(string="BE03", tracking=True)
+    rl_be04_cmt  = fields.Char(string="BE04", tracking=True)
+    rl_be05_cmt  = fields.Char(string="BE05", tracking=True)
+    rl_be06_cmt  = fields.Char(string="BE06", tracking=True)
+    rl_be07_cmt  = fields.Char(string="BE07", tracking=True)
+    rl_be09_cmt  = fields.Char(string="BE09", tracking=True)
+    rl_be10_cmt  = fields.Char(string="BE10", tracking=True)
+    rl_be11_cmt  = fields.Char(string="BE11", tracking=True)
+    rl_be12_cmt  = fields.Char(string="BE12", tracking=True)
+    rl_be13_cmt  = fields.Char(string="BE13", tracking=True)
+    rl_be14_cmt  = fields.Char(string="BE14", tracking=True)
+    rl_be15_cmt  = fields.Char(string="BE15", tracking=True)
+    rl_be16_cmt  = fields.Char(string="BE16", tracking=True)
+    rl_be17_cmt  = fields.Char(string="BE17", tracking=True)
+
+
+
+
+
 
     state                             = fields.Selection([
         ("rl_brouillon",  "Brouillon"),

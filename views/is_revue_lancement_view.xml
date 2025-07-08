@@ -195,8 +195,15 @@
                                         <field name="rl_pgrc_amort_cmt"            nolabel="1" colspan="6"/>
                                     </group>
                                 </group>
-                                <group string="Données revue de lancement" >
-                                    <group attrs="{'invisible': [('state', '!=', 'rl_brouillon')]}" >
+
+
+
+
+
+
+
+                                <group string="Données revue de lancement" col="2">
+                                    <group attrs="{'invisible': [('state', '!=', 'rl_brouillon')]}" string="Données" >
                                         <field name="rl_be01"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                         <field name="rl_be01b" attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                         <field name="rl_be01c" attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
@@ -219,7 +226,7 @@
                                         <field name="ecart" attrs="{'invisible':[('ecart','=',0)]}" style="background-color:orange"/>
                                         <field name="rl_annee_inv"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                     </group>
-                                    <group attrs="{'invisible': [('state', '=', 'rl_brouillon')]}" >
+                                    <group attrs="{'invisible': [('state', '=', 'rl_brouillon')]}" string="Liens">
                                         <field name="rl_be01_id"/>
                                         <field name="rl_be01b_id"/>
                                         <field name="rl_be01c_id"/>
@@ -241,6 +248,26 @@
                                         <field name="rl_be_total"/>
                                         <field name="ecart" attrs="{'invisible':[('ecart','=',0)]}" style="background-color:orange"/>
                                         <field name="rl_annee_inv"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                    </group>
+                                    <group col="2"  string="Commentaires">
+                                        <field name="rl_be01_cmt"/>
+                                        <field name="rl_be01b_cmt"/>
+                                        <field name="rl_be01c_cmt"/>
+                                        <field name="rl_be02_cmt"/>
+                                        <field name="rl_be03_cmt"/>
+                                        <field name="rl_be04_cmt"/>
+                                        <field name="rl_be05_cmt"/>
+                                        <field name="rl_be06_cmt"/>
+                                        <field name="rl_be07_cmt"/>
+                                        <field name="rl_be09_cmt"/>
+                                        <field name="rl_be10_cmt"/>
+                                        <field name="rl_be11_cmt"/>
+                                        <field name="rl_be12_cmt"/>
+                                        <field name="rl_be13_cmt"/>
+                                        <field name="rl_be14_cmt"/>
+                                        <field name="rl_be15_cmt"/>
+                                        <field name="rl_be16_cmt"/>
+                                        <field name="rl_be17_cmt"/>
                                     </group>
                                 </group>
                             </page>
