@@ -47,7 +47,7 @@ class IsDocMoule(models.Model):
         dates_j={}
         for line in lines:
             moule=line.idmoule
-            if moule not in moules:
+            if moule not in moules and moule:
                 moules.append(moule)
         js=('J0','J1','J2','J3','J4','J5')
         for moule in moules:
