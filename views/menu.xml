@@ -94,12 +94,16 @@
 
         <!-- Gestion commcerciale / Plan d'acttion -->
         <menuitem 
-            name="Action"  id="is_action_menu" sequence="60"
-            parent="is_gestion_commerciale_menu" action="is_action_action"
+            name="Plan d'action" id="is_plan_action_menu" sequence="60"
+            parent="is_gestion_commerciale_menu"
         />
         <menuitem 
-            name="Plan d'action"  id="is_plan_action_menu" sequence="61"
-            parent="is_gestion_commerciale_menu" action="is_plan_action_action"
+            name="Action"  id="is_pa_action_menu" sequence="10"
+            parent="is_plan_action_menu" action="is_action_action"
+        />
+        <menuitem 
+            name="Plan d'action"  id="is_pa_plan_action_menu" sequence="20"
+            parent="is_plan_action_menu" action="is_plan_action_action"
         />
 
         <!-- Gestion commcerciale / PAC -->
