@@ -22,7 +22,7 @@ class is_action(models.Model):
     _name = "is.action"
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description="Action"
-#    _rec_name = "order"
+    _rec_name = "title"
 #    _order='order desc'
 
     state            = fields.Selection(_STATE_ACTION, "Etat", default=_STATE_ACTION[0][0], tracking=True)
@@ -32,10 +32,10 @@ class is_action(models.Model):
     risque           = fields.Text("Risque", tracking=True)
     comment          = fields.Text("Commentaire", tracking=True)
 
-    date       = fields.Date("Date de création", default=lambda *a: fields.datetime.now(), tracking=True)
-    dateplan   = fields.Date("Date de fin prévue", required=True, tracking=True)
-    datedo     = fields.Date("Date terminée", tracking=True)
-    datecheck  = fields.Date("Date de vérification", tracking=True)
+    date             = fields.Date("Date de création", default=lambda *a: fields.datetime.now(), tracking=True)
+    dateplan         = fields.Date("Date de fin prévue", required=True, tracking=True)
+    datedo           = fields.Date("Date terminée", tracking=True)
+    datecheck        = fields.Date("Date de vérification", tracking=True)
 
     file_ids         = fields.Many2many("ir.attachment", "is_action_file_rel", "file", "att_id", string="Fichiers")
 

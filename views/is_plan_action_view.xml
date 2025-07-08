@@ -106,7 +106,17 @@
                     <field name="resp_id"          optional="show" widget="many2one_clickable"/>
                     <field name="risque"           optional="show"/>
                     <field name="comment"          optional="show"/>
+                    <field name="date"             optional="hide"/>
                     <field name="dateplan"         optional="hide"/>
+                    <field name="datedo"           optional="hide"/>
+                    <field name="datecheck"        optional="hide"/>
+                    <field name="plan_action_id"   optional="hide"/>
+                    <field name="pilot_id"         optional="hide"/>
+                    <field name="num_moule"        optional="hide"/>
+                    <field name="num_dossierf"     optional="hide"/>
+                    <field name="client"           optional="hide"/>
+                    <field name="date_beg"         optional="hide"/>
+                    <field name="date_end"         optional="hide"/>
                     <field name="create_date"      optional="hide" string="Créé le"/>
                     <field name="create_uid"       optional="hide" string="Créé par"/>
                     <field name="write_date"       optional="hide" string="Modifié le"/>
@@ -125,6 +135,29 @@
                         groups="base.group_system"
                     />
                 </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_action_search">
+            <field name="name">is_action_search</field>
+            <field name="model">is.action</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="title"/>
+                    <field name="resp_id"/>
+                    <field name="risque"/>
+                    <field name="comment"/>
+                    <field name="date"/>
+                    <field name="dateplan"/>
+                    <field name="datedo"/>
+                    <field name="datecheck"/>
+                    <field name="plan_action_id"/>
+                    <field name="pilot_id"/>
+                    <field name="num_moule"/>
+                    <field name="num_dossierf"/>
+                    <field name="client"/>
+                    <field name="date_beg"/>
+                    <field name="date_end"/>
+                </search>
             </field>
         </record>
         <record model="ir.actions.act_window" id="is_action_action">
