@@ -157,14 +157,14 @@ class is_prise_avance(models.Model):
                 obj.date_outillage_vsb = False
                 obj.date_retour_outillage_vsb = False
                 obj.nb_jours_vsb = False
-            elif obj.state == 'diffuse':
+            if obj.state == 'diffuse':
                 obj.vers_brouillon_vsb = is_user or is_resp
                 obj.vers_diffuse_vsb = False
                 obj.vers_realise_vsb = is_resp
                 obj.pieces_stck_vsb = True
                 obj.date_outillage_vsb = True
                 obj.date_retour_outillage_vsb = True
-            else:
+            if obj.state == 'realise':
                 obj.vers_brouillon_vsb = False
                 obj.vers_diffuse_vsb = is_resp
                 obj.vers_realise_vsb = False
