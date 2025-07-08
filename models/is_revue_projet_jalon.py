@@ -5,10 +5,6 @@ from odoo.exceptions import AccessError, ValidationError, UserError  # type: ign
 from datetime import datetime, timedelta, date
 
 
-#TODO : 
-#- Le champ rpj_total_vente_moule va lire des infos dans les investissement achat moule => Pas dispo dans Odoo
-
-
 class is_revue_projet_jalon(models.Model):
     _name        = "is.revue.projet.jalon"
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
@@ -66,7 +62,8 @@ class is_revue_projet_jalon(models.Model):
                         if obj.rpj_point_bloquant==0:                     # Pas de point bloquant
                             if obj.rpj_j==(obj.rpj_mouleid.j_actuelle or obj.dossierf_id.j_actuelle):     # Uniquement si J moule = J CR
                                 if  uid in [obj.rpj_chef_projetid.id, obj.rpj_directeur_techniqueid.id]:
-                                    vsb=True
+                                    if obj.rpj_rrid and obj.rpj_rrid.state=='rr_diffuse' and obj.rpj_rrid.active==True:
+                                        vsb=True
             obj.vers_j_suivante_vsb = vsb
 
 
@@ -118,7 +115,8 @@ class is_revue_projet_jalon(models.Model):
 
     def vers_directeur_technique_action(self):
         for obj in self:
-            if not obj.rpj_rrid:
+            #if not obj.rpj_rrid:
+            if not obj.rpj_rrid or obj.rpj_rrid.state!='rr_diffuse' or obj.rpj_rrid.active==False:
                 raise ValidationError("Il est obligatoire d'avoir une revue des risques pour valider ce document!")
             J = obj.rpj_j
             if J!='J4' and J!='J5':
