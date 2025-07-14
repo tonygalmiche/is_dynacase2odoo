@@ -1,33 +1,28 @@
 from odoo import models, fields, api         # type: ignore
 
-
-   # FIXME nb_pieces_total => Champ calculé
-
-    #FIXME Mettre cette liste de choix pour identification_particuliere
-    # $t=array(
-    #     "01 - YELLOW (jaune)",            
-    #     "02 - BLUE (bleu)",            
-    #     "03 - BLACK (noir)",            
-    #     "04 - WHITE (blanc)",            
-    #     "05 - PURPLE (violet)",            
-    #     "06 - GREY (gris)",            
-    #     "07 - BROWN (brun)",            
-    #     "08 - PINK (rose)",            
-    #     "09 - YELLOW (jaune)",            
-    #     "10 - BLUE (bleu)",            
-    #     "11 - BLACK (noir)",            
-    #     "12 - WHITE (blanc)",            
-    #     "13 - PURPLE (violet)",            
-    #     "14 - GREY (gris)",            
-    #     "15 - BROWN (brun)",            
-    #     "16 - PINK (rose)",            
-    #     "17 - YELLOW (jaune)",            
-    # );
+# 211372 (PG_DEMANDE_ESSAI)
+# FIXME nb_pieces_total => Champ calculé
 
 
-
-
-
+_IDENTIFICATION_PARTICULIERE=([
+    ("01", "01 - YELLOW (jaune)"),            
+    ("02", "02 - BLUE (bleu)"),            
+    ("03", "03 - BLACK (noir)"),            
+    ("04", "04 - WHITE (blanc)"),            
+    ("05", "05 - PURPLE (violet)"),            
+    ("06", "06 - GREY (gris)"),            
+    ("07", "07 - BROWN (brun)"),            
+    ("08", "08 - PINK (rose)"),            
+    ("09", "09 - YELLOW (jaune)"),            
+    ("10", "10 - BLUE (bleu)"),            
+    ("11", "11 - BLACK (noir)"),            
+    ("12", "12 - WHITE (blanc)"),            
+    ("13", "13 - PURPLE (violet)"),            
+    ("14", "14 - GREY (gris)"),            
+    ("15", "15 - BROWN (brun)"),            
+    ("16", "16 - PINK (rose)"),            
+    ("17", "17 - YELLOW (jaune)"),            
+])
 
 
 _STATE = ([
@@ -159,7 +154,8 @@ class is_demande_essai(models.Model):
     nb_pieces_comenntaire       = fields.Text("Commentaire sur le nombre de pièces demandées (versions...)", tracking=True)
 
     # FIXME
-    identification_particuliere = fields.Char("Identification particulière", tracking=True)
+    identification_particuliere       = fields.Selection(_IDENTIFICATION_PARTICULIERE, "Identification particulière", tracking=True)
+    identification_particuliere_autre = fields.Char("Identification particulière (autre)", tracking=True)
 
     besoin_mod                  = fields.Boolean('Besoin MOD', default=False, tracking=True)
     code_matiere_id             = fields.Many2one("is.dossier.article", "Code matière", tracking=True)

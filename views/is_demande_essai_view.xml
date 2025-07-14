@@ -104,6 +104,7 @@
                                         <field name="nb_pieces_chef_projet"       attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                         <field name="nb_pieces_comenntaire"       attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                         <field name="identification_particuliere" attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="identification_particuliere_autre" attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                         <field name="besoin_mod"                  attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                         <field name="piece_jointe_ids"            attrs="{'readonly': [('state_readonly','==',True)]}" widget="many2many_binary"/>
                                         <field name="images_ids"                  attrs="{'readonly': [('state_readonly','==',True)]}" widget="many2many_binary"/>
