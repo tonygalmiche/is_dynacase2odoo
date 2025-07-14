@@ -118,6 +118,18 @@ class is_demande_essai(models.Model):
             obj.designation = designation
 
 
+    @api.depends("nb_pieces_client","nb_pieces_metrologie","nb_pieces_chef_projet")
+    def _compute_nb_pieces_total(self):
+        def char2int(val):
+            try:
+                res = int(val)
+            except:
+                res=0
+            return res   
+        for obj in self:
+            obj.nb_pieces_total = char2int(obj.nb_pieces_client) + char2int(obj.nb_pieces_metrologie) + char2int(obj.nb_pieces_chef_projet)
+
+
     state                       = fields.Selection(_STATE, "Etat", default=_STATE[0][0], tracking=True)
     state_readonly              = fields.Boolean("Etat dont les variables sont en lecture seule", compute='_compute_state_readonly', store=False, readonly=True, copy=False)
     active                      = fields.Boolean('Actif', default=True, tracking=True)
@@ -147,16 +159,10 @@ class is_demande_essai(models.Model):
     nb_pieces_client            = fields.Char("Nombre de pièces pour le client", tracking=True)
     nb_pieces_metrologie        = fields.Char("Nombre de pièces pour la métrologie", tracking=True)
     nb_pieces_chef_projet       = fields.Char("Nombre de pièces pour le chef de projet", tracking=True)
-
-    # FIXME => Champ calculé
-    nb_pieces_total             = fields.Char("Nombre de pièces total", tracking=True)
-
+    nb_pieces_total             = fields.Integer("Nombre de pièces total", tracking=True, compute='_compute_nb_pieces_total', store=True, readonly=True, copy=False)
     nb_pieces_comenntaire       = fields.Text("Commentaire sur le nombre de pièces demandées (versions...)", tracking=True)
-
-    # FIXME
     identification_particuliere       = fields.Selection(_IDENTIFICATION_PARTICULIERE, "Identification particulière", tracking=True)
     identification_particuliere_autre = fields.Char("Identification particulière (autre)", tracking=True)
-
     besoin_mod                  = fields.Boolean('Besoin MOD', default=False, tracking=True)
     code_matiere_id             = fields.Many2one("is.dossier.article", "Code matière", tracking=True)
     designation_mat             = fields.Char("Désignation matière", tracking=True)

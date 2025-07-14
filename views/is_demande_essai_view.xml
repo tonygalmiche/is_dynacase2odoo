@@ -102,6 +102,7 @@
                                         <field name="nb_pieces_client"            attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                         <field name="nb_pieces_metrologie"        attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                         <field name="nb_pieces_chef_projet"       attrs="{'readonly': [('state_readonly','==',True)]}"/>
+                                        <field name="nb_pieces_total"/>
                                         <field name="nb_pieces_comenntaire"       attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                         <field name="identification_particuliere" attrs="{'readonly': [('state_readonly','==',True)]}"/>
                                         <field name="identification_particuliere_autre" attrs="{'readonly': [('state_readonly','==',True)]}"/>
@@ -243,11 +244,10 @@
                     <field name="semaine_essai"               optional="hide"/>
                     <field name="identification_cmt"          optional="hide"/>
                     <field name="temp_immob"                  optional="hide"/>
-                    <!--field name="nb_pieces_par_empreinte"/-->
                     <field name="nb_pieces_client"            optional="hide"/>
                     <field name="nb_pieces_metrologie"        optional="hide"/>
                     <field name="nb_pieces_chef_projet"       optional="hide"/>
-                    <!--field name="nb_pieces_total"/-->
+                    <field name="nb_pieces_total"             optional="hide"/>
                     <field name="nb_pieces_comenntaire"       optional="hide"/>
                     <field name="identification_particuliere" optional="hide"/>
                     <field name="identification_particuliere_autre" optional="hide"/>
