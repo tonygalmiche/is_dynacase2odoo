@@ -250,6 +250,7 @@
                     <!--field name="nb_pieces_total"/-->
                     <field name="nb_pieces_comenntaire"       optional="hide"/>
                     <field name="identification_particuliere" optional="hide"/>
+                    <field name="identification_particuliere_autre" optional="hide"/>
                     <field name="besoin_mod"                  optional="hide"/>
                     <field name="code_matiere_id"             optional="hide" widget="many2one_clickable"/>
                     <field name="designation_mat"             optional="hide"/>
