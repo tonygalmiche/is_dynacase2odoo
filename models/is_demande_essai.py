@@ -1,9 +1,5 @@
 from odoo import models, fields, api         # type: ignore
 
-#TODO:
-#- Gestion des droits
-#- Pieces jointes
-
 
 _IDENTIFICATION_PARTICULIERE=([
     ("01", "01 - YELLOW (jaune)"),            
@@ -130,28 +126,27 @@ class is_demande_essai(models.Model):
 
 
     state                       = fields.Selection(_STATE, "Etat", default=_STATE[0][0], tracking=True)
-    state_readonly              = fields.Boolean("Etat dont les variables sont en lecture seule", compute='_compute_state_readonly', store=False, readonly=True, copy=False)
     active                      = fields.Boolean('Actif', default=True, tracking=True)
     langue                      = fields.Selection(_LANG, "Langue", tracking=True, default='FR')
     type_essai                  = fields.Selection(_TYPE_ESSAI, "Type essai", default='moule', tracking=True)
     num_seq                     = fields.Integer('Numéro séquentiel', tracking=True, compute="_compute_num_essai", readonly=True, store=True)
     num_essai                   = fields.Char('N° essai'            , tracking=True, compute="_compute_num_essai", readonly=True, store=True)
-    date                        = fields.Date("Date", default=lambda *a: fields.datetime.now(), tracking=True)
-    user_id                     = fields.Many2one("res.users", string="Demandeur", default=lambda self: self.env.uid, tracking=True)
+    date                        = fields.Date("Date", default=lambda *a: fields.datetime.now(), tracking=True,copy=False)
+    user_id                     = fields.Many2one("res.users", string="Demandeur", default=lambda self: self.env.uid, tracking=True,copy=False)
     moule_id                    = fields.Many2one('is.mold', string="Moule", tracking=True)
     dossierf_id                 = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
     num_erd_id                  = fields.Many2one('is.erd', string='Numéro erd', tracking=True)
     designation                 = fields.Char("Désignation", tracking=True, compute="_compute_num_essai", readonly=True, store=True)
-    outillage_dispo             = fields.Boolean('Outillage disponible', default=False, tracking=True)
-    date_disp_out               = fields.Date("Date de disponibilité de l'outillage", tracking=True)
-    etat_stock                  = fields.Selection(_ETAT_STOCK, string="Etat des produits en stock", tracking=True)
+    outillage_dispo             = fields.Boolean('Outillage disponible', default=False, tracking=True,copy=False)
+    date_disp_out               = fields.Date("Date de disponibilité de l'outillage", tracking=True,copy=False)
+    etat_stock                  = fields.Selection(_ETAT_STOCK, string="Etat des produits en stock", tracking=True,copy=False)
     lieu_essai_id               = fields.Many2one('is.database', string="Lieu essai", tracking=True)
     lieu_essai_autre            = fields.Char('Autre', tracking=True)
     resp_essai_id               = fields.Many2one("res.users", string="Responsable de l'essai", tracking=True)
     resp_planning_id            = fields.Many2one("res.users", string="Responsable du planning", tracking=True)
     ident_commentaire           = fields.Text('Commentaire Traçabilité')
     autres_personnes_ids        = fields.Many2many("res.users", "is_demande_essai_autres_personnes_rel", "demande_essai_id", "user_id", string="Autres personnes à informer", tracking=True)
-    semaine_essai               = fields.Char("Semaine ou jour de réalisation de l'essai", tracking=True)
+    semaine_essai               = fields.Char("Semaine ou jour de réalisation de l'essai", tracking=True,copy=False)
     identification_cmt          = fields.Text("Commentaire", tracking=True)
     temp_immob                  = fields.Selection(_TEMPS_IMMOB, "Temps d'immobilisation", tracking=True)
     nb_pieces_par_empreinte     = fields.Char("Nombre de pièces de chaque empreinte", tracking=True)
@@ -186,44 +181,68 @@ class is_demande_essai(models.Model):
     images_ids                  = fields.Many2many("ir.attachment", "is_demande_essai_images_rel", "images", "att_id", string="Images")
     te_piece_jointe_ids         = fields.Many2many("ir.attachment", "is_demande_essai_te_pieces_jointes_rel", "te_piece_jointe", "att_id", string="Compte-rendu")
     tps_cycle_standard          = fields.Char("Tps cycle standard", tracking=True)
-    tps_cycle_objectif          = fields.Char("Tps cycle objectif", tracking=True)
-    tps_cycle_resultat          = fields.Char("Tps cycle résultat", tracking=True)
+    tps_cycle_objectif          = fields.Char("Tps cycle objectif", tracking=True,copy=False)
+    tps_cycle_resultat          = fields.Char("Tps cycle résultat", tracking=True,copy=False)
     poids_piece_standard        = fields.Char("Poids pièce standard", tracking=True)
-    poids_piece_objectif        = fields.Char("Poids pièce objectif", tracking=True)
-    poids_piece_resultat        = fields.Char("Poids pièce résultat", tracking=True)
+    poids_piece_objectif        = fields.Char("Poids pièce objectif", tracking=True,copy=False)
+    poids_piece_resultat        = fields.Char("Poids pièce résultat", tracking=True,copy=False)
     presse_standard_id          = fields.Many2one('is.equipement', "Presse standard", tracking=True)
-    presse_objectif_id          = fields.Many2one('is.equipement', "Presse objectif", tracking=True)
-    presse_resultat_id          = fields.Many2one('is.equipement', "Presse résultat", tracking=True)
+    presse_objectif_id          = fields.Many2one('is.equipement', "Presse objectif", tracking=True,copy=False)
+    presse_resultat_id          = fields.Many2one('is.equipement', "Presse résultat", tracking=True,copy=False)
     nb_mo_standard              = fields.Selection(_NB_MO, "Nombre mo standard", tracking=True)
-    nb_mo_objectif              = fields.Selection(_NB_MO, "Nombre mo objectif", tracking=True)
-    nb_mo_resultat              = fields.Selection(_NB_MO, "Nombre mo résultat", tracking=True)
-    de_piece_jointe_ids         = fields.Many2many("ir.attachment", "is_demande_essai_de_pieces_jointes_rel", "de_piece_jointe", "att_id", string="Pièce jointe DE")
-    de_commentaire_deroulement  = fields.Text('Commentaire déroulement essai', tracking=True)
+    nb_mo_objectif              = fields.Selection(_NB_MO, "Nombre mo objectif", tracking=True,copy=False)
+    nb_mo_resultat              = fields.Selection(_NB_MO, "Nombre mo résultat", tracking=True,copy=False)
+    de_piece_jointe_ids         = fields.Many2many("ir.attachment", "is_demande_essai_de_pieces_jointes_rel", "de_piece_jointe", "att_id", string="Pièce jointe DE",copy=False)
+    de_commentaire_deroulement  = fields.Text('Commentaire déroulement essai', tracking=True,copy=False)
     resp_metrologie_id          = fields.Many2one("res.users", "Responsable métrologie", tracking=True)
-    metro_rapport_controle      = fields.Boolean("Rapport de contrôle", tracking=True)
-    metro_rc_complet            = fields.Boolean("RC Complet", tracking=True)
-    metro_rc_partiel            = fields.Boolean("RC Partiel", tracking=True)
-    metro_gamme_geometrique     = fields.Boolean("Gamme géométrique", tracking=True)
-    metro_couleur               = fields.Boolean("Couleur", tracking=True)
-    metro_aspect                = fields.Boolean("Aspect", tracking=True)
-    metro_controle_visuel       = fields.Boolean("Contrôle visuel", tracking=True)
-    metro_brillance             = fields.Boolean("Brillance", tracking=True)
-    metro_choc                  = fields.Boolean("Choc", tracking=True)
-    metro_capabilite            = fields.Boolean("Capabilité", tracking=True)
-    metro_capa30                = fields.Boolean("Capabilité 30 pièces", tracking=True)
-    metro_capa50                = fields.Boolean("Capabilité 50 pièces", tracking=True)
-    metro_commentaire           = fields.Text('Commentaire métrologie', tracking=True)
-    rapport_de_controle_ids    = fields.Many2many("ir.attachment", "is_demande_essai_rapport_de_controle_rel", "rapport_de_controle", "att_id", string="Fichier rapport de contrôle")
+    metro_rapport_controle      = fields.Boolean("Rapport de contrôle", tracking=True,copy=False)
+    metro_rc_complet            = fields.Boolean("RC Complet", tracking=True,copy=False)
+    metro_rc_partiel            = fields.Boolean("RC Partiel", tracking=True,copy=False)
+    metro_gamme_geometrique     = fields.Boolean("Gamme géométrique", tracking=True,copy=False)
+    metro_couleur               = fields.Boolean("Couleur", tracking=True,copy=False)
+    metro_aspect                = fields.Boolean("Aspect", tracking=True,copy=False)
+    metro_controle_visuel       = fields.Boolean("Contrôle visuel", tracking=True,copy=False)
+    metro_brillance             = fields.Boolean("Brillance", tracking=True,copy=False)
+    metro_choc                  = fields.Boolean("Choc", tracking=True,copy=False)
+    metro_capabilite            = fields.Boolean("Capabilité", tracking=True,copy=False)
+    metro_capa30                = fields.Boolean("Capabilité 30 pièces", tracking=True,copy=False)
+    metro_capa50                = fields.Boolean("Capabilité 50 pièces", tracking=True,copy=False)
+    metro_commentaire           = fields.Text('Commentaire métrologie', tracking=True,copy=False)
+    rapport_de_controle_ids    = fields.Many2many("ir.attachment", "is_demande_essai_rapport_de_controle_rel", "rapport_de_controle", "att_id", string="Fichier rapport de contrôle",copy=False)
     rapport_cote_conforme      = fields.Integer("% cote conforme", tracking=True)
-    rapport_commentaire        = fields.Text("Commentaire rapport métrologie", tracking=True)
-    date_planifiee             = fields.Date("Date planifiée", tracking=True)
-    date_realisation           = fields.Date("Date de réalisation de l'essai", tracking=True)
-    demande_essai_pdf_ids      = fields.Many2many("ir.attachment", "is_demande_essai_demande_essai_pdf_rel", "demande_essai_pdf", "att_id", string="Demande d'essai PDF")
-    etiquette_pdf_ids          = fields.Many2many("ir.attachment", "is_demande_essai_etiquette_pdf_rel", "etiquette_pdf", "att_id", string="Etiquette PDF")
+    rapport_commentaire        = fields.Text("Commentaire rapport métrologie", tracking=True,copy=False)
+    date_planifiee             = fields.Date("Date planifiée", tracking=True,copy=False)
+    date_realisation           = fields.Date("Date de réalisation de l'essai", tracking=True,copy=False)
+    demande_essai_pdf_ids      = fields.Many2many("ir.attachment", "is_demande_essai_demande_essai_pdf_rel", "demande_essai_pdf", "att_id", string="Demande d'essai PDF",copy=False)
+    etiquette_pdf_ids          = fields.Many2many("ir.attachment", "is_demande_essai_etiquette_pdf_rel", "etiquette_pdf", "att_id", string="Etiquette PDF",copy=False)
     dynacase_id         = fields.Integer(string="Id Dynacase", index=True, copy=False)
     mail_to_ids = fields.Many2many('res.users', compute='_compute_mail_to_cc_ids', string="Mail To")
     mail_cc_ids = fields.Many2many('res.users', compute='_compute_mail_to_cc_ids', string="Mail Cc")
+    ro_user     = fields.Boolean("ro_user"    , compute='_compute_ro', store=False, readonly=True)
+    ro_essai    = fields.Boolean("ro_essai"   , compute='_compute_ro', store=False, readonly=True)
+    ro_planning = fields.Boolean("ro_planning", compute='_compute_ro', store=False, readonly=True)
+    ro_metro    = fields.Boolean("ro_metro"   , compute='_compute_ro', store=False, readonly=True)
 
+
+    @api.depends('state','user_id','resp_essai_id','resp_planning_id','resp_metrologie_id')
+    def _compute_ro(self):
+        uid = self._uid
+        for obj in self:
+            ro_user = ro_essai = ro_planning = ro_metro =True
+            if obj.state in ('brouillon','diffuse','planifie','cr','metrologie') and uid==obj.user_id.id:
+                ro_user = False
+            if obj.state in ('diffuse') and uid==obj.resp_planning_id.id:
+                ro_planning = False
+            if obj.state in ('planifie','cr') and uid==obj.resp_essai_id.id:
+                ro_essai = False
+            if obj.state in ('metrologie') and uid==obj.resp_metrologie_id.id:
+                ro_metro = False
+            obj.ro_user = ro_user
+            obj.ro_essai = ro_essai
+            obj.ro_planning = ro_planning
+            obj.ro_metro = ro_metro
+
+ 
     def get_doc_url(self):
         for obj in self:
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -285,13 +304,6 @@ class is_demande_essai(models.Model):
                 'target': 'new',
             }
 
-    @api.depends('state')
-    def _compute_state_readonly(self):
-        for obj in self:
-            if obj.state == 'solde':
-                obj.state_readonly = True
-            else:
-                obj.state_readonly = False
 
     def vers_brouillon_action(self):
         for obj in self:
