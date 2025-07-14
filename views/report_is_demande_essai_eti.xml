@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="is_demande_essai_eti_template">
+            <t t-set="company" t-value="res_company"/>
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="etiquettes" t-value="[1,2]"/>
+                    <div class="page demande_essai">
+                        <t t-foreach="etiquettes" t-as="etiquette">
+                            <table>
+                                <tr>
+                                    <td style="border-bottom:2px solid black">
+                                        <img t-if="company.is_logo" t-att-src="image_data_uri(company.is_logo)" style="max-height:60px;" alt="Logo"/>
+                                        <div style="text-align:center">FO-0-BEI-47-3</div>
+                                    </td>
+                                    <td colspan="2" style="border-bottom:2px solid black">
+
+                                        <t t-if="o.langue=='FR'">
+                                            <t t-if="etiquette==1">
+                                                <h1>ESSAI DE FABRICATION</h1>
+                                                <h2>Essai n° <span t-field="o.num_essai"/></h2>
+                                            </t>
+                                            <t t-if="etiquette==2">
+                                                <h1>PIECES METROLOGIE</h1>
+                                            </t>
+                                        </t>
+                                        <t t-if="o.langue=='EN'">
+                                            <t t-if="etiquette==1">
+                                                <h1>TESTING MANUFACTURING</h1>
+                                                <h2>Folder n° <span t-field="o.num_essai"/></h2>
+                                            </t>
+                                            <t t-if="etiquette==2">
+                                                <h1>TESTING MANUFACTURING<br />METROLOGY PART</h1>
+                                            </t>
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th t-if="o.langue=='FR'" style="vertical-align:middle">N° MOULE :</th>
+                                    <th t-if="o.langue=='EN'" style="vertical-align:middle">N° OF MOLD :</th>
+                                    <td style="vertical-align:middle" colspan="2"> <span t-field="o.moule_id.name"/>  <span t-field="o.moule_id.designation"/> </td>
+                                </tr>
+                                <tr>
+                                    <th t-if="o.langue=='FR'" style="vertical-align:middle">PRESSE :</th>
+                                    <th t-if="o.langue=='EN'" style="vertical-align:middle">PRESS :</th>
+                                    <td colspan="2"> <span t-field="o.presse_standard_id.numero_equipement"/> <span t-field="o.presse_standard_id.designation"/></td>
+                                </tr>
+                                <tr>
+                                    <th t-if="o.langue=='FR'" style="vertical-align:middle">DATE ESSAI :</th>
+                                    <th t-if="o.langue=='EN'" style="vertical-align:middle">DATE OF TEST :</th>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <th t-if="o.langue=='FR'" style="vertical-align:middle;border-bottom:2px solid black">OBJECTIF :</th>
+                                    <th t-if="o.langue=='EN'" style="vertical-align:middle;border-bottom:2px solid black">TARGET OF TEST :</th>
+                                    <td colspan="2" style="border-bottom:2px solid black">
+                                        <div style="height:20mm; max-height:20mm; overflow:hidden; line-height:1; font-size:10pt;">
+                                            <span t-field="o.identification_cmt"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th t-if="o.langue=='FR'" style="vertical-align:middle">MATIERE 1  :</th>
+                                    <th t-if="o.langue=='EN'" style="vertical-align:middle">MATERIAL 1 :</th>
+                                    <td>
+                                        <div t-if="o.code_matiere_id"         style="margin:0; padding:0; line-height:0.9;" t-field="o.code_matiere_id.code_pg"/>
+                                        <div t-if="o.code_matiere_recyclage"  style="margin:0; padding:0; line-height:0.9;" t-field="o.code_matiere_recyclage"/>
+                                        <div style="margin:0; padding:0; line-height:0.9;" t-field="o.designation_mat"/>
+                                    </td>
+                                    <td rowspan="5" style="border-bottom:2px solid black;width:90mm">
+                                        <div style="height:55mm; max-height:55mm; overflow:hidden; line-height:0.9; font-size:11pt;">
+                                            <div t-if="o.metro_rapport_controle" style="margin:0; padding:0; line-height:0.9;">☐ Rapport de contrôle</div>
+                                            <div t-if="o.metro_rc_complet" style="margin:0; padding:0; line-height:0.9;">☐ RC Complet</div>
+                                            <div t-if="o.metro_rc_partiel" style="margin:0; padding:0; line-height:0.9;">☐ RC Partiel</div>
+                                            <div t-if="o.metro_gamme_geometrique" style="margin:0; padding:0; line-height:0.9;">☐ Gamme géométrique</div>
+                                            <div t-if="o.metro_couleur" style="margin:0; padding:0; line-height:0.9;">☐ Couleur</div>
+                                            <div t-if="o.metro_aspect" style="margin:0; padding:0; line-height:0.9;">☐ Aspect</div>
+                                            <div t-if="o.metro_controle_visuel" style="margin:0; padding:0; line-height:0.9;">☐ Contrôle visuel</div>
+                                            <div t-if="o.metro_brillance" style="margin:0; padding:0; line-height:0.9;">☐ Brillance</div>
+                                            <div t-if="o.metro_choc" style="margin:0; padding:0; line-height:0.9;">☐ Choc</div>
+                                            <div t-if="o.metro_capabilite" style="margin:0; padding:0; line-height:0.9;">☐ Capabilité</div>
+                                            <div t-if="o.metro_capa30" style="margin:0; padding:0; line-height:0.9;">☐ Capabilité 30 pièces</div>
+                                            <div t-if="o.metro_capa50" style="margin:0; padding:0; line-height:0.9;">☐ Capabilité 50 pièces</div>
+                                            <span style="margin:0; padding:0; line-height:1;" t-field="o.metro_commentaire"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th t-if="o.langue=='FR'" style="vertical-align:middle">MATIERE 2 :</th>
+                                    <th t-if="o.langue=='EN'" style="vertical-align:middle">MATERIAL 2 :</th>
+                                    <td>
+                                        <div t-if="o.code_matiere2_id"         style="margin:0; padding:0; line-height:0.9;" t-field="o.code_matiere2_id.code_pg"/>
+                                        <div t-if="o.code_matiere_recyclage2"  style="margin:0; padding:0; line-height:0.9;" t-field="o.code_matiere_recyclage2"/>
+                                        <div style="margin:0; padding:0; line-height:0.9;" t-field="o.designation_mat2"/>
+                                </td>
+                                </tr>
+                                <tr>
+                                    <th t-if="o.langue=='FR'" style="vertical-align:middle">COLORANT :</th>
+                                    <th t-if="o.langue=='EN'" style="vertical-align:middle">MASTERBATCH :</th>
+                                    <td >
+                                        <div style="margin:0; padding:0; line-height:0.9;" t-field="o.code_colorant_id.code_pg"/>
+                                        <div style="margin:0; padding:0; line-height:0.9;" t-field="o.designation_col"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th t-if="o.langue=='FR'" style="vertical-align:middle">IDENTIFICATION<br />PARTICULIERE :</th>
+                                    <th t-if="o.langue=='EN'" style="vertical-align:middle">IDENTIFICATION :</th>
+                                    <td > <span t-field="o.identification_particuliere"/></td>
+                                </tr>
+                                <tr>
+                                    <th t-if="o.langue=='FR'" style="vertical-align:middle">QUANTITE :</th>
+                                    <th t-if="o.langue=='EN'" style="vertical-align:middle">QUANTITY :</th>
+                                    <td></td>
+                                </tr>
+                                <tr t-if="etiquette==2">
+                                    <td colspan="3" style="border-top:2px solid black">
+                                        <h1>Essai n° <span t-field="o.num_essai"/></h1>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div t-if="etiquette==1" style="height:25mm"/>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+
+        <record id="is_demande_essai_eti_paperformat" model="report.paperformat">
+            <field name="name">A4 Demande d'essai</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">10</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">15</field>
+            <field name="dpi">90</field>
+        </record>
+
+
+        <record id="is_demande_essai_eti_report" model="ir.actions.report">
+            <field name="name">Etiquette demande d'essai</field>
+            <field name="model">is.demande.essai</field>
+            <field name="binding_model_id" ref="model_is_demande_essai"/>
+            <field name="paperformat_id" ref="is_dynacase2odoo.is_demande_essai_eti_paperformat"/>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">is_dynacase2odoo.is_demande_essai_eti_template</field>
+            <field name="report_file">is_dynacase2odoo.is_demande_essai_eti_template</field>
+        </record>
+    </data>
+</odoo>

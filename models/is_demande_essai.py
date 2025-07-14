@@ -1,7 +1,11 @@
 from odoo import models, fields, api         # type: ignore
 
-# 211372 (PG_DEMANDE_ESSAI)
-# FIXME nb_pieces_total => Champ calculé
+
+#TODO:
+#- PDF en Franças et Anglais
+#- Envoi des mails
+#- Gestion des droits
+#- Pieces jointes
 
 
 _IDENTIFICATION_PARTICULIERE=([
@@ -46,8 +50,6 @@ _TYPE_ESSAI = ([
     ('assemblage' , 'Assemblage'),
     ('erd' , 'ERD'),
 ])
-
-
 
 
 _ETAT_STOCK = ([

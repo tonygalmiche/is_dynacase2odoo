@@ -1,0 +1,36 @@
+
+// Demande d'essai
+.demande_essai{
+    color:black
+}
+.demande_essai h1{
+    font-size:20pt;
+    font-weight: bold;
+    text-align:center;
+}
+.demande_essai h2{
+    font-size:16pt;
+    font-weight: bold;
+    text-align:center;
+}
+.demande_essai table{
+    border-collapse: collapse;
+    border:2px solid black;
+    font-size:13pt;
+    width: 100%;
+}
+.demande_essai td{
+    padding:1mm;
+    max-height: 10mm;
+    height: 10mm;            /* optionnel, pour forcer la hauteur */
+    vertical-align: middle;     /* alignement vertical optionnel */
+    border-right:2px solid black;
+}
+.demande_essai th{
+    font-weight: bold;
+    padding:1mm;
+    text-align:right;
+    white-space: nowrap; 
+    vertical-align: middle;     /* alignement vertical optionnel */
+}
+
