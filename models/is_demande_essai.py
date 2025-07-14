@@ -1,9 +1,6 @@
 from odoo import models, fields, api         # type: ignore
 
-
 #TODO:
-#- PDF en Franças et Anglais
-#- Envoi des mails
 #- Gestion des droits
 #- Pieces jointes
 
@@ -220,11 +217,64 @@ class is_demande_essai(models.Model):
     rapport_cote_conforme      = fields.Integer("% cote conforme", tracking=True)
     rapport_commentaire        = fields.Text("Commentaire rapport métrologie", tracking=True)
     date_planifiee             = fields.Date("Date planifiée", tracking=True)
-    date_realisation           = fields.Date("Date de réalisation de l'essai", tracking=True)  # readonly
+    date_realisation           = fields.Date("Date de réalisation de l'essai", tracking=True)
     demande_essai_pdf_ids      = fields.Many2many("ir.attachment", "is_demande_essai_demande_essai_pdf_rel", "demande_essai_pdf", "att_id", string="Demande d'essai PDF")
     etiquette_pdf_ids          = fields.Many2many("ir.attachment", "is_demande_essai_etiquette_pdf_rel", "etiquette_pdf", "att_id", string="Etiquette PDF")
     dynacase_id         = fields.Integer(string="Id Dynacase", index=True, copy=False)
+    mail_to_ids = fields.Many2many('res.users', compute='_compute_mail_to_cc_ids', string="Mail To")
+    mail_cc_ids = fields.Many2many('res.users', compute='_compute_mail_to_cc_ids', string="Mail Cc")
 
+    def get_doc_url(self):
+        for obj in self:
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            url = base_url + '/web#id=%s' '&view_type=form&model=%s'%(obj.id,self._name)
+            return url
+
+    def get_state_name(self):
+        for obj in self:
+            return dict(self._fields['state'].selection).get(self.state)
+
+    @api.depends("state")
+    def _compute_mail_to_cc_ids(self):
+        for obj in self:
+            to_ids=[]
+            cc_ids=[]
+            if obj.state=='diffuse':
+                to_ids.append(obj.resp_essai_id)
+                to_ids.append(obj.resp_planning_id)
+                to_ids.append(obj.resp_metrologie_id)
+                for personne in obj.autres_personnes_ids:
+                    cc_ids.append(personne)
+            if obj.state=='planifie':
+                to_ids.append(obj.user_id)
+                to_ids.append(obj.resp_essai_id)
+                to_ids.append(obj.resp_metrologie_id)
+            if obj.state=='metrologie':
+                to_ids.append(obj.user_id)
+                to_ids.append(obj.resp_metrologie_id)
+            if obj.state=='termine':
+                to_ids = self.env['is.liste.diffusion.mail'].get_users('is.demande.essai','termine')
+                to_ids.append(obj.user_id)
+                to_ids.append(obj.resp_essai_id)
+                to_ids.append(obj.resp_metrologie_id)
+            obj.mail_to_ids = self.env['is.liste.diffusion.mail'].get_users_ids(users=to_ids)
+            obj.mail_cc_ids = self.env['is.liste.diffusion.mail'].get_users_ids(users=cc_ids)
+
+    def users2mail(self,users):
+        return self.env['is.liste.diffusion.mail'].users2mail(users=users)
+      
+    def users2partner_ids(self,users):
+        return self.env['is.liste.diffusion.mail'].users2partner_ids(users=users)
+
+    def envoi_mail(self):
+        template = self.env.ref('is_dynacase2odoo.is_demande_essai_mail_template').sudo()     
+        email_values = {
+            'email_cc'      : self.users2mail(self.mail_cc_ids),
+            'auto_delete'   : False,
+            'recipient_ids' : self.users2partner_ids(self.mail_to_ids),
+            'scheduled_date': False,
+        }
+        template.send_mail(self.id, force_send=True, raise_exception=False, email_values=email_values)
 
     def lien_vers_dynacase_action(self):
         for obj in self:
@@ -250,11 +300,13 @@ class is_demande_essai(models.Model):
     def vers_diffuse_action(self):
         for obj in self:
             obj.state='diffuse'
+            obj.envoi_mail()
  
     def vers_planifie_action(self):
         for obj in self:
             obj.state='planifie'
- 
+            obj.envoi_mail()
+
     def vers_cr_action(self):
         for obj in self:
             obj.state='cr'
@@ -262,11 +314,13 @@ class is_demande_essai(models.Model):
     def vers_metrologie_action(self):
         for obj in self:
             obj.state='metrologie'
+            obj.envoi_mail()
  
     def vers_termine_action(self):
         for obj in self:
             obj.state='termine'
- 
+            obj.envoi_mail()
+
     def vers_solde_action(self):
         for obj in self:
             obj.state='solde'
