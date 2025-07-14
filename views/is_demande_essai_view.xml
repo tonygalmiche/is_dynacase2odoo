@@ -165,13 +165,10 @@
                                     <field name="fiche_tech_mat_ids"          attrs="{'readonly': [('ro_user','==',True)]}" widget="many2many_binary"/>
                                     <field name="te_piece_jointe_ids"         attrs="{'readonly': [('ro_user','==',True)]}" widget="many2many_binary" readonly="1"/>
                                 </group>
-
-
-
-                                <group string="Documents générés">
+                                <!-- <group string="Documents générés">
                                     <field name="demande_essai_pdf_ids"       attrs="{'readonly': [('ro_user','==',True)]}" widget="many2many_binary"/>
                                     <field name="etiquette_pdf_ids"           attrs="{'readonly': [('ro_user','==',True)]}" widget="many2many_binary"/>
-                                </group>
+                                </group> -->
                             </page>
                             <page string="Données économiques">
                                 <group col="3">
@@ -328,8 +325,8 @@
                     <field name="rapport_commentaire"         optional="hide"/>
                     <field name="date_planifiee"              optional="hide"/>
                     <field name="date_realisation"            optional="hide"/>
-                    <field name="demande_essai_pdf_ids"       optional="hide"/>
-                    <field name="etiquette_pdf_ids"           optional="hide"/>
+                    <!-- <field name="demande_essai_pdf_ids"       optional="hide"/>
+                    <field name="etiquette_pdf_ids"           optional="hide"/> -->
                     <field name="create_date"                 optional="hide" string="Créé le"/>
                     <field name="create_uid"                  optional="hide" string="Créé par"/>
                     <field name="write_date"                  optional="hide" string="Modifié le"/>
