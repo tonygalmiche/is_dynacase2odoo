@@ -34,3 +34,19 @@
     vertical-align: middle;     /* alignement vertical optionnel */
 }
 
+
+// facture_outillage
+.facture_outillage{
+    font-size: 8pt;
+}
+.facture_outillage h2{
+    padding: 0;
+    margin-bottom: 0;
+    line-height: 1;
+    font-size: 12pt;
+}
+.facture_outillage .table > :not(caption) > * > * {
+    padding: 0.1rem 0.1rem;
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+}

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="is_facture_outillage_template">
+            <t t-set="company" t-value="res_company"/>
+            <t t-call="web.basic_layout">
+                <div class="page facture_outillage">
+                    <h2>
+                        Suivi factures outillages
+                        du <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/> à <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%H')"/>H<br />
+                    </h2>
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th class="text-center"><strong>Type</strong></th>
+                                <th><strong>Dossier</strong></th>
+                                <th><strong>Client</strong></th>
+                                <th><strong>Chef de projet</strong></th>
+                                <th><strong>N° commande</strong></th>
+                                <th><strong>Soldé</strong></th>
+                                <th class="text-right"><strong>Montant dossier</strong></th>
+                                <th class="text-right"><strong>Ecart dossier facture</strong></th>
+                                <th class="text-center"><strong>Date facture prév</strong></th>
+                                <th><strong>N° facture</strong></th>
+                                <th class="text-right"><strong>Montant HT</strong></th>
+                                <th class="text-center"><strong>Date facture</strong></th>
+                                <th class="text-center"><strong>Date règlement</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="total_montant_dossier"   t-value="0"/>
+                            <t t-set="total_ecart_commande_facture"   t-value="0"/>
+                            <tr t-foreach="docs" t-as="o">
+                                <t t-set="total_montant_dossier"        t-value="total_montant_dossier        + o.montant_dossier"/>
+                                <t t-set="total_ecart_commande_facture" t-value="total_ecart_commande_facture + o.ecart_commande_facture"/>
+                                <td class="text-center"><span t-field="o.type_dossier"/> </td>
+                                <td><span t-field="o.designation"/> </td>
+                                <td><span t-field="o.client_id"/> </td>
+                                <td><span t-field="o.chef_projet_id"/> </td>
+                                <td><span t-field="o.numero_commande_client"/> </td>
+                                <td class="text-center"><span t-field="o.solde"/> </td>
+                                <td class="text-right" style="white-space: nowrap"><span t-esc='"{:,.2f}".format(o.montant_dossier).replace(","," ").replace(".",",")'/></td>
+                                <td class="text-right" style="white-space: nowrap"><span t-esc='"{:,.2f}".format(o.ecart_commande_facture).replace(","," ").replace(".",",")'/></td>
+                                <td class="text-center"><span t-field="o.date_facture_prev"/> </td>
+                                <td class="text-center"><span t-field="o.num_facture"/> </td>
+                                <td class="text-right"><span t-field="o.montant_ht"/> </td>
+                                <td class="text-center"><span t-field="o.date_facture"/> </td>
+                                <td class="text-center"><span t-field="o.date_reglement"/> </td>
+
+                            </tr>
+                            <tr>
+                                <th class="text-right" colspan="6"><strong>Total : </strong></th>
+                                <th class="text-right" style="white-space: nowrap"><strong><span t-esc='"{:,.2f}".format(total_montant_dossier).replace(","," ").replace(".",",")'/></strong></th>
+                                <th class="text-right" style="white-space: nowrap"><strong><span t-esc='"{:,.2f}".format(total_ecart_commande_facture).replace(","," ").replace(".",",")'/></strong></th>
+                                <th colspan="5"></th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </template>
+        <record id="is_facture_outillage_report" model="ir.actions.report">
+            <field name="name">Suivi factures outillages</field>
+            <field name="model">is.facture.outillage</field>
+            <field name="binding_model_id" ref="model_is_facture_outillage"/>
+            <field name="paperformat_id" ref="is_plastigray16.landscape_paperformat"/>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">is_dynacase2odoo.is_facture_outillage_template</field>
+            <field name="report_file">is_dynacase2odoo.is_facture_outillage_template</field>
+        </record>
+    </data>
+</odoo>
