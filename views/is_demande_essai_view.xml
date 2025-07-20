@@ -46,49 +46,42 @@
                             string="vers Brouillon"
                             type="object"
                             attrs="{'invisible': [('state', '!=', 'diffuse')]}"
-                            groups="base.group_system"
                         />
                         <button
                             name="vers_diffuse_action"
                             string="vers Diffusé Planning"
                             type="object"
                             attrs="{'invisible': [('state', '!=', 'brouillon'), ('state', '!=', 'planifie')]}"
-                            groups="base.group_system"
                         />
                         <button
                             name="vers_planifie_action"
                             string="vers Planifié"
                             type="object"
                             attrs="{'invisible': [('state', '!=', 'diffuse'), ('state', '!=', 'cr')]}"
-                            groups="base.group_system"
                         />
                         <button
                             name="vers_cr_action"
                             string="vers CR Essai à faire"
                             type="object"
                             attrs="{'invisible': [('state', '!=', 'planifie'), ('state', '!=', 'metrologie'), ('state', '!=', 'termine')]}"
-                            groups="base.group_system"
                         />
                         <button
                             name="vers_metrologie_action"
                             string="vers Métrologie à faire"
                             type="object"
-                            attrs="{'invisible': [('state', '!=', 'cr'), ('state', '!=', 'termine')]}"
-                            groups="base.group_system"
+                            attrs="{'invisible': ['|',('state', 'not in', ['cr', 'termine']), ('resp_metrologie_id', '=', False)]}"
                         />
                         <button
                             name="vers_termine_action"
                             string="vers Terminé"
                             type="object"
                             attrs="{'invisible': [('state', '!=', 'cr'), ('state', '!=', 'metrologie'), ('state', '!=', 'solde')]}"
-                            groups="base.group_system"
                         />
                         <button
                             name="vers_solde_action"
                             string="vers Soldé"
                             type="object"
                             attrs="{'invisible': [('state', '!=', 'termine')]}"
-                            groups="base.group_system"
                         />
                         <field name="state" widget="statusbar"/>
                     </header>
@@ -116,6 +109,7 @@
                                         <field name="lieu_essai_autre"              attrs="{'readonly': [('ro_user','==',True)]}"/>
                                         <field name="resp_essai_id"    required="1" attrs="{'readonly': [('ro_user','==',True)]}"/>
                                         <field name="resp_planning_id" required="1" attrs="{'readonly': [('ro_user','==',True)]}"/>
+                                        <field name="resp_metrologie_id"            attrs="{'readonly': [('ro_user','==',True)]}"/>
                                         <field name="ident_commentaire"             attrs="{'readonly': [('ro_user','==',True)]}"/>
                                         <field name="autres_personnes_ids"          attrs="{'readonly': [('ro_user','==',True)]}" widget="many2many_tags"/>
                                     </group>
@@ -126,7 +120,6 @@
                                         <field name="nb_pieces_client"            attrs="{'readonly': [('ro_user','==',True)]}"/>
                                         <field name="nb_pieces_metrologie"        attrs="{'readonly': [('ro_user','==',True)]}"/>
                                         <field name="nb_pieces_chef_projet"       attrs="{'readonly': [('ro_user','==',True)]}"/>
-                                        <field name="nb_pieces_total"/>
                                         <field name="nb_pieces_comenntaire"       attrs="{'readonly': [('ro_user','==',True)]}"/>
                                         <field name="identification_particuliere" attrs="{'readonly': [('ro_user','==',True)]}"/>
                                         <field name="identification_particuliere_autre" attrs="{'readonly': [('ro_user','==',True)]}"/>
@@ -139,18 +132,18 @@
                                     <group string="Matière">
                                         <field name="code_matiere_id"              attrs="{'readonly': [('ro_user','==',True)]}"/>
                                         <field name="designation_mat" required="1" attrs="{'readonly': [('ro_user','==',True)]}"/>
-                                        <field name="code_matiere_recyclage"       attrs="{'readonly': [('ro_user','==',True)]}"/>
+                                        <field name="code_recyclage_matiere1_id"/>
                                         <field name="lieu_stockage_matiere"        attrs="{'readonly': [('ro_user','==',True)]}"/>
                                         <field name="mat_disp"                     attrs="{'readonly': [('ro_user','==',True)]}"/>
-                                        <field name="mat_date_disp"                attrs="{'readonly': [('ro_user','==',True)], 'invisible': [('mat_disp', '=', False)]}"/>
+                                        <field name="mat_date_disp"                attrs="{'readonly': [('ro_user','==',True)], 'invisible': [('mat_disp', '=', True)]}"/>
                                     </group>
                                     <group string="Matière 2">
                                         <field name="code_matiere2_id"            attrs="{'readonly': [('ro_user','==',True)]}"/>
                                         <field name="designation_mat2"            attrs="{'readonly': [('ro_user','==',True)]}"/>
-                                        <field name="code_matiere_recyclage2"     attrs="{'readonly': [('ro_user','==',True)]}"/>
+                                        <field name="code_recyclage_matiere2_id"/>
                                         <field name="lieu_stockage_matiere2"      attrs="{'readonly': [('ro_user','==',True)]}"/>
                                         <field name="mat_disp2"                   attrs="{'readonly': [('ro_user','==',True)]}"/>
-                                        <field name="mat_date_disp2"              attrs="{'readonly': [('ro_user','==',True)], 'invisible': [('mat_disp2', '=', False)]}"/>
+                                        <field name="mat_date_disp2"              attrs="{'readonly': [('ro_user','==',True)], 'invisible': [('mat_disp2', '=', True)]}"/>
                                     </group>
                                     <group string="Colorant">
                                         <field name="code_colorant_id"            attrs="{'readonly': [('ro_user','==',True)]}"/>
@@ -158,67 +151,64 @@
                                         <field name="lieu_stockage_colorant"      attrs="{'readonly': [('ro_user','==',True)]}"/>
                                         <field name="pourcent_colorant"           attrs="{'readonly': [('ro_user','==',True)]}"/>
                                         <field name="colorant_disp"               attrs="{'readonly': [('ro_user','==',True)]}"/>
-                                        <field name="colorant_date_disp"          attrs="{'readonly': [('ro_user','==',True)], 'invisible': [('colorant_disp', '=', False)]}"/>
+                                        <field name="colorant_date_disp"          attrs="{'readonly': [('ro_user','==',True)], 'invisible': [('colorant_disp', '=', True)]}"/>
                                     </group>
                                 </group>
                                 <group>
                                     <field name="fiche_tech_mat_ids"          attrs="{'readonly': [('ro_user','==',True)]}" widget="many2many_binary"/>
                                     <field name="te_piece_jointe_ids"         attrs="{'readonly': [('ro_user','==',True)]}" widget="many2many_binary" readonly="1"/>
                                 </group>
-                                <!-- <group string="Documents générés">
-                                    <field name="demande_essai_pdf_ids"       attrs="{'readonly': [('ro_user','==',True)]}" widget="many2many_binary"/>
-                                    <field name="etiquette_pdf_ids"           attrs="{'readonly': [('ro_user','==',True)]}" widget="many2many_binary"/>
-                                </group> -->
                             </page>
                             <page string="Données économiques">
-                                <group col="3">
-                                  
+                                <group col="2">
+                                        <!-- 
                                         <group string="Standard">
                                             <field name="tps_cycle_standard"          attrs="{'readonly': [('ro_essai','==',True)]}"/>
                                             <field name="poids_piece_standard"        attrs="{'readonly': [('ro_essai','==',True)]}"/>
                                             <field name="presse_standard_id"          attrs="{'readonly': [('ro_essai','==',True)]}"/>
                                             <field name="nb_mo_standard"              attrs="{'readonly': [('ro_essai','==',True)]}"/>
-                                        </group>
+                                        </group> 
+                                        -->
                                         <group string="Objectif">
-                                            <field name="tps_cycle_objectif"          attrs="{'readonly': [('ro_essai','==',True)]}"/>
-                                            <field name="poids_piece_objectif"        attrs="{'readonly': [('ro_essai','==',True)]}"/>
-                                            <field name="presse_objectif_id"          attrs="{'readonly': [('ro_essai','==',True)]}"/>
-                                            <field name="nb_mo_objectif"              attrs="{'readonly': [('ro_essai','==',True)]}"/>
+                                            <field name="tps_cycle_objectif"          attrs="{'readonly': [('ro_user','==',True)]}"/>
+                                            <field name="poids_piece_objectif"        attrs="{'readonly': [('ro_user','==',True)]}"/>
+                                            <field name="presse_objectif_id"          attrs="{'readonly': [('ro_user','==',True)]}"/>
+                                            <field name="nb_mo_objectif"              attrs="{'readonly': [('ro_user','==',True)]}"/>
                                         </group>
-                                        <group string="Résultat">
+                                        <group string="Résultat" attrs="{'invisible': [('state','in',['brouillon'])]}">
                                             <field name="tps_cycle_resultat"          attrs="{'readonly': [('ro_essai','==',True)]}"/>
                                             <field name="poids_piece_resultat"        attrs="{'readonly': [('ro_essai','==',True)]}"/>
                                             <field name="presse_resultat_id"          attrs="{'readonly': [('ro_essai','==',True)]}"/>
                                             <field name="nb_mo_resultat"              attrs="{'readonly': [('ro_essai','==',True)]}"/>
+                                            <field name="de_piece_jointe_ids"         attrs="{'readonly': [('ro_essai','==',True)]}" widget="many2many_binary"/>
+                                            <field name="de_commentaire_deroulement"  attrs="{'readonly': [('ro_essai','==',True)]}"/>
                                         </group>
                                 </group>
-
-                                <group>
-                                    <field name="de_piece_jointe_ids"         attrs="{'readonly': [('ro_essai','==',True)]}" widget="many2many_binary"/>
-                                    <field name="de_commentaire_deroulement"  attrs="{'readonly': [('ro_essai','==',True)]}"/>
-                                </group>
                             </page>
-                            <page string="Planning">
+                            <page string="Planning" attrs="{'invisible': [('state','in',['brouillon'])]}">
                                 <group string="Planning">
                                     <field name="date_planifiee"              attrs="{'readonly': [('ro_planning','==',True)]}"/>
-                                    <field name="date_realisation"            attrs="{'readonly': [('ro_planning','==',True)]}"/>
+                                    <field name="date_realisation"            attrs="{'invisible': [('date_realisation','==',False)]}"/>
                                 </group>
                             </page>
-                            <page string="Métrologie">
+
+
+
+
+                            <page string="Métrologie" attrs="{'invisible': [('resp_metrologie_id','==',False)]}">
                                 <group string="Métrologie">
-                                    <field name="resp_metrologie_id"          attrs="{'readonly': [('ro_user','==',True)]}"/>
-                                    <field name="metro_rapport_controle"      attrs="{'readonly': [('ro_metro','==',True)]}"/>
-                                    <field name="metro_rc_complet"            attrs="{'readonly': [('ro_metro','==',True)]}"/>
-                                    <field name="metro_rc_partiel"            attrs="{'readonly': [('ro_metro','==',True)]}"/>
-                                    <field name="metro_couleur"               attrs="{'readonly': [('ro_metro','==',True)]}"/>
-                                    <field name="metro_brillance"             attrs="{'readonly': [('ro_metro','==',True)]}"/>
-                                    <field name="metro_choc"                  attrs="{'readonly': [('ro_metro','==',True)]}"/>
-                                    <field name="metro_capabilite"            attrs="{'readonly': [('ro_metro','==',True)]}"/>
-                                    <field name="metro_capa30"                attrs="{'readonly': [('ro_metro','==',True)], 'invisible': [('metro_capabilite', '=', False)]}"/>
-                                    <field name="metro_capa50"                attrs="{'readonly': [('ro_metro','==',True)], 'invisible': [('metro_capabilite', '=', False)]}"/>
-                                    <field name="metro_commentaire"           attrs="{'readonly': [('ro_metro','==',True)]}"/>
+                                    <field name="metro_rapport_controle"      attrs="{'readonly': [('ro_user','==',True)]}"/>
+                                    <field name="metro_rc_complet"            attrs="{'readonly': [('ro_user','==',True)]}"/>
+                                    <field name="metro_rc_partiel"            attrs="{'readonly': [('ro_user','==',True)]}"/>
+                                    <field name="metro_couleur"               attrs="{'readonly': [('ro_user','==',True)]}"/>
+                                    <field name="metro_brillance"             attrs="{'readonly': [('ro_user','==',True)]}"/>
+                                    <field name="metro_choc"                  attrs="{'readonly': [('ro_user','==',True)]}"/>
+                                    <field name="metro_capabilite"            attrs="{'readonly': [('ro_user','==',True)]}"/>
+                                    <field name="metro_capa30"                attrs="{'readonly': [('ro_user','==',True)], 'invisible': [('metro_capabilite', '=', False)]}"/>
+                                    <field name="metro_capa50"                attrs="{'readonly': [('ro_user','==',True)], 'invisible': [('metro_capabilite', '=', False)]}"/>
+                                    <field name="metro_commentaire"           attrs="{'readonly': [('ro_user','==',True)]}"/>
                                 </group>
-                                <group string="Rapport de contrôle">
+                                <group string="Rapport de contrôle" attrs="{'invisible': [('state','in',['brouillon','diffuse','planifie'])]}">
                                     <field name="rapport_de_controle_ids"     attrs="{'readonly': [('ro_metro','==',True)]}" widget="many2many_binary"/>
                                     <field name="rapport_cote_conforme"       attrs="{'readonly': [('ro_metro','==',True)]}"/>
                                     <field name="rapport_commentaire"         attrs="{'readonly': [('ro_metro','==',True)]}"/>
@@ -257,6 +247,7 @@
                     <field name="lieu_essai_autre"            optional="hide"/>
                     <field name="resp_essai_id"               optional="show"/>
                     <field name="resp_planning_id"            optional="hide"/>
+                    <field name="resp_metrologie_id"          optional="hide"/>
                     <field name="ident_commentaire"           optional="hide"/>
                     <field name="autres_personnes_ids"        optional="hide" widget="many2many_tags" />
                     <field name="semaine_essai"               optional="hide"/>
@@ -265,20 +256,19 @@
                     <field name="nb_pieces_client"            optional="hide"/>
                     <field name="nb_pieces_metrologie"        optional="hide"/>
                     <field name="nb_pieces_chef_projet"       optional="hide"/>
-                    <field name="nb_pieces_total"             optional="hide"/>
                     <field name="nb_pieces_comenntaire"       optional="hide"/>
                     <field name="identification_particuliere" optional="hide"/>
                     <field name="identification_particuliere_autre" optional="hide"/>
                     <field name="besoin_mod"                  optional="hide"/>
                     <field name="code_matiere_id"             optional="hide" widget="many2one_clickable"/>
                     <field name="designation_mat"             optional="hide"/>
-                    <field name="code_matiere_recyclage"      optional="hide"/>
+                    <field name="code_recyclage_matiere1_id"  optional="hide"/>
                     <field name="lieu_stockage_matiere"       optional="hide"/>
                     <field name="mat_disp"                    optional="hide"/>
                     <field name="mat_date_disp"               optional="hide"/>
                     <field name="code_matiere2_id"            optional="hide" widget="many2one_clickable"/>
                     <field name="designation_mat2"            optional="hide"/>
-                    <field name="code_matiere_recyclage2"     optional="hide"/>
+                    <field name="code_recyclage_matiere2_id"  optional="hide"/>
                     <field name="lieu_stockage_matiere2"      optional="hide"/>
                     <field name="mat_disp2"                   optional="hide"/>
                     <field name="mat_date_disp2"              optional="hide"/>
@@ -292,21 +282,16 @@
                     <field name="piece_jointe_ids"            optional="hide"/>
                     <field name="images_ids"                  optional="hide"/>
                     <field name="te_piece_jointe_ids"         optional="hide"/>
-                    <field name="tps_cycle_standard"          optional="hide"/>
                     <field name="tps_cycle_objectif"          optional="hide"/>
                     <field name="tps_cycle_resultat"          optional="hide"/>
-                    <field name="poids_piece_standard"        optional="hide"/>
                     <field name="poids_piece_objectif"        optional="hide"/>
                     <field name="poids_piece_resultat"        optional="hide"/>
-                    <field name="presse_standard_id"          optional="hide" widget="many2one_clickable"/>
                     <field name="presse_objectif_id"          optional="hide" widget="many2one_clickable"/>
                     <field name="presse_resultat_id"          optional="hide" widget="many2one_clickable"/>
-                    <field name="nb_mo_standard"              optional="hide"/>
                     <field name="nb_mo_objectif"              optional="hide"/>
                     <field name="nb_mo_resultat"              optional="hide"/>
                     <field name="de_piece_jointe_ids"         optional="hide"/>
                     <field name="de_commentaire_deroulement"  optional="hide"/>
-                    <field name="resp_metrologie_id"          optional="hide"/>
                     <field name="metro_rapport_controle"      optional="hide"/>
                     <field name="metro_rc_complet"            optional="hide"/>
                     <field name="metro_rc_partiel"            optional="hide"/>

@@ -1,40 +1,4 @@
 
-// Demande d'essai
-.demande_essai{
-    color:black
-}
-.demande_essai h1{
-    font-size:20pt;
-    font-weight: bold;
-    text-align:center;
-}
-.demande_essai h2{
-    font-size:16pt;
-    font-weight: bold;
-    text-align:center;
-}
-.demande_essai table{
-    border-collapse: collapse;
-    border:2px solid black;
-    font-size:13pt;
-    width: 100%;
-}
-.demande_essai td{
-    padding:1mm;
-    max-height: 10mm;
-    height: 10mm;            /* optionnel, pour forcer la hauteur */
-    vertical-align: middle;     /* alignement vertical optionnel */
-    border-right:2px solid black;
-}
-.demande_essai th{
-    font-weight: bold;
-    padding:1mm;
-    text-align:right;
-    white-space: nowrap; 
-    vertical-align: middle;     /* alignement vertical optionnel */
-}
-
-
 // facture_outillage
 .facture_outillage{
     font-size: 8pt;
@@ -50,3 +14,89 @@
     padding-left: 0.3rem;
     padding-right: 0.3rem;
 }
+
+
+
+// Demande d'essai - Etiquette
+.demande_essai_eti{
+    color:black
+}
+.demande_essai_eti h1{
+    font-size:20pt;
+    font-weight: bold;
+    text-align:center;
+}
+.demande_essai_eti h2{
+    font-size:16pt;
+    font-weight: bold;
+    text-align:center;
+}
+.demande_essai_eti table{
+    border-collapse: collapse;
+    border:2px solid black;
+    font-size:13pt;
+    width: 100%;
+}
+.demande_essai_eti td{
+    padding:1mm;
+    max-height: 10mm;
+    height: 10mm;           
+    vertical-align: middle;    
+    border-right:2px solid black;
+}
+.demande_essai_eti th{
+    font-weight: bold;
+    padding:1mm;
+    text-align:right;
+    white-space: nowrap; 
+    vertical-align: middle;    
+}
+
+
+// is_demande_essai_header
+.is_demande_essai_header table{
+    border-collapse: collapse;
+    border:1px solid black;
+    font-size:11pt;
+    width: 100%;
+}
+.is_demande_essai_header td{
+    padding:1mm;
+    vertical-align: middle;    
+    border:1px solid black;
+    text-align:center;
+}
+
+// is_demande_essai_page
+.is_demande_essai_page table{
+    border-collapse: collapse;
+    border:0px solid black;
+    font-size:11pt;
+    width: 100%;
+}
+.is_demande_essai_page td{
+    padding:2pt;
+    border:0px solid black;
+    text-align:left;
+}
+.is_demande_essai_page th{
+    padding:2pt;
+    border:0px solid black;
+    text-align:right;
+    font-weight: bold;
+}
+.is_demande_essai_page h1{
+    font-size:14pt;
+    font-weight: bold;
+    border-bottom:1px solid black;
+}
+
+.is_demande_essai_donnees_economique th{
+    border:1px solid black;
+}
+.is_demande_essai_donnees_economique td{
+    text-align:center;
+    border:1px solid black;
+}
+
+

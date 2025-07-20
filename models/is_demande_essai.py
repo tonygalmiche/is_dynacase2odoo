@@ -1,4 +1,5 @@
 from odoo import models, fields, api         # type: ignore
+from datetime import datetime, timedelta
 
 
 _IDENTIFICATION_PARTICULIERE=([
@@ -113,16 +114,16 @@ class is_demande_essai(models.Model):
             obj.designation = designation
 
 
-    @api.depends("nb_pieces_client","nb_pieces_metrologie","nb_pieces_chef_projet")
-    def _compute_nb_pieces_total(self):
-        def char2int(val):
-            try:
-                res = int(val)
-            except:
-                res=0
-            return res   
-        for obj in self:
-            obj.nb_pieces_total = char2int(obj.nb_pieces_client) + char2int(obj.nb_pieces_metrologie) + char2int(obj.nb_pieces_chef_projet)
+    # @api.depends("nb_pieces_client","nb_pieces_metrologie","nb_pieces_chef_projet")
+    # def _compute_nb_pieces_total(self):
+    #     def char2int(val):
+    #         try:
+    #             res = int(val)
+    #         except:
+    #             res=0
+    #         return res   
+    #     for obj in self:
+    #         obj.nb_pieces_total = char2int(obj.nb_pieces_client) + char2int(obj.nb_pieces_metrologie) + char2int(obj.nb_pieces_chef_projet)
 
 
     state                       = fields.Selection(_STATE, "Etat", default=_STATE[0][0], tracking=True)
@@ -144,6 +145,7 @@ class is_demande_essai(models.Model):
     lieu_essai_autre            = fields.Char('Autre', tracking=True)
     resp_essai_id               = fields.Many2one("res.users", string="Responsable de l'essai", tracking=True)
     resp_planning_id            = fields.Many2one("res.users", string="Responsable du planning", tracking=True)
+    resp_metrologie_id          = fields.Many2one("res.users", "Responsable métrologie", tracking=True)
     ident_commentaire           = fields.Text('Commentaire Traçabilité')
     autres_personnes_ids        = fields.Many2many("res.users", "is_demande_essai_autres_personnes_rel", "demande_essai_id", "user_id", string="Autres personnes à informer", tracking=True)
     semaine_essai               = fields.Char("Semaine ou jour de réalisation de l'essai", tracking=True,copy=False)
@@ -153,24 +155,30 @@ class is_demande_essai(models.Model):
     nb_pieces_client            = fields.Char("Nombre de pièces pour le client", tracking=True)
     nb_pieces_metrologie        = fields.Char("Nombre de pièces pour la métrologie", tracking=True)
     nb_pieces_chef_projet       = fields.Char("Nombre de pièces pour le chef de projet", tracking=True)
-    nb_pieces_total             = fields.Integer("Nombre de pièces total", tracking=True, compute='_compute_nb_pieces_total', store=True, readonly=True, copy=False)
+    # nb_pieces_total             = fields.Integer("Nombre de pièces total", tracking=True, compute='_compute_nb_pieces_total', store=True, readonly=True, copy=False)
     nb_pieces_comenntaire       = fields.Text("Commentaire sur le nombre de pièces demandées (versions...)", tracking=True)
     identification_particuliere       = fields.Selection(_IDENTIFICATION_PARTICULIERE, "Identification particulière", tracking=True)
     identification_particuliere_autre = fields.Char("Identification particulière (autre)", tracking=True)
     besoin_mod                  = fields.Boolean('Besoin MOD', default=False, tracking=True)
-    code_matiere_id             = fields.Many2one("is.dossier.article", "Code matière", tracking=True)
+    code_matiere_id             = fields.Many2one("is.dossier.article", "Code matière", domain=[('type_dossier','=','matiere')], tracking=True)
     designation_mat             = fields.Char("Désignation matière", tracking=True)
-    code_matiere_recyclage      = fields.Char("Code recyclage", tracking=True)  # readonly
+
+    #code_matiere_recyclage      = fields.Char("Code recyclage", tracking=True)  # readonly
+    code_recyclage_matiere1_id  = fields.Many2one(related="code_matiere_id.code_recyclage_id", string="Code recyclage matière")
+
     lieu_stockage_matiere       = fields.Selection(_LIEN_STOCK_MAT, "Lieu de stockage de la matière", tracking=True)
     mat_disp                    = fields.Boolean('Matière disponible', tracking=True)
     mat_date_disp               = fields.Date("Date de disponibilité de la matière", tracking=True)
-    code_matiere2_id            = fields.Many2one("is.dossier.article", "Code matière 2", tracking=True)
+    code_matiere2_id            = fields.Many2one("is.dossier.article", "Code matière 2", domain=[('type_dossier','=','matiere')], tracking=True)
     designation_mat2            = fields.Char("Désignation matière 2", tracking=True)
-    code_matiere_recyclage2     = fields.Char("Code recyclage 2", tracking=True)  # readonly
+
+    #code_matiere_recyclage2     = fields.Char("Code recyclage 2", tracking=True)  # readonly
+    code_recyclage_matiere2_id  = fields.Many2one(related="code_matiere2_id.code_recyclage_id", string="Code recyclage matière 2")
+
     lieu_stockage_matiere2      = fields.Selection(_LIEN_STOCK_MAT, "Lieu de stockage de la matière 2", tracking=True)
     mat_disp2                   = fields.Boolean('Matière disponible 2', tracking=True)
     mat_date_disp2              = fields.Date("Date de disponibilité de la matière 2", tracking=True)
-    code_colorant_id            = fields.Many2one("is.dossier.article", "Code colorant", tracking=True)
+    code_colorant_id            = fields.Many2one("is.dossier.article", "Code colorant", domain=[('type_dossier','=','colorant')], tracking=True)
     designation_col             = fields.Char("Désignation colorant", tracking=True)
     lieu_stockage_colorant      = fields.Selection(_LIEN_STOCK_MAT, "Lieu de stockage du colorant", tracking=True)
     pourcent_colorant           = fields.Char("% de colorant", tracking=True)
@@ -187,14 +195,13 @@ class is_demande_essai(models.Model):
     poids_piece_objectif        = fields.Char("Poids pièce objectif", tracking=True,copy=False)
     poids_piece_resultat        = fields.Char("Poids pièce résultat", tracking=True,copy=False)
     presse_standard_id          = fields.Many2one('is.equipement', "Presse standard", tracking=True)
-    presse_objectif_id          = fields.Many2one('is.equipement', "Presse objectif", tracking=True,copy=False)
-    presse_resultat_id          = fields.Many2one('is.equipement', "Presse résultat", tracking=True,copy=False)
+    presse_objectif_id          = fields.Many2one('is.equipement', "Presse objectif", tracking=True, domain=[('type_id.name','=','PRESSE')], copy=False)
+    presse_resultat_id          = fields.Many2one('is.equipement', "Presse résultat", tracking=True, domain=[('type_id.name','=','PRESSE')], copy=False)
     nb_mo_standard              = fields.Selection(_NB_MO, "Nombre mo standard", tracking=True)
     nb_mo_objectif              = fields.Selection(_NB_MO, "Nombre mo objectif", tracking=True,copy=False)
     nb_mo_resultat              = fields.Selection(_NB_MO, "Nombre mo résultat", tracking=True,copy=False)
     de_piece_jointe_ids         = fields.Many2many("ir.attachment", "is_demande_essai_de_pieces_jointes_rel", "de_piece_jointe", "att_id", string="Pièce jointe DE",copy=False)
     de_commentaire_deroulement  = fields.Text('Commentaire déroulement essai', tracking=True,copy=False)
-    resp_metrologie_id          = fields.Many2one("res.users", "Responsable métrologie", tracking=True)
     metro_rapport_controle      = fields.Boolean("Rapport de contrôle", tracking=True,copy=False)
     metro_rc_complet            = fields.Boolean("RC Complet", tracking=True,copy=False)
     metro_rc_partiel            = fields.Boolean("RC Partiel", tracking=True,copy=False)
@@ -212,7 +219,7 @@ class is_demande_essai(models.Model):
     rapport_cote_conforme      = fields.Integer("% cote conforme", tracking=True)
     rapport_commentaire        = fields.Text("Commentaire rapport métrologie", tracking=True,copy=False)
     date_planifiee             = fields.Date("Date planifiée", tracking=True,copy=False)
-    date_realisation           = fields.Date("Date de réalisation de l'essai", tracking=True,copy=False)
+    date_realisation           = fields.Date("Date de réalisation de l'essai", tracking=True,readonly=True,copy=False)
     # demande_essai_pdf_ids      = fields.Many2many("ir.attachment", "is_demande_essai_demande_essai_pdf_rel", "demande_essai_pdf", "att_id", string="Demande d'essai PDF",copy=False)
     # etiquette_pdf_ids          = fields.Many2many("ir.attachment", "is_demande_essai_etiquette_pdf_rel", "etiquette_pdf", "att_id", string="Etiquette PDF",copy=False)
     dynacase_id         = fields.Integer(string="Id Dynacase", index=True, copy=False)
@@ -322,6 +329,7 @@ class is_demande_essai(models.Model):
     def vers_cr_action(self):
         for obj in self:
             obj.state='cr'
+            obj.date_realisation = datetime.now()
  
     def vers_metrologie_action(self):
         for obj in self:

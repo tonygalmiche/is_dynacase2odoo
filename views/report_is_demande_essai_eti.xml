@@ -6,7 +6,7 @@
             <t t-call="web.basic_layout">
                 <t t-foreach="docs" t-as="o">
                     <t t-set="etiquettes" t-value="[1,2]"/>
-                    <div class="page demande_essai">
+                    <div class="page demande_essai_eti">
                         <t t-foreach="etiquettes" t-as="etiquette">
                             <table>
                                 <tr>
@@ -64,8 +64,8 @@
                                     <th t-if="o.langue=='FR'" style="vertical-align:middle">MATIERE 1  :</th>
                                     <th t-if="o.langue=='EN'" style="vertical-align:middle">MATERIAL 1 :</th>
                                     <td>
-                                        <div t-if="o.code_matiere_id"         style="margin:0; padding:0; line-height:0.9;" t-field="o.code_matiere_id.code_pg"/>
-                                        <div t-if="o.code_matiere_recyclage"  style="margin:0; padding:0; line-height:0.9;" t-field="o.code_matiere_recyclage"/>
+                                        <div t-if="o.code_matiere_id"            style="margin:0; padding:0; line-height:0.9;" t-field="o.code_matiere_id.code_pg"/>
+                                        <div t-if="o.code_recyclage_matiere1_id" style="margin:0; padding:0; line-height:0.9;" t-field="o.code_recyclage_matiere1_id.name"/>
                                         <div style="margin:0; padding:0; line-height:0.9;" t-field="o.designation_mat"/>
                                     </td>
                                     <td rowspan="5" style="border-bottom:2px solid black;width:90mm">
@@ -90,8 +90,8 @@
                                     <th t-if="o.langue=='FR'" style="vertical-align:middle">MATIERE 2 :</th>
                                     <th t-if="o.langue=='EN'" style="vertical-align:middle">MATERIAL 2 :</th>
                                     <td>
-                                        <div t-if="o.code_matiere2_id"         style="margin:0; padding:0; line-height:0.9;" t-field="o.code_matiere2_id.code_pg"/>
-                                        <div t-if="o.code_matiere_recyclage2"  style="margin:0; padding:0; line-height:0.9;" t-field="o.code_matiere_recyclage2"/>
+                                        <div t-if="o.code_matiere2_id"           style="margin:0; padding:0; line-height:0.9;" t-field="o.code_matiere2_id.code_pg"/>
+                                        <div t-if="o.code_recyclage_matiere2_id" style="margin:0; padding:0; line-height:0.9;" t-field="o.code_recyclage_matiere2_id.name"/>
                                         <div style="margin:0; padding:0; line-height:0.9;" t-field="o.designation_mat2"/>
                                 </td>
                                 </tr>
