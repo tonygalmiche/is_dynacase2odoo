@@ -16,12 +16,18 @@ class is_modif_donnee_technique(models.Model):
     _rec_name = "num_demande"
     _order='num_demande'
 
+
+
     num_demande                   = fields.Integer("N° Demande", readonly=True)
     active                        = fields.Boolean('Actif', default=True, tracking=True)
     moule_id                      = fields.Many2one('is.mold', 'Moule', tracking=True)
     dossierf_id                   = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
-    codepg                        = fields.Char("Code PG", tracking=True)
-    designation                   = fields.Char("Désignation", tracking=True)
+    designation_dossier           = fields.Char("Désignation dossier", tracking=True, compute='_compute_designation_dossier', readonly=True, store=True)
+
+    codepg                        = fields.Char("Code PG", tracking=True, readonly=True)
+    codepg_id                     = fields.Many2one("is.article", "Code article", tracking=True)
+    designation                   = fields.Char("Désignation article", tracking=True)
+
     demandeur                     = fields.Many2one("res.users", "Demandeur", default=lambda self: self.env.uid, tracking=True)
     date_demande                  = fields.Date("Date demande", tracking=True, default=lambda *a: fields.datetime.now())
     responsable_action            = fields.Many2one("res.users", "Responsable de l'action", tracking=True, required=True)
@@ -42,6 +48,23 @@ class is_modif_donnee_technique(models.Model):
     readonly_vsb                  = fields.Boolean(string="Accès en lecture seule", compute='_compute_vsb', readonly=True, store=False)
     mail_to_ids   = fields.Many2many('res.users', compute='_compute_mail_to_cc_ids', string="Mail To")
     mail_cc_ids   = fields.Many2many('res.users', compute='_compute_mail_to_cc_ids', string="Mail Cc")
+
+
+    @api.depends("moule_id","dossierf_id")
+    def _compute_designation_dossier(self):
+        for obj in self:
+            designation = False
+            if obj.dossierf_id:
+                designation = obj.dossierf_id.designation
+            if obj.moule_id:
+                designation = obj.moule_id.designation
+            obj.designation_dossier = designation
+
+
+    @api.onchange('codepg_id')
+    def onchange_codepg_id(self):
+        for obj in self:
+            obj.designation = obj.codepg_id.designation
 
 
     def get_doc_url(self):

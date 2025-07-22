@@ -79,10 +79,14 @@
                         <field name="readonly_vsb" invisible="1"/>
                         <group>
                             <field name="num_demande"/>
-                            <field name="moule_id" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
-                            <field name="dossierf_id" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
-                            <field name="codepg" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                            <field name="moule_id"            attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                            <field name="dossierf_id"         attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                            <field name="designation_dossier"/>
+
+                            <field name="codepg"      attrs="{'invisible': [('codepg','=',False)]}"/>
+                            <field name="codepg_id"   attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                             <field name="designation" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+
                             <field name="demandeur" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                             <field name="date_demande" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                             <field name="responsable_action" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
@@ -119,7 +123,9 @@
                     <field name="num_demande"              optional="show"/>
                     <field name="moule_id"                 optional="show" widget="many2one_clickable"/>
                     <field name="dossierf_id"              optional="show" widget="many2one_clickable"/>
-                    <field name="codepg"                   optional="show"/>
+                    <field name="designation_dossier"      optional="hide"/>
+                    <field name="codepg"                   optional="hide"/>
+                    <field name="codepg_id"                optional="show"/>
                     <field name="designation"              optional="show"/>
                     <field name="demandeur"                optional="show"/>
                     <field name="date_demande"             optional="show"/>
@@ -157,7 +163,8 @@
                     <field name="num_demande"/>
                     <field name="moule_id"/>
                     <field name="dossierf_id"/>
-                    <field name="codepg"/>
+                    <field name="designation_dossier"/>
+                    <field name="codepg_id"/>
                     <field name="designation"/>
                     <field name="demandeur"/>
                     <field name="responsable_action"/>
