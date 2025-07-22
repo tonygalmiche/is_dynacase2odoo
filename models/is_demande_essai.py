@@ -156,7 +156,7 @@ class is_demande_essai(models.Model):
     nb_pieces_metrologie        = fields.Char("Nombre de pièces pour la métrologie", tracking=True)
     nb_pieces_chef_projet       = fields.Char("Nombre de pièces pour le chef de projet", tracking=True)
     # nb_pieces_total             = fields.Integer("Nombre de pièces total", tracking=True, compute='_compute_nb_pieces_total', store=True, readonly=True, copy=False)
-    nb_pieces_comenntaire       = fields.Text("Commentaire sur le nombre de pièces demandées (versions...)", tracking=True)
+    nb_pieces_comenntaire       = fields.Text("Commentaire nb pièces", help="Commentaire sur le nombre de pièces demandées (versions...)", tracking=True)
     identification_particuliere       = fields.Selection(_IDENTIFICATION_PARTICULIERE, "Identification particulière", tracking=True)
     identification_particuliere_autre = fields.Char("Identification particulière (autre)", tracking=True)
     besoin_mod                  = fields.Boolean('Besoin MOD', default=False, tracking=True)
