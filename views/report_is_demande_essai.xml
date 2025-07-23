@@ -32,25 +32,38 @@
                             <tr><th>Demandeur : </th><td><span t-field="o.user_id"/></td></tr>
                             <tr><th>Moule / Assemblage : </th><td><span t-field="o.moule_id.name"/><span t-field="o.dossierf_id.name"/> <span t-field="o.designation"/></td></tr>
                             <tr><th>Date de disponibilité de l'outillage : </th><td><span t-field="o.date_disp_out"/></td></tr>
-                            <tr><th>Lieu essai : </th><td><span t-field="o.lieu_essai_id"/></td></tr>
+                            <tr><th>Lieu essai : </th><td>
+                                <div t-if="o.lieu_essai_id"    t-field="o.lieu_essai_id"/>
+                                <div t-if="o.lieu_essai_autre" t-field="o.lieu_essai_autre"/>
+                            </td></tr>
                             <tr><th>Responsable de l'essai : </th><td><span t-field="o.resp_essai_id"/></td></tr>
                             <tr><th>Responsable du planning : </th><td><span t-field="o.resp_planning_id"/></td></tr>
                             <tr><th>Semaine ou jour de réalisation de l'essai : </th><td><span t-field="o.semaine_essai"/></td></tr>
-                            <tr><th>Commentaire : </th><td><span t-field="o.ident_commentaire"/></td></tr>
+                            <tr><th>Commentaire traçabilité : </th><td><span t-field="o.ident_commentaire"/></td></tr>
                             <tr><th>Temps d'immobilisation : </th><td><span t-field="o.temp_immob"/></td></tr>
+                            <tr><th>Commentaire : </th><td><span t-field="o.identification_cmt"/></td></tr>
                             <tr><th>Nombre de pièces pour le client : </th><td><span t-field="o.nb_pieces_client"/></td></tr>
                             <tr><th>Nombre de pièces pour la métrologie : </th><td><span t-field="o.nb_pieces_metrologie"/></td></tr>
                             <tr><th>Nombre de pièces pour le chef de projet : </th><td><span t-field="o.nb_pieces_chef_projet"/></td></tr>
-                            <tr><th>Identification particulière : </th><td><span t-field="o.identification_particuliere"/></td></tr>
+                            <tr><th>Commentaire nb pièces : </th><td><span t-field="o.nb_pieces_comenntaire"/></td></tr>
+                            <tr><th>Identification particulière : </th><td>
+                                <div t-if="o.identification_particuliere"       t-field="o.identification_particuliere"/>
+                                <div t-if="o.identification_particuliere_autre" t-field="o.identification_particuliere_autre"/>
+                            </td></tr>
                             <tr><th>Besoin MOD : </th><td><span t-field="o.besoin_mod"/></td></tr>
                         </table>
-
                         <h1>Matières / Colorant</h1>
                         <table width="100%">
-                            <tr><th style="width:40%">Code matière : </th><td><span t-field="o.code_matiere_id"/></td></tr>
-                            <tr><th>Désignation : </th><td><span t-field="o.designation_mat"/></td></tr>
-                            <tr><th>Lieu de stockage de la matière : </th><td><span t-field="o.lieu_stockage_matiere"/></td></tr>
-                            <tr><th>Matière disponible : </th><td><span t-field="o.mat_disp"/></td></tr>
+                            <tr><th style="width:40%">Code matière 1 : </th><td><span t-field="o.code_matiere_id"/></td></tr>
+                            <tr><th>Désignation matière 1 :            </th><td><span t-field="o.designation_mat"/></td></tr>
+                            <tr><th>Lieu de stockage de la matière 1 : </th><td><span t-field="o.lieu_stockage_matiere"/></td></tr>
+                            <tr><th>Matière 1 disponible :             </th><td><span t-field="o.mat_disp"/></td></tr>
+
+                            <tr t-if="o.designation_mat2"><th>Code matière 2 :                   </th><td><span t-field="o.code_matiere2_id"/></td></tr>
+                            <tr t-if="o.designation_mat2"><th>Désignation matière 2 :            </th><td><span t-field="o.designation_mat2"/></td></tr>
+                            <tr t-if="o.designation_mat2"><th>Lieu de stockage de la matière 2 : </th><td><span t-field="o.lieu_stockage_matiere2"/></td></tr>
+                            <tr t-if="o.designation_mat2"><th>Matière 2 disponible :             </th><td><span t-field="o.mat_disp2"/></td></tr>
+                            
                             <tr><th>Code colorant : </th><td><span t-field="o.code_colorant_id"/></td></tr>
                             <tr><th>Désignation : </th><td><span t-field="o.designation_col"/></td></tr>
                             <tr><th>Lieu de stockage du colorant : </th><td><span t-field="o.lieu_stockage_colorant"/></td></tr>
