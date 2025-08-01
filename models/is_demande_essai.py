@@ -295,9 +295,10 @@ class is_demande_essai(models.Model):
     def envoi_mail(self):
         template = self.env.ref('is_dynacase2odoo.is_demande_essai_mail_template').sudo()     
         email_values = {
+            'email_to'      : self.users2mail(self.mail_to_ids),
             'email_cc'      : self.users2mail(self.mail_cc_ids),
             'auto_delete'   : False,
-            'recipient_ids' : self.users2partner_ids(self.mail_to_ids),
+            #'recipient_ids' : self.users2partner_ids(self.mail_to_ids),
             'scheduled_date': False,
         }
         template.send_mail(self.id, force_send=True, raise_exception=False, email_values=email_values)
