@@ -3,9 +3,8 @@ from odoo import models, fields, api  # type: ignore
 _STATE = ([
     ('brouillon', 'Brouillon'),
     ('diffuse', 'Diffusé'),
-    ('realise', 'Réalisé'),
+    ('realise', 'Planifié'),
 ])
-
 
 class is_prise_avance(models.Model):
     _name='is.prise.avance'
