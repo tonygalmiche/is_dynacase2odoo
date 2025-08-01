@@ -53,7 +53,7 @@
                         />
                         <button 
                             name="vers_realise_action"
-                            string="vers Réalisé"
+                            string="vers Planifié"
                             type="object"
                             attrs="{'invisible': [('vers_realise_vsb', '=', False)]}" 
                         />
