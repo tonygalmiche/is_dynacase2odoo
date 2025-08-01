@@ -182,6 +182,8 @@ class is_dossier_appel_offre(models.Model):
     def _compute_vsb(self):
         for obj in self:
             uid = self._uid
+
+            chef_projet         = self.env.user.has_group('is_plastigray16.is_chef_projet_group')
             gestionnaire_projet = self.env.user.has_group('is_dynacase2odoo.is_gestionnaire_projet_group')
             commercial          = self.env.user.has_group('is_plastigray16.is_commerciaux_group')
             group_ok = gestionnaire_projet or commercial
@@ -204,7 +206,7 @@ class is_dossier_appel_offre(models.Model):
             obj.vers_transmis_be_vsb = vsb
 
             vsb = False
-            if group_ok and obj.state in ('plastransbe','plasvalidbe'):
+            if (chef_projet or gestionnaire_projet or commercial) and obj.state in ('plastransbe','plasvalidbe'):
                 vsb=True
             obj.vers_analyse_be_vsb = vsb
 
@@ -305,7 +307,7 @@ class is_dossier_appel_offre(models.Model):
 
     def vers_analyse_be_action(self):
         for obj in self:
-            obj.state='Analyse_BE'
+            obj.sudo().state='Analyse_BE'
             obj.envoi_mail()
 
     def vers_valide_be_action(self):
