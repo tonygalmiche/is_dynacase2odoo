@@ -26,50 +26,240 @@
                     <div class="page is_demande_essai_page">
                         <h1>Identification</h1>
                         <table width="100%">
-                            <tr><th style="width:40%">Type essai : </th><td><span t-field="o.type_essai"/></td></tr>
-                            <tr><th>N°essai : </th><td><span t-field="o.num_essai"/></td></tr>
-                            <tr><th>Date : </th><td><span t-field="o.date"/></td></tr>
-                            <tr><th>Demandeur : </th><td><span t-field="o.user_id"/></td></tr>
-                            <tr><th>Moule / Assemblage : </th><td><span t-field="o.moule_id.name"/><span t-field="o.dossierf_id.name"/> <span t-field="o.designation"/></td></tr>
-                            <tr><th>Date de disponibilité de l'outillage : </th><td><span t-field="o.date_disp_out"/></td></tr>
-                            <tr><th>Lieu essai : </th><td>
-                                <div t-if="o.lieu_essai_id"    t-field="o.lieu_essai_id"/>
-                                <div t-if="o.lieu_essai_autre" t-field="o.lieu_essai_autre"/>
-                            </td></tr>
-                            <tr><th>Responsable de l'essai : </th><td><span t-field="o.resp_essai_id"/></td></tr>
-                            <tr><th>Responsable du planning : </th><td><span t-field="o.resp_planning_id"/></td></tr>
-                            <tr><th>Semaine ou jour de réalisation de l'essai : </th><td><span t-field="o.semaine_essai"/></td></tr>
-                            <tr><th>Commentaire traçabilité : </th><td><span t-field="o.ident_commentaire"/></td></tr>
-                            <tr><th>Temps d'immobilisation : </th><td><span t-field="o.temp_immob"/></td></tr>
-                            <tr><th>Commentaire : </th><td><span t-field="o.identification_cmt"/></td></tr>
-                            <tr><th>Nombre de pièces pour le client : </th><td><span t-field="o.nb_pieces_client"/></td></tr>
-                            <tr><th>Nombre de pièces pour la métrologie : </th><td><span t-field="o.nb_pieces_metrologie"/></td></tr>
-                            <tr><th>Nombre de pièces pour le chef de projet : </th><td><span t-field="o.nb_pieces_chef_projet"/></td></tr>
-                            <tr><th>Commentaire nb pièces : </th><td><span t-field="o.nb_pieces_comenntaire"/></td></tr>
-                            <tr><th>Identification particulière : </th><td>
-                                <div t-if="o.identification_particuliere"       t-field="o.identification_particuliere"/>
-                                <div t-if="o.identification_particuliere_autre" t-field="o.identification_particuliere_autre"/>
-                            </td></tr>
-                            <tr><th>Besoin MOD : </th><td><span t-field="o.besoin_mod"/></td></tr>
-                        </table>
-                        <h1>Matières / Colorant</h1>
-                        <table width="100%">
-                            <tr><th style="width:40%">Code matière 1 : </th><td><span t-field="o.code_matiere_id"/></td></tr>
-                            <tr><th>Désignation matière 1 :            </th><td><span t-field="o.designation_mat"/></td></tr>
-                            <tr><th>Lieu de stockage de la matière 1 : </th><td><span t-field="o.lieu_stockage_matiere"/></td></tr>
-                            <tr><th>Matière 1 disponible :             </th><td><span t-field="o.mat_disp"/></td></tr>
-
-                            <tr t-if="o.designation_mat2"><th>Code matière 2 :                   </th><td><span t-field="o.code_matiere2_id"/></td></tr>
-                            <tr t-if="o.designation_mat2"><th>Désignation matière 2 :            </th><td><span t-field="o.designation_mat2"/></td></tr>
-                            <tr t-if="o.designation_mat2"><th>Lieu de stockage de la matière 2 : </th><td><span t-field="o.lieu_stockage_matiere2"/></td></tr>
-                            <tr t-if="o.designation_mat2"><th>Matière 2 disponible :             </th><td><span t-field="o.mat_disp2"/></td></tr>
-                            
-                            <tr><th>Code colorant : </th><td><span t-field="o.code_colorant_id"/></td></tr>
-                            <tr><th>Désignation : </th><td><span t-field="o.designation_col"/></td></tr>
-                            <tr><th>Lieu de stockage du colorant : </th><td><span t-field="o.lieu_stockage_colorant"/></td></tr>
-                            <tr><th>% de colorant : </th><td><span t-field="o.pourcent_colorant"/></td></tr>
                             <tr>
-                                <th>Fiche technique matière : </th>
+                                <th style="width:40%">
+                                   <t t-if="o.langue=='FR'">Type essai : </t>
+                                   <t t-if="o.langue=='EN'">Type test :</t>
+                                </th>
+                                <td><span t-field="o.type_essai"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">N°essai : </t>
+                                    <t t-if="o.langue=='EN'">Test No. :</t>
+                                </th>
+                                <td><span t-field="o.num_essai"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Date : 
+                                </th>
+                                <td><span t-field="o.date"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Demandeur : </t>
+                                    <t t-if="o.langue=='EN'">Applicant name :</t>
+                                </th>
+                                <td><span t-field="o.user_id"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Moule / Assemblage : </t>
+                                    <t t-if="o.langue=='EN'">Mold :</t>
+                                </th>
+                                <td><span t-field="o.moule_id.name"/><span t-field="o.dossierf_id.name"/> <span t-field="o.designation"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Date de disponibilité de l'outillage : </t>
+                                    <t t-if="o.langue=='EN'">Tools availability :</t>
+                                </th>
+                                <td><span t-field="o.date_disp_out"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Lieu essai : </t>
+                                    <t t-if="o.langue=='EN'">Test place :</t>
+                                </th>
+                                <td>
+                                    <div t-if="o.lieu_essai_id"    t-field="o.lieu_essai_id"/>
+                                    <div t-if="o.lieu_essai_autre" t-field="o.lieu_essai_autre"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Responsable de l'essai : </t>
+                                    <t t-if="o.langue=='EN'">Person responsible for test :</t>
+                                </th>
+                                <td><span t-field="o.resp_essai_id"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Responsable du planning : </t>
+                                    <t t-if="o.langue=='EN'">Responsible for planning  :</t>
+                                </th>
+                                <td><span t-field="o.resp_planning_id"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Semaine ou jour de réalisation de l'essai : </t>
+                                    <t t-if="o.langue=='EN'">Date of test :</t>
+                                </th>
+                                <td><span t-field="o.semaine_essai"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Commentaire traçabilité  : </t>
+                                    <t t-if="o.langue=='EN'">Comment :</t>
+                                </th>
+                                <td><span t-field="o.ident_commentaire"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Temps d'immobilisation : </t>
+                                    <t t-if="o.langue=='EN'">Overall number of parts :</t>
+                                </th>
+                                <td><span t-field="o.temp_immob"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Commentaire : </t>
+                                    <t t-if="o.langue=='EN'">Comment :</t>
+                                </th>
+                                <td><span t-field="o.identification_cmt"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Nombre de pièces pour le client  : </t>
+                                    <t t-if="o.langue=='EN'">Number of pieces for the customer :</t>
+                                </th>
+                                <td><span t-field="o.nb_pieces_client"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Nombre de pièces pour la métrologie : </t>
+                                    <t t-if="o.langue=='EN'">Number of parts for metrology :</t>
+                                </th>
+                                <td><span t-field="o.nb_pieces_metrologie"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Nombre de pièces pour le chef de projet : </t>
+                                    <t t-if="o.langue=='EN'">Number of parts for the project manager :</t>
+                                </th>
+                                <td><span t-field="o.nb_pieces_chef_projet"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Commentaire nb pièces : </t>
+                                    <t t-if="o.langue=='EN'">Comment :</t>
+                                </th>
+                                <td><span t-field="o.nb_pieces_comenntaire"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Identification particulière : </t>
+                                    <t t-if="o.langue=='EN'">Type of test :</t>
+                                </th>
+                                <td>
+                                    <div t-if="o.identification_particuliere"       t-field="o.identification_particuliere"/>
+                                    <div t-if="o.identification_particuliere_autre" t-field="o.identification_particuliere_autre"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Besoin MOD : </t>
+                                    <t t-if="o.langue=='EN'">Besoin MOD :</t>
+                                </th>
+                                <td><span t-field="o.besoin_mod"/></td>
+                            </tr>
+                        </table>
+                        <br />
+                        <h1>
+                            <t t-if="o.langue=='FR'">Matières / Colorant : </t>
+                            <t t-if="o.langue=='EN'">Materials / Master batch :</t>
+                        </h1>
+                        <table width="100%">
+                            <tr>
+                                <th style="width:40%">
+                                    <t t-if="o.langue=='FR'">Code matière 1 : </t>
+                                    <t t-if="o.langue=='EN'">Material code 1 :</t>
+                                </th>
+                                <td><span t-field="o.code_matiere_id"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Désignation matière 1 : </t>
+                                    <t t-if="o.langue=='EN'">Designation material 1 :</t>
+                                </th>
+                                <td><span t-field="o.designation_mat"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Lieu de stockage de la matière 1 : </t>
+                                    <t t-if="o.langue=='EN'">Place of storage of the material 1 :</t>
+                                </th>
+                                <td><span t-field="o.lieu_stockage_matiere"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Matière 1 disponible : </t>
+                                    <t t-if="o.langue=='EN'">Matière 1 disponible :</t>
+                                </th
+                                ><td><span t-field="o.mat_disp"/></td>
+                            </tr>
+                            <tr t-if="o.designation_mat2">
+                                <th>
+                                    <t t-if="o.langue=='FR'">Code matière 2 : </t>
+                                    <t t-if="o.langue=='EN'">Material code 2 :</t>
+                                </th>
+                                <td><span t-field="o.code_matiere2_id"/></td>
+                            </tr>
+                            <tr t-if="o.designation_mat2">
+                                <th>
+                                    <t t-if="o.langue=='FR'">Désignation matière 2 : </t>
+                                    <t t-if="o.langue=='EN'">Designation material 2 :</t>
+                                </th>
+                                <td><span t-field="o.designation_mat2"/></td>
+                            </tr>
+                            <tr t-if="o.designation_mat2">
+                                <th>
+                                    <t t-if="o.langue=='FR'">Lieu de stockage de la matière 2 : </t>
+                                    <t t-if="o.langue=='EN'">Place of storage of the material 2 :</t>
+                                </th>
+                                <td><span t-field="o.lieu_stockage_matiere2"/></td>
+                            </tr>
+                            <tr t-if="o.designation_mat2">
+                                <th>
+                                    <t t-if="o.langue=='FR'">Matière 2 disponible : </t>
+                                    <t t-if="o.langue=='EN'">Matière 2 disponible :</t>
+                                </th>
+                                <td><span t-field="o.mat_disp2"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Code colorant : </t>
+                                    <t t-if="o.langue=='EN'">Master batch code :</t>
+                                </th>
+                                <td><span t-field="o.code_colorant_id"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Désignation : </t>
+                                    <t t-if="o.langue=='EN'">Designation :</t>
+                                </th>
+                                <td><span t-field="o.designation_col"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Lieu de stockage du colorant : </t>
+                                    <t t-if="o.langue=='EN'">Place of storage :</t>
+                                </th>
+                                <td><span t-field="o.lieu_stockage_colorant"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">% de colorant : </t>
+                                    <t t-if="o.langue=='EN'">% master batch :</t>
+                                </th>
+                                <td><span t-field="o.pourcent_colorant"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <t t-if="o.langue=='FR'">Fiche technique matière : </t>
+                                    <t t-if="o.langue=='EN'">Material data sheet :</t>
+                                </th>
                                 <td>
                                     <t t-foreach="o.fiche_tech_mat_ids" t-as="fiche_tech_mat">
                                         <div t-esc="fiche_tech_mat.name"/>
@@ -77,19 +267,63 @@
                                 </td>
                             </tr>
                         </table>
-
-                        <h1>Données économiques</h1>
+                        <br />
+                        <h1>   
+                            <t t-if="o.langue=='FR'">Données économiques : </t>
+                            <t t-if="o.langue=='EN'">Economic data :</t>
+                        </h1>
                         <table width="100%" class="is_demande_essai_donnees_economique">
-                            <tr><th></th><td><b>Ojectif / Target</b></td><td><b>Résultat / Result</b></td></tr>
-                            <tr><th>Tps cycle / Time cycle(s) :  </th><td><span t-field="o.tps_cycle_objectif"/>  </td><td><span t-field="o.tps_cycle_resultat"/></td></tr>
-                            <tr><th>Poids pièce / Part weight :  </th><td><span t-field="o.poids_piece_objectif"/></td><td><span t-field="o.poids_piece_resultat"/></td></tr>
-                            <tr><th>Presse / Injection machine : </th><td><span t-field="o.presse_objectif_id"/>  </td><td><span t-field="o.presse_resultat_id"/></td></tr>
-                            <tr><th>Nbre MO / Handwork number :  </th><td><span t-field="o.nb_mo_objectif"/>      </td><td><span t-field="o.nb_mo_resultat"/></td></tr>
+                            <tr>
+                                <th></th>
+                                <td>
+                                    <b>Ojectif / Target</b>
+                                </td>
+                                <td>
+                                    <b>Résultat / Result</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Tps cycle / Time cycle(s) :  
+                                </th>
+                                <td><span t-field="o.tps_cycle_objectif"/>  </td>
+                                <td><span t-field="o.tps_cycle_resultat"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Poids pièce / Part weight :  
+                                </th>
+                                <td><span t-field="o.poids_piece_objectif"/></td>
+                                <td><span t-field="o.poids_piece_resultat"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Presse / Injection machine : 
+                                </th>
+                                <td><span t-field="o.presse_objectif_id"/>  </td>
+                                <td><span t-field="o.presse_resultat_id"/></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Nbre MO / Handwork number :  
+                                </th>
+                                <td><span t-field="o.nb_mo_objectif"/>      </td>
+                                <td><span t-field="o.nb_mo_resultat"/></td>
+                            </tr>
                         </table>
-
-                        <h1>Métrologie</h1>
+                        <br />
+                        <h1>
+                            <t t-if="o.langue=='FR'">Métrologie : </t>
+                            <t t-if="o.langue=='EN'">Metrology :</t>
+                        </h1>
                         <table width="100%">
-                            <tr><th style="width:40%">Responsable métrologie : </th><td><span t-field="o.resp_metrologie_id"/></td></tr>
+                            <tr>
+                                <th style="width:40%">
+                                    <t t-if="o.langue=='FR'">Metrology Manager : </t>
+                                    <t t-if="o.langue=='EN'">Responsable métrologie :</t>
+                                </th>
+                                <td><span t-field="o.resp_metrologie_id"/></td>
+                            </tr>
                         </table>
                     </div>               
                     
