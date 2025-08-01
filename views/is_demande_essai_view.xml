@@ -158,7 +158,7 @@
                                 </group>
                                 <group>
                                     <field name="fiche_tech_mat_ids"          attrs="{'readonly': [('ro_user','==',True)]}" widget="many2many_binary"/>
-                                    <field name="te_piece_jointe_ids"         attrs="{'readonly': [('ro_user','==',True)]}" widget="many2many_binary" readonly="1"/>
+                                    <!-- <field name="te_piece_jointe_ids"         attrs="{'readonly': [('ro_user','==',True)]}" widget="many2many_binary" readonly="1"/> -->
                                 </group>
                             </page>
                             <page string="Données économiques">

@@ -44,7 +44,7 @@
                                 <tr>
                                     <th t-if="o.langue=='FR'" style="vertical-align:middle">PRESSE :</th>
                                     <th t-if="o.langue=='EN'" style="vertical-align:middle">PRESS :</th>
-                                    <td colspan="2"> <span t-field="o.presse_standard_id.numero_equipement"/> <span t-field="o.presse_standard_id.designation"/></td>
+                                    <td colspan="2"> <span t-field="o.presse_objectif_id.numero_equipement"/> <span t-field="o.presse_objectif_id.designation"/></td>
                                 </tr>
                                 <tr>
                                     <th t-if="o.langue=='FR'" style="vertical-align:middle">DATE ESSAI :</th>
