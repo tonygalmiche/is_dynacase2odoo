@@ -229,6 +229,11 @@ class is_revue_de_contrat(models.Model):
     readonly = fields.Boolean('Readonly', default=False, compute="_compute_readonly", store=False, readonly=True)
 
 
+    def _get_report_base_filename(self):
+        self.ensure_one()
+        return "Revue de contrat %s" % (self.name or "report")
+
+
     def _compute_readonly(self):
         for obj in self:
             readonly = False

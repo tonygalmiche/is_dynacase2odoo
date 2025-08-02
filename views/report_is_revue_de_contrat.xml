@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <template id="is_revue_de_contrat_template">
+        <t t-set="company" t-value="res_company"/>
+        <t t-call="web.basic_layout" t-ignore-header="True">
+            <main>
+                <t t-foreach="docs" t-as="o">
+                    <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')"></div>
+                    <div class="page is_revue_de_contrat_page">
+                        <table style="width:100%;border:0pt">
+                            <tr>
+                                <td style="width:30%;border:0pt">
+                                    <img t-if="company.is_logo" t-att-src="image_data_uri(company.is_logo)" style="max-height:60px;" alt="Logo"/>   
+                                </td>
+                                <td style="width:70%;border:0pt;text-align:right">
+                                    <h1>Revue de contrat <span t-field="o.name"/></h1>                                    
+                                </td>
+                            </tr>
+                        </table>
+
+                        <h2>Données d'initialisation</h2>
+                        <table style="width:50%;border:0pt">
+                            <tr t-if="o.rc_mouleid">    <th>Moule      </th><td><span t-field="o.rc_mouleid"/></td></tr>
+                            <tr t-if="o.rc_dossierfid"> <th>Dossier F  </th><td><span t-field="o.rc_dossierfid"/></td></tr>
+                            <tr><th style="width:60%">Désignation</th><td><span t-field="o.rc_designation"/></td></tr>
+                        </table>
+
+                        <h2>Décomposition de prix</h2>
+                        <table style="width:100%;border:0pt" class="is_revue_de_contrat_table">
+                            <thead>
+                                <tr>
+                                    <th>Désignation</th>
+                                    <th>Réf client</th>
+                                    <th>Site</th>
+                                    <th class="text-end">Qt annuelle</th>
+                                    <th class="text-end">Part matière</th>
+                                    <th class="text-end">Part composant</th>
+                                    <th class="text-end">VA inj</th>
+                                    <th class="text-end">VA ass</th>
+                                    <th class="text-end">Part emballage</th>
+                                    <th class="text-end">Frais port</th>
+                                    <th class="text-end">Logistique</th>
+                                    <th class="text-end">Amt client</th>
+                                    <th class="text-end">Amt interne</th>
+                                    <th class="text-end">Cagnotage</th>
+                                    <th class="text-end">Surcoût</th>
+                                    <th class="text-end">Prix vente</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tboby>
+                                <tr t-foreach="o.decomposition_prix_ids" t-as="l">
+                                    <td><span t-field="l.rc_price_comp_article"/></td>
+                                    <td><span t-field="l.rc_reference_client"/></td>
+                                    <td><span t-field="l.rc_price_clientid"/></td>
+                                    <td class="text-end"><span t-field="l.rc_year_quantity"/></td>
+                                    <td class="text-end"><span t-field="l.rc_mat_part"/></td>
+                                    <td class="text-end"><span t-field="l.rc_comp_part"/></td>
+                                    <td class="text-end"><span t-field="l.rc_va_injection"/></td>
+                                    <td class="text-end"><span t-field="l.rc_va_assembly"/></td>
+                                    <td class="text-end"><span t-field="l.rc_emb_part"/></td>
+                                    <td class="text-end"><span t-field="l.rc_port_fee"/></td>
+                                    <td class="text-end"><span t-field="l.rc_logistic"/></td>
+                                    <td class="text-end"><span t-field="l.rc_moul_amort"/></td>
+                                    <td class="text-end"><span t-field="l.rc_moul_amort_interne"/></td>
+                                    <td class="text-end"><span t-field="l.rc_moul_cagnotage"/></td>
+                                    <td class="text-end"><span t-field="l.rc_preserie_surcout"/></td>
+                                    <td class="text-end"><span t-field="l.rc_sell_price"/></td>
+                                    <td class="text-end"><span t-field="l.rc_total"/></td>
+                                </tr>
+                            </tboby>
+                        </table>
+
+                        <h2>Données de fabrication</h2>
+                        <table style="width:50%;border:0pt">
+                            <tr><th style="width:40%">Site de fabrication</th><td><span t-field="o.rc_site_fabrication"/></td></tr>
+                            <tr><th>Process de fabrication</th><td><span t-field="o.rc_process_fabrication"/></td></tr>
+                            <tr><th>Nombre d'empreintes du moule</th><td><span t-field="o.rc_nb_empreintes_moule"/></td></tr>
+                            <tr><th>Moulage sur (empreintes)</th><td><span t-field="o.rc_moulage_sur"/></td></tr>
+                            <tr><th>Tonnage presse vendu</th><td><span t-field="o.rc_tonnage_presse_vendu"/></td></tr>
+                            <tr><th>Stock de sécurité</th><td><span t-field="o.rc_stock_securite"/></td></tr>
+                            <tr><th>Stock de sécurité commentaire</th><td><span t-field="o.rc_stock_securite_commentaire"/></td></tr>
+                           
+                        </table>
+
+                        <h2>Dossier injection</h2>
+                        <table style="width:50%;border:0pt">
+                            <tr><th style="width:60%">Process et site de fabrication vendu</th><td><span t-field="o.rc_dfi_process_fab"/></td></tr>
+                            <tr><th>Schéma de flux vendu (Logistique)</th><td><span t-field="o.rc_dfi_schema_lieu_fab"/></td></tr>
+                            <tr><th>Classe commerciale</th><td><span t-field="o.rc_dfi_classe_comrc"/></td></tr>
+                        </table>
+
+                        <h2>Spécificités et Éléments qualités</h2>
+                        <table style="width:50%;border:0pt">
+                            <tr><th style="width:60%">Pièce soumise à réglementation</th><td><span t-field="o.rc_sp_piece_reglem"/></td></tr>
+                            <tr><th>Commentaire Pièce soumise à réglementation</th><td><span t-field="o.rc_sp_piece_reglem_cmt"/></td></tr>
+                            <tr><th>Sécurité du produit</th><td><span t-field="o.rc_sp_piece_sec"/></td></tr>
+                            <tr><th>Commentaire Sécurité du produit</th><td><span t-field="o.rc_sp_piece_sec_cmt"/></td></tr>
+                            <tr><th>Pièce de sécurité</th><td><span t-field="o.rc_sp_piece_sec2"/></td></tr>
+                            <tr><th>Commentaire pièce de sécurité</th><td><span t-field="o.rc_sp_piece_sec2_cmt"/></td></tr>
+                            <tr><th>Matière connue à PG</th><td><span t-field="o.rc_sp_mat_con_pg"/></td></tr>
+                            <tr><th>Désignation matière connue à PG</th><td><span t-field="o.rc_sp_mat_con_pg_cmt"/></td></tr>
+                        </table>
+
+                        <p style="page-break-before:always;"> </p>
+                        <t t-foreach="o.version_ids" t-as="l">
+                            <h2>Version moule - Article <span t-field="l.decomposition_prix_id"/></h2>
+                            <table style="width:50%;border:0pt" class="is_revue_de_contrat_table">
+                                <tbody>
+                                    <tr>
+                                        <th class="text-end" style="width:50%" >Cycle</th>
+                                        <td class="text-left"><span t-field="l.rc_dfi_cycle"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-end">Nb emp</th>
+                                        <td class="text-left"><span t-field="l.rc_dfi_nb_emp"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-end">MOD</th>
+                                        <td class="text-left"><span t-field="l.rc_dfi_mod"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-end">Tx rebut</th>
+                                        <td class="text-left"><span t-field="l.rc_dfi_taux_rebut"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-end">Matière 1</th>
+                                        <td class="text-left"><span t-field="l.rc_dfi_matiere"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-end">Pds pièce mat 1</th>
+                                        <td class="text-left"><span t-field="l.rc_dfi_poids_piece"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-end">Pds carotte mat 1</th>
+                                        <td class="text-left"><span t-field="l.rc_dfi_poids_carotte"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-end">Carotte Rebroyé mat 1</th>
+                                        <td class="text-left"><span t-field="l.rc_dfi_car_reb"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-end">Rebroyé mat 1</th>
+                                        <td class="text-left"><span t-field="l.rc_dfi_car_reb_pourcentage"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-end">Prix et lot mat 1</th>
+                                        <td class="text-left"><span t-field="l.rc_dfi_mat_prix_vendu"/></td>
+                                    </tr>
+                                    <t t-if="l.rc_dfi_matiere2">
+                                        <tr>
+                                            <th class="text-end">Matière 2</th>
+                                            <td class="text-left"><span t-field="l.rc_dfi_matiere2"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-end">Pds pièce mat 2</th>
+                                            <td class="text-left"><span t-field="l.rc_dfi_poids_piece2"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-end">Pds carotte mat 2</th>
+                                            <td class="text-left"><span t-field="l.rc_dfi_poids_carotte2"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-end">Carotte Rebroyé mat 2</th>
+                                            <td class="text-left"><span t-field="l.rc_dfi_car_reb2"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-end">Rebroyé mat 2</th>
+                                            <td class="text-left"><span t-field="l.rc_dfi_car_reb_pourcentage2"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-end">Prix et lot mat 2</th>
+                                            <td class="text-left"><span t-field="l.rc_dfi_mat_prix_vendu2"/></td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="l.rc_dfi_comp">
+                                        <tr>
+                                            <th class="text-end">Composant</th>
+                                            <td class="text-left"><span t-field="l.rc_dfi_comp"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-end">Prix et lot comp</th>
+                                            <td class="text-left"><span t-field="l.rc_dfi_comp_prix_vendu"/></td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="l.rc_dfi_sous_traitance">
+                                        <tr>
+                                            <th class="text-end">Sous-traitance</th>
+                                            <td class="text-left"><span t-field="l.rc_dfi_sous_traitance"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-end">Prix et lot ST</th>
+                                            <td class="text-left"><span t-field="l.rc_dfi_sous_traitance_prix"/></td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <th class="text-end">Descriptif emballage</th>
+                                        <td class="text-left"><span t-field="l.rc_dfi_desc_emb"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-end">Qt par UC</th>
+                                        <td class="text-left"><span t-field="l.rc_dfi_qte_carton"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-end">Nb UC</th>
+                                        <td class="text-left"><span t-field="l.rc_dfi_qte_palette"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-end">Lot liv</th>
+                                        <td class="text-left"><span t-field="l.rc_dfi_lot_liv"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-end">Multiple</th>
+                                        <td class="text-left"><span t-field="l.rc_dfi_multiple_liv"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-end">Lot fab</th>
+                                        <td class="text-left"><span t-field="l.rc_dfi_lot_fab"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                    </div>
+
+                    <div class="footer">
+                        <div class="text-center" style="border-top: 1px solid black">
+                            <table style="width:100%">
+                                <tr>
+                                    <td class="text-left" style="width:90%">
+                                    </td>
+                                    <td class="text-right">
+                                        Page <span class="page" style="font-size:11pt;"/> / <span class="topage"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <p style="page-break-before:always;"> </p>
+                </t>
+            </main>
+        </t>
+    </template>
+
+    <record id="is_revue_de_contrat_paperformat" model="report.paperformat">
+        <field name="name">Revue de contrat</field>
+        <field name="default" eval="True" />
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">20</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+    <record id="is_revue_de_contrat_report" model="ir.actions.report">
+        <field name="name">Revue de contrat</field>
+        <field name="model">is.revue.de.contrat</field>
+        <field name="binding_model_id" ref="model_is_revue_de_contrat"/>
+        <field name="paperformat_id" ref="is_revue_de_contrat_paperformat"/>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">is_dynacase2odoo.is_revue_de_contrat_template</field>
+        <field name="report_file">is_dynacase2odoo.is_revue_de_contrat_template</field>
+    </record>
+
+</data>
+</odoo>
