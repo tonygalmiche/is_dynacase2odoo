@@ -304,7 +304,7 @@ class IsDocMoule(models.Model):
                 if obj.etat=='F':
                     color='SpringGreen'
                 else:
-                    color = 'Orange'
+                    color = 'CornflowerBlue'
                     if obj.date_fin_gantt and now>obj.date_fin_gantt:
                         color='Red'
             else:
@@ -320,14 +320,17 @@ class IsDocMoule(models.Model):
                 if obj.date_fin_gantt:
                     if now>obj.date_fin_gantt:
                         color='Red'
-                #if obj.etat in ('AF','D') and obj.date_j_prevue and obj.date_fin_gantt:
-                #    if obj.date_fin_gantt> obj.date_j_prevue:
-                #        color='Gray'
                 if obj.etat=='F':
                     color='SpringGreen'
                 if obj.etat=='D' and obj.fin_derogation and obj.fin_derogation>=now:
                     color='Orange'
-            obj.color=color
+            obj.color = color
+
+
+
+            print('color=',color)
+
+
 
 
     @api.depends('etat','array_ids.annex','array_ids.comment')
