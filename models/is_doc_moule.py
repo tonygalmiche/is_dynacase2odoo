@@ -300,7 +300,7 @@ class IsDocMoule(models.Model):
         "Retourne la couleur de l'indicateur en fonction de différent paramètres"
         for obj in self:
             now = date.today()
-            if obj.type_document=='Article':
+            if obj.type_document not in ['Moule', 'Dossier F']:
                 if obj.etat=='F':
                     color='SpringGreen'
                 else:
