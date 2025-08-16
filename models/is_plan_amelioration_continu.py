@@ -3,6 +3,17 @@ from odoo.exceptions import ValidationError  # type: ignore
 from datetime import datetime
 
 
+
+class is_plan_amelioration_continu_pj(models.Model):
+    _name        = "is.plan.amelioration.continu.pj"
+    _description = "Pièce-jointe des PAC"
+    _order='lig,id'
+
+    lig            = fields.Integer(string="Lig",index=True,copy=False, help="Permet de faire le lien avec la ligne du tableau dans Dynacase")
+    attachment_ids = fields.Many2many("ir.attachment", "is_plan_amelioration_continu_attachment_rel", "pac_line_id", "attachment_id", string="Fichiers")
+    pac_id         = fields.Many2one("is.plan.amelioration.continu")
+
+
 class is_plan_amelioration_continu(models.Model):
     _name='is.plan.amelioration.continu'
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
@@ -10,7 +21,7 @@ class is_plan_amelioration_continu(models.Model):
     _rec_name = "numero"
     _order='numero desc'
 
-    numero              = fields.Integer('Numéro', tracking=True)
+    numero              = fields.Integer('Numéro', tracking=True, copy=False)
     active              = fields.Boolean('Actif', default=True, tracking=True)
     type                = fields.Selection([('pac', 'PAC'), ('revue', 'Revue')], "Type", required=True, tracking=True)
     createur_id         = fields.Many2one('res.users', 'Créateur', required=True, default=lambda self: self.env.uid, tracking=True)
@@ -19,21 +30,36 @@ class is_plan_amelioration_continu(models.Model):
     processus_id        = fields.Char('Processus', tracking=True)
     annee               = fields.Char('Année', default=lambda self: datetime.now().year, store=True, tracking=True)
     mois                = fields.Char('Mois', default=lambda self: str(datetime.now().month) if datetime.now().month > 9 else '0' + str(datetime.now().month), tracking=True)
-    groupe_acces_id     = fields.Many2one('res.groups', "Groupe d'accès en consultation Id", tracking=True)
+    groupe_acces_id     = fields.Many2one('res.groups', "Groupe d'accès en consultation", tracking=True)
     plan_action_ids     = fields.Many2many('is.plan.action','is_plan_amelioration_continu_plan_action_rel','plan_amelioration_continu_id','plan_action_id', string="Plan d'actions", tracking=True)
-    piece_jointe_ids    = fields.Many2many("ir.attachment", "is_plan_amelioration_continu_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
     dynacase_id         = fields.Integer(string="Id Dynacase", index=True, copy=False)
+    pj_ids              = fields.One2many("is.plan.amelioration.continu.pj", "pac_id", string="Pièce jointe")
+    pj_noms             = fields.Text(string="Noms des pièces jointes", tracking=True, compute="_compute_pj_noms", store=True, readonly=True,copy=False)
+
+
+    @api.depends('pj_ids', 'pj_ids.attachment_ids', 'pj_ids.attachment_ids.name')
+    def _compute_pj_noms(self):
+        """Calcule la liste des noms des pièces jointes"""
+        for record in self:
+            noms = []
+            for pj in record.pj_ids:
+                for attachment in pj.attachment_ids:
+                    if attachment.name:
+                        noms.append(attachment.name)
+            record.pj_noms = '\n'.join(noms) if noms else ''
+
 
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if self._rec_name not in vals:
-                last = self.env[self._name].search([(self._rec_name, '!=', None)], order=self._rec_name + " desc", limit=1)
+            if 'numero' not in vals:
+                last = self.env[self._name].search([('numero', '!=', None)], order="numero desc", limit=1)
                 if last:
-                    vals[self._rec_name] = getattr(last, self._rec_name) + 1
+                    vals['numero'] = last.numero + 1
                 else:
-                    vals[self._rec_name] = 0
+                    vals['numero'] = 0
         return super().create(vals_list)
+
 
     def lien_vers_dynacase_action(self):
         for obj in self:

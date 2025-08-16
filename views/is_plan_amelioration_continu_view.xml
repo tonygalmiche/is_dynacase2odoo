@@ -22,21 +22,31 @@
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
                         <group string="Identification">
-                            <field name="numero"     readonly="1"/>
-                            <field name="type"/>
-                            <field name="createur_id"/>
-                            <field name="site_id"/>
-                            <field name="service_id"/>
-                            <field name="processus_id"/>
-                            <field name="annee"/>
-                            <field name="mois"/>
+                            <group>
+                                <field name="type"/>
+                                <field name="site_id" required="1"/>
+                                <field name="service_id"/>
+                                <field name="processus_id" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="annee"/>
+                                <field name="mois"/>
+                                <field name="numero"     readonly="1"/>
+                                <field name="createur_id" readonly="1"/>
+                                <field name="groupe_acces_id"   readonly="1"/>
+                                <field name="pj_noms" invisible="1"/>
+                            </group>
                         </group>
-                        <group string="Accès en consultation">
-                            <field name="groupe_acces_id"/>
+                        <group string="Pièce-jointe">
+                            <field name="pj_ids" nolabel="1" colspan="2">
+                                <tree editable="bottom"  options="{'no_open': True}">
+                                    <field name="lig" widget="handle"/>
+                                    <field name="attachment_ids" widget="many2many_binary"/>
+                                </tree>
+                            </field>
                         </group>
-                        <group string="Contenu">
-                            <field name="plan_action_ids"/>
-                            <field name="piece_jointe_ids"   widget="many2many_binary"/>
+                        <group string="Plan d'action"  attrs="{'invisible': [('plan_action_ids', '=', [])]}">
+                            <field name="plan_action_ids" readonly="1"/>
                         </group>
                     </sheet>
                    <div class="oe_chatter">
