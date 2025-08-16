@@ -26,7 +26,7 @@
                                 <field name="type"/>
                                 <field name="site_id" required="1"/>
                                 <field name="service_id"/>
-                                <field name="processus_id" invisible="1"/>
+                                <field name="processus_id"/>
                             </group>
                             <group>
                                 <field name="annee"/>
