@@ -21,32 +21,33 @@
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
+                        <field name="readonly_all" invisible="1"/>
                         <group string="Identification">
                             <group>
-                                <field name="type"/>
-                                <field name="site_id" required="1"/>
-                                <field name="service_id"/>
-                                <field name="processus_id"/>
+                                <field name="type" attrs="{'readonly': [('readonly_all', '=', True)]}"/>
+                                <field name="site_id" required="1" attrs="{'readonly': [('readonly_all', '=', True)]}"/>
+                                <field name="service_id" attrs="{'readonly': [('readonly_all', '=', True)]}"/>
+                                <field name="processus_id" attrs="{'readonly': [('readonly_all', '=', True)]}"/>
                             </group>
                             <group>
-                                <field name="annee"/>
-                                <field name="mois"/>
-                                <field name="numero"     readonly="1"/>
+                                <field name="annee" attrs="{'readonly': [('readonly_all', '=', True)]}"/>
+                                <field name="mois" attrs="{'readonly': [('readonly_all', '=', True)]}"/>
+                                <field name="numero" readonly="1"/>
                                 <field name="createur_id" readonly="1"/>
-                                <field name="groupe_acces_id"   readonly="1"/>
+                                <field name="groupe_acces_id" attrs="{'readonly': [('readonly_all', '=', True)]}"/>
                                 <field name="pj_noms" invisible="1"/>
                             </group>
                         </group>
                         <group string="Pièce-jointe">
                             <field name="pj_ids" nolabel="1" colspan="2">
-                                <tree editable="bottom"  options="{'no_open': True}">
-                                    <field name="lig" widget="handle"/>
-                                    <field name="attachment_ids" widget="many2many_binary"/>
+                                <tree editable="bottom" options="{'no_open': True}">
+                                    <field name="lig"            widget="handle"/>
+                                    <field name="attachment_ids" widget="many2many_binary" attrs="{'readonly': [('parent.readonly_all', '=', True)]}"/>
                                 </tree>
                             </field>
                         </group>
                         <group string="Plan d'action"  attrs="{'invisible': [('plan_action_ids', '=', [])]}">
-                            <field name="plan_action_ids" readonly="1"/>
+                            <field name="plan_action_ids" attrs="{'readonly': [('readonly_all', '=', True)]}"/>
                         </group>
                     </sheet>
                    <div class="oe_chatter">

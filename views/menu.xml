@@ -92,9 +92,9 @@
             parent="is_gestion_commerciale_menu" action="is_plastigray16.res_partner_client_action"
         />
 
-        <!-- Gestion commcerciale / Plan d'acttion -->
+        <!-- Gestion commcerciale / Plan d'acttion et PAC -->
         <menuitem 
-            name="Plan d'action" id="is_plan_action_menu" sequence="60"
+            name="Plan d'action et PAC" id="is_plan_action_menu" sequence="60"
             parent="is_gestion_commerciale_menu"
         />
         <menuitem 
@@ -105,11 +105,9 @@
             name="Plan d'action"  id="is_pa_plan_action_menu" sequence="20"
             parent="is_plan_action_menu" action="is_plan_action_action"
         />
-
-        <!-- Gestion commcerciale / PAC -->
         <menuitem 
-            name="Revue et plan d'amélioration continu"  id="is_plan_amelioration_continu_menu" sequence="60"
-            parent="is_gestion_commerciale_menu" action="is_plan_amelioration_continu_action"
+            name="Revue et plan d'amélioration continu"  id="is_plan_amelioration_continu_menu" sequence="30"
+            parent="is_plan_action_menu" action="is_plan_amelioration_continu_action"
         />
 
 

@@ -50,6 +50,29 @@ class is_action(models.Model):
     date_end         = fields.Date(related='plan_action_id.date_end')
     dynacase_id      = fields.Integer(string="Id Dynacase", index=True, copy=False)
 
+    # Champ calculé pour détecter si l'utilisateur peut modifier
+    readonly_all        = fields.Boolean(string="Lecture seule", compute="_compute_readonly_all", store=False)
+
+
+    def _compute_readonly_all(self):
+        """Détermine si l'utilisateur courant peut modifier cet enregistrement"""
+        for record in self:
+            readonly = True
+            if not record.resp_id:
+                readonly=False
+            else:
+                if record.state=='plan':
+                    try:
+                        # Vérifier si l'utilisateur peut écrire sur cet enregistrement
+                        record.check_access_rights('write')
+                        record.check_access_rule('write')
+                        readonly = False
+                    except Exception:
+                        # Si une exception est levée, l'utilisateur n'a pas le droit d'écriture
+                        readonly = True
+            record.readonly_all = readonly
+
+
     def vers_plan_action(self):
         for obj in self:
             obj.state='plan'
@@ -105,6 +128,30 @@ class is_plan_action(models.Model):
     piece_jointe_ids    = fields.Many2many("ir.attachment", "is_plan_action_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
     is_action_ids       = fields.One2many("is.action", "plan_action_id", tracking=True)
     dynacase_id         = fields.Integer(string="Id Dynacase", index=True, copy=False)
+
+    # Champ calculé pour détecter si l'utilisateur peut modifier
+    readonly_all        = fields.Boolean(string="Lecture seule", compute="_compute_readonly_all", store=False)
+
+
+    @api.depends('pilot_id')
+    def _compute_readonly_all(self):
+        """Détermine si l'utilisateur courant peut modifier cet enregistrement"""
+        for record in self:
+            readonly = True
+            if record.state=='actif':
+                try:
+                    # Vérifier si l'utilisateur peut écrire sur cet enregistrement
+                    record.check_access_rights('write')
+                    record.check_access_rule('write')
+                    readonly = False
+                except Exception:
+                    # Si une exception est levée, l'utilisateur n'a pas le droit d'écriture
+                    readonly = True
+            record.readonly_all = readonly
+
+
+#  [('state','!=','actif')]}
+
 
     @api.model_create_multi
     def create(self, vals_list):

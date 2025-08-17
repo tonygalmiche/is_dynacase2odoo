@@ -14,7 +14,6 @@
                             string="Dynacase"
                             type="object" class="btn btn-info"
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                            groups="base.group_system"
                         />
                         <field name="dynacase_id" invisible="1"/>
                         <button
@@ -22,51 +21,47 @@
                             string="vers Plan"
                             type="object"
                             attrs="{'invisible': [('state', '!=', 'do')]}"
-                            groups="base.group_system"
                         />
                         <button
                             name="vers_do_action"
                             string="vers Do"
                             type="object"
                             attrs="{'invisible': [('state', 'not in', ['plan', 'check'])]}"
-                            groups="base.group_system"
                         />
                         <button
                             name="vers_check_action"
                             string="vers Check"
                             type="object"
                             attrs="{'invisible': [('state', 'not in', ['do', 'act'])]}"
-                            groups="base.group_system"
                         />
                         <button
                             name="vers_act_action"
                             string="vers Act"
                             type="object"
                             attrs="{'invisible': [('state', 'not in', ['check', 'do', 'plan'])]}"
-                            groups="base.group_system"
                         />
                         <button
                             name="vers_annule_action"
                             string="vers Annulé"
                             type="object"
                             attrs="{'invisible': [('state', '==', 'annule')]}"
-                            groups="base.group_system"
                         />
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
+                        <field name="readonly_all" invisible="1"/>
                         <group col="2">
                             <group string="Caractéristiques">
-                                <field name="title"    attrs="{'readonly': [('state', '==', 'annule')]}"/>
-                                <field name="resp_id"  attrs="{'readonly': [('state', '==', 'annule')]}"/>
-                                <field name="risque"   attrs="{'readonly': [('state', '==', 'annule')]}"/>
-                                <field name="comment"  attrs="{'readonly': [('state', '==', 'annule')]}"/>
+                                <field name="title"    attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="resp_id"  attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="risque"   attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="comment"  attrs="{'readonly': [('readonly_all','=',True)]}"/>
                             </group>
                             <group string="Dates">
                                 <field name="date" readonly="1"/>
-                                <field name="dateplan" attrs="{'readonly': [('state', '==', 'annule')]}"/>
+                                <field name="dateplan" attrs="{'readonly': [('readonly_all','=',True)]}"/>
                                 <field name="datedo" readonly="1"/>
                                 <field name="datecheck" readonly="1"/>
                             </group>
@@ -85,7 +80,7 @@
                             </group>
                         </group>
                         <group string="Fichiers">
-                            <field name="file_ids" widget="many2many_binary" attrs="{'invisible': [('state', '==', 'annule')]}"/>
+                            <field name="file_ids" widget="many2many_binary" attrs="{'invisible': [('readonly_all','=',True)]}"/>
                         </group>
                     </sheet>
                    <div class="oe_chatter">
@@ -167,6 +162,9 @@
             <field name="context">{}
             </field>
         </record>
+
+
+
         <!-- is.plan.action -->
         <record model="ir.ui.view" id="is_plan_action_form_view">
             <field name="name">is_plan_action_form_view</field>
@@ -180,7 +178,6 @@
                             string="Dynacase"
                             type="object" class="btn btn-info"
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                            groups="base.group_system"
                         />
                         <field name="dynacase_id" invisible="1"/>
                         <button
@@ -188,48 +185,46 @@
                             string="vers Actif"
                             type="object"
                             attrs="{'invisible': [('state', '!=', 'solde')]}"
-                            groups="base.group_system"
                         />
                         <button
                             name="vers_solde_action"
                             string="vers Soldé"
                             type="object"
                             attrs="{'invisible': [('state', '==', 'solde')]}"
-                            groups="base.group_system"
                         />
                         <button
                             name="vers_annule_action"
                             string="vers Annulé"
                             type="object"
                             attrs="{'invisible': [('state', '==', 'annule')]}"
-                            groups="base.group_system"
                         />
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
+                        <field name="readonly_all" invisible="1"/>
                         <group>
                             <group string="Caractéristiques">
                                 <field name="num_int"     readonly="1"/>
-                                <field name="title"   attrs="{'readonly': [('state','!=','actif')]}"/>
-                                <field name="client_id"   attrs="{'readonly': [('state','!=','actif')]}"/>
-                                <field name="moule_id"    attrs="{'readonly': [('state','!=','actif')]}"/>
-                                <field name="dossierf_id"    attrs="{'readonly': [('state','!=','actif')]}"/>
+                                <field name="title"   attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="client_id"   attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="moule_id"    attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="dossierf_id"    attrs="{'readonly': [('readonly_all','=',True)]}"/>
                             </group>
                             <group string="Pilote">
-                                <field name="pilot_id"    attrs="{'readonly': [('state','!=','actif')]}"/>
+                                <field name="pilot_id"    attrs="{'readonly': [('readonly_all','=',True)]}"/>
                             </group>
                         </group>
                         <group>
                             <group string="Accès en consultation">
-                                <field name="group_id"    attrs="{'readonly': [('state','!=','actif')]}"/>
+                                <field name="group_id"    attrs="{'readonly': [('readonly_all','=',True)]}"/>
                             </group>
                             <group string="Plan d'action">
-                                <field name="obj"         attrs="{'readonly': [('state','!=','actif')]}"/>
-                                <field name="date_beg"    attrs="{'readonly': [('state','!=','actif')]}"/>
-                                <field name="date_end"    attrs="{'readonly': [('state','!=','actif')]}"/>
-                                <field name="action_prev" attrs="{'readonly': [('state','!=','actif')]}"/>
+                                <field name="obj"         attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="date_beg"    attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="date_end"    attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="action_prev" attrs="{'readonly': [('readonly_all','=',True)]}"/>
                             </group>
                         </group>
                         <group string="Liste des actions">
@@ -237,7 +232,7 @@
                             </field>
                         </group>
                         <group string="Pièces jointes">
-                            <field name="piece_jointe_ids"   widget="many2many_binary" attrs="{'readonly': [('state','!=','actif')]}"/>
+                            <field name="piece_jointe_ids"   widget="many2many_binary" attrs="{'readonly': [('readonly_all','=',True)]}"/>
                         </group>
                     </sheet>
                    <div class="oe_chatter">

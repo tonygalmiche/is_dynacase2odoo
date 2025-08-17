@@ -26,7 +26,8 @@ class is_plan_amelioration_continu(models.Model):
     type                = fields.Selection([('pac', 'PAC'), ('revue', 'Revue')], "Type", required=True, tracking=True)
     createur_id         = fields.Many2one('res.users', 'Créateur', required=True, default=lambda self: self.env.uid, tracking=True)
     site_id             = fields.Many2one('is.database', "Site", tracking=True)
-    service_id          = fields.Many2one('res.groups', "Service", tracking=True)
+    #service_id         = fields.Many2one('res.groups', "Service", tracking=True)
+    service_id          = fields.Many2one(related="createur_id.is_service_id")
     processus_id        = fields.Char('Processus', tracking=True)
     annee               = fields.Char('Année', default=lambda self: datetime.now().year, store=True, tracking=True)
     mois                = fields.Char('Mois', default=lambda self: str(datetime.now().month) if datetime.now().month > 9 else '0' + str(datetime.now().month), tracking=True)
@@ -35,6 +36,26 @@ class is_plan_amelioration_continu(models.Model):
     dynacase_id         = fields.Integer(string="Id Dynacase", index=True, copy=False)
     pj_ids              = fields.One2many("is.plan.amelioration.continu.pj", "pac_id", string="Pièce jointe")
     pj_noms             = fields.Text(string="Noms des pièces jointes", tracking=True, compute="_compute_pj_noms", store=True, readonly=True,copy=False)
+    
+    # Champ calculé pour détecter si l'utilisateur peut modifier
+    readonly_all        = fields.Boolean(string="Lecture seule", compute="_compute_readonly_all", store=False)
+
+
+    @api.depends('createur_id')
+    def _compute_readonly_all(self):
+        """Détermine si l'utilisateur courant peut modifier cet enregistrement"""
+        for record in self:
+            readonly = True
+            try:
+                # Vérifier si l'utilisateur peut écrire sur cet enregistrement
+                record.check_access_rights('write')
+                record.check_access_rule('write')
+                readonly = False
+            except Exception:
+                # Si une exception est levée, l'utilisateur n'a pas le droit d'écriture
+                readonly = True
+            
+            record.readonly_all = readonly
 
 
     @api.depends('pj_ids', 'pj_ids.attachment_ids', 'pj_ids.attachment_ids.name')
