@@ -128,10 +128,16 @@ class is_plan_action(models.Model):
     piece_jointe_ids    = fields.Many2many("ir.attachment", "is_plan_action_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
     is_action_ids       = fields.One2many("is.action", "plan_action_id", tracking=True)
     dynacase_id         = fields.Integer(string="Id Dynacase", index=True, copy=False)
-
-    # Champ calculé pour détecter si l'utilisateur peut modifier
+    responsables_ids    = fields.Many2many("res.users", string="Responsables des actions", compute="_compute_responsables_ids", store=True, readonly=True)
     readonly_all        = fields.Boolean(string="Lecture seule", compute="_compute_readonly_all", store=False)
 
+
+    @api.depends('is_action_ids.resp_id')
+    def _compute_responsables_ids(self):
+        """Calcule la liste des responsables des actions associées"""
+        for record in self:
+            responsables = record.is_action_ids.mapped('resp_id')
+            record.responsables_ids = responsables
 
     @api.depends('pilot_id')
     def _compute_readonly_all(self):

@@ -81,6 +81,17 @@
             <field eval="1" name="perm_read"/>
             <field eval="0" name="perm_create"/>
         </record>
+        <record id="is_plan_action_responsables_rule" model="ir.rule">
+            <field name="name">Accès en lecture aux responsables des actions</field>
+            <field name="model_id" ref="model_is_plan_action"/>
+            <field name="domain_force">[('responsables_ids','in',user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+        </record>
+
 
 
 

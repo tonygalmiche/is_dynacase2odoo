@@ -98,7 +98,8 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="title"            optional="show"/>
-                    <field name="resp_id"          optional="show" widget="many2one_clickable"/>
+                    <field name="pilot_id"         optional="hide"/>
+                    <field name="resp_id"          optional="show"/>
                     <field name="risque"           optional="show"/>
                     <field name="comment"          optional="show"/>
                     <field name="date"             optional="hide"/>
@@ -106,7 +107,6 @@
                     <field name="datedo"           optional="hide"/>
                     <field name="datecheck"        optional="hide"/>
                     <field name="plan_action_id"   optional="hide"/>
-                    <field name="pilot_id"         optional="hide"/>
                     <field name="num_moule"        optional="hide"/>
                     <field name="num_dossierf"     optional="hide"/>
                     <field name="client"           optional="hide"/>
@@ -230,6 +230,7 @@
                         <group string="Liste des actions">
                             <field name="is_action_ids" nolabel="1" colspan="2">
                             </field>
+                            <field name="responsables_ids" widget="many2many_tags"/>
                         </group>
                         <group string="Pièces jointes">
                             <field name="piece_jointe_ids"   widget="many2many_binary" attrs="{'readonly': [('readonly_all','=',True)]}"/>
