@@ -61,7 +61,7 @@
                             </group>
                             <group string="Dates">
                                 <field name="date" readonly="1"/>
-                                <field name="dateplan" attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="dateplan" attrs="{'readonly': [('readonly_all','=',True)]}" required="1"/>
                                 <field name="datedo" readonly="1"/>
                                 <field name="datecheck" readonly="1"/>
                             </group>

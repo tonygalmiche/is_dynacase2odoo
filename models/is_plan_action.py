@@ -33,7 +33,7 @@ class is_action(models.Model):
     comment          = fields.Text("Commentaire", tracking=True)
 
     date             = fields.Date("Date de création", default=lambda *a: fields.datetime.now(), tracking=True)
-    dateplan         = fields.Date("Date de fin prévue", required=True, tracking=True)
+    dateplan         = fields.Date("Date de fin prévue", required=False, tracking=True)
     datedo           = fields.Date("Date terminée", tracking=True)
     datecheck        = fields.Date("Date de vérification", tracking=True)
 
