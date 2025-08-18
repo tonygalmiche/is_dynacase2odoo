@@ -33,5 +33,13 @@
         <field name="comment"></field>
         <field name="category_id" ref="is_plastigray16.is_groupe_plastigray_module_category"/>
     </record>
+
+    <record model="res.groups" id="is_gestionnaire_norme_cdc_group" >
+        <field name="name">Gestionnaire des normes et CDC</field>
+        <field name="comment"></field>
+        <field name="category_id" ref="is_plastigray16.is_groupe_plastigray_module_category"/>
+    </record>
+
+
 </data>
 </openerp>

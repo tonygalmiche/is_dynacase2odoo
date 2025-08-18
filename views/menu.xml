@@ -456,5 +456,19 @@
             ])]"/>
         </record>
 
+	    <!-- Gestion de la qualité -->
+        <record id="gestion_qualite_menu" model="ir.ui.menu" >
+            <field name="name">Gestion de la qualité</field>
+            <field name="sequence">6</field>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray16.is_employes_hors_production_group'),
+            ])]"/>
+        </record>
+        <menuitem id="menu_is_norme_cdc"
+              name="Normes CDC"
+              action="action_is_norme_cdc"
+              parent="gestion_qualite_menu"
+              sequence="10"
+        />
     </data>
 </odoo>

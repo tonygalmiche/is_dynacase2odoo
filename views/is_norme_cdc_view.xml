@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_is_norme_cdc_form" model="ir.ui.view">
+        <field name="name">is.norme.cdc.form</field>
+        <field name="model">is.norme.cdc</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <field name="active" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="niveau"/>
+                            <field name="reference"/>
+                            <field name="designation"/>
+                            <field name="sujet"/>
+                            <field name="createur"/>
+                            <field name="indice"/>
+                            <field name="etat"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="datepg"/>
+                            <field name="date_prochaine_alerte"/>
+                            <field name="date_verif"/>
+                            <field name="duree_conserv"/>
+                            <field name="lieu_physique"/>
+                            <field name="lieu_info"/>
+                            <field name="lien_internet" widget="url"/>
+                        </group>
+                    </group>
+                    <group string="Pièces jointes">
+                        <field name="attachment_ids"   widget="many2many_binary"/>
+                        <field name="attachment_names"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="view_is_norme_cdc_tree" model="ir.ui.view">
+        <field name="name">is.norme.cdc.tree</field>
+        <field name="model">is.norme.cdc</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="niveau" optional="show"/>
+                <field name="reference" optional="show"/>
+                <field name="designation" optional="show"/>
+                <field name="sujet" optional="show"/>
+                <field name="createur" optional="show"/>
+                <field name="indice" optional="show"/>
+                <field name="etat" optional="show"/>
+                <field name="date" optional="show"/>
+                <field name="datepg" optional="show"/>
+                <field name="date_prochaine_alerte" optional="show"/>
+                <field name="date_verif" optional="show"/>
+                <field name="duree_conserv" optional="show"/>
+                <field name="lieu_physique" optional="show"/>
+                <field name="lieu_info" optional="show"/>
+                <field name="lien_internet" optional="show"/>
+                <field name="attachment_ids" optional="show"   widget="many2many_binary"/>
+                <field name="attachment_names" optional="hide"/>
+                <field name="create_date"      optional="hide" string="Créé le"/>
+                <field name="create_uid"       optional="hide" string="Créé par"/>
+                <field name="write_date"       optional="hide" string="Modifié le"/>
+                <field name="write_uid"        optional="hide" string="Modifié par"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_is_norme_cdc_search" model="ir.ui.view">
+        <field name="name">is.norme.cdc.search</field>
+        <field name="model">is.norme.cdc</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="reference"/>
+                <field name="designation"/>
+                <field name="niveau"/>
+                <field name="createur"/>
+                <field name="attachment_names"/>
+                <field name="etat"/>
+                <separator/>
+                <filter string="Actif"   name="active"   domain="[('active', '=', True)]"/>
+                <filter string="Archivé" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Alerte prochaine" name="alerte_prochaine" 
+                        domain="[('date_prochaine_alerte', '!=', False), ('date_prochaine_alerte', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Niveau" name="group_niveau" domain="[]" context="{'group_by': 'niveau'}"/>
+                    <filter string="État" name="group_etat" domain="[]" context="{'group_by': 'etat'}"/>
+                    <filter string="Créateur" name="group_createur" domain="[]" context="{'group_by': 'createur'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_is_norme_cdc" model="ir.actions.act_window">
+        <field name="name">Normes CDC</field>
+        <field name="res_model">is.norme.cdc</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

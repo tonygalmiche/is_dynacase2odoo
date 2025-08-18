@@ -94,3 +94,9 @@ access_is_gantt_pdf_excel,access_is_gantt_pdf_excel,model_is_gantt_pdf_excel,bas
 access_is_gantt_pdf_excel_gest,access_is_gantt_pdf_excel_gest,model_is_gantt_pdf_excel,is_plastigray16.is_chef_projet_group,1,1,1,1
 
 access_is_demande_essai,access_is_demande_essai,model_is_demande_essai,base.group_user,1,1,1,0
+
+
+access_is_norme_cdc,access_is_norme_cdc,model_is_norme_cdc,base.group_user,1,0,0,0
+access_is_norme_cdc_gestionnaire,access_is_norme_cdc_gestionnaire,model_is_norme_cdc,is_gestionnaire_norme_cdc_group,1,1,1,0
+
+
