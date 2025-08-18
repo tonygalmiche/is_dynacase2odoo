@@ -27,6 +27,7 @@ class IsNormeCdc(models.Model):
     lien_internet            = fields.Char(string='Lien vers Internet',                           tracking=True)
     attachment_ids           = fields.Many2many("ir.attachment", "is_norme_cdc_attachment_rel", "norme_id", "att_id", string="Fichiers")
     attachment_names         = fields.Text(string='Noms des fichiers', compute='_compute_attachment_names', store=True, tracking=True)
+    dynacase_id              = fields.Integer(string="Id Dynacase", index=True, copy=False)
 
 
     @api.depends('attachment_ids.name')
@@ -34,6 +35,16 @@ class IsNormeCdc(models.Model):
         for record in self:
             if record.attachment_ids:
                 names = record.attachment_ids.mapped('name')
-                record.attachment_names = ', '.join(names)
+                record.attachment_names = '\n'.join(names)
             else:
                 record.attachment_names = False
+
+
+    def lien_vers_dynacase_action(self):
+        for obj in self:
+            url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
+            return {
+                'type' : 'ir.actions.act_url',
+                'url': url,
+                'target': 'new',
+            }

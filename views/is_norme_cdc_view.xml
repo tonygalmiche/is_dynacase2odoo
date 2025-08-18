@@ -31,7 +31,7 @@
                     </group>
                     <group string="Pièces jointes">
                         <field name="attachment_ids"   widget="many2many_binary"/>
-                        <field name="attachment_names"/>
+                        <field name="attachment_names" invisible="1"/>
                     </group>
                 </sheet>
                 <div class="oe_chatter">
@@ -57,17 +57,23 @@
                 <field name="date" optional="show"/>
                 <field name="datepg" optional="show"/>
                 <field name="date_prochaine_alerte" optional="show"/>
-                <field name="date_verif" optional="show"/>
-                <field name="duree_conserv" optional="show"/>
-                <field name="lieu_physique" optional="show"/>
-                <field name="lieu_info" optional="show"/>
-                <field name="lien_internet" optional="show"/>
-                <field name="attachment_ids" optional="show"   widget="many2many_binary"/>
-                <field name="attachment_names" optional="hide"/>
+                <field name="date_verif"       optional="show"/>
+                <field name="duree_conserv"    optional="show"/>
+                <field name="lieu_physique"    optional="show"/>
+                <field name="lieu_info"        optional="show"/>
+                <field name="lien_internet"    optional="show"/>
+                <field name="attachment_names" optional="show"/>
+                <field name="attachment_ids"   optional="hide"   widget="many2many_binary"/>
                 <field name="create_date"      optional="hide" string="Créé le"/>
                 <field name="create_uid"       optional="hide" string="Créé par"/>
                 <field name="write_date"       optional="hide" string="Modifié le"/>
                 <field name="write_uid"        optional="hide" string="Modifié par"/>
+                <field name="dynacase_id"      optional="hide" groups="base.group_system"/>
+                <button
+                    title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"
+                    attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                    groups="base.group_system"
+                />
             </tree>
         </field>
     </record>
