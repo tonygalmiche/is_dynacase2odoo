@@ -279,10 +279,10 @@ class is_demande_essai(models.Model):
                 to_ids.append(obj.user_id)
                 to_ids.append(obj.resp_metrologie_id)
             if obj.state=='termine':
-                to_ids = self.env['is.liste.diffusion.mail'].get_users('is.demande.essai','termine')
+                #to_ids = self.env['is.liste.diffusion.mail'].get_users('is.demande.essai','termine')
                 to_ids.append(obj.user_id)
-                to_ids.append(obj.resp_essai_id)
-                to_ids.append(obj.resp_metrologie_id)
+                #to_ids.append(obj.resp_essai_id)
+                #to_ids.append(obj.resp_metrologie_id)
             obj.mail_to_ids = self.env['is.liste.diffusion.mail'].get_users_ids(users=to_ids)
             obj.mail_cc_ids = self.env['is.liste.diffusion.mail'].get_users_ids(users=cc_ids)
 
