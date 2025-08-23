@@ -122,6 +122,9 @@ class is_fiche_codification(models.Model):
 
     def vers_transmis_action(self):
         for obj in self:
+            for line in obj.decomposition_ids:
+                if line.delta!=0:
+                    raise ValidationError("Le prix de vente doit être égale à la somme de sa décomposition (delta=%s)"%line.delta)                
             obj.state='transmis'
             obj.envoi_mail()
 
@@ -248,3 +251,12 @@ class is_fiche_codification_decomposition_line(models.Model):
     amt_moule          = fields.Float("Amt moule", digits=(12, 4))
     surcout_pre_serie  = fields.Float("Surcôut pré-série", digits=(12, 4))
     prix_vente         = fields.Float("Prix vente", digits=(12, 4))
+    delta              = fields.Float("Delta", digits=(12, 4), compute='_compute_delta', store=False)
+
+    @api.depends('part_mat', 'part_comp', 'part_emb', 'va_inj', 'va_ass', 'frais_port', 'logis', 'amt_moule', 'surcout_pre_serie', 'prix_vente')
+    def _compute_delta(self):
+        for obj in self:
+            delta = obj.prix_vente - obj.part_mat - obj.part_comp - obj.part_emb - obj.va_inj - obj.va_ass - obj.frais_port - obj.logis - obj.amt_moule- obj.surcout_pre_serie
+            obj.delta = round(delta,4)
+
+

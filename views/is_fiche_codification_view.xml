@@ -114,7 +114,7 @@
                             </tree>
                         </field>
                         <field name="decomposition_ids" nolabel="1" colspan="2" attrs="{'readonly': [('state','!=','brouillon')]}">
-                            <tree editable="bottom">
+                            <tree editable="bottom" decoration-danger="delta!=0">
                                 <field name="part_mat"/>
                                 <field name="part_comp"/>
                                 <field name="part_emb"/>
@@ -125,6 +125,7 @@
                                 <field name="amt_moule"/>
                                 <field name="surcout_pre_serie"/>
                                 <field name="prix_vente"/>
+                                <field name="delta"/>
                             </tree>
                         </field>
                         <group string="Pièces jointes">
