@@ -26,6 +26,7 @@
                         <button 
                             string="Actualiser" name="actualiser_action" 
                             type="object"
+                            groups="is_dynacase2odoo.is_gestionnaire_facture_outillage_group"
                         />
                 </header>
                     <sheet>
