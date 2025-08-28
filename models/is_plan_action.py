@@ -116,9 +116,15 @@ class is_plan_action(models.Model):
     num_int             = fields.Integer('Numéro interne', tracking=True)
     state               = fields.Selection(_STATE, "Etat", default=_STATE[0][0], tracking=True)
     active              = fields.Boolean('Actif', default=True, tracking=True)
-    client_id           = fields.Many2one('res.partner', 'Client', tracking=True, domain=[("is_company","=",True), ("customer","=",True)])
+    client_id           = fields.Many2one(
+        'res.partner',
+        'Client',
+        tracking=True,
+        domain=[("is_company", "=", True), ("customer", "=", True), ("is_code", "like", "90%")]
+    )
     moule_id            = fields.Many2one('is.mold', 'Moule', tracking=True)
     dossierf_id         = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
+    designation         = fields.Char(string="Désignation Moule/Dossier F", compute="_compute_designation", store=True, readonly=True)
     pilot_id            = fields.Many2one('res.users', 'Pilote', required=True, default=lambda self: self.env.uid, tracking=True)
     group_id            = fields.Many2one('res.groups', "Groupe d'accès en consultation", tracking=True)
     obj                 = fields.Text('Objectif', tracking=True)
@@ -130,6 +136,17 @@ class is_plan_action(models.Model):
     dynacase_id         = fields.Integer(string="Id Dynacase", index=True, copy=False)
     responsables_ids    = fields.Many2many("res.users", string="Responsables des actions", compute="_compute_responsables_ids", store=True, readonly=True)
     readonly_all        = fields.Boolean(string="Lecture seule", compute="_compute_readonly_all", store=False)
+
+
+    @api.depends('moule_id', 'dossierf_id')
+    def _compute_designation(self):
+        for record in self:
+            if record.moule_id:
+                record.designation = record.moule_id.designation
+            elif record.dossierf_id:
+                record.designation = record.dossierf_id.designation
+            else:
+                record.designation = ''
 
 
     @api.depends('is_action_ids.resp_id')

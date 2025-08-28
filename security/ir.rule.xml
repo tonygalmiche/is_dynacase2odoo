@@ -51,6 +51,16 @@
         - Modifier : pilot_id, is_gestionnaire_plan_action_group
         - Voir : La liste des responsables des actions + group_id
         -->
+        <record id="is_plan_action_createur_rule" model="ir.rule">
+            <field name="name">Accès en modification au créateur</field>
+            <field name="model_id" ref="model_is_plan_action"/>
+            <field name="domain_force">[('create_uid','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+        </record>
         <record id="is_plan_action_pilot_rule" model="ir.rule">
             <field name="name">Accès en modification au pilote</field>
             <field name="model_id" ref="model_is_plan_action"/>
@@ -100,6 +110,16 @@
         - Modifier : pilot_id, resp_id, is_gestionnaire_plan_action_group
         - Voir : group_id
         -->
+        <record id="is_action_createur_rule" model="ir.rule">
+            <field name="name">Accès en modification au créateur</field>
+            <field name="model_id" ref="model_is_action"/>
+            <field name="domain_force">[('create_uid','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+        </record>
         <record id="is_action_pilot_rule" model="ir.rule">
             <field name="name">Accès en modification au pilote</field>
             <field name="model_id" ref="model_is_action"/>
