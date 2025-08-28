@@ -35,3 +35,4 @@ from . import is_liste_diffusion_mail
 from . import is_facture_outillage
 from . import is_demande_essai
 from . import is_norme_cdc
+from . import is_fnc

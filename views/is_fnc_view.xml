@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<!-- Form view -->
+	<record id="view_is_fnc_form" model="ir.ui.view">
+		<field name="name">is.fnc.form</field>
+		<field name="model">is.fnc</field>
+		<field name="arch" type="xml">
+			<form>
+				<sheet>
+					<notebook>
+						<page string="Description">
+                            <group>
+                                <group>
+                                    <field name="type_non_conformite"/>
+                                    <field name="num_non_conformite"/>
+                                    <field name="date_detection"/>
+                                    <field name="client"/>
+                                    <field name="site"/>
+                                    <field name="num_reclamation"/>
+                                    <field name="contact_client"/>
+                                    <field name="mail_commercial"/>
+                                </group>
+                            </group>
+                            <group string="Liste des produits concernés">
+                                <field name="produit_ids" context="{'default_fnc_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="code_produit"/>
+                                        <field name="num_moule"/>
+                                        <field name="designation"/>
+                                        <field name="projet"/>
+                                        <field name="ref_client"/>
+                                        <field name="prix_vente"/>
+                                        <field name="qt_non_conforme"/>
+                                        <field name="qt_retournee"/>
+                                        <field name="qt_detruite"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="famille_article"/>
+                                    <field name="total_non_conforme"/>
+                                    <field name="description_probleme"/>
+                                    <field name="type_defaut"/>
+                                    <field name="tracabilite"/>
+                                    <field name="reclamation_recurrente"/>
+                                </group>
+                            </group>
+                        </page>
+						<page string="Action immédiate">
+							<group>
+								<group>
+									<field name="bl_retour"/>
+								</group>
+                            </group>
+                            <group string="Actions">
+                                <field name="action_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2" >
+                                    <tree editable="bottom">
+                                        <field name="tri_stock"/>
+                                        <field name="action_stock"/>
+                                        <field name="responsable_tri"/>
+                                        <field name="date_tri"/>
+                                        <field name="nb_non_conforme"/>
+                                        <field name="cout_tri"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group string="Actions curatives">
+                                <field name="action_curative_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2" >
+                                    <tree editable="bottom">
+                                        <field name="cur_action"/>
+                                        <field name="cur_responsable"/>
+                                        <field name="cur_delai"/>
+                                        <field name="cur_date"/>
+                                    </tree>
+                                </field>
+                            </group>
+							<group>
+								<group>
+									<field name="reponse"/>
+								</group>
+                            </group>
+						</page>
+						<page string="Analyse de la non-conformité">
+							<field name="cause_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2">
+								<tree editable="bottom">
+									<field name="cause"/>
+									<field name="type"/>
+									<field name="type_cause"/>
+									<field name="contribution"/>
+								</tree>
+							</field>
+                            <group>
+                                <group>
+                                    <field name="equipe"/>
+                                    <field name="operateur"/>
+                                    <field name="presse"/>
+                                    <field name="origine_defaut"/>
+                                    <field name="decision"/>
+                                    <field name="date_reponse_4d"/>
+                                </group>
+                            </group>
+						</page>
+						<page string="Plan d'actions">
+                            <group>
+                                <field name="id" invisible="1"/>
+                            </group>
+                            <group string="Actions correctives">
+                                <field name="action_corrective_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2">
+                                    <tree editable="bottom">
+                                        <field name="cor_action"/>
+                                        <field name="cor_responsable"/>
+                                        <field name="cor_delai"/>
+                                        <field name="cor_date"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group string="Actions préventives">
+                                <field name="action_preventive_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2">
+                                    <tree editable="bottom">
+                                        <field name="pre_action"/>
+                                        <field name="pre_responsable"/>
+                                        <field name="pre_delai"/>
+                                        <field name="pre_date"/>
+                                    </tree>
+                                </field>
+                            </group>
+
+
+                            <group string="Mesure de l'efficacité des actions">
+                                <field name="action_efficacite_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2">
+                                    <tree editable="bottom">
+                                        <field name="eff_action"/>
+                                        <field name="eff_responsable"/>
+                                        <field name="eff_delai"/>
+                                        <field name="eff_date"/>
+                                        <field name="eff_conclusion"/>
+                                    </tree>
+                                </field>
+                            </group>                            
+                            <group string="8D et modification documentation">
+                                <group>
+                                    <field name="date_8d"/>
+                                    <field name="doc_amdec"/>
+                                    <field name="doc_plan_surveillance"/>
+                                    <field name="doc_moyen_controle"/>
+                                </group>
+                                <group>
+                                    <field name="doc_mode_operatoire"/>
+                                    <field name="doc_plans"/>
+                                    <field name="doc_autres"/>
+                                    <field name="date_cloture"/>
+                                </group>
+                            </group>
+						</page>
+						<page string="Coûts">
+
+                            <group>
+                                <field name="id" invisible="1"/>
+                            </group>
+
+
+							<group string="Coût comptable (Service Financier)">
+								<field name="avoir_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2">
+									<tree editable="bottom">
+										<field name="num_avoir"/>
+										<field name="date_avoir"/>
+										<field name="montant_avoir"/>
+									</tree>
+								</field>
+							</group>
+							<group>
+								<group>
+									<field name="total_avoir"/>
+									<field name="date_bilan"/>
+									<field name="situation_bilan"/>
+								</group>
+                            </group>
+                            <group string="Autres coûts non qualité">
+								<field name="autre_cout_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2">
+									<tree editable="bottom">
+										<field name="type_cout"/>
+										<field name="montant"/>
+									</tree>
+								</field>
+							</group>
+                            <group>
+								<group>
+									<field name="cout_facture"/>
+                                    <field name="cout_piece"/>
+									<field name="cout_total_tri"/>
+									<field name="total_autrecouts"/>
+									<field name="cout_total"/>
+									<field name="total_perte"/>
+								</group>
+							</group>
+						</page>
+                        <!-- 
+						<page string="Action">
+							<group>
+								<group>
+									<field name="nb_retournees"/>
+									<field name="nb_detruites"/>
+								</group>
+							</group>
+						</page> 
+                        -->
+					</notebook>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+	<!-- Tree view -->
+	<record id="view_is_fnc_tree" model="ir.ui.view">
+		<field name="name">is.fnc.tree</field>
+		<field name="model">is.fnc</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="num_non_conformite" optional="show"/>
+				<field name="date_detection" optional="show"/>
+				<field name="type_non_conformite" optional="show"/>
+				<field name="client" optional="show"/>
+				<field name="site" optional="show"/>
+				<field name="decision" optional="show"/>
+				<field name="date_cloture" optional="show"/>
+				<field name="total_non_conforme" optional="show"/>
+				<field name="cout_total" optional="show"/>
+				<field name="total_perte" optional="show"/>
+				<field name="create_date" optional="hide"/>
+			</tree>
+		</field>
+	</record>
+
+	<!-- Search view -->
+	<record id="view_is_fnc_search" model="ir.ui.view">
+		<field name="name">is.fnc.search</field>
+		<field name="model">is.fnc</field>
+		<field name="arch" type="xml">
+			<search>
+				<field name="num_non_conformite"/>
+				<field name="client"/>
+				<field name="site"/>
+				<field name="type_non_conformite"/>
+				<field name="decision"/>
+				<field name="date_detection"/>
+				<field name="date_cloture"/>
+				<separator/>
+				<group expand="0" string="Grouper par">
+					<filter string="Type" name="group_type" context="{'group_by':'type_non_conformite'}"/>
+					<filter string="Client" name="group_client" context="{'group_by':'client'}"/>
+					<filter string="Site" name="group_site" context="{'group_by':'site'}"/>
+					<filter string="Décision" name="group_decision" context="{'group_by':'decision'}"/>
+				</group>
+			</search>
+		</field>
+	</record>
+
+	<!-- Action -->
+	<record id="is_fnc_action" model="ir.actions.act_window">
+		<field name="name">FNC</field>
+		<field name="res_model">is.fnc</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+</odoo>

@@ -101,3 +101,15 @@ access_is_norme_cdc,access_is_norme_cdc,model_is_norme_cdc,base.group_user,1,0,0
 access_is_norme_cdc_gestionnaire,access_is_norme_cdc_gestionnaire,model_is_norme_cdc,is_gestionnaire_norme_cdc_group,1,1,1,0
 
 
+access_is_fnc,access_is_fnc,model_is_fnc,base.group_user,1,1,1,1
+access_is_fnc_produit,access_is_fnc_produit,model_is_fnc_produit,base.group_user,1,1,1,1
+access_is_fnc_action,access_is_fnc_action,model_is_fnc_action,base.group_user,1,1,1,1
+access_is_fnc_action_curative,access_is_fnc_action_curative,model_is_fnc_action_curative,base.group_user,1,1,1,1
+access_is_fnc_action_corrective,access_is_fnc_action_corrective,model_is_fnc_action_corrective,base.group_user,1,1,1,1
+access_is_fnc_action_preventive,access_is_fnc_action_preventive,model_is_fnc_action_preventive,base.group_user,1,1,1,1
+access_is_fnc_action_efficacite,access_is_fnc_action_efficacite,model_is_fnc_action_efficacite,base.group_user,1,1,1,1
+access_is_fnc_avoir,access_is_fnc_avoir,model_is_fnc_avoir,base.group_user,1,1,1,1
+access_is_fnc_autre_cout,access_is_fnc_autre_cout,model_is_fnc_autre_cout,base.group_user,1,1,1,1
+access_is_fnc_cause,access_is_fnc_cause,model_is_fnc_cause,base.group_user,1,1,1,1
+
+

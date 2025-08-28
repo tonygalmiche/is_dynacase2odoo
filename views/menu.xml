@@ -470,6 +470,13 @@
         />
 
 
+        <!-- Gestion de la qualité / FNC -->
+        <menuitem 
+            name="FNC" id="is_fnc_menu" sequence="40"
+            parent="gestion_qualite_menu" action="is_fnc_action"
+        />
+
+
 
 
 
