@@ -26,12 +26,12 @@ class is_plan_amelioration_continu(models.Model):
     type                = fields.Selection([('pac', 'PAC'), ('revue', 'Revue')], "Type", required=True, tracking=True)
     createur_id         = fields.Many2one('res.users', 'Créateur', required=True, default=lambda self: self.env.uid, tracking=True)
     site_id             = fields.Many2one('is.database', "Site", tracking=True)
-    #service_id         = fields.Many2one('res.groups', "Service", tracking=True)
-    service_id          = fields.Many2one(related="createur_id.is_service_id")
+    service_id          = fields.Many2one('is.service', "Service", tracking=True)
+    #service_id          = fields.Many2one(related="createur_id.is_service_id")
     processus_id        = fields.Char('Processus', tracking=True)
     annee               = fields.Char('Année', default=lambda self: datetime.now().year, store=True, tracking=True)
     mois                = fields.Char('Mois', default=lambda self: str(datetime.now().month) if datetime.now().month > 9 else '0' + str(datetime.now().month), tracking=True)
-    groupe_acces_id     = fields.Many2one('res.groups', "Groupe d'accès en consultation", tracking=True)
+    groupe_acces_id     = fields.Many2one('res.groups', "Groupe d'accès en consultation", tracking=True, readonly=True)
     plan_action_ids     = fields.Many2many('is.plan.action','is_plan_amelioration_continu_plan_action_rel','plan_amelioration_continu_id','plan_action_id', string="Plan d'actions", tracking=True)
     dynacase_id         = fields.Integer(string="Id Dynacase", index=True, copy=False)
     pj_ids              = fields.One2many("is.plan.amelioration.continu.pj", "pac_id", string="Pièce jointe")
@@ -39,6 +39,23 @@ class is_plan_amelioration_continu(models.Model):
     
     # Champ calculé pour détecter si l'utilisateur peut modifier
     readonly_all        = fields.Boolean(string="Lecture seule", compute="_compute_readonly_all", store=False)
+
+
+
+
+    @api.onchange('site_id')
+    def _onchange_site_id_set_groupe_acces(self):
+        """Si le site est "Siège", renseigne automatiquement le groupe d'accès
+        en consultation avec le groupe nommé 'CODIR'. Sinon, vide le champ.
+
+        Implémenté à la demande: mise à jour via onchange uniquement.
+        """
+        for rec in self:
+            groupe = False
+            # On teste sur le libellé du site
+            if rec.site_id and (rec.site_id.name or '').strip().lower() == 'siège':
+                groupe = rec.env['res.groups'].search([('name', '=', 'CODIR')], limit=1)
+            rec.groupe_acces_id = groupe.id if groupe else False
 
 
     @api.depends('createur_id')

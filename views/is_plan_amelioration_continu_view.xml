@@ -34,7 +34,7 @@
                                 <field name="mois" attrs="{'readonly': [('readonly_all', '=', True)]}"/>
                                 <field name="numero" readonly="1"/>
                                 <field name="createur_id" readonly="1"/>
-                                <field name="groupe_acces_id" attrs="{'readonly': [('readonly_all', '=', True)]}"/>
+                                <field name="groupe_acces_id" force_save="1"/>
                                 <field name="pj_noms" invisible="1"/>
                             </group>
                         </group>
