@@ -49,7 +49,7 @@
                                     <th class="text-end">Total</th>
                                 </tr>
                             </thead>
-                            <tboby>
+                            <tbody>
                                 <tr t-foreach="o.decomposition_prix_ids" t-as="l">
                                     <td><span t-field="l.rc_price_comp_article"/></td>
                                     <td><span t-field="l.rc_reference_client"/></td>
@@ -69,7 +69,7 @@
                                     <td class="text-end"><span t-field="l.rc_sell_price"/></td>
                                     <td class="text-end"><span t-field="l.rc_total"/></td>
                                 </tr>
-                            </tboby>
+                            </tbody>
                         </table>
 
                         <h2>Données de fabrication</h2>
@@ -81,15 +81,61 @@
                             <tr><th>Tonnage presse vendu</th><td><span t-field="o.rc_tonnage_presse_vendu"/></td></tr>
                             <tr><th>Stock de sécurité</th><td><span t-field="o.rc_stock_securite"/></td></tr>
                             <tr><th>Stock de sécurité commentaire</th><td><span t-field="o.rc_stock_securite_commentaire"/></td></tr>
-                           
                         </table>
-
-                        <h2>Dossier injection</h2>
-                        <table style="width:50%;border:0pt">
-                            <tr><th style="width:60%">Process et site de fabrication vendu</th><td><span t-field="o.rc_dfi_process_fab"/></td></tr>
-                            <tr><th>Schéma de flux vendu (Logistique)</th><td><span t-field="o.rc_dfi_schema_lieu_fab"/></td></tr>
-                            <tr><th>Classe commerciale</th><td><span t-field="o.rc_dfi_classe_comrc"/></td></tr>
+                        <t t-if="o.rc_doc_moule_assemblage=='c1'">
+                            <h2>Dossier assemblage</h2>
+                            <table style="width:50%;border:0pt">
+                                <tr><th style="width:40%">Descriptif du process et site de fabrication vendu</th><td><span t-field="o.rc_dfe_desc_proc"/></td></tr>
+                                <tr><th>Schéma de flux vendu (Logistique) </th><td><span t-field="o.rc_dfe_sch_lieu_fab"/></td></tr>
+                            </table>
+                            <h2>Versions Dossier F</h2>
+                            <table style="width:100%;border:0pt" class="is_revue_de_contrat_table">
+                            <thead>
+                                <tr>
+                                    <th>Version</th>
+                                    <th>Composants</th>
+                                    <th>Comp + prix vendu</th>
+                                    <th class="text-end">Cycle/pièce</th>
+                                    <th class="text-end">MOD poste</th>
+                                    <th class="text-end">Tx rebut (%)</th>
+                                    <th>Emballage</th>
+                                    <th>Sous-traitance</th>
+                                    <th class="text-end">Prix ST</th>
+                                    <th class="text-end">Qt/carton</th>
+                                    <th class="text-end">Qt/palette</th>
+                                    <th class="text-end">Lot liv</th>
+                                    <th class="text-end">Multiple</th>
+                                    <th class="text-end">Lot fab</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.dfe_version_ids" t-as="l">
+                                    <td><span t-field="l.rc_dfe_version"/></td>
+                                    <td><span t-field="l.rc_dfe_comp"/></td>
+                                    <td><span t-field="l.rc_dfe_comp_pri_vendu"/></td>
+                                    <td class="text-end"><span t-field="l.rc_dfe_cycle"/></td>
+                                    <td class="text-end"><span t-field="l.rc_dfe_mod"/></td>
+                                    <td class="text-end"><span t-field="l.rc_dfe_taux_rebut"/></td>
+                                    <td><span t-field="l.rc_dfe_desc_emaballage"/></td>
+                                    <td><span t-field="l.rc_dfe_sous_traitance"/></td>
+                                    <td class="text-end"><span t-field="l.rc_dfe_sous_traitance_prix"/></td>
+                                    <td class="text-end"><span t-field="l.rc_dfe_qte_carton"/></td>
+                                    <td class="text-end"><span t-field="l.rc_dfe_qte_palette"/></td>
+                                    <td class="text-end"><span t-field="l.rc_dfe_lot_livraison"/></td>
+                                    <td class="text-end"><span t-field="l.rc_dfe_multiple_liv"/></td>
+                                    <td class="text-end"><span t-field="l.rc_dfe_lot_fab"/></td>
+                                </tr>
+                            </tbody>
                         </table>
+                        </t>
+                        <t t-if="o.rc_doc_moule_assemblage!='c1'">
+                            <h2>Dossier injection</h2>
+                            <table style="width:50%;border:0pt">
+                                <tr><th style="width:60%">Process et site de fabrication vendu</th><td><span t-field="o.rc_dfi_process_fab"/></td></tr>
+                                <tr><th>Schéma de flux vendu (Logistique)</th><td><span t-field="o.rc_dfi_schema_lieu_fab"/></td></tr>
+                                <tr><th>Classe commerciale</th><td><span t-field="o.rc_dfi_classe_comrc"/></td></tr>
+                            </table>
+                        </t>
 
                         <h2>Spécificités et Éléments qualités</h2>
                         <table style="width:50%;border:0pt">
