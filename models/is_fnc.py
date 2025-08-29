@@ -6,16 +6,32 @@ class IsFNC(models.Model):
 	_name = "is.fnc"
 	_description = "Fiche Non-Conformité (FNC)"
 	_order = "id desc"
+	_inherit = ["mail.thread", "mail.activity.mixin"]
+
+	# Archivage standard Odoo
+	active = fields.Boolean(string="Actif", default=True, tracking=True)
+
+	# Intégration Dynacase
+	dynacase_id = fields.Integer(string="Id Dynacase", index=True, copy=False)
+
+	def lien_vers_dynacase_action(self):
+		for obj in self:
+			url = "https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s" % obj.dynacase_id
+			return {
+				"type": "ir.actions.act_url",
+				"url": url,
+				"target": "new",
+			}
 
 	# ------------------------------------------------------------
 	# Description (fr_description)
 	# ------------------------------------------------------------
-	createur = fields.Char(string="Créateur de la FNC")
-	createurid = fields.Integer(string="Créateur de la FNC Id", index=True)
+	createur = fields.Char(string="Créateur de la FNC", tracking=True)
+	createurid = fields.Integer(string="Créateur de la FNC Id", index=True, tracking=True)
 
-	soc = fields.Char(string="Site")
-	socid = fields.Integer(string="ID du site", index=True)
-	soccode = fields.Integer(string="Code du site")
+	soc = fields.Char(string="Site", tracking=True)
+	socid = fields.Integer(string="ID du site", index=True, tracking=True)
+	soccode = fields.Integer(string="Code du site", tracking=True)
 
 	type_non_conformite = fields.Selection(
 		selection=[
@@ -28,24 +44,25 @@ class IsFNC(models.Model):
 			("COMEX", "COMEX"),
 		],
 		string="Type de non-conformité",
+		tracking=True,
 	)
-	num_non_conformite = fields.Char(string="N° de non-conformité PG")
-	date_detection = fields.Date(string="Date de détection")
+	num_non_conformite = fields.Char(string="N° de non-conformité PG", tracking=True)
+	date_detection = fields.Date(string="Date de détection", tracking=True)
 
-	client = fields.Char(string="Client émetteur")
-	clientid = fields.Integer(string="Client émetteur ID", index=True)
+	client = fields.Char(string="Client émetteur", tracking=True)
+	clientid = fields.Integer(string="Client émetteur ID", index=True, tracking=True)
 
-	mail_commercial = fields.Char(string="Mail du commercial")
+	mail_commercial = fields.Char(string="Mail du commercial", tracking=True)
 
-	site = fields.Char(string="Site émetteur")
-	siteid = fields.Integer(string="Site émetteur ID", index=True)
+	site = fields.Char(string="Site émetteur", tracking=True)
+	siteid = fields.Integer(string="Site émetteur ID", index=True, tracking=True)
 
-	num_reclamation = fields.Char(string="N° de réclamation client")
-	contact_client = fields.Char(string="Contact Client")
+	num_reclamation = fields.Char(string="N° de réclamation client", tracking=True)
+	contact_client = fields.Char(string="Contact Client", tracking=True)
 
-	famille_article = fields.Char(string="Famille article")
-	total_non_conforme = fields.Float(string="Total pièces non conformes", digits=(16, 2))
-	description_probleme = fields.Char(string="Description du problème")
+	famille_article = fields.Char(string="Famille article", tracking=True)
+	total_non_conforme = fields.Float(string="Total pièces non conformes", digits=(16, 2), tracking=True)
+	description_probleme = fields.Char(string="Description du problème", tracking=True)
 	type_defaut = fields.Selection(
 		selection=[
 			("", ""),
@@ -82,28 +99,30 @@ class IsFNC(models.Model):
 			("Zone de flux", "Zone de flux"),
 		],
 		string="Type de défaut",
+		tracking=True,
 	)
-	tracabilite = fields.Char(string="Traçabilité (date fab° + OF + N°OP)")
+	tracabilite = fields.Char(string="Traçabilité (date fab° + OF + N°OP)", tracking=True)
 	reclamation_recurrente = fields.Selection(
 		selection=[("", ""), ("OUI", "OUI"), ("NON", "NON")],
 		string="Réclamation récurrente",
+		tracking=True,
 	)
 
 	# ------------------------------------------------------------
 	# Action (fr_action)
 	# ------------------------------------------------------------
-	nb_retournees = fields.Float(string="Nbre de pièces retournées", digits=(16, 2))
-	nb_detruites = fields.Float(string="Nbre de pièces détruites", digits=(16, 2))
-	bl_retour = fields.Char(string="BL de retour")
-	reponse = fields.Date(string="Date 1ère réponse")
+	nb_retournees = fields.Float(string="Nbre de pièces retournées", digits=(16, 2), tracking=True)
+	nb_detruites = fields.Float(string="Nbre de pièces détruites", digits=(16, 2), tracking=True)
+	bl_retour = fields.Char(string="BL de retour", tracking=True)
+	reponse = fields.Date(string="Date 1ère réponse", tracking=True)
 
 	# ------------------------------------------------------------
 	# Analyse (fr_analyse)
 	# ------------------------------------------------------------
-	equipe = fields.Char(string="Équipe")
-	operateur = fields.Char(string="Opérateur")
-	presse = fields.Char(string="Presse")
-	presseid = fields.Integer(string="Presse ID", index=True)
+	equipe = fields.Char(string="Équipe", tracking=True)
+	operateur = fields.Char(string="Opérateur", tracking=True)
+	presse = fields.Char(string="Presse", tracking=True)
+	presseid = fields.Integer(string="Presse ID", index=True, tracking=True)
 	origine_defaut = fields.Selection(
 		selection=[
 			("", ""),
@@ -118,6 +137,7 @@ class IsFNC(models.Model):
 			("Développement", "Développement"),
 		],
 		string="Origine du défaut",
+		tracking=True,
 	)
 	decision = fields.Selection(
 		selection=[
@@ -127,13 +147,14 @@ class IsFNC(models.Model):
 			("Annulée", "Annulée"),
 		],
 		string="Décision",
+		tracking=True,
 	)
-	date_reponse_4d = fields.Date(string="Date réponse 4D")
+	date_reponse_4d = fields.Date(string="Date réponse 4D", tracking=True)
 
 	# ------------------------------------------------------------
 	# Plan d'action (fr_planaction)
 	# ------------------------------------------------------------
-	date_8d = fields.Date(string="Date réponse 8D")
+	date_8d = fields.Date(string="Date réponse 8D", tracking=True)
 
 	# ------------------------------------------------------------
 	# 8D (fr_8D)
@@ -141,44 +162,50 @@ class IsFNC(models.Model):
 	doc_amdec = fields.Selection(
 		selection=[("", ""), ("OUI", "OUI"), ("NON", "NON")],
 		string="Modification AMDEC",
+		tracking=True,
 	)
 	doc_plan_surveillance = fields.Selection(
 		selection=[("", ""), ("OUI", "OUI"), ("NON", "NON")],
 		string="Modification Plans de surveillance, fiche de contrôle",
+		tracking=True,
 	)
 	doc_moyen_controle = fields.Selection(
 		selection=[("", ""), ("OUI", "OUI"), ("NON", "NON")],
 		string="Modification Moyens de contrôle, gabarits",
+		tracking=True,
 	)
 	doc_mode_operatoire = fields.Selection(
 		selection=[("", ""), ("OUI", "OUI"), ("NON", "NON")],
 		string="Modification Mode opératoire",
+		tracking=True,
 	)
 	doc_plans = fields.Selection(
 		selection=[("", ""), ("OUI", "OUI"), ("NON", "NON")],
 		string="Modification Plans",
+		tracking=True,
 	)
 	doc_autres = fields.Selection(
 		selection=[("", ""), ("OUI", "OUI"), ("NON", "NON")],
 		string="Modification Autres",
+		tracking=True,
 	)
-	date_cloture = fields.Date(string="Date de clôture")
+	date_cloture = fields.Date(string="Date de clôture", tracking=True)
 
 	# ------------------------------------------------------------
 	# Coûts / Bilan
 	# ------------------------------------------------------------
-	total_avoir = fields.Float(string="Total des avoirs", digits=(16, 2))
+	total_avoir = fields.Float(string="Total des avoirs", digits=(16, 2), tracking=True)
 
-	date_bilan = fields.Date(string="Date Bilan")
-	situation_bilan = fields.Char(string="Décision bilan")
+	date_bilan = fields.Date(string="Date Bilan", tracking=True)
+	situation_bilan = fields.Char(string="Décision bilan", tracking=True)
 
-	cout_piece = fields.Float(string="Total coûts pièces", digits=(16, 2))
-	cout_total_tri = fields.Float(string="Total coûts tri", digits=(16, 2))
-	total_autrecouts = fields.Float(string="Total autres coûts non-qualité", digits=(16, 2))
+	cout_piece = fields.Float(string="Total coûts pièces", digits=(16, 2), tracking=True)
+	cout_total_tri = fields.Float(string="Total coûts tri", digits=(16, 2), tracking=True)
+	total_autrecouts = fields.Float(string="Total autres coûts non-qualité", digits=(16, 2), tracking=True)
 
-	cout_total = fields.Float(string="Coût TOTAL", digits=(16, 2))
-	cout_facture = fields.Float(string="Coût facturé FIF", digits=(16, 2))
-	total_perte = fields.Float(string="TOTAL coût non-qualité", digits=(16, 2))
+	cout_total = fields.Float(string="Coût TOTAL", digits=(16, 2), tracking=True)
+	cout_facture = fields.Float(string="Coût facturé FIF", digits=(16, 2), tracking=True)
+	total_perte = fields.Float(string="TOTAL coût non-qualité", digits=(16, 2), tracking=True)
 
 	# ------------------------------------------------------------
 	# Produits

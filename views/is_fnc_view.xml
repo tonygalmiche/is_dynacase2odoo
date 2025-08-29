@@ -5,8 +5,19 @@
 		<field name="name">is.fnc.form</field>
 		<field name="model">is.fnc</field>
 		<field name="arch" type="xml">
-			<form>
-				<sheet>
+            <form>
+                <header>
+                    <field name="dynacase_id" invisible="1"/>
+                    <button 
+                        string="Dynacase" name="lien_vers_dynacase_action"
+                        type="object" class="btn btn-info"
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+                </header>
+                <sheet>
+                    <field name="active" invisible="1"/>
+                    <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
 					<notebook>
 						<page string="Description">
                             <group>
@@ -206,8 +217,13 @@
 						</page> 
                         -->
 					</notebook>
-				</sheet>
-			</form>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
 		</field>
 	</record>
 
@@ -216,19 +232,79 @@
 		<field name="name">is.fnc.tree</field>
 		<field name="model">is.fnc</field>
 		<field name="arch" type="xml">
-			<tree>
-				<field name="num_non_conformite" optional="show"/>
-				<field name="date_detection" optional="show"/>
-				<field name="type_non_conformite" optional="show"/>
-				<field name="client" optional="show"/>
-				<field name="site" optional="show"/>
-				<field name="decision" optional="show"/>
-				<field name="date_cloture" optional="show"/>
-				<field name="total_non_conforme" optional="show"/>
-				<field name="cout_total" optional="show"/>
-				<field name="total_perte" optional="show"/>
-				<field name="create_date" optional="hide"/>
-			</tree>
+            <tree>
+                <!-- Identification / description -->
+                <field name="type_non_conformite" optional="show"/>
+                <field name="num_non_conformite" optional="show"/>
+                <field name="date_detection" optional="show"/>
+                <field name="client" optional="show"/>
+                <field name="clientid" optional="show"/>
+                <field name="mail_commercial" optional="show"/>
+                <field name="site" optional="show"/>
+                <field name="siteid" optional="show"/>
+                <field name="soc" optional="show"/>
+                <field name="socid" optional="show"/>
+                <field name="soccode" optional="show"/>
+                <field name="num_reclamation" optional="show"/>
+                <field name="contact_client" optional="show"/>
+                <field name="famille_article" optional="show"/>
+                <field name="total_non_conforme" optional="show"/>
+                <field name="description_probleme" optional="show"/>
+                <field name="type_defaut" optional="show"/>
+                <field name="tracabilite" optional="show"/>
+                <field name="reclamation_recurrente" optional="show"/>
+
+                <!-- Action immédiate -->
+                <field name="nb_retournees" optional="hide"/>
+                <field name="nb_detruites" optional="hide"/>
+                <field name="bl_retour" optional="hide"/>
+                <field name="reponse" optional="hide"/>
+
+                <!-- Analyse -->
+                <field name="equipe" optional="hide"/>
+                <field name="operateur" optional="hide"/>
+                <field name="presse" optional="hide"/>
+                <field name="presseid" optional="hide"/>
+                <field name="origine_defaut" optional="hide"/>
+                <field name="decision" optional="hide"/>
+                <field name="date_reponse_4d" optional="hide"/>
+
+                <!-- Plan d'action / 8D -->
+                <field name="date_8d" optional="hide"/>
+                <field name="doc_amdec" optional="hide"/>
+                <field name="doc_plan_surveillance" optional="hide"/>
+                <field name="doc_moyen_controle" optional="hide"/>
+                <field name="doc_mode_operatoire" optional="hide"/>
+                <field name="doc_plans" optional="hide"/>
+                <field name="doc_autres" optional="hide"/>
+                <field name="date_cloture" optional="hide"/>
+
+                <!-- Coûts / Bilan -->
+                <field name="total_avoir" optional="hide"/>
+                <field name="date_bilan" optional="hide"/>
+                <field name="situation_bilan" optional="hide"/>
+                <field name="cout_piece" optional="hide"/>
+                <field name="cout_total_tri" optional="hide"/>
+                <field name="total_autrecouts" optional="hide"/>
+                <field name="cout_total" optional="hide"/>
+                <field name="cout_facture" optional="hide"/>
+                <field name="total_perte" optional="hide"/>
+
+                <button 
+                    title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"
+                    attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                    groups="base.group_system"
+                />
+                <field name="dynacase_id" optional="hide" groups="base.group_system"/>
+
+                <!-- Métadonnées -->
+                <field name="createur" optional="hide"/>
+                <field name="createurid" optional="hide"/>
+                <field name="create_date" optional="hide" string="Créé le"/>
+                <field name="create_uid"  optional="hide" string="Créé par"/>
+                <field name="write_date"  optional="hide" string="Modifié le"/>
+                <field name="write_uid"   optional="hide" string="Modifié par"/>
+            </tree>
 		</field>
 	</record>
 
