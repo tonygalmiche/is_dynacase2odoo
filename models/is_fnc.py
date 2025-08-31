@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields  # type: ignore
+from odoo import models, fields, api  # type: ignore
 
 
 class IsFNC(models.Model):
@@ -66,7 +66,25 @@ class IsFNC(models.Model):
 	contact_client = fields.Char(string="Contact Client", tracking=True)
 
 	#famille_article = fields.Char(string="Famille article", tracking=True)
-	total_non_conforme = fields.Float(string="Total pièces non conformes", digits=(16, 2), tracking=True)
+	total_non_conforme = fields.Float(
+		string="Total pièces non conformes",
+		digits=(16, 0),
+		tracking=True,
+		compute="_compute_total_non_conforme",
+		store=False,
+		readonly=True,
+	)
+
+	@api.depends('produit_ids.qt_non_conforme')
+	def _compute_total_non_conforme(self):
+		for rec in self:
+			total = 0.0
+			for line in rec.produit_ids:
+				total += line.qt_non_conforme or 0.0
+			rec.total_non_conforme = total
+
+
+
 	description_probleme = fields.Char(string="Description du problème", tracking=True)
 	type_defaut = fields.Selection(
 		selection=[
