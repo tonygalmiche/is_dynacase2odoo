@@ -56,7 +56,8 @@ class IsFNC(models.Model):
 
 	#client = fields.Char(string="Client émetteur", tracking=True)
 	#clientid = fields.Integer(string="Client émetteur ID", index=True, tracking=True)
-	client_id = fields.Many2one('res.partner', string='Client émetteur',tracking=True, domain=[('is_company', '=', True), ('customer', '=', True), ('is_code', 'ilike', '90%')]) 
+	client_id    = fields.Many2one('res.partner', string='Client émetteur',tracking=True, domain=[('is_company', '=', True), ('customer', '=', True), ('is_code', 'ilike', '90%')]) 
+	client_autre = fields.Char(string="Autre client", readonly=True)
 
 	mail_commercial = fields.Char(string="Mail du commercial", tracking=True)
 

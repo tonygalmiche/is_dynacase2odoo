@@ -27,6 +27,7 @@
                                     <field name="num_non_conformite" required="1"/>
                                     <field name="date_detection" required="1"/>
                                     <field name="client_id" required="1"/>
+                                    <field name="client_autre" attrs="{'invisible':[('client_autre','=',False)]}"/>
                                     <field name="num_reclamation"/>
                                     <field name="contact_client"/>
                                     <field name="mail_commercial"/>
@@ -234,12 +235,13 @@
 		<field name="arch" type="xml">
             <tree>
                 <!-- Identification / description -->
-                <field name="type_non_conformite" optional="show"/>
+                <field name="site_id" optional="show"/>
                 <field name="num_non_conformite" optional="show"/>
+                <field name="type_non_conformite" optional="show"/>
                 <field name="date_detection" optional="show"/>
                 <field name="client_id" optional="show" widget="many2one_clickable"/>
+                <field name="client_autre" optional="hide"/>
                 <field name="mail_commercial" optional="show"/>
-                <field name="site_id" optional="show"/>
                 <field name="num_reclamation" optional="show"/>
                 <field name="contact_client" optional="show"/>
                 <field name="famille_article" optional="show"/>
