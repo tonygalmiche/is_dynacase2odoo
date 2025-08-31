@@ -65,7 +65,7 @@ class IsFNC(models.Model):
 	num_reclamation = fields.Char(string="N° de réclamation client", tracking=True)
 	contact_client = fields.Char(string="Contact Client", tracking=True)
 
-	famille_article = fields.Char(string="Famille article", tracking=True)
+	#famille_article = fields.Char(string="Famille article", tracking=True)
 	total_non_conforme = fields.Float(string="Total pièces non conformes", digits=(16, 2), tracking=True)
 	description_probleme = fields.Char(string="Description du problème", tracking=True)
 	type_defaut = fields.Selection(
@@ -126,8 +126,14 @@ class IsFNC(models.Model):
 	# ------------------------------------------------------------
 	equipe = fields.Char(string="Équipe", tracking=True)
 	operateur = fields.Char(string="Opérateur", tracking=True)
-	presse = fields.Char(string="Presse", tracking=True)
-	presseid = fields.Integer(string="Presse ID", index=True, tracking=True)
+
+
+	#presse = fields.Char(string="Presse", tracking=True)
+	#presseid = fields.Integer(string="Presse ID", index=True, tracking=True)
+
+	presse_id = fields.Many2one('is.equipement', "Presse", tracking=True, domain=[('type_id.name','=','PRESSE')])
+
+
 	origine_defaut = fields.Selection(
 		selection=[
 			("", ""),

@@ -50,7 +50,6 @@
                             </group>
                             <group>
                                 <group>
-                                    <field name="famille_article"/>
                                     <field name="total_non_conforme"/>
                                     <field name="description_probleme"/>
                                     <field name="type_defaut"/>
@@ -106,7 +105,7 @@
                                 <group>
                                     <field name="equipe"/>
                                     <field name="operateur"/>
-                                    <field name="presse"/>
+                                    <field name="presse_id"/>
                                     <field name="origine_defaut"/>
                                     <field name="decision"/>
                                     <field name="date_reponse_4d"/>
@@ -244,7 +243,6 @@
                 <field name="mail_commercial" optional="show"/>
                 <field name="num_reclamation" optional="show"/>
                 <field name="contact_client" optional="show"/>
-                <field name="famille_article" optional="show"/>
                 <field name="total_non_conforme" optional="show"/>
                 <field name="description_probleme" optional="show"/>
                 <field name="type_defaut" optional="show"/>
@@ -260,8 +258,7 @@
                 <!-- Analyse -->
                 <field name="equipe" optional="hide"/>
                 <field name="operateur" optional="hide"/>
-                <field name="presse" optional="hide"/>
-                <field name="presseid" optional="hide"/>
+                <field name="presse_id" optional="hide"/>
                 <field name="origine_defaut" optional="hide"/>
                 <field name="decision" optional="hide"/>
                 <field name="date_reponse_4d" optional="hide"/>
