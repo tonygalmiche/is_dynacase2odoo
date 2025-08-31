@@ -149,14 +149,14 @@
                                     </tree>
                                 </field>
                             </group>                            
+                            <group>
+                                <field name="date_8d"/>
+                            </group>
                             <group string="8D et modification documentation">
                                 <group>
-                                    <field name="date_8d"/>
                                     <field name="doc_amdec"/>
                                     <field name="doc_plan_surveillance"/>
                                     <field name="doc_moyen_controle"/>
-                                </group>
-                                <group>
                                     <field name="doc_mode_operatoire"/>
                                     <field name="doc_plans"/>
                                     <field name="doc_autres"/>
@@ -240,14 +240,14 @@
                 <field name="date_detection" optional="show"/>
                 <field name="client_id" optional="show" widget="many2one_clickable"/>
                 <field name="client_autre" optional="hide"/>
-                <field name="mail_commercial" optional="show"/>
+                <field name="mail_commercial" optional="hide"/>
                 <field name="num_reclamation" optional="show"/>
-                <field name="contact_client" optional="show"/>
+                <field name="contact_client" optional="hide"/>
                 <field name="total_non_conforme" optional="show"/>
                 <field name="description_probleme" optional="show"/>
                 <field name="type_defaut" optional="show"/>
-                <field name="tracabilite" optional="show"/>
-                <field name="reclamation_recurrente" optional="show"/>
+                <field name="tracabilite" optional="hide"/>
+                <field name="reclamation_recurrente" optional="hide"/>
 
                 <!-- Action immédiate -->
                 <field name="nb_retournees" optional="hide"/>
