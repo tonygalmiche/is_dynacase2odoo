@@ -22,11 +22,11 @@
 						<page string="Description">
                             <group>
                                 <group>
-                                    <field name="type_non_conformite"/>
-                                    <field name="num_non_conformite"/>
-                                    <field name="date_detection"/>
-                                    <field name="client"/>
-                                    <field name="site"/>
+                                    <field name="site_id" required="1"/>
+                                    <field name="type_non_conformite" required="1"/>
+                                    <field name="num_non_conformite" required="1"/>
+                                    <field name="date_detection" required="1"/>
+                                    <field name="client_id" required="1"/>
                                     <field name="num_reclamation"/>
                                     <field name="contact_client"/>
                                     <field name="mail_commercial"/>
@@ -237,14 +237,9 @@
                 <field name="type_non_conformite" optional="show"/>
                 <field name="num_non_conformite" optional="show"/>
                 <field name="date_detection" optional="show"/>
-                <field name="client" optional="show"/>
-                <field name="clientid" optional="show"/>
+                <field name="client_id" optional="show" widget="many2one_clickable"/>
                 <field name="mail_commercial" optional="show"/>
-                <field name="site" optional="show"/>
-                <field name="siteid" optional="show"/>
-                <field name="soc" optional="show"/>
-                <field name="socid" optional="show"/>
-                <field name="soccode" optional="show"/>
+                <field name="site_id" optional="show"/>
                 <field name="num_reclamation" optional="show"/>
                 <field name="contact_client" optional="show"/>
                 <field name="famille_article" optional="show"/>
@@ -298,8 +293,6 @@
                 <field name="dynacase_id" optional="hide" groups="base.group_system"/>
 
                 <!-- Métadonnées -->
-                <field name="createur" optional="hide"/>
-                <field name="createurid" optional="hide"/>
                 <field name="create_date" optional="hide" string="Créé le"/>
                 <field name="create_uid"  optional="hide" string="Créé par"/>
                 <field name="write_date"  optional="hide" string="Modifié le"/>
@@ -315,8 +308,7 @@
 		<field name="arch" type="xml">
 			<search>
 				<field name="num_non_conformite"/>
-				<field name="client"/>
-				<field name="site"/>
+				<field name="client_id"/>
 				<field name="type_non_conformite"/>
 				<field name="decision"/>
 				<field name="date_detection"/>
@@ -324,8 +316,8 @@
 				<separator/>
 				<group expand="0" string="Grouper par">
 					<filter string="Type" name="group_type" context="{'group_by':'type_non_conformite'}"/>
-					<filter string="Client" name="group_client" context="{'group_by':'client'}"/>
-					<filter string="Site" name="group_site" context="{'group_by':'site'}"/>
+					<filter string="Client" name="group_client" context="{'group_by':'client_id'}"/>
+					<filter string="Site" name="group_site" context="{'group_by':'site_id'}"/>
 					<filter string="Décision" name="group_decision" context="{'group_by':'decision'}"/>
 				</group>
 			</search>

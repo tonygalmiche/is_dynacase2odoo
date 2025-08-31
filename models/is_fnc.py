@@ -5,6 +5,7 @@ from odoo import models, fields  # type: ignore
 class IsFNC(models.Model):
 	_name = "is.fnc"
 	_description = "Fiche Non-Conformité (FNC)"
+	_rec_name = "num_non_conformite"
 	_order = "id desc"
 	_inherit = ["mail.thread", "mail.activity.mixin"]
 
@@ -26,12 +27,16 @@ class IsFNC(models.Model):
 	# ------------------------------------------------------------
 	# Description (fr_description)
 	# ------------------------------------------------------------
-	createur = fields.Char(string="Créateur de la FNC", tracking=True)
-	createurid = fields.Integer(string="Créateur de la FNC Id", index=True, tracking=True)
+	#createur = fields.Char(string="Créateur de la FNC", tracking=True)
+	#createurid = fields.Integer(string="Créateur de la FNC Id", index=True, tracking=True)
 
-	soc = fields.Char(string="Site", tracking=True)
-	socid = fields.Integer(string="ID du site", index=True, tracking=True)
-	soccode = fields.Integer(string="Code du site", tracking=True)
+	#soc = fields.Char(string="Site", tracking=True)
+	#socid = fields.Integer(string="ID du site", index=True, tracking=True)
+	#soccode = fields.Integer(string="Code du site", tracking=True)
+	#site = fields.Char(string="Site émetteur", tracking=True)
+	#siteid = fields.Integer(string="Site émetteur ID", index=True, tracking=True)
+
+	site_id = fields.Many2one('is.database', "Site")
 
 	type_non_conformite = fields.Selection(
 		selection=[
@@ -49,13 +54,12 @@ class IsFNC(models.Model):
 	num_non_conformite = fields.Char(string="N° de non-conformité PG", tracking=True)
 	date_detection = fields.Date(string="Date de détection", tracking=True)
 
-	client = fields.Char(string="Client émetteur", tracking=True)
-	clientid = fields.Integer(string="Client émetteur ID", index=True, tracking=True)
+	#client = fields.Char(string="Client émetteur", tracking=True)
+	#clientid = fields.Integer(string="Client émetteur ID", index=True, tracking=True)
+	client_id = fields.Many2one('res.partner', string='Client émetteur',tracking=True, domain=[('is_company', '=', True), ('customer', '=', True), ('is_code', 'ilike', '90%')]) 
 
 	mail_commercial = fields.Char(string="Mail du commercial", tracking=True)
 
-	site = fields.Char(string="Site émetteur", tracking=True)
-	siteid = fields.Integer(string="Site émetteur ID", index=True, tracking=True)
 
 	num_reclamation = fields.Char(string="N° de réclamation client", tracking=True)
 	contact_client = fields.Char(string="Contact Client", tracking=True)
