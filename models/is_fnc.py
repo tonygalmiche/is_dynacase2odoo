@@ -321,31 +321,43 @@ class IsFNCProduit(models.Model):
 	fnc_id = fields.Many2one(
 		"is.fnc", string="FNC", required=True, ondelete="cascade", index=True
 	)
-	article_id = fields.Many2one('is.article', 'Article')
-	moule_id   = fields.Many2one("is.mold", string="Moule")
-	project_id = fields.Many2one('is.mold.project', 'Projet')
-	designation = fields.Char(string="Désignation")
-	ref_client = fields.Char(string="Référence client")
-	prix_vente = fields.Float(string="Prix de vente ou coût", digits=(16, 4))
+	article_id      = fields.Many2one('is.article', 'Article')
+	moule_id        = fields.Many2one("is.mold", string="Moule")
+	dossierf_id     = fields.Many2one("is.dossierf", string="Dossier F")
+	project_id      = fields.Many2one('is.mold.project', 'Projet')
+	designation     = fields.Char(string="Désignation")
+	ref_client      = fields.Char(string="Référence client")
+	prix_vente      = fields.Float(string="Prix de vente ou coût", digits=(16, 4))
 	qt_non_conforme = fields.Float(string="Quantité non-conforme", digits=(16, 2))
-	qt_retournee = fields.Float(string="Quantité retournée", digits=(16, 2))
-	qt_detruite = fields.Float(string="Quantité détruite", digits=(16, 2))
+	qt_retournee    = fields.Float(string="Quantité retournée", digits=(16, 2))
+	qt_detruite     = fields.Float(string="Quantité détruite", digits=(16, 2))
 
 
 	@api.onchange('article_id')
 	def onchange_article_id(self):
-		designation = moule_id = project_id = False
+		designation = moule_id = dossierf_id = project_id = False
 		if self.article_id:
 			designation = self.article_id.designation
-			domain=[
-				('name','=', self.article_id.moule)
-			]
-			lines=self.env['is.mold'].search(domain, limit=1)
-			for line in lines:
-				moule_id   = line.id	
-				project_id = line.project.id
+			if self.article_id.moule:
+				if str(self.article_id.moule).startswith('F'):
+					domain = [
+						('name', '=', self.article_id.moule)
+					]
+					lines = self.env['is.dossierf'].search(domain, limit=1)
+					for line in lines:
+						dossierf_id = line.id	
+						project_id  = line.project.id
+				else:
+					domain = [
+						('name', '=', self.article_id.moule)
+					]
+					lines = self.env['is.mold'].search(domain, limit=1)
+					for line in lines:
+						moule_id   = line.id	
+						project_id = line.project.id
 		self.designation = designation
 		self.moule_id    = moule_id
+		self.dossierf_id = dossierf_id
 		self.project_id  = project_id
 
 
