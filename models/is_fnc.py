@@ -369,9 +369,13 @@ class IsFNCAction(models.Model):
 	fnc_id = fields.Many2one(
 		"is.fnc", string="FNC", required=True, ondelete="cascade", index=True
 	)
-
 	tri_stock = fields.Selection(
-		selection=[("", ""), ("OUI", "OUI"), ("NON", "NON")],
+		selection=[
+			("Client"      , "Client"), 
+			("Client final", "Client final"), 
+			("PG"          , "PG"), 
+			("Fournisseur" , "Fournisseur")
+		],
 		string="Tri des stocks",
 	)
 	action_stock = fields.Char(string="Actions sur les stocks")
