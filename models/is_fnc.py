@@ -483,7 +483,7 @@ class IsFNCCause(models.Model):
 		"is.fnc", string="FNC", required=True, ondelete="cascade", index=True
 	)
 
-	cause = fields.Text(string="Cause")
+	cause = fields.Char(string="Cause")
 	type = fields.Selection(
 		selection=[("", ""), ("Création", "Création"), ("Non-détection", "Non-détection")],
 		string="Type",
@@ -506,5 +506,5 @@ class IsFNCCause(models.Model):
 		],
 		string="Type de cause",
 	)
-	contribution = fields.Text(string="% de contribution")
+	contribution = fields.Integer(string="% de contribution")
 
