@@ -41,44 +41,54 @@ class is_dossier_modif_variante(models.Model):
             #     readonly=False
             readonly=False
             obj.readonly_vsb = readonly
+            
             vsb = False
-            if obj.state in ["plascreate", "plastransbe"]:
+            if commercial and obj.state in ["plascreate", "plastransbe"]:
                 vsb = True
             obj.vers_analyse_vsb = vsb
+            
             vsb = False
             if obj.state in ["plasanalysed", "Analyse_BE", "plasrelancecli", "plasdiffusedcli"]:
                 vsb = True
             obj.vers_transmis_be_vsb = vsb
+
             vsb = False
             if obj.state in ["plastransbe", "plasvalidbe"]:
                 vsb = True
             obj.vers_analyse_be_vsb = vsb
+
             vsb = False
             if obj.state in ["Analyse_BE"]:
                 vsb = True
             obj.vers_vali_de_be_vsb = vsb
+
             vsb = False
-            if obj.state in ["plasvalidbe"]:
+            if commercial and obj.state in ["plasvalidbe"]:
                 vsb = True
             obj.vers_vali_de_commercial_vsb = vsb
+           
             vsb = False
-            if obj.state in ["plasvalidcom", "plasanalysed", "plasloosed", "plaswinned", "plascancelled"]:
+            if commercial and obj.state in ["plasvalidcom", "plasanalysed", "plasloosed", "plaswinned", "plascancelled"]:
                 vsb = True
             obj.vers_diffuse_client_vsb = vsb
+           
             vsb = False
-            if obj.state in ["plasdiffusedcli"]:
+            if commercial and  obj.state in ["plasdiffusedcli"]:
                 vsb = True
             obj.vers_relance_client_vsb = vsb
+
             vsb = False
-            if obj.state in ["plasrelancecli", "plasdiffusedcli"]:
+            if  commercial and obj.state in ["plasrelancecli", "plasdiffusedcli"]:
                 vsb = True
             obj.vers_perdu_vsb = vsb
+
             vsb = False
-            if obj.state in ["plasrelancecli", "plasdiffusedcli"]:
+            if  commercial and obj.state in ["plasrelancecli", "plasdiffusedcli"]:
                 vsb = True
             obj.vers_gagne_vsb = vsb
+
             vsb = False
-            if obj.state in ["plasrelancecli", "diffuse_client"]:
+            if  commercial and obj.state in ["plasrelancecli", "diffuse_client"]:
                 vsb = True
             obj.vers_annule_vsb = vsb
 
