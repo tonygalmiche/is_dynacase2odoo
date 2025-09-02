@@ -411,7 +411,7 @@ class IsFNCActionCorrective(models.Model):
 
 	cor_action = fields.Char(string="Actions")
 	cor_responsable = fields.Char(string="Responsable")
-	cor_delai = fields.Char(string="Délai")
+	cor_delai = fields.Date(string="Délai")
 	cor_date = fields.Date(string="Date de réalisation")
 
 
@@ -426,7 +426,7 @@ class IsFNCActionPreventive(models.Model):
 
 	pre_action = fields.Char(string="Actions")
 	pre_responsable = fields.Char(string="Responsable")
-	pre_delai = fields.Char(string="Délai")
+	pre_delai = fields.Date(string="Délai")
 	pre_date = fields.Date(string="Date de réalisation")
 
 
@@ -441,7 +441,7 @@ class IsFNCActionEfficacite(models.Model):
 
 	eff_action = fields.Char(string="Actions")
 	eff_responsable = fields.Char(string="Responsable")
-	eff_delai = fields.Char(string="Délai")
+	eff_delai = fields.Date(string="Délai")
 	eff_date = fields.Date(string="Date de réalisation")
 	eff_conclusion = fields.Char(string="Conclusion")
 
