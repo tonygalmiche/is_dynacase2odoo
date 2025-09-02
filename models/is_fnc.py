@@ -396,7 +396,7 @@ class IsFNCActionCurative(models.Model):
 
 	cur_action = fields.Char(string="Actions")
 	cur_responsable = fields.Char(string="Responsable")
-	cur_delai = fields.Char(string="Délai")
+	cur_delai = fields.Date(string="Délai")
 	cur_date = fields.Date(string="Date de réalisation")
 
 
