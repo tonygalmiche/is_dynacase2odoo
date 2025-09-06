@@ -470,6 +470,18 @@
         />
 
 
+        <!-- Gestion de la qualité / Processus -->
+        <record id="is_processus_menu" model="ir.ui.menu">
+            <field name="name">Processus</field>
+            <field name="sequence">25</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.gestion_qualite_menu')"/>
+            <field name="action" ref="is_processus_action"/>
+        </record>
+
+
+
+
+
         <!-- Gestion de la qualité / FNC -->
         <menuitem 
             name="FNC" id="is_fnc_menu" sequence="40"
@@ -513,6 +525,12 @@
             <field name="parent_id" eval="ref('is_dynacase2odoo.is_ctrl_rcp_menu')"/>
             <field name="action" ref="is_ctrl_rcp_saisie_action"/>
         </record>
+
+
+
+
+
+
 
     </data>
 </odoo>

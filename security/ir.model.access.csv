@@ -126,3 +126,5 @@ access_is_ctrl_rcp_rapport,access_is_ctrl_rcp_rapport,model_is_ctrl_rcp_rapport,
 
 access_is_ctrl_rcp_saisie,access_is_ctrl_rcp_saisie,model_is_ctrl_rcp_saisie,base.group_user,1,1,1,1
 access_is_ctrl_rcp_saisie_mesure,access_is_ctrl_rcp_saisie_mesure,model_is_ctrl_rcp_saisie_mesure,base.group_user,1,1,1,1
+
+access_is_processus,access_is_processus,model_is_processus,base.group_user,1,1,1,0

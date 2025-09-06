@@ -39,3 +39,4 @@ from . import is_fnc
 from . import is_reclamation_fournisseur
 from . import is_ctrl_rcp
 from . import is_ctrl_rcp_rapport
+from . import is_processus

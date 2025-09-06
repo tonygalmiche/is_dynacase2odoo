@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Search View -->
+        <record id="is_processus_search" model="ir.ui.view">
+            <field name="name">is.processus.search</field>
+            <field name="model">is.processus</field>
+            <field name="arch" type="xml">
+                <search string="Recherche Processus">
+                    <field name="numpcs"/>
+                    <field name="numindice"/>
+                    <field name="nom"/>
+                    <filter string="Avec pilote" name="with_pilot" domain="[('pilotepcs_id','!=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="is_processus_tree" model="ir.ui.view">
+            <field name="name">is.processus.tree</field>
+            <field name="model">is.processus</field>
+            <field name="arch" type="xml">
+                <tree string="Processus">
+                    <field name="numpcs" optional="show"/>
+                    <field name="numindice" optional="show"/>
+                    <field name="nom" optional="show"/>
+                    <field name="pilotepcs_id" optional="show"/>
+                    <field name="niveau" optional="show"/>
+                    <field name="exigence" optional="hide"/>
+                    <field name="element" optional="hide"/>
+                    <field name="donneesentree" optional="hide"/>
+                    <field name="donneessortie" optional="hide"/>
+                    <field name="finalite" optional="hide"/>
+                    <field name="efficience" optional="hide"/>
+                    <field name="efficacite" optional="hide"/>
+                    <field name="quiverifie_id" optional="show"/>
+                    <field name="quiapprouve_id" optional="show"/>
+                    <field name="diffusion" optional="hide"/>
+                    <field name="create_date" optional="hide" string="Créé le"/>
+                    <field name="create_uid" optional="hide" string="Créé par"/>
+                    <field name="write_date" optional="hide" string="Modifié le"/>
+                    <field name="write_uid" optional="hide" string="Modifié par"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View (sans notebook) -->
+        <record id="is_processus_form" model="ir.ui.view">
+            <field name="name">is.processus.form</field>
+            <field name="model">is.processus</field>
+            <field name="arch" type="xml">
+                <form string="Processus">
+                    <header>
+                        <field name="active" invisible="1"/>
+                        <button 
+                            title="Dynacase" name="lien_vers_dynacase_action" type="object" 
+                            icon="fa-file" class="oe_highlight"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                            groups="base.group_system"
+                        />
+                        <field name="dynacase_id" groups="base.group_system"/>
+                    </header>
+                    <sheet>
+                        <field name="active" invisible="1"/>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <group string="Identification">
+                            <group>
+                                <field name="numpcs"/>
+                                <field name="numindice"/>
+                                <field name="nom"/>
+                                <field name="niveau"/>
+                                <field name="pilotepcs_id"/>
+                                <field name="exigence"/>
+                            </group>
+                        </group>
+
+                        <group string="Contenu">
+                            <group>
+                                <field name="element" widget="text"/>
+                                <field name="donneesentree" widget="text"/>
+                                <field name="donneessortie" widget="text"/>
+                                <field name="finalite" widget="text"/>
+                                <field name="efficience" widget="text"/>
+                                <field name="efficacite" widget="text"/>
+                            </group>
+                        </group>
+                        <group string="Cycle">
+                            <group>
+                                <group>
+                                    <field name="quiverifie_id"/>
+                                    <field name="quiapprouve_id"/>
+                                    <field name="diffusion"/>
+                                </group>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="is_processus_action" model="ir.actions.act_window">
+            <field name="name">Processus</field>
+            <field name="res_model">is.processus</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="is_processus_search"/>
+            <field name="context">{}</field>
+        </record>
+
+    </data>
+</odoo>
