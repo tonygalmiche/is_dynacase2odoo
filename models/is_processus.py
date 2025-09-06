@@ -12,10 +12,10 @@ class IsProcessus(models.Model):
     dynacase_id  = fields.Integer(string="Id Dynacase", index=True, copy=False)
 
     # Identification
-    numpcs       = fields.Char(string="Numéro du processus", required=True, tracking=True)
-    numindice    = fields.Char(string="Indice", required=True, tracking=True)
-    nom          = fields.Char(string="Nom du processus", required=True, tracking=True)
-    pilotepcs_id = fields.Many2one('res.users', 'Pilote du processus', required=True, default=lambda self: self.env.uid, tracking=True)
+    numpcs       = fields.Char(string="Numéro du processus", required=False, tracking=True)
+    numindice    = fields.Char(string="Indice", required=False, tracking=True)
+    nom          = fields.Char(string="Nom du processus", required=False, tracking=True)
+    pilotepcs_id = fields.Many2one('res.users', 'Pilote du processus', required=False, default=lambda self: self.env.uid, tracking=True)
     niveau       = fields.Char(string="Niveau", tracking=True)
     exigence     = fields.Char(string="Liste des exigences", tracking=True)
 

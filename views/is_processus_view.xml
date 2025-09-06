@@ -72,11 +72,11 @@
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group string="Identification">
                             <group>
-                                <field name="numpcs"/>
-                                <field name="numindice"/>
-                                <field name="nom"/>
-                                <field name="niveau"/>
-                                <field name="pilotepcs_id"/>
+                                <field name="numpcs" required="1"/>
+                                <field name="numindice" required="1"/>
+                                <field name="nom" required="1"/>
+                                <field name="niveau" required="1"/>
+                                <field name="pilotepcs_id" required="1"/>
                                 <field name="exigence"/>
                             </group>
                         </group>
