@@ -6,7 +6,10 @@ class IsProcessus(models.Model):
     _name = 'is.processus'
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description = 'Processus'
+    _order = "numpcs"
     _rec_name = 'numpcs'
+
+
 
     active       = fields.Boolean(string="Actif", default=True, tracking=True)
     dynacase_id  = fields.Integer(string="Id Dynacase", index=True, copy=False)
