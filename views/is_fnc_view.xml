@@ -58,6 +58,9 @@
                                     <field name="reclamation_recurrente"/>
                                 </group>
                             </group>
+                            <group string="Pièces jointes">
+                                <field name="pj_description_ids" widget="many2many_binary"/>
+                            </group>
                         </page>
 						<page string="Action immédiate">
 							<group>
@@ -92,6 +95,9 @@
 									<field name="reponse"/>
 								</group>
                             </group>
+                            <group string="Pièces jointes">
+                                <field name="pj_action_ids" widget="many2many_binary"/>
+                            </group>
 						</page>
 						<page string="Analyse de la non-conformité">
 							<field name="cause_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2">
@@ -111,6 +117,9 @@
                                     <field name="decision"/>
                                     <field name="date_reponse_4d"/>
                                 </group>
+                            </group>
+                            <group string="Pièces jointes">
+                                <field name="pj_analyse_ids" widget="many2many_binary"/>
                             </group>
 						</page>
 						<page string="Plan d'actions">
@@ -137,8 +146,6 @@
                                     </tree>
                                 </field>
                             </group>
-
-
                             <group string="Mesure de l'efficacité des actions">
                                 <field name="action_efficacite_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2">
                                     <tree editable="bottom">
@@ -164,14 +171,14 @@
                                     <field name="date_cloture"/>
                                 </group>
                             </group>
+                            <group string="Pièces jointes">
+                                <field name="pj_plan_action_ids" widget="many2many_binary"/>
+                            </group>
 						</page>
 						<page string="Coûts">
-
                             <group>
                                 <field name="id" invisible="1"/>
                             </group>
-
-
 							<group string="Coût comptable (Service Financier)">
 								<field name="avoir_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2">
 									<tree editable="bottom">
@@ -206,17 +213,10 @@
 									<field name="total_perte"/>
 								</group>
 							</group>
+                            <group string="Pièces jointes">
+                                <field name="pj_cout_ids" widget="many2many_binary"/>
+                            </group>
 						</page>
-                        <!-- 
-						<page string="Action">
-							<group>
-								<group>
-									<field name="nb_retournees"/>
-									<field name="nb_detruites"/>
-								</group>
-							</group>
-						</page> 
-                        -->
 					</notebook>
                 </sheet>
                 <div class="oe_chatter">

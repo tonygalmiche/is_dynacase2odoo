@@ -313,6 +313,24 @@ class IsFNC(models.Model):
 	)
 
 
+	# Pièces jointes
+	pj_description_ids = fields.Many2many("ir.attachment", "is_fnc_pj_description_rel", "pj_description", "att_id", string="Pièces jointes description")
+	pj_action_ids      = fields.Many2many("ir.attachment", "is_fnc_pj_action_rel"     , "pj_action"     , "att_id", string="Pièces jointes action")
+	pj_analyse_ids     = fields.Many2many("ir.attachment", "is_fnc_pj_analyse_rel"    , "pj_analyse"    , "att_id", string="Pièces jointes analyse")
+	pj_plan_action_ids = fields.Many2many("ir.attachment", "is_fnc_pj_plan_action_rel", "pj_plan_action", "att_id", string="Pièces jointes plan d'action")
+	pj_cout_ids        = fields.Many2many("ir.attachment", "is_fnc_pj_cout_rel"       , "pj_cout"       , "att_id", string="Pièces jointes coût")
+
+
+
+
+
+
+
+
+
+
+
+
 class IsFNCProduit(models.Model):
 	_name = "is.fnc.produit"
 	_description = "Ligne produit pour FNC"
