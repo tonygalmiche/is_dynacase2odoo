@@ -92,6 +92,19 @@
                                 <field name="rpj_niveau_ppm"    attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"          readonly="1"/>
                                 <field name="rpj_commentaire"   attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}" />
                                 <field name="rpj_motif_refus"   attrs="{'readonly': [('state', 'in', ['rpj_refus','rpj_valide'])]}" />
+                            </group>
+                            <group string="">
+                                <field name="logo_rs" invisible="1"/>
+                                <div colspan="2" style="text-align:center;height:530px">
+                                    <img attrs="{'invisible': [('logo_rs', '!=', 'S')]}"  alt="Logo S"  src="/is_dynacase2odoo/static/src/img/logo_s.png"  style="max-width:50px"/><br />
+                                    <img attrs="{'invisible': [('logo_rs', '!=', 'R')]}"  alt="Logo R"  src="/is_dynacase2odoo/static/src/img/logo_r.png"  style="max-width:50px"/><br />
+                                    <img attrs="{'invisible': [('logo_rs', '!=', 'RS')]}" alt="Logo RS" src="/is_dynacase2odoo/static/src/img/logo_rs.png" style="max-width:50px"/><br />        
+                                    <field name="rpj_photo" widget="image" readonly="1" style="max-width:400px;max-height:400px" nolabel="1" colspan="2"/>
+                                </div>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
                                 <separator string="Lieu de production" />
                                 <field name="rpj_lieu_production"     readonly="1"/>
                                 <field name="rpj_affectation_presse"  readonly="1"/>
@@ -112,17 +125,16 @@
                                         <field name="rpj_bilan_risque_leadership"   optional="show" width="25%" readonly="1"/>
                                     </tree>
                                 </field>
+
+                                <separator string="Critères à risque"/>
+                                <field name="rpj_critere_a_risque" readonly="1"/>
+
+
+
                                 <separator string="Pièces jointes" />
                                 <field name="rpj_piece_jointe" widget="many2many_binary" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
                             </group>
-                            <group string="">
-                                <field name="logo_rs" invisible="1"/>
-                                <div colspan="2" style="text-align:center;height:530px">
-                                    <img attrs="{'invisible': [('logo_rs', '!=', 'S')]}"  alt="Logo S"  src="/is_dynacase2odoo/static/src/img/logo_s.png"  style="max-width:50px"/><br />
-                                    <img attrs="{'invisible': [('logo_rs', '!=', 'R')]}"  alt="Logo R"  src="/is_dynacase2odoo/static/src/img/logo_r.png"  style="max-width:50px"/><br />
-                                    <img attrs="{'invisible': [('logo_rs', '!=', 'RS')]}" alt="Logo RS" src="/is_dynacase2odoo/static/src/img/logo_rs.png" style="max-width:50px"/><br />        
-                                    <field name="rpj_photo" widget="image" readonly="1" style="max-width:400px;max-height:400px" nolabel="1" colspan="2"/>
-                                </div>
+                            <group>
                                 <separator string="Équipe projet" />
                                 <field name="equipe_projet_ids" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}">
                                     <tree editable="bottom">
@@ -146,8 +158,6 @@
                                 <field name="rpj_responsable_projetid"    attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
                                 <field name="rpj_directeur_siteid"        attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
                                 <field name="rpj_directeur_techniqueid"   attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
-                                <separator string="Critères à risque"/>
-                                <field name="rpj_critere_a_risque" readonly="1"/>
                             </group>
                         </group>
                         <group col="3">
