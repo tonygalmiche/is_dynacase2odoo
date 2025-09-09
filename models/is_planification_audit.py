@@ -34,10 +34,10 @@ class is_planification_audit(models.Model):
     dynacase_id                 = fields.Integer(string="Id Dynacase", index=True, copy=False)
 
     numero                      = fields.Char("Numéro d'audit", tracking=True)
-    emetteur_id                 = fields.Many2one("res.users", string="Émetteur", default=lambda self: self.env.uid, tracking=True, required=True)
-    site_id                     = fields.Many2one('is.database', "Site", tracking=True, required=True)
-    responsable_id              = fields.Many2one("res.users", string="Responsable qualité du site", tracking=True, required=True)
-    type_audit                  = fields.Selection(_TYPE, "Type audit", tracking=True, required=True)
+    emetteur_id                 = fields.Many2one("res.users", string="Émetteur", default=lambda self: self.env.uid, tracking=True)
+    site_id                     = fields.Many2one('is.database', "Site", tracking=True)
+    responsable_id              = fields.Many2one("res.users", string="Responsable qualité du site", tracking=True)
+    type_audit                  = fields.Selection(_TYPE, "Type audit", tracking=True)
     jour_nuit                   = fields.Selection(_JOUR_NUIT, "Jour / Nuit", tracking=True)
     moule_id                    = fields.Many2one('is.mold', string="Moule", tracking=True)
     dossierf_id                 = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
@@ -45,7 +45,7 @@ class is_planification_audit(models.Model):
     designation                 = fields.Char("Désignation", tracking=True)
     ref_client                  = fields.Char("Référence client", tracking=True)
     description                 = fields.Char("Description", tracking=True)
-    client_id                   = fields.Many2one("res.partner", string="Client", tracking=True, domain=[("is_company","=",True), ("customer","=",True)])
+    client_id                   = fields.Many2one("res.partner", string="Client", tracking=True, domain=[("is_company","=",True), ("customer","=",True), ("is_code", "like", "90%")])
     fournisseur_id              = fields.Many2one('res.partner', 'Nom du fournisseur', tracking=True, domain=[("is_company","=",True), ("supplier","=",True)])
     demandeur_id                = fields.Many2one("res.users", "Demandeur", default=lambda self: self.env.uid, tracking=True)
     

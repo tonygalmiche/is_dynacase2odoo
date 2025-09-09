@@ -24,10 +24,10 @@
                         <group>
                             <group name="fr_identification" string="Identification">
                                 <field name="numero"/>
-                                <field name="emetteur_id"/>
-                                <field name="site_id"/>
-                                <field name="responsable_id"/>
-                                <field name="type_audit"/>
+                                <field name="emetteur_id" required="1"/>
+                                <field name="site_id" required="1"/>
+                                <field name="responsable_id" required="1"/>
+                                <field name="type_audit" required="1"/>
                                 <field name="jour_nuit"/>
                                 <field name="moule_id"/>
                                 <field name="dossierf_id"/>
