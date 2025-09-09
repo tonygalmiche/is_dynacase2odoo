@@ -77,5 +77,7 @@ class is_planification_audit(models.Model):
 
     @api.onchange('article_id')
     def onchange_article_id(self):
-        if self.article_id and self.article_id.ref_client:
+        if self.article_id:
             self.ref_client = self.article_id.ref_client
+        else:
+            self.ref_client = False
