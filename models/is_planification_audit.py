@@ -66,7 +66,6 @@ class is_planification_audit(models.Model):
     
     piece_jointe_ids            = fields.Many2many("ir.attachment", "is_planification_audit_pieces_jointes_rel", "piece_jointe", "att_id", string="Pièce jointe")
 
-
     def lien_vers_dynacase_action(self):
         for obj in self:
             url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
@@ -75,3 +74,8 @@ class is_planification_audit(models.Model):
                 'url': url,
                 'target': 'new',
             }
+
+    @api.onchange('article_id')
+    def onchange_article_id(self):
+        if self.article_id and self.article_id.ref_client:
+            self.ref_client = self.article_id.ref_client
