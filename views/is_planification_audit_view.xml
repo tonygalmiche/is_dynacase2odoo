@@ -31,8 +31,7 @@
                                 <field name="jour_nuit"/>
                                 <field name="moule_id"/>
                                 <field name="dossierf_id"/>
-                                <field name="codepg"/>
-                                <field name="designation"/>
+                                <field name="article_id"/>
                                 <field name="ref_client"/>
                                 <field name="description"/>
                                 <field name="client_id"/>
@@ -59,9 +58,9 @@
                                 <field name="replan_calculee"/>
                                 <field name="replan_saisie"/>
                             </group>
-                            <group name="fr_piece_jointe" string="Pièces jointes">
-                                <field name="piece_jointe_ids" widget="many2many_binary"/>
-                            </group>
+                        </group>
+                        <group name="fr_piece_jointe" string="Pièces jointes">
+                            <field name="piece_jointe_ids" widget="many2many_binary"/>
                         </group>
                     </sheet>
                    <div class="oe_chatter">
@@ -86,8 +85,7 @@
                     <field name="jour_nuit"         optional="show"/>
                     <field name="moule_id"          optional="show" widget="many2one_clickable"/>
                     <field name="dossierf_id"       optional="show" widget="many2one_clickable"/>
-                    <field name="codepg"            optional="show"/>
-                    <field name="designation"       optional="show"/>
+                    <field name="article_id"        optional="show"/>
                     <field name="ref_client"        optional="show"/>
                     <field name="description"       optional="show"/>
                     <field name="client_id"         optional="show" widget="many2one_clickable"/>
