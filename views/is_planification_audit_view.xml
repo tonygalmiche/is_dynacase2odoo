@@ -85,7 +85,7 @@
                     <field name="jour_nuit"         optional="show"/>
                     <field name="moule_id"          optional="show" widget="many2one_clickable"/>
                     <field name="dossierf_id"       optional="show" widget="many2one_clickable"/>
-                    <field name="article_id"        optional="show"/>
+                    <field name="article_id"        optional="show" widget="many2one_clickable"/>
                     <field name="ref_client"        optional="show"/>
                     <field name="description"       optional="show"/>
                     <field name="client_id"         optional="show" widget="many2one_clickable"/>
