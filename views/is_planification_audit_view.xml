@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="is_planification_audit_form_view">
+            <field name="name">is_planification_audit_form_view</field>
+            <field name="model">is.planification.audit</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Form">
+                    <header>
+                        <button
+                            name="lien_vers_dynacase_action"
+                            string="Dynacase"
+                            type="object" class="btn btn-info"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                            groups="base.group_system"
+                        />
+                        <field name="dynacase_id" invisible="1"/>
+                    </header>
+                    <sheet>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active" invisible="1"/>
+
+                        <group>
+                            <group name="fr_identification" string="Identification">
+                                <field name="numero"/>
+                                <field name="emetteur_id"/>
+                                <field name="site_id"/>
+                                <field name="responsable_id"/>
+                                <field name="type_audit"/>
+                                <field name="jour_nuit"/>
+                                <field name="moule_id"/>
+                                <field name="dossierf_id"/>
+                                <field name="codepg"/>
+                                <field name="designation"/>
+                                <field name="ref_client"/>
+                                <field name="description"/>
+                                <field name="client_id"/>
+                                <field name="fournisseur_id"/>
+                                <field name="demandeur_id"/>
+                            </group>
+
+                            <group name="fr_description" string="Description">
+                                <field name="date_prev"/>
+                                <field name="mois_prev"/>
+                                <field name="date_realise"/>
+                                <field name="mois_realise"/>
+                                <field name="auditeur1_id"/>
+                                <field name="auditeur2_id"/>
+                            </group>
+
+                            <group name="fr_resultat" string="Résultat">
+                                <field name="nb_crit_conformes"/>
+                                <field name="nb_crit_audites"/>
+                                <field name="pourcent_conform"/>
+                                <field name="note"/>
+                                <field name="plan_actions_id"/>
+                                <field name="etat_plan_actions"/>
+                                <field name="replan_calculee"/>
+                                <field name="replan_saisie"/>
+                            </group>
+                            <group name="fr_piece_jointe" string="Pièces jointes">
+                                <field name="piece_jointe_ids" widget="many2many_binary"/>
+                            </group>
+                        </group>
+                    </sheet>
+                   <div class="oe_chatter">
+                        <field name="message_follower_ids" />
+                        <field name="activity_ids" />
+                        <field name="message_ids" />
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_planification_audit_tree_view">
+            <field name="name">is_planification_audit_tree_view</field>
+            <field name="model">is.planification.audit</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="numero"            optional="show"/>
+                    <field name="emetteur_id"       optional="show" widget="many2one_clickable"/>
+                    <field name="site_id"           optional="show" widget="many2one_clickable"/>
+                    <field name="responsable_id"    optional="show" widget="many2one_clickable"/>
+                    <field name="type_audit"        optional="show"/>
+                    <field name="jour_nuit"         optional="show"/>
+                    <field name="moule_id"          optional="show" widget="many2one_clickable"/>
+                    <field name="dossierf_id"       optional="show" widget="many2one_clickable"/>
+                    <field name="codepg"            optional="show"/>
+                    <field name="designation"       optional="show"/>
+                    <field name="ref_client"        optional="show"/>
+                    <field name="description"       optional="show"/>
+                    <field name="client_id"         optional="show" widget="many2one_clickable"/>
+                    <field name="fournisseur_id"    optional="show" widget="many2one_clickable"/>
+                    <field name="demandeur_id"      optional="show" widget="many2one_clickable"/>
+                    <field name="date_prev"         optional="hide"/>
+                    <field name="mois_prev"         optional="hide"/>
+                    <field name="date_realise"      optional="hide"/>
+                    <field name="mois_realise"      optional="hide"/>
+                    <field name="auditeur1_id"      optional="hide" widget="many2one_clickable"/>
+                    <field name="auditeur2_id"      optional="hide" widget="many2one_clickable"/>
+                    <field name="nb_crit_conformes" optional="hide"/>
+                    <field name="nb_crit_audites"   optional="hide"/>
+                    <field name="pourcent_conform"  optional="hide"/>
+                    <field name="note"              optional="hide"/>
+                    <field name="plan_actions_id"   optional="hide" widget="many2one_clickable"/>
+                    <field name="etat_plan_actions" optional="hide"/>
+                    <field name="replan_calculee"   optional="hide"/>
+                    <field name="replan_saisie"     optional="hide"/>
+                    <field name="piece_jointe_ids"  optional="hide" widget="many2many_binary"/>
+                    <field name="create_date"       optional="hide" string="Créé le"/>
+                    <field name="create_uid"        optional="hide" string="Créé par"/>
+                    <field name="write_date"        optional="hide" string="Modifié le"/>
+                    <field name="write_uid"         optional="hide" string="Modifié par"/>
+                    <field name="dynacase_id"       optional="hide" groups="base.group_system"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+                </tree>
+        </field>
+        </record>
+        <record model="ir.ui.view" id="is_planification_audit_search">
+            <field name="name">is_planification_audit_search</field>
+            <field name="model">is.planification.audit</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="numero"/>
+                    <field name="type_audit"/>
+                    <field name="jour_nuit"/>
+                </search>
+            </field>
+        </record>
+        -->
+        <record model="ir.actions.act_window" id="is_planification_audit_action">
+            <field name="name">Planification audit</field>
+            <field name="res_model">is.planification.audit</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}
+            </field>
+        </record>
+    </data>
+</odoo>

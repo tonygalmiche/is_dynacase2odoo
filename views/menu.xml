@@ -468,7 +468,10 @@
             name="Revue et plan d'amélioration continu"  id="is_plan_amelioration_continu_menu" sequence="30"
             parent="is_plan_action_menu" action="is_plan_amelioration_continu_action"
         />
-
+        <menuitem 
+            name="Planification d'audit"  id="is_planification_audit_menu" sequence="30"
+            parent="is_plan_action_menu" action="is_planification_audit_action"
+        />
 
         <!-- Gestion de la qualité / Processus -->
         <record id="is_processus_menu" model="ir.ui.menu">
