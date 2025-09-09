@@ -116,6 +116,7 @@
                                 <field name="rpj_rlid"     readonly="1" force_save="1" />
                                 <separator string="Revue des risques" />
                                 <field name="rpj_rrid" readonly="1" force_save="1"/>
+
                                 <field name="bilan_ids" nolabel="1" colspan="2">
                                     <tree editable="bottom" create="false" colspan="2" delete="false">
                                         <field name="rpj_bilan_risque_j"            optional="show" width="15%" readonly="1"/>
@@ -125,24 +126,10 @@
                                         <field name="rpj_bilan_risque_leadership"   optional="show" width="25%" readonly="1"/>
                                     </tree>
                                 </field>
-
                                 <separator string="Critères à risque"/>
                                 <field name="rpj_critere_a_risque" readonly="1"/>
-
-
-
-                                <separator string="Pièces jointes" />
-                                <field name="rpj_piece_jointe" widget="many2many_binary" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
                             </group>
                             <group>
-                                <separator string="Équipe projet" />
-                                <field name="equipe_projet_ids" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}">
-                                    <tree editable="bottom">
-                                        <field name="rpj_equipe_projet_fonction" optional="show" />
-                                        <field name="rpj_equipe_projet_nomid" optional="show" />
-                                        <field name="rpj_equipe_projet_presence" optional="show" />
-                                    </tree>
-                                </field>
                                 <separator string="Équipe projet (Pour gestion des droits et des mails)"/>
                                 <field name="rpj_chef_projetid"           attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
                                 <field name="rpj_expert_injectionid"      attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
@@ -158,8 +145,42 @@
                                 <field name="rpj_responsable_projetid"    attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
                                 <field name="rpj_directeur_siteid"        attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
                                 <field name="rpj_directeur_techniqueid"   attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+
+                                <separator string="Équipe projet" />
+                                <field name="equipe_projet_ids" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}">
+                                    <tree editable="bottom">
+                                        <field name="rpj_equipe_projet_fonction" optional="show" />
+                                        <field name="rpj_equipe_projet_nomid" optional="show" />
+                                        <field name="rpj_equipe_projet_presence" optional="show" />
+                                    </tree>
+                                </field>
+
+
+
                             </group>
                         </group>
+                        <!-- <group>
+                            <group>
+                                <field name="bilan_ids" nolabel="1" colspan="2">
+                                    <tree editable="bottom" create="false" colspan="2" delete="false">
+                                        <field name="rpj_bilan_risque_j"            optional="show" width="15%" readonly="1"/>
+                                        <field name="rpj_bilan_risque_design"       optional="show" width="20%" readonly="1"/>
+                                        <field name="rpj_bilan_risque_supply_chain" optional="show" width="25%" readonly="1"/>
+                                        <field name="rpj_bilan_risque_qualite"      optional="show" width="15%" readonly="1"/>
+                                        <field name="rpj_bilan_risque_leadership"   optional="show" width="25%" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </group> -->
+                        
+
+                        <group>
+                            <separator string="Pièces jointes" />
+                            <field name="rpj_piece_jointe" widget="many2many_binary" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                        </group>
+
+
+
                         <group col="3">
                             <group name="rpj_planning" string="Planning">
                                 <field name="rpj_date_j0" readonly="1" force_save="1"/>
