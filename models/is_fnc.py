@@ -335,9 +335,10 @@ class IsFNCProduit(models.Model):
 
 	@api.onchange('article_id')
 	def onchange_article_id(self):
-		designation = moule_id = dossierf_id = project_id = False
+		designation = moule_id = dossierf_id = project_id = ref_client = False
 		if self.article_id:
 			designation = self.article_id.designation
+			ref_client  = self.article_id.ref_client
 			if self.article_id.moule:
 				if str(self.article_id.moule).startswith('F'):
 					domain = [
@@ -359,6 +360,7 @@ class IsFNCProduit(models.Model):
 		self.moule_id    = moule_id
 		self.dossierf_id = dossierf_id
 		self.project_id  = project_id
+		self.ref_client  = ref_client
 
 
 class IsFNCAction(models.Model):
