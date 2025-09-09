@@ -76,37 +76,3 @@ class is_planification_audit(models.Model):
                 'url': url,
                 'target': 'new',
             }
-
-
-#    def vers_brouillon_action(self):
-#        for obj in self:
-#            obj.state='brouillon'
-#
-#    def vers_diffuse_action(self):
-#        for obj in self:
-#            obj.state='diffuse'
-#            obj.envoi_mail()
-# 
-#    def vers_planifie_action(self):
-#        for obj in self:
-#            obj.state='planifie'
-#            obj.envoi_mail()
-#
-#    def vers_cr_action(self):
-#        for obj in self:
-#            obj.state='cr'
-#            obj.date_realisation = datetime.now()
-# 
-#    def vers_metrologie_action(self):
-#        for obj in self:
-#            obj.state='metrologie'
-#            obj.envoi_mail()
-# 
-#    def vers_termine_action(self):
-#        for obj in self:
-#            obj.state='termine'
-#            obj.envoi_mail()
-#
-#    def vers_solde_action(self):
-#        for obj in self:
-#            obj.state='solde'
