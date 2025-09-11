@@ -16,8 +16,8 @@
                     <field name="date_detection_defaut" optional="show"/>
                     <field name="annee_detection_defaut" optional="hide"/>
                     <field name="date_creation" optional="show"/>
-                    <field name="telephone" optional="show"/>
-                    <field name="courriel" optional="show"/>
+                    <field name="telephone" optional="hide"/>
+                    <field name="courriel" optional="hide"/>
 
                     <!-- Nature de la réclamation -->
                     <field name="nature_qualite" optional="hide"/>
@@ -25,8 +25,10 @@
                     <field name="nature_administratif" optional="hide"/>
 
                     <!-- Réception concernée -->
-                    <field name="num_reception" optional="hide"/>
-                    <field name="fournisseur_id"  optional="show" widget="many2one_clickable"/>
+                    <field name="num_reception" optional="show"/>
+                    <field name="fournisseur_id"  optional="hide" widget="many2one_clickable"/>
+                    <field name="code_fournisseur"  optional="show"/>
+                    <field name="nom_fournisseur"  optional="show"/>
                     <field name="codepg" optional="hide"/>
                     <field name="designation" optional="hide"/>
                     <field name="ref_fournisseur" optional="hide"/>
