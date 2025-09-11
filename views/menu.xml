@@ -487,18 +487,38 @@
 
         <!-- Gestion de la qualité / FNC -->
         <menuitem 
-            name="FNC" id="is_fnc_menu" sequence="40"
+            name="FNC"  id="is_fnc_menu" sequence="40"
             parent="gestion_qualite_menu" action="is_fnc_action"
         />
 
 
 		<!-- Gestion de la qualité / Réclamations fournisseurs -->
-		<record id="is_reclamation_fournisseur_menu" model="ir.ui.menu" >
+
+		<record id="is_reclamation_fournisseur_main_menu" model="ir.ui.menu" >
 			<field name="name">Réclamations fournisseurs</field>
 			<field name="sequence">50</field>
 			<field name="parent_id" eval="ref('gestion_qualite_menu')"/>
+		</record>
+		<record id="is_reclamation_fournisseur_menu" model="ir.ui.menu" >
+			<field name="name">Réclamations fournisseurs</field>
+			<field name="sequence">10</field>
+			<field name="parent_id" eval="ref('is_reclamation_fournisseur_main_menu')"/>
 			<field name="action"    ref="is_reclamation_fournisseur_action"/>
 		</record>
+        <menuitem 
+            name="Réceptions"  id="is_reception_menu" sequence="20"
+            parent="is_reclamation_fournisseur_main_menu" action="is_reception_action"
+        />
+
+        <record id="is_actualiser_receptions_menu" model="ir.ui.menu" >
+            <field name="name">Actualiser les réceptions</field>
+            <field name="sequence">30</field>
+            <field name="parent_id" eval="ref('is_reclamation_fournisseur_main_menu')"/>
+            <field name="action"    ref="is_actualiser_receptions_actions_server"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('base.group_system'),
+            ])]"/>
+        </record>
 
 
 		<!-- Gestion de la qualité / Contrôle réception -->

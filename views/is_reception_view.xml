@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <record id="is_actualiser_receptions_actions_server" model="ir.actions.server">
+        <field name="name">Actualiser les réceptions</field>
+        <field name="model_id" ref="is_dynacase2odoo.model_is_reception" />
+        <field name="binding_model_id" ref="is_dynacase2odoo.model_is_reception"/>
+        <field name="state">code</field>
+        <field name="code">action = model.actualiser_receptions_action()</field>
+    </record>
+    <record id="is_actualiser_receptions_cron" model="ir.cron">
+        <field name="name">Actualiser les réceptions</field>
+        <field name="model_id" ref="model_is_reception"/>
+        <field name="state">code</field>
+        <field name="code">model.actualiser_receptions_action()</field>
+        <!-- <field name="interval_type">minutes</field>
+        <field name="interval_number">30</field> -->
+        <field name="interval_type">days</field>
+        <field name="interval_number">1</field>
+        <field name="numbercall">-1</field>
+    </record>
+
+
+    <!-- Form view -->
+    <record id="view_is_reception_form" model="ir.ui.view">
+        <field name="name">is.reception.form</field>
+        <field name="model">is.reception</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="database_id" required="1"/>
+                            <field name="numero_reception" required="1"/>
+                            <field name="move_id" required="1"/>
+                            <field name="date_reception" required="1"/>
+                            <field name="fournisseur_id"/>
+                        </group>
+                        <group>
+                            <field name="code_pg"/>
+                            <field name="designation"/>
+                            <field name="reference_fournisseur"/>
+                            <field name="numero_bl_fournisseur"/>
+                            <field name="numero_commande"/>
+                            <field name="quantite_livree"/>
+                            <field name="prix_achat_commande"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree view -->
+    <record id="view_is_reception_tree" model="ir.ui.view">
+        <field name="name">is.reception.tree</field>
+        <field name="model">is.reception</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="database_id" optional="show"/>
+                <field name="numero_reception" optional="show"/>
+                <field name="move_id" optional="hide"/>
+                <field name="date_reception" optional="show"/>
+                <field name="fournisseur_id" optional="show" widget="many2one_clickable"/>
+                <field name="code_pg" optional="show"/>
+                <field name="designation" optional="show"/>
+                <field name="reference_fournisseur" optional="hide"/>
+                <field name="numero_bl_fournisseur" optional="hide"/>
+                <field name="numero_commande" optional="hide"/>
+                <field name="quantite_livree" optional="show"/>
+                <field name="prix_achat_commande" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="view_is_reception_search" model="ir.ui.view">
+        <field name="name">is.reception.search</field>
+        <field name="model">is.reception</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="numero_reception"/>
+                <field name="fournisseur_id"/>
+                <field name="code_pg"/>
+                <field name="designation"/>
+                <field name="reference_fournisseur"/>
+                <field name="numero_commande"/>
+                <field name="date_reception"/>
+                <separator/>
+                <filter string="Cette semaine" name="this_week" 
+                        domain="[('date_reception', '&gt;=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%Y-%m-%d')),
+                                ('date_reception', '&lt;=', (context_today() + datetime.timedelta(days=6-context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                <filter string="Ce mois" name="this_month" 
+                        domain="[('date_reception', '&gt;=', (context_today().replace(day=1)).strftime('%Y-%m-%d')),
+                                ('date_reception', '&lt;=', ((context_today().replace(day=1) + datetime.timedelta(days=32)).replace(day=1) - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Site" name="group_site" context="{'group_by':'database_id'}"/>
+                    <filter string="Date de réception" name="group_date" context="{'group_by':'date_reception'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="is_reception_action" model="ir.actions.act_window">
+        <field name="name">Réceptions</field>
+        <field name="res_model">is.reception</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucune réception trouvée !
+            </p>
+            <p>
+                Ici vous pouvez consulter toutes les réceptions des différents sites.
+            </p>
+        </field>
+    </record>
+
+</odoo>

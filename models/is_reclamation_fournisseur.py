@@ -2,36 +2,49 @@
 from odoo import api, fields, models
 
 
+
+#TODO:
+#- Import des réceptions des sites dans Odoo (comme articles de tous les sites)
+#- Import et visu des photos
+#- Import des pieces jointes
+#- Lien avec les receptions et fournisseurs
+#- Num reception à calcluler
+#- Totaux des cout à calculer
+#- Code société à revoir
+
+
+
 class IsReclamationFournisseur(models.Model):
 	_name = "is.reclamation.fournisseur"
 	_description = "Réclamation Fournisseur"
 	_inherit = ["mail.thread", "mail.activity.mixin"]
+	_rec_name = "num_reclamation"
+	_order = "num_reclamation desc"
 
-	# Archivage standard Odoo
-	active = fields.Boolean(string="Actif", default=True, tracking=True)
 
-	# Intégration Dynacase
-	dynacase_id = fields.Integer(string="Id Dynacase", index=True, copy=False)
+	@api.depends('date_detection_defaut')
+	def _compute_annee_detection_defaut(self):
+		for rec in self:
+			if rec.date_detection_defaut:
+				rec.annee_detection_defaut = rec.date_detection_defaut.year
+			else:
+				rec.annee_detection_defaut = False
 
-	def lien_vers_dynacase_action(self):
-		for obj in self:
-			url = "https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s" % obj.dynacase_id
-			return {
-				"type": "ir.actions.act_url",
-				"url": url,
-				"target": "new",
-			}
+
+	def _get_site_id(self):
+		user = self.env['res.users'].browse(self._uid)
+		site_id = user.is_site_id.id
+		return site_id
+
+
+
 
 	# rf_fr_identification
-	createur = fields.Char(string="Créateur", tracking=True)
-	createurid = fields.Char(string="Créateur Id", tracking=True)
-	telephone = fields.Char(string="Téléphone", tracking=True)
-	courriel = fields.Char(string="Courriel", tracking=True)
-	soc = fields.Char(string="Site", tracking=True)
-	socid = fields.Char(string="ID du site", tracking=True)
-	soccode = fields.Integer(string="Code du site", tracking=True)
-	date_creation = fields.Date(string="Date de création", tracking=True)
-	num_reclamation = fields.Integer(string="Numéro de la réclamation", tracking=True)
+	site_id          = fields.Many2one('is.database', "Site", tracking=True, default=lambda self: self._get_site_id(),)
+	telephone        = fields.Char(string="Téléphone", tracking=True)
+	courriel         = fields.Char(string="Courriel", tracking=True)
+	date_creation    = fields.Date("Date création", tracking=True, default=lambda *a: fields.datetime.now())
+	num_reclamation  = fields.Integer(string="Numéro de la réclamation", tracking=True, index=True, copy=False, readonly=True)
 	type_reclamation = fields.Selection(
 		selection=[
 			("", ""),
@@ -42,9 +55,10 @@ class IsReclamationFournisseur(models.Model):
 		string="Type de réclamation",
 		tracking=True,
 	)
-	nb_reclamations = fields.Integer(string="Nombre de réclamations en 12 mois", tracking=True)
-	date_detection_defaut = fields.Date(string="Date de détection du défaut", tracking=True)
-	annee_detection_defaut = fields.Char(string="Année de détection du défaut", tracking=True)
+	nb_reclamations        = fields.Integer(string="Nombre de réclamations en 12 mois", tracking=True)
+	date_detection_defaut  = fields.Date(string="Date détection", help="Date de détection du défaut", tracking=True, default=lambda *a: fields.datetime.now())
+	annee_detection_defaut = fields.Char(string="Année détection", tracking=True, compute="_compute_annee_detection_defaut", store=True, readonly=True, copy=False)
+
 
 	# rf_fr_nature_reclamation
 	nature_qualite = fields.Selection(
@@ -58,8 +72,10 @@ class IsReclamationFournisseur(models.Model):
 		, tracking=True)
 
 	# rf_fr_rcp_concernee
+	reception_id = fields.Many2one('is.reception', "Réception", tracking=True)
 	num_reception = fields.Char(string="Numéro de réception", tracking=True)
-	fournisseur = fields.Char(string="Fournisseur", tracking=True)
+	#fournisseur = fields.Char(string="Fournisseur", tracking=True)
+	fournisseur_id = fields.Many2one('res.partner', 'Fournisseur', tracking=True, domain=[("is_company","=",True), ("supplier","=",True)])
 	codepg = fields.Char(string="Référence PG", tracking=True)
 	designation = fields.Char(string="Désignation", tracking=True)
 	ref_fournisseur = fields.Char(string="Référence fournisseur", tracking=True)
@@ -112,6 +128,7 @@ class IsReclamationFournisseur(models.Model):
 	# rf_fr_photo
 	photo = fields.Binary(string="Photo", attachment=True, tracking=True)
 
+
 	# rf_fr_tri_interne_pg
 	motif_tri = fields.Char(string="Motif du tri", tracking=True)
 	nombre_heures = fields.Float(string="Nombres d'heures", tracking=True)
@@ -153,6 +170,75 @@ class IsReclamationFournisseur(models.Model):
 		string="Coûts comptables",
 		tracking=True,
 	)
+	piece_jointe_ids = fields.Many2many("ir.attachment", "is_reclamation_fournisseur_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
+	active = fields.Boolean(string="Actif", default=True, tracking=True)
+	dynacase_id = fields.Integer(string="Id Dynacase", index=True, copy=False)
+
+
+
+
+
+	def lien_vers_dynacase_action(self):
+		for obj in self:
+			url = "https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s" % obj.dynacase_id
+			return {
+				"type": "ir.actions.act_url",
+				"url": url,
+				"target": "new",
+			}
+
+
+	@api.model_create_multi
+	def create(self, vals_list):
+		for vals in vals_list:
+			lines=self.env['is.reclamation.fournisseur'].search([],order='num_reclamation desc', limit=1)
+			num_reclamation=1
+			for line in lines:
+				num_reclamation = line.num_reclamation + 1
+			vals['num_reclamation'] = num_reclamation
+		return super().create(vals_list)
+
+
+	@api.onchange('reception_id')
+	def onchange_reception_id(self):
+		for obj in self:
+			numero_reception = fournisseur_id = code_pg = designation = ref_fournisseur = False
+			numero_bl_fournisseur = numero_commande = prix_achat_commande = quantite_livree = date_reception = False
+			if obj.reception_id:
+				numero_reception = obj.reception_id.numero_reception
+				fournisseur_id   = obj.reception_id.fournisseur_id.id 
+				code_pg          = obj.reception_id.code_pg
+				designation      = obj.reception_id.designation
+				ref_fournisseur = obj.reception_id.reference_fournisseur
+				numero_bl_fournisseur = obj.reception_id.numero_bl_fournisseur
+				numero_commande     = obj.reception_id.numero_commande
+				prix_achat_commande = obj.reception_id.prix_achat_commande
+				quantite_livree     = obj.reception_id.quantite_livree
+				date_reception      = obj.reception_id.date_reception
+			obj.num_reception = numero_reception
+			obj.fournisseur_id = fournisseur_id
+			obj.codepg = code_pg
+			obj.designation = designation
+			obj.ref_fournisseur = ref_fournisseur
+			obj.num_bl_fournisseur = numero_bl_fournisseur
+			obj.num_commande = numero_commande
+			obj.prix_achat_commande = prix_achat_commande
+			obj.quantite_livree = quantite_livree
+			obj.date_reception = date_reception
+
+
+
+	@api.onchange('fournisseur_id')
+	def onchange_fournisseur_id(self):
+		for obj in self:
+			nom_fournisseur = adr_fournisseur = code_fournisseur = False
+			if obj.fournisseur_id:
+				nom_fournisseur = obj.fournisseur_id.name
+				adr_fournisseur = "%s %s %s %s"%(obj.fournisseur_id.street,obj.fournisseur_id.street2,obj.fournisseur_id.zip,obj.fournisseur_id.city)
+				code_fournisseur = obj.fournisseur_id.is_code
+			obj.nom_fournisseur = nom_fournisseur
+			obj.adr_fournisseur = adr_fournisseur
+			obj.code_fournisseur = code_fournisseur
 
 
 class IsReclamationFournisseurAutreCout(models.Model):

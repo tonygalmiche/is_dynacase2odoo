@@ -10,15 +10,12 @@
 			<field name="arch" type="xml">
                 <tree string="Réclamations fournisseurs" create="1" delete="0">
                     <!-- Identification -->
-                    <field name="soccode" optional="show"/>
+                    <field name="site_id" optional="show"/>
                     <field name="num_reclamation" optional="show"/>
                     <field name="type_reclamation" optional="show"/>
                     <field name="date_detection_defaut" optional="show"/>
-                    <field name="annee_detection_defaut" optional="show"/>
-                    <field name="nb_reclamations" optional="show"/>
-                    <field name="soc" optional="show"/>
+                    <field name="annee_detection_defaut" optional="hide"/>
                     <field name="date_creation" optional="show"/>
-                    <field name="createur" optional="show"/>
                     <field name="telephone" optional="show"/>
                     <field name="courriel" optional="show"/>
 
@@ -29,7 +26,7 @@
 
                     <!-- Réception concernée -->
                     <field name="num_reception" optional="hide"/>
-                    <field name="fournisseur" optional="hide"/>
+                    <field name="fournisseur_id"  optional="show" widget="many2one_clickable"/>
                     <field name="codepg" optional="hide"/>
                     <field name="designation" optional="hide"/>
                     <field name="ref_fournisseur" optional="hide"/>
@@ -101,15 +98,16 @@
 			<field name="model">is.reclamation.fournisseur</field>
 			<field name="arch" type="xml">
 				<search string="Recherche Réclamation">
+					<field name="site_id"/>
 					<field name="num_reclamation"/>
 					<field name="type_reclamation"/>
-					<field name="fournisseur"/>
+					<field name="fournisseur_id"/>
 					<field name="codepg"/>
 					<field name="date_creation"/>
 					<field name="date_cloture_reel"/>
 					<group expand="0" string="Group By">
 						<filter name="group_type" string="Type" context="{'group_by': 'type_reclamation'}"/>
-						<filter name="group_fournisseur" string="Fournisseur" context="{'group_by': 'fournisseur'}"/>
+						<filter name="group_fournisseur" string="Fournisseur" context="{'group_by': 'fournisseur_id'}"/>
 						<filter name="group_annee" string="Année détection" context="{'group_by': 'annee_detection_defaut'}"/>
 						<filter name="group_date_creation" string="Date création" context="{'group_by': 'date_creation'}"/>
 					</group>
@@ -137,51 +135,23 @@
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
 						<group string="Identification">
 							<group>
-								<field name="soccode"/>
-								<field name="num_reclamation"/>
-								<field name="type_reclamation"/>
-								<field name="date_detection_defaut"/>
-								<field name="annee_detection_defaut"/>
-								<field name="nb_reclamations"/>
-							</group>
-							<group>
-								<field name="soc"/>
-								<field name="date_creation"/>
-								<field name="createur"/>
+								<field name="type_reclamation" required="1"/>
 								<field name="telephone"/>
 								<field name="courriel"/>
 							</group>
+							<group>
+								<field name="num_reclamation"/>
+								<field name="site_id" required="1"/>
+								<field name="date_creation"/>
+								<field name="date_detection_defaut" required="1"/>
+								<field name="annee_detection_defaut" invisible="1"/>
+						    </group>
 
-                            <!-- Nature -->
-                            <group string="Nature de la réclamation">
+                            <!-- Description de la réclamation -->
+                            <group string="Description de la réclamation">
                                 <field name="nature_qualite"/>
                                 <field name="nature_logistique"/>
                                 <field name="nature_administratif"/>
-                            </group>
-
-                            <!-- Réception concernée -->
-                            <group string="Réception concernée">
-                                <field name="num_reception"/>
-                                <field name="fournisseur"/>
-                                <field name="codepg"/>
-                                <field name="designation"/>
-                                <field name="ref_fournisseur"/>
-                                <field name="num_bl_fournisseur"/>
-                                <field name="num_commande"/>
-                                <field name="prix_achat_commande"/>
-                                <field name="quantite_livree"/>
-                                <field name="date_reception"/>
-                            </group>
-
-                            <!-- Fournisseur concerné -->
-                            <group string="Fournisseur concerné">
-                                <field name="nom_fournisseur"/>
-                                <field name="adr_fournisseur"/>
-                                <field name="code_fournisseur"/>
-                            </group>
-
-                            <!-- Description -->
-                            <group string="Description de la réclamation">
                                 <field name="quantite_nc"/>
                                 <field name="quantite_a_facturer"/>
                                 <field name="defaut_constate_choix"/>
@@ -191,17 +161,39 @@
                                 <field name="commentaire_description"/>
                             </group>
 
+                            <!-- Réception concernée -->
+                            <group string="Réception concernée">
+                                <field name="reception_id"/>
+                                <field name="num_reception" force_save="1" invisible="1"/>
+                                <field name="fournisseur_id"/>
+                                <field name="nom_fournisseur" force_save="1" readonly="1"/>
+                                <field name="adr_fournisseur" force_save="1" readonly="1"/>
+                                <field name="code_fournisseur" force_save="1" readonly="1"/>
+                                <field name="codepg" force_save="1" readonly="1"/>
+                                <field name="designation" force_save="1" readonly="1"/>
+                                <field name="ref_fournisseur" force_save="1" readonly="1"/>
+                                <field name="num_bl_fournisseur" force_save="1" readonly="1"/>
+                                <field name="num_commande" force_save="1" readonly="1"/>
+                                <field name="prix_achat_commande" force_save="1" readonly="1"/>
+                                <field name="quantite_livree" force_save="1" readonly="1"/>
+                                <field name="date_reception" force_save="1" readonly="1"/>
+                            </group>
+
+                           
+
                             <!-- Tri interne -->
                             <group string="Tri interne Plastigray">
                                 <field name="motif_tri"/>
                                 <field name="nombre_heures"/>
                             </group>
+                        </group>
+                       
+                        <!-- Photo-->
+                         <div style="text-align:center"> 
+                            <field name="photo" widget='image' style="max-width:1200px"/>
+                        </div>
 
-                            <!-- Photo-->
-                            <group string="Photo">
-                                <field name="photo" filename="photo"/>
-                            </group>
-
+                        <group>
                             <!-- Réponse fournisseur (objectif) -->
                             <group string="Réponse fournisseur (objectif)">
                                 <field name="date_secu_fourn_obj"/>
@@ -216,29 +208,14 @@
                                 <field name="date_analyse_reel"/>
                                 <field name="date_plan_reel"/>
                                 <field name="date_cloture_reel"/>
-                            </group>
-
-
-                            <!-- Commentaire -->
-                            <group string="Commentaire">
                                 <field name="commentaire_reponse"/>
                             </group>
 
 
 
-                            <!-- Autres coûts -->
-                            <group string="Autres coûts">
-                                <field name="autre_cout_ids" context="{'default_reclamation_id': active_id}">
-                                    <tree editable="bottom">
-                                        <field name="type_cout"/>
-                                        <field name="montant_autre"/>
-                                    </tree>
-                                </field>
-                            </group>
-
                             <!-- Coûts comptables -->
                             <group string="Coûts comptables">
-                                <field name="cout_compta_ids" context="{'default_reclamation_id': active_id}">
+                                <field name="cout_compta_ids" context="{'default_reclamation_id': active_id}" nolabel="1" colspan="2">
                                     <tree editable="bottom">
                                         <field name="num_facture"/>
                                         <field name="date_cout"/>
@@ -247,14 +224,26 @@
                                 </field>
                             </group>
 
+
+                            <!-- Autres coûts -->
+                            <group string="Autres coûts">
+                                <field name="autre_cout_ids" context="{'default_reclamation_id': active_id}" nolabel="1" colspan="2">
+                                    <tree editable="bottom">
+                                        <field name="type_cout"/>
+                                        <field name="montant_autre"/>
+                                    </tree>
+                                </field>
+                            </group>
+
+
                             <!-- Coûts globaux -->
                             <group string="Coûts">
                                 <field name="couts_produits"/>
                                 <field name="couts_tris"/>
                             </group>
-
-
-
+                        </group>
+                        <group string="Pièces jointes">
+                            <field name="piece_jointe_ids" widget="many2many_binary" nolabel="1" colspan="2"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
