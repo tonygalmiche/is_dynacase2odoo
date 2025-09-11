@@ -27,8 +27,9 @@
                     <!-- Réception concernée -->
                     <field name="num_reception" optional="show"/>
                     <field name="fournisseur_id"  optional="hide" widget="many2one_clickable"/>
-                    <field name="code_fournisseur"  optional="show"/>
-                    <field name="nom_fournisseur"  optional="show"/>
+                    <field name="nom_fournisseur" optional="show"/>
+                    <field name="adr_fournisseur" optional="hide"/>
+                    <field name="code_fournisseur" optional="hide"/>
                     <field name="codepg" optional="hide"/>
                     <field name="designation" optional="hide"/>
                     <field name="ref_fournisseur" optional="hide"/>
@@ -38,10 +39,6 @@
                     <field name="quantite_livree" optional="hide"/>
                     <field name="date_reception" optional="hide"/>
 
-                    <!-- Fournisseur concerné -->
-                    <field name="nom_fournisseur" optional="hide"/>
-                    <field name="adr_fournisseur" optional="hide"/>
-                    <field name="code_fournisseur" optional="hide"/>
 
                     <!-- Description -->
                     <field name="quantite_nc" optional="hide"/>
