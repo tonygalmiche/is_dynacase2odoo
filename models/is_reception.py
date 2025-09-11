@@ -77,7 +77,7 @@ class is_reception(models.Model):
                         and sm.state='done'
                         and sp.state='done'
                         and sp.is_date_reception>='2025-01-01'
-                        and (ic.name::INTEGER<60 or ic.name in ('71','72'))
+                        and (ic.name::INTEGER<=60 or ic.name in ('71','72'))
                 """
                 cur.execute(SQL)
                 rows = cur.fetchall()
