@@ -2,18 +2,6 @@
 from odoo import api, fields, models
 
 
-
-#TODO:
-#- Import des réceptions des sites dans Odoo (comme articles de tous les sites)
-#- Import et visu des photos
-#- Import des pieces jointes
-#- Lien avec les receptions et fournisseurs
-#- Num reception à calcluler
-#- Totaux des cout à calculer
-#- Code société à revoir
-
-
-
 class IsReclamationFournisseur(models.Model):
 	_name = "is.reclamation.fournisseur"
 	_description = "Réclamation Fournisseur"
