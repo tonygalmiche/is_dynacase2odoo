@@ -8,7 +8,8 @@
 			<field name="model">is.ctrl.rcp.gamme</field>
 			<field name="arch" type="xml">
 				<tree>
-					<field name="dossier_article_id" string="Code PG" optional="show"/>
+					<field name="dossier_article_id" optional="show" widget="many2one_clickable"/>
+					<field name="dossier_article" optional="hide"/>
 					<field name="responsable_id" optional="show"/>
 					<field name="date_fin_prevue" optional="show"/>
 					<field name="etat" widget="badge" optional="show"/>
@@ -49,32 +50,31 @@
 						<group>
 							<group>
 								<field name="dossier_article_id" required="1"/>
-								<field name="responsable_id" required="1"/>
+								<field name="dossier_article" attrs="{'invisible': [('dossier_article', '=', False)]}"/>
+								<field name="responsable_id"/>
 								<field name="date_fin_prevue"/>
 								<field name="etat"/>
 							</group>
-							<group string="Pièces jointes">
-								<field name="piece_jointe_ids" widget="many2many_binary"/>
-							</group>
 						</group>
-						<notebook>
-							<page string="Contrôles">
-								<field name="controle_ids" context="{'default_gamme_id': active_id}" nolabel="1">
-									<tree editable="bottom">
+						<group string="Pièces jointes">
+							<field name="piece_jointe_ids" widget="many2many_binary" nolabel="1" colspan="2"/>
+						</group>
+						<group string="Contrôles">
+							<field name="controle_ids" context="{'default_gamme_id': active_id}" nolabel="1" colspan="2">
+								<tree editable="bottom">
+									<field name="intitule_controle"/>
+									<field name="tolerance_mini"/>
+									<field name="tolerance_maxi"/>
+								</tree>
+								<form string="Contrôle">
+									<group>
 										<field name="intitule_controle"/>
 										<field name="tolerance_mini"/>
 										<field name="tolerance_maxi"/>
-									</tree>
-									<form string="Contrôle">
-										<group>
-											<field name="intitule_controle"/>
-											<field name="tolerance_mini"/>
-											<field name="tolerance_maxi"/>
-										</group>
-									</form>
-								</field>
-							</page>
-						</notebook>
+									</group>
+								</form>
+							</field>
+						</group>
 					</sheet>
 					<div class="oe_chatter">
 						<field name="message_follower_ids"/>
