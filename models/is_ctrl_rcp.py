@@ -26,14 +26,17 @@ class IsCtrlRcpGamme(models.Model):
 	# Archivage standard Odoo
 	active = fields.Boolean(string="Actif", default=True, tracking=True)
 
-	piece_jointe_ids = fields.Many2many(
-		"ir.attachment",
-		"is_ctrl_rcp_gamme_attachment_rel",
-		"gamme_id",
-		"attachment_id",
-		string="Pièces jointes",
-		tracking=True,
-	)
+	# piece_jointe_ids = fields.Many2many(
+	# 	"ir.attachment",
+	# 	"is_ctrl_rcp_gamme_attachment_rel",
+	# 	"gamme_id",
+	# 	"attachment_id",
+	# 	string="Pièces jointes",
+	# 	tracking=True,
+	# )
+
+	piece_jointe_ids = fields.Many2many("ir.attachment", "is_ctrl_rcp_gamme_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
+
 
 	# Lignes de contrôles
 	controle_ids = fields.One2many(

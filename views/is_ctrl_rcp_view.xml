@@ -14,17 +14,16 @@
 					<field name="date_fin_prevue" optional="show"/>
 					<field name="etat" widget="badge" optional="show"/>
 					<field name="piece_jointe_ids" widget="many2many_tags" optional="hide"/>
+					<field name="create_date" optional="hide" string="Créé le"/>
+					<field name="create_uid"  optional="hide" string="Créé par"/>
+					<field name="write_date"  optional="hide" string="Modifié le"/>
+					<field name="write_uid"   optional="hide" string="Modifié par"/>
 					<button 
 						title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
 						attrs="{'invisible': [('dynacase_id', '=', 0)]}"
 						groups="base.group_system"
 					/>
 					<field name="dynacase_id" optional="hide" groups="base.group_system"/>
-					<!-- Champs d'audit, calqués sur is_erd_tree_view -->
-					<field name="create_date" optional="hide" string="Créé le"/>
-					<field name="create_uid"  optional="hide" string="Créé par"/>
-					<field name="write_date"  optional="hide" string="Modifié le"/>
-					<field name="write_uid"   optional="hide" string="Modifié par"/>
 				</tree>
 			</field>
 		</record>
