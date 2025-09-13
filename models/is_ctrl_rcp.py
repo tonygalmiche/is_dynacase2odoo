@@ -72,8 +72,8 @@ class IsCtrlRcpGammeControle(models.Model):
 		index=True,
 	)
 	intitule_controle = fields.Char(string="Intitulé du contrôle", required=True)
-	tolerance_mini    = fields.Float(string="Tolérance mini")
-	tolerance_maxi    = fields.Float(string="Tolérance maxi")
+	tolerance_mini    = fields.Char(string="Tolérance mini")
+	tolerance_maxi    = fields.Char(string="Tolérance maxi")
 
 
 class IsCtrlRcpSaisie(models.Model):
