@@ -1,432 +1,426 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-	<data>
+    <data>
 
-		<!-- is.ctrl.rcp.gamme: Tree View -->
-		<record id="is_ctrl_rcp_gamme_tree_view" model="ir.ui.view">
-			<field name="name">is_ctrl_rcp_gamme_tree_view</field>
-			<field name="model">is.ctrl.rcp.gamme</field>
-			<field name="arch" type="xml">
-				<tree>
-					<field name="dossier_article_id" optional="show" widget="many2one_clickable"/>
-					<field name="dossier_article" optional="hide"/>
-					<field name="responsable_id" optional="show"/>
-					<field name="date_fin_prevue" optional="show"/>
-					<field name="etat" widget="badge" optional="show"/>
-					<field name="piece_jointe_ids" widget="many2many_tags" optional="hide"/>
-					<field name="create_date" optional="hide" string="Créé le"/>
-					<field name="create_uid"  optional="hide" string="Créé par"/>
-					<field name="write_date"  optional="hide" string="Modifié le"/>
-					<field name="write_uid"   optional="hide" string="Modifié par"/>
-					<button 
-						title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
-						attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-						groups="base.group_system"
-					/>
-					<field name="dynacase_id" optional="hide" groups="base.group_system"/>
-				</tree>
-			</field>
-		</record>
+        <!-- is.ctrl.rcp.gamme: Tree View -->
+        <record id="is_ctrl_rcp_gamme_tree_view" model="ir.ui.view">
+            <field name="name">is_ctrl_rcp_gamme_tree_view</field>
+            <field name="model">is.ctrl.rcp.gamme</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="dossier_article_id" optional="show" widget="many2one_clickable"/>
+                    <field name="dossier_article" optional="hide"/>
+                    <field name="responsable_id" optional="show"/>
+                    <field name="date_fin_prevue" optional="show"/>
+                    <field name="etat" widget="badge" optional="show"/>
+                    <field name="piece_jointe_ids" widget="many2many_tags" optional="hide"/>
+                    <field name="create_date" optional="hide" string="Créé le"/>
+                    <field name="create_uid"  optional="hide" string="Créé par"/>
+                    <field name="write_date"  optional="hide" string="Modifié le"/>
+                    <field name="write_uid"   optional="hide" string="Modifié par"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
+                </tree>
+            </field>
+        </record>
 
-		<!-- is.ctrl.rcp.gamme: Form View -->
-		<record id="is_ctrl_rcp_gamme_form_view" model="ir.ui.view">
-			<field name="name">is_ctrl_rcp_gamme_form_view</field>
-			<field name="model">is.ctrl.rcp.gamme</field>
-			<field name="arch" type="xml">
-						<form string="Gamme Contrôle Réception">
-							<header>
-								<field name="dynacase_id" invisible="1"/>
-								<button 
-									string="Dynacase" name="lien_vers_dynacase_action"
-									type="object" class="btn btn-info"
-									attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-									groups="base.group_system"
-								/>
-							</header>
-							<sheet>
-								<field name="active" invisible="1"/>
-								<widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-						<group>
-							<group>
-								<field name="dossier_article_id" required="1"/>
-								<field name="dossier_article" attrs="{'invisible': [('dossier_article', '=', False)]}"/>
-								<field name="responsable_id"/>
-								<field name="date_fin_prevue"/>
-								<field name="etat"/>
-							</group>
-						</group>
-						<group string="Pièces jointes">
-							<field name="piece_jointe_ids" widget="many2many_binary" nolabel="1" colspan="2"/>
-						</group>
-						<group string="Contrôles">
-							<field name="controle_ids" context="{'default_gamme_id': active_id}" nolabel="1" colspan="2">
-								<tree editable="bottom">
-									<field name="intitule_controle"/>
-									<field name="tolerance_mini"/>
-									<field name="tolerance_maxi"/>
-								</tree>
-								<form string="Contrôle">
-									<group>
-										<field name="intitule_controle"/>
-										<field name="tolerance_mini"/>
-										<field name="tolerance_maxi"/>
-									</group>
-								</form>
-							</field>
-						</group>
-					</sheet>
-					<div class="oe_chatter">
-						<field name="message_follower_ids"/>
-						<field name="activity_ids"/>
-						<field name="message_ids"/>
-					</div>
-				</form>
-			</field>
-		</record>
+        <!-- is.ctrl.rcp.gamme: Form View -->
+        <record id="is_ctrl_rcp_gamme_form_view" model="ir.ui.view">
+            <field name="name">is_ctrl_rcp_gamme_form_view</field>
+            <field name="model">is.ctrl.rcp.gamme</field>
+            <field name="arch" type="xml">
+                        <form string="Gamme Contrôle Réception">
+                            <header>
+                                <field name="dynacase_id" invisible="1"/>
+                                <button 
+                                    string="Dynacase" name="lien_vers_dynacase_action"
+                                    type="object" class="btn btn-info"
+                                    attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                                    groups="base.group_system"
+                                />
+                            </header>
+                            <sheet>
+                                <field name="active" invisible="1"/>
+                                <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <group>
+                            <group>
+                                <field name="dossier_article_id" required="1"/>
+                                <field name="dossier_article" attrs="{'invisible': [('dossier_article', '=', False)]}"/>
+                                <field name="responsable_id"/>
+                                <field name="date_fin_prevue"/>
+                                <field name="etat"/>
+                            </group>
+                        </group>
+                        <group string="Pièces jointes">
+                            <field name="piece_jointe_ids" widget="many2many_binary" nolabel="1" colspan="2"/>
+                        </group>
+                        <group string="Contrôles">
+                            <field name="controle_ids" context="{'default_gamme_id': active_id}" nolabel="1" colspan="2">
+                                <tree editable="bottom">
+                                    <field name="intitule_controle"/>
+                                    <field name="tolerance_mini"/>
+                                    <field name="tolerance_maxi"/>
+                                </tree>
+                                <form string="Contrôle">
+                                    <group>
+                                        <field name="intitule_controle"/>
+                                        <field name="tolerance_mini"/>
+                                        <field name="tolerance_maxi"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
 
-		<!-- is.ctrl.rcp.gamme: Search View -->
-		<record id="is_ctrl_rcp_gamme_search_view" model="ir.ui.view">
-			<field name="name">is_ctrl_rcp_gamme_search_view</field>
-			<field name="model">is.ctrl.rcp.gamme</field>
-			<field name="arch" type="xml">
-				<search>
-					<field name="dossier_article_id" string="Code PG"/>
-					<field name="responsable_id"/>
-					<field name="date_fin_prevue"/>
-					<field name="etat"/>
-				</search>
-			</field>
-		</record>
+        <!-- is.ctrl.rcp.gamme: Search View -->
+        <record id="is_ctrl_rcp_gamme_search_view" model="ir.ui.view">
+            <field name="name">is_ctrl_rcp_gamme_search_view</field>
+            <field name="model">is.ctrl.rcp.gamme</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="dossier_article_id" string="Code PG"/>
+                    <field name="responsable_id"/>
+                    <field name="date_fin_prevue"/>
+                    <field name="etat"/>
+                </search>
+            </field>
+        </record>
 
-		<!-- is.ctrl.rcp.gamme.controle: Inline views (optional) -->
-		<record id="is_ctrl_rcp_gamme_controle_tree_view" model="ir.ui.view">
-			<field name="name">is_ctrl_rcp_gamme_controle_tree_view</field>
-			<field name="model">is.ctrl.rcp.gamme.controle</field>
-			<field name="arch" type="xml">
-				<tree>
-					<field name="gamme_id" optional="show"/>
-					<field name="intitule_controle" optional="show"/>
-					<field name="tolerance_mini" optional="show"/>
-					<field name="tolerance_maxi" optional="show"/>
-				</tree>
-			</field>
-		</record>
+        <!-- is.ctrl.rcp.gamme.controle: Inline views (optional) -->
+        <record id="is_ctrl_rcp_gamme_controle_tree_view" model="ir.ui.view">
+            <field name="name">is_ctrl_rcp_gamme_controle_tree_view</field>
+            <field name="model">is.ctrl.rcp.gamme.controle</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="gamme_id" optional="show"/>
+                    <field name="intitule_controle" optional="show"/>
+                    <field name="tolerance_mini" optional="show"/>
+                    <field name="tolerance_maxi" optional="show"/>
+                </tree>
+            </field>
+        </record>
 
-		<record id="is_ctrl_rcp_gamme_controle_form_view" model="ir.ui.view">
-			<field name="name">is_ctrl_rcp_gamme_controle_form_view</field>
-			<field name="model">is.ctrl.rcp.gamme.controle</field>
-			<field name="arch" type="xml">
-				<form string="Contrôle">
-					<sheet>
-						<group>
-							<field name="gamme_id"/>
-							<field name="intitule_controle"/>
-							<field name="tolerance_mini"/>
-							<field name="tolerance_maxi"/>
-						</group>
-					</sheet>
-				</form>
-			</field>
-		</record>
+        <record id="is_ctrl_rcp_gamme_controle_form_view" model="ir.ui.view">
+            <field name="name">is_ctrl_rcp_gamme_controle_form_view</field>
+            <field name="model">is.ctrl.rcp.gamme.controle</field>
+            <field name="arch" type="xml">
+                <form string="Contrôle">
+                    <sheet>
+                        <group>
+                            <field name="gamme_id"/>
+                            <field name="intitule_controle"/>
+                            <field name="tolerance_mini"/>
+                            <field name="tolerance_maxi"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
-		<!-- Action -->
-		<record id="is_ctrl_rcp_gamme_action" model="ir.actions.act_window">
-			<field name="name">Gamme Contrôle Réception</field>
-			<field name="res_model">is.ctrl.rcp.gamme</field>
-			<field name="view_mode">tree,form</field>
-			<field name="search_view_id" ref="is_ctrl_rcp_gamme_search_view"/>
-			<field name="context">{}</field>
-		</record>
+        <!-- Action -->
+        <record id="is_ctrl_rcp_gamme_action" model="ir.actions.act_window">
+            <field name="name">Gamme Contrôle Réception</field>
+            <field name="res_model">is.ctrl.rcp.gamme</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="is_ctrl_rcp_gamme_search_view"/>
+            <field name="context">{}</field>
+        </record>
 
-		<!-- ================= RAPPORT RCP ================= -->
-		<record id="is_ctrl_rcp_rapport_tree_view" model="ir.ui.view">
-			<field name="name">is_ctrl_rcp_rapport_tree_view</field>
-			<field name="model">is.ctrl.rcp.rapport</field>
-			<field name="arch" type="xml">
-				<tree>
-					<field name="titre" optional="show"/>
-					<field name="num_rapport" optional="show"/>
-					<field name="soc" optional="show"/>
-					<field name="num_rcp" optional="show"/>
-					<field name="codepg" optional="show"/>
-					<field name="designation" optional="show"/>
-					<field name="moule" optional="show"/>
-					<field name="fournisseur" optional="show"/>
-					<field name="code_fournisseur" optional="hide"/>
-					<field name="qt_annonce" optional="hide"/>
-					<field name="qt_recue" optional="hide"/>
-					<field name="num_lot_fourn" optional="hide"/>
-					<field name="date_rcp" optional="hide"/>
-					<field name="num_bl" optional="hide"/>
-					<field name="num_lot_of" optional="hide"/>
-					<field name="date_ctrl" optional="hide"/>
-					<field name="createurid" optional="hide"/>
-					<field name="createur" optional="hide"/>
-					<field name="gamme_ctrl_rcpid" optional="hide"/>
-					<field name="gamme_ctrl_rcp" optional="hide"/>
-					<field name="condi_resultat" optional="hide"/>
-					<field name="conform_resultat" optional="hide"/>
-					<field name="decision_rcp" optional="hide"/>
+        <!-- ================= RAPPORT RCP ================= -->
+        <record id="is_ctrl_rcp_rapport_tree_view" model="ir.ui.view">
+            <field name="name">is_ctrl_rcp_rapport_tree_view</field>
+            <field name="model">is.ctrl.rcp.rapport</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="num_rapport" optional="show"/>
+                    <field name="site_id" optional="show"/>
+                    <field name="reception_id" optional="show"/>
+                    <field name="codepg" optional="show"/>
+                    <field name="designation" optional="show"/>
+                    <field name="moule" optional="show"/>
+                    <field name="fournisseur_id" optional="show"/>
+                    <field name="fournisseur" optional="hide"/>
+                    <field name="code_fournisseur" optional="hide"/>
+                    <field name="qt_annonce" optional="hide"/>
+                    <field name="qt_recue" optional="hide"/>
+                    <field name="num_lot_fourn" optional="hide"/>
+                    <field name="date_rcp" optional="hide"/>
+                    <field name="num_bl" optional="hide"/>
+                    <field name="num_lot_of" optional="hide"/>
+                    <field name="date_ctrl" optional="hide"/>
+                    <field name="gamme_id" optional="hide"/>
+                    <field name="condi_resultat" optional="hide"/>
+                    <field name="conform_resultat" optional="hide"/>
+                    <field name="decision_rcp" optional="hide"/>
 
-					<!-- Lien Dynacase: même logique que is_erd_tree_view -->
-					<button 
-						title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
-						attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-						groups="base.group_system"
-					/>
-					<field name="dynacase_id" optional="hide" groups="base.group_system"/>
+                    <!-- Lien Dynacase: même logique que is_erd_tree_view -->
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
 
-					<!-- Champs d'audit, calqués sur is_erd_tree_view -->
-					<field name="create_date" optional="hide" string="Créé le"/>
-					<field name="create_uid"  optional="hide" string="Créé par"/>
-					<field name="write_date"  optional="hide" string="Modifié le"/>
-					<field name="write_uid"   optional="hide" string="Modifié par"/>
-				</tree>
-			</field>
-		</record>
+                    <!-- Champs d'audit, calqués sur is_erd_tree_view -->
+                    <field name="create_date" optional="hide" string="Créé le"/>
+                    <field name="create_uid"  optional="hide" string="Créé par"/>
+                    <field name="write_date"  optional="hide" string="Modifié le"/>
+                    <field name="write_uid"   optional="hide" string="Modifié par"/>
+                </tree>
+            </field>
+        </record>
 
-		<record id="is_ctrl_rcp_rapport_form_view" model="ir.ui.view">
-			<field name="name">is_ctrl_rcp_rapport_form_view</field>
-			<field name="model">is.ctrl.rcp.rapport</field>
-			<field name="arch" type="xml">
-				<form string="Rapport Contrôle Réception">
-					<header>
-						<field name="dynacase_id" invisible="1"/>
-						<button 
-							string="Dynacase" name="lien_vers_dynacase_action"
-							type="object" class="btn btn-info"
-							attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-							groups="base.group_system"
-						/>
-					</header>
-					<sheet>
-						<field name="active" invisible="1"/>
-						<widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-						<group string="Identification">
-							<group>
-								<field name="titre"/>
-								<field name="num_rapport"/>
-								<field name="soc"/>
-								<field name="num_rcp"/>
-								<field name="codepg"/>
-								<field name="designation"/>
-								<field name="moule"/>
-							</group>
-							<group>
-								<field name="fournisseur"/>
-								<field name="code_fournisseur"/>
-								<field name="qt_annonce"/>
-								<field name="qt_recue"/>
-								<field name="num_lot_fourn"/>
-								<field name="date_rcp"/>
-								<field name="num_bl"/>
-								<field name="num_lot_of"/>
-							</group>
-						</group>
-						<group string="Contrôle">
-							<group>
-								<field name="date_ctrl"/>
-								<field name="createurid"/>
-								<field name="createur"/>
-							</group>
-							<group>
-								<field name="gamme_ctrl_rcpid"/>
-								<field name="gamme_ctrl_rcp"/>
-								<field name="gamme_ctrl_rcp_pdf" filename="gamme_ctrl_rcp"/>
-							</group>
-						</group>
-						<group string="Résultats">
-							<group>
-								<field name="condi_resultat"/>
-								<field name="conform_resultat"/>
-								<field name="decision_rcp"/>
-							</group>
-							<group>
-								<field name="commentaire"/>
-								<field name="pieces_jointes" widget="many2many_binary"/>
-							</group>
-						</group>
-					</sheet>
-					<div class="oe_chatter">
-						<field name="message_follower_ids"/>
-						<field name="activity_ids"/>
-						<field name="message_ids"/>
-					</div>
-				</form>
-			</field>
-		</record>
+        <record id="is_ctrl_rcp_rapport_form_view" model="ir.ui.view">
+            <field name="name">is_ctrl_rcp_rapport_form_view</field>
+            <field name="model">is.ctrl.rcp.rapport</field>
+            <field name="arch" type="xml">
+                <form string="Rapport Contrôle Réception">
+                    <header>
+                        <field name="dynacase_id" invisible="1"/>
+                        <button 
+                            string="Dynacase" name="lien_vers_dynacase_action"
+                            type="object" class="btn btn-info"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                            groups="base.group_system"
+                        />
+                    </header>
+                    <sheet>
+                        <field name="active" invisible="1"/>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <group string="Identification">
+                            <group>
+                                <field name="num_rapport"/>
+                                <field name="site_id"/>
+                                <field name="reception_id"/>
+                                <field name="codepg"/>
+                                <field name="designation"/>
+                                <field name="moule"/>
+                            </group>
+                            <group>
+                                <field name="fournisseur_id"/>
+                                <field name="fournisseur"/>
+                                <field name="code_fournisseur"/>
+                                <field name="qt_annonce"/>
+                                <field name="qt_recue"/>
+                                <field name="num_lot_fourn"/>
+                                <field name="date_rcp"/>
+                                <field name="num_bl"/>
+                                <field name="num_lot_of"/>
+                            </group>
+                        </group>
+                        <group string="Contrôle">
+                            <group>
+                                <field name="date_ctrl"/>
+                                <field name="gamme_id"/>
+                                <!-- <field name="gamme_ctrl_rcp_pdf" filename="gamme_ctrl_rcp"/> -->
+                            </group>
+                        </group>
+                        <group string="Résultats">
+                            <group>
+                                <field name="condi_resultat"/>
+                                <field name="conform_resultat"/>
+                                <field name="decision_rcp"/>
+                            </group>
+                            <group>
+                                <field name="commentaire"/>
+                            </group>
+                        </group>
+                         <group string="Pièces jointes">
+                            <field name="piece_jointe_ids" widget="many2many_binary" nolabel="1" colspan="2"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
 
-		<record id="is_ctrl_rcp_rapport_search_view" model="ir.ui.view">
-			<field name="name">is_ctrl_rcp_rapport_search_view</field>
-			<field name="model">is.ctrl.rcp.rapport</field>
-			<field name="arch" type="xml">
-				<search>
-					<field name="num_rapport"/>
-					<field name="soc"/>
-					<field name="num_rcp"/>
-					<field name="codepg"/>
-					<field name="fournisseur"/>
-					<field name="date_rcp"/>
-					<field name="date_ctrl"/>
-					<field name="decision_rcp"/>
-				</search>
-			</field>
-		</record>
+        <record id="is_ctrl_rcp_rapport_search_view" model="ir.ui.view">
+            <field name="name">is_ctrl_rcp_rapport_search_view</field>
+            <field name="model">is.ctrl.rcp.rapport</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="num_rapport"/>
+                    <field name="site_id"/>
+                    <field name="reception_id"/>
+                    <field name="codepg"/>
+                    <field name="fournisseur_id"/>
+                    <field name="date_rcp"/>
+                    <field name="date_ctrl"/>
+                    <field name="decision_rcp"/>
+                </search>
+            </field>
+        </record>
 
-		<record id="is_ctrl_rcp_rapport_action" model="ir.actions.act_window">
-			<field name="name">Rapports RCP</field>
-			<field name="res_model">is.ctrl.rcp.rapport</field>
-			<field name="view_mode">tree,form</field>
-			<field name="search_view_id" ref="is_ctrl_rcp_rapport_search_view"/>
-			<field name="context">{}</field>
-		</record>
+        <record id="is_ctrl_rcp_rapport_action" model="ir.actions.act_window">
+            <field name="name">Rapports RCP</field>
+            <field name="res_model">is.ctrl.rcp.rapport</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="is_ctrl_rcp_rapport_search_view"/>
+            <field name="context">{}</field>
+        </record>
 
-		<!-- ================= SAISIE RCP ================= -->
-		<!-- Tree View -->
-		<record id="is_ctrl_rcp_saisie_tree_view" model="ir.ui.view">
-			<field name="name">is_ctrl_rcp_saisie_tree_view</field>
-			<field name="model">is.ctrl.rcp.saisie</field>
-			<field name="arch" type="xml">
-				<tree>
-					<field name="num_saisie" optional="show"/>
-					<field name="soc" optional="show"/>
-					<field name="num_rcp" optional="show"/>
-					<field name="codepg" optional="show"/>
-					<field name="designation" optional="show"/>
-					<field name="moule" optional="show"/>
-					<field name="fournisseur" optional="show"/>
-					<field name="num_lot_fourn" optional="hide"/>
-					<field name="rapport" optional="hide"/>
-					<field name="rapportid" optional="hide"/>
-					<field name="rapport_lig" optional="hide"/>
-					<field name="date_ctrl" optional="show"/>
-					<field name="createur" optional="hide"/>
-					<field name="createurid" optional="hide"/>
-					<field name="controle_a_effectuer" optional="hide"/>
-					<field name="tolerance_mini" optional="hide"/>
-					<field name="tolerance_maxi" optional="hide"/>
-					<field name="resultat" optional="show"/>
-					<!-- Lien Dynacase -->
-					<button 
-						title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
-						attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-						groups="base.group_system"
-					/>
-					<field name="dynacase_id" optional="hide" groups="base.group_system"/>
-					<!-- Audit -->
-					<field name="create_date" optional="hide" string="Créé le"/>
-					<field name="create_uid"  optional="hide" string="Créé par"/>
-					<field name="write_date"  optional="hide" string="Modifié le"/>
-					<field name="write_uid"   optional="hide" string="Modifié par"/>
-				</tree>
-			</field>
-		</record>
+        <!-- ================= SAISIE RCP ================= -->
+        <!-- Tree View -->
+        <record id="is_ctrl_rcp_saisie_tree_view" model="ir.ui.view">
+            <field name="name">is_ctrl_rcp_saisie_tree_view</field>
+            <field name="model">is.ctrl.rcp.saisie</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="num_saisie" optional="show"/>
+                    <field name="soc" optional="show"/>
+                    <field name="num_rcp" optional="show"/>
+                    <field name="codepg" optional="show"/>
+                    <field name="designation" optional="show"/>
+                    <field name="moule" optional="show"/>
+                    <field name="fournisseur" optional="show"/>
+                    <field name="num_lot_fourn" optional="hide"/>
+                    <field name="rapport" optional="hide"/>
+                    <field name="rapportid" optional="hide"/>
+                    <field name="rapport_lig" optional="hide"/>
+                    <field name="date_ctrl" optional="show"/>
+                    <field name="createur" optional="hide"/>
+                    <field name="createurid" optional="hide"/>
+                    <field name="controle_a_effectuer" optional="hide"/>
+                    <field name="tolerance_mini" optional="hide"/>
+                    <field name="tolerance_maxi" optional="hide"/>
+                    <field name="resultat" optional="show"/>
+                    <!-- Lien Dynacase -->
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
+                    <!-- Audit -->
+                    <field name="create_date" optional="hide" string="Créé le"/>
+                    <field name="create_uid"  optional="hide" string="Créé par"/>
+                    <field name="write_date"  optional="hide" string="Modifié le"/>
+                    <field name="write_uid"   optional="hide" string="Modifié par"/>
+                </tree>
+            </field>
+        </record>
 
-		<!-- Form View -->
-		<record id="is_ctrl_rcp_saisie_form_view" model="ir.ui.view">
-			<field name="name">is_ctrl_rcp_saisie_form_view</field>
-			<field name="model">is.ctrl.rcp.saisie</field>
-			<field name="arch" type="xml">
-				<form string="Saisie Contrôle Réception">
-					<header>
-						<field name="dynacase_id" invisible="1"/>
-						<button 
-							string="Dynacase" name="lien_vers_dynacase_action"
-							type="object" class="btn btn-info"
-							attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-							groups="base.group_system"
-						/>
-					</header>
-					<sheet>
-						<field name="active" invisible="1"/>
-						<widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-						<group string="Identification">
-							<group>
-								<field name="num_saisie"/>
-								<field name="soc"/>
-								<field name="num_rcp"/>
-								<field name="codepg"/>
-								<field name="designation"/>
-							</group>
-							<group>
-								<field name="moule"/>
-								<field name="fournisseur"/>
-								<field name="num_lot_fourn"/>
-							</group>
-						</group>
-						<group string="Contrôle RCP">
-							<group>
-								<field name="rapport"/>
-								<field name="rapportid"/>
-								<field name="rapport_lig"/>
-							</group>
-							<group>
-								<field name="date_ctrl"/>
-								<field name="createur"/>
-								<field name="createurid"/>
-							</group>
-						</group>
-						<group string="Détails de contrôle">
-							<group>
-								<field name="controle_a_effectuer"/>
-								<field name="tolerance_mini"/>
-								<field name="tolerance_maxi"/>
-							</group>
-							<group>
-								<field name="resultat"/>
-							</group>
-						</group>
-						<notebook>
-							<page string="Mesures">
-								<field name="mesure_ids" context="{'default_saisie_id': active_id}" nolabel="1">
-									<tree editable="bottom">
-										<field name="num_mesure"/>
-										<field name="valeur_mesuree"/>
-										<field name="valeur_resultat"/>
-									</tree>
-									<form string="Mesure">
-										<group>
-											<field name="num_mesure"/>
-											<field name="valeur_mesuree"/>
-											<field name="valeur_resultat"/>
-										</group>
-									</form>
-								</field>
-							</page>
-						</notebook>
-						<div class="oe_chatter">
-							<field name="message_follower_ids"/>
-							<field name="activity_ids"/>
-							<field name="message_ids"/>
-						</div>
-					</sheet>
-				</form>
-			</field>
-		</record>
+        <!-- Form View -->
+        <record id="is_ctrl_rcp_saisie_form_view" model="ir.ui.view">
+            <field name="name">is_ctrl_rcp_saisie_form_view</field>
+            <field name="model">is.ctrl.rcp.saisie</field>
+            <field name="arch" type="xml">
+                <form string="Saisie Contrôle Réception">
+                    <header>
+                        <field name="dynacase_id" invisible="1"/>
+                        <button 
+                            string="Dynacase" name="lien_vers_dynacase_action"
+                            type="object" class="btn btn-info"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                            groups="base.group_system"
+                        />
+                    </header>
+                    <sheet>
+                        <field name="active" invisible="1"/>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <group string="Identification">
+                            <group>
+                                <field name="num_saisie"/>
+                                <field name="soc"/>
+                                <field name="num_rcp"/>
+                                <field name="codepg"/>
+                                <field name="designation"/>
+                            </group>
+                            <group>
+                                <field name="moule"/>
+                                <field name="fournisseur"/>
+                                <field name="num_lot_fourn"/>
+                            </group>
+                        </group>
+                        <group string="Contrôle RCP">
+                            <group>
+                                <field name="rapport"/>
+                                <field name="rapportid"/>
+                                <field name="rapport_lig"/>
+                            </group>
+                            <group>
+                                <field name="date_ctrl"/>
+                                <field name="createur"/>
+                                <field name="createurid"/>
+                            </group>
+                        </group>
+                        <group string="Détails de contrôle">
+                            <group>
+                                <field name="controle_a_effectuer"/>
+                                <field name="tolerance_mini"/>
+                                <field name="tolerance_maxi"/>
+                            </group>
+                            <group>
+                                <field name="resultat"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Mesures">
+                                <field name="mesure_ids" context="{'default_saisie_id': active_id}" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="num_mesure"/>
+                                        <field name="valeur_mesuree"/>
+                                        <field name="valeur_resultat"/>
+                                    </tree>
+                                    <form string="Mesure">
+                                        <group>
+                                            <field name="num_mesure"/>
+                                            <field name="valeur_mesuree"/>
+                                            <field name="valeur_resultat"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids"/>
+                            <field name="activity_ids"/>
+                            <field name="message_ids"/>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
-		<!-- Search View -->
-		<record id="is_ctrl_rcp_saisie_search_view" model="ir.ui.view">
-			<field name="name">is_ctrl_rcp_saisie_search_view</field>
-			<field name="model">is.ctrl.rcp.saisie</field>
-			<field name="arch" type="xml">
-				<search>
-					<field name="num_saisie"/>
-					<field name="num_rcp"/>
-					<field name="codepg"/>
-					<field name="fournisseur"/>
-					<field name="date_ctrl"/>
-				</search>
-			</field>
-		</record>
+        <!-- Search View -->
+        <record id="is_ctrl_rcp_saisie_search_view" model="ir.ui.view">
+            <field name="name">is_ctrl_rcp_saisie_search_view</field>
+            <field name="model">is.ctrl.rcp.saisie</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="num_saisie"/>
+                    <field name="num_rcp"/>
+                    <field name="codepg"/>
+                    <field name="fournisseur"/>
+                    <field name="date_ctrl"/>
+                </search>
+            </field>
+        </record>
 
-		<!-- Action -->
-		<record id="is_ctrl_rcp_saisie_action" model="ir.actions.act_window">
-			<field name="name">Saisies RCP</field>
-			<field name="res_model">is.ctrl.rcp.saisie</field>
-			<field name="view_mode">tree,form</field>
-			<field name="search_view_id" ref="is_ctrl_rcp_saisie_search_view"/>
-			<field name="context">{}</field>
-		</record>
+        <!-- Action -->
+        <record id="is_ctrl_rcp_saisie_action" model="ir.actions.act_window">
+            <field name="name">Saisies RCP</field>
+            <field name="res_model">is.ctrl.rcp.saisie</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="is_ctrl_rcp_saisie_search_view"/>
+            <field name="context">{}</field>
+        </record>
 
-	</data>
+    </data>
 </odoo>

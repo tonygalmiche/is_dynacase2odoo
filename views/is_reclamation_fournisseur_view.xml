@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-	<data>
+    <data>
 
 
-		<!-- Tree view -->
-		<record id="is_reclamation_fournisseur_tree" model="ir.ui.view">
-			<field name="name">is.reclamation.fournisseur.tree</field>
-			<field name="model">is.reclamation.fournisseur</field>
-			<field name="arch" type="xml">
+        <!-- Tree view -->
+        <record id="is_reclamation_fournisseur_tree" model="ir.ui.view">
+            <field name="name">is.reclamation.fournisseur.tree</field>
+            <field name="model">is.reclamation.fournisseur</field>
+            <field name="arch" type="xml">
                 <tree string="Réclamations fournisseurs" create="1" delete="0">
                     <!-- Identification -->
                     <field name="site_id" optional="show"/>
@@ -88,36 +88,36 @@
                     <field name="write_date"  optional="hide" string="Modifié le"/>
                     <field name="write_uid"   optional="hide" string="Modifié par"/>
                 </tree>
-			</field>
-		</record>
+            </field>
+        </record>
 
-		<!-- Search view -->
-		<record id="is_reclamation_fournisseur_search" model="ir.ui.view">
-			<field name="name">is.reclamation.fournisseur.search</field>
-			<field name="model">is.reclamation.fournisseur</field>
-			<field name="arch" type="xml">
-				<search string="Recherche Réclamation">
-					<field name="site_id"/>
-					<field name="num_reclamation"/>
-					<field name="type_reclamation"/>
-					<field name="fournisseur_id"/>
-					<field name="codepg"/>
-					<field name="date_creation"/>
-					<field name="date_cloture_reel"/>
-					<group expand="0" string="Group By">
-						<filter name="group_type" string="Type" context="{'group_by': 'type_reclamation'}"/>
-						<filter name="group_fournisseur" string="Fournisseur" context="{'group_by': 'fournisseur_id'}"/>
-						<filter name="group_annee" string="Année détection" context="{'group_by': 'annee_detection_defaut'}"/>
-						<filter name="group_date_creation" string="Date création" context="{'group_by': 'date_creation'}"/>
-					</group>
-				</search>
-			</field>
-		</record>
+        <!-- Search view -->
+        <record id="is_reclamation_fournisseur_search" model="ir.ui.view">
+            <field name="name">is.reclamation.fournisseur.search</field>
+            <field name="model">is.reclamation.fournisseur</field>
+            <field name="arch" type="xml">
+                <search string="Recherche Réclamation">
+                    <field name="site_id"/>
+                    <field name="num_reclamation"/>
+                    <field name="type_reclamation"/>
+                    <field name="fournisseur_id"/>
+                    <field name="codepg"/>
+                    <field name="date_creation"/>
+                    <field name="date_cloture_reel"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_type" string="Type" context="{'group_by': 'type_reclamation'}"/>
+                        <filter name="group_fournisseur" string="Fournisseur" context="{'group_by': 'fournisseur_id'}"/>
+                        <filter name="group_annee" string="Année détection" context="{'group_by': 'annee_detection_defaut'}"/>
+                        <filter name="group_date_creation" string="Date création" context="{'group_by': 'date_creation'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
-		<!-- Form view -->
-		<record id="is_reclamation_fournisseur_form" model="ir.ui.view">
-			<field name="name">is.reclamation.fournisseur.form</field>
-			<field name="model">is.reclamation.fournisseur</field>
+        <!-- Form view -->
+        <record id="is_reclamation_fournisseur_form" model="ir.ui.view">
+            <field name="name">is.reclamation.fournisseur.form</field>
+            <field name="model">is.reclamation.fournisseur</field>
             <field name="arch" type="xml">
                 <form string="Réclamation fournisseur">
                     <header>
@@ -132,19 +132,19 @@
                     <sheet>
                         <field name="active" invisible="1"/>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-						<group string="Identification">
-							<group>
-								<field name="type_reclamation" required="1"/>
-								<field name="telephone"/>
-								<field name="courriel"/>
-							</group>
-							<group>
-								<field name="num_reclamation"/>
-								<field name="site_id" required="1"/>
-								<field name="date_creation"/>
-								<field name="date_detection_defaut" required="1"/>
-								<field name="annee_detection_defaut" invisible="1"/>
-						    </group>
+                        <group string="Identification">
+                            <group>
+                                <field name="type_reclamation" required="1"/>
+                                <field name="telephone"/>
+                                <field name="courriel"/>
+                            </group>
+                            <group>
+                                <field name="num_reclamation"/>
+                                <field name="site_id" required="1"/>
+                                <field name="date_creation"/>
+                                <field name="date_detection_defaut" required="1"/>
+                                <field name="annee_detection_defaut" invisible="1"/>
+                            </group>
 
                             <!-- Description de la réclamation -->
                             <group string="Description de la réclamation">
@@ -251,22 +251,22 @@
                         <field name="message_ids"/>
                     </div>
                 </form>
-			</field>
-		</record>
+            </field>
+        </record>
 
 
-		<!-- Action -->
-		<record id="is_reclamation_fournisseur_action" model="ir.actions.act_window">
-			<field name="name">Réclamations fournisseurs</field>
-			<field name="res_model">is.reclamation.fournisseur</field>
-			<field name="view_mode">tree,form</field>
-			<field name="context">{}</field>
-			<field name="domain">[]</field>
-			<field name="help" type="html">
-				<p>Créer et suivre les réclamations fournisseurs.</p>
-			</field>
-		</record>
+        <!-- Action -->
+        <record id="is_reclamation_fournisseur_action" model="ir.actions.act_window">
+            <field name="name">Réclamations fournisseurs</field>
+            <field name="res_model">is.reclamation.fournisseur</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p>Créer et suivre les réclamations fournisseurs.</p>
+            </field>
+        </record>
 
 
-	</data>
+    </data>
 </odoo>
