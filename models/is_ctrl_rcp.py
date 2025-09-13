@@ -3,10 +3,10 @@ from odoo import models, fields  # type: ignore
 
 class IsCtrlRcpGamme(models.Model):
 	_name = "is.ctrl.rcp.gamme"
+	_inherit = ["mail.thread", "mail.activity.mixin"]
 	_description = "Gamme Contrôle Réception"
 	_rec_name = "dossier_article_id"
-    
-	_inherit = ["mail.thread", "mail.activity.mixin"]
+	_order = "dossier_article_id"
 
 	dossier_article_id = fields.Many2one("is.dossier.article", string="Dossier article", required=False, index=True, tracking=True)
 	dossier_article    = fields.Char(string="Dossier article (archivé)", tracking=True, copy=False, readonly=True)
@@ -19,7 +19,7 @@ class IsCtrlRcpGamme(models.Model):
 			("F", "Fait"),
 		],
 		string="État",
-		default="AF",
+		default="F",
 		tracking=True,
 	)
 
