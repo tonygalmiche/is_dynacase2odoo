@@ -8,7 +8,7 @@ class IsCtrlRcpGamme(models.Model):
     
 	_inherit = ["mail.thread", "mail.activity.mixin"]
 
-	dossier_article_id = fields.Many2one("is.dossier.article", string="Code PG", required=True, index=True, tracking=True)
+	dossier_article_id = fields.Many2one("is.dossier.article", string="Code PG", required=False, index=True, tracking=True)
 	responsable_id     = fields.Many2one("res.users", string="Responsable", tracking=True)
 	date_fin_prevue    = fields.Date(string="Date de fin prévue", tracking=True)
 	etat = fields.Selection(

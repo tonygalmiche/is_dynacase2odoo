@@ -48,8 +48,8 @@
 								<widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
 						<group>
 							<group>
-								<field name="dossier_article_id" string="Code PG"/>
-								<field name="responsable_id"/>
+								<field name="dossier_article_id" required="1"/>
+								<field name="responsable_id" required="1"/>
 								<field name="date_fin_prevue"/>
 								<field name="etat"/>
 							</group>
