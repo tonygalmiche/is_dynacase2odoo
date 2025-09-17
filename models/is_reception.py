@@ -24,6 +24,7 @@ class is_reception(models.Model):
     fournisseur_id        = fields.Many2one('res.partner', 'Fournisseur', domain=[("is_company","=",True), ("supplier","=",True)])
     code_pg               = fields.Char("Référence PG", index=True)
     designation           = fields.Char("Désignation")
+    moule                 = fields.Char("Moule")
     reference_fournisseur = fields.Char("Référence fournisseur")
     numero_bl_fournisseur = fields.Char("Numéro de BL fournisseur")
     numero_commande       = fields.Char("Numéro de commande")
@@ -62,6 +63,7 @@ class is_reception(models.Model):
                         pt.is_code                as code_pg,
                         pt.name->>'fr_FR'         as designation,
                         pt.is_ref_fournisseur     as reference_fournisseur,
+                        pt.is_mold_dossierf       as moule,
                         sp.is_num_bl              as numero_bl_fournisseur,
                         po.name                   as numero_commande,
                         pol.price_unit            as prix_achat_commande,
@@ -91,6 +93,7 @@ class is_reception(models.Model):
                         'fournisseur_id'       : row['fournisseur_id'],
                         'code_pg'              : row['code_pg'],
                         'designation'          : row['designation'],
+                        'moule'                : row['moule'],
                         'reference_fournisseur': row['reference_fournisseur'],
                         'numero_bl_fournisseur': row['numero_bl_fournisseur'],
                         'numero_commande'      : row['numero_commande'],

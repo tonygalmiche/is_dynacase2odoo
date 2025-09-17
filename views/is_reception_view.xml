@@ -40,6 +40,7 @@
                         <group>
                             <field name="code_pg"/>
                             <field name="designation"/>
+                            <field name="moule"/>
                             <field name="reference_fournisseur"/>
                             <field name="numero_bl_fournisseur"/>
                             <field name="numero_commande"/>
@@ -65,6 +66,7 @@
                 <field name="fournisseur_id" optional="show" widget="many2one_clickable"/>
                 <field name="code_pg" optional="show"/>
                 <field name="designation" optional="show"/>
+                <field name="moule" optional="show"/>
                 <field name="reference_fournisseur" optional="hide"/>
                 <field name="numero_bl_fournisseur" optional="hide"/>
                 <field name="numero_commande" optional="hide"/>
@@ -84,6 +86,7 @@
                 <field name="fournisseur_id"/>
                 <field name="code_pg"/>
                 <field name="designation"/>
+                <field name="moule"/>
                 <field name="reference_fournisseur"/>
                 <field name="numero_commande"/>
                 <field name="date_reception"/>

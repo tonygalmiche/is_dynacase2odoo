@@ -164,6 +164,7 @@
                     <field name="condi_resultat" optional="hide"/>
                     <field name="conform_resultat" optional="hide"/>
                     <field name="decision_rcp" optional="hide"/>
+                    <field name="commentaire" optional="hide"/>
 
                     <!-- Lien Dynacase: même logique que is_erd_tree_view -->
                     <button 
@@ -182,6 +183,8 @@
             </field>
         </record>
 
+
+        <!-- is.ctrl.rcp.rapport -->
         <record id="is_ctrl_rcp_rapport_form_view" model="ir.ui.view">
             <field name="name">is_ctrl_rcp_rapport_form_view</field>
             <field name="model">is.ctrl.rcp.rapport</field>
@@ -203,41 +206,62 @@
                             <group>
                                 <field name="num_rapport"/>
                                 <field name="site_id"/>
-                                <field name="reception_id"/>
-                                <field name="codepg"/>
-                                <field name="designation"/>
-                                <field name="moule"/>
+                                <field name="reception_id" required="1"/>
+                                <field name="fournisseur_id" required="1"/>
+                                <field name="fournisseur" force_save="1" readonly="1"/>
+                                <field name="code_fournisseur" force_save="1" readonly="1"/>
                             </group>
                             <group>
-                                <field name="fournisseur_id"/>
-                                <field name="fournisseur"/>
-                                <field name="code_fournisseur"/>
-                                <field name="qt_annonce"/>
-                                <field name="qt_recue"/>
-                                <field name="num_lot_fourn"/>
-                                <field name="date_rcp"/>
-                                <field name="num_bl"/>
-                                <field name="num_lot_of"/>
+                                <field name="codepg" force_save="1" readonly="1"/>
+                                <field name="designation" force_save="1" readonly="1"/>
+                                <field name="moule" force_save="1" readonly="1"/>
+                                <field name="qt_annonce" force_save="1" readonly="1"/>
+                                <field name="qt_recue" force_save="1" readonly="1"/>
+                                <field name="num_lot_fourn" force_save="1" readonly="1"/>
+                                <field name="date_rcp" force_save="1" readonly="1"/>
+                                <field name="num_bl" force_save="1" readonly="1"/>
+                                <field name="num_lot_of" force_save="1" readonly="1"/>
                             </group>
                         </group>
                         <group string="Contrôle">
                             <group>
-                                <field name="date_ctrl"/>
-                                <field name="gamme_id"/>
-                                <!-- <field name="gamme_ctrl_rcp_pdf" filename="gamme_ctrl_rcp"/> -->
+                                <field name="date_ctrl" required="1"/>
+                                <field name="gamme_id" attrs="{'readonly': [('saisie_ids', '!=', [])]}" required="1" force_save="1"/>
                             </group>
                         </group>
-                        <group string="Résultats">
+                        <group string="Résultats" attrs="{'invisible': [('gamme_id', '=', False)]}">
                             <group>
                                 <field name="condi_resultat"/>
                                 <field name="conform_resultat"/>
-                                <field name="decision_rcp"/>
-                            </group>
-                            <group>
-                                <field name="commentaire"/>
                             </group>
                         </group>
-                         <group string="Pièces jointes">
+                        <group  attrs="{'invisible': [('saisie_ids', '=', [])]}">
+                            <field name="saisie_ids" nolabel="1" colspan="2" force_save="1" readonly="1">
+                                <tree>
+                                    <button 
+                                        title="Ouvrir la fiche complète" 
+                                        name="ouvrir_fiche_saisie_action" 
+                                        type="object" 
+                                        icon="fa-search-plus" 
+                                        class="btn-link"
+                                    />
+                                    <field name="rapport_lig" optional="show"/>
+                                    <field name="controle_a_effectuer" optional="show"/>
+                                    <field name="tolerance_mini" optional="show"/>
+                                    <field name="tolerance_maxi" optional="show"/>
+                                    <field name="resultat" optional="show"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group attrs="{'invisible': [('gamme_id', '=', False)]}">
+                            <group>
+                                <field name="decision_rcp"/>
+                            </group>
+                        </group>
+                        <group attrs="{'invisible': [('gamme_id', '=', False)]}">
+                            <field name="commentaire"/>
+                        </group>
+                         <group string="Pièces jointes" attrs="{'invisible': [('gamme_id', '=', False)]}">
                             <field name="piece_jointe_ids" widget="many2many_binary" nolabel="1" colspan="2"/>
                         </group>
                     </sheet>
@@ -249,7 +273,6 @@
                 </form>
             </field>
         </record>
-
         <record id="is_ctrl_rcp_rapport_search_view" model="ir.ui.view">
             <field name="name">is_ctrl_rcp_rapport_search_view</field>
             <field name="model">is.ctrl.rcp.rapport</field>
@@ -266,7 +289,6 @@
                 </search>
             </field>
         </record>
-
         <record id="is_ctrl_rcp_rapport_action" model="ir.actions.act_window">
             <field name="name">Rapports RCP</field>
             <field name="res_model">is.ctrl.rcp.rapport</field>
@@ -275,39 +297,35 @@
             <field name="context">{}</field>
         </record>
 
-        <!-- ================= SAISIE RCP ================= -->
-        <!-- Tree View -->
+        <!-- is.ctrl.rcp.saisie -->
         <record id="is_ctrl_rcp_saisie_tree_view" model="ir.ui.view">
             <field name="name">is_ctrl_rcp_saisie_tree_view</field>
             <field name="model">is.ctrl.rcp.saisie</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="num_saisie" optional="show"/>
-                    <field name="soc" optional="show"/>
-                    <field name="num_rcp" optional="show"/>
+                    <field name="site_id" optional="show"/>
+                    <field name="rapport_id" optional="show" widget="many2one_clickable"/>
+                    <field name="date_ctrl" optional="show"/>
+                    <field name="reception_id" optional="show" widget="many2one_clickable"/>
+                    <field name="num_reception" optional="hide"/>
+                    <field name="fournisseur_id" optional="show" widget="many2one_clickable"/>
+                    <field name="fournisseur" optional="hide"/>
+                    <field name="code_fournisseur" optional="hide"/>
                     <field name="codepg" optional="show"/>
                     <field name="designation" optional="show"/>
                     <field name="moule" optional="show"/>
-                    <field name="fournisseur" optional="show"/>
                     <field name="num_lot_fourn" optional="hide"/>
-                    <field name="rapport" optional="hide"/>
-                    <field name="rapportid" optional="hide"/>
-                    <field name="rapport_lig" optional="hide"/>
-                    <field name="date_ctrl" optional="show"/>
-                    <field name="createur" optional="hide"/>
-                    <field name="createurid" optional="hide"/>
-                    <field name="controle_a_effectuer" optional="hide"/>
-                    <field name="tolerance_mini" optional="hide"/>
-                    <field name="tolerance_maxi" optional="hide"/>
-                    <field name="resultat" optional="show"/>
-                    <!-- Lien Dynacase -->
+                    <field name="rapport_lig" optional="show"/>
+                    <field name="controle_a_effectuer" optional="show"/>
+                    <field name="tolerance_mini" optional="show"/>
+                    <field name="tolerance_maxi" optional="show"/>
+                    <field name="resultat_display" optional="show"/>
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
                         groups="base.group_system"
                     />
                     <field name="dynacase_id" optional="hide" groups="base.group_system"/>
-                    <!-- Audit -->
                     <field name="create_date" optional="hide" string="Créé le"/>
                     <field name="create_uid"  optional="hide" string="Créé par"/>
                     <field name="write_date"  optional="hide" string="Modifié le"/>
@@ -315,8 +333,6 @@
                 </tree>
             </field>
         </record>
-
-        <!-- Form View -->
         <record id="is_ctrl_rcp_saisie_form_view" model="ir.ui.view">
             <field name="name">is_ctrl_rcp_saisie_form_view</field>
             <field name="model">is.ctrl.rcp.saisie</field>
@@ -336,84 +352,69 @@
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group string="Identification">
                             <group>
-                                <field name="num_saisie"/>
-                                <field name="soc"/>
-                                <field name="num_rcp"/>
-                                <field name="codepg"/>
-                                <field name="designation"/>
-                            </group>
-                            <group>
-                                <field name="moule"/>
-                                <field name="fournisseur"/>
-                                <field name="num_lot_fourn"/>
-                            </group>
-                        </group>
-                        <group string="Contrôle RCP">
-                            <group>
-                                <field name="rapport"/>
-                                <field name="rapportid"/>
-                                <field name="rapport_lig"/>
+                                <field name="site_id"/>
+                                <field name="rapport_id" readonly="1"/>
+                                <field name="reception_id"/>
+                                <field name="fournisseur_id"/>
                             </group>
                             <group>
                                 <field name="date_ctrl"/>
-                                <field name="createur"/>
-                                <field name="createurid"/>
+                                <field name="codepg"/>
+                                <field name="designation"/>
+                                <field name="moule"/>
+                                <field name="num_lot_fourn"/>
                             </group>
                         </group>
                         <group string="Détails de contrôle">
                             <group>
-                                <field name="controle_a_effectuer"/>
-                                <field name="tolerance_mini"/>
-                                <field name="tolerance_maxi"/>
-                            </group>
+                                <field name="rapport_lig" readonly="1"/>
+                                <field name="controle_a_effectuer" readonly="1"/>
+                             </group>
                             <group>
-                                <field name="resultat"/>
+                                <field name="tolerance_mini"   readonly="1"/>
+                                <field name="tolerance_maxi"   readonly="1"/>
                             </group>
                         </group>
-                        <notebook>
-                            <page string="Mesures">
-                                <field name="mesure_ids" context="{'default_saisie_id': active_id}" nolabel="1">
-                                    <tree editable="bottom">
-                                        <field name="num_mesure"/>
-                                        <field name="valeur_mesuree"/>
-                                        <field name="valeur_resultat"/>
-                                    </tree>
-                                    <form string="Mesure">
-                                        <group>
-                                            <field name="num_mesure"/>
-                                            <field name="valeur_mesuree"/>
-                                            <field name="valeur_resultat"/>
-                                        </group>
-                                    </form>
-                                </field>
-                            </page>
-                        </notebook>
-                        <div class="oe_chatter">
-                            <field name="message_follower_ids"/>
-                            <field name="activity_ids"/>
-                            <field name="message_ids"/>
-                        </div>
+                        <group string="Mesures">
+                            <button 
+                                string="Créer 20 mesures" 
+                                name="creer_20_mesures_action" 
+                                type="object" 
+                                class="btn btn-primary"
+                                icon="fa-plus"
+                                attrs="{'invisible': [('mesure_ids', '!=', [])]}"
+                                colspan="2"
+                            />
+                            <field name="mesure_ids" context="{'default_saisie_id': active_id}" nolabel="1" colspan="2" attrs="{'invisible': [('mesure_ids', '=', [])]}">
+                                <tree editable="bottom" create="false" delete="false">
+                                    <field name="num_mesure" readonly="1"/>
+                                    <field name="valeur_mesuree"/>
+                                    <field name="valeur_resultat_display"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group attrs="{'invisible': [('mesure_ids', '=', [])]}">
+                           <group>
+                                <field name="resultat_display" readonly="1"/>
+                            </group>
+                        </group>
                     </sheet>
                 </form>
             </field>
         </record>
-
-        <!-- Search View -->
         <record id="is_ctrl_rcp_saisie_search_view" model="ir.ui.view">
             <field name="name">is_ctrl_rcp_saisie_search_view</field>
             <field name="model">is.ctrl.rcp.saisie</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name="num_saisie"/>
-                    <field name="num_rcp"/>
-                    <field name="codepg"/>
-                    <field name="fournisseur"/>
+                    <field name="site_id"/>
+                    <field name="rapport_id"/>
+                    <field name="reception_id"/>
                     <field name="date_ctrl"/>
-                </search>
+                    <field name="fournisseur_id"/>
+               </search>
             </field>
         </record>
-
-        <!-- Action -->
         <record id="is_ctrl_rcp_saisie_action" model="ir.actions.act_window">
             <field name="name">Saisies RCP</field>
             <field name="res_model">is.ctrl.rcp.saisie</field>
