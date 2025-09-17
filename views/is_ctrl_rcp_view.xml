@@ -153,7 +153,7 @@
                     <field name="num_bl" optional="hide"/>
                     <field name="num_lot_of" optional="hide"/>
                     <field name="date_ctrl" optional="hide"/>
-                    <field name="gamme_id" optional="hide"/>
+                    <field name="gamme_id" optional="hide" widget="many2one_clickable"/>
                     <field 
                         name="condi_resultat" optional="show" widget="badge" 
                         decoration-success="condi_resultat=='Conforme'"
@@ -245,11 +245,11 @@
                                         icon="fa-search-plus" 
                                         class="btn-link"
                                     />
-                                    <field name="rapport_lig" optional="show"/>
-                                    <field name="controle_a_effectuer" optional="show"/>
-                                    <field name="tolerance_mini" optional="show"/>
-                                    <field name="tolerance_maxi" optional="show"/>
-                                    <field name="resultat" optional="show"/>
+                                    <field name="rapport_lig"/>
+                                    <field name="controle_a_effectuer"/>
+                                    <field name="tolerance_mini"/>
+                                    <field name="tolerance_maxi"/>
+                                    <field name="resultat_display"/>
                                 </tree>
                             </field>
                         </group>
