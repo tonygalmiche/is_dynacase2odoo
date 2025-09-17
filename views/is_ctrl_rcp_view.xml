@@ -147,6 +147,7 @@
                     <field name="num_rapport" optional="show"/>
                     <field name="site_id" optional="show"/>
                     <field name="reception_id" optional="show"/>
+                    <field name="num_reception" optional="hide"/>
                     <field name="codepg" optional="show"/>
                     <field name="designation" optional="show"/>
                     <field name="moule" optional="show"/>
@@ -207,6 +208,7 @@
                                 <field name="num_rapport"/>
                                 <field name="site_id"/>
                                 <field name="reception_id" required="1"/>
+                                <field name="num_reception"  force_save="1" readonly="1"/>
                                 <field name="fournisseur_id" required="1"/>
                                 <field name="fournisseur" force_save="1" readonly="1"/>
                                 <field name="code_fournisseur" force_save="1" readonly="1"/>
