@@ -22,31 +22,16 @@ class IsCtrlRcpGamme(models.Model):
         default="F",
         tracking=True,
     )
-
-    # Archivage standard Odoo
     active = fields.Boolean(string="Actif", default=True, tracking=True)
-
-    # piece_jointe_ids = fields.Many2many(
-    #     "ir.attachment",
-    #     "is_ctrl_rcp_gamme_attachment_rel",
-    #     "gamme_id",
-    #     "attachment_id",
-    #     string="Pièces jointes",
-    #     tracking=True,
-    # )
-
     piece_jointe_ids = fields.Many2many("ir.attachment", "is_ctrl_rcp_gamme_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
-
-    # Lignes de contrôles
     controle_ids = fields.One2many(
         "is.ctrl.rcp.gamme.controle",
         "gamme_id",
         string="Contrôles",
         tracking=True,
     )
-
-    # Intégration Dynacase
     dynacase_id = fields.Integer(string="Id Dynacase", index=True, copy=False)
+
 
     def lien_vers_dynacase_action(self):
         for obj in self:
@@ -83,20 +68,11 @@ class IsCtrlRcpRapport(models.Model):
     _rec_name = "num_rapport"
     _order = "num_rapport desc"
 
-
     # Identification
-    #titre = fields.Char(string="Titre", tracking=True)
-    # soc = fields.Selection(
-    #     selection=[("", ""), ("1", "1"), ("3", "3"), ("4", "4")],
-    #     string="Code société Prodstar",
-    #     default="",
-    #     tracking=True,
-    # )
-
-    num_rapport      = fields.Integer(string="N° du rapport", tracking=True, readonly=1, index=True, copy=False)
+    num_rapport      = fields.Integer(string="N°", tracking=True, readonly=1, index=True, copy=False)
     site_id          = fields.Many2one('is.database', "Site", tracking=True, default=lambda self: self._get_site_id(),)
     reception_id     = fields.Many2one('is.reception', "Réception", tracking=True)
-    num_reception    = fields.Char(string="Numéro de réception", tracking=True)
+    num_reception    = fields.Char(string="N° réception", tracking=True)
     fournisseur_id   = fields.Many2one('res.partner', 'Fournisseur', tracking=True, domain=[("is_company","=",True), ("supplier","=",True)])
     fournisseur      = fields.Char(string="Nom fournisseur", tracking=True)
     code_fournisseur = fields.Char(string="Code fournisseur", tracking=True)
@@ -115,11 +91,6 @@ class IsCtrlRcpRapport(models.Model):
     date_ctrl = fields.Date(string="Date du contrôle", tracking=True)
     gamme_id  = fields.Many2one("is.ctrl.rcp.gamme", string="Gamme de contrôle", tracking=True)
 
-    # Pièce jointe de la gamme de contrôle (PDF)
-    # gamme_ctrl_rcp_pdf = fields.Binary(
-    #     string="PDF de la gamme de contrôle", attachment=True
-    # )
-
     # Résultats des contrôles
     condi_resultat = fields.Selection(
         selection=[("", ""), ("Conforme", "Conforme"), ("Non conforme", "Non conforme")],
@@ -133,7 +104,6 @@ class IsCtrlRcpRapport(models.Model):
         default="",
         tracking=True,
     )
-
     decision_rcp = fields.Selection(
         selection=[
             ("Livraison refusée", "Livraison refusée"),
@@ -220,13 +190,6 @@ class IsCtrlRcpRapport(models.Model):
                         'controle_a_effectuer': controle.intitule_controle,
                         'tolerance_mini': controle.tolerance_mini,
                         'tolerance_maxi': controle.tolerance_maxi,
-                        # 'num_rcp': obj.num_reception,
-                        # 'codepg': obj.codepg,
-                        # 'designation': obj.designation,
-                        # 'moule': obj.moule,
-                        # 'fournisseur': obj.fournisseur,
-                        # 'num_lot_fourn': obj.num_lot_fourn,
-                        # 'date_ctrl': obj.date_ctrl,
                     }
                     saisies_vals.append((0, 0, saisie_vals))
                     lig+=1
@@ -358,9 +321,6 @@ class IsCtrlRcpSaisie(models.Model):
     def creer_20_mesures_action(self):
         """Crée 20 lignes de mesures numérotées de 1 à 20"""
         self.ensure_one()
-        # Supprimer les mesures existantes
-        #self.mesure_ids.unlink()
-        
         # Créer 20 nouvelles mesures
         mesures_vals = []
         for i in range(1, 21):

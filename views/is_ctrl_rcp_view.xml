@@ -2,7 +2,7 @@
 <odoo>
     <data>
 
-        <!-- is.ctrl.rcp.gamme: Tree View -->
+        <!-- is.ctrl.rcp.gamme -->
         <record id="is_ctrl_rcp_gamme_tree_view" model="ir.ui.view">
             <field name="name">is_ctrl_rcp_gamme_tree_view</field>
             <field name="model">is.ctrl.rcp.gamme</field>
@@ -27,8 +27,6 @@
                 </tree>
             </field>
         </record>
-
-        <!-- is.ctrl.rcp.gamme: Form View -->
         <record id="is_ctrl_rcp_gamme_form_view" model="ir.ui.view">
             <field name="name">is_ctrl_rcp_gamme_form_view</field>
             <field name="model">is.ctrl.rcp.gamme</field>
@@ -83,8 +81,6 @@
                 </form>
             </field>
         </record>
-
-        <!-- is.ctrl.rcp.gamme: Search View -->
         <record id="is_ctrl_rcp_gamme_search_view" model="ir.ui.view">
             <field name="name">is_ctrl_rcp_gamme_search_view</field>
             <field name="model">is.ctrl.rcp.gamme</field>
@@ -98,7 +94,8 @@
             </field>
         </record>
 
-        <!-- is.ctrl.rcp.gamme.controle: Inline views (optional) -->
+
+        <!-- is.ctrl.rcp.gamme.controle -->
         <record id="is_ctrl_rcp_gamme_controle_tree_view" model="ir.ui.view">
             <field name="name">is_ctrl_rcp_gamme_controle_tree_view</field>
             <field name="model">is.ctrl.rcp.gamme.controle</field>
@@ -111,7 +108,6 @@
                 </tree>
             </field>
         </record>
-
         <record id="is_ctrl_rcp_gamme_controle_form_view" model="ir.ui.view">
             <field name="name">is_ctrl_rcp_gamme_controle_form_view</field>
             <field name="model">is.ctrl.rcp.gamme.controle</field>
@@ -128,8 +124,6 @@
                 </form>
             </field>
         </record>
-
-        <!-- Action -->
         <record id="is_ctrl_rcp_gamme_action" model="ir.actions.act_window">
             <field name="name">Gamme Contrôle Réception</field>
             <field name="res_model">is.ctrl.rcp.gamme</field>
@@ -137,8 +131,6 @@
             <field name="search_view_id" ref="is_ctrl_rcp_gamme_search_view"/>
             <field name="context">{}</field>
         </record>
-
-        <!-- ================= RAPPORT RCP ================= -->
         <record id="is_ctrl_rcp_rapport_tree_view" model="ir.ui.view">
             <field name="name">is_ctrl_rcp_rapport_tree_view</field>
             <field name="model">is.ctrl.rcp.rapport</field>
@@ -146,12 +138,12 @@
                 <tree>
                     <field name="num_rapport" optional="show"/>
                     <field name="site_id" optional="show"/>
-                    <field name="reception_id" optional="show"/>
+                    <field name="reception_id" optional="show" widget="many2one_clickable"/>
                     <field name="num_reception" optional="hide"/>
                     <field name="codepg" optional="show"/>
                     <field name="designation" optional="show"/>
                     <field name="moule" optional="show"/>
-                    <field name="fournisseur_id" optional="show"/>
+                    <field name="fournisseur_id" optional="show" widget="many2one_clickable"/>
                     <field name="fournisseur" optional="hide"/>
                     <field name="code_fournisseur" optional="hide"/>
                     <field name="qt_annonce" optional="hide"/>
@@ -162,20 +154,29 @@
                     <field name="num_lot_of" optional="hide"/>
                     <field name="date_ctrl" optional="hide"/>
                     <field name="gamme_id" optional="hide"/>
-                    <field name="condi_resultat" optional="hide"/>
-                    <field name="conform_resultat" optional="hide"/>
-                    <field name="decision_rcp" optional="hide"/>
+                    <field 
+                        name="condi_resultat" optional="show" widget="badge" 
+                        decoration-success="condi_resultat=='Conforme'"
+                        decoration-warning="condi_resultat=='Non conforme'"
+                    />
+                    <field 
+                        name="conform_resultat" optional="show" widget="badge" 
+                        decoration-success="conform_resultat=='Conforme'"
+                        decoration-warning="conform_resultat=='Non conforme'"
+                    />
+                    <field 
+                        name="decision_rcp" optional="show" widget="badge" 
+                        decoration-success="decision_rcp=='Livraison acceptée'"
+                        decoration-warning="decision_rcp=='Livraison dérogée'"
+                        decoration-danger="decision_rcp=='Livraison refusée'"
+                    />
                     <field name="commentaire" optional="hide"/>
-
-                    <!-- Lien Dynacase: même logique que is_erd_tree_view -->
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
                         groups="base.group_system"
                     />
                     <field name="dynacase_id" optional="hide" groups="base.group_system"/>
-
-                    <!-- Champs d'audit, calqués sur is_erd_tree_view -->
                     <field name="create_date" optional="hide" string="Créé le"/>
                     <field name="create_uid"  optional="hide" string="Créé par"/>
                     <field name="write_date"  optional="hide" string="Modifié le"/>
@@ -183,9 +184,6 @@
                 </tree>
             </field>
         </record>
-
-
-        <!-- is.ctrl.rcp.rapport -->
         <record id="is_ctrl_rcp_rapport_form_view" model="ir.ui.view">
             <field name="name">is_ctrl_rcp_rapport_form_view</field>
             <field name="model">is.ctrl.rcp.rapport</field>
@@ -298,6 +296,7 @@
             <field name="search_view_id" ref="is_ctrl_rcp_rapport_search_view"/>
             <field name="context">{}</field>
         </record>
+
 
         <!-- is.ctrl.rcp.saisie -->
         <record id="is_ctrl_rcp_saisie_tree_view" model="ir.ui.view">
@@ -424,6 +423,5 @@
             <field name="search_view_id" ref="is_ctrl_rcp_saisie_search_view"/>
             <field name="context">{}</field>
         </record>
-
     </data>
 </odoo>
