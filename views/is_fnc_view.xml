@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-	<!-- Form view -->
-	<record id="view_is_fnc_form" model="ir.ui.view">
-		<field name="name">is.fnc.form</field>
-		<field name="model">is.fnc</field>
-		<field name="arch" type="xml">
+    <!-- Form view -->
+    <record id="view_is_fnc_form" model="ir.ui.view">
+        <field name="name">is.fnc.form</field>
+        <field name="model">is.fnc</field>
+        <field name="arch" type="xml">
             <form>
                 <header>
                     <field name="dynacase_id" invisible="1"/>
@@ -18,8 +18,8 @@
                 <sheet>
                     <field name="active" invisible="1"/>
                     <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-					<notebook>
-						<page string="Description">
+                    <notebook>
+                        <page string="Description">
                             <group>
                                 <group>
                                     <field name="site_id" required="1"/>
@@ -62,11 +62,11 @@
                                 <field name="pj_description_ids" widget="many2many_binary"/>
                             </group>
                         </page>
-						<page string="Action immédiate">
-							<group>
-								<group>
-									<field name="bl_retour"/>
-								</group>
+                        <page string="Action immédiate">
+                            <group>
+                                <group>
+                                    <field name="bl_retour"/>
+                                </group>
                             </group>
                             <group string="Actions">
                                 <field name="action_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2" >
@@ -90,24 +90,24 @@
                                     </tree>
                                 </field>
                             </group>
-							<group>
-								<group>
-									<field name="reponse"/>
-								</group>
+                            <group>
+                                <group>
+                                    <field name="reponse"/>
+                                </group>
                             </group>
                             <group string="Pièces jointes">
                                 <field name="pj_action_ids" widget="many2many_binary"/>
                             </group>
-						</page>
-						<page string="Analyse de la non-conformité">
-							<field name="cause_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2">
-								<tree editable="bottom">
-									<field name="cause"/>
-									<field name="type"/>
-									<field name="type_cause"/>
-									<field name="contribution"/>
-								</tree>
-							</field>
+                        </page>
+                        <page string="Analyse de la non-conformité">
+                            <field name="cause_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2">
+                                <tree editable="bottom">
+                                    <field name="cause"/>
+                                    <field name="type"/>
+                                    <field name="type_cause"/>
+                                    <field name="contribution"/>
+                                </tree>
+                            </field>
                             <group>
                                 <group>
                                     <field name="equipe"/>
@@ -121,8 +121,8 @@
                             <group string="Pièces jointes">
                                 <field name="pj_analyse_ids" widget="many2many_binary"/>
                             </group>
-						</page>
-						<page string="Plan d'actions">
+                        </page>
+                        <page string="Plan d'actions">
                             <group>
                                 <field name="id" invisible="1"/>
                             </group>
@@ -174,50 +174,50 @@
                             <group string="Pièces jointes">
                                 <field name="pj_plan_action_ids" widget="many2many_binary"/>
                             </group>
-						</page>
-						<page string="Coûts">
+                        </page>
+                        <page string="Coûts">
                             <group>
                                 <field name="id" invisible="1"/>
                             </group>
-							<group string="Coût comptable (Service Financier)">
-								<field name="avoir_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2">
-									<tree editable="bottom">
-										<field name="num_avoir"/>
-										<field name="date_avoir"/>
-										<field name="montant_avoir"/>
-									</tree>
-								</field>
-							</group>
-							<group>
-								<group>
-									<field name="total_avoir"/>
-									<field name="date_bilan"/>
-									<field name="situation_bilan"/>
-								</group>
+                            <group string="Coût comptable (Service Financier)">
+                                <field name="avoir_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2">
+                                    <tree editable="bottom">
+                                        <field name="num_avoir"/>
+                                        <field name="date_avoir"/>
+                                        <field name="montant_avoir"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="total_avoir"/>
+                                    <field name="date_bilan"/>
+                                    <field name="situation_bilan"/>
+                                </group>
                             </group>
                             <group string="Autres coûts non qualité">
-								<field name="autre_cout_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2">
-									<tree editable="bottom">
-										<field name="type_cout"/>
-										<field name="montant"/>
-									</tree>
-								</field>
-							</group>
+                                <field name="autre_cout_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2">
+                                    <tree editable="bottom">
+                                        <field name="type_cout"/>
+                                        <field name="montant"/>
+                                    </tree>
+                                </field>
+                            </group>
                             <group>
-								<group>
-									<field name="cout_facture"/>
+                                <group>
+                                    <field name="cout_facture"/>
                                     <field name="cout_piece"/>
-									<field name="cout_total_tri"/>
-									<field name="total_autrecouts"/>
-									<field name="cout_total"/>
-									<field name="total_perte"/>
-								</group>
-							</group>
+                                    <field name="cout_total_tri"/>
+                                    <field name="total_autrecouts"/>
+                                    <field name="cout_total"/>
+                                    <field name="total_perte"/>
+                                </group>
+                            </group>
                             <group string="Pièces jointes">
                                 <field name="pj_cout_ids" widget="many2many_binary"/>
                             </group>
-						</page>
-					</notebook>
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
@@ -225,14 +225,14 @@
                     <field name="message_ids"/>
                 </div>
             </form>
-		</field>
-	</record>
+        </field>
+    </record>
 
-	<!-- Tree view -->
-	<record id="view_is_fnc_tree" model="ir.ui.view">
-		<field name="name">is.fnc.tree</field>
-		<field name="model">is.fnc</field>
-		<field name="arch" type="xml">
+    <!-- Tree view -->
+    <record id="view_is_fnc_tree" model="ir.ui.view">
+        <field name="name">is.fnc.tree</field>
+        <field name="model">is.fnc</field>
+        <field name="arch" type="xml">
             <tree>
                 <!-- Identification / description -->
                 <field name="site_id" optional="show"/>
@@ -298,37 +298,37 @@
                 <field name="write_date"  optional="hide" string="Modifié le"/>
                 <field name="write_uid"   optional="hide" string="Modifié par"/>
             </tree>
-		</field>
-	</record>
+        </field>
+    </record>
 
-	<!-- Search view -->
-	<record id="view_is_fnc_search" model="ir.ui.view">
-		<field name="name">is.fnc.search</field>
-		<field name="model">is.fnc</field>
-		<field name="arch" type="xml">
-			<search>
-				<field name="num_non_conformite"/>
-				<field name="client_id"/>
-				<field name="type_non_conformite"/>
-				<field name="decision"/>
-				<field name="date_detection"/>
-				<field name="date_cloture"/>
-				<separator/>
-				<group expand="0" string="Grouper par">
-					<filter string="Type" name="group_type" context="{'group_by':'type_non_conformite'}"/>
-					<filter string="Client" name="group_client" context="{'group_by':'client_id'}"/>
-					<filter string="Site" name="group_site" context="{'group_by':'site_id'}"/>
-					<filter string="Décision" name="group_decision" context="{'group_by':'decision'}"/>
-				</group>
-			</search>
-		</field>
-	</record>
+    <!-- Search view -->
+    <record id="view_is_fnc_search" model="ir.ui.view">
+        <field name="name">is.fnc.search</field>
+        <field name="model">is.fnc</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="num_non_conformite"/>
+                <field name="client_id"/>
+                <field name="type_non_conformite"/>
+                <field name="decision"/>
+                <field name="date_detection"/>
+                <field name="date_cloture"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Type" name="group_type" context="{'group_by':'type_non_conformite'}"/>
+                    <filter string="Client" name="group_client" context="{'group_by':'client_id'}"/>
+                    <filter string="Site" name="group_site" context="{'group_by':'site_id'}"/>
+                    <filter string="Décision" name="group_decision" context="{'group_by':'decision'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
 
-	<!-- Action -->
-	<record id="is_fnc_action" model="ir.actions.act_window">
-		<field name="name">FNC</field>
-		<field name="res_model">is.fnc</field>
-		<field name="view_mode">tree,form</field>
-	</record>
+    <!-- Action -->
+    <record id="is_fnc_action" model="ir.actions.act_window">
+        <field name="name">FNC</field>
+        <field name="res_model">is.fnc</field>
+        <field name="view_mode">tree,form</field>
+    </record>
 
 </odoo>

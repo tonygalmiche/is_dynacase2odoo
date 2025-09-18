@@ -23,7 +23,7 @@
 
                         <group>
                             <group name="fr_identification" string="Identification">
-                                <field name="numero"/>
+                                <field name="numero" readonly="1"/>
                                 <field name="emetteur_id" required="1"/>
                                 <field name="site_id" required="1"/>
                                 <field name="responsable_id" required="1"/>

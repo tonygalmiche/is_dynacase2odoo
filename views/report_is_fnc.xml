@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="is_fnc_template">
+            <t t-set="company" t-value="res_company"/>
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
+                        <table style="width:100%">
+                            <tr>
+                                <td style="width:20%">
+                                    <img t-if="company.is_logo" t-att-src="image_data_uri(company.is_logo)" style="max-height:60px;" alt="Logo"/>
+                                    <img t-if="not company.is_logo and company.logo" t-att-src="image_data_uri(company.logo)" style="max-height:60px;" alt="Logo"/>
+                                </td>
+                                <td style="width:60%; text-align:center; font-size:18px; font-weight:bold;">
+                                    Fiche Non-Conformité
+                                </td>
+                                <td style="width:20%; text-align:right;">
+                                    <div><b>N°:</b> <span t-field="o.num_non_conformite"/></div>
+                                    <div><b>Type:</b> <span t-field="o.type_non_conformite"/></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="page is_fnc_page">
+                        <style>
+                            .is_fnc_page h2 {
+                                background-color: #f8f9fa;
+                                padding: 8px;
+                                margin: 15px 0 10px 0;
+                                border-left: 4px solid #007bff;
+                                font-size: 14px;
+                            }
+                            .is_fnc_page h3 {
+                                padding: 8px;
+                                margin: 15px 0 10px 0;
+                                border-bottom: 1px solid;
+                                font-size: 12px;
+                            }
+                            .is_fnc_page table th {
+                                background-color: #f8f9fa;
+                                padding: 5px 8px;
+                                font-weight: bold;
+                                font-size: 11px;
+                                border-bottom: 1px solid #dee2e6;
+                                text-align:right;
+                            }
+                            .is_fnc_page table td {
+                                padding: 5px 8px;
+                                font-size: 11px;
+                                border-bottom: 1px solid #dee2e6;
+                            }
+                            .is_fnc_table {
+                                border-collapse: collapse;
+                                border: 1px solid #dee2e6;
+                                width: 100%;
+                                margin: 10px 0;
+                            }
+                            .is_fnc_table th,
+                            .is_fnc_table td {
+                                border: 1px solid #dee2e6;
+                                padding: 5px 8px;
+                                font-size: 11px;
+                            }
+                            .is_fnc_table th {
+                                background-color: #f8f9fa;
+                                font-weight: bold;
+                            }
+                        </style>
+
+                        <h2>Identification</h2>
+                        <table style="width:100%; border:0pt">
+                            <tr>
+                                <th style="width:25%">Site</th>
+                                <td style="width:25%"><span t-field="o.site_id"/></td>
+                                <th style="width:25%">Type non-conformité</th>
+                                <td style="width:25%"><span t-field="o.type_non_conformite"/></td>
+                            </tr>
+                            <tr>
+                                <th>N° non-conformité</th>
+                                <td><span t-field="o.num_non_conformite"/></td>
+                                <th>Date détection</th>
+                                <td><span t-field="o.date_detection"/></td>
+                            </tr>
+                            <tr>
+                                <th>Client émetteur</th>
+                                <td><span t-field="o.client_id"/></td>
+                                <th>N° réclamation</th>
+                                <td><span t-field="o.num_reclamation"/></td>
+                            </tr>
+                            <tr t-if="o.client_autre">
+                                <th>Autre client</th>
+                                <td><span t-field="o.client_autre"/></td>
+                                <th>Contact client</th>
+                                <td><span t-field="o.contact_client"/></td>
+                            </tr>
+                            <tr>
+                                <th>Créateur de la FNC</th>
+                                <td><span t-field="o.create_uid"/></td>
+                                <th>Mail commercial</th>
+                                <td><span t-field="o.mail_commercial"/></td>
+                            </tr>
+                            <tr>
+                                <th>Description du problème</th>
+                                <td colspan="3"><span t-field="o.description_probleme"/></td>
+                            </tr>
+                            <tr>
+                               <th>Traçabilité (date fab° + OF + N°OP)</th>
+                                <td><span t-field="o.tracabilite"/></td>
+                                <th>Réclamation récurrente</th>
+                                <td><span t-field="o.reclamation_recurrente"/></td>
+                            </tr>
+                        </table>
+
+                        <!-- Liste des produits concernés -->
+                        <t t-if="o.produit_ids">
+                            <h2>Liste des produits concernés</h2>
+                            <table class="is_fnc_table">
+                                <thead>
+                                    <tr>
+                                        <th>Article</th>
+                                        <th>Désignation</th>
+                                        <th>Moule</th>
+                                        <th>Projet</th>
+                                        <th>Réf. client</th>
+                                        <th>Qt non conforme</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.produit_ids" t-as="produit">
+                                        <td><span t-field="produit.article_id"/></td>
+                                        <td><span t-field="produit.designation"/></td>
+                                        <td>
+                                            <span t-if="produit.moule_id" t-field="produit.moule_id"/>
+                                            <span t-if="produit.dossierf_id"  t-field="produit.dossierf_id"/>
+                                        </td>
+                                        <td><span t-field="produit.project_id"/></td>
+                                        <td><span t-field="produit.ref_client"/></td>
+                                        <td class="text-end"><span t-field="produit.qt_non_conforme"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+
+
+                        <t t-if="o.action_ids">
+                            <h2>Liste des actions</h2>
+                            <table class="is_fnc_table">
+                                <thead>
+                                    <tr>
+                                        <th>Tri stock</th>
+                                        <th>Action stock</th>
+                                        <th>Responsable tri</th>
+                                        <th>Date tri</th>
+                                        <th>Nb non conforme</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.action_ids" t-as="action">
+                                        <td><span t-field="action.tri_stock"/></td>
+                                        <td><span t-field="action.action_stock"/></td>
+                                        <td><span t-field="action.responsable_tri"/></td>
+                                        <td><span t-field="action.date_tri"/></td>
+                                        <td class="text-end"><span t-field="action.nb_non_conforme"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+
+
+                        <t t-if="o.action_curative_ids">
+                            <table class="is_fnc_table">
+                                <thead>
+                                    <tr>
+                                        <th>Action</th>
+                                        <th>Responsable</th>
+                                        <th>Délai</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.action_curative_ids" t-as="curative">
+                                        <td><span t-field="curative.cur_action"/></td>
+                                        <td><span t-field="curative.cur_responsable"/></td>
+                                        <td><span t-field="curative.cur_delai"/></td>
+                                        <td><span t-field="curative.cur_date"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+
+
+                        <h2>Analyse de la non-conformité</h2>
+                        <t t-if="o.cause_ids">
+                            <table class="is_fnc_table">
+                                <thead>
+                                    <tr>
+                                        <th>Cause</th>
+                                        <th>Type</th>
+                                        <th>Type cause</th>
+                                        <th>Contribution</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.cause_ids" t-as="cause">
+                                        <td><span t-field="cause.cause"/></td>
+                                        <td><span t-field="cause.type"/></td>
+                                        <td><span t-field="cause.type_cause"/></td>
+                                        <td><span t-field="cause.contribution"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <table style="width:50%; border:0pt">
+                            <tr>
+                                <th>Décision</th>
+                                <td><span t-field="o.decision"/></td>
+                             </tr>
+                           <tr>
+                                 <th>Date réponse 4D</th>
+                                <td><span t-field="o.date_reponse_4d"/></td>
+                            </tr>
+                        </table>
+
+
+
+                        <h2>Plan d'actions</h2>
+
+                        <t t-if="o.action_corrective_ids">
+                            <h3>Actions correctives</h3>
+                            <table class="is_fnc_table">
+                                <thead>
+                                    <tr>
+                                        <th>Action</th>
+                                        <th>Responsable</th>
+                                        <th>Délai</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.action_corrective_ids" t-as="corrective">
+                                        <td><span t-field="corrective.cor_action"/></td>
+                                        <td><span t-field="corrective.cor_responsable"/></td>
+                                        <td><span t-field="corrective.cor_delai"/></td>
+                                        <td><span t-field="corrective.cor_date"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <t t-if="o.action_preventive_ids">
+                            <h3>Actions préventives</h3>
+                            <table class="is_fnc_table">
+                                <thead>
+                                    <tr>
+                                        <th>Action</th>
+                                        <th>Responsable</th>
+                                        <th>Délai</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.action_preventive_ids" t-as="preventive">
+                                        <td><span t-field="preventive.pre_action"/></td>
+                                        <td><span t-field="preventive.pre_responsable"/></td>
+                                        <td><span t-field="preventive.pre_delai"/></td>
+                                        <td><span t-field="preventive.pre_date"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <t t-if="o.action_efficacite_ids">
+                            <h3>Mesure de l'efficacité des actions</h3>
+                            <table class="is_fnc_table">
+                                <thead>
+                                    <tr>
+                                        <th>Action</th>
+                                        <th>Responsable</th>
+                                        <th>Délai</th>
+                                        <th>Date</th>
+                                        <th>Conclusion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.action_efficacite_ids" t-as="efficacite">
+                                        <td><span t-field="efficacite.eff_action"/></td>
+                                        <td><span t-field="efficacite.eff_responsable"/></td>
+                                        <td><span t-field="efficacite.eff_delai"/></td>
+                                        <td><span t-field="efficacite.eff_date"/></td>
+                                        <td><span t-field="efficacite.eff_conclusion"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <table style="width:100%; border:0pt">
+                            <tr>
+                                <th style="width:25%">Date 8D</th>
+                                <td style="width:25%"><span t-field="o.date_8d"/></td>
+                                <th style="width:25%">Date clôture</th>
+                                <td style="width:25%"><span t-field="o.date_cloture"/></td>
+                            </tr>
+                        </table>
+
+
+<!-- 
+                    
+
+                        <h2>Action immédiate</h2>
+                        <table style="width:100%; border:0pt">
+                            <tr>
+                                <th style="width:25%">BL retour</th>
+                                <td style="width:75%"><span t-field="o.bl_retour"/></td>
+                            </tr>
+                            <tr>
+                                <th>Réponse</th>
+                                <td><span t-field="o.reponse"/></td>
+                            </tr>
+                        </table>
+
+                     
+
+                     
+
+                        <t t-if="o.pj_action_ids">
+                            <h3>Pièces jointes - Action</h3>
+                            <ul>
+                                <li t-foreach="o.pj_action_ids" t-as="att">
+                                    <span t-esc="att.name"/>
+                                </li>
+                            </ul>
+                        </t>
+
+                        <p style="page-break-before:always;"> </p>
+
+                      
+                    
+
+                        <t t-if="o.pj_analyse_ids">
+                            <h3>Pièces jointes - Analyse</h3>
+                            <ul>
+                                <li t-foreach="o.pj_analyse_ids" t-as="att">
+                                    <span t-esc="att.name"/>
+                                </li>
+                            </ul>
+                        </t>
+
+                        <p style="page-break-before:always;"> </p>
+
+
+                        <h3>8D et modification documentation</h3>
+                        <table style="width:100%; border:0pt">
+                            <tr>
+                                <th style="width:25%">AMDEC</th>
+                                <td style="width:25%"><span t-field="o.doc_amdec"/></td>
+                                <th style="width:25%">Plan surveillance</th>
+                                <td style="width:25%"><span t-field="o.doc_plan_surveillance"/></td>
+                            </tr>
+                            <tr>
+                                <th>Moyen contrôle</th>
+                                <td><span t-field="o.doc_moyen_controle"/></td>
+                                <th>Mode opératoire</th>
+                                <td><span t-field="o.doc_mode_operatoire"/></td>
+                            </tr>
+                            <tr>
+                                <th>Plans</th>
+                                <td><span t-field="o.doc_plans"/></td>
+                                <th>Autres</th>
+                                <td><span t-field="o.doc_autres"/></td>
+                            </tr>
+                        </table>
+
+                        <t t-if="o.pj_plan_action_ids">
+                            <h3>Pièces jointes - Plan d'action</h3>
+                            <ul>
+                                <li t-foreach="o.pj_plan_action_ids" t-as="att">
+                                    <span t-esc="att.name"/>
+                                </li>
+                            </ul>
+                        </t>
+
+                        <p style="page-break-before:always;"> </p>
+
+                        <h2>Coûts</h2>
+
+                        <t t-if="o.avoir_ids">
+                            <h3>Coût comptable (Service Financier)</h3>
+                            <table class="is_fnc_table">
+                                <thead>
+                                    <tr>
+                                        <th>N° avoir</th>
+                                        <th>Date avoir</th>
+                                        <th>Montant avoir</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.avoir_ids" t-as="avoir">
+                                        <td><span t-field="avoir.num_avoir"/></td>
+                                        <td><span t-field="avoir.date_avoir"/></td>
+                                        <td class="text-end"><span t-field="avoir.montant_avoir"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <t t-if="o.autre_cout_ids">
+                            <h3>Autres coûts non qualité</h3>
+                            <table class="is_fnc_table">
+                                <thead>
+                                    <tr>
+                                        <th>Type coût</th>
+                                        <th>Montant</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.autre_cout_ids" t-as="cout">
+                                        <td><span t-field="cout.type_cout"/></td>
+                                        <td class="text-end"><span t-field="cout.montant"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <table style="width:100%; border:0pt">
+                            <tr>
+                                <th style="width:25%">Total avoir</th>
+                                <td style="width:25%"><span t-field="o.total_avoir"/></td>
+                                <th style="width:25%">Date bilan</th>
+                                <td style="width:25%"><span t-field="o.date_bilan"/></td>
+                            </tr>
+                            <tr>
+                                <th>Situation bilan</th>
+                                <td><span t-field="o.situation_bilan"/></td>
+                                <th>Coût facture</th>
+                                <td><span t-field="o.cout_facture"/></td>
+                            </tr>
+                            <tr>
+                                <th>Coût pièce</th>
+                                <td><span t-field="o.cout_piece"/></td>
+                                <th>Coût total tri</th>
+                                <td><span t-field="o.cout_total_tri"/></td>
+                            </tr>
+                            <tr>
+                                <th>Total autres coûts</th>
+                                <td><span t-field="o.total_autrecouts"/></td>
+                                <th>Coût total</th>
+                                <td><span t-field="o.cout_total"/></td>
+                            </tr>
+                            <tr>
+                                <th>Total perte</th>
+                                <td colspan="3"><span t-field="o.total_perte"/></td>
+                            </tr>
+                        </table>
+
+                        <t t-if="o.pj_cout_ids">
+                            <h3>Pièces jointes - Coûts</h3>
+                            <ul>
+                                <li t-foreach="o.pj_cout_ids" t-as="att">
+                                    <span t-esc="att.name"/>
+                                </li>
+                            </ul>
+                        </t> -->
+                    </div>
+
+                    <div class="footer">
+                        <div class="text-right">Page <span class="page"/>/<span class="topage"/></div>
+                    </div>
+                    <p style="page-break-before:always;"> </p>
+                </t>
+            </t>
+        </template>
+
+        <record id="is_fnc_paperformat" model="report.paperformat">
+            <field name="name">Fiche Non-Conformité</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="margin_top">20</field>
+            <field name="margin_bottom">15</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">20</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="is_fnc_report" model="ir.actions.report">
+            <field name="name">Fiche Non-Conformité</field>
+            <field name="model">is.fnc</field>
+            <field name="binding_model_id" ref="is_dynacase2odoo.model_is_fnc"/>
+            <field name="paperformat_id" ref="is_fnc_paperformat"/>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">is_dynacase2odoo.is_fnc_template</field>
+            <field name="report_file">is_dynacase2odoo.is_fnc_template</field>
+        </record>
+    </data>
+</odoo>
