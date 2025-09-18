@@ -28,10 +28,12 @@ class is_reception(models.Model):
     reference_fournisseur = fields.Char("Référence fournisseur")
     numero_bl_fournisseur = fields.Char("Numéro de BL fournisseur")
     numero_commande       = fields.Char("Numéro de commande")
-    prix_achat_commande   = fields.Float("Prix achat commande", digits=(16, 4))
-    quantite_livree       = fields.Float("Quantité livrée", digits=(16, 4))
+    prix_achat_commande   = fields.Float("Prix achat commande (UA)", digits=(16, 4))
+    quantite_livree       = fields.Float("Quantité livrée (US)", digits=(16, 4))
+    unit_coef             = fields.Float('US/UA', help="Unité de réception / Unité d'achat", digits=(14,6))
     date_reception        = fields.Date("Date de réception", index=True)
-
+    sm_uom                = fields.Char("Unité réception")
+    pol_uom               = fields.Char("Unité achat")
 
 
     def actualiser_receptions_action(self):
@@ -67,12 +69,17 @@ class is_reception(models.Model):
                         sp.is_num_bl              as numero_bl_fournisseur,
                         po.name                   as numero_commande,
                         pol.price_unit            as prix_achat_commande,
-                        round(coalesce(sm.quantity_done/sm.is_unit_coef,0),4) as quantite_livree
+                        sm.quantity_done          as quantite_livree,
+                        sm.is_unit_coef           as unit_coef,
+                        uom1.name->>'fr_FR'       as sm_uom,
+                        uom2.name->>'fr_FR'       as pol_uom
                     from stock_picking sp inner join stock_move                sm on sm.picking_id=sp.id 
                                         inner join product_product           pp on sm.product_id=pp.id
                                         inner join product_template          pt on pp.product_tmpl_id=pt.id
                                         left outer join purchase_order_line pol on sm.purchase_line_id=pol.id
                                         left outer join purchase_order       po on pol.order_id=po.id
+                                        left outer join uom_uom            uom1 on sm.product_uom=uom1.id
+                                        left outer join uom_uom            uom2 on pol.product_uom=uom2.id
                                         join res_partner rp on sp.partner_id=rp.id
                                         join is_category ic on pt.is_category_id=ic.id
                     where sp.picking_type_id=1
@@ -99,6 +106,9 @@ class is_reception(models.Model):
                         'numero_commande'      : row['numero_commande'],
                         'prix_achat_commande'  : row['prix_achat_commande'],
                         'quantite_livree'      : row['quantite_livree'],
+                        'unit_coef'            : row['unit_coef'],
+                        'sm_uom'               : row['sm_uom'],
+                        'pol_uom'              : row['pol_uom'],
                     }
 
                     #** Recherche si la fournisseur existe ********************

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="is_reclamation_fournisseur_template">
+            <t t-set="company" t-value="res_company"/>
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
+                        <table style="width:100%">
+                            <tr>
+                                <td style="width:20%">
+                                    <img t-if="company.is_logo" t-att-src="image_data_uri(company.is_logo)" style="max-height:60px;" alt="Logo"/>
+                                    <img t-if="not company.is_logo and company.logo" t-att-src="image_data_uri(company.logo)" style="max-height:60px;" alt="Logo"/>
+                                </td>
+                                <td style="width:60%; text-align:center; font-size:18px; font-weight:bold;">
+                                    Réclamation Fournisseur
+                                </td>
+                                <td style="width:20%; text-align:right;">
+                                    <div><b>N°:</b> <span t-field="o.num_reclamation"/></div>
+                                    <div><b>Site:</b> <span t-field="o.site_id"/></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="page is_reclamation_fournisseur_page">
+                        <style>
+                            .is_reclamation_fournisseur_page h2 {
+                                background-color: #f8f9fa;
+                                padding: 8px;
+                                margin: 15px 0 10px 0;
+                                border-left: 4px solid #007bff;
+                                font-size: 14px;
+                            }
+                            .is_reclamation_fournisseur_page table th {
+                                background-color: #f8f9fa;
+                                padding: 5px 8px;
+                                font-weight: bold;
+                                font-size: 11px;
+                                border-bottom: 1px solid #dee2e6;
+                                text-align:right;
+                            }
+                            .is_reclamation_fournisseur_page table td {
+                                padding: 5px 8px;
+                                font-size: 11px;
+                                border-bottom: 1px solid #dee2e6;
+                            }
+                            .is_reclamation_fournisseur_table {
+                                border-collapse: collapse;
+                                border: 1px solid #dee2e6;
+                            }
+                            .is_reclamation_fournisseur_table th,
+                            .is_reclamation_fournisseur_table td {
+                                border: 1px solid #dee2e6;
+                            }
+                        </style>
+                        <h2 style="margin-top:0">Identification</h2>
+                        <table style="width:100%; border:0pt">
+                            <tr>
+                                <th style="width:35%">Créateur</th>
+                                <td style="width:65%"><span t-field="o.create_uid"/></td>
+                            </tr>
+                           <tr>
+                                <th style="width:35%">Date de création</th>
+                                <td style="width:65%"><span t-field="o.create_date"/></td>
+                            </tr>
+                           <tr>
+                                <th style="width:35%">Date de détection du défaut</th>
+                                <td style="width:65%"><span t-field="o.date_detection_defaut"/></td>
+                            </tr>
+                           <tr>
+                                <th style="width:35%">Type de réclamation</th>
+                                <td style="width:65%"><span t-field="o.type_reclamation"/></td>
+                            </tr>
+                        </table>
+
+                        <h2>Nature de la réclamation</h2>
+                        <table style="width:100%; border:0pt">
+
+                            <tr>
+                                <th style="width:35%">Qualité</th>
+                                <td style="width:65%"><span t-field="o.nature_qualite"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:35%">Logistique</th>
+                                <td style="width:65%"><span t-field="o.nature_logistique"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:35%">Administratif</th>
+                                <td style="width:65%"><span t-field="o.nature_administratif"/></td>
+                            </tr>
+                        </table>
+
+
+                        <h2>Fournisseur concerné</h2>
+                        <table style="width:100%; border:0pt">
+                            <tr>
+                                <th style="width:35%">Nom du fournisseur</th>
+                                <td style="width:65%"><span t-field="o.nom_fournisseur"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:35%">Adresse du fournisseur</th>
+                                <td style="width:65%"><span t-field="o.adr_fournisseur"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:35%">Code fournisseur</th>
+                                <td style="width:65%"><span t-field="o.code_fournisseur"/></td>
+                            </tr>
+                        </table>
+
+
+                        <h2>Réception concernée</h2>
+                        <table style="width:100%; border:0pt">
+                            <tr>
+                                <th style="width:35%">Référence Plastigray</th>
+                                <td style="width:65%"><span t-field="o.codepg"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:35%">Référence. fournisseur</th>
+                                <td style="width:65%"><span t-field="o.ref_fournisseur"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:35%">N° BL fournisseur</th>
+                                <td style="width:65%"><span t-field="o.num_bl_fournisseur"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:35%">N° commande</th>
+                                <td style="width:65%"><span t-field="o.num_commande"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:35%">Quantité livrée</th>
+                                <td style="width:65%"><span t-field="o.quantite_livree"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:35%">Date réception</th>
+                                <td style="width:65%"><span t-field="o.date_reception"/></td>
+                            </tr>
+                        </table>
+
+                        <h2>Description de la réclamation</h2>
+                        <table style="width:100%; border:0pt">
+                            <tr>
+                                <th style="width:35%">Quantité NC</th>
+                                <td style="width:65%"><span t-field="o.quantite_nc"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:35%">Quantité à facturer</th>
+                                <td style="width:65%"><span t-field="o.quantite_a_facturer"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:35%">Défaut constaté</th>
+                                <td style="width:65%"><span t-field="o.defaut_constate_choix"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:35%">Commentaire</th>
+                                <td style="width:65%"><span t-field="o.commentaire_description"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:35%">Réclamation récurrente</th>
+                                <td style="width:65%"><span t-field="o.reclamation_recurrente"/></td>
+                            </tr>
+                          
+                        </table>
+                        <p style="page-break-before:always;"> </p>
+
+
+                        <t t-if="o.photo">
+                            <h2>Photo</h2>
+                            <div style="text-align:center; margin:20px 0;">
+                                <img t-att-src="image_data_uri(o.photo)" style="max-width:100%; max-height:400px;" alt="Photo"/>
+                            </div>
+                        </t>
+
+
+                       <h2>Coûts produits / tris</h2>
+                        <table style="width:100%; border:0pt">
+                            <tr>
+                                <th style="width:35%">Coûts des produits</th>
+                                <td style="width:65%"><span t-field="o.couts_produits"/></td>
+                            </tr> 
+                            <tr>
+                                <th style="width:35%">Coûts des tris</th>
+                                <td style="width:65%"><span t-field="o.couts_tris"/></td>
+                            </tr> 
+                        </table>
+                        <t t-if="o.autre_cout_ids">
+                            <h2>Autres coûts</h2>
+                            <table style="width:100%; border:0pt" class="is_reclamation_fournisseur_table">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:left; width:50%">Type coût</th>
+                                        <th style="text-align:right; width:50%">Montant</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.autre_cout_ids" t-as="cout">
+                                        <td><span t-field="cout.type_cout"/></td>
+                                        <td style="text-align:right"><span t-field="cout.montant_autre"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                        <t t-if="o.cout_compta_ids">
+                            <h2>Coûts comptables</h2>
+                            <table style="width:100%; border:0pt" class="is_reclamation_fournisseur_table">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:left; width:40%">N° facture</th>
+                                        <th style="text-align:left; width:30%">Date coût</th>
+                                        <th style="text-align:right; width:30%">Montant</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.cout_compta_ids" t-as="cout">
+                                        <td><span t-field="cout.num_facture"/></td>
+                                        <td><span t-field="cout.date_cout"/></td>
+                                        <td style="text-align:right"><span t-field="cout.montant"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                        <h2>Somme des coûts</h2>
+                        <table style="width:100%; border:0pt">
+                            <tr>
+                                <th style="width:35%">Somme des coûts</th>
+                                <td style="width:65%"><span t-field="o.somme_des_couts"/></td>
+                            </tr> 
+                        </table>
+                    </div> 
+
+                    <div class="footer">
+                        <div class="text-right">Page <span class="page"/>/<span class="topage"/></div>
+                    </div>
+                    <p style="page-break-before:always;"> </p>
+                </t>
+            </t>
+        </template>
+
+        <record id="is_reclamation_fournisseur_paperformat" model="report.paperformat">
+            <field name="name">Réclamation Fournisseur</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="margin_top">20</field>
+            <field name="margin_bottom">15</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">20</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="is_reclamation_fournisseur_report" model="ir.actions.report">
+            <field name="name">Réclamation Fournisseur</field>
+            <field name="model">is.reclamation.fournisseur</field>
+            <field name="binding_model_id" ref="is_dynacase2odoo.model_is_reclamation_fournisseur"/>
+            <field name="paperformat_id" ref="is_reclamation_fournisseur_paperformat"/>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">is_dynacase2odoo.is_reclamation_fournisseur_template</field>
+            <field name="report_file">is_dynacase2odoo.is_reclamation_fournisseur_template</field>
+        </record>
+    </data>
+</odoo>

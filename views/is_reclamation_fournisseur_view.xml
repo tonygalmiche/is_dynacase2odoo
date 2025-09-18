@@ -16,8 +16,6 @@
                     <field name="date_detection_defaut" optional="show"/>
                     <field name="annee_detection_defaut" optional="hide"/>
                     <field name="date_creation" optional="show"/>
-                    <field name="telephone" optional="hide"/>
-                    <field name="courriel" optional="hide"/>
 
                     <!-- Nature de la réclamation -->
                     <field name="nature_qualite" optional="hide"/>
@@ -44,7 +42,6 @@
                     <field name="quantite_nc" optional="hide"/>
                     <field name="quantite_a_facturer" optional="hide"/>
                     <field name="defaut_constate_choix" optional="hide"/>
-                    <field name="defaut_constate" optional="hide"/>
                     <field name="reclamation_recurrente" optional="hide"/>
                     <field name="suppression_aqp" optional="hide"/>
                     <field name="commentaire_description" optional="hide"/>
@@ -74,6 +71,7 @@
                     <!-- Coûts globaux -->
                     <field name="couts_produits" optional="hide"/>
                     <field name="couts_tris" optional="hide"/>
+                    <field name="somme_des_couts" optional="hide"/>
 
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"
@@ -135,15 +133,14 @@
                         <group string="Identification">
                             <group>
                                 <field name="type_reclamation" required="1"/>
-                                <field name="telephone"/>
-                                <field name="courriel"/>
+                                <field name="date_detection_defaut" required="1"/>
+                                <field name="annee_detection_defaut" invisible="1"/>
+                                <field name="site_id" required="1"/>
                             </group>
                             <group>
                                 <field name="num_reclamation"/>
-                                <field name="site_id" required="1"/>
                                 <field name="date_creation"/>
-                                <field name="date_detection_defaut" required="1"/>
-                                <field name="annee_detection_defaut" invisible="1"/>
+                                <field name="create_uid" string="Créateur"/>
                             </group>
 
                             <!-- Description de la réclamation -->
@@ -154,7 +151,6 @@
                                 <field name="quantite_nc"/>
                                 <field name="quantite_a_facturer"/>
                                 <field name="defaut_constate_choix"/>
-                                <field name="defaut_constate"/>
                                 <field name="reclamation_recurrente"/>
                                 <field name="suppression_aqp"/>
                                 <field name="commentaire_description"/>
@@ -210,7 +206,15 @@
                                 <field name="commentaire_reponse"/>
                             </group>
 
-
+                            <!-- Autres coûts -->
+                            <group string="Autres coûts">
+                                <field name="autre_cout_ids" context="{'default_reclamation_id': active_id}" nolabel="1" colspan="2">
+                                    <tree editable="bottom">
+                                        <field name="type_cout"/>
+                                        <field name="montant_autre"/>
+                                    </tree>
+                                </field>
+                            </group>
 
                             <!-- Coûts comptables -->
                             <group string="Coûts comptables">
@@ -223,22 +227,11 @@
                                 </field>
                             </group>
 
-
-                            <!-- Autres coûts -->
-                            <group string="Autres coûts">
-                                <field name="autre_cout_ids" context="{'default_reclamation_id': active_id}" nolabel="1" colspan="2">
-                                    <tree editable="bottom">
-                                        <field name="type_cout"/>
-                                        <field name="montant_autre"/>
-                                    </tree>
-                                </field>
-                            </group>
-
-
                             <!-- Coûts globaux -->
                             <group string="Coûts">
                                 <field name="couts_produits"/>
                                 <field name="couts_tris"/>
+                                <field name="somme_des_couts"/>
                             </group>
                         </group>
                         <group string="Pièces jointes">

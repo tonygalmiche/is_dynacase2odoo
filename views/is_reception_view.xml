@@ -45,7 +45,10 @@
                             <field name="numero_bl_fournisseur"/>
                             <field name="numero_commande"/>
                             <field name="quantite_livree"/>
+                            <field name="sm_uom"/>
                             <field name="prix_achat_commande"/>
+                            <field name="pol_uom"/>
+                            <field name="unit_coef"/>
                         </group>
                     </group>
                 </sheet>
@@ -71,7 +74,10 @@
                 <field name="numero_bl_fournisseur" optional="hide"/>
                 <field name="numero_commande" optional="hide"/>
                 <field name="quantite_livree" optional="show"/>
+                <field name="sm_uom" optional="hide"/>
                 <field name="prix_achat_commande" optional="hide"/>
+                <field name="pol_uom" optional="hide"/>
+                <field name="unit_coef" optional="hide"/>
             </tree>
         </field>
     </record>

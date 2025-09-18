@@ -69,7 +69,7 @@ class IsReclamationFournisseur(models.Model):
     ref_fournisseur = fields.Char(string="Référence fournisseur", tracking=True)
     num_bl_fournisseur = fields.Char(string="Numéro de BL fournisseur", tracking=True)
     num_commande = fields.Char(string="Numéro de commande", tracking=True)
-    prix_achat_commande = fields.Float(string="Prix achat commande", tracking=True)
+    prix_achat_commande = fields.Float(string="Prix achat commande", tracking=True, digits=(12, 4))
     quantite_livree = fields.Float(string="Quantité livrée", tracking=True)
     date_reception = fields.Date(string="Date de réception", tracking=True)
 
@@ -81,6 +81,8 @@ class IsReclamationFournisseur(models.Model):
     # rf_fr_description_reclamation
     quantite_nc = fields.Float(string="Quantité NC", tracking=True)
     quantite_a_facturer = fields.Float(string="Quantité à facturer", tracking=True)
+
+
     defaut_constate = fields.Text(string="Défaut constaté (ancien)", tracking=True)
     defaut_constate_choix = fields.Selection(
         selection=[
@@ -139,9 +141,41 @@ class IsReclamationFournisseur(models.Model):
     # rf_fr_commentaire
     commentaire_reponse = fields.Text(string="Commentaire réponse", tracking=True)
 
-    # rf_fr_couts
-    couts_produits = fields.Float(string="Coûts des produits", tracking=True)
-    couts_tris = fields.Float(string="Coûts des tris", tracking=True)
+    couts_produits = fields.Float(
+        string="Coûts des produits",
+        tracking=True,
+        help="Prix achat commande x Quantité à facturer",
+        compute="_compute_couts_produits",
+        store=True,
+        readonly=True,
+    )
+
+    @api.depends('prix_achat_commande', 'quantite_a_facturer')
+    def _compute_couts_produits(self):
+        for rec in self:
+            rec.couts_produits = (rec.prix_achat_commande or 0.0) * (rec.quantite_a_facturer or 0.0)
+
+
+    couts_tris = fields.Float(
+        string="Coûts des tris",
+        tracking=True,
+        compute="_compute_couts_tris",
+        store=True,
+        readonly=True,
+    )
+
+    @api.depends('annee_detection_defaut', 'nombre_heures')
+    def _compute_couts_tris(self):
+        for rec in self:
+            try:
+                annee = int(rec.annee_detection_defaut or 0)
+            except (ValueError, TypeError):
+                annee = 0
+            cout_horaire = 25
+            if annee >= 2025:
+                cout_horaire = 30
+            rec.couts_tris = round((rec.nombre_heures or 0) * cout_horaire)
+
 
     # Autres coûts (lignes)
     autre_cout_ids = fields.One2many(
@@ -158,6 +192,27 @@ class IsReclamationFournisseur(models.Model):
         string="Coûts comptables",
         tracking=True,
     )
+
+
+    somme_des_couts = fields.Float(
+        string="Somme des coûts",
+        tracking=True,
+        help="Coûts des produits + Coûts des tris + Autres coûts + Coûts comptables",
+        compute="_compute_somme_des_couts",
+        store=True,
+        readonly=True,
+    )
+
+    @api.depends('couts_produits', 'couts_tris', 'autre_cout_ids.montant_autre', 'cout_compta_ids.montant')
+    def _compute_somme_des_couts(self):
+        for rec in self:
+            autres_couts = sum(rec.autre_cout_ids.mapped('montant_autre'))
+            couts_compta = sum(rec.cout_compta_ids.mapped('montant'))
+            rec.somme_des_couts = (rec.couts_produits or 0.0) + (rec.couts_tris or 0.0) + autres_couts + couts_compta
+
+
+
+
     piece_jointe_ids = fields.Many2many("ir.attachment", "is_reclamation_fournisseur_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
     active = fields.Boolean(string="Actif", default=True, tracking=True)
     dynacase_id = fields.Integer(string="Id Dynacase", index=True, copy=False)
@@ -174,6 +229,7 @@ class IsReclamationFournisseur(models.Model):
                 "url": url,
                 "target": "new",
             }
+
 
 
     @api.model_create_multi
@@ -200,7 +256,7 @@ class IsReclamationFournisseur(models.Model):
                 ref_fournisseur = obj.reception_id.reference_fournisseur
                 numero_bl_fournisseur = obj.reception_id.numero_bl_fournisseur
                 numero_commande     = obj.reception_id.numero_commande
-                prix_achat_commande = obj.reception_id.prix_achat_commande
+                prix_achat_commande = (obj.reception_id.prix_achat_commande / (obj.reception_id.unit_coef or 1))
                 quantite_livree     = obj.reception_id.quantite_livree
                 date_reception      = obj.reception_id.date_reception
             obj.num_reception = numero_reception
