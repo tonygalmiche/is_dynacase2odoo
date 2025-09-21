@@ -45,7 +45,7 @@ class is_planification_audit(models.Model):
     ref_client                  = fields.Char("Référence client", tracking=True)
     description                 = fields.Char("Description", tracking=True)
     client_id                   = fields.Many2one("res.partner", string="Client", tracking=True, domain=[("is_company","=",True), ("customer","=",True), ("is_code", "like", "90%")])
-    fournisseur_id              = fields.Many2one('res.partner', 'Nom du fournisseur', tracking=True, domain=[("is_company","=",True), ("supplier","=",True)])
+    fournisseur_id              = fields.Many2one('res.partner', 'Fournisseur'  , tracking=True, domain=[("is_company","=",True), ("supplier","=",True)])
     demandeur_id                = fields.Many2one("res.users", "Demandeur", default=lambda self: self.env.uid, tracking=True)
     date_prev                   = fields.Date("Date prévisionnelle", tracking=True, copy=False)
     mois_prev = fields.Char("Mois prévisionnel", tracking=True, copy=False, compute="_compute_mois_prev", store=True)
@@ -117,7 +117,14 @@ class is_planification_audit(models.Model):
 
     @api.onchange('article_id')
     def onchange_article_id(self):
+
+        print('TEST')
+
         if self.article_id:
-            self.ref_client = self.article_id.ref_client
+            self.ref_client     = self.article_id.ref_client
+            self.client_id      = self.article_id.client_id.id
+            self.fournisseur_id = self.article_id.fournisseur_id.id
         else:
-            self.ref_client = False
+            self.ref_client     = False
+            self.client_id      = False
+            self.fournisseur_id = False

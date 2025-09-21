@@ -31,7 +31,7 @@
                                 <field name="jour_nuit"/>
                                 <field name="moule_id"/>
                                 <field name="dossierf_id"/>
-                                <field name="article_id"/>
+                                <field name="article_id"  domain="[('database_id','=',site_id)]"/>
                                 <field name="ref_client"/>
                                 <field name="description"/>
                                 <field name="client_id"/>
