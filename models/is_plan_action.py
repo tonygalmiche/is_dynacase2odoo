@@ -104,12 +104,23 @@ class is_action(models.Model):
                 'target': 'new',
             }
 
+    def open_action_form(self):
+        """Ouvre la fiche complète de l'action"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Action',
+            'res_model': 'is.action',
+            'res_id': self.id,
+            'view_mode': 'form',
+        }
+
 
 class is_plan_action(models.Model):
     _name='is.plan.action'
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description="Plan d'action"
-    _rec_name = "title"
+    _rec_name = "num_int"
     _order='num_int desc'
 
     title               = fields.Char('Libellé', required=True, tracking=True)

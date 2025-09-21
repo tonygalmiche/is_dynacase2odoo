@@ -230,6 +230,33 @@
                         </group>
                         <group string="Liste des actions">
                             <field name="is_action_ids" nolabel="1" colspan="2">
+                                <tree>
+                                    <button name="open_action_form" type="object" icon="fa-search" title="Ouvrir la fiche complète"/>
+                                    <field name="title"            optional="show"/>
+                                    <field name="pilot_id"         optional="hide"/>
+                                    <field name="resp_id"          optional="show"/>
+                                    <field name="risque"           optional="show"/>
+                                    <field name="comment"          optional="show"/>
+                                    <field name="date"             optional="hide"/>
+                                    <field name="dateplan"         optional="hide"/>
+                                    <field name="datedo"           optional="hide"/>
+                                    <field name="datecheck"        optional="hide"/>
+                                    <field name="plan_action_id"   optional="hide"/>
+                                    <field name="num_moule"        optional="hide"/>
+                                    <field name="num_dossierf"     optional="hide"/>
+                                    <field name="client"           optional="hide"/>
+                                    <field name="date_beg"         optional="hide"/>
+                                    <field name="date_end"         optional="hide"/>
+                                    <field name="create_date"      optional="hide" string="Créé le"/>
+                                    <field name="create_uid"       optional="hide" string="Créé par"/>
+                                    <field name="write_date"       optional="hide" string="Modifié le"/>
+                                    <field name="write_uid"        optional="hide" string="Modifié par"/>
+                                    <field
+                                        name="state" optional="show" widget="badge"
+                                        decoration-warning="state in ['annule']"
+                                        decoration-info="state in ['actif']"
+                                    />
+                                </tree>
                             </field>
                             <field name="responsables_ids" widget="many2many_tags"/>
                         </group>
