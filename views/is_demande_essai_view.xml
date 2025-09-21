@@ -133,7 +133,7 @@
                                 <group string="Matière / Colorant" col="3">
                                     <group string="Matière">
                                         <field name="code_matiere_id"              attrs="{'readonly': [('ro_user','=',True)]}"/>
-                                        <field name="designation_mat" required="1" attrs="{'readonly': [('ro_user','=',True)]}"/>
+                                        <field name="designation_mat"              attrs="{'readonly': [('ro_user','=',True)]}"/>
                                         <field name="code_recyclage_matiere1_id"/>
                                         <field name="lieu_stockage_matiere"        attrs="{'readonly': [('ro_user','=',True)]}"/>
                                         <field name="mat_disp"                     attrs="{'readonly': [('ro_user','=',True)]}"/>

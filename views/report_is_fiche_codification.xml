@@ -1,243 +1,243 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-	<data>
-		<template id="is_fiche_codification_template">
-			<t t-set="company" t-value="res_company"/>
-			<t t-call="web.basic_layout">
-				<t t-foreach="docs" t-as="o">
-					<div class="header">
-						<table style="width:100%">
-							<tr>
-								<td style="width:20%">
-									<img t-if="company.is_logo" t-att-src="image_data_uri(company.is_logo)" style="max-height:60px;" alt="Logo"/>
-								</td>
-								<td style="width:60%; text-align:center; font-size:18px; font-weight:bold;">
-									Fiche de codification
-								</td>
-								<td style="width:20%; text-align:right;">
-									<div><b>Chrono:</b> <span t-field="o.chrono"/></div>
-									<div><b>Etat:</b> <span t-esc="o.get_state_name()"/></div>
-								</td>
-							</tr>
-						</table>
-					</div>
+    <data>
+        <template id="is_fiche_codification_template">
+            <t t-set="company" t-value="res_company"/>
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
+                        <table style="width:100%">
+                            <tr>
+                                <td style="width:20%">
+                                    <img t-if="company.is_logo" t-att-src="image_data_uri(company.is_logo)" style="max-height:60px;" alt="Logo"/>
+                                </td>
+                                <td style="width:60%; text-align:center; font-size:18px; font-weight:bold;">
+                                    Fiche de codification
+                                </td>
+                                <td style="width:20%; text-align:right;">
+                                    <div><b>Chrono:</b> <span t-field="o.chrono"/></div>
+                                    <div><b>Etat:</b> <span t-esc="o.get_state_name()"/></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
 
-					<div class="page is_revue_de_contrat_page">
-						<h2 style="margin-top:0">Identification</h2>
-						<table style="width:100%; border:0pt">
-							<tr>
-								<th style="width:20%">Dossier</th>
-								<td style="width:30%"><span t-field="o.dossier"/></td>
-								<th style="width:20%">Date</th>
-								<td style="width:30%"><span t-field="o.date"/></td>
-							</tr>
-							<tr>
-								<th>Établi par</th>
-								<td><span t-field="o.etabli_par_id"/></td>
-								<th>Chef de projet</th>
-								<td><span t-field="o.chef_de_projet_id"/></td>
-							</tr>
-							<tr>
-								<th>Client</th>
-								<td><span t-field="o.client_id"/></td>
-								<th>Projet</th>
-								<td><span t-field="o.project_id"/></td>
-							</tr>
-							<tr>
-								<th>Origine de la fiche</th>
-								<td><span t-field="o.type_dossier"/></td>
-								<th>Création / Modification</th>
-								<td><span t-field="o.creation_modif"/></td>
-							</tr>
-							<tr>
-								<th>Dossier Modif Variante</th>
-								<td><span t-field="o.dossier_modif_variante_id"/></td>
-								<th>Revue de contrat</th>
-								<td><span t-field="o.revue_contrat_id"/></td>
-							</tr>
-							<tr>
-								<th>Moule</th>
-								<td><span t-field="o.mold_id"/></td>
-								<th>Dossier F</th>
-								<td><span t-field="o.dossierf_id"/></td>
-							</tr>
-						</table>
-
-						<h2>Gamme</h2>
-						<table style="width:100%; border:0pt">
-							<tr>
-								<th style="width:20%">Type presse</th>
-								<td style="width:30%"><span t-field="o.type_presse"/></td>
-								<th style="width:20%">Temps de cycle</th>
-								<td style="width:30%"><span t-field="o.tps_cycle"/></td>
-							</tr>
-							<tr>
-								<th>Nombre d'empreintes</th>
-								<td><span t-field="o.nb_empreintes"/></td>
-								<th>Nombre de mod</th>
-								<td><span t-field="o.nb_mod"/></td>
-							</tr>
-						</table>
-
-						<h2>Codification</h2>
-						<table style="width:100%; border:0pt">
-							<tr>
-								<th style="width:20%">Code PG</th>
-								<td style="width:30%"><span t-field="o.code_pg"/></td>
+                    <div class="page is_revue_de_contrat_page">
+                        <h2 style="margin-top:0">Identification</h2>
+                        <table style="width:100%; border:0pt">
+                            <tr>
+                                <th style="width:20%">Dossier</th>
+                                <td style="width:30%"><span t-field="o.dossier"/></td>
+                                <th style="width:20%">Date</th>
+                                <td style="width:30%"><span t-field="o.date"/></td>
                             </tr>
                             <tr>
-								<th style="width:20%">Désignation</th>
-								<td style="width:30%"><span t-field="o.designation"/></td>
-							</tr>
-							<tr>
-								<th>Code client</th>
-								<td><span t-field="o.code_client"/></td>
+                                <th>Établi par</th>
+                                <td><span t-field="o.etabli_par_id"/></td>
+                                <th>Chef de projet</th>
+                                <td><span t-field="o.chef_de_projet_id"/></td>
                             </tr>
                             <tr>
-								<th>Référence plan</th>
-								<td><span t-field="o.ref_plan"/></td>
-							</tr>
-							<tr>
-								<th>Indice plan</th>
-								<td><span t-field="o.indice_plan"/></td>
+                                <th>Client</th>
+                                <td><span t-field="o.client_id"/></td>
+                                <th>Projet</th>
+                                <td><span t-field="o.project_id"/></td>
                             </tr>
                             <tr>
+                                <th>Origine de la fiche</th>
+                                <td><span t-field="o.type_dossier"/></td>
+                                <th>Création / Modification</th>
+                                <td><span t-field="o.creation_modif"/></td>
+                            </tr>
+                            <tr>
+                                <th>Dossier Modif Variante</th>
+                                <td><span t-field="o.dossier_modif_variante_id"/></td>
+                                <th>Revue de contrat</th>
+                                <td><span t-field="o.revue_contrat_id"/></td>
+                            </tr>
+                            <tr>
+                                <th>Moule</th>
+                                <td><span t-field="o.mold_id"/></td>
+                                <th>Dossier F</th>
+                                <td><span t-field="o.dossierf_id"/></td>
+                            </tr>
+                        </table>
 
+                        <h2>Gamme</h2>
+                        <table style="width:100%; border:0pt">
+                            <tr>
+                                <th style="width:20%">Type presse</th>
+                                <td style="width:30%"><span t-field="o.type_presse"/></td>
+                                <th style="width:20%">Temps de cycle</th>
+                                <td style="width:30%"><span t-field="o.tps_cycle"/></td>
+                            </tr>
+                            <tr>
+                                <th>Nombre d'empreintes</th>
+                                <td><span t-field="o.nb_empreintes"/></td>
+                                <th>Nombre de mod</th>
+                                <td><span t-field="o.nb_mod"/></td>
+                            </tr>
+                        </table>
 
-								<th>Type UC</th>
-								<td><span t-field="o.type_uc"/></td>
-							</tr>
-							<tr>
-								<th>Quantité / UC</th>
-								<td><span t-field="o.qt_uc"/></td>
+                        <h2>Codification</h2>
+                        <table style="width:100%; border:0pt">
+                            <tr>
+                                <th style="width:20%">Code PG</th>
+                                <td style="width:30%"><span t-field="o.code_pg"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:20%">Désignation</th>
+                                <td style="width:30%"><span t-field="o.designation"/></td>
+                            </tr>
+                            <tr>
+                                <th>Code client</th>
+                                <td><span t-field="o.code_client"/></td>
+                            </tr>
+                            <tr>
+                                <th>Référence plan</th>
+                                <td><span t-field="o.ref_plan"/></td>
+                            </tr>
+                            <tr>
+                                <th>Indice plan</th>
+                                <td><span t-field="o.indice_plan"/></td>
                             </tr>
                             <tr>
 
 
-								<th>Commentaire</th>
-								<td><span t-field="o.commentaire"/></td>
-							</tr>
-						</table>
+                                <th>Type UC</th>
+                                <td><span t-field="o.type_uc"/></td>
+                            </tr>
+                            <tr>
+                                <th>Quantité / UC</th>
+                                <td><span t-field="o.qt_uc"/></td>
+                            </tr>
+                            <tr>
 
-						<h2>Livraison</h2>
-						<table style="width:100%; border:0pt">
-							<tr>
-								<th style="width:20%">Prévisions annuelles</th>
-								<td style="width:30%"><span t-field="o.prev_annuelle"/></td>
-								<th style="width:20%">Date DMS</th>
-								<td style="width:30%"><span t-field="o.date_dms"/></td>
-							</tr>
-							<tr>
-								<th>Durée de vie</th>
-								<td><span t-field="o.duree_vie"/></td>
-								<th>Lot de livraison</th>
-								<td><span t-field="o.lot_livraison"/></td>
-							</tr>
-							<tr>
-								<th>Site de livraison</th>
-								<td colspan="3"><span t-field="o.site_livraison"/></td>
-							</tr>
-						</table>
 
-						<t t-if="o.nomenclature_ids">
-							<h2>Nomenclature</h2>
-							<table style="width:100%; border:0pt" class="is_fiche_codification_table">
-								<thead>
-									<tr>
-										<th style="text-align:left">Code PG</th>
-										<th style="text-align:left">Désignation</th>
-										<th class="text-end" style="width:15%">Quantité</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr t-foreach="o.nomenclature_ids" t-as="l">
-										<td><span t-field="l.nom_code_pg"/></td>
-										<td><span t-field="l.nom_designation"/></td>
-										<td class="text-end"><span t-field="l.nom_qt"/></td>
-									</tr>
-								</tbody>
-							</table>
-						</t>
+                                <th>Commentaire</th>
+                                <td><span t-field="o.commentaire"/></td>
+                            </tr>
+                        </table>
 
-						<t t-if="o.decomposition_ids">
-							<h2>Décomposition du prix de vente</h2>
-							<table style="width:100%; border:0pt" class="is_fiche_codification_table">
-								<thead>
-									<tr>
-										<th class="text-end">Part mat</th>
-										<th class="text-end">Part comp</th>
-										<th class="text-end">Part emb</th>
-										<th class="text-end">VA inj</th>
-										<th class="text-end">VA ass</th>
-										<th class="text-end">Frais port</th>
-										<th class="text-end">Logis</th>
-										<th class="text-end">Amt moule</th>
-										<th class="text-end">Surcôut pré-série</th>
-										<th class="text-end">Prix vente</th>
-										<th class="text-end">Delta</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr t-foreach="o.decomposition_ids" t-as="d">
-										<td class="text-end"><span t-field="d.part_mat"/></td>
-										<td class="text-end"><span t-field="d.part_comp"/></td>
-										<td class="text-end"><span t-field="d.part_emb"/></td>
-										<td class="text-end"><span t-field="d.va_inj"/></td>
-										<td class="text-end"><span t-field="d.va_ass"/></td>
-										<td class="text-end"><span t-field="d.frais_port"/></td>
-										<td class="text-end"><span t-field="d.logis"/></td>
-										<td class="text-end"><span t-field="d.amt_moule"/></td>
-										<td class="text-end"><span t-field="d.surcout_pre_serie"/></td>
-										<td class="text-end"><span t-field="d.prix_vente"/></td>
-										<td class="text-end"><span t-field="d.delta"/></td>
-									</tr>
-								</tbody>
-							</table>
-						</t>
+                        <h2>Livraison</h2>
+                        <table style="width:100%; border:0pt">
+                            <tr>
+                                <th style="width:20%">Prévisions annuelles</th>
+                                <td style="width:30%"><span t-field="o.prev_annuelle"/></td>
+                                <th style="width:20%">Date DMS</th>
+                                <td style="width:30%"><span t-field="o.date_dms"/></td>
+                            </tr>
+                            <tr>
+                                <th>Durée de vie</th>
+                                <td><span t-field="o.duree_vie"/></td>
+                                <th>Lot de livraison</th>
+                                <td><span t-field="o.lot_livraison"/></td>
+                            </tr>
+                            <tr>
+                                <th>Site de livraison</th>
+                                <td colspan="3"><span t-field="o.site_livraison"/></td>
+                            </tr>
+                        </table>
 
-						<t t-if="o.piece_jointe_ids">
-							<h2>Pièces jointes</h2>
-							<ul>
-								<li t-foreach="o.piece_jointe_ids" t-as="att">
-									<span t-esc="att.name"/>
-								</li>
-							</ul>
-						</t>
-					</div>
+                        <t t-if="o.nomenclature_ids">
+                            <h2>Nomenclature</h2>
+                            <table style="width:100%; border:0pt" class="is_fiche_codification_table">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:left">Code PG</th>
+                                        <th style="text-align:left">Désignation</th>
+                                        <th class="text-end" style="width:15%">Quantité</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.nomenclature_ids" t-as="l">
+                                        <td><span t-field="l.nom_code_pg"/></td>
+                                        <td><span t-field="l.nom_designation"/></td>
+                                        <td class="text-end"><span t-field="l.nom_qt"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
 
-					<div class="footer">
-						<div class="text-right">Page <span class="page"/>/<span class="topage"/></div>
-					</div>
-					<p style="page-break-before:always;"> </p>
-				</t>
-			</t>
-		</template>
+                        <t t-if="o.decomposition_ids">
+                            <h2>Décomposition du prix de vente</h2>
+                            <table style="width:100%; border:0pt" class="is_fiche_codification_table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-end">Part mat</th>
+                                        <th class="text-end">Part comp</th>
+                                        <th class="text-end">Part emb</th>
+                                        <th class="text-end">VA inj</th>
+                                        <th class="text-end">VA ass</th>
+                                        <th class="text-end">Frais port</th>
+                                        <th class="text-end">Logis</th>
+                                        <th class="text-end">Amt moule</th>
+                                        <th class="text-end">Surcôut pré-série</th>
+                                        <th class="text-end">Prix vente</th>
+                                        <th class="text-end">Delta</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.decomposition_ids" t-as="d">
+                                        <td class="text-end"><span t-field="d.part_mat"/></td>
+                                        <td class="text-end"><span t-field="d.part_comp"/></td>
+                                        <td class="text-end"><span t-field="d.part_emb"/></td>
+                                        <td class="text-end"><span t-field="d.va_inj"/></td>
+                                        <td class="text-end"><span t-field="d.va_ass"/></td>
+                                        <td class="text-end"><span t-field="d.frais_port"/></td>
+                                        <td class="text-end"><span t-field="d.logis"/></td>
+                                        <td class="text-end"><span t-field="d.amt_moule"/></td>
+                                        <td class="text-end"><span t-field="d.surcout_pre_serie"/></td>
+                                        <td class="text-end"><span t-field="d.prix_vente"/></td>
+                                        <td class="text-end"><span t-field="d.delta"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
 
-		<record id="is_fiche_codification_paperformat" model="report.paperformat">
-			<field name="name">Fiche de codification</field>
-			<field name="default" eval="True"/>
-			<field name="format">A4</field>
-			<field name="orientation">Portrait</field>
-			<field name="page_height">0</field>
-			<field name="page_width">0</field>
-			<field name="margin_top">20</field>
-			<field name="margin_bottom">15</field>
-			<field name="margin_left">7</field>
-			<field name="margin_right">7</field>
-			<field name="header_line" eval="False"/>
-			<field name="header_spacing">20</field>
-			<field name="dpi">90</field>
-		</record>
+                        <t t-if="o.piece_jointe_ids">
+                            <h2>Pièces jointes</h2>
+                            <ul>
+                                <li t-foreach="o.piece_jointe_ids" t-as="att">
+                                    <span t-esc="att.name"/>
+                                </li>
+                            </ul>
+                        </t>
+                    </div>
 
-		<record id="is_fiche_codification_report" model="ir.actions.report">
-			<field name="name">Fiche de codification</field>
-			<field name="model">is.fiche.codification</field>
-			<field name="binding_model_id" ref="model_is_fiche_codification"/>
-			<field name="paperformat_id" ref="is_fiche_codification_paperformat"/>
-			<field name="report_type">qweb-pdf</field>
-			<field name="report_name">is_dynacase2odoo.is_fiche_codification_template</field>
-			<field name="report_file">is_dynacase2odoo.is_fiche_codification_template</field>
-		</record>
-	</data>
+                    <div class="footer">
+                        <div class="text-right">Page <span class="page"/>/<span class="topage"/></div>
+                    </div>
+                    <p style="page-break-before:always;"> </p>
+                </t>
+            </t>
+        </template>
+
+        <record id="is_fiche_codification_paperformat" model="report.paperformat">
+            <field name="name">Fiche de codification</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="margin_top">20</field>
+            <field name="margin_bottom">15</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">20</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="is_fiche_codification_report" model="ir.actions.report">
+            <field name="name">Fiche de codification</field>
+            <field name="model">is.fiche.codification</field>
+            <field name="binding_model_id" ref="model_is_fiche_codification"/>
+            <field name="paperformat_id" ref="is_fiche_codification_paperformat"/>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">is_dynacase2odoo.is_fiche_codification_template</field>
+            <field name="report_file">is_dynacase2odoo.is_fiche_codification_template</field>
+        </record>
+    </data>
     
 </odoo>

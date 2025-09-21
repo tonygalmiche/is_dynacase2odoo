@@ -497,8 +497,9 @@ class IsDocMoule(models.Model):
                     raise ValidationError("Impossbile de passer à l'état 'Fait' car aucune réponse n'est fournie (%s) !"%type_demande)
                 for obj in self:
                     if obj.plan_piece:
-                        if not obj.pp_revue_plan or not obj.pp_equipe_projet or not obj.pp_maj_odoo:
-                            raise ValidationError("Impossbile de passer à l'état 'Fait' car il est nécessaire de renseigner les champs 'Plan pièce' !")                
+                        if obj.pp_revue_plan!='OK' or obj.pp_equipe_projet!='OK' or obj.pp_maj_odoo!='OK':
+                            raise ValidationError("Impossbile de passer à l'état 'Fait' car les champs 'Plan pièce' doivent être sur 'OK' !")
+
         for obj in self:
             if not obj.acces_chef_projet:
                 champs_interdit=[

@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="is_modif_donnee_technique_report_template">
+            <t t-set="company" t-value="res_company"/>
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="o">
+
+                    <div class="header">
+                        <table style="width:100%">
+                            <tr>
+                                <td style="width:20%">
+                                    <img t-if="company.is_logo" t-att-src="image_data_uri(company.is_logo)" style="max-height:60px;" alt="Logo"/>
+                                    <img t-if="not company.is_logo and company.logo" t-att-src="image_data_uri(company.logo)" style="max-height:60px;" alt="Logo"/>
+                                </td>
+                                <td style="width:60%; text-align:center;">
+                                    <div><b>Demande de modification de données techniques</b></div>
+                                </td>
+                                <td style="width:20%; text-align:right;">
+                                    <div><b>N°:</b> <span t-field="o.num_demande"/></div>
+                                    <div><b>du:</b> <span t-field="o.create_date" t-options="{'widget': 'date'}"/></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="page">
+
+                        <style>
+                            .page h2 {
+                                background-color: #f8f9fa;
+                                padding: 8px;
+                                margin: 15px 0 10px 0;
+                                border-left: 4px solid #007bff;
+                                font-size: 14px;
+                            }
+                        </style>
+
+
+                        <div class="oe_structure"/>
+                        <!-- État avec badge coloré -->
+                        <div class="row mb-3">
+                            <div class="col-12 text-center">
+                                <span t-if="o.state == 'mdt_brouillon'" class="badge badge-warning" style="font-size: 14px; padding: 8px 12px;">
+                                    <t t-esc="dict(o._fields['state'].selection)[o.state]"/>
+                                </span>
+                                <span t-if="o.state == 'mdt_diffuse'" class="badge badge-info" style="font-size: 14px; padding: 8px 12px;">
+                                    <t t-esc="dict(o._fields['state'].selection)[o.state]"/>
+                                </span>
+                                <span t-if="o.state == 'mdt_termine'" class="badge badge-success" style="font-size: 14px; padding: 8px 12px;">
+                                    <t t-esc="dict(o._fields['state'].selection)[o.state]"/>
+                                </span>
+                                <span t-if="o.state == 'mdt_refuse'" class="badge badge-danger" style="font-size: 14px; padding: 8px 12px;">
+                                    <t t-esc="dict(o._fields['state'].selection)[o.state]"/>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Informations principales -->
+                        <h2>Identification</h2>
+                        <div class="row">
+                            <div class="col-6">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td style="width: 40%; font-weight: bold;">N° Demande:</td>
+                                        <td><span t-field="o.num_demande"/></td>
+                                    </tr>
+                                    <tr t-if="o.moule_id">
+                                        <td style="font-weight: bold;">Moule:</td>
+                                        <td><span t-field="o.moule_id"/></td>
+                                    </tr>
+                                    <tr t-if="o.dossierf_id">
+                                        <td style="font-weight: bold;">Dossier F:</td>
+                                        <td><span t-field="o.dossierf_id"/></td>
+                                    </tr>
+                                    <tr t-if="o.designation_dossier">
+                                        <td style="font-weight: bold;">Désignation:</td>
+                                        <td><span t-field="o.designation_dossier"/></td>
+                                    </tr>
+                                    <tr t-if="o.codepg">
+                                        <td style="font-weight: bold;">Code PG:</td>
+                                        <td><span t-field="o.codepg"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <table class="table table-sm">
+                                    <tr t-if="o.codepg_id">
+                                        <td style="width: 40%; font-weight: bold;">Code article:</td>
+                                        <td><span t-field="o.codepg_id"/></td>
+                                    </tr>
+                                    <tr t-if="o.designation">
+                                        <td style="font-weight: bold;">Désignation article:</td>
+                                        <td><span t-field="o.designation"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold;">Demandeur:</td>
+                                        <td><span t-field="o.demandeur"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold;">Date demande:</td>
+                                        <td><span t-field="o.date_demande"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold;">Responsable:</td>
+                                        <td><span t-field="o.responsable_action"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Section Article -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h2>Article</h2>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td style="width: 25%; font-weight: bold;">Modification Article:</td>
+                                        <td>
+                                            <span t-if="o.article" class="text-success">☑ Oui</span>
+                                            <span t-if="not o.article" class="text-muted">☐ Non</span>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="o.article_commentaire">
+                                        <td style="font-weight: bold; vertical-align: top;">Commentaire article:</td>
+                                        <td>
+                                            <div style="white-space: pre-wrap;"><span t-field="o.article_commentaire"/></div>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="o.article_piece_jointe_ids">
+                                        <td style="font-weight: bold; vertical-align: top;">Pièces jointes article:</td>
+                                        <td>
+                                            <ul class="list-unstyled">
+                                                <li t-foreach="o.article_piece_jointe_ids" t-as="attachment">
+                                                    📎 <span t-field="attachment.name"/>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Section Nomenclature -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td style="width: 25%; font-weight: bold;">Modification Nomenclature:</td>
+                                        <td>
+                                            <span t-if="o.nomenclature" class="text-success">☑ Oui</span>
+                                            <span t-if="not o.nomenclature" class="text-muted">☐ Non</span>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="o.nomenclature_commentaire">
+                                        <td style="font-weight: bold; vertical-align: top;">Commentaire nomenclature:</td>
+                                        <td>
+                                            <div style="white-space: pre-wrap;"><span t-field="o.nomenclature_commentaire"/></div>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="o.nomenclature_piece_jointe_ids">
+                                        <td style="font-weight: bold; vertical-align: top;">Pièces jointes nomenclature:</td>
+                                        <td>
+                                            <ul class="list-unstyled">
+                                                <li t-foreach="o.nomenclature_piece_jointe_ids" t-as="attachment">
+                                                    📎 <span t-field="attachment.name"/>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Section Gamme -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td style="width: 25%; font-weight: bold;">Modification Gamme:</td>
+                                        <td>
+                                            <span t-if="o.gamme_article" class="text-success">☑ Oui</span>
+                                            <span t-if="not o.gamme_article" class="text-muted">☐ Non</span>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="o.gamme_commentaire">
+                                        <td style="font-weight: bold; vertical-align: top;">Commentaire gamme:</td>
+                                        <td>
+                                            <div style="white-space: pre-wrap;"><span t-field="o.gamme_commentaire"/></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Informations de suivi -->
+                        <div class="row mt-5">
+                            <div class="col-12">
+                                 <h2>Informations de suivi</h2>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <table class="table table-sm">
+                                            <tr>
+                                                <td style="width: 40%; font-weight: bold;">Créé le:</td>
+                                                <td><span t-field="o.create_date" t-options="{'widget': 'datetime'}"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight: bold;">Créé par:</td>
+                                                <td><span t-field="o.create_uid"/></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="col-6">
+                                        <table class="table table-sm">
+                                            <tr>
+                                                <td style="width: 40%; font-weight: bold;">Modifié le:</td>
+                                                <td><span t-field="o.write_date" t-options="{'widget': 'datetime'}"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight: bold;">Modifié par:</td>
+                                                <td><span t-field="o.write_uid"/></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="oe_structure"/>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <!-- Format papier personnalisé -->
+        <record id="is_modif_donnee_technique_paperformat" model="report.paperformat">
+            <field name="name">A4 Modification données techniques</field>
+            <field name="default" eval="False" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">15</field>
+            <field name="margin_bottom">15</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">15</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <!-- Action de rapport -->
+        <record id="is_modif_donnee_technique_report_action" model="ir.actions.report">
+            <field name="name">Demande modification données techniques</field>
+            <field name="model">is.modif.donnee.technique</field>
+            <field name="binding_model_id" ref="model_is_modif_donnee_technique"/>
+            <field name="paperformat_id" ref="is_dynacase2odoo.is_modif_donnee_technique_paperformat"/>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">is_dynacase2odoo.is_modif_donnee_technique_report_template</field>
+            <field name="report_file">is_dynacase2odoo.is_modif_donnee_technique_report_template</field>
+        </record>
+    </data>
+</odoo>
