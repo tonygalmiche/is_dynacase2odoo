@@ -14,11 +14,10 @@ class is_modif_donnee_technique(models.Model):
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description="Demande modification données techniques"
     _rec_name = "num_demande"
-    _order='num_demande'
+    _order='num_demande desc'
 
 
-
-    num_demande                   = fields.Integer("N° Demande", readonly=True)
+    num_demande                   = fields.Integer("N° Demande", readonly=True,copy=False)
     active                        = fields.Boolean('Actif', default=True, tracking=True)
     moule_id                      = fields.Many2one('is.mold', 'Moule', tracking=True)
     dossierf_id                   = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
