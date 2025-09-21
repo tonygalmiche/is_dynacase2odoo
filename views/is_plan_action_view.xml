@@ -14,6 +14,7 @@
                             string="Dynacase"
                             type="object" class="btn btn-info"
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                            groups="base.group_system"
                         />
                         <field name="dynacase_id" invisible="1"/>
                         <button
@@ -178,6 +179,7 @@
                             string="Dynacase"
                             type="object" class="btn btn-info"
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                            groups="base.group_system"
                         />
                         <field name="dynacase_id" invisible="1"/>
                         <button
