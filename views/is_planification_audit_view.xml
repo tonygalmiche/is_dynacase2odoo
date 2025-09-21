@@ -125,12 +125,17 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="numero"/>
+                    <field name="description"/>
                     <field name="type_audit"/>
-                    <field name="jour_nuit"/>
+                    <field name="site_id"/>
+                    <field name="responsable_id"/>
+                    <field name="moule_id"/>
+                    <field name="article_id"/>
+                    <field name="client_id"/>
+                    <field name="fournisseur_id"/>
                 </search>
             </field>
         </record>
-        -->
         <record model="ir.actions.act_window" id="is_planification_audit_action">
             <field name="name">Planification audit</field>
             <field name="res_model">is.planification.audit</field>
