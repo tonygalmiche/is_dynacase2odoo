@@ -554,7 +554,7 @@ class is_revue_projet_jalon(models.Model):
             ]
             lines=self.env['is.revue.projet.jalon.revue.de.projet.jalon'].search(domain)
             for line in obj.revue_de_projet_jalon_ids:
-                article = line.rpj_de2_article.strip()
+                article = (line.rpj_de2_article or '').strip()
                 if article=='':
                     line.unlink()
             #******************************************************************
