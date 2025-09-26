@@ -175,6 +175,10 @@ cython_debug/
 # Scripts d'aide au développement
 odoo_helper.sh
 
+# Fichiers de contexte et documentation personnalisée
+CONTEXT_DEVELOPPEMENT.md
+PROMPTS_ODOO.md
+
 
 
 
