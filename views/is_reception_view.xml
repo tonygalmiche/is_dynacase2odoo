@@ -62,22 +62,22 @@
         <field name="model">is.reception</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="database_id" optional="show"/>
-                <field name="numero_reception" optional="show"/>
-                <field name="move_id" optional="hide"/>
-                <field name="date_reception" optional="show"/>
-                <field name="fournisseur_id" optional="show" widget="many2one_clickable"/>
-                <field name="code_pg" optional="show"/>
-                <field name="designation" optional="show"/>
-                <field name="moule" optional="show"/>
-                <field name="reference_fournisseur" optional="hide"/>
-                <field name="numero_bl_fournisseur" optional="hide"/>
-                <field name="numero_commande" optional="hide"/>
-                <field name="quantite_livree" optional="show"/>
-                <field name="sm_uom" optional="hide"/>
-                <field name="prix_achat_commande" optional="hide"/>
-                <field name="pol_uom" optional="hide"/>
-                <field name="unit_coef" optional="hide"/>
+                <field name="database_id"            optional="show"/>
+                <field name="numero_reception"       optional="show"/>
+                <field name="move_id"                optional="hide"/>
+                <field name="date_reception"         optional="show"/>
+                <field name="fournisseur_id"         optional="show" widget="many2one_clickable"/>
+                <field name="code_pg"                optional="show"/>
+                <field name="designation"            optional="show"/>
+                <field name="moule"                  optional="show"/>
+                <field name="reference_fournisseur"  optional="hide"/>
+                <field name="numero_bl_fournisseur"  optional="hide"/>
+                <field name="numero_commande"        optional="hide"/>
+                <field name="quantite_livree"        optional="show"/>
+                <field name="sm_uom"                 optional="hide"/>
+                <field name="prix_achat_commande"    optional="hide"/>
+                <field name="pol_uom"                optional="hide"/>
+                <field name="unit_coef"              optional="hide"/>
             </tree>
         </field>
     </record>

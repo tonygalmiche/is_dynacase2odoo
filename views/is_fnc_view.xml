@@ -235,68 +235,68 @@
         <field name="arch" type="xml">
             <tree>
                 <!-- Identification / description -->
-                <field name="site_id" optional="show"/>
-                <field name="num_non_conformite" optional="show"/>
-                <field name="type_non_conformite" optional="show"/>
-                <field name="date_detection" optional="show"/>
-                <field name="client_id" optional="show" widget="many2one_clickable"/>
-                <field name="client_autre" optional="hide"/>
-                <field name="mail_commercial" optional="hide"/>
-                <field name="num_reclamation" optional="show"/>
-                <field name="contact_client" optional="hide"/>
-                <field name="total_non_conforme" optional="show"/>
-                <field name="description_probleme" optional="show"/>
-                <field name="type_defaut" optional="show"/>
-                <field name="tracabilite" optional="hide"/>
-                <field name="reclamation_recurrente" optional="hide"/>
+                <field name="site_id"                    optional="show"/>
+                <field name="num_non_conformite"         optional="show"/>
+                <field name="type_non_conformite"        optional="show"/>
+                <field name="date_detection"             optional="show"/>
+                <field name="client_id"                  optional="show" widget="many2one_clickable"/>
+                <field name="client_autre"               optional="hide"/>
+                <field name="mail_commercial"            optional="hide"/>
+                <field name="num_reclamation"            optional="show"/>
+                <field name="contact_client"             optional="hide"/>
+                <field name="total_non_conforme"         optional="show"/>
+                <field name="description_probleme"       optional="show"/>
+                <field name="type_defaut"                optional="show"/>
+                <field name="tracabilite"                optional="hide"/>
+                <field name="reclamation_recurrente"     optional="hide"/>
 
                 <!-- Action immédiate -->
-                <field name="nb_retournees" optional="hide"/>
-                <field name="nb_detruites" optional="hide"/>
-                <field name="bl_retour" optional="hide"/>
-                <field name="reponse" optional="hide"/>
+                <field name="nb_retournees"              optional="hide"/>
+                <field name="nb_detruites"               optional="hide"/>
+                <field name="bl_retour"                  optional="hide"/>
+                <field name="reponse"                    optional="hide"/>
 
                 <!-- Analyse -->
-                <field name="equipe" optional="hide"/>
-                <field name="operateur" optional="hide"/>
-                <field name="presse_id" optional="hide"/>
-                <field name="origine_defaut" optional="hide"/>
-                <field name="decision" optional="hide"/>
-                <field name="date_reponse_4d" optional="hide"/>
+                <field name="equipe"                     optional="hide"/>
+                <field name="operateur"                  optional="hide"/>
+                <field name="presse_id"                  optional="hide"/>
+                <field name="origine_defaut"             optional="hide"/>
+                <field name="decision"                   optional="hide"/>
+                <field name="date_reponse_4d"            optional="hide"/>
 
                 <!-- Plan d'action / 8D -->
-                <field name="date_8d" optional="hide"/>
-                <field name="doc_amdec" optional="hide"/>
-                <field name="doc_plan_surveillance" optional="hide"/>
-                <field name="doc_moyen_controle" optional="hide"/>
-                <field name="doc_mode_operatoire" optional="hide"/>
-                <field name="doc_plans" optional="hide"/>
-                <field name="doc_autres" optional="hide"/>
-                <field name="date_cloture" optional="hide"/>
+                <field name="date_8d"                    optional="hide"/>
+                <field name="doc_amdec"                  optional="hide"/>
+                <field name="doc_plan_surveillance"      optional="hide"/>
+                <field name="doc_moyen_controle"         optional="hide"/>
+                <field name="doc_mode_operatoire"        optional="hide"/>
+                <field name="doc_plans"                  optional="hide"/>
+                <field name="doc_autres"                 optional="hide"/>
+                <field name="date_cloture"               optional="hide"/>
 
                 <!-- Coûts / Bilan -->
-                <field name="total_avoir" optional="hide"/>
-                <field name="date_bilan" optional="hide"/>
-                <field name="situation_bilan" optional="hide"/>
-                <field name="cout_piece" optional="hide"/>
-                <field name="cout_total_tri" optional="hide"/>
-                <field name="total_autrecouts" optional="hide"/>
-                <field name="cout_total" optional="hide"/>
-                <field name="cout_facture" optional="hide"/>
-                <field name="total_perte" optional="hide"/>
+                <field name="total_avoir"                optional="hide"/>
+                <field name="date_bilan"                 optional="hide"/>
+                <field name="situation_bilan"            optional="hide"/>
+                <field name="cout_piece"                 optional="hide"/>
+                <field name="cout_total_tri"             optional="hide"/>
+                <field name="total_autrecouts"           optional="hide"/>
+                <field name="cout_total"                 optional="hide"/>
+                <field name="cout_facture"               optional="hide"/>
+                <field name="total_perte"                optional="hide"/>
 
                 <button 
                     title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"
                     attrs="{'invisible': [('dynacase_id', '=', 0)]}"
                     groups="base.group_system"
                 />
-                <field name="dynacase_id" optional="hide" groups="base.group_system"/>
+                <field name="dynacase_id"                optional="hide" groups="base.group_system"/>
 
                 <!-- Métadonnées -->
-                <field name="create_date" optional="hide" string="Créé le"/>
-                <field name="create_uid"  optional="hide" string="Créé par"/>
-                <field name="write_date"  optional="hide" string="Modifié le"/>
-                <field name="write_uid"   optional="hide" string="Modifié par"/>
+                <field name="create_date"                optional="hide" string="Créé le"/>
+                <field name="create_uid"                 optional="hide" string="Créé par"/>
+                <field name="write_date"                 optional="hide" string="Modifié le"/>
+                <field name="write_uid"                  optional="hide" string="Modifié par"/>
             </tree>
         </field>
     </record>
