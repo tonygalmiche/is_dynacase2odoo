@@ -80,6 +80,9 @@ Module Odoo 16 pour Plastigray pour migrer les développements de Dynacase dans 
             'is_dynacase2odoo/static/src/dhtmlxgantt_project/*',
             'is_dynacase2odoo/static/src/background_color/*',
             'is_dynacase2odoo/static/src/suivi_projet/*',
+            'is_dynacase2odoo/static/src/cartographie_processus/cartographie_processus.css',
+            'is_dynacase2odoo/static/src/cartographie_processus/cartographie_processus.js',
+            'is_dynacase2odoo/static/src/cartographie_processus/cartographie_processus.xml',
 
             # 'is_dynacase2odoo/static/src/js/*',
             # 'is_dynacase2odoo/static/src/dynamic_delete_o2m/*',

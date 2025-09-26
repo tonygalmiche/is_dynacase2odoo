@@ -1,0 +1,79 @@
+/* Styles spécifiques pour la cartographie des processus */
+.o_cartographie_processus {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    background-color: #f8f9fa;
+}
+
+.o_cartographie_processus__header {
+    background-color: #fff;
+    border-bottom: 1px solid #dee2e6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    padding: 12px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.o_cartographie_processus__header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.o_cartographie_processus__header-content img {
+    max-height: 48px;
+    width: auto;
+}
+
+.o_cartographie_processus__title {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--o-brand-primary, #0d6efd);
+}
+
+.o_cartographie_processus__content {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: 0 20px 60px;
+    min-height: 0;
+}
+
+.o_cartographie_processus__section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0;
+    font-size: 1.25rem;
+}
+
+.o_cartographie_processus__legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.o_cartographie_processus__legend-item img {
+    width: 30px;
+    height: auto;
+}
+
+.o_cartographie_processus__list .list-group-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 0.65rem;
+    padding-bottom: 0.65rem;
+}
+
+.o_cartographie_processus__list .list-group-item i {
+    font-size: 0.95rem;
+}
+
+.o_cartographie_processus__documents .list-group-item {
+    padding: 0.75rem 1rem;
+}

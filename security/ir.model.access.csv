@@ -131,5 +131,8 @@ access_is_ctrl_rcp_saisie,access_is_ctrl_rcp_saisie,model_is_ctrl_rcp_saisie,bas
 access_is_ctrl_rcp_saisie_mesure,access_is_ctrl_rcp_saisie_mesure,model_is_ctrl_rcp_saisie_mesure,base.group_user,1,1,1,1
 
 access_is_processus,access_is_processus,model_is_processus,base.group_user,1,1,1,0
+access_is_processus_etape,access_is_processus_etape,model_is_processus_etape,base.group_user,1,1,1,0
+access_is_processus_doc,access_is_processus_doc,model_is_processus_doc,base.group_user,1,1,1,0
+access_is_processus_doc_etape,access_is_processus_doc_etape,model_is_processus_doc_etape,base.group_user,1,1,1,0
 
 access_is_planification_audit,access_is_planification_audit,model_is_planification_audit,base.group_user,1,1,1,0

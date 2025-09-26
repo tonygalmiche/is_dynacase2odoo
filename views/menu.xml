@@ -379,7 +379,7 @@
 
 
         
-	    <!-- Gestion des achats -->
+        <!-- Gestion des achats -->
         <record id="gestion_des_achats_menu" model="ir.ui.menu" >
             <field name="name">Gestion des achats</field>
             <field name="sequence">5</field>
@@ -436,7 +436,7 @@
             ])]"/>
         </record>
 
-	    <!-- Gestion de la qualité -->
+        <!-- Gestion de la qualité -->
         <record id="gestion_qualite_menu" model="ir.ui.menu" >
             <field name="name">Gestion de la qualité</field>
             <field name="sequence">6</field>
@@ -473,18 +473,40 @@
             parent="is_plan_action_menu" action="is_planification_audit_action"
         />
 
+
+
         <!-- Gestion de la qualité / Processus -->
-        <record id="is_processus_menu" model="ir.ui.menu">
+        <record id="is_processus_main_menu" model="ir.ui.menu">
             <field name="name">Processus</field>
             <field name="sequence">25</field>
             <field name="parent_id" eval="ref('is_dynacase2odoo.gestion_qualite_menu')"/>
+        </record>
+        <record id="is_cartographie_processus_menu" model="ir.ui.menu">
+            <field name="name">Cartographie des processus</field>
+            <field name="sequence">10</field>
+            <field name="parent_id" eval="ref('is_processus_main_menu')"/>
+            <field name="action" ref="is_cartographie_processus_action"/>
+        </record>
+        <record id="is_processus_menu" model="ir.ui.menu">
+            <field name="name">Liste des processus</field>
+            <field name="sequence">20</field>
+            <field name="parent_id" eval="ref('is_processus_main_menu')"/>
             <field name="action" ref="is_processus_action"/>
         </record>
+        <record id="is_processus_etape_menu" model="ir.ui.menu">
+            <field name="name">Étapes des processus</field>
+            <field name="sequence">30</field>
+            <field name="parent_id" eval="ref('is_processus_main_menu')"/>
+            <field name="action" ref="is_processus_etape_action"/>
+        </record>
+        <record id="is_processus_doc_menu" model="ir.ui.menu">
+            <field name="name">Documents des processus</field>
+            <field name="sequence">40</field>
+            <field name="parent_id" eval="ref('is_processus_main_menu')"/>
+            <field name="action" ref="is_processus_doc_action"/>
+        </record>
 
-
-
-
-
+        
         <!-- Gestion de la qualité / FNC -->
         <menuitem 
             name="FNC"  id="is_fnc_menu" sequence="40"
@@ -492,19 +514,19 @@
         />
 
 
-		<!-- Gestion de la qualité / Réclamations fournisseurs -->
+        <!-- Gestion de la qualité / Réclamations fournisseurs -->
 
-		<record id="is_reclamation_fournisseur_main_menu" model="ir.ui.menu" >
-			<field name="name">Réclamations fournisseurs</field>
-			<field name="sequence">50</field>
-			<field name="parent_id" eval="ref('gestion_qualite_menu')"/>
-		</record>
-		<record id="is_reclamation_fournisseur_menu" model="ir.ui.menu" >
-			<field name="name">Réclamations fournisseurs</field>
-			<field name="sequence">10</field>
-			<field name="parent_id" eval="ref('is_reclamation_fournisseur_main_menu')"/>
-			<field name="action"    ref="is_reclamation_fournisseur_action"/>
-		</record>
+        <record id="is_reclamation_fournisseur_main_menu" model="ir.ui.menu" >
+            <field name="name">Réclamations fournisseurs</field>
+            <field name="sequence">50</field>
+            <field name="parent_id" eval="ref('gestion_qualite_menu')"/>
+        </record>
+        <record id="is_reclamation_fournisseur_menu" model="ir.ui.menu" >
+            <field name="name">Réclamations fournisseurs</field>
+            <field name="sequence">10</field>
+            <field name="parent_id" eval="ref('is_reclamation_fournisseur_main_menu')"/>
+            <field name="action"    ref="is_reclamation_fournisseur_action"/>
+        </record>
         <menuitem 
             name="Réceptions"  id="is_reception_menu" sequence="20"
             parent="is_reclamation_fournisseur_main_menu" action="is_reception_action"
@@ -521,19 +543,19 @@
         </record>
 
 
-		<!-- Gestion de la qualité / Contrôle réception -->
-		<record id="is_ctrl_rcp_menu" model="ir.ui.menu">
-			<field name="name">Contrôle Réception</field>
-			<field name="sequence">70</field>
-			<field name="parent_id" eval="ref('is_dynacase2odoo.gestion_qualite_menu')"/>
-		</record>
+        <!-- Gestion de la qualité / Contrôle réception -->
+        <record id="is_ctrl_rcp_menu" model="ir.ui.menu">
+            <field name="name">Contrôle Réception</field>
+            <field name="sequence">70</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.gestion_qualite_menu')"/>
+        </record>
 
-		<record id="is_ctrl_rcp_gamme_menu" model="ir.ui.menu">
-			<field name="name">Gamme Contrôle Réception</field>
-			<field name="sequence">10</field>
-			<field name="parent_id" eval="ref('is_dynacase2odoo.is_ctrl_rcp_menu')"/>
-			<field name="action" ref="is_ctrl_rcp_gamme_action"/>
-		</record>
+        <record id="is_ctrl_rcp_gamme_menu" model="ir.ui.menu">
+            <field name="name">Gamme Contrôle Réception</field>
+            <field name="sequence">10</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_ctrl_rcp_menu')"/>
+            <field name="action" ref="is_ctrl_rcp_gamme_action"/>
+        </record>
 
         <record id="is_ctrl_rcp_rapport_menu" model="ir.ui.menu">
             <field name="name">Rapports RCP</field>

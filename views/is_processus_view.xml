@@ -2,7 +2,7 @@
 <odoo>
     <data>
 
-        <!-- Search View -->
+        <!-- is.processus -->
         <record id="is_processus_search" model="ir.ui.view">
             <field name="name">is.processus.search</field>
             <field name="model">is.processus</field>
@@ -15,8 +15,6 @@
                 </search>
             </field>
         </record>
-
-        <!-- Tree View -->
         <record id="is_processus_tree" model="ir.ui.view">
             <field name="name">is.processus.tree</field>
             <field name="model">is.processus</field>
@@ -50,8 +48,6 @@
                 </tree>
             </field>
         </record>
-
-        <!-- Form View (sans notebook) -->
         <record id="is_processus_form" model="ir.ui.view">
             <field name="name">is.processus.form</field>
             <field name="model">is.processus</field>
@@ -70,8 +66,8 @@
                     <sheet>
                         <field name="active" invisible="1"/>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                        <group string="Identification">
-                            <group>
+                        <group>
+                            <group string="Identification">
                                 <field name="numpcs" required="1"/>
                                 <field name="numindice" required="1"/>
                                 <field name="nom" required="1"/>
@@ -79,10 +75,8 @@
                                 <field name="pilotepcs_id" required="1"/>
                                 <field name="exigence"/>
                             </group>
-                        </group>
 
-                        <group string="Contenu">
-                            <group>
+                            <group string="Contenu">>
                                 <field name="element" widget="text"/>
                                 <field name="donneesentree" widget="text"/>
                                 <field name="donneessortie" widget="text"/>
@@ -91,14 +85,317 @@
                                 <field name="efficacite" widget="text"/>
                             </group>
                         </group>
-                        <group string="Cycle">
-                            <group>
+                        <notebook>
+                            <page string="Cycle">
                                 <group>
-                                    <field name="quiverifie_id"/>
-                                    <field name="quiapprouve_id"/>
-                                    <field name="diffusion"/>
+                                    <group>
+                                        <field name="quiverifie_id"/>
+                                        <field name="quiapprouve_id"/>
+                                        <field name="diffusion"/>
+                                    </group>
                                 </group>
+                            </page>
+                            <page string="Étapes du processus">
+                                <field name="etape_ids">
+                                    <tree string="Étapes" editable="bottom">
+                                        <field name="numetape"/>
+                                        <field name="description"/>
+                                        <field name="responsable"/>
+                                        <field name="pilote_id"/>
+                                        <field name="sous_processus_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Documents du processus">
+                                <field name="doc_ids">
+                                    <tree string="Documents">
+                                        <field name="reference"/>
+                                        <field name="designation"/>
+                                        <field name="etape_id"/>
+                                        <field name="auteur_id"/>
+                                        <field name="version"/>
+                                        <field name="active"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="is_processus_action" model="ir.actions.act_window">
+            <field name="name">Processus</field>
+            <field name="res_model">is.processus</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="is_processus_search"/>
+            <field name="context">{}</field>
+        </record>
+        <record id="is_cartographie_processus_action" model="ir.actions.client">
+            <field name="name">Cartographie des processus</field>
+            <field name="tag">is_dynacase2odoo.cartographie_processus</field>
+        </record>
+
+
+        <!-- is.processus.etape -->
+        <record id="is_processus_etape_search" model="ir.ui.view">
+            <field name="name">is.processus.etape.search</field>
+            <field name="model">is.processus.etape</field>
+            <field name="arch" type="xml">
+                <search string="Recherche Étapes des processus">
+                    <field name="numetape"/>
+                    <field name="description"/>
+                    <field name="processus_id"/>
+                    <field name="responsable"/>
+                    <field name="pilote_id"/>
+                    <filter string="Actif" name="active" domain="[('active','=', True)]"/>
+                    <filter string="Archivé" name="inactive" domain="[('active','=', False)]"/>
+                    <group expand="0" string="Grouper par">
+                        <filter string="Processus" name="group_by_processus" domain="[]" context="{'group_by':'processus_id'}"/>
+                        <filter string="Pilote" name="group_by_pilote" domain="[]" context="{'group_by':'pilote_id'}"/>
+                        <filter string="Responsable" name="group_by_responsable" domain="[]" context="{'group_by':'responsable'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="is_processus_etape_tree" model="ir.ui.view">
+            <field name="name">is.processus.etape.tree</field>
+            <field name="model">is.processus.etape</field>
+            <field name="arch" type="xml">
+                <tree string="Étapes des processus">
+                    <field name="processus_id" optional="show"/>
+                    <field name="numetape" optional="show"/>
+                    <field name="description" optional="show"/>
+                    <field name="responsable" optional="show"/>
+                    <field name="pilote_id" optional="show"/>
+                    <field name="sous_processus_id" optional="hide"/>
+                    <field name="active" optional="hide"/>
+                    <field name="create_date" optional="hide" string="Créé le"/>
+                    <field name="create_uid" optional="hide" string="Créé par"/>
+                    <field name="write_date" optional="hide" string="Modifié le"/>
+                    <field name="write_uid" optional="hide" string="Modifié par"/>
+                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
+                </tree>
+            </field>
+        </record>
+        <record id="is_processus_etape_form" model="ir.ui.view">
+            <field name="name">is.processus.etape.form</field>
+            <field name="model">is.processus.etape</field>
+            <field name="arch" type="xml">
+                <form string="Étape du processus">
+                    <header>
+                        <field name="active" invisible="1"/>
+                        <field name="dynacase_id" groups="base.group_system"/>
+                    </header>
+                    <sheet>
+                        <field name="active" invisible="1"/>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        
+                        <group string="Identification">
+                            <group>
+                                <field name="processus_id" required="1"/>
+                                <field name="numetape"/>
+                                <field name="pilote_id"/>
                             </group>
+                            <group>
+                                <field name="responsable"/>
+                                <field name="sous_processus_id"/>
+                            </group>
+                        </group>
+
+                        <group string="Description">
+                            <field name="description" widget="text" nolabel="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="is_processus_etape_action" model="ir.actions.act_window">
+            <field name="name">Étapes des processus</field>
+            <field name="res_model">is.processus.etape</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="is_processus_etape_search"/>
+            <field name="context">{'search_default_active': 1}</field>
+        </record>
+
+
+
+
+        <!-- is.processus.doc -->
+        <record id="is_processus_doc_search" model="ir.ui.view">
+            <field name="name">is.processus.doc.search</field>
+            <field name="model">is.processus.doc</field>
+            <field name="arch" type="xml">
+                <search string="Recherche Documents des processus">
+                    <field name="reference"/>
+                    <field name="designation"/>
+                    <field name="processus_id"/>
+                    <field name="etape_id"/>
+                    <field name="auteur_id"/>
+                    <field name="pilote_id"/>
+                    <filter string="Actif" name="active" domain="[('active','=', True)]"/>
+                    <filter string="Archivé" name="inactive" domain="[('active','=', False)]"/>
+                    <group expand="0" string="Grouper par">
+                        <filter string="Processus" name="group_by_processus" domain="[]" context="{'group_by':'processus_id'}"/>
+                        <filter string="Étape" name="group_by_etape" domain="[]" context="{'group_by':'etape_id'}"/>
+                        <filter string="Auteur" name="group_by_auteur" domain="[]" context="{'group_by':'auteur_id'}"/>
+                        <filter string="Pilote" name="group_by_pilote" domain="[]" context="{'group_by':'pilote_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="is_processus_doc_tree" model="ir.ui.view">
+            <field name="name">is.processus.doc.tree</field>
+            <field name="model">is.processus.doc</field>
+            <field name="arch" type="xml">
+                <tree string="Documents des processus">
+                    <field name="reference" optional="show"/>
+                    <field name="designation" optional="show"/>
+                    <field name="processus_id" optional="show"/>
+                    <field name="etape_id" optional="hide"/>
+                    <field name="procedure_id" optional="hide"/>
+                    <field name="pilote_id" optional="show"/>
+                    <field name="auteur_id" optional="show"/>
+                    <field name="site_id" optional="hide"/>
+                    <field name="niveau" optional="hide"/>
+                    <field name="version" optional="show"/>
+                    <field name="modification" optional="hide"/>
+                    <field name="dossier" optional="hide"/>
+                    <field name="active" optional="hide"/>
+                    <field name="create_date" optional="hide" string="Créé le"/>
+                    <field name="create_uid" optional="hide" string="Créé par"/>
+                    <field name="write_date" optional="hide" string="Modifié le"/>
+                    <field name="write_uid" optional="hide" string="Modifié par"/>
+                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
+                </tree>
+            </field>
+        </record>
+        <record id="is_processus_doc_form" model="ir.ui.view">
+            <field name="name">is.processus.doc.form</field>
+            <field name="model">is.processus.doc</field>
+            <field name="arch" type="xml">
+                <form string="Document du processus">
+                    <header>
+                        <field name="active" invisible="1"/>
+                        <field name="dynacase_id" groups="base.group_system"/>
+                    </header>
+                    <sheet>
+                        <field name="active" invisible="1"/>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        
+                        <group string="Identification du processus">
+                            <group>
+                                <field name="processus_id"/>
+                                <field name="etape_id"/>
+                                <field name="procedure_id"/>
+                            </group>
+                            <group>
+                                <field name="pilote_id"/>
+                            </group>
+                        </group>
+
+                        <group string="Identification du document">
+                            <group>
+                                <field name="reference" required="1"/>
+                                <field name="designation"/>
+                                <field name="site_id"/>
+                                <field name="niveau"/>
+                                <field name="version"/>
+                                <field name="modification"/>
+                            </group>
+                            <group>
+                                <field name="auteur_id"/>
+                                <field name="dossier"/>
+                                <field name="piecejointe" filename="reference"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Organisation (FO)">
+                                <group>
+                                    <group string="Qui remplit / Qui classe">
+                                        <field name="quiremplit_id"/>
+                                        <field name="quiclasse_id"/>
+                                        <field name="lieuclassement"/>
+                                    </group>
+                                    <group string="Archivage / Destruction">
+                                        <field name="quiarchive_id"/>
+                                        <field name="lieuarchive"/>
+                                        <field name="reglerange"/>
+                                        <field name="dureecons"/>
+                                        <field name="quidetruit_id"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <page string="Diffusion">
+                                <group>
+                                    <group>
+                                        <field name="quiverifie_id"/>
+                                        <field name="quiapprouve_id"/>
+                                        <field name="diffusion"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Étapes du document">
+                                <field name="etape_doc_ids">
+                                    <tree string="Étapes" editable="bottom">
+                                        <button name="open_etape_doc" type="object" icon="fa-search" title="Voir la fiche étape"/>
+                                        <field name="numeroetape"/>
+                                        <field name="nometape"/>
+                                        <field name="responsable_id"/>
+                                        <field name="description"/>
+                                        <field name="doclibre"/>
+                                    </tree>
+                                </field>
+                                <field name="etape_doc_texte" invisible="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="is_processus_doc_action" model="ir.actions.act_window">
+            <field name="name">Documents des processus</field>
+            <field name="res_model">is.processus.doc</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="is_processus_doc_search"/>
+            <field name="context">{'search_default_active': 1}</field>
+        </record>
+
+
+        <!-- is.processus.doc.etape -->
+        <record id="is_processus_doc_etape_form" model="ir.ui.view">
+            <field name="name">is.processus.doc.etape.form</field>
+            <field name="model">is.processus.doc.etape</field>
+            <field name="arch" type="xml">
+                <form string="Étape du document">
+                    <sheet>
+                        <group string="Identification">
+                            <field name="doc_id"/>
+                            <field name="numeroetape"/>
+                            <field name="nometape"/>
+                            <field name="responsable_id"/>
+                        </group>
+                        <group string="Description">
+                            <field name="description" widget="text"/>
+                        </group>
+                        <group string="Document libre">
+                            <field name="doclibre" widget="text"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -110,14 +407,6 @@
             </field>
         </record>
 
-        <!-- Action -->
-        <record id="is_processus_action" model="ir.actions.act_window">
-            <field name="name">Processus</field>
-            <field name="res_model">is.processus</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="is_processus_search"/>
-            <field name="context">{}</field>
-        </record>
 
     </data>
 </odoo>
