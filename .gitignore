@@ -179,6 +179,7 @@ prompt_helper.sh
 # Fichiers de contexte et documentation personnalisée
 CONTEXT_DEVELOPPEMENT.md
 PROMPTS_ODOO.md
+PROMPTS_RAPIDES.md
 
 
 
