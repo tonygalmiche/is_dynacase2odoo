@@ -531,10 +531,13 @@ class IsDocMoule(models.Model):
     def name_get(self):
         result = []
         for obj in self:
+            name = obj.param_project_id.ppr_famille
+            if name=='Autre':
+                name = "%s (Autre)"%(obj.demande or '')
             if obj.type_document=='Article':
-                name="[%s] %s"%(obj.dossier_article_id.code_pg,obj.param_project_id.ppr_famille)
+                name="[%s] %s"%(obj.dossier_article_id.code_pg,name)
             else:
-                name="[%s] %s"%(obj.moule_dossierf,obj.param_project_id.ppr_famille)
+                name="[%s] %s"%(obj.moule_dossierf,name)
             result.append((obj.id, name))
         return result
 

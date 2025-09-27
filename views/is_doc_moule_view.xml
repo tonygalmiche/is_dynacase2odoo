@@ -462,7 +462,7 @@
                 <calendar 
                     date_start="date_debut_gantt" 
                     date_stop="date_fin_gantt" 
-                    color="idresp" 
+                    color="param_project_id" 
                     hide_time="false" 
                     event_limit="100"
                     event_open_popup="false"
@@ -471,6 +471,7 @@
                 >
                 <field name="idresp" filters="1" invisible="1"/>
                 <field name="param_project_id"/> 
+                <field name="demande"/> 
                 <field name="date_debut_gantt"/> 
                 <field name="duree"/> 
                 <field name="date_fin_gantt"/> 
