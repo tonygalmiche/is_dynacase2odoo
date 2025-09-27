@@ -262,6 +262,29 @@ class SuiviProjet extends Component {
         }
     }
 
+    ModifVarianteClick(ev) {
+        const res_model = ev.target.attributes.res_model.value;
+        const res_id    = ev.target.attributes.res_id.value;
+        this.getModifVariante(res_model,res_id);
+    }
+    async getModifVariante(res_model,res_id){
+        const params={
+            "res_model": res_model,        
+            "res_id"   : res_id,        
+        }
+        var res = await this.orm.call("is.doc.moule", 'get_modif_variante', [false],params);
+        this.action.doAction({
+            type: 'ir.actions.act_window',
+            name: 'Modifications/Variantes',
+            target: 'current',
+            res_model: 'is.dossier.modif.variante',
+            views: [[false, 'tree'], [false, 'form']],
+            domain: [
+                ['id','in',res.ids],
+            ],
+        });
+    }
+
 
     async getSuiviProjet(ok=false){
         const params={

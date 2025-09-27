@@ -397,6 +397,18 @@ class IsDocMoule(models.Model):
                         j_actuelle = False
                         if row['j_actuelle']:
                             j_actuelle = dict(GESTION_J).get(row['j_actuelle'],"?")
+                        
+                        #** Calcul du nombre de modifications variantes ***
+                        nb_modif_variante = 0
+                        domain_modif = False
+                        if row['res_model'] == 'is.mold':
+                            domain_modif = [('demao_idmoule', '=', row['moule_id'])]
+                        elif row['res_model'] in ['is.dossierf', 'is.dossier.article']:
+                            domain_modif = [('dossierf_id', '=', row['moule_id'])]
+                        
+                        if domain_modif:
+                            nb_modif_variante = self.env['is.dossier.modif.variante'].search_count(domain_modif)
+                        
                         vals={
                             'key'         : key,
                             'res_model'   : row['res_model'],
@@ -414,6 +426,7 @@ class IsDocMoule(models.Model):
                             'total_coefficient': 0,
                             'total_note'       : 0,
                             'nb_notes'         : 0,
+                            'nb_modif_variante': nb_modif_variante,
                         }
                         mydict[key]=vals
 
@@ -657,5 +670,21 @@ class IsDocMoule(models.Model):
         res = {
             'id'   : id,
             'model': 'is.revue.risque',
+        }
+        return res
+
+    def get_modif_variante(self,res_model,res_id):
+        domain=False
+        if res_model=='is.mold':
+            domain=[('demao_idmoule','=',int(res_id))]
+        if res_model=='is.dossierf':
+            domain=[('dossierf_id','=',int(res_id))]
+        ids=[]
+        if domain:
+            docs=self.env['is.dossier.modif.variante'].search(domain, order="demao_date desc")
+            for doc in docs:
+                ids.append(doc.id)
+        res = {
+            'ids': ids,
         }
         return res
