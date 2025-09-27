@@ -399,15 +399,8 @@ class IsDocMoule(models.Model):
                             j_actuelle = dict(GESTION_J).get(row['j_actuelle'],"?")
                         
                         #** Calcul du nombre de modifications variantes ***
-                        nb_modif_variante = 0
-                        domain_modif = False
-                        if row['res_model'] == 'is.mold':
-                            domain_modif = [('demao_idmoule', '=', row['moule_id'])]
-                        elif row['res_model'] in ['is.dossierf', 'is.dossier.article']:
-                            domain_modif = [('dossierf_id', '=', row['moule_id'])]
-                        
-                        if domain_modif:
-                            nb_modif_variante = self.env['is.dossier.modif.variante'].search_count(domain_modif)
+                        domain_modif = self._get_modif_variante_domain(row['res_model'], row['moule_id'])
+                        nb_modif_variante = self.env['is.dossier.modif.variante'].search_count(domain_modif) if domain_modif else 0
                         
                         vals={
                             'key'         : key,
@@ -673,17 +666,22 @@ class IsDocMoule(models.Model):
         }
         return res
 
+    def _get_modif_variante_domain(self, res_model, res_id):
+        """Helper method to build domain for modif/variante search with common filters"""
+        base_filters = [('state', '=', 'plaswinned'), ('solde', '=', False)]
+        
+        if res_model == 'is.mold':
+            return [('demao_idmoule', '=', int(res_id))] + base_filters
+        elif res_model in ['is.dossierf', 'is.dossier.article']:
+            return [('dossierf_id', '=', int(res_id))] + base_filters
+        return False
+
     def get_modif_variante(self,res_model,res_id):
-        domain=False
-        if res_model=='is.mold':
-            domain=[('demao_idmoule','=',int(res_id))]
-        if res_model=='is.dossierf':
-            domain=[('dossierf_id','=',int(res_id))]
-        ids=[]
+        domain = self._get_modif_variante_domain(res_model, res_id)
+        ids = []
         if domain:
-            docs=self.env['is.dossier.modif.variante'].search(domain, order="demao_date desc")
-            for doc in docs:
-                ids.append(doc.id)
+            docs = self.env['is.dossier.modif.variante'].search(domain, order="demao_date desc")
+            ids = [doc.id for doc in docs]
         res = {
             'ids': ids,
         }
