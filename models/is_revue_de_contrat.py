@@ -17,9 +17,9 @@ class is_revue_de_contrat(models.Model):
 
 
     name                               = fields.Char(string="N°", compute="_compute_name", store=True, readonly=True)
-    rc_mouleid                         = fields.Many2one("is.mold", string="Moule", tracking=True)
-    rc_dossierfid                      = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
-    rc_indice                          = fields.Integer(string="Indice", readonly=True, default=0)
+    rc_mouleid                         = fields.Many2one("is.mold", string="Moule", tracking=True,copy=False)
+    rc_dossierfid                      = fields.Many2one("is.dossierf", string="Dossier F", tracking=True,copy=False)
+    rc_indice                          = fields.Integer(string="Indice", readonly=True, default=0,copy=False)
     rc_doc_moule_assemblage            = fields.Selection([
         ("c1", "La revue de contrat est attachée à un dossier d'assemblage"),
         ("c2", "La revue de contrat est attachée à un moule autonome"),
@@ -245,6 +245,44 @@ class is_revue_de_contrat(models.Model):
             obj.readonly = readonly
 
 
+    def reviser_rc_action(self):
+        for obj in self:
+            default={
+                'rc_mouleid'   : obj.rc_mouleid.id,
+                'rc_dossierfid': obj.rc_dossierfid.id,
+                'rc_indice'    : (obj.rc_indice or 0)+1,
+            }
+            copy = obj.copy(default=default)
+            res= {
+                'name': 'Copie',
+                'view_mode': 'form',
+                'res_model': 'is.revue.de.contrat',
+                'res_id': copy.id,
+                'type': 'ir.actions.act_window',
+            }
+            return res
+
+
+    def copy(self, default=None):
+        for obj in self:
+            domain=[
+                ('rpj_mouleid', '=', obj.rc_mouleid.id), 
+                ('dossierf_id', '=', obj.rc_dossierfid.id), 
+                ('state'      , '=', 'rpj_valide'), 
+            ]
+            lines = self.env['is.revue.projet.jalon'].search(domain)
+            if len(lines)>0:
+                raise ValidationError("Il existe déjà une revue de projet jalon de validée => Duplication impossible !")
+            default = dict(default or {})
+            #default['rc_indice']=obj.rc_indice+1
+            res=super().copy(default=default)
+            return res
+
+
+
+
+
+
     def actualisation_champs_calcules_action(self):
         nb=len(self)
         ct=1
@@ -385,7 +423,6 @@ class is_revue_de_contrat(models.Model):
         return res
 
 
-
     @api.constrains('rc_mouleid', 'rc_dossierfid', 'rc_indice')
     def _rc_unique(self):
         for obj in self:
@@ -398,22 +435,6 @@ class is_revue_de_contrat(models.Model):
                 lines = self.env['is.revue.de.contrat'].search(domain)
                 if len(lines) > 1:
                     raise ValidationError("La revue de contrat %s %s indice %s existe déjà !"%(obj.rc_mouleid.name or '',obj.rc_dossierfid.name or '',obj.rc_indice))
-
-
-    def copy(self, default=None):
-        for obj in self:
-            domain=[
-                ('rpj_mouleid', '=', obj.rc_mouleid.id), 
-                ('dossierf_id', '=', obj.rc_dossierfid.id), 
-                ('state'      , '=', 'rpj_valide'), 
-            ]
-            lines = self.env['is.revue.projet.jalon'].search(domain)
-            if len(lines)>0:
-                raise ValidationError("Il existe déjà une revue de projet jalon de validée => Duplication impossible !")
-            default = dict(default or {})
-            default['rc_indice']=obj.rc_indice+1
-            res=super().copy(default=default)
-            return res
 
 
     def lien_vers_dynacase_action(self):
@@ -580,19 +601,6 @@ class is_revue_de_contrat(models.Model):
                     if hasattr(rc, field_name):
                         val = getattr(rc,field_name)
                         setattr(obj, field_name, val)
-
-
-    def reviser_rc_action(self):
-        for obj in self:
-            copy=obj.copy()
-            res= {
-                'name': 'Copie',
-                'view_mode': 'form',
-                'res_model': 'is.revue.de.contrat',
-                'res_id': copy.id,
-                'type': 'ir.actions.act_window',
-            }
-            return res
 
 
     def creation_revue_lancement_action(self):
