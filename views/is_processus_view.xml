@@ -61,7 +61,7 @@
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                             groups="base.group_system"
                         />
-                        <field name="dynacase_id" groups="base.group_system"/>
+                        <field name="dynacase_id" groups="base.group_system" invisible="1"/>
                     </header>
                     <sheet>
                         <field name="active" invisible="1"/>
@@ -198,7 +198,7 @@
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                             groups="base.group_system"
                         />
-                        <field name="dynacase_id" groups="base.group_system"/>
+                        <field name="dynacase_id" groups="base.group_system" invisible="1"/>
                     </header>
                     <sheet>
                         <field name="active" invisible="1"/>
@@ -215,6 +215,18 @@
                         </group>
                         <group string="Description">
                             <field name="description" widget="text" nolabel="1" colspan="2"/>
+                        </group>
+                        <group string="Documents">
+                            <field name="doc_ids" nolabel="1" colspan="2">
+                                <tree>
+                                    <button name="action_view_document" type="object" icon="fa-search" title="Voir la fiche complète"/>
+                                    <field name="reference"/>
+                                    <field name="designation"/>
+                                    <field name="etape_id"/>
+                                    <field name="auteur_id"/>
+                                    <field name="version"/>
+                                </tree>
+                            </field>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -303,7 +315,7 @@
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                             groups="base.group_system"
                         />
-                        <field name="dynacase_id" groups="base.group_system"/>
+                        <field name="dynacase_id" groups="base.group_system" invisible="1"/>
                     </header>
                     <sheet>
                         <field name="active" invisible="1"/>

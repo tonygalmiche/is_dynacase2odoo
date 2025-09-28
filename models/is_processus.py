@@ -39,7 +39,7 @@ class IsProcessus(models.Model):
     etape_ids = fields.One2many('is.processus.etape', 'processus_id', string="Étapes du processus", tracking=True)
     
     # Documents du processus
-    doc_ids = fields.One2many('is.processus.doc', 'processus_id', string="Documents du processus", tracking=True)
+    doc_ids = fields.One2many('is.processus.doc', 'processus_id', string="Documents du processus")
 
     def lien_vers_dynacase_action(self):
         for obj in self:
@@ -68,6 +68,8 @@ class IsProcessusEtape(models.Model):
     sous_processus_id = fields.Many2one('is.processus', string="Sous-processus", tracking=True)
     active            = fields.Boolean(string="Actif", default=True, tracking=True)
     dynacase_id       = fields.Integer(string="Id Dynacase", index=True, copy=False)
+    doc_ids           = fields.One2many('is.processus.doc', 'etape_id', string="Documents", readonly=True)
+
 
     def lien_vers_dynacase_action(self):
         for obj in self:
@@ -147,6 +149,18 @@ class IsProcessusDoc(models.Model):
                 record.etape_doc_texte = ", ".join(lines)
             else:
                 record.etape_doc_texte = "Aucune étape définie"
+
+    def action_view_document(self):
+        """Ouvre la fiche complète du document du processus"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Document du processus',
+            'res_model': 'is.processus.doc',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'target': 'current',
+        }
 
     def lien_vers_dynacase_action(self):
         for obj in self:
