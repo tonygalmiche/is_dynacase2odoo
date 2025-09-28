@@ -76,7 +76,7 @@
                                 <field name="exigence"/>
                             </group>
 
-                            <group string="Contenu">>
+                            <group string="Contenu">
                                 <field name="element" widget="text"/>
                                 <field name="donneesentree" widget="text"/>
                                 <field name="donneessortie" widget="text"/>
@@ -105,7 +105,7 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Documents du processus">
+                            <page string="Documents du processus" attrs="{'invisible': [('doc_ids', '=', [])]}">
                                 <field name="doc_ids">
                                     <tree string="Documents">
                                         <button name="action_view_document" type="object" icon="fa-search" title="Voir la fiche complète"/>
@@ -216,7 +216,7 @@
                         <group string="Description">
                             <field name="description" widget="text" nolabel="1" colspan="2"/>
                         </group>
-                        <group string="Documents">
+                        <group string="Documents" attrs="{'invisible': [('doc_ids', '=', [])]}">
                             <field name="doc_ids" nolabel="1" colspan="2">
                                 <tree>
                                     <button name="action_view_document" type="object" icon="fa-search" title="Voir la fiche complète"/>
@@ -390,6 +390,7 @@
                                         <button name="open_etape_doc" type="object" icon="fa-search" title="Voir la fiche étape"/>
                                         <field name="numeroetape"/>
                                         <field name="nometape"/>
+                                        <field name="responsable"/>
                                         <field name="responsable_id"/>
                                         <field name="description"/>
                                         <field name="doclibre"/>
@@ -397,6 +398,23 @@
                                 </field>
                                 <field name="etape_doc_texte" invisible="1"/>
                             </page>
+
+
+                            <page string="Documents" attrs="{'invisible': [('doc_ids', '=', [])]}">
+                                <field name="doc_ids" nolabel="1" colspan="2">
+                                    <tree>
+                                        <button name="action_view_document" type="object" icon="fa-search" title="Voir la fiche complète"/>
+                                        <field name="reference"/>
+                                        <field name="designation"/>
+                                        <field name="etape_id"/>
+                                        <field name="auteur_id"/>
+                                        <field name="version"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+
+
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">

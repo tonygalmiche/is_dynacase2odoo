@@ -125,6 +125,10 @@ class IsProcessusDoc(models.Model):
     etape_doc_ids   = fields.One2many('is.processus.doc.etape', 'doc_id', string="Étapes du document")
     etape_doc_texte = fields.Text(string="Étapes (texte)", compute='_compute_etape_doc_texte', store=True, tracking=True)
 
+    doc_ids = fields.One2many('is.processus.doc', 'procedure_id', string="Documents", readonly=True)
+
+
+
     active      = fields.Boolean(string="Actif", default=True, tracking=True)
     dynacase_id = fields.Integer(string="Id Dynacase", index=True, copy=False)
 
@@ -182,7 +186,8 @@ class IsProcessusDocEtape(models.Model):
     doc_id         = fields.Many2one('is.processus.doc', string="Document", required=True, tracking=True)
     numeroetape    = fields.Integer(string="Numéro étape", tracking=True)
     nometape       = fields.Char(string="Nom de l'étape", tracking=True)
-    responsable_id = fields.Many2one('res.users', string="Responsable", tracking=True)
+    responsable    = fields.Char(string="Responsable", tracking=True)
+    responsable_id = fields.Many2one('res.users', string="Nom du responsable", tracking=True)
     description    = fields.Text(string="Description", tracking=True)
     doclibre       = fields.Text(string="Document libre", tracking=True)
 
