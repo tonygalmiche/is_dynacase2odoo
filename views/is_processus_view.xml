@@ -56,9 +56,9 @@
                     <header>
                         <field name="active" invisible="1"/>
                         <button 
-                            title="Dynacase" name="lien_vers_dynacase_action" type="object" 
-                            icon="fa-file" class="oe_highlight"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                            string="Dynacase" name="lien_vers_dynacase_action"
+                            type="object" class="btn btn-info"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                             groups="base.group_system"
                         />
                         <field name="dynacase_id" groups="base.group_system"/>
@@ -193,9 +193,9 @@
                     <header>
                         <field name="active" invisible="1"/>
                         <button 
-                            title="Dynacase" name="lien_vers_dynacase_action" type="object" 
-                            icon="fa-file" class="oe_highlight"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                            string="Dynacase" name="lien_vers_dynacase_action"
+                            type="object" class="btn btn-info"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                             groups="base.group_system"
                         />
                         <field name="dynacase_id" groups="base.group_system"/>
@@ -298,9 +298,9 @@
                     <header>
                         <field name="active" invisible="1"/>                        
                         <button 
-                            title="Dynacase" name="lien_vers_dynacase_action" type="object" 
-                            icon="fa-file" class="oe_highlight"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                            string="Dynacase" name="lien_vers_dynacase_action"
+                            type="object" class="btn btn-info"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                             groups="base.group_system"
                         />
                         <field name="dynacase_id" groups="base.group_system"/>
