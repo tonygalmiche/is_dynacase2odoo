@@ -209,15 +209,15 @@
                             <group>
                                 <field name="processus_id" required="1"/>
                                 <field name="numetape"/>
-                                <field name="pilote_id"/>
+                                <field name="responsable"/>
                             </group>
                             <group>
-                                <field name="responsable"/>
+                                <field name="pilote_id"/>
                                 <field name="sous_processus_id"/>
                             </group>
                         </group>
                         <group string="Description">
-                            <field name="description" widget="text" nolabel="1"/>
+                            <field name="description" widget="text" nolabel="1" colspan="2"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">

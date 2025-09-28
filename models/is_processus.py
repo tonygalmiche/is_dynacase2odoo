@@ -61,7 +61,7 @@ class IsProcessusEtape(models.Model):
     _rec_name = 'numetape'
 
     processus_id      = fields.Many2one('is.processus', string="Processus", required=True, tracking=True)    
-    pilote_id         = fields.Many2one('res.users', string="Pilote", tracking=True)
+    pilote_id         = fields.Many2one(related="processus_id.pilotepcs_id")
     numetape          = fields.Char(string="N°", tracking=True)
     description       = fields.Text(string="Description", tracking=True)
     responsable       = fields.Char(string="Responsable", tracking=True)
