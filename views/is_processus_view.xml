@@ -335,10 +335,10 @@
                             <group>
                                 <field name="processus_id"/>
                                 <field name="etape_id"/>
-                                <field name="procedure_id"/>
                             </group>
                             <group>
                                 <field name="pilote_id"/>
+                                <field name="procedure_id"/>
                             </group>
                         </group>
 
@@ -347,15 +347,16 @@
                                 <field name="reference" required="1"/>
                                 <field name="designation"/>
                                 <field name="niveau"/>
-                                <field name="version"/>
-                                <field name="modification"/>
                             </group>
                             <group>
                                 <field name="auteur_id"/>
-                                <field name="piecejointe" filename="reference"/>
+                                <field name="version"/>
+                                <field name="modification"/>
                             </group>
                         </group>
-
+                        <group string="Pièces jointes">
+                            <field name="piece_jointe_ids" widget="many2many_binary" nolabel="1" colspan="2"/>
+                        </group>
                         <notebook>
                             <page string="Organisation (FO)">
                                 <group>
@@ -411,7 +412,7 @@
             <field name="res_model">is.processus.doc</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="is_processus_doc_search"/>
-            <field name="context">{'search_default_active': 1}</field>
+            <field name="context">{}</field>
         </record>
 
 

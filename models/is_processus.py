@@ -104,7 +104,7 @@ class IsProcessusDoc(models.Model):
     modification = fields.Char(string="Modification", tracking=True)
     auteur_id    = fields.Many2one('res.users', string="Auteur", tracking=True)
     dossier      = fields.Char(string="Dossier (Processus)", tracking=True)
-    piecejointe  = fields.Binary(string="Pièce jointe", tracking=True)
+    piece_jointe_ids = fields.Many2many("ir.attachment", "is_processus_doc_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
 
     # Organisation (Pour les FO) - frame dpcs_fo
     quiremplit_id  = fields.Many2one('res.users', string="Qui remplit", tracking=True)
