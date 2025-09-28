@@ -178,6 +178,11 @@
                     <field name="create_uid" optional="hide" string="Créé par"/>
                     <field name="write_date" optional="hide" string="Modifié le"/>
                     <field name="write_uid" optional="hide" string="Modifié par"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
                     <field name="dynacase_id" optional="hide" groups="base.group_system"/>
                 </tree>
             </field>
@@ -189,12 +194,17 @@
                 <form string="Étape du processus">
                     <header>
                         <field name="active" invisible="1"/>
+                        <button 
+                            title="Dynacase" name="lien_vers_dynacase_action" type="object" 
+                            icon="fa-file" class="oe_highlight"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                            groups="base.group_system"
+                        />
                         <field name="dynacase_id" groups="base.group_system"/>
                     </header>
                     <sheet>
                         <field name="active" invisible="1"/>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                        
                         <group string="Identification">
                             <group>
                                 <field name="processus_id" required="1"/>
@@ -206,7 +216,6 @@
                                 <field name="sous_processus_id"/>
                             </group>
                         </group>
-
                         <group string="Description">
                             <field name="description" widget="text" nolabel="1"/>
                         </group>
@@ -275,6 +284,11 @@
                     <field name="create_uid" optional="hide" string="Créé par"/>
                     <field name="write_date" optional="hide" string="Modifié le"/>
                     <field name="write_uid" optional="hide" string="Modifié par"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
                     <field name="dynacase_id" optional="hide" groups="base.group_system"/>
                 </tree>
             </field>
@@ -285,7 +299,13 @@
             <field name="arch" type="xml">
                 <form string="Document du processus">
                     <header>
-                        <field name="active" invisible="1"/>
+                        <field name="active" invisible="1"/>                        
+                        <button 
+                            title="Dynacase" name="lien_vers_dynacase_action" type="object" 
+                            icon="fa-file" class="oe_highlight"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                            groups="base.group_system"
+                        />
                         <field name="dynacase_id" groups="base.group_system"/>
                     </header>
                     <sheet>
