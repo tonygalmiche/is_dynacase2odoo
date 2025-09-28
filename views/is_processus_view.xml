@@ -283,11 +283,9 @@
                     <field name="procedure_id" optional="hide" widget="many2one_clickable" />
                     <field name="pilote_id" optional="show"/>
                     <field name="auteur_id" optional="show"/>
-                    <field name="site_id" optional="hide"/>
                     <field name="niveau" optional="hide"/>
                     <field name="version" optional="show"/>
                     <field name="modification" optional="hide"/>
-                    <field name="dossier" optional="hide"/>
                     <field name="active" optional="hide"/>
                     <field name="create_date" optional="hide" string="Créé le"/>
                     <field name="create_uid" optional="hide" string="Créé par"/>
@@ -336,14 +334,12 @@
                             <group>
                                 <field name="reference" required="1"/>
                                 <field name="designation"/>
-                                <field name="site_id"/>
                                 <field name="niveau"/>
                                 <field name="version"/>
                                 <field name="modification"/>
                             </group>
                             <group>
                                 <field name="auteur_id"/>
-                                <field name="dossier"/>
                                 <field name="piecejointe" filename="reference"/>
                             </group>
                         </group>
