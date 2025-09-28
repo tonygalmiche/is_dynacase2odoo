@@ -39,7 +39,7 @@ class IsProcessus(models.Model):
     etape_ids = fields.One2many('is.processus.etape', 'processus_id', string="Étapes du processus", tracking=True)
     
     # Documents du processus
-    doc_ids = fields.One2many('is.processus.doc', 'processus_id', string="Documents du processus")
+    doc_ids = fields.One2many('is.processus.doc', 'processus_id', string="Documents du processus", readonly=True)
 
     def lien_vers_dynacase_action(self):
         for obj in self:

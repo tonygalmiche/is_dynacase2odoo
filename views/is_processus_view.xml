@@ -108,12 +108,12 @@
                             <page string="Documents du processus">
                                 <field name="doc_ids">
                                     <tree string="Documents">
+                                        <button name="action_view_document" type="object" icon="fa-search" title="Voir la fiche complète"/>
                                         <field name="reference"/>
                                         <field name="designation"/>
                                         <field name="etape_id"/>
                                         <field name="auteur_id"/>
                                         <field name="version"/>
-                                        <field name="active"/>
                                     </tree>
                                 </field>
                             </page>
@@ -148,7 +148,7 @@
                 <search string="Recherche Étapes des processus">
                     <field name="numetape"/>
                     <field name="description"/>
-                    <field name="processus_id"/>
+                    <field name="processus_id" widget="many2one_clickable" />
                     <field name="responsable"/>
                     <field name="pilote_id"/>
                     <filter string="Actif" name="active" domain="[('active','=', True)]"/>
@@ -166,7 +166,7 @@
             <field name="model">is.processus.etape</field>
             <field name="arch" type="xml">
                 <tree string="Étapes des processus">
-                    <field name="processus_id" optional="show"/>
+                    <field name="processus_id" optional="show" widget="many2one_clickable" />
                     <field name="numetape" optional="show"/>
                     <field name="description" optional="show"/>
                     <field name="responsable" optional="show"/>
@@ -278,9 +278,9 @@
                 <tree string="Documents des processus">
                     <field name="reference" optional="show"/>
                     <field name="designation" optional="show"/>
-                    <field name="processus_id" optional="show"/>
-                    <field name="etape_id" optional="hide"/>
-                    <field name="procedure_id" optional="hide"/>
+                    <field name="processus_id" optional="show" widget="many2one_clickable" />
+                    <field name="etape_id" optional="hide" widget="many2one_clickable" />
+                    <field name="procedure_id" optional="hide" widget="many2one_clickable" />
                     <field name="pilote_id" optional="show"/>
                     <field name="auteur_id" optional="show"/>
                     <field name="site_id" optional="hide"/>
