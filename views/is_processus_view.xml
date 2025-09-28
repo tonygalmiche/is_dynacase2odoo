@@ -276,21 +276,33 @@
             <field name="model">is.processus.doc</field>
             <field name="arch" type="xml">
                 <tree string="Documents des processus">
-                    <field name="reference" optional="show"/>
-                    <field name="designation" optional="show"/>
-                    <field name="processus_id" optional="show" widget="many2one_clickable" />
-                    <field name="etape_id" optional="hide" widget="many2one_clickable" />
-                    <field name="procedure_id" optional="hide" widget="many2one_clickable" />
-                    <field name="pilote_id" optional="show"/>
-                    <field name="auteur_id" optional="show"/>
-                    <field name="niveau" optional="hide"/>
-                    <field name="version" optional="show"/>
-                    <field name="modification" optional="hide"/>
-                    <field name="active" optional="hide"/>
-                    <field name="create_date" optional="hide" string="Créé le"/>
-                    <field name="create_uid" optional="hide" string="Créé par"/>
-                    <field name="write_date" optional="hide" string="Modifié le"/>
-                    <field name="write_uid" optional="hide" string="Modifié par"/>
+                    <field name="reference"        optional="show"/>
+                    <field name="designation"      optional="show"/>
+                    <field name="processus_id"     optional="show" widget="many2one_clickable" />
+                    <field name="etape_id"         optional="hide" widget="many2one_clickable" />
+                    <field name="procedure_id"     optional="hide" widget="many2one_clickable" />
+                    <field name="pilote_id"        optional="show"/>
+                    <field name="auteur_id"        optional="show"/>
+                    <field name="site_id"          optional="hide"/>
+                    <field name="niveau"           optional="hide"/>
+                    <field name="version"          optional="show"/>
+                    <field name="modification"     optional="hide"/>
+                    <field name="quiremplit_id"    optional="hide"/>
+                    <field name="quiclasse_id"     optional="hide"/>
+                    <field name="lieuclassement"   optional="hide"/>
+                    <field name="quiarchive_id"    optional="hide"/>
+                    <field name="lieuarchive"      optional="hide"/>
+                    <field name="reglerange"       optional="hide"/>
+                    <field name="dureecons"        optional="hide"/>
+                    <field name="quidetruit_id"    optional="hide"/>
+                    <field name="quiverifie_id"    optional="hide"/>
+                    <field name="quiapprouve_id"   optional="hide"/>
+                    <field name="diffusion"        optional="hide"/>
+                    <field name="active"           optional="hide"/>
+                    <field name="create_date"      optional="hide" string="Créé le"/>
+                    <field name="create_uid"       optional="hide" string="Créé par"/>
+                    <field name="write_date"       optional="hide" string="Modifié le"/>
+                    <field name="write_uid"        optional="hide" string="Modifié par"/>
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
