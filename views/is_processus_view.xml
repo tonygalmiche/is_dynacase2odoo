@@ -102,7 +102,6 @@
                                         <field name="description"/>
                                         <field name="responsable"/>
                                         <field name="pilote_id"/>
-                                        <field name="sous_processus_id"/>
                                     </tree>
                                 </field>
                             </page>
@@ -172,7 +171,6 @@
                     <field name="description" optional="show"/>
                     <field name="responsable" optional="show"/>
                     <field name="pilote_id" optional="show"/>
-                    <field name="sous_processus_id" optional="hide"/>
                     <field name="active" optional="hide"/>
                     <field name="create_date" optional="hide" string="Créé le"/>
                     <field name="create_uid" optional="hide" string="Créé par"/>
@@ -213,7 +211,6 @@
                             </group>
                             <group>
                                 <field name="pilote_id"/>
-                                <field name="sous_processus_id"/>
                             </group>
                         </group>
                         <group string="Description">
