@@ -47,17 +47,10 @@ class IsReclamationFournisseur(models.Model):
     date_detection_defaut  = fields.Date(string="Date détection", help="Date de détection du défaut", tracking=True, default=lambda *a: fields.datetime.now())
     annee_detection_defaut = fields.Char(string="Année détection", tracking=True, compute="_compute_annee_detection_defaut", store=True, readonly=True, copy=False)
 
-
     # rf_fr_nature_reclamation
-    nature_qualite = fields.Selection(
-        selection=[("Non", "Non"), ("Oui", "Oui")], string="Qualité"
-        , tracking=True)
-    nature_logistique = fields.Selection(
-        selection=[("Non", "Non"), ("Oui", "Oui")], string="Logistique"
-        , tracking=True)
-    nature_administratif = fields.Selection(
-        selection=[("Non", "Non"), ("Oui", "Oui")], string="Administratif"
-        , tracking=True)
+    # nature_qualite       = fields.Boolean(string="Qualité"      , tracking=True, default=False)
+    # nature_logistique    = fields.Boolean(string="Logistique"   , tracking=True, default=False)
+    # nature_administratif = fields.Boolean(string="Administratif", tracking=True, default=False)
 
     # rf_fr_rcp_concernee
     reception_id = fields.Many2one('is.reception', "Réception", tracking=True)

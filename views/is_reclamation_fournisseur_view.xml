@@ -18,9 +18,9 @@
                     <field name="date_creation" optional="show"/>
 
                     <!-- Nature de la réclamation -->
-                    <field name="nature_qualite" optional="hide"/>
+                    <!-- <field name="nature_qualite" optional="hide"/>
                     <field name="nature_logistique" optional="hide"/>
-                    <field name="nature_administratif" optional="hide"/>
+                    <field name="nature_administratif" optional="hide"/> -->
 
                     <!-- Réception concernée -->
                     <field name="num_reception" optional="show"/>
@@ -145,9 +145,9 @@
 
                             <!-- Description de la réclamation -->
                             <group string="Description de la réclamation">
-                                <field name="nature_qualite"/>
+                                <!-- <field name="nature_qualite"/>
                                 <field name="nature_logistique"/>
-                                <field name="nature_administratif"/>
+                                <field name="nature_administratif"/> -->
                                 <field name="quantite_nc"/>
                                 <field name="quantite_a_facturer"/>
                                 <field name="defaut_constate_choix"/>
@@ -160,7 +160,7 @@
                             <group string="Réception concernée">
                                 <field name="reception_id"/>
                                 <field name="num_reception" force_save="1" invisible="1"/>
-                                <field name="fournisseur_id"/>
+                                <field name="fournisseur_id" attrs="{'required': [('type_reclamation', '=', 'Réclamation')]}"/>
                                 <field name="nom_fournisseur" force_save="1" readonly="1"/>
                                 <field name="adr_fournisseur" force_save="1" readonly="1"/>
                                 <field name="code_fournisseur" force_save="1" readonly="1"/>
