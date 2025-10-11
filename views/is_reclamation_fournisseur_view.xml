@@ -18,9 +18,9 @@
                     <field name="date_creation" optional="show"/>
 
                     <!-- Nature de la réclamation -->
-                    <!-- <field name="nature_qualite" optional="hide"/>
+                    <field name="nature_qualite" optional="hide"/>
                     <field name="nature_logistique" optional="hide"/>
-                    <field name="nature_administratif" optional="hide"/> -->
+                    <field name="nature_administratif" optional="hide"/>
 
                     <!-- Réception concernée -->
                     <field name="num_reception" optional="show"/>
