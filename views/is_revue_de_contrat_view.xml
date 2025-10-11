@@ -257,6 +257,7 @@
                                             </group>
                                         </form>
                                         <tree>
+                                            <button title="Dupliquer cette décomposition de prix" name="action_dupliquer_decomposition_prix" type="object" icon="fa-copy"/>
                                             <field name="rc_price_comp_article" optional="show" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
                                             <field name="rc_reference_client" optional="show" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
                                             <field name="rc_year_quantity" optional="show" attrs="{'readonly': [('parent.readonly', '=', True)]}"/>
@@ -400,6 +401,7 @@
                                             </group>
                                         </form>
                                         <tree>
+                                            <button title="Dupliquer cette version" name="action_dupliquer_version" type="object" icon="fa-copy"/>
                                             <field name="rc_dfi_version"        optional="show"/>
                                             <field name="decomposition_prix_id" optional="hide"/>
                                             <field name="rc_dfi_article"        optional="show"/>
@@ -466,6 +468,7 @@
                                             </group>
                                         </form>
                                         <tree>
+                                            <button title="Dupliquer cette version" name="action_dupliquer_dfe_version" type="object" icon="fa-copy"/>
                                             <field name="rc_dfe_version" optional="show"/>
                                             <field name="rc_dfe_comp" optional="show"/>
                                             <field name="rc_dfe_comp_pri_vendu" optional="show"/>

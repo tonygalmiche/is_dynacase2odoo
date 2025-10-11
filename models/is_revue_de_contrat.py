@@ -707,6 +707,19 @@ class is_revue_de_contrat_decomposition_prix(models.Model):
             obj.rc_ecart = total - obj.rc_sell_price
 
 
+    def action_dupliquer_decomposition_prix(self):
+        """Duplique la décomposition de prix courante"""
+        for record in self:
+            # Créer une copie de l'enregistrement
+            copy_vals = record.copy_data()[0]
+            # Optionnellement modifier le nom de l'article dupliqué
+            if 'rc_price_comp_article' in copy_vals and copy_vals['rc_price_comp_article']:
+                copy_vals['rc_price_comp_article'] = copy_vals['rc_price_comp_article'] + ' (Copie)'
+            # Créer le nouvel enregistrement
+            new_record = record.create(copy_vals)
+        return True
+
+
 class is_revue_de_contrat_decomposition_productivite(models.Model):
     _name        = "is.revue.de.contrat.decomposition.productivite"
     _description = "Revue de contrat Productivité"
@@ -827,6 +840,18 @@ class is_revue_de_contrat_version(models.Model):
         self.rc_dfi_article = self.decomposition_prix_id.rc_price_comp_article
 
 
+    def action_dupliquer_version(self):
+        """Duplique la version courante"""
+        for record in self:
+            # Créer une copie de l'enregistrement
+            copy_vals = record.copy_data()[0]
+            # Optionnellement modifier le nom de la version dupliquée
+            if 'rc_dfi_version' in copy_vals:
+                copy_vals['rc_dfi_version'] = copy_vals['rc_dfi_version']
+            # Créer le nouvel enregistrement
+            new_record = record.create(copy_vals)
+        return True
+
 
     # dfe_version_ids                    = fields.One2many("is.revue.de.contrat.dfe.version", "is_revue_id", copy=True)
 
@@ -858,3 +883,16 @@ class is_revue_de_contrat_dfe_version(models.Model):
     rc_dfe_multiple_liv        = fields.Char(string="Multiple de livraison")
     rc_dfe_lot_fab             = fields.Char(string="Lot de fabrication (en pièces)")
     is_revue_id                = fields.Many2one("is.revue.de.contrat", string="Revue de contrat")
+
+
+    def action_dupliquer_dfe_version(self):
+        """Duplique la version DFE courante"""
+        for record in self:
+            # Créer une copie de l'enregistrement
+            copy_vals = record.copy_data()[0]
+            # Optionnellement modifier le nom de la version dupliquée
+            if 'rc_dfe_version' in copy_vals:
+                copy_vals['rc_dfe_version'] = copy_vals['rc_dfe_version']
+            # Créer le nouvel enregistrement
+            new_record = record.create(copy_vals)
+        return True

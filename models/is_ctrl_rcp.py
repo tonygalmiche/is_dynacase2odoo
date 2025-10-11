@@ -365,8 +365,8 @@ class IsCtrlRcpSaisieMesure(models.Model):
     def _compute_valeur_resultat(self):
         for record in self:
             res=False
-            if record.saisie_id.tolerance_mini=="OK":
-                if record.valeur_mesuree=="OK":
+            if (record.saisie_id.tolerance_mini or '').upper()=="OK":
+                if (record.valeur_mesuree or '').upper()=="OK":
                     res='OK'
                 else:
                     res = 'nOK'
