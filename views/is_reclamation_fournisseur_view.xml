@@ -100,8 +100,7 @@
                     <field name="type_reclamation"/>
                     <field name="fournisseur_id"/>
                     <field name="codepg"/>
-                    <field name="date_creation"/>
-                    <field name="date_cloture_reel"/>
+                    <field name="annee_detection_defaut"/>
                     <group expand="0" string="Group By">
                         <filter name="group_type" string="Type" context="{'group_by': 'type_reclamation'}"/>
                         <filter name="group_fournisseur" string="Fournisseur" context="{'group_by': 'fournisseur_id'}"/>
@@ -145,9 +144,9 @@
 
                             <!-- Description de la réclamation -->
                             <group string="Description de la réclamation">
-                                <!-- <field name="nature_qualite"/>
+                                <field name="nature_qualite"/>
                                 <field name="nature_logistique"/>
-                                <field name="nature_administratif"/> -->
+                                <field name="nature_administratif"/>
                                 <field name="quantite_nc"/>
                                 <field name="quantite_a_facturer"/>
                                 <field name="defaut_constate_choix"/>

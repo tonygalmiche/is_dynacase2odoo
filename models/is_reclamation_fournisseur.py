@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime, timedelta
 from odoo import api, fields, models
 
 
@@ -48,9 +49,9 @@ class IsReclamationFournisseur(models.Model):
     annee_detection_defaut = fields.Char(string="Année détection", tracking=True, compute="_compute_annee_detection_defaut", store=True, readonly=True, copy=False)
 
     # rf_fr_nature_reclamation
-    # nature_qualite       = fields.Boolean(string="Qualité"      , tracking=True, default=False)
-    # nature_logistique    = fields.Boolean(string="Logistique"   , tracking=True, default=False)
-    # nature_administratif = fields.Boolean(string="Administratif", tracking=True, default=False)
+    nature_qualite       = fields.Boolean(string="Qualité"      , tracking=True, default=False)
+    nature_logistique    = fields.Boolean(string="Logistique"   , tracking=True, default=False)
+    nature_administratif = fields.Boolean(string="Administratif", tracking=True, default=False)
 
     # rf_fr_rcp_concernee
     reception_id = fields.Many2one('is.reception', "Réception", tracking=True)
@@ -126,10 +127,21 @@ class IsReclamationFournisseur(models.Model):
     date_secu_fourn_obj = fields.Date(
         string="Date de sécurisation fournisseur (J+1)",
         tracking=True,
+        default=lambda *a: fields.datetime.now() + timedelta(days=1)
     )
-    date_analyse_obj = fields.Date(string="Date de l'analyse des causes (J+10)", tracking=True)
-    date_plan_obj = fields.Date(string="Date du plan d'action (J+30)", tracking=True)
-    date_cloture_obj = fields.Date(string="Date de clôture (J+60)", tracking=True)
+    date_analyse_obj = fields.Date(
+        string="Date de l'analyse des causes (J+10)", tracking=True,
+        default=lambda *a: fields.datetime.now() + timedelta(days=10)
+    )
+    date_plan_obj = fields.Date(
+        string="Date du plan d'action (J+30)", tracking=True,
+        default=lambda *a: fields.datetime.now() + timedelta(days=30)
+
+    )
+    date_cloture_obj = fields.Date(
+        string="Date de clôture (J+60)", tracking=True,
+        default=lambda *a: fields.datetime.now() + timedelta(days=60)
+    )
 
     # rf_fr_commentaire
     commentaire_reponse = fields.Text(string="Commentaire réponse", tracking=True)
