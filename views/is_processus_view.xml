@@ -141,26 +141,6 @@
 
 
         <!-- is.processus.etape -->
-        <record id="is_processus_etape_search" model="ir.ui.view">
-            <field name="name">is.processus.etape.search</field>
-            <field name="model">is.processus.etape</field>
-            <field name="arch" type="xml">
-                <search string="Recherche Étapes des processus">
-                    <field name="numetape"/>
-                    <field name="description"/>
-                    <field name="processus_id" widget="many2one_clickable" />
-                    <field name="responsable"/>
-                    <field name="pilote_id"/>
-                    <filter string="Actif" name="active" domain="[('active','=', True)]"/>
-                    <filter string="Archivé" name="inactive" domain="[('active','=', False)]"/>
-                    <group expand="0" string="Grouper par">
-                        <filter string="Processus" name="group_by_processus" domain="[]" context="{'group_by':'processus_id'}"/>
-                        <filter string="Pilote" name="group_by_pilote" domain="[]" context="{'group_by':'pilote_id'}"/>
-                        <filter string="Responsable" name="group_by_responsable" domain="[]" context="{'group_by':'responsable'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
         <record id="is_processus_etape_tree" model="ir.ui.view">
             <field name="name">is.processus.etape.tree</field>
             <field name="model">is.processus.etape</field>
@@ -237,40 +217,39 @@
                 </form>
             </field>
         </record>
+
+        <record id="is_processus_etape_search" model="ir.ui.view">
+            <field name="name">is.processus.etape.search</field>
+            <field name="model">is.processus.etape</field>
+            <field name="arch" type="xml">
+                <search string="Recherche Étapes des processus">
+                    <field name="numetape"/>
+                    <field name="description"/>
+                    <field name="processus_id" widget="many2one_clickable" />
+                    <field name="responsable"/>
+                    <field name="pilote_id"/>
+                    <filter string="Hors processus 'ARCHIVE'" name="hors_archive" domain="[('processus_id','!=', 'ARCHIVE')]"/>
+                    <filter string="Archivé (actif=0)" name="inactive" domain="[('active','=', False)]"/>
+                    <group expand="0" string="Grouper par">
+                        <filter string="Processus" name="group_by_processus" domain="[]" context="{'group_by':'processus_id'}"/>
+                        <filter string="Pilote" name="group_by_pilote" domain="[]" context="{'group_by':'pilote_id'}"/>
+                        <filter string="Responsable" name="group_by_responsable" domain="[]" context="{'group_by':'responsable'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
         <record id="is_processus_etape_action" model="ir.actions.act_window">
             <field name="name">Étapes des processus</field>
             <field name="res_model">is.processus.etape</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="is_processus_etape_search"/>
-            <field name="context">{'search_default_active': 1}</field>
+            <field name="context">{'search_default_hors_archive': 1}</field>
         </record>
 
 
 
 
         <!-- is.processus.doc -->
-        <record id="is_processus_doc_search" model="ir.ui.view">
-            <field name="name">is.processus.doc.search</field>
-            <field name="model">is.processus.doc</field>
-            <field name="arch" type="xml">
-                <search string="Recherche Documents des processus">
-                    <field name="reference"/>
-                    <field name="designation"/>
-                    <field name="processus_id"/>
-                    <field name="etape_id"/>
-                    <field name="auteur_id"/>
-                    <field name="pilote_id"/>
-                    <filter string="Actif" name="active" domain="[('active','=', True)]"/>
-                    <filter string="Archivé" name="inactive" domain="[('active','=', False)]"/>
-                    <group expand="0" string="Grouper par">
-                        <filter string="Processus" name="group_by_processus" domain="[]" context="{'group_by':'processus_id'}"/>
-                        <filter string="Étape" name="group_by_etape" domain="[]" context="{'group_by':'etape_id'}"/>
-                        <filter string="Auteur" name="group_by_auteur" domain="[]" context="{'group_by':'auteur_id'}"/>
-                        <filter string="Pilote" name="group_by_pilote" domain="[]" context="{'group_by':'pilote_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
         <record id="is_processus_doc_tree" model="ir.ui.view">
             <field name="name">is.processus.doc.tree</field>
             <field name="model">is.processus.doc</field>
@@ -319,13 +298,18 @@
                 <form string="Document du processus">
                     <header>
                         <field name="active" invisible="1"/>                        
+                        <field name="dynacase_id" groups="base.group_system" invisible="1"/>
                         <button 
                             string="Dynacase" name="lien_vers_dynacase_action"
                             type="object" class="btn btn-info"
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                             groups="base.group_system"
                         />
-                        <field name="dynacase_id" groups="base.group_system" invisible="1"/>
+                        <button 
+                            string="Réviser ce document" name="action_reviser_document"
+                            type="object"
+                            attrs="{'invisible': [('active', '=', False)]}"
+                        />
                     </header>
                     <sheet>
                         <field name="active" invisible="1"/>
@@ -356,6 +340,9 @@
                         </group>
                         <group string="Pièces jointes">
                             <field name="piece_jointe_ids" widget="many2many_binary" nolabel="1" colspan="2"/>
+                        </group>
+                        <group string="Révision" attrs="{'invisible': [('motif_revision', '=', False)]}">
+                            <field name="motif_revision" widget="text" nolabel="1" colspan="2"/>
                         </group>
                         <notebook>
                             <page string="Organisation (FO)">
@@ -398,8 +385,6 @@
                                 </field>
                                 <field name="etape_doc_texte" invisible="1"/>
                             </page>
-
-
                             <page string="Documents" attrs="{'invisible': [('doc_ids', '=', [])]}">
                                 <field name="doc_ids" nolabel="1" colspan="2">
                                     <tree>
@@ -412,9 +397,6 @@
                                     </tree>
                                 </field>
                             </page>
-
-
-
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
@@ -425,12 +407,34 @@
                 </form>
             </field>
         </record>
+        <record id="is_processus_doc_search" model="ir.ui.view">
+            <field name="name">is.processus.doc.search</field>
+            <field name="model">is.processus.doc</field>
+            <field name="arch" type="xml">
+                <search string="Recherche Documents des processus">
+                    <field name="reference"/>
+                    <field name="designation"/>
+                    <field name="processus_id"/>
+                    <field name="etape_id"/>
+                    <field name="auteur_id"/>
+                    <field name="pilote_id"/>
+                    <filter string="Hors processus 'ARCHIVE'" name="hors_archive" domain="[('processus_id','!=', 'ARCHIVE')]"/>
+                    <filter string="Archivé (actif=0)" name="inactive" domain="[('active','=', False)]"/>
+                    <group expand="0" string="Grouper par">
+                        <filter string="Processus" name="group_by_processus" domain="[]" context="{'group_by':'processus_id'}"/>
+                        <filter string="Étape"     name="group_by_etape" domain="[]" context="{'group_by':'etape_id'}"/>
+                        <filter string="Auteur"    name="group_by_auteur" domain="[]" context="{'group_by':'auteur_id'}"/>
+                        <filter string="Pilote"    name="group_by_pilote" domain="[]" context="{'group_by':'pilote_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
         <record id="is_processus_doc_action" model="ir.actions.act_window">
             <field name="name">Documents des processus</field>
             <field name="res_model">is.processus.doc</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="is_processus_doc_search"/>
-            <field name="context">{}</field>
+            <field name="context">{'search_default_hors_archive': 1}</field>
         </record>
 
 

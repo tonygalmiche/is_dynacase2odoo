@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Wizard de révision de document -->
+        <record id="is_processus_doc_revision_wizard_form" model="ir.ui.view">
+            <field name="name">is.processus.doc.revision.wizard.form</field>
+            <field name="model">is.processus.doc.revision.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Réviser ce document">
+                    <sheet>
+                        <group>
+                            <field name="document_id" readonly="1"/>
+                        </group>
+                        <group string="Motif de révision">
+                            <field name="motif_revision" widget="text" nolabel="1" colspan="2" 
+                                   placeholder="Veuillez indiquer le motif de cette révision (obligatoire)"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Confirmer la révision" name="action_confirmer_revision" 
+                                type="object" class="btn-primary"/>
+                        <button string="Annuler" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>
