@@ -400,7 +400,7 @@ class IsDocMoule(models.Model):
                         
                         #** Calcul du nombre de modifications variantes ***
                         domain_modif = self._get_modif_variante_domain(row['res_model'], row['moule_id'])
-                        nb_modif_variante = self.env['is.dossier.modif.variante'].search_count(domain_modif) if domain_modif else 0
+                        nb_modif_variante = self.env['is.dossier.modif.variante'].sudo().search_count(domain_modif) if domain_modif else 0
                         
                         vals={
                             'key'         : key,

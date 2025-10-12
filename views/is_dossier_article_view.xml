@@ -37,6 +37,7 @@
                                 <field name="famille"      readonly="1"/>
                                 <field name="sous_famille" readonly="1"/>
                                 <field name="categorie"    readonly="1"/>
+                                <field name="gestionnaire" readonly="1"/>
                                 <field name="automobile"/>
                             </group>    
                         </group>

@@ -75,6 +75,8 @@
                                 <field name="dossier_modif_variante_id" attrs="{'invisible': [('type_document', '!=', 'Dossier Modif Variante')], 'required': [('type_document', '=', 'Dossier Modif Variante')], 'readonly': [('acces_chef_projet', '=', False)]}"/>
                                 <field name="dossier_appel_offre_id"    attrs="{'invisible': [('type_document', '!=', 'dossier_appel_offre')]   , 'required': [('type_document', '=', 'dossier_appel_offre')]   , 'readonly': [('acces_chef_projet', '=', False)]}"/>
                                 <field name="moule_dossierf"            attrs="{'invisible': ['|','|',('moule_dossierf', '=', False),('idmoule', '!=', False),('dossierf_id', '!=', False)]}" />
+                                <field name="gestionnaire"              attrs="{'invisible': [('gestionnaire', '=', False)]}" />
+                                <field name="designation_dossier"/>
                                 <field name="param_project_id"          attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
                                 <field name="idresp"                    attrs="{'readonly': [('acces_chef_projet', '=', False)]}"/>
                                 <field name="date_debut_gantt"          attrs="{'readonly': [('acces_chef_projet', '=', False)], 'invisible': [('type_document', '=', 'Article')]}"/>
@@ -328,6 +330,7 @@
                     <field name="dossier_modif_variante_id" optional="hide"           widget="many2one_clickable"/>
                     <field name="dossier_article_id"        optional="hide"           widget="many2one_clickable"/>
                     <field name="moule_dossierf"            optional="hide" />
+                    <field name="designation_dossier"       optional="hide" />
                     <field name="site_id"                   optional="hide" />
                     <button title="Gantt du projet" name="doc_projet_action" type="object" icon="fa-indent" attrs="{'invisible': [('idproject', '=', False)]}"/>
                     <field name="idproject" optional="show"         widget="many2one_clickable"/>
@@ -624,7 +627,11 @@
             <field name="res_model">is.doc.moule</field>
             <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
             <field name="domain">[('type_document','=','Moule'),('idmoule','!=',False)]</field>
-            <field name="context">{'default_type_document': 'Moule'}</field>
+            <field name="context">{
+                'default_type_document': 'Moule',
+                'default_param_project_id': 213,
+                'default_idresp': uid
+            }</field>
             <field name="view_id" ref="is_doc_moule_moule_tree"/>
         </record>
 
@@ -708,6 +715,8 @@
             <field name="arch" type="xml">
                 <tree string="Document moule" default_order="dossier_article_id, param_project_id">
                     <field name="dossier_article_id"  optional="show" widget="many2one_clickable"/>
+                    <field name="designation_dossier" optional="show"/>
+                    <field name="gestionnaire"        optional="show"/>
                     <field name="param_project_id"    optional="show"/>
                     <field name="idresp"              optional="show" />
                     <field name="date_fin_gantt"      optional="show" />

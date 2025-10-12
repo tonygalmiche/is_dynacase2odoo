@@ -39,6 +39,7 @@
                                 <field name="ppr_type_demande" />
                                 <field name="ppr_maj_amdec"          attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="ppr_responsable"        attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
+                                <field name="droit_equipe_projet"/>
                                 <field name="ppr_revue_lancement"    attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="ppr_moule_hors_auto"    attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="plan_piece"             attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
@@ -85,6 +86,7 @@
                     <field name="ppr_type_demande"          optional="show"/>
                     <field name="ppr_maj_amdec"             optional="hide"/>
                     <field name="ppr_responsable"           optional="show"/>
+                    <field name="droit_equipe_projet"       optional="hide"/>
                     <field name="ppr_revue_lancement"       optional="hide"/>
                     <field name="ppr_moule_hors_auto"       optional="hide"/>
                     <field name="duree_attente_avant"       optional="hide"/>

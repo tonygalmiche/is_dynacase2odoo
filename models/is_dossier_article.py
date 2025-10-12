@@ -11,19 +11,34 @@ class is_dossier_article(models.Model):
     nb_fait     = fields.Integer(string="Nb doc fait"   , compute='_compute_fait',store=True,readonly=True)
 
 
-    @api.depends('doc_ids', 'doc_ids.doc_id', 'doc_ids.piecejointe')
-    def _compute_fait(self):
+    # gestionnaire = fields.Char(string="Gestionnaire", compute='_compute_gestionnaire', store=False, readonly=True)
+
+
+    # @api.depends('doc_ids', 'doc_ids.doc_id', 'doc_ids.piecejointe')
+    # def _compute_fait(self):
+    #     for obj in self:
+    #         nb_a_faire = nb_crees = nb_fait = 0
+    #         for line in obj.doc_ids:
+    #             nb_a_faire+=1
+    #             if line.doc_id:
+    #                 nb_crees+=1
+    #             if line.piecejointe:
+    #                 nb_fait+=1
+    #         obj.nb_a_faire = nb_a_faire
+    #         obj.nb_crees   = nb_crees
+    #         obj.nb_fait    = nb_fait
+
+
+    @api.depends('code_pg')
+    def _compute_gestionnaire(self):
         for obj in self:
-            nb_a_faire = nb_crees = nb_fait = 0
-            for line in obj.doc_ids:
-                nb_a_faire+=1
-                if line.doc_id:
-                    nb_crees+=1
-                if line.piecejointe:
-                    nb_fait+=1
-            obj.nb_a_faire = nb_a_faire
-            obj.nb_crees   = nb_crees
-            obj.nb_fait    = nb_fait
+            gestionnaire = False
+            if obj.code_pg:
+                # Recherche dans is.article avec code_pg = name
+                article = self.env['is.article'].search([('name', '=', obj.code_pg)], limit=1)
+                if article:
+                    gestionnaire = article.gestionnaire or ""
+            obj.gestionnaire = gestionnaire
 
 
     def lien_vers_dynacase_action(self):

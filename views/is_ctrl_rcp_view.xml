@@ -9,6 +9,8 @@
                     <field name="param_project_id"    optional="hide"  widget="many2one_clickable"/>
                     <field name="type_document"       optional="hide"/>
                     <field name="dossier_article_id"  widget="many2one_clickable"/>
+                    <field name="designation_dossier" optional="show" />
+                    <field name="gestionnaire"        optional="show" />
                     <field name="idresp"              optional="show" />
                     <field name="rsp_pj"              optional="show" />
                     <field name="indicateur"          optional="hide"/>

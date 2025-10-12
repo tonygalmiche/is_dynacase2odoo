@@ -102,6 +102,23 @@ class IsDocMoule(models.Model):
             obj.date_j_prevue = date_j_prevue
 
 
+    @api.depends('type_document', 'idmoule', 'dossierf_id', 'dossier_modif_variante_id', 'dossier_article_id', 'dossier_appel_offre_id')
+    def _compute_designation_dossier(self):
+        for obj in self:
+            designation = ""
+            if obj.type_document == 'Moule' and obj.idmoule:
+                designation = obj.idmoule.designation or ""
+            elif obj.type_document == 'Dossier F' and obj.dossierf_id:
+                designation = obj.dossierf_id.designation or ""
+            elif obj.type_document == 'Dossier Modif Variante' and obj.dossier_modif_variante_id:
+                designation = obj.dossier_modif_variante_id.demao_desig or ""
+            elif obj.type_document == 'Article' and obj.dossier_article_id:
+                designation = obj.dossier_article_id.designation or ""
+            elif obj.type_document == 'dossier_appel_offre' and obj.dossier_appel_offre_id:
+                designation = obj.dossier_appel_offre_id.dao_desig or ""
+            obj.designation_dossier = designation
+
+
     type_document = fields.Selection(TYPE_DOCUMENT,string="Type de document", default="Moule", required=True, tracking=True)
     sequence = fields.Integer(string="Ordre", tracking=True, copy=False)
     project_prev     = fields.Html(compute='_compute_project_prev', store=True)
@@ -116,7 +133,9 @@ class IsDocMoule(models.Model):
     dossierf_id      = fields.Many2one("is.dossierf"              , string="Dossier F", tracking=True, index=True)
     dossier_modif_variante_id = fields.Many2one("is.dossier.modif.variante", string="Dossier Modif / Variante", tracking=True)
     dossier_article_id        = fields.Many2one("is.dossier.article"       , string="Dossier article", index=True, tracking=True)
+    gestionnaire              = fields.Char(related="dossier_article_id.gestionnaire")
     dossier_appel_offre_id    = fields.Many2one("is.dossier.appel.offre"   , string="Dossier appel d'offre", tracking=True)
+    designation_dossier       = fields.Char("Désignation dossier", compute='_compute_designation_dossier', store=False, readonly=True)
     moule_dossierf   = fields.Char("Moule / Dossier F"                   , compute='_compute_idproject_moule_dossierf',store=True, readonly=True)
     idproject        = fields.Many2one("is.mold.project", string="Projet", compute='_compute_idproject_moule_dossierf',store=True, readonly=True)
     client_id        = fields.Many2one("res.partner", string="Client"    , compute='_compute_idproject_moule_dossierf',store=True, readonly=True)
@@ -162,33 +181,25 @@ class IsDocMoule(models.Model):
         ("02", "Conforme à l’exigence client < 80 mm/min"),
     ],string="Conforme", tracking=True)
     suivi_projet        = fields.Boolean(string="Suivi des projets", default=True, tracking=True, help="Indique si c'est ce document qui doit être affiché dans le suivi des projets dans le cas où il y a plusieurs documents de la même famille")
-
-
-    #** Ajout du 08/03/2025 => Famille 'Plan pièce'
     plan_piece       = fields.Boolean(related="param_project_id.plan_piece")
     gamme_controle   = fields.Boolean(related="param_project_id.gamme_controle")
     pp_revue_plan    = fields.Selection(_OK_NOK, string="Revue de plan"          , tracking=True)
     pp_equipe_projet = fields.Selection(_OK_NOK, string="Diffusion équipe projet", tracking=True)
     pp_maj_odoo      = fields.Selection(_OK_NOK, string="Mise à jour Article / Nomenclature", tracking=True)
-
     pp_revue_plan_commentaire    = fields.Char(string="Revue de plan commentaire"          , tracking=True)
     pp_equipe_projet_commentaire = fields.Char(string="Diffusion équipe projet commentaire", tracking=True)
     pp_maj_odoo_commentaire      = fields.Char(string="Mise à jour Article / Nomenclature commentaire", tracking=True)
-
     recopie_reponse_vsb = fields.Boolean(string="Recopie réponse vsb", compute='_compute_recopie_reponse_vsbf',store=False, readonly=True)
-
     array_ids    = fields.One2many("is.doc.moule.array", "is_doc_id", string="Pièce-jointe de réponse à la demande")
     array_ids_ro = fields.Boolean(string="Pièce-jointe de réponse à la demande readonly", compute='_compute_array_ids_ro', readonly=True, store=False)
-
     array_ids_html = fields.Html(string="Pièces Jointes", compute='_compute_array_ids_html', sanitize=False)
-
-
     controle_ids = fields.One2many(
         "is.ctrl.rcp.gamme.controle",
         "doc_gamme_id",
         string="Contrôles",
         tracking=True,
     )
+    droit_equipe_projet = fields.Boolean(related="param_project_id.droit_equipe_projet")
 
 
 
@@ -446,6 +457,8 @@ class IsDocMoule(models.Model):
         for obj in self:
             acces=False
             if self.env.user.has_group('is_plastigray16.is_chef_projet_group'):
+                acces=True
+            if self.param_project_id.droit_equipe_projet==True:
                 acces=True
             obj.acces_chef_projet = acces
 

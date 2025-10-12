@@ -160,6 +160,7 @@ class IsParamProject(models.Model):
     array_html          = fields.Html(string="Gestion des J", compute='_compute_array_html',store=True, readonly=True, tracking=True)
     plan_piece          = fields.Boolean("Afficher les champs de la famille 'Plan Pièce'", default=False, tracking=True)
     gamme_controle      = fields.Boolean("Afficher les champs de la famille 'Gamme de contrôle'", default=False, tracking=True)
+    droit_equipe_projet = fields.Boolean("Accès complet au groupe 'Membres équipe projet'", default=False, tracking=True)
     active              = fields.Boolean('Actif', default=True, tracking=True)
 
 
