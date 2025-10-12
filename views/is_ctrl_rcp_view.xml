@@ -3,7 +3,7 @@
     <data>
 
         <!-- is.ctrl.rcp.gamme -->
-        <record id="is_ctrl_rcp_gamme_tree_view" model="ir.ui.view">
+        <!-- <record id="is_ctrl_rcp_gamme_tree_view" model="ir.ui.view">
             <field name="name">is_ctrl_rcp_gamme_tree_view</field>
             <field name="model">is.ctrl.rcp.gamme</field>
             <field name="arch" type="xml">
@@ -92,7 +92,7 @@
                     <field name="etat"/>
                 </search>
             </field>
-        </record>
+        </record> -->
 
 
         <!-- is.ctrl.rcp.gamme.controle -->
@@ -101,7 +101,7 @@
             <field name="model">is.ctrl.rcp.gamme.controle</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="gamme_id" optional="show"/>
+                    <field name="doc_gamme_id" optional="show"/>
                     <field name="intitule_controle" optional="show"/>
                     <field name="tolerance_mini" optional="show"/>
                     <field name="tolerance_maxi" optional="show"/>
@@ -115,7 +115,7 @@
                 <form string="Contrôle">
                     <sheet>
                         <group>
-                            <field name="gamme_id"/>
+                            <field name="doc_gamme_id"/>
                             <field name="intitule_controle"/>
                             <field name="tolerance_mini"/>
                             <field name="tolerance_maxi"/>
@@ -124,13 +124,15 @@
                 </form>
             </field>
         </record>
-        <record id="is_ctrl_rcp_gamme_action" model="ir.actions.act_window">
+
+
+        <!-- <record id="is_ctrl_rcp_gamme_action" model="ir.actions.act_window">
             <field name="name">Gamme Contrôle Réception</field>
             <field name="res_model">is.ctrl.rcp.gamme</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="is_ctrl_rcp_gamme_search_view"/>
             <field name="context">{}</field>
-        </record>
+        </record> -->
         <record id="is_ctrl_rcp_rapport_tree_view" model="ir.ui.view">
             <field name="name">is_ctrl_rcp_rapport_tree_view</field>
             <field name="model">is.ctrl.rcp.rapport</field>

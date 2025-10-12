@@ -1,46 +1,46 @@
 from odoo import models, fields, api  # type: ignore
 
 
-class IsCtrlRcpGamme(models.Model):
-    _name = "is.ctrl.rcp.gamme"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
-    _description = "Gamme Contrôle Réception"
-    _rec_name = "dossier_article_id"
-    _order = "dossier_article_id"
+# class IsCtrlRcpGamme(models.Model):
+#     _name = "is.ctrl.rcp.gamme"
+#     _inherit = ["mail.thread", "mail.activity.mixin"]
+#     _description = "Gamme Contrôle Réception"
+#     _rec_name = "dossier_article_id"
+#     _order = "dossier_article_id"
 
-    dossier_article_id = fields.Many2one("is.dossier.article", string="Dossier article", required=False, index=True, tracking=True)
-    dossier_article    = fields.Char(string="Dossier article (archivé)", tracking=True, copy=False, readonly=True)
-    responsable_id     = fields.Many2one("res.users", string="Responsable", tracking=True, default=lambda self: self.env.uid)
-    date_fin_prevue    = fields.Date(string="Date de fin prévue", tracking=True, default=lambda *a: fields.datetime.now())
-    etat = fields.Selection(
-        [
-            ("", ""),
-            ("AF", "A Faire"),
-            ("F", "Fait"),
-        ],
-        string="État",
-        default="F",
-        tracking=True,
-    )
-    active = fields.Boolean(string="Actif", default=True, tracking=True)
-    piece_jointe_ids = fields.Many2many("ir.attachment", "is_ctrl_rcp_gamme_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
-    controle_ids = fields.One2many(
-        "is.ctrl.rcp.gamme.controle",
-        "gamme_id",
-        string="Contrôles",
-        tracking=True,
-    )
-    dynacase_id = fields.Integer(string="Id Dynacase", index=True, copy=False)
+#     dossier_article_id = fields.Many2one("is.dossier.article", string="Dossier article", required=False, index=True, tracking=True)
+#     dossier_article    = fields.Char(string="Dossier article (archivé)", tracking=True, copy=False, readonly=True)
+#     responsable_id     = fields.Many2one("res.users", string="Responsable", tracking=True, default=lambda self: self.env.uid)
+#     date_fin_prevue    = fields.Date(string="Date de fin prévue", tracking=True, default=lambda *a: fields.datetime.now())
+#     etat = fields.Selection(
+#         [
+#             ("", ""),
+#             ("AF", "A Faire"),
+#             ("F", "Fait"),
+#         ],
+#         string="État",
+#         default="F",
+#         tracking=True,
+#     )
+#     active = fields.Boolean(string="Actif", default=True, tracking=True)
+#     piece_jointe_ids = fields.Many2many("ir.attachment", "is_ctrl_rcp_gamme_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
+#     controle_ids = fields.One2many(
+#         "is.ctrl.rcp.gamme.controle",
+#         "gamme_id",
+#         string="Contrôles",
+#         tracking=True,
+#     )
+#     dynacase_id = fields.Integer(string="Id Dynacase", index=True, copy=False)
 
 
-    def lien_vers_dynacase_action(self):
-        for obj in self:
-            url = "https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s" % obj.dynacase_id
-            return {
-                "type": "ir.actions.act_url",
-                "url": url,
-                "target": "new",
-            }
+#     def lien_vers_dynacase_action(self):
+#         for obj in self:
+#             url = "https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s" % obj.dynacase_id
+#             return {
+#                 "type": "ir.actions.act_url",
+#                 "url": url,
+#                 "target": "new",
+#             }
 
 
 
@@ -49,8 +49,8 @@ class IsCtrlRcpGammeControle(models.Model):
     _description = "Contrôle de la gamme RCP"
     _order = "id"
 
-    gamme_id = fields.Many2one(
-        "is.ctrl.rcp.gamme",
+    doc_gamme_id = fields.Many2one(
+        "is.doc.moule",
         string="Gamme",
         required=True,
         ondelete="cascade",
@@ -89,7 +89,7 @@ class IsCtrlRcpRapport(models.Model):
 
     # Contrôle RCP
     date_ctrl = fields.Date(string="Date du contrôle", tracking=True)
-    gamme_id  = fields.Many2one("is.ctrl.rcp.gamme", string="Gamme de contrôle", tracking=True)
+    gamme_id  = fields.Many2one("is.doc.moule", string="Gamme de contrôle", tracking=True)
 
     # Résultats des contrôles
     condi_resultat = fields.Selection(
@@ -158,7 +158,7 @@ class IsCtrlRcpRapport(models.Model):
             if codepg:
                 articles = self.env["is.dossier.article"].search([('code_pg', '=', codepg)], limit=1)
                 for article in  articles:
-                    gammes = self.env["is.ctrl.rcp.gamme"].search([('dossier_article_id', '=', article.id)], limit=1)
+                    gammes = self.env["is.doc.moule"].search([('dossier_article_id', '=', article.id)], limit=1)
                     for gamme in gammes:
                         obj.gamme_id = gamme.id
             #******************************************************************

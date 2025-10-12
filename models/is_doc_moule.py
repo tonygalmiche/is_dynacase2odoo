@@ -181,6 +181,23 @@ class IsDocMoule(models.Model):
     array_ids_html = fields.Html(string="Pièces Jointes", compute='_compute_array_ids_html', sanitize=False)
 
 
+    controle_ids = fields.One2many(
+        "is.ctrl.rcp.gamme.controle",
+        "doc_gamme_id",
+        string="Contrôles",
+        tracking=True,
+    )
+
+
+
+
+
+
+
+
+
+
+
 
     @api.depends('array_ids', 'array_ids.annex_pdf', 'array_ids.annex', 'array_ids.comment', 'array_ids.demandmodif', 'array_ids.maj_amdec')
     def _compute_array_ids_html(self):
