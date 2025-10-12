@@ -228,7 +228,11 @@
                         <group string="Contrôle">
                             <group>
                                 <field name="date_ctrl" required="1"/>
-                                <field name="gamme_id" attrs="{'readonly': [('saisie_ids', '!=', [])]}" required="1" force_save="1"/>
+                                <field 
+                                    name="gamme_id" 
+                                    attrs="{'readonly': [('saisie_ids', '!=', [])]}" required="1" force_save="1"
+                                    domain="[('gamme_controle','=',1)]"
+                                />
                             </group>
                         </group>
                         <group string="Résultats" attrs="{'invisible': [('gamme_id', '=', False)]}">
@@ -402,6 +406,11 @@
                             </group>
                         </group>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
                 </form>
             </field>
         </record>

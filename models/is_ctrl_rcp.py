@@ -60,6 +60,81 @@ class IsCtrlRcpGammeControle(models.Model):
     tolerance_mini    = fields.Char(string="Tolérance mini")
     tolerance_maxi    = fields.Char(string="Tolérance maxi")
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for record in records:
+            if record.doc_gamme_id:
+                message = f"Nouveau contrôle ajouté : {record.intitule_controle}"
+                if record.tolerance_mini or record.tolerance_maxi:
+                    tolerances = []
+                    if record.tolerance_mini:
+                        tolerances.append(f"Mini: {record.tolerance_mini}")
+                    if record.tolerance_maxi:
+                        tolerances.append(f"Maxi: {record.tolerance_maxi}")
+                    message += f" ({', '.join(tolerances)})"
+                record.doc_gamme_id.message_post(body=message)
+        return records
+
+    def write(self, vals):
+        # Sauvegarder les anciennes valeurs pour comparaison
+        old_values = {}
+        for record in self:
+            old_values[record.id] = {
+                'intitule_controle': record.intitule_controle,
+                'tolerance_mini': record.tolerance_mini,
+                'tolerance_maxi': record.tolerance_maxi,
+            }
+        
+        result = super().write(vals)
+        
+        # Poster un message si des valeurs ont changé
+        for record in self:
+            if record.doc_gamme_id:
+                old_val = old_values[record.id]
+                messages = []
+                
+                # Vérifier l'intitulé du contrôle
+                if 'intitule_controle' in vals and old_val['intitule_controle'] != record.intitule_controle:
+                    messages.append(f"Intitulé modifié : '{old_val['intitule_controle']}' → '{record.intitule_controle}'")
+                
+                # Vérifier la tolérance mini
+                if 'tolerance_mini' in vals and old_val['tolerance_mini'] != record.tolerance_mini:
+                    old_mini = old_val['tolerance_mini'] or 'vide'
+                    new_mini = record.tolerance_mini or 'vide'
+                    messages.append(f"Tolérance mini modifiée : {old_mini} → {new_mini}")
+                
+                # Vérifier la tolérance maxi
+                if 'tolerance_maxi' in vals and old_val['tolerance_maxi'] != record.tolerance_maxi:
+                    old_maxi = old_val['tolerance_maxi'] or 'vide'
+                    new_maxi = record.tolerance_maxi or 'vide'
+                    messages.append(f"Tolérance maxi modifiée : {old_maxi} → {new_maxi}")
+                
+                if messages:
+                    full_message = f"Contrôle '{record.intitule_controle}' modifié :<br/>" + "<br/>".join([f"• {msg}" for msg in messages])
+                    record.doc_gamme_id.message_post(body=full_message)
+        
+        return result
+
+    def unlink(self):
+        # Sauvegarder les informations avant suppression
+        deleted_controls = []
+        for record in self:
+            if record.doc_gamme_id:
+                deleted_controls.append({
+                    'doc_gamme_id': record.doc_gamme_id,
+                    'intitule_controle': record.intitule_controle,
+                })
+        
+        result = super().unlink()
+        
+        # Poster un message après suppression
+        for control_info in deleted_controls:
+            message = f"Contrôle supprimé : {control_info['intitule_controle']}"
+            control_info['doc_gamme_id'].message_post(body=message)
+        
+        return result
+
 
 class IsCtrlRcpRapport(models.Model):
     _name = "is.ctrl.rcp.rapport"
@@ -158,7 +233,11 @@ class IsCtrlRcpRapport(models.Model):
             if codepg:
                 articles = self.env["is.dossier.article"].search([('code_pg', '=', codepg)], limit=1)
                 for article in  articles:
-                    gammes = self.env["is.doc.moule"].search([('dossier_article_id', '=', article.id)], limit=1)
+                    domain=[
+                        ('dossier_article_id', '=', article.id),
+                        ('gamme_controle', '=', True),
+                    ]
+                    gammes = self.env["is.doc.moule"].search(domain, limit=1)
                     for gamme in gammes:
                         obj.gamme_id = gamme.id
             #******************************************************************
@@ -255,7 +334,7 @@ class IsCtrlRcpSaisie(models.Model):
         copy=False
     )
     resultat_display = fields.Html(string="Résultat", compute="_compute_resultat_display", store=True)
-    mesure_ids   = fields.One2many("is.ctrl.rcp.saisie.mesure","saisie_id",string="Mesures")
+    mesure_ids   = fields.One2many("is.ctrl.rcp.saisie.mesure","saisie_id",string="Mesures", tracking=True)
     active       = fields.Boolean(string="Actif", default=True, tracking=True)
     dynacase_id  = fields.Integer(string="Id Dynacase", index=True, copy=False, tracking=True)
 
@@ -353,6 +432,44 @@ class IsCtrlRcpSaisieMesure(models.Model):
     )
     valeur_resultat_display = fields.Html(string="Résultat Ctrl", compute="_compute_valeur_resultat_display", store=True)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for record in records:
+            if record.saisie_id and record.valeur_mesuree:
+                message = f"Nouvelle mesure ajoutée : Mesure n°{record.num_mesure} = {record.valeur_mesuree}"
+                record.saisie_id.message_post(body=message)
+        return records
+
+    def write(self, vals):
+        # Sauvegarder les anciennes valeurs pour comparaison
+        old_values = {}
+        for record in self:
+            old_values[record.id] = {
+                'valeur_mesuree': record.valeur_mesuree,
+                'num_mesure': record.num_mesure,
+            }
+        
+        result = super().write(vals)
+        
+        # Poster un message si la valeur mesurée a changé
+        if 'valeur_mesuree' in vals:
+            for record in self:
+                old_val = old_values[record.id]['valeur_mesuree']
+                new_val = record.valeur_mesuree
+                if old_val != new_val and record.saisie_id:
+                    if old_val and new_val:
+                        message = f"Mesure n°{record.num_mesure} modifiée : {old_val} → {new_val}"
+                    elif not old_val and new_val:
+                        message = f"Mesure n°{record.num_mesure} saisie : {new_val}"
+                    elif old_val and not new_val:
+                        message = f"Mesure n°{record.num_mesure} supprimée (était : {old_val})"
+                    else:
+                        continue
+                    record.saisie_id.message_post(body=message)
+        
+        return result
+
 
     def str2float(self,val):
             try:
@@ -364,14 +481,17 @@ class IsCtrlRcpSaisieMesure(models.Model):
     @api.depends('valeur_mesuree', 'saisie_id.tolerance_mini', 'saisie_id.tolerance_maxi')
     def _compute_valeur_resultat(self):
         for record in self:
-            res=False
-            if (record.saisie_id.tolerance_mini or '').upper()=="OK":
+            res = False
+            # Si valeur_mesuree est vide, valeur_resultat reste vide
+            if not record.valeur_mesuree:
+                res = False
+            elif (record.saisie_id.tolerance_mini or '').upper()=="OK":
                 if (record.valeur_mesuree or '').upper()=="OK":
                     res='OK'
                 else:
                     res = 'nOK'
             else:
-                if record.valeur_mesuree  and  record.saisie_id.tolerance_mini and  record.saisie_id.tolerance_maxi:
+                if record.valeur_mesuree and record.saisie_id.tolerance_mini and record.saisie_id.tolerance_maxi:
                     valeur = self.str2float(record.valeur_mesuree)
                     mini   = self.str2float(record.saisie_id.tolerance_mini)
                     maxi   = self.str2float(record.saisie_id.tolerance_maxi)

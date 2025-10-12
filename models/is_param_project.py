@@ -159,7 +159,11 @@ class IsParamProject(models.Model):
     array_ids           = fields.One2many('is.param.project.array', 'param_project_id')
     array_html          = fields.Html(string="Gestion des J", compute='_compute_array_html',store=True, readonly=True, tracking=True)
     plan_piece          = fields.Boolean("Afficher les champs de la famille 'Plan Pièce'", default=False, tracking=True)
+    gamme_controle      = fields.Boolean("Afficher les champs de la famille 'Gamme de contrôle'", default=False, tracking=True)
     active              = fields.Boolean('Actif', default=True, tracking=True)
+
+
+
 
 
     @api.depends('array_ids','array_ids.ppr_irv','array_ids.ppr_bloquant')

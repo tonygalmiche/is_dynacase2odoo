@@ -127,6 +127,29 @@
                                 </div>
                             </group>
                         </group>
+
+
+                        <group string="Contrôles" attrs="{'invisible': [('gamme_controle', '!=', True)]}">
+                            <field name="gamme_controle" invisible="1"/>
+                            <field name="controle_ids" context="{'default_doc_gamme_id': active_id}" nolabel="1" colspan="2">
+                                <tree editable="bottom">
+                                    <field name="intitule_controle"/>
+                                    <field name="tolerance_mini"/>
+                                    <field name="tolerance_maxi"/>
+                                </tree>
+                                <form string="Contrôle">
+                                    <group>
+                                        <field name="intitule_controle"/>
+                                        <field name="tolerance_mini"/>
+                                        <field name="tolerance_maxi"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </group>
+
+
+
+
                         <notebook>
                             <page string="Réponse à la demande">
                                 <field name="array_ids_ro" invisible="1"/>

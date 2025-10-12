@@ -26,6 +26,7 @@ class IsDocMoule(models.Model):
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description = "Document moule"
     #_rec_name    = "param_project_id"
+    _rec_names_search = ['param_project_id', 'dossier_article_id.code_pg', 'moule_dossierf']
     _order = 'section_id,sequence,section_id,param_project_id'
 
 
@@ -165,6 +166,7 @@ class IsDocMoule(models.Model):
 
     #** Ajout du 08/03/2025 => Famille 'Plan pièce'
     plan_piece       = fields.Boolean(related="param_project_id.plan_piece")
+    gamme_controle   = fields.Boolean(related="param_project_id.gamme_controle")
     pp_revue_plan    = fields.Selection(_OK_NOK, string="Revue de plan"          , tracking=True)
     pp_equipe_projet = fields.Selection(_OK_NOK, string="Diffusion équipe projet", tracking=True)
     pp_maj_odoo      = fields.Selection(_OK_NOK, string="Mise à jour Article / Nomenclature", tracking=True)
@@ -342,12 +344,6 @@ class IsDocMoule(models.Model):
                 if obj.etat=='D' and obj.fin_derogation and obj.fin_derogation>=now:
                     color='Orange'
             obj.color = color
-
-
-
-            print('color=',color)
-
-
 
 
     @api.depends('etat','array_ids.annex','array_ids.comment')
