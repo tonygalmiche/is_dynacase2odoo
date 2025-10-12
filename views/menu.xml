@@ -549,14 +549,12 @@
             <field name="sequence">70</field>
             <field name="parent_id" eval="ref('is_dynacase2odoo.gestion_qualite_menu')"/>
         </record>
-
-        <!-- <record id="is_ctrl_rcp_gamme_menu" model="ir.ui.menu">
-            <field name="name">Gamme Contrôle Réception</field>
+        <record id="is_ctrl_rcp_gamme_menu" model="ir.ui.menu">
+            <field name="name">Gamme de controle réception</field>
             <field name="sequence">10</field>
             <field name="parent_id" eval="ref('is_dynacase2odoo.is_ctrl_rcp_menu')"/>
             <field name="action" ref="is_ctrl_rcp_gamme_action"/>
         </record>
- -->
         <record id="is_ctrl_rcp_rapport_menu" model="ir.ui.menu">
             <field name="name">Rapports RCP</field>
             <field name="sequence">20</field>
