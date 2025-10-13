@@ -155,39 +155,11 @@
                         <notebook>
                             <page string="Réponse à la demande">
                                 <field name="array_ids_ro" invisible="1"/>
-                                <!-- Le 23/06/2025 : Quand array_ids est en lecture lecture seule, je n'ai pas 
-                                    trouvé de solution pour ne pas afficher la vue formulaire en cliqant sur une ligne du tree
-                                    J'ai éssayé pendant 1 jour de créer un widget sans succès
-                                    J'ai éssayé de dupliquer le champ comme ci-dessous, mais il y a un bug d'affichage dans ce cas
-                                    Pourtant 'no_open="1"' fonctionne, mais il bug qaund il est couplé avec editable="bottom"
-                                    La seule solution qu'il me reste est de créer un champ HTML pour remplacer le tree 
-                                    quand array_ids est en lecure seule
-                                 -->
-                                <!-- 
-                                 <group string="RW" attrs="{'invisible': ['|',('array_ids_ro','=',True),('ppr_type_demande', 'not in', ['PJ', 'PJ_TEXTE', 'PJ_DATE'] )]}">
-                                    <field name="array_ids" nolabel="1" colspan="2">
-                                        <tree editable="bottom">
-                                            <field name="annex" widget="many2many_binary"/>
-                                        </tree>
-                                    </field>
-                                </group>
-                                <group string="RO"  attrs="{'invisible': ['|',('array_ids_ro','=',False),('ppr_type_demande', 'not in', ['PJ', 'PJ_TEXTE', 'PJ_DATE'] )]}">
-                                    <field name="array_ids" nolabel="1" colspan="2" readonly="1">
-                                        <tree no_open="1">
-                                            <field name="annex_pdf" widget="many2many_binary"/>
-                                            <field name="annex"     widget="many2many_binary"/>
-                                        </tree>
-                                    </field>
-                                    <field name="rsp_pj"    attrs="{'invisible': [('rsp_pj', '=', False)]}"/>
-                                </group>
-                                -->
                                 <group>
                                     <field 
                                         name="array_ids_html" nolabel="1"  colspan="2"
                                         attrs="{'invisible': ['|',('array_ids_ro', '=', False),('ppr_type_demande', 'not in', ['PJ', 'PJ_TEXTE', 'PJ_DATE'] )]}"
                                     />
-
-                                    <!-- widget="one2many_no_click"  -->
                                     <field 
                                         name="array_ids" nolabel="1" colspan="2" 
                                         attrs="{'invisible': ['|',('array_ids_ro', '=', True),('ppr_type_demande', 'not in', ['PJ', 'PJ_TEXTE', 'PJ_DATE'] )]}"
@@ -208,10 +180,10 @@
                                         type="object" class="btn btn-info" colspan="2"
                                         attrs="{'invisible': [('recopie_reponse_vsb', '=', False)]}"
                                     />
-                                    <field name="rsp_pj"    attrs="{'invisible': [('rsp_pj', '=', False)]}"/>
+                                    <field name="rsp_pj"    attrs="{'invisible': [('rsp_pj', 'in', [False,''])]}"/>
                                     <field name="rsp_date"  attrs="{'invisible': [('ppr_type_demande', 'not in', ['DATE', 'PJ_DATE'])]}"/>
                                     <field name="rsp_texte" attrs="{'invisible': [('ppr_type_demande', 'not in', ['TEXTE','PJ_TEXTE'])]}"/>
-                                    <field name="rsp_auto"  attrs="{'invisible': [('rsp_auto', '=', False)]}"/>
+                                    <field name="rsp_auto"  attrs="{'invisible': [('rsp_auto', '=', False)]}" nolabel="1" colspan="2"/>
                                 </group>
                             </page>
                             <page string="Autres informations">

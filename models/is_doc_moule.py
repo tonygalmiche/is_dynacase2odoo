@@ -202,79 +202,147 @@ class IsDocMoule(models.Model):
     droit_equipe_projet = fields.Boolean(related="param_project_id.droit_equipe_projet")
 
 
+    def actualisation_famille_automatique_action(self):
+        nb=len(self)
+        ct=1
+        for obj in self:
+            if obj.ppr_type_demande=='AUTO':
+                html_head = """
+                    <table class="table table-sm">
+                        <tbody>
+                """
+                html_foot = "</tbody></table>"
+                rsp_auto=False
+                if obj.param_project_id.ppr_famille=="Fiche technique matière":
+                    if obj.idmoule:
+                        #** Recherche des articles liés au moule **************
+                        for line in obj.idmoule.article_ids:
+                            code_pg = line.article_id.code_pg or ''
+                            if code_pg[0:2]=='50':
+                                domain=[
+                                    ('ppr_famille'  ,'=', 'Caractéristiques technique'),
+                                    ('type_document','=', 'Article'),
+                                ]
+                                familles=self.env['is.param.project'].search(domain,limit=1)
+                                for famille in familles:
+                                    domain=[
+                                        ('etat','=','F'),
+                                        ('param_project_id'  ,'=',famille.id),
+                                        ('dossier_article_id','=',line.article_id.id),
+                                    ]
+                                    docs=self.env['is.doc.moule'].search(domain,order='j_prevue desc',limit=1)
+                                    for doc in docs:
+                                        rsp_auto = doc.rsp_pj
+
+                dao = obj.idmoule.dossier_appel_offre_id or obj.dossierf_id.dossier_appel_offre_id
+                if dao:
+                    if obj.param_project_id.ppr_famille=="Dossier commercial":
+                        #rsp_auto=obj.get_pj(dao.dao_offre_validee)
+                        if len(dao.dao_offre_validee)>0:
+                            res = self.render_attachments(dao.dao_offre_validee)
+                            rsp_auto="%s<tr><td>%s</td></tr>%s"%(html_head,res,html_foot)
+                    if obj.param_project_id.ppr_famille=="Commande client":
+                        #rsp_auto=obj.get_pj(dao.dao_commande_client)
+                        if len(dao.dao_commande_client)>0:
+                            res = self.render_attachments(dao.dao_commande_client)
+                            rsp_auto="%s<tr><td>%s</td></tr>%s"%(html_head,res,html_foot)
+                    if obj.param_project_id.ppr_famille=="Lettre de nomination et contrats":
+                        #rsp_auto=obj.get_pj(dao.dao_lettre_nomination)
+                        if len(dao.dao_lettre_nomination)>0:
+                            res = self.render_attachments(dao.dao_lettre_nomination)
+                            rsp_auto="%s<tr><td>%s</td></tr>%s"%(html_head,res,html_foot)
+                rc = obj.idmoule.revue_contrat_id or obj.dossierf_id.revue_contrat_id
+                if rc:
+                    if obj.param_project_id.ppr_famille=="Engagement de faisabilité":
+                        #rsp_auto=obj.get_pj(rc.rc_df_engagement_faisabilite)
+                        if len(rc.rc_df_engagement_faisabilite)>0:
+                            res = self.render_attachments(rc.rc_df_engagement_faisabilite)
+                            rsp_auto="%s<tr><td>%s</td></tr>%s"%(html_head,res,html_foot)
+
+                    if obj.param_project_id.ppr_famille=="Fiche capacitaire":
+                        #rsp_auto=obj.get_pj(rc.rc_df_fiche_capacitaire)
+                        if len(rc.rc_df_fiche_capacitaire)>0:
+                            res = self.render_attachments(rc.rc_df_fiche_capacitaire)
+                            rsp_auto="%s<tr><td>%s</td></tr>%s"%(html_head,res,html_foot)
+                if obj.param_project_id.ppr_famille=="Obtenir la Commande client":
+                    if obj.dossier_modif_variante_id:
+                        rsp_auto = obj.dossier_modif_variante_id.demao_numcmd
+                if rsp_auto:
+                    obj.etat='F'
+                obj.rsp_auto = rsp_auto
+                _logger.info("actualisation_famille_automatique_action : %s/%s : %s"%(ct,nb,obj.param_project_id.ppr_famille))
+            ct+=1
+        return []
 
 
 
-
-
-
-
-
+    def render_attachments(self,attachments):
+        res = ''
+        for att in attachments:
+            mimetype = att.mimetype or ""
+            ext = (att.name or "").split(".")[-1].lower() if att.name and "." in att.name else ""
+            url = f"/web/content/{att.id}?download=true"
+            name = html.escape(att.name or "")
+            res += f"""
+                <div class="o_attachment o_attachment_many2many" title="{name}">
+                <div class="o_attachment_wrap">
+                    <div class="o_image_box float-start" data-tooltip="Download {name}">
+                    <a aria-label="Download" download="" href="{url}">
+                        <span class="o_image o_hover" role="img" data-mimetype="{mimetype}" data-ext="{ext}"></span>
+                    </a>
+                    </div>
+                    <div class="caption">
+                    <a class="ml4" download="" data-tooltip="Download {name}" href="{url}">{name}</a>
+                    </div>
+                    <div class="caption small">
+                    <a class="ml4 small text-uppercase" href="{url}"><b>{ext}</b></a>
+                    </div>
+                    <div class="o_attachment_uploaded">
+                    <i class="text-success fa fa-check" role="img" aria-label="Uploaded" title="Téléchargé"></i>
+                    </div>
+                </div>
+                </div>
+            """
+        return res or ""
 
 
     @api.depends('array_ids', 'array_ids.annex_pdf', 'array_ids.annex', 'array_ids.comment', 'array_ids.demandmodif', 'array_ids.maj_amdec')
     def _compute_array_ids_html(self):
         for rec in self:
-            html_out = """
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
-            """
-            if rec.ppr_transformation_pdf:
-                html_out+="<th>Fichiers PDF</th>"
-            html_out+=""""
-                        <th>Fichiers</th>
-                        <th>Commentaire</th>
-                    </tr>
-                </thead>
-                <tbody>
-            """
-            for line in rec.array_ids:
-                def render_attachments(attachments):
-                    res = ''
-                    for att in attachments:
-                        mimetype = att.mimetype or ""
-                        ext = (att.name or "").split(".")[-1].lower() if att.name and "." in att.name else ""
-                        url = f"/web/content/{att.id}?download=true"
-                        name = html.escape(att.name or "")
-                        res += f"""
-<div class="o_attachment o_attachment_many2many" title="{name}">
-  <div class="o_attachment_wrap">
-    <div class="o_image_box float-start" data-tooltip="Download {name}">
-      <a aria-label="Download" download="" href="{url}">
-        <span class="o_image o_hover" role="img" data-mimetype="{mimetype}" data-ext="{ext}"></span>
-      </a>
-    </div>
-    <div class="caption">
-      <a class="ml4" download="" data-tooltip="Download {name}" href="{url}">{name}</a>
-    </div>
-    <div class="caption small">
-      <a class="ml4 small text-uppercase" href="{url}"><b>{ext}</b></a>
-    </div>
-    <div class="o_attachment_uploaded">
-      <i class="text-success fa fa-check" role="img" aria-label="Uploaded" title="Téléchargé"></i>
-    </div>
-  </div>
-</div>
-                        """
-                    return res or ""
-                
-                if rec.ppr_transformation_pdf:
-                    annex_pdf_html = render_attachments(line.annex_pdf)
-                annex_html = render_attachments(line.annex)
-                #demandmodif = html.escape(str(line.demandmodif) if line.demandmodif else "")
-                #maj_amdec = html.escape(str(line.maj_amdec) if line.maj_amdec else "")
-                comment = html.escape(line.comment or "")
-
-                html_out += "<tr>"    
-                if rec.ppr_transformation_pdf:
-                    html_out += f"<td>{annex_pdf_html}</td>"
-                html_out += f"""
-                        <td>{annex_html}</td>
-                        <td>{comment}</td>
-                    </tr>
+            html_out=None
+            if len(rec.array_ids)>0:
+                html_out = """
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
                 """
-            html_out += "</tbody></table>"
+                if rec.ppr_transformation_pdf:
+                    html_out+="<th>Fichiers PDF</th>"
+                html_out+="""
+                            <th>Fichiers</th>
+                            <th>Commentaire</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                """
+                for line in rec.array_ids:
+                    if rec.ppr_transformation_pdf:
+                        annex_pdf_html = self.render_attachments(line.annex_pdf)
+                    annex_html = self.render_attachments(line.annex)
+                    comment = html.escape(line.comment or "")
+
+                    html_out += "<tr>"    
+                    if rec.ppr_transformation_pdf:
+                        html_out += f"<td>{annex_pdf_html}</td>"
+                    html_out += f"""
+                            <td>{annex_html}</td>
+                            <td>{comment}</td>
+                        </tr>
+                    """
+                html_out += "</tbody></table>"
+
+            #html_out="toto et tutu"
+
             rec.array_ids_html = html_out
 
 
@@ -707,57 +775,6 @@ class IsDocMoule(models.Model):
                 res='<br>'.join(res)
         return res
 
-
-    def actualisation_famille_automatique_action(self):
-        nb=len(self)
-        ct=1
-        for obj in self:
-            if obj.ppr_type_demande=='AUTO':
-                rsp_auto=False
-                if obj.param_project_id.ppr_famille=="Fiche technique matière":
-                    if obj.idmoule:
-                        #** Recherche des articles liés au moule **************
-                        for line in obj.idmoule.article_ids:
-                            code_pg = line.article_id.code_pg or ''
-                            if code_pg[0:2]=='50':
-                                domain=[
-                                    ('ppr_famille'  ,'=', 'Caractéristiques technique'),
-                                    ('type_document','=', 'Article'),
-                                ]
-                                familles=self.env['is.param.project'].search(domain,limit=1)
-                                for famille in familles:
-                                    domain=[
-                                        ('etat','=','F'),
-                                        ('param_project_id'  ,'=',famille.id),
-                                        ('dossier_article_id','=',line.article_id.id),
-                                    ]
-                                    docs=self.env['is.doc.moule'].search(domain,order='j_prevue desc',limit=1)
-                                    for doc in docs:
-                                        rsp_auto = doc.rsp_pj
-
-                dao = obj.idmoule.dossier_appel_offre_id or obj.dossierf_id.dossier_appel_offre_id
-                if dao:
-                    if obj.param_project_id.ppr_famille=="Dossier commercial":
-                        rsp_auto=obj.get_pj(dao.dao_offre_validee)
-                    if obj.param_project_id.ppr_famille=="Commande client":
-                        rsp_auto=obj.get_pj(dao.dao_commande_client)
-                    if obj.param_project_id.ppr_famille=="Lettre de nomination et contrats":
-                        rsp_auto=obj.get_pj(dao.dao_lettre_nomination)
-                rc = obj.idmoule.revue_contrat_id or obj.dossierf_id.revue_contrat_id
-                if rc:
-                    if obj.param_project_id.ppr_famille=="Engagement de faisabilité":
-                        rsp_auto=obj.get_pj(rc.rc_df_engagement_faisabilite)
-                    if obj.param_project_id.ppr_famille=="Fiche capacitaire":
-                        rsp_auto=obj.get_pj(rc.rc_df_fiche_capacitaire)
-                if obj.param_project_id.ppr_famille=="Obtenir la Commande client":
-                    if obj.dossier_modif_variante_id:
-                        rsp_auto = obj.dossier_modif_variante_id.demao_numcmd
-                if rsp_auto:
-                    obj.etat='F'
-                obj.rsp_auto = rsp_auto
-                _logger.info("actualisation_famille_automatique_action : %s/%s : %s : rsp_auto=%s"%(ct,nb,obj.param_project_id.ppr_famille,rsp_auto))
-            ct+=1
-        return []
 
 
     def recopie_reponse_action(self):
