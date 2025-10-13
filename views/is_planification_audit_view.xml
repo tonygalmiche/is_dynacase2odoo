@@ -22,13 +22,26 @@
                         <field name="active" invisible="1"/>
 
                         <group>
-                            <group name="fr_identification" string="Identification">
+                            <group string="Description de l'audit">
                                 <field name="numero" readonly="1"/>
-                                <field name="emetteur_id" required="1"/>
-                                <field name="site_id" required="1"/>
+                                <field name="emetteur_id"    required="1"/>
+                                <field name="site_id"        required="1"/>
                                 <field name="responsable_id" required="1"/>
-                                <field name="type_audit" required="1"/>
-                                <field name="jour_nuit"/>
+                                <field name="type_audit"     required="1"/>
+                                <field name="jour_nuit"      required="1"/>
+                                <field name="date_prev"/>
+                                <field name="mois_prev" invisible="1"/>
+                            </group>
+                            <group string="Réalisation de l'audit">
+                                <field name="date_realise"/>
+                                <field name="mois_realise" invisible="1"/>
+                                <field name="auditeur1_id"/>
+                                <field name="auditeur2_id"/>
+                                <field name="auditeur2_externe"/>
+                                <field name="commentaire"/>
+                            </group>
+
+                            <group string="Périmètre de l'audit">
                                 <field name="moule_id"/>
                                 <field name="dossierf_id"/>
                                 <field name="article_id"  domain="[('database_id','=',site_id)]"/>
@@ -38,28 +51,24 @@
                                 <field name="fournisseur_id"/>
                                 <field name="demandeur_id"/>
                             </group>
-
-                            <group name="fr_description" string="Description">
-                                <field name="date_prev"/>
-                                <field name="mois_prev"/>
-                                <field name="date_realise"/>
-                                <field name="mois_realise"/>
-                                <field name="auditeur1_id"/>
-                                <field name="auditeur2_id"/>
-                            </group>
-
-                            <group name="fr_resultat" string="Résultat">
+                            <group string="Résultat">
                                 <field name="nb_crit_conformes"/>
                                 <field name="nb_crit_audites"/>
                                 <field name="pourcent_conform"/>
                                 <field name="note"/>
+                            </group>
+                            <group string="Plan d'actions">
                                 <field name="plan_actions_id"/>
+                                <field name="plan_actions_intitule"/>
                                 <field name="etat_plan_actions"/>
+                            </group>
+                            <group string="Cloture de l'audit">
                                 <field name="replan_calculee"/>
                                 <field name="replan_saisie"/>
+                                <field name="date_cloture"/>
                             </group>
                         </group>
-                        <group name="fr_piece_jointe" string="Pièces jointes">
+                        <group string="Pièces jointes">
                             <field name="piece_jointe_ids" widget="many2many_binary"/>
                         </group>
                     </sheet>
@@ -97,14 +106,18 @@
                     <field name="mois_realise"      optional="hide"/>
                     <field name="auditeur1_id"      optional="hide" widget="many2one_clickable"/>
                     <field name="auditeur2_id"      optional="hide" widget="many2one_clickable"/>
+                    <field name="auditeur2_externe" optional="hide"/>
+                    <field name="commentaire"       optional="hide"/>
                     <field name="nb_crit_conformes" optional="hide"/>
                     <field name="nb_crit_audites"   optional="hide"/>
                     <field name="pourcent_conform"  optional="hide"/>
                     <field name="note"              optional="hide"/>
                     <field name="plan_actions_id"   optional="hide" widget="many2one_clickable"/>
+                    <field name="plan_actions_intitule" optional="hide"/>
                     <field name="etat_plan_actions" optional="hide"/>
                     <field name="replan_calculee"   optional="hide"/>
                     <field name="replan_saisie"     optional="hide"/>
+                    <field name="date_cloture"      optional="hide"/>
                     <field name="piece_jointe_ids"  optional="hide" widget="many2many_binary"/>
                     <field name="create_date"       optional="hide" string="Créé le"/>
                     <field name="create_uid"        optional="hide" string="Créé par"/>
@@ -133,6 +146,9 @@
                     <field name="article_id"/>
                     <field name="client_id"/>
                     <field name="fournisseur_id"/>
+                    <field name="auditeur1_id"/>
+                    <field name="auditeur2_id"/>
+                    <field name="auditeur2_externe"/>
                 </search>
             </field>
         </record>

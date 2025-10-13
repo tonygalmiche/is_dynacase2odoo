@@ -458,7 +458,7 @@ class IsDocMoule(models.Model):
             acces=False
             if self.env.user.has_group('is_plastigray16.is_chef_projet_group'):
                 acces=True
-            if self.param_project_id.droit_equipe_projet==True:
+            if obj.param_project_id.droit_equipe_projet==True:
                 acces=True
             obj.acces_chef_projet = acces
 
