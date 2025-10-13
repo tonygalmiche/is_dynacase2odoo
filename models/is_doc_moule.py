@@ -255,6 +255,9 @@ class IsDocMoule(models.Model):
                 if rc:
                     if obj.param_project_id.ppr_famille=="Engagement de faisabilité":
                         #rsp_auto=obj.get_pj(rc.rc_df_engagement_faisabilite)
+
+                        print(obj,rc,rc.rc_df_engagement_faisabilite)
+
                         if len(rc.rc_df_engagement_faisabilite)>0:
                             res = self.render_attachments(rc.rc_df_engagement_faisabilite)
                             rsp_auto="%s<tr><td>%s</td></tr>%s"%(html_head,res,html_foot)
@@ -270,6 +273,8 @@ class IsDocMoule(models.Model):
                 if rsp_auto:
                     obj.etat='F'
                 obj.rsp_auto = rsp_auto
+                if rsp_auto:
+                    obj.rsp_pj = False
                 _logger.info("actualisation_famille_automatique_action : %s/%s : %s"%(ct,nb,obj.param_project_id.ppr_famille))
             ct+=1
         return []
