@@ -569,6 +569,14 @@
             <field name="action" ref="is_ctrl_rcp_saisie_action"/>
         </record>
 
+        <!-- Gestion de la qualité / Relevé dimensionnel -->
+        <record id="is_releve_dimensionnel_menu" model="ir.ui.menu">
+            <field name="name">Relevés dimensionnels</field>
+            <field name="sequence">40</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_ctrl_rcp_menu')"/>
+            <field name="action" ref="is_releve_dimensionnel_action"/>
+        </record>
+
 
 
 

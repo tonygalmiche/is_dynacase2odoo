@@ -237,15 +237,42 @@ class IsReclamationFournisseur(models.Model):
 
 
 
+    def _validate_nature_reclamation(self, vals=None):
+        """Valide qu'exactement une des trois natures est cochée"""
+        if vals is None:
+            vals = {}
+        
+        # Récupère les valeurs actuelles ou celles à modifier
+        nature_qualite = vals.get('nature_qualite', getattr(self, 'nature_qualite', False))
+        nature_logistique = vals.get('nature_logistique', getattr(self, 'nature_logistique', False))
+        nature_administratif = vals.get('nature_administratif', getattr(self, 'nature_administratif', False))
+        
+        # Compte le nombre de cases cochées
+        nb_coches = sum([nature_qualite, nature_logistique, nature_administratif])
+        
+        if nb_coches == 0:
+            raise models.ValidationError("Il est obligatoire de cocher au moins une nature de réclamation (Qualité, Logistique ou Administratif).")
+        elif nb_coches > 1:
+            raise models.ValidationError("Il est interdit de cocher plus d'une nature de réclamation. Veuillez sélectionner uniquement Qualité, Logistique ou Administratif.")
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            # Validation de la nature de réclamation
+            self._validate_nature_reclamation(vals)
+            
             lines=self.env['is.reclamation.fournisseur'].search([],order='num_reclamation desc', limit=1)
             num_reclamation=1
             for line in lines:
                 num_reclamation = line.num_reclamation + 1
             vals['num_reclamation'] = num_reclamation
         return super().create(vals_list)
+
+    def write(self, vals):
+        # Validation de la nature de réclamation pour chaque enregistrement
+        for record in self:
+            record._validate_nature_reclamation(vals)
+        return super().write(vals)
 
 
     @api.onchange('reception_id')

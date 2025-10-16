@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- is.releve.dimensionnel -->
+        <record model="ir.ui.view" id="is_releve_dimensionnel_form_view">
+            <field name="name">is_releve_dimensionnel_form_view</field>
+            <field name="model">is.releve.dimensionnel</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Relevé dimensionnel">
+                    <header>
+                        <field name="dynacase_id" invisible="1"/>
+                        <button 
+                            string="Dynacase" name="lien_vers_dynacase_action"
+                            type="object" class="btn btn-info"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                            groups="base.group_system"
+                        />
+                    </header>
+                    <sheet>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active" invisible="1"/>
+                        <group>
+                            <group string="Identification">
+                                <field name="numreleve" required="1"/>
+                                <field name="moule"/>
+                                <field name="createur"/>
+                            </group>
+                            <group string="Relevés">
+                                <field name="minimum"/>
+                                <field name="maximum"/>
+                            </group>
+                        </group>
+                        <group string="Données">
+                            <field name="saisir"/>
+                        </group>
+                        <group string="Saisies de relevés">
+                            <field name="saisie_ids" nolabel="1" colspan="2">
+                                <tree editable="bottom">
+                                    <button name="%(is_releve_dimensionnel_saisie_action)d" 
+                                            type="action" 
+                                            icon="fa-search-plus" 
+                                            title="Voir le détail de la saisie"
+                                            context="{'default_releve_id': parent.id, 'form_view_ref': 'is_dynacase2odoo.is_releve_dimensionnel_saisie_form_view'}"/>
+                                    <field name="numsaisie"/>
+                                    <field name="datesaisie"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_releve_dimensionnel_tree_view">
+            <field name="name">is_releve_dimensionnel_tree_view</field>
+            <field name="model">is.releve.dimensionnel</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="numreleve" optional="show"/>
+                    <field name="moule" optional="show"/>
+                    <field name="createur" optional="show"/>
+                    <field name="minimum" optional="show"/>
+                    <field name="maximum" optional="show"/>
+                    <field name="saisir" optional="hide"/>
+                    <field name="create_date" optional="hide"/>
+                    <field name="create_uid" optional="hide"/>
+                    <field name="write_date" optional="hide"/>
+                    <field name="write_uid" optional="hide"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_releve_dimensionnel_search">
+            <field name="name">is_releve_dimensionnel_search</field>
+            <field name="model">is.releve.dimensionnel</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="numreleve"/>
+                    <field name="moule"/>
+                    <field name="createur"/>
+                    <filter string="Archivé" name="archived" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Regrouper par">
+                        <filter string="Moule" name="group_moule" context="{'group_by': 'moule'}"/>
+                        <filter string="Créateur" name="group_createur" context="{'group_by': 'createur'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_releve_dimensionnel_action">
+            <field name="name">Relevés dimensionnels</field>
+            <field name="res_model">is.releve.dimensionnel</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Créer un nouveau relevé dimensionnel
+                </p>
+                <p>
+                    Les relevés dimensionnels permettent d'enregistrer les mesures 
+                    et contrôles effectués sur les moules et pièces.
+                </p>
+            </field>
+        </record>
+
+
+        <!-- is.releve.dimensionnel.saisie -->
+        <record model="ir.ui.view" id="is_releve_dimensionnel_saisie_tree_view">
+            <field name="name">is_releve_dimensionnel_saisie_tree_view</field>
+            <field name="model">is.releve.dimensionnel.saisie</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="releve_id"/>
+                    <field name="numsaisie"/>
+                    <field name="datesaisie"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_releve_dimensionnel_saisie_form_view">
+            <field name="name">is_releve_dimensionnel_saisie_form_view</field>
+            <field name="model">is.releve.dimensionnel.saisie</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Saisie de relevé dimensionnel">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="releve_id"/>
+                                <field name="numsaisie"/>
+                                <field name="datesaisie"/>
+                            </group>
+                        </group>
+                        <group string="Lignes de saisies">
+                            <field name="ligne_ids" nolabel="1" colspan="2">
+                                <tree editable="bottom">
+                                    <field name="numof"/>
+                                    <field name="numcolis"/>
+                                    <field name="visa"/>
+                                    <field name="releve"/>
+                                    <field name="resultat"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_releve_dimensionnel_saisie_action">
+            <field name="name">Saisies de relevés dimensionnels</field>
+            <field name="res_model">is.releve.dimensionnel.saisie</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+        </record>
+    </data>
+</odoo>
