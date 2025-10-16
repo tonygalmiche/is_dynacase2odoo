@@ -45,6 +45,19 @@ class IsReleveDimensionnelSaisie(models.Model):
     ligne_ids    = fields.One2many("is.releve.dimensionnel.saisie.ligne", "saisie_id", string="Lignes de saisies")
 
 
+
+    def voir_saisie_action(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Saisie',
+            'res_model': 'is.releve.dimensionnel.saisie',
+            'res_id': self.id,
+            'view_mode': 'form',
+        }
+
+
+
+
 class IsReleveDimensionnelSaisieLigne(models.Model):
     _name        = "is.releve.dimensionnel.saisie.ligne"
     _description = "Ligne de saisie de relevé dimensionnel"

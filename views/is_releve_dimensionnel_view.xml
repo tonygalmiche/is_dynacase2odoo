@@ -83,14 +83,11 @@
                                 <field name="maximum"/>
                             </group>
                         </group>
-                        <group string="Données">
-                            <field name="saisir"/>
-                        </group>
                         <group string="Saisies de relevés">
                             <field name="saisie_ids" nolabel="1" colspan="2">
                                 <tree editable="bottom">
-                                    <button name="%(is_releve_dimensionnel_saisie_action)d" 
-                                            type="action" 
+                                    <button name="voir_saisie_action" 
+                                            type="object" 
                                             icon="fa-search-plus" 
                                             title="Voir le détail de la saisie"
                                             context="{'default_releve_id': parent.id, 'form_view_ref': 'is_dynacase2odoo.is_releve_dimensionnel_saisie_form_view'}"/>
@@ -114,7 +111,6 @@
                     <field name="createur" optional="show"/>
                     <field name="minimum" optional="show"/>
                     <field name="maximum" optional="show"/>
-                    <field name="saisir" optional="hide"/>
                     <field name="create_date" optional="hide"/>
                     <field name="create_uid" optional="hide"/>
                     <field name="write_date" optional="hide"/>
