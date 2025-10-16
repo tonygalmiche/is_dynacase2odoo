@@ -1,6 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+
+
+        <!-- is.releve.dimensionnel.saisie -->
+        <record model="ir.ui.view" id="is_releve_dimensionnel_saisie_tree_view">
+            <field name="name">is_releve_dimensionnel_saisie_tree_view</field>
+            <field name="model">is.releve.dimensionnel.saisie</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="releve_id"/>
+                    <field name="numsaisie"/>
+                    <field name="datesaisie"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_releve_dimensionnel_saisie_form_view">
+            <field name="name">is_releve_dimensionnel_saisie_form_view</field>
+            <field name="model">is.releve.dimensionnel.saisie</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Saisie de relevé dimensionnel">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="releve_id"/>
+                                <field name="numsaisie"/>
+                                <field name="datesaisie"/>
+                            </group>
+                        </group>
+                        <group string="Lignes de saisies">
+                            <field name="ligne_ids" nolabel="1" colspan="2">
+                                <tree editable="bottom">
+                                    <field name="numof"/>
+                                    <field name="numcolis"/>
+                                    <field name="visa"/>
+                                    <field name="releve"/>
+                                    <field name="resultat"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_releve_dimensionnel_saisie_action">
+            <field name="name">Saisies de relevés dimensionnels</field>
+            <field name="res_model">is.releve.dimensionnel.saisie</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+        </record>
+
+
         <!-- is.releve.dimensionnel -->
         <record model="ir.ui.view" id="is_releve_dimensionnel_form_view">
             <field name="name">is_releve_dimensionnel_form_view</field>
@@ -109,53 +161,5 @@
         </record>
 
 
-        <!-- is.releve.dimensionnel.saisie -->
-        <record model="ir.ui.view" id="is_releve_dimensionnel_saisie_tree_view">
-            <field name="name">is_releve_dimensionnel_saisie_tree_view</field>
-            <field name="model">is.releve.dimensionnel.saisie</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree>
-                    <field name="releve_id"/>
-                    <field name="numsaisie"/>
-                    <field name="datesaisie"/>
-                </tree>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="is_releve_dimensionnel_saisie_form_view">
-            <field name="name">is_releve_dimensionnel_saisie_form_view</field>
-            <field name="model">is.releve.dimensionnel.saisie</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Saisie de relevé dimensionnel">
-                    <sheet>
-                        <group>
-                            <group>
-                                <field name="releve_id"/>
-                                <field name="numsaisie"/>
-                                <field name="datesaisie"/>
-                            </group>
-                        </group>
-                        <group string="Lignes de saisies">
-                            <field name="ligne_ids" nolabel="1" colspan="2">
-                                <tree editable="bottom">
-                                    <field name="numof"/>
-                                    <field name="numcolis"/>
-                                    <field name="visa"/>
-                                    <field name="releve"/>
-                                    <field name="resultat"/>
-                                </tree>
-                            </field>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-        <record model="ir.actions.act_window" id="is_releve_dimensionnel_saisie_action">
-            <field name="name">Saisies de relevés dimensionnels</field>
-            <field name="res_model">is.releve.dimensionnel.saisie</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{}</field>
-        </record>
     </data>
 </odoo>
