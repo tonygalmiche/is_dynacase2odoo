@@ -137,3 +137,9 @@ access_is_releve_dimensionnel_saisie,access_is_releve_dimensionnel_saisie,model_
 access_is_releve_dimensionnel_saisie_ligne,access_is_releve_dimensionnel_saisie_ligne,model_is_releve_dimensionnel_saisie_ligne,base.group_user,1,0,0,0
 
 access_is_res_users_partner,access_is_res_users_partner,model_is_res_users_partner,base.group_user,1,0,0,0
+
+access_is_prodstar_fp2art,access_is_prodstar_fp2art,model_is_prodstar_fp2art,base.group_user,1,1,1,1
+access_is_prodstar_fp2nomq,access_is_prodstar_fp2nomq,model_is_prodstar_fp2nomq,base.group_user,1,1,1,1
+access_is_prodstar_fp2game,access_is_prodstar_fp2game,model_is_prodstar_fp2game,base.group_user,1,1,1,1
+access_is_prodstar_fp2gamo,access_is_prodstar_fp2gamo,model_is_prodstar_fp2gamo,base.group_user,1,1,1,1
+access_is_prodstar_fp2sec,access_is_prodstar_fp2sec,model_is_prodstar_fp2sec,base.group_user,1,1,1,1

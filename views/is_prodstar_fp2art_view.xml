@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- is.prodstar.fp2art -->
+        <record id="is_prodstar_fp2art_tree_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fp2art.tree</field>
+            <field name="model">is.prodstar.fp2art</field>
+            <field name="arch" type="xml">
+                <tree string="Prodstar FP2ART" default_order="code_pg">
+                    <field name="soc"            optional="show"/>
+                    <field name="code_pg"        string="Code PG"/>
+                    <field name="designation"    string="Désignation"/>
+                    <field name="cat"            optional="show"/>
+                    <field name="fam"            optional="show"/>
+                    <field name="gest"           optional="show"/>
+                    <field name="moule"          optional="show"/>
+                    <field name="projet"         optional="show"/>
+                    <field name="ref_plan"       optional="hide"/>
+                    <field name="ind"            optional="hide"/>
+                    <field name="us"             optional="show"/>
+                    <field name="uc"             optional="show"/>
+                    <field name="uc_us"          optional="hide"/>
+                    <field name="designation_uc" optional="hide"/>
+                    <field name="um_uc"          optional="hide"/>
+                    <field name="sr"             optional="hide"/>
+                </tree>
+            </field>
+        </record>
+        <record id="is_prodstar_fp2art_form_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fp2art.form</field>
+            <field name="model">is.prodstar.fp2art</field>
+            <field name="arch" type="xml">
+                <form string="Prodstar FP2ART">
+                    <sheet>
+                        <group>
+                            <group string="Informations générales">
+                                <field name="soc"/>
+                                <field name="code_pg"/>
+                                <field name="designation"/>
+                                <field name="cat"/>
+                                <field name="fam"/>
+                                <field name="gest"/>
+                                <field name="moule"/>
+                                <field name="projet"/>
+                            </group>
+                            <group string="Spécifications techniques">
+                                <field name="ref_plan"/>
+                                <field name="ind"/>
+                                <field name="us"/>
+                                <field name="uc"/>
+                                <field name="uc_us"/>
+                                <field name="designation_uc"/>
+                                <field name="um_uc"/>
+                                <field name="sr"/>
+                            </group>
+                        </group>
+                        <group string="Spécifications internes">
+                            <field name="specif_interne" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="is_prodstar_fp2art_search_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fp2art.search</field>
+            <field name="model">is.prodstar.fp2art</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="code_pg" string="Code PG" filter_domain="[('code_pg','ilike',self)]"/>
+                    <field name="designation" string="Désignation" filter_domain="[('designation','ilike',self)]"/>
+                    <field name="moule" string="Moule" filter_domain="[('moule','ilike',self)]"/>
+                    <field name="projet" string="Projet" filter_domain="[('projet','ilike',self)]"/>
+                    <field name="gest" string="Gestionnaire" filter_domain="[('gest','ilike',self)]"/>
+                    <group expand="0" string="Grouper par">
+                        <filter name="group_soc" string="Société" context="{'group_by':'soc'}"/>
+                        <filter name="group_cat" string="Catégorie" context="{'group_by':'cat'}"/>
+                        <filter name="group_fam" string="Famille" context="{'group_by':'fam'}"/>
+                        <filter name="group_gest" string="Gestionnaire" context="{'group_by':'gest'}"/>
+                        <filter name="group_moule" string="Moule" context="{'group_by':'moule'}"/>
+                        <filter name="group_projet" string="Projet" context="{'group_by':'projet'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="is_prodstar_fp2art_action" model="ir.actions.act_window">
+            <field name="name">Articles Prodstar</field>
+            <field name="res_model">is.prodstar.fp2art</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- is.prodstar.fp2nomq -->
+        <record id="is_prodstar_fp2nomq_tree_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fp2nomq.tree</field>
+            <field name="model">is.prodstar.fp2nomq</field>
+            <field name="arch" type="xml">
+                <tree string="Prodstar FP2NOMQ" default_order="compose, lig">
+                    <field name="soc"         optional="show"/>
+                    <field name="compose"     string="Composé"/>
+                    <field name="alternative" optional="show"/>
+                    <field name="lig"         string="Ligne"/>
+                    <field name="composant"   string="Composant"/>
+                    <field name="date_debut"  optional="show"/>
+                    <field name="date_fin"    optional="show"/>
+                    <field name="quantite"    string="Quantité"/>
+                </tree>
+            </field>
+        </record>
+        <record id="is_prodstar_fp2nomq_form_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fp2nomq.form</field>
+            <field name="model">is.prodstar.fp2nomq</field>
+            <field name="arch" type="xml">
+                <form string="Prodstar FP2NOMQ">
+                    <sheet>
+                        <group>
+                            <group string="Informations générales">
+                                <field name="soc"/>
+                                <field name="compose"/>
+                                <field name="alternative"/>
+                                <field name="lig"/>
+                                <field name="composant"/>
+                            </group>
+                            <group string="Dates et quantité">
+                                <field name="date_debut"/>
+                                <field name="date_fin"/>
+                                <field name="quantite"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="is_prodstar_fp2nomq_search_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fp2nomq.search</field>
+            <field name="model">is.prodstar.fp2nomq</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="compose" string="Composé" filter_domain="[('compose','ilike',self)]"/>
+                    <field name="composant" string="Composant" filter_domain="[('composant','ilike',self)]"/>
+                    <field name="alternative" string="Alternative" filter_domain="[('alternative','ilike',self)]"/>
+                    
+                    <group expand="0" string="Grouper par">
+                        <filter name="group_soc" string="Société" context="{'group_by':'soc'}"/>
+                        <filter name="group_compose" string="Composé" context="{'group_by':'compose'}"/>
+                        <filter name="group_alternative" string="Alternative" context="{'group_by':'alternative'}"/>
+                        <filter name="group_composant" string="Composant" context="{'group_by':'composant'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="is_prodstar_fp2nomq_action" model="ir.actions.act_window">
+            <field name="name">Nomenclatures Prodstar</field>
+            <field name="res_model">is.prodstar.fp2nomq</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- is.prodstar.fp2game -->
+        <record id="is_prodstar_fp2game_tree_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fp2game.tree</field>
+            <field name="model">is.prodstar.fp2game</field>
+            <field name="arch" type="xml">
+                <tree string="Prodstar FP2GAME" default_order="article, alternative">
+                    <field name="soc"         optional="show"/>
+                    <field name="article"     string="Article"/>
+                    <field name="alternative" string="Alternative"/>
+                    <field name="coef"        string="Coefficient"/>
+                </tree>
+            </field>
+        </record>
+        <record id="is_prodstar_fp2game_form_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fp2game.form</field>
+            <field name="model">is.prodstar.fp2game</field>
+            <field name="arch" type="xml">
+                <form string="Prodstar FP2GAME">
+                    <sheet>
+                        <group>
+                            <field name="soc"/>
+                            <field name="article"/>
+                            <field name="alternative"/>
+                            <field name="coef"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="is_prodstar_fp2game_search_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fp2game.search</field>
+            <field name="model">is.prodstar.fp2game</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="article" string="Article" filter_domain="[('article','ilike',self)]"/>
+                    <field name="alternative" string="Alternative" filter_domain="[('alternative','ilike',self)]"/>
+                    
+                    <group expand="0" string="Grouper par">
+                        <filter name="group_soc" string="Société" context="{'group_by':'soc'}"/>
+                        <filter name="group_article" string="Article" context="{'group_by':'article'}"/>
+                        <filter name="group_alternative" string="Alternative" context="{'group_by':'alternative'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="is_prodstar_fp2game_action" model="ir.actions.act_window">
+            <field name="name">Gammes Prodstar</field>
+            <field name="res_model">is.prodstar.fp2game</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- is.prodstar.fp2gamo -->
+        <record id="is_prodstar_fp2gamo_tree_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fp2gamo.tree</field>
+            <field name="model">is.prodstar.fp2gamo</field>
+            <field name="arch" type="xml">
+                <tree string="Prodstar FP2GAMO" default_order="article, alternative, ordre">
+                    <field name="soc"            optional="show"/>
+                    <field name="article"        string="Article"/>
+                    <field name="alternative"    optional="show"/>
+                    <field name="ordre"          string="Ordre"/>
+                    <field name="qi0028"         string="QI0028"/>
+                    <field name="type_section"   optional="show"/>
+                    <field name="section"        string="Section"/>
+                    <field name="sous_section"   optional="show"/>
+                    <field name="tps_preparation" string="Tps Préparation"/>
+                    <field name="tps_fab"        string="Tps Fab"/>
+                </tree>
+            </field>
+        </record>
+        <record id="is_prodstar_fp2gamo_form_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fp2gamo.form</field>
+            <field name="model">is.prodstar.fp2gamo</field>
+            <field name="arch" type="xml">
+                <form string="Prodstar FP2GAMO">
+                    <sheet>
+                        <group>
+                            <group string="Informations générales">
+                                <field name="soc"/>
+                                <field name="article"/>
+                                <field name="alternative"/>
+                                <field name="ordre"/>
+                                <field name="qi0028"/>
+                            </group>
+                            <group string="Sections et temps">
+                                <field name="type_section"/>
+                                <field name="section"/>
+                                <field name="sous_section"/>
+                                <field name="tps_preparation"/>
+                                <field name="tps_fab"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="is_prodstar_fp2gamo_search_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fp2gamo.search</field>
+            <field name="model">is.prodstar.fp2gamo</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="article" string="Article" filter_domain="[('article','ilike',self)]"/>
+                    <field name="alternative" string="Alternative" filter_domain="[('alternative','ilike',self)]"/>
+                    <field name="section" string="Section" filter_domain="[('section','ilike',self)]"/>
+                    <field name="qi0028" string="QI0028" filter_domain="[('qi0028','ilike',self)]"/>
+                    
+                    <group expand="0" string="Grouper par">
+                        <filter name="group_soc" string="Société" context="{'group_by':'soc'}"/>
+                        <filter name="group_article" string="Article" context="{'group_by':'article'}"/>
+                        <filter name="group_alternative" string="Alternative" context="{'group_by':'alternative'}"/>
+                        <filter name="group_type_section" string="Type section" context="{'group_by':'type_section'}"/>
+                        <filter name="group_section" string="Section" context="{'group_by':'section'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="is_prodstar_fp2gamo_action" model="ir.actions.act_window">
+            <field name="name">Gammes opératoires Prodstar</field>
+            <field name="res_model">is.prodstar.fp2gamo</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- is.prodstar.fp2sec -->
+        <record id="is_prodstar_fp2sec_tree_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fp2sec.tree</field>
+            <field name="model">is.prodstar.fp2sec</field>
+            <field name="arch" type="xml">
+                <tree string="Prodstar FP2SEC" default_order="type_section, section, sous_section">
+                    <field name="soc"          optional="show"/>
+                    <field name="type_section" string="Type section"/>
+                    <field name="section"      string="Section"/>
+                    <field name="sous_section" string="Sous-section"/>
+                    <field name="nom_section"  string="Nom section"/>
+                    <field name="pc0096"       string="PC0096"/>
+                    <field name="pc0111"       string="PC0111"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="is_prodstar_fp2sec_form_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fp2sec.form</field>
+            <field name="model">is.prodstar.fp2sec</field>
+            <field name="arch" type="xml">
+                <form string="Prodstar FP2SEC">
+                    <sheet>
+                        <group>
+                            <group string="Informations section">
+                                <field name="soc"/>
+                                <field name="type_section"/>
+                                <field name="section"/>
+                                <field name="sous_section"/>
+                                <field name="nom_section"/>
+                            </group>
+                            <group string="Codes produits">
+                                <field name="pc0096"/>
+                                <field name="pc0111"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="is_prodstar_fp2sec_search_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fp2sec.search</field>
+            <field name="model">is.prodstar.fp2sec</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="nom_section" string="Nom section" filter_domain="[('nom_section','ilike',self)]"/>
+                    <field name="section" string="Section" filter_domain="[('section','ilike',self)]"/>
+                    <field name="sous_section" string="Sous-section" filter_domain="[('sous_section','ilike',self)]"/>
+                    <field name="type_section" string="Type section" filter_domain="[('type_section','ilike',self)]"/>
+                    
+                    <group expand="0" string="Grouper par">
+                        <filter name="group_soc" string="Société" context="{'group_by':'soc'}"/>
+                        <filter name="group_type_section" string="Type section" context="{'group_by':'type_section'}"/>
+                        <filter name="group_section" string="Section" context="{'group_by':'section'}"/>
+                        <filter name="group_sous_section" string="Sous-section" context="{'group_by':'sous_section'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="is_prodstar_fp2sec_action" model="ir.actions.act_window">
+            <field name="name">Sections Prodstar</field>
+            <field name="res_model">is.prodstar.fp2sec</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

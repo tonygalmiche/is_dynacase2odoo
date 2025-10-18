@@ -594,11 +594,42 @@
             <field name="action" ref="is_releve_dimensionnel_saisie_action"/>
         </record>
 
-
-
-
-
-
+        <!-- Prodstar -->
+        <record id="is_prodstar_menu" model="ir.ui.menu">
+            <field name="name">Prodstar</field>
+            <field name="sequence">84</field>
+            <field name="parent_id" eval="ref('is_plastigray16.menu_is_donnees_techniques')"/>
+        </record>
+        <record id="is_prodstar_fp2art_menu" model="ir.ui.menu">
+            <field name="name">Articles Prodstar</field>
+            <field name="sequence">10</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
+            <field name="action" ref="is_prodstar_fp2art_action"/>
+        </record>
+        <record id="is_prodstar_fp2nomq_menu" model="ir.ui.menu">
+            <field name="name">Nomenclatures Prodstar</field>
+            <field name="sequence">20</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
+            <field name="action" ref="is_prodstar_fp2nomq_action"/>
+        </record>
+        <record id="is_prodstar_fp2game_menu" model="ir.ui.menu">
+            <field name="name">Gammes Prodstar</field>
+            <field name="sequence">30</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
+            <field name="action" ref="is_prodstar_fp2game_action"/>
+        </record>
+        <record id="is_prodstar_fp2gamo_menu" model="ir.ui.menu">
+            <field name="name">Gammes opératoires Prodstar</field>
+            <field name="sequence">40</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
+            <field name="action" ref="is_prodstar_fp2gamo_action"/>
+        </record>
+        <record id="is_prodstar_fp2sec_menu" model="ir.ui.menu">
+            <field name="name">Sections Prodstar</field>
+            <field name="sequence">50</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
+            <field name="action" ref="is_prodstar_fp2sec_action"/>
+        </record>
 
     </data>
 </odoo>

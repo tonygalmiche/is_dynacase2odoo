@@ -43,3 +43,4 @@ from . import is_processus
 from . import is_planification_audit
 from . import is_releve_dimensionnel
 from . import is_res_users_partner
+from . import is_prodstar
