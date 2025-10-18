@@ -19,6 +19,7 @@ class IsReleveDimensionnel(models.Model):
     active      = fields.Boolean('Actif', default=True)
     dynacase_id = fields.Integer(string="Id Dynacase",index=True,copy=False)    
     saisie_ids  = fields.One2many("is.releve.dimensionnel.saisie", "releve_id", string="Saisies de relevés")
+    ligne_ids   = fields.One2many("is.releve.dimensionnel.saisie.ligne", "releve_id", string="Lignes de saisies")
 
 
     def lien_vers_dynacase_action(self):
@@ -65,6 +66,7 @@ class IsReleveDimensionnelSaisieLigne(models.Model):
     _order       = "id"
 
     saisie_id = fields.Many2one("is.releve.dimensionnel.saisie", string="Saisie", required=True, ondelete="cascade")
+    releve_id = fields.Many2one("is.releve.dimensionnel", string="Relevé", related="saisie_id.releve_id", store=True)
     numof     = fields.Char(string="N°OF")
     numcolis  = fields.Char(string="N°Colis")
     visa      = fields.Char(string="Visa Contrôleur")

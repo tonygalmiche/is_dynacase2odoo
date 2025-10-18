@@ -576,6 +576,12 @@
             <field name="parent_id" eval="ref('is_dynacase2odoo.is_ctrl_rcp_menu')"/>
             <field name="action" ref="is_releve_dimensionnel_action"/>
         </record>
+        <record id="is_releve_dimensionnel_saisie_menu" model="ir.ui.menu">
+            <field name="name">Saisies des relevés dimensionnels</field>
+            <field name="sequence">50</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_ctrl_rcp_menu')"/>
+            <field name="action" ref="is_releve_dimensionnel_saisie_action"/>
+        </record>
 
 
 

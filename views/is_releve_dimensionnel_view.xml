@@ -10,7 +10,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="releve_id"/>
+                    <field name="releve_id" widget="many2one_clickable"/>
                     <field name="numsaisie"/>
                     <field name="datesaisie"/>
                 </tree>
@@ -33,6 +33,7 @@
                         <group string="Lignes de saisies">
                             <field name="ligne_ids" nolabel="1" colspan="2">
                                 <tree editable="bottom">
+                                    <field name="saisie_id" widget="many2one_clickable"/>
                                     <field name="numof"/>
                                     <field name="numcolis"/>
                                     <field name="visa"/>
@@ -84,15 +85,28 @@
                             </group>
                         </group>
                         <group string="Saisies de relevés">
-                            <field name="saisie_ids" nolabel="1" colspan="2">
-                                <tree editable="bottom">
+                            <field name="saisie_ids" nolabel="1" colspan="2" readonly="1">
+                                <tree>
                                     <button name="voir_saisie_action" 
                                             type="object" 
                                             icon="fa-search-plus" 
                                             title="Voir le détail de la saisie"
                                             context="{'default_releve_id': parent.id, 'form_view_ref': 'is_dynacase2odoo.is_releve_dimensionnel_saisie_form_view'}"/>
                                     <field name="numsaisie"/>
+                                    <field name="numsaisie"/>
                                     <field name="datesaisie"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group string="Lignes de saisies">
+                            <field name="ligne_ids" nolabel="1" colspan="2" readonly="1">
+                                <tree>
+                                    <field name="saisie_id" widget="many2one_clickable"/>
+                                    <field name="numof"/>
+                                    <field name="numcolis"/>
+                                    <field name="visa"/>
+                                    <field name="releve"/>
+                                    <field name="resultat"/>
                                 </tree>
                             </field>
                         </group>
