@@ -38,13 +38,11 @@ class IsReleveDimensionnelSaisie(models.Model):
     _rec_name    = "numsaisie"
     _order       = "id"
 
-    releve_id    = fields.Many2one("is.releve.dimensionnel", string="Relevé", required=True, ondelete="cascade")
-    numsaisie    = fields.Integer(string="N° de saisie")
-    datesaisie   = fields.Date(string="Date de saisie")
-    
-    # Relation One2many vers les lignes de saisies
-    ligne_ids    = fields.One2many("is.releve.dimensionnel.saisie.ligne", "saisie_id", string="Lignes de saisies")
-
+    releve_id   = fields.Many2one("is.releve.dimensionnel", string="Relevé", required=True, ondelete="cascade")
+    numsaisie   = fields.Integer(string="N° de saisie")
+    datesaisie  = fields.Date(string="Date de saisie")
+    dynacase_id = fields.Integer(string="Id Dynacase",index=True,copy=False)    
+    ligne_ids   = fields.One2many("is.releve.dimensionnel.saisie.ligne", "saisie_id", string="Lignes de saisies")
 
 
     def voir_saisie_action(self):
@@ -55,6 +53,16 @@ class IsReleveDimensionnelSaisie(models.Model):
             'res_id': self.id,
             'view_mode': 'form',
         }
+
+
+    def lien_vers_dynacase_action(self):
+        for obj in self:
+            url = "https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s" % obj.dynacase_id
+            return {
+                "type": "ir.actions.act_url",
+                "url": url,
+                "target": "new",
+            }
 
 
 

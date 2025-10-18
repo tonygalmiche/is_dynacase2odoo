@@ -13,6 +13,12 @@
                     <field name="releve_id" widget="many2one_clickable"/>
                     <field name="numsaisie"/>
                     <field name="datesaisie"/>
+                    <button 
+                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"
+                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                        groups="base.group_system"
+                    />
+                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
                 </tree>
             </field>
         </record>
@@ -22,6 +28,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Saisie de relevé dimensionnel">
+                    <header>
+                        <field name="dynacase_id" invisible="1"/>
+                        <button 
+                            string="Dynacase" name="lien_vers_dynacase_action"
+                            type="object" class="btn btn-info"
+                            attrs="{'invisible': [('dynacase_id', '=', 0)]}"
+                            groups="base.group_system"
+                        />
+                    </header>
                     <sheet>
                         <group>
                             <group>
