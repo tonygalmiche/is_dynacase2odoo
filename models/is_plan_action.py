@@ -61,7 +61,7 @@ class is_action(models.Model):
             if not record.resp_id:
                 readonly=False
             else:
-                if record.state=='plan':
+                if record.state in ['plan','do','check']:
                     try:
                         # Vérifier si l'utilisateur peut écrire sur cet enregistrement
                         record.check_access_rights('write')
@@ -182,9 +182,6 @@ class is_plan_action(models.Model):
                     # Si une exception est levée, l'utilisateur n'a pas le droit d'écriture
                     readonly = True
             record.readonly_all = readonly
-
-
-#  [('state','!=','actif')]}
 
 
     @api.model_create_multi

@@ -86,7 +86,7 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Cycle">
+                            <page string="Cycle de validation">
                                 <group>
                                     <group>
                                         <field name="quiverifie_id"/>
@@ -229,7 +229,7 @@
                     <field name="responsable"/>
                     <field name="pilote_id"/>
                     <filter string="Hors processus 'ARCHIVE'" name="hors_archive" domain="[('processus_id','!=', 'ARCHIVE')]"/>
-                    <filter string="Archivé (actif=0)" name="inactive" domain="[('active','=', False)]"/>
+                    <!-- <filter string="Archivé (actif=0)" name="inactive" domain="[('active','=', False)]"/> -->
                     <group expand="0" string="Grouper par">
                         <filter string="Processus" name="group_by_processus" domain="[]" context="{'group_by':'processus_id'}"/>
                         <filter string="Pilote" name="group_by_pilote" domain="[]" context="{'group_by':'pilote_id'}"/>
@@ -248,6 +248,15 @@
 
 
 
+        <!-- Action serveur pour réviser un document -->
+        <record id="reviser_document_action_server" model="ir.actions.server">
+            <field name="name">Réviser ce document</field>
+            <field name="model_id" ref="model_is_processus_doc"/>
+            <field name="binding_model_id" ref="model_is_processus_doc"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_reviser_document()</field>
+        </record>
 
         <!-- is.processus.doc -->
         <record id="is_processus_doc_tree" model="ir.ui.view">
@@ -305,11 +314,11 @@
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                             groups="base.group_system"
                         />
-                        <button 
+                        <!-- <button 
                             string="Réviser ce document" name="action_reviser_document"
                             type="object"
                             attrs="{'invisible': [('active', '=', False)]}"
-                        />
+                        /> -->
                     </header>
                     <sheet>
                         <field name="active" invisible="1"/>
@@ -347,22 +356,22 @@
                         <notebook>
                             <page string="Organisation (FO)">
                                 <group>
-                                    <group string="Qui remplit / Qui classe">
-                                        <field name="quiremplit_id"/>
-                                        <field name="quiclasse_id"/>
+                                    <group string="Classement / Archivage">
+                                        <!-- <field name="quiremplit_id"/> -->
+                                        <!-- <field name="quiclasse_id"/> -->
                                         <field name="lieuclassement"/>
                                     </group>
                                     <group string="Archivage / Destruction">
-                                        <field name="quiarchive_id"/>
+                                        <!-- <field name="quiarchive_id"/> -->
                                         <field name="lieuarchive"/>
-                                        <field name="reglerange"/>
-                                        <field name="dureecons"/>
-                                        <field name="quidetruit_id"/>
+                                        <!-- <field name="reglerange"/> -->
+                                        <!-- <field name="dureecons"/> -->
+                                        <!-- <field name="quidetruit_id"/> -->
                                     </group>
                                 </group>
                             </page>
                             
-                            <page string="Diffusion">
+                            <page string="Cycle de validation">
                                 <group>
                                     <group>
                                         <field name="quiverifie_id"/>
@@ -419,7 +428,7 @@
                     <field name="auteur_id"/>
                     <field name="pilote_id"/>
                     <filter string="Hors processus 'ARCHIVE'" name="hors_archive" domain="[('processus_id','!=', 'ARCHIVE')]"/>
-                    <filter string="Archivé (actif=0)" name="inactive" domain="[('active','=', False)]"/>
+                    <!-- <filter string="Archivé (actif=0)" name="inactive" domain="[('active','=', False)]"/> -->
                     <group expand="0" string="Grouper par">
                         <filter string="Processus" name="group_by_processus" domain="[]" context="{'group_by':'processus_id'}"/>
                         <filter string="Étape"     name="group_by_etape" domain="[]" context="{'group_by':'etape_id'}"/>
