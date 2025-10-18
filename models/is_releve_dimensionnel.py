@@ -38,7 +38,7 @@ class IsReleveDimensionnelSaisie(models.Model):
     _rec_name    = "numsaisie"
     _order       = "id"
 
-    releve_id   = fields.Many2one("is.releve.dimensionnel", string="Relevé", required=True, ondelete="cascade")
+    releve_id   = fields.Many2one("is.releve.dimensionnel", string="Relevé", required=True, ondelete="cascade", index=True)
     numsaisie   = fields.Integer(string="N° de saisie")
     datesaisie  = fields.Date(string="Date de saisie")
     dynacase_id = fields.Integer(string="Id Dynacase",index=True,copy=False)    
@@ -73,12 +73,12 @@ class IsReleveDimensionnelSaisieLigne(models.Model):
     _rec_name    = "id"
     _order       = "id"
 
-    saisie_id = fields.Many2one("is.releve.dimensionnel.saisie", string="Saisie", required=True, ondelete="cascade")
-    releve_id = fields.Many2one("is.releve.dimensionnel", string="Relevé", related="saisie_id.releve_id", store=True)
+    saisie_id = fields.Many2one("is.releve.dimensionnel.saisie", string="Saisie", required=True, ondelete="cascade", index=True)
+    releve_id = fields.Many2one("is.releve.dimensionnel", string="Relevé", related="saisie_id.releve_id", store=True, index=True)
     numof     = fields.Char(string="N°OF")
     numcolis  = fields.Char(string="N°Colis")
     visa      = fields.Char(string="Visa Contrôleur")
-    releve    = fields.Float(string="Relevé", digits=(12, 6))
+    releve    = fields.Float(string="Mesure relevéé", digits=(12, 6))
     resultat  = fields.Char(string="Résultat")
 
 
