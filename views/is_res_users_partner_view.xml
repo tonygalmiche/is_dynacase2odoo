@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Vue Tree -->
+        <record id="is_res_users_partner_tree_view" model="ir.ui.view">
+            <field name="name">is_res_users_partner_tree_view</field>
+            <field name="model">is.res.users.partner</field>
+            <field name="arch" type="xml">
+                <tree string="Annuaire téléphonique">
+                    <field name="site" />
+                    <field name="name" />
+                    <field name="email" optional="show"/>
+                    <field name="phone" optional="show"/>
+                    <field name="mobile" optional="show"/>
+                    <field name="service_id" optional="show"/>
+                    <field name="login" optional="hide"/>
+                    <field name="user_id" optional="hide" widget="many2one_clickable"/>
+                    <field name="partner_id" optional="hide" widget="many2one_clickable"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vue Form -->
+        <record id="is_res_users_partner_form_view" model="ir.ui.view">
+            <field name="name">is_res_users_partner_form_view</field>
+            <field name="model">is.res.users.partner</field>
+            <field name="arch" type="xml">
+                <form string="Annuaire téléphonique">
+                    <sheet>
+                        <group string="Informations personnelles">
+                            <group>
+                                <field name="name"/>
+                                <field name="email"/>
+                                <field name="login"/>
+                            </group>
+                            <group>
+                                <field name="phone"/>
+                                <field name="mobile"/>
+                            </group>
+                        </group>
+                        <group string="Références">
+                            <group>
+                                <field name="user_id"/>
+                                <field name="partner_id"/>
+                            </group>
+                            <group>
+                                <field name="site"/>
+                                <field name="service_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vue Search -->
+        <record id="is_res_users_partner_search_view" model="ir.ui.view">
+            <field name="name">is_res_users_partner_search_view</field>
+            <field name="model">is.res.users.partner</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="site"/>
+                    <field name="name"/>
+                    <field name="email"/>
+                    <field name="phone"/>
+                    <field name="mobile"/>
+                    <field name="service_id"/>
+                    <separator/>
+                    <group expand="0" string="Filtrer par site">
+                        <filter string="Gray" name="filter_gray" domain="[('site', '=', 'Gray')]"/>
+                        <filter string="ST-Brice" name="filter_st_brice" domain="[('site', '=', 'ST-Brice')]"/>
+                        <filter string="Plasti-ka" name="filter_plasti_ka" domain="[('site', '=', 'Plasti-ka')]"/>
+                        <filter string="Siège" name="filter_siege" domain="[('site', '=', 'Siège')]"/>
+                        <filter string="Autre" name="filter_autre" domain="[('site', '=', 'Autre')]"/>
+                    </group>
+                    <group expand="0" string="Grouper par">
+                        <filter string="Site" name="group_by_site" context="{'group_by': 'site'}"/>
+                        <filter string="Service" name="group_by_service" context="{'group_by': 'service_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="is_res_users_partner_action" model="ir.actions.act_window">
+            <field name="name">Annuaire téléphonique</field>
+            <field name="res_model">is.res.users.partner</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="is_res_users_partner_search_view"/>
+            <field name="limit">500</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Annuaire téléphonique des utilisateurs et contacts
+                </p>
+                <p>
+                    Cet annuaire affiche la liste des utilisateurs actifs avec leurs informations de contact.
+                </p>
+            </field>
+        </record>
+
+ 
+    </data>
+</odoo>

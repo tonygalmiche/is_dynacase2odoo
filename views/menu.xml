@@ -2,6 +2,17 @@
 <odoo>
     <data>
 
+
+
+       <!-- Annuaire téléphonique -->
+        <record id="is_res_users_partner_menu" model="ir.ui.menu">
+            <field name="name">Annuaire téléphonique</field>
+            <field name="sequence">0</field>
+            <field name="parent_id"/>
+            <field name="action" ref="is_res_users_partner_action"/>
+        </record>
+
+
         <!-- Gestion commcerciale -->
         <record id="is_gestion_commerciale_menu" model="ir.ui.menu" >
             <field name="name">Gestion commerciale</field>
