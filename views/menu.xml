@@ -601,34 +601,64 @@
             <field name="parent_id" eval="ref('is_plastigray16.menu_is_donnees_techniques')"/>
         </record>
         <record id="is_prodstar_fp2art_menu" model="ir.ui.menu">
-            <field name="name">Articles Prodstar</field>
+            <field name="name">Articles</field>
             <field name="sequence">10</field>
             <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
             <field name="action" ref="is_prodstar_fp2art_action"/>
         </record>
         <record id="is_prodstar_fp2nomq_menu" model="ir.ui.menu">
-            <field name="name">Nomenclatures Prodstar</field>
+            <field name="name">Nomenclatures</field>
             <field name="sequence">20</field>
             <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
             <field name="action" ref="is_prodstar_fp2nomq_action"/>
         </record>
         <record id="is_prodstar_fp2game_menu" model="ir.ui.menu">
-            <field name="name">Gammes Prodstar</field>
+            <field name="name">Gammes-Entêtes</field>
             <field name="sequence">30</field>
             <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
             <field name="action" ref="is_prodstar_fp2game_action"/>
         </record>
         <record id="is_prodstar_fp2gamo_menu" model="ir.ui.menu">
-            <field name="name">Gammes opératoires Prodstar</field>
+            <field name="name">Gammes-Opérations</field>
             <field name="sequence">40</field>
             <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
             <field name="action" ref="is_prodstar_fp2gamo_action"/>
         </record>
-        <record id="is_prodstar_fp2sec_menu" model="ir.ui.menu">
-            <field name="name">Sections Prodstar</field>
+        <record id="is_prodstar_fp2gams_menu" model="ir.ui.menu">
+            <field name="name">Gammes-Sous-traitance</field>
             <field name="sequence">50</field>
             <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
+            <field name="action" ref="is_prodstar_fp2gams_action"/>
+        </record>
+        <record id="is_prodstar_fp2gamu_menu" model="ir.ui.menu">
+            <field name="name">Gammes-Moules</field>
+            <field name="sequence">60</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
+            <field name="action" ref="is_prodstar_fp2gamu_action"/>
+        </record>
+        <record id="is_prodstar_fp2sec_menu" model="ir.ui.menu">
+            <field name="name">Sections</field>
+            <field name="sequence">70</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
             <field name="action" ref="is_prodstar_fp2sec_action"/>
+        </record>
+        <record id="is_prodstar_fa2rcp_menu" model="ir.ui.menu">
+            <field name="name">Réceptions</field>
+            <field name="sequence">80</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
+            <field name="action" ref="is_prodstar_fa2rcp_action"/>
+        </record>
+        <record id="is_prodstar_fc2lie_menu" model="ir.ui.menu">
+            <field name="name">Livraions-Entêtes</field>
+            <field name="sequence">90</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
+            <field name="action" ref="is_prodstar_fc2lie_action"/>
+        </record>
+        <record id="is_prodstar_fc2lid_menu" model="ir.ui.menu">
+            <field name="name">Livraions-Lignes</field>
+            <field name="sequence">100</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
+            <field name="action" ref="is_prodstar_fc2lid_action"/>
         </record>
 
     </data>

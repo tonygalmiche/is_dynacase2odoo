@@ -143,3 +143,8 @@ access_is_prodstar_fp2nomq,access_is_prodstar_fp2nomq,model_is_prodstar_fp2nomq,
 access_is_prodstar_fp2game,access_is_prodstar_fp2game,model_is_prodstar_fp2game,base.group_user,1,1,1,1
 access_is_prodstar_fp2gamo,access_is_prodstar_fp2gamo,model_is_prodstar_fp2gamo,base.group_user,1,1,1,1
 access_is_prodstar_fp2sec,access_is_prodstar_fp2sec,model_is_prodstar_fp2sec,base.group_user,1,1,1,1
+access_is_prodstar_fp2gams,access_is_prodstar_fp2gams,model_is_prodstar_fp2gams,base.group_user,1,1,1,1
+access_is_prodstar_fp2gamu,access_is_prodstar_fp2gamu,model_is_prodstar_fp2gamu,base.group_user,1,1,1,1
+access_is_prodstar_fa2rcp,access_is_prodstar_fa2rcp,model_is_prodstar_fa2rcp,base.group_user,1,1,1,1
+access_is_prodstar_fc2lie,access_is_prodstar_fc2lie,model_is_prodstar_fc2lie,base.group_user,1,1,1,1
+access_is_prodstar_fc2lid,access_is_prodstar_fc2lid,model_is_prodstar_fc2lid,base.group_user,1,1,1,1
