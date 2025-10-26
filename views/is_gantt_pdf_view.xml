@@ -24,8 +24,8 @@
                                 <field name="dossier_modif_variante_id" attrs="{'invisible': [('type_document', '!=', 'Dossier Modif Variante')], 'required': [('type_document', '=', 'Dossier Modif Variante')]}"/>
                                 <field name="dossier_appel_offre_id"    attrs="{'invisible': [('type_document', '!=', 'dossier_appel_offre')]   , 'required': [('type_document', '=', 'dossier_appel_offre')]}"/>
                                 <field name="format_fichier"/>
+                                <field name="traduction"/>
                                 <field name="modele_excel_id" attrs="{'invisible': [('format_fichier', '!=', 'xlsx')], 'required': [('format_fichier', '=', 'xlsx')]}"/>
-
                             </group>
                             <group>
                                 <field 
@@ -64,6 +64,7 @@
                     <field name='date_debut'/>
                     <field name='date_fin'/>
                     <field name="format_fichier"/>
+                    <field name="traduction"/>
                     <field name="create_date" optional="hide"/>
                     <field name="create_uid"  optional="hide"/>
                     <field name="write_date"  optional="hide"/>

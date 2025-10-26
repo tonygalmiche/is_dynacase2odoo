@@ -98,7 +98,7 @@
                                         <field name="langue"           required="1" attrs="{'readonly': [('ro_user','=',True)]}"/>
                                         <field name="type_essai"       required="1" attrs="{'readonly': [('ro_user','=',True)]}"/>
                                         <field name="user_id"          required="1" attrs="{'readonly': [('ro_user','=',True)]}"/>
-                                        <field name="moule_id"                      attrs="{'readonly': [('ro_user','=',True)], 'invisible': [('type_essai','!=','moule')]}"/>
+                                        <field name="moule_id"                      attrs="{'readonly': [('ro_user','=',True)], 'invisible': [('type_essai','not in',['moule', 'assemblage'])]}"/>
                                         <field name="dossierf_id"                   attrs="{'readonly': [('ro_user','=',True)], 'invisible': [('type_essai','!=','assemblage')]}"/>
                                         <field name="num_erd_id"                    attrs="{'readonly': [('ro_user','=',True)], 'invisible': [('type_essai','!=','erd')]}"/>
                                         <field name="designation"      required="1" force_save="1"/>

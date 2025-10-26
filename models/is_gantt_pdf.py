@@ -79,6 +79,10 @@ class IsGanttPdf(models.Model):
         ("svg"  , "SVG"),
         ("xlsx" , "Excel"),
     ], string="Format fichier", default="png", tracking=True)
+    traduction = fields.Selection([
+        ("fr"  , "Français"),
+        ("en"  , "Anglais"),
+    ], string="Traduction", default="fr", required=True, tracking=True)
     section_ids = fields.One2many('is.gantt.pdf.section', 'gantt_pdf_id')
 
 
@@ -518,9 +522,16 @@ class IsGanttPdf(models.Model):
                         x      = decal*jour_width+grille_width
                         y      = entete_height + entete_table_height + nb*tache_height
                         width  = duration*jour_width
-
                         height = tache_height
-                        txt = '%s %s'%('- '*item.get('niveau'),item.get('text'))
+
+                        #** Traduction ****************************************
+                        item_text = item.get('text')
+                        if obj.traduction=='en':
+                            item_text = item.get('text_en')
+                        #******************************************************
+
+                        txt = '%s %s'%('- '*item.get('niveau'),item_text)
+
                         cairo_show_text(ctx,5,y+tache_height-1,txt=txt) # Nom de la tache à gauche
                         if obj.bordure_jour:
                             for ct in range(0,jour_nb):
@@ -550,7 +561,15 @@ class IsGanttPdf(models.Model):
                             fill_rgb = to_rgb(_CSS_COLOR[border_color])
 
                         cairo_rectangle(ctx,x,y+3,tache_height/2,height-6,fill_rgb=fill_rgb)    # Rectangle Fait/Pas fait
-                        cairo_show_text(ctx,x+tache_height,y+tache_height,txt=item.get('text')) # Nom de la tache sur le rectangle de la tache
+
+                        #** Traduction ****************************************
+                        txt = item.get('text')
+                        if obj.traduction=='en':
+                            txt =  item.get('text_en')
+                        print(obj.traduction,txt)
+                        #******************************************************
+
+                        cairo_show_text(ctx,x+tache_height,y+tache_height,txt=txt) # Nom de la tache sur le rectangle de la tache
                         nb+=1
 
                 #** Logo au format PIL et redimmensionnement **********************

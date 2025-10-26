@@ -10,8 +10,10 @@
                     <field name="site" />
                     <field name="name" />
                     <field name="email" optional="show"/>
+                    <field name="is_ligne_directe" optional="hide"/>
                     <field name="phone" optional="show"/>
                     <field name="mobile" optional="show"/>
+                    <field name="standard_telephonique" optional="show"/>
                     <field name="service_id" optional="show"/>
                     <field name="login" optional="hide"/>
                     <field name="user_id" optional="hide" widget="many2one_clickable"/>
@@ -34,8 +36,10 @@
                                 <field name="login"/>
                             </group>
                             <group>
+                                <field name="is_ligne_directe"/>
                                 <field name="phone"/>
                                 <field name="mobile"/>
+                                <field name="standard_telephonique"/>
                             </group>
                         </group>
                         <group string="Références">
@@ -67,6 +71,7 @@
                     <field name="service_id"/>
                     <separator/>
                     <group expand="0" string="Filtrer par site">
+                        <filter string="Ligne directe" name="ligne_directe" domain="[('is_ligne_directe', '=', True)]"/>
                         <filter string="Gray" name="filter_gray" domain="[('site', '=', 'Gray')]"/>
                         <filter string="ST-Brice" name="filter_st_brice" domain="[('site', '=', 'ST-Brice')]"/>
                         <filter string="Plasti-ka" name="filter_plasti_ka" domain="[('site', '=', 'Plasti-ka')]"/>
@@ -88,7 +93,7 @@
             <field name="view_mode">tree</field>
             <field name="search_view_id" ref="is_res_users_partner_search_view"/>
             <field name="limit">500</field>
-            <field name="context">{}</field>
+            <field name="context">{'search_default_ligne_directe': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Annuaire téléphonique des utilisateurs et contacts

@@ -113,6 +113,7 @@ class IsParamProject(models.Model):
     sequence = fields.Integer(string="Ordre", tracking=True)
     ppr_icon                = fields.Image(string="Icône")
     ppr_famille             = fields.Char(string="Famille", required=True, tracking=True)
+    ppr_famille_en          = fields.Char(string="Famille (EN)", tracking=True, help="Traduction en anglais pour Gantt PDF en anglais")
     ppr_familleid           = fields.Integer(string="Famille Id", tracking=True)
     ppr_transformation_pdf  = fields.Boolean(string="Transformation en PDF", tracking=True)
     type_document           = fields.Selection(TYPE_DOCUMENT,string="Type de document", default="Moule", required=True, tracking=True)

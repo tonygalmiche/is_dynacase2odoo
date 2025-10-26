@@ -18,6 +18,8 @@ class is_res_users_partner(models.Model):
     phone      = fields.Char('Téléphone')
     mobile     = fields.Char('Mobile')
     login      = fields.Char('Login')
+    standard_telephonique = fields.Char('Standard téléphonique')
+    is_ligne_directe      = fields.Boolean('Ligne directe', help="Indique si l’utilisateur a une ligne directe pour apparaître dans l'annuaire téléphonique")
 
 
     def init(self):
@@ -35,7 +37,9 @@ class is_res_users_partner(models.Model):
                    ru.is_service_id as service_id,
                    rp.phone,
                    rp.mobile,
-                   ru.login
+                   ru.login,
+                   ru.is_ligne_directe,
+                   s.standard_telephonique
                 from res_users ru inner join res_partner rp on ru.partner_id=rp.id
                                         join is_database s on ru.is_site_id=s.id
                 where ru.active=true and rp.active=true and ru.id not in (2)

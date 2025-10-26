@@ -28,6 +28,7 @@
                         <group string="Identification">
                             <group name="ppr_fr_identification">
                                 <field name="ppr_famille"/>
+                                <field name="ppr_famille_en"/>
                                 <field name="sequence"/>
                                 <field name="type_document"/>
                                 <field name="ppr_transformation_pdf"/>
@@ -75,6 +76,7 @@
                 <tree string="Paramétrage projet">
                     <field name='sequence'                  optional="hide"/>
                     <field name="ppr_famille"               optional="show"/>
+                    <field name="ppr_famille_en"            optional="hide"/>
                     <field name="ppr_familleid"             optional="hide"/>
                     <field name="type_document"             optional="show"/>
                     <field name="ppr_transformation_pdf"    optional="hide"/>
@@ -111,6 +113,7 @@
             <field name="arch" type="xml">
                 <search string="Paramétrage projet">
                     <field name="ppr_famille" />
+                    <field name="ppr_famille_en" />
                     <field name="type_document"/>
                     <field name="ppr_transformation_pdf" />
                     <field name="ppr_dossier_fab" />

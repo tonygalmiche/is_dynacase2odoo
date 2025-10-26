@@ -90,7 +90,7 @@ class is_demande_essai(models.Model):
             designation = False
             if obj.id:
                 domain=[
-                    ('type_essai','=',obj.type_essai),
+                    #('type_essai','=',obj.type_essai),
                     ('moule_id','=',obj.moule_id.id),
                     ('dossierf_id','=',obj.dossierf_id.id),
                     ('num_erd_id','=',obj.num_erd_id.id),

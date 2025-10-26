@@ -115,13 +115,6 @@ class IsDocMoule(models.Model):
                     jour_fermeture_ids=jours
         #**********************************************************************
 
-
-#PROJET is.mold.project(776,) ['2009-05-18', '2009-05-19', '2009-05-20', '2009-05-21', '2009-05-22', '2009-05-23', '2009-05-24', '2009-05-25', '2009-05-26', '2009-05-27', '2009-05-28', '2009-05-29', '2009-05-30', '2024-12-01', '2024-12-02', '2024-12-03', '2024-12-04', '2024-12-05', '2024-12-06', '2024-12-07', '2024-12-08', '2024-12-09', '2024-12-10', '2024-12-11', '2024-12-12', '2024-12-13', '2024-12-14', '2024-12-15', '2024-12-16', '2024-12-17', '2024-12-18', '2024-12-19', '2024-12-20', '2024-12-21', '2024-12-22', '2024-12-23', '2024-12-24', '2024-12-25', '2024-12-26', '2024-12-27', '2024-12-28', '2024-12-29', '2024-12-30', '2024-12-31', '2025-01-27', '2025-01-28', '2025-01-29', '2025-01-30', '2025-01-31', '2025-02-01', '2025-02-02', '2025-02-03', '2025-02-04', '2025-02-05', '2025-02-06', '2025-02-07']
-
-
-
-
-
         dossier_id=dossier_model=False
         for dossier in dossiers:
             dossier_id    = dossier.id
@@ -207,11 +200,12 @@ class IsDocMoule(models.Model):
                 else:
                    name=famille
 
-
-
                 if line.param_project_id.ppr_revue_lancement:
                     name="%s"%name
                     #name="%s [%s]"%(name,line.param_project_id.ppr_revue_lancement)
+
+                #** Traduction en anglais *************************************
+                name_en=line.param_project_id.ppr_famille_en or name
 
                 duration = line.duree_gantt or 1
                 parent = (line.idmoule.id or line.dossierf_id.id or line.dossier_modif_variante_id.id or line.dossier_appel_offre_id.id)+20000000 + line.section_id.id + 30000000
@@ -245,6 +239,7 @@ class IsDocMoule(models.Model):
                     "model"       : line._name,
                     "res_id"      : line.id,
                     "text"        : name,
+                    "text_en"     : name_en,
                     "end_date"    : end_date,
                     "duration"    : duration,
                     "parent"      : parent,
