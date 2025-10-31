@@ -85,39 +85,35 @@
                                 <field name="efficacite" widget="text"/>
                             </group>
                         </group>
-                        <notebook>
-                            <page string="Cycle de validation">
-                                <group>
-                                    <group>
-                                        <field name="quiverifie_id"/>
-                                        <field name="quiapprouve_id"/>
-                                        <field name="diffusion"/>
-                                    </group>
-                                </group>
-                            </page>
-                            <page string="Étapes du processus">
-                                <field name="etape_ids">
-                                    <tree string="Étapes" editable="bottom">
-                                        <field name="numetape"/>
-                                        <field name="description"/>
-                                        <field name="responsable"/>
-                                        <field name="pilote_id"/>
-                                    </tree>
-                                </field>
-                            </page>
-                            <page string="Documents du processus" attrs="{'invisible': [('doc_ids', '=', [])]}">
-                                <field name="doc_ids">
-                                    <tree string="Documents">
-                                        <button name="action_view_document" type="object" icon="fa-search" title="Voir la fiche complète"/>
-                                        <field name="reference"/>
-                                        <field name="designation"/>
-                                        <field name="etape_id"/>
-                                        <field name="auteur_id"/>
-                                        <field name="version"/>
-                                    </tree>
-                                </field>
-                            </page>
-                        </notebook>
+                        <group string="Cycle de validation">
+                            <group>
+                                <field name="quiverifie_id"/>
+                                <field name="quiapprouve_id"/>
+                                <field name="diffusion"/>
+                            </group>
+                        </group>
+                        <group string="Étapes du processus">
+                            <field name="etape_ids" nolabel="1" colspan="2">
+                                <tree string="Étapes" editable="bottom">
+                                    <field name="numetape"/>
+                                    <field name="description"/>
+                                    <field name="responsable"/>
+                                    <field name="pilote_id"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group string="Documents du processus" attrs="{'invisible': [('doc_ids', '=', [])]}">
+                            <field name="doc_ids" nolabel="1" colspan="2">
+                                <tree string="Documents" limit="500">
+                                    <button name="action_view_document" type="object" icon="fa-search" title="Voir la fiche complète"/>
+                                    <field name="reference"/>
+                                    <field name="designation"/>
+                                    <field name="etape_id"/>
+                                    <field name="auteur_id"/>
+                                    <field name="version"/>
+                                </tree>
+                            </field>
+                        </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids"/>
@@ -198,7 +194,7 @@
                         </group>
                         <group string="Documents" attrs="{'invisible': [('doc_ids', '=', [])]}">
                             <field name="doc_ids" nolabel="1" colspan="2">
-                                <tree>
+                                <tree limit="500">
                                     <button name="action_view_document" type="object" icon="fa-search" title="Voir la fiche complète"/>
                                     <field name="reference"/>
                                     <field name="designation"/>
@@ -314,11 +310,6 @@
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                             groups="base.group_system"
                         />
-                        <!-- <button 
-                            string="Réviser ce document" name="action_reviser_document"
-                            type="object"
-                            attrs="{'invisible': [('active', '=', False)]}"
-                        /> -->
                     </header>
                     <sheet>
                         <field name="active" invisible="1"/>
@@ -353,60 +344,47 @@
                         <group string="Révision" attrs="{'invisible': [('motif_revision', '=', False)]}">
                             <field name="motif_revision" widget="text" nolabel="1" colspan="2"/>
                         </group>
-                        <notebook>
-                            <page string="Organisation (FO)">
-                                <group>
-                                    <group string="Classement / Archivage">
-                                        <!-- <field name="quiremplit_id"/> -->
-                                        <!-- <field name="quiclasse_id"/> -->
-                                        <field name="lieuclassement"/>
-                                    </group>
-                                    <group string="Archivage / Destruction">
-                                        <!-- <field name="quiarchive_id"/> -->
-                                        <field name="lieuarchive"/>
-                                        <!-- <field name="reglerange"/> -->
-                                        <!-- <field name="dureecons"/> -->
-                                        <!-- <field name="quidetruit_id"/> -->
-                                    </group>
-                                </group>
-                            </page>
-                            
-                            <page string="Cycle de validation">
-                                <group>
-                                    <group>
-                                        <field name="quiverifie_id"/>
-                                        <field name="quiapprouve_id"/>
-                                        <field name="diffusion"/>
-                                    </group>
-                                </group>
-                            </page>
-                            <page string="Étapes du document">
-                                <field name="etape_doc_ids">
-                                    <tree string="Étapes" editable="bottom">
-                                        <button name="open_etape_doc" type="object" icon="fa-search" title="Voir la fiche étape"/>
-                                        <field name="numeroetape"/>
-                                        <field name="nometape"/>
-                                        <field name="responsable"/>
-                                        <field name="responsable_id"/>
-                                        <field name="description"/>
-                                        <field name="doclibre"/>
-                                    </tree>
-                                </field>
-                                <field name="etape_doc_texte" invisible="1"/>
-                            </page>
-                            <page string="Documents" attrs="{'invisible': [('doc_ids', '=', [])]}">
-                                <field name="doc_ids" nolabel="1" colspan="2">
-                                    <tree>
-                                        <button name="action_view_document" type="object" icon="fa-search" title="Voir la fiche complète"/>
-                                        <field name="reference"/>
-                                        <field name="designation"/>
-                                        <field name="etape_id"/>
-                                        <field name="auteur_id"/>
-                                        <field name="version"/>
-                                    </tree>
-                                </field>
-                            </page>
-                        </notebook>
+                        <group>
+                            <group string="Classement / Archivage">
+                                <field name="lieuclassement"/>
+                            </group>
+                            <group string="Archivage / Destruction">
+                                <field name="lieuarchive"/>
+                            </group>
+                        </group>
+                        <group string="Cycle de validation">
+                            <group>
+                                <field name="quiverifie_id"/>
+                                <field name="quiapprouve_id"/>
+                                <field name="diffusion"/>
+                            </group>
+                        </group>
+                        <group string="Étapes du document">
+                            <field name="etape_doc_ids" nolabel="1" colspan="2">
+                                <tree string="Étapes" editable="bottom">
+                                    <button name="open_etape_doc" type="object" icon="fa-search" title="Voir la fiche étape"/>
+                                    <field name="numeroetape"/>
+                                    <field name="nometape"/>
+                                    <field name="responsable"/>
+                                    <field name="responsable_id"/>
+                                    <field name="description"/>
+                                    <field name="doclibre"/>
+                                </tree>
+                            </field>
+                            <field name="etape_doc_texte" invisible="1"/>
+                        </group>
+                        <group string="Documents" attrs="{'invisible': [('doc_ids', '=', [])]}">
+                            <field name="doc_ids" nolabel="1" colspan="2">
+                                <tree>
+                                    <button name="action_view_document" type="object" icon="fa-search" title="Voir la fiche complète"/>
+                                    <field name="reference"/>
+                                    <field name="designation"/>
+                                    <field name="etape_id"/>
+                                    <field name="auteur_id"/>
+                                    <field name="version"/>
+                                </tree>
+                            </field>
+                        </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids"/>
