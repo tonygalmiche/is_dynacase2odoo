@@ -158,3 +158,5 @@ access_is_prodstar_fp2gamu,access_is_prodstar_fp2gamu,model_is_prodstar_fp2gamu,
 access_is_prodstar_fa2rcp,access_is_prodstar_fa2rcp,model_is_prodstar_fa2rcp,base.group_user,1,1,1,1
 access_is_prodstar_fc2lie,access_is_prodstar_fc2lie,model_is_prodstar_fc2lie,base.group_user,1,1,1,1
 access_is_prodstar_fc2lid,access_is_prodstar_fc2lid,model_is_prodstar_fc2lid,base.group_user,1,1,1,1
+
+access_is_oberthur,access_is_oberthur,model_is_oberthur,base.group_user,1,1,1,1
