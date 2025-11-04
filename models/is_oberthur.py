@@ -26,7 +26,7 @@ class is_oberthur(models.Model):
     bransubd  = fields.Selection(_TYPE, "Branchement SubD25", tracking=True)
     blocvis   = fields.Selection(_TYPE, "Blocage 2 Vis 8059", tracking=True)
     soudure   = fields.Selection(_TYPE, "Aspect Soudure", tracking=True)
-    continu2  = fields.Char("Continuité Maillage 2", tracking=True)
+    continu2  = fields.Selection(_TYPE, "Continuité Maillage 2", tracking=True)
     ctrelect  = fields.Selection(_TYPE, "Contrôle Électrique Final", tracking=True)
     date      = fields.Integer("Date saisie", tracking=True)
     heure     = fields.Integer("Heure", tracking=True)
@@ -35,3 +35,4 @@ class is_oberthur(models.Model):
     controle  = fields.Char("Controleur", tracking=True)
     reprise   = fields.Char("Ordre Reprise", tracking=True)
     comment   = fields.Char("Commentaire", tracking=True)
+    modif     = fields.Boolean(string="Modif", store=False)

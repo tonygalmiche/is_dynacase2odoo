@@ -11,13 +11,14 @@
                         <group>
                             <field name="montage"/>
                             <field name="coque"/>
-                            <field name="harnais"/>
-                            <field name="numof"/>
+                            <field name="harnais" attrs="{'readonly': [('modif', '==', False)]}"/>
+                            <field name="numof" attrs="{'readonly': [('modif', '==', False)]}"/>
                             <field name="continu1"/>
                             <field name="tensiong"/>
                             <field name="tensiond"/>
                             <field name="bransubd"/>
                             <field name="blocvis"/>
+                            <field name="modif"/>
                         </group>
                     </sheet>
                 </form>
