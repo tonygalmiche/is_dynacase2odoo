@@ -419,7 +419,7 @@ class IsFNC(models.Model):
             found = False
             res=False
             for contact in obj.client_id.child_ids:
-                if "commercial" in (contact.is_type_contact.name or "").lower():
+                if "qualité" in (contact.is_type_contact.name or "").lower():
                     for database in contact.is_database_line_ids:
                         if database == obj.site_id:
                             res = contact
