@@ -35,4 +35,4 @@ class is_oberthur(models.Model):
     controle  = fields.Char("Controleur", tracking=True)
     reprise   = fields.Char("Ordre Reprise", tracking=True)
     comment   = fields.Char("Commentaire", tracking=True)
-    modif     = fields.Boolean(string="Modif", store=False)
+    modif     = fields.Boolean(string="Modifier le harnais et numof", store=False)
