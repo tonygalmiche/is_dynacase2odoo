@@ -1,5 +1,4 @@
-from odoo import models, fields, api         # type: ignore
-from datetime import datetime, timedelta
+from odoo import models, fields         # type: ignore
 
 
 class is_oberthur(models.Model):
@@ -14,13 +13,13 @@ class is_oberthur(models.Model):
     batterie  = fields.Char("K0008B27788", tracking=True)
     harnais   = fields.Char("Harnais", tracking=True)
     numof     = fields.Char("N° OF", tracking=True)
-    continu1  = fields.Char("Continuité Maillage", tracking=True)
+    continu1  = fields.Char("Continuité Maillage 1", tracking=True)
     tensiong  = fields.Float("Tension Gauche", digits=(5, 2), tracking=True)
     tensiond  = fields.Float("Tension Droite", digits=(5, 2), tracking=True)
     bransubd  = fields.Float("Branch. Sub-D", digits=(5, 2), tracking=True)
     blocvis   = fields.Char("Blocage Vis", tracking=True)
     soudure   = fields.Char("Soudure", tracking=True)
-    continu2  = fields.Char("Continuité Maillage", tracking=True)
+    continu2  = fields.Char("Continuité Maillage 2", tracking=True)
     ctrelect  = fields.Char("Contrôle Final", tracking=True)
     date      = fields.Integer("Date saisie", tracking=True)
     heure     = fields.Integer("Heure", tracking=True)
