@@ -110,6 +110,7 @@ class is_dossier_article_doc(models.Model):
                 'type_document'     : 'Article',
                 'dossier_article_id': obj.dossier_id.id,
                 'param_project_id'  : obj.param_project_id.id,
+                'idresp'            : self._uid,
             }
             doc = self.env['is.doc.moule'].create(vals)
             obj.doc_id = doc.id

@@ -533,6 +533,8 @@ class IsDocMoule(models.Model):
                 acces=True
             if obj.param_project_id.droit_equipe_projet==True:
                 acces=True
+            if self.env.user.has_group('is_plastigray16.is_qualite_group') and obj.dossier_article_id:
+                acces=True
             obj.acces_chef_projet = acces
 
 
