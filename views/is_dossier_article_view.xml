@@ -7,7 +7,7 @@
             <field name="model_id" ref="is_plastigray16.model_is_dossier_article"/>
             <field name="binding_model_id" ref="is_plastigray16.model_is_dossier_article"/>
             <field name="state">code</field>
-            <field name="code">action = records.initialiser_documents_dossier_article_action()</field>
+            <field name="code">action = records.sudo().initialiser_documents_dossier_article_action()</field>
         </record>
         <record model="ir.ui.view" id="is_dossier_article_form_view">
             <field name="name">is_dossier_article_form_view</field>
