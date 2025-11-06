@@ -59,7 +59,7 @@ class is_dossier_article(models.Model):
                 domain.append(('dossier_colorant', '=', True))
             if obj.type_dossier=='composant':
                 domain.append(('dossier_composant', '=', True))
-            familles=self.env['is.param.project'].search(domain)
+            familles=self.env['is.param.project'].sudo().search(domain)
             for famille in familles:
                 line_id=False
                 for line in obj.doc_ids:
@@ -71,7 +71,7 @@ class is_dossier_article(models.Model):
                         'dossier_id'      : obj.id,
                         'param_project_id': famille.id,
                     }
-                    line_id = self.env['is.dossier.article.doc'].create(vals)
+                    line_id = self.env['is.dossier.article.doc'].sudo().create(vals)
 
                 #** Recherche des docuements pour cette famille ***************
                 domain=[
