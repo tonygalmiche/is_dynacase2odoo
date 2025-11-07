@@ -444,6 +444,8 @@ class IsFNCProduit(models.Model):
     fnc_id = fields.Many2one(
         "is.fnc", string="FNC", required=True, ondelete="cascade", index=True
     )
+
+    site_id         = fields.Many2one(related='fnc_id.site_id')
     article_id      = fields.Many2one('is.article', 'Article')
     moule_id        = fields.Many2one("is.mold", string="Moule")
     dossierf_id     = fields.Many2one("is.dossierf", string="Dossier F")
@@ -458,10 +460,12 @@ class IsFNCProduit(models.Model):
 
     @api.onchange('article_id')
     def onchange_article_id(self):
-        designation = moule_id = dossierf_id = project_id = ref_client = False
+        designation = moule_id = dossierf_id = project_id = ref_client = prix_vente = False
         if self.article_id:
             designation = self.article_id.designation
             ref_client  = self.article_id.ref_client
+            prix_vente  = self.article_id.prix_vente or self.article_id.cout_actualise 
+
             if self.article_id.moule:
                 if str(self.article_id.moule).startswith('F'):
                     domain = [
@@ -484,6 +488,7 @@ class IsFNCProduit(models.Model):
         self.dossierf_id = dossierf_id
         self.project_id  = project_id
         self.ref_client  = ref_client
+        self.prix_vente  = prix_vente
 
 
 class IsFNCAction(models.Model):

@@ -36,7 +36,8 @@
                             <group string="Liste des produits concernés">
                                 <field name="produit_ids" context="{'default_fnc_id': active_id}" nolabel="1" colspan="2">
                                     <tree editable="bottom">
-                                        <field name="article_id"  optional="show"/>
+                                        <field name="site_id"     invisible="1"/>
+                                        <field name="article_id"  optional="show" domain="[('database_id','=',site_id)]"/>
                                         <field name="designation" optional="hide"/>
                                         <field name="moule_id"    optional="show"/>
                                         <field name="dossierf_id" optional="show"/>
