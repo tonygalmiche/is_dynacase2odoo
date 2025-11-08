@@ -42,6 +42,33 @@ class IsProcessus(models.Model):
     # Documents du processus
     doc_ids = fields.One2many('is.processus.doc', 'processus_id', string="Documents du processus", readonly=True)
 
+    # Champ calculé pour la visibilité du bouton de création de document
+    can_create_document = fields.Boolean(string="Peut créer un document", compute='_compute_can_create_document')
+
+    @api.depends('pilotepcs_id')
+    def _compute_can_create_document(self):
+        """Détermine si l'utilisateur courant peut créer un document pour ce processus"""
+        for record in self:
+            # Vérifier si l'utilisateur est le pilote du processus
+            is_pilote = record.pilotepcs_id and record.pilotepcs_id.id == self.env.uid
+            # Vérifier si l'utilisateur est dans le groupe gestionnaire
+            is_gestionnaire = self.env.user.has_group('is_dynacase2odoo.is_gestionnaire_processus_group')
+            record.can_create_document = is_pilote or is_gestionnaire
+
+    def action_create_document(self):
+        """Ouvre le formulaire de création d'un document lié à ce processus"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Créer un document',
+            'res_model': 'is.processus.doc',
+            'view_mode': 'form',
+            'target': 'current',
+            'context': {
+                'default_processus_id': self.id,
+            }
+        }
+
     def lien_vers_dynacase_action(self):
         for obj in self:
             url = "https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s" % obj.dynacase_id
@@ -70,6 +97,34 @@ class IsProcessusEtape(models.Model):
     active            = fields.Boolean(string="Actif", default=True, tracking=True)
     dynacase_id       = fields.Integer(string="Id Dynacase", index=True, copy=False)
     doc_ids           = fields.One2many('is.processus.doc', 'etape_id', string="Documents", readonly=True)
+
+    # Champ calculé pour la visibilité du bouton de création de document
+    can_create_document = fields.Boolean(string="Peut créer un document", compute='_compute_can_create_document')
+
+    @api.depends('pilote_id')
+    def _compute_can_create_document(self):
+        """Détermine si l'utilisateur courant peut créer un document pour cette étape"""
+        for record in self:
+            # Vérifier si l'utilisateur est le pilote du processus
+            is_pilote = record.pilote_id and record.pilote_id.id == self.env.uid
+            # Vérifier si l'utilisateur est dans le groupe gestionnaire
+            is_gestionnaire = self.env.user.has_group('is_dynacase2odoo.is_gestionnaire_processus_group')
+            record.can_create_document = is_pilote or is_gestionnaire
+
+    def action_create_document(self):
+        """Ouvre le formulaire de création d'un document lié à cette étape"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Créer un document',
+            'res_model': 'is.processus.doc',
+            'view_mode': 'form',
+            'target': 'current',
+            'context': {
+                'default_etape_id': self.id,
+                'default_processus_id': self.processus_id.id,
+            }
+        }
 
     def lien_vers_dynacase_action(self):
         for obj in self:
@@ -143,6 +198,20 @@ class IsProcessusDoc(models.Model):
 
     active      = fields.Boolean(string="Actif", default=True, tracking=True)
     dynacase_id = fields.Integer(string="Id Dynacase", index=True, copy=False)
+
+    # Champ calculé pour déterminer si les champs doivent être en lecture seule
+    is_readonly = fields.Boolean(string="Lecture seule", compute='_compute_is_readonly')
+
+    @api.depends('pilote_id')
+    def _compute_is_readonly(self):
+        """Détermine si les champs doivent être en lecture seule pour l'utilisateur courant"""
+        for record in self:
+            # Vérifier si l'utilisateur est le pilote du processus
+            is_pilote = record.pilote_id and record.pilote_id.id == self.env.uid
+            # Vérifier si l'utilisateur est dans le groupe gestionnaire
+            is_gestionnaire = self.env.user.has_group('is_dynacase2odoo.is_gestionnaire_processus_group')
+            # Le champ est readonly si l'utilisateur n'est NI pilote NI gestionnaire
+            record.is_readonly = not (is_pilote or is_gestionnaire)
 
     def _get_site_id(self):
         user = self.env['res.users'].browse(self._uid)

@@ -55,6 +55,14 @@
                 <form string="Processus">
                     <header>
                         <field name="active" invisible="1"/>
+                        <field name="can_create_document" invisible="1"/>
+                        <button 
+                            string="Créer un document" 
+                            name="action_create_document" 
+                            type="object"
+                            class="btn btn-primary"
+                            attrs="{'invisible': ['|', ('can_create_document', '=', False), ('id', '=', False)]}"
+                        />
                         <button 
                             string="Dynacase" name="lien_vers_dynacase_action"
                             type="object" class="btn btn-info"
@@ -168,6 +176,14 @@
                 <form string="Étape du processus">
                     <header>
                         <field name="active" invisible="1"/>
+                        <field name="can_create_document" invisible="1"/>
+                        <button 
+                            string="Créer un document" 
+                            name="action_create_document" 
+                            type="object"
+                            class="btn btn-primary"
+                            attrs="{'invisible': ['|', ('can_create_document', '=', False), ('id', '=', False)]}"
+                        />
                         <button 
                             string="Dynacase" name="lien_vers_dynacase_action"
                             type="object" class="btn btn-info"
@@ -259,7 +275,7 @@
             <field name="name">is.processus.doc.tree</field>
             <field name="model">is.processus.doc</field>
             <field name="arch" type="xml">
-                <tree string="Documents des processus">
+                <tree string="Documents des processus" create="0">
                     <field name="reference"        optional="show"/>
                     <field name="designation"      optional="show"/>
                     <field name="processus_id"     optional="show" widget="many2one_clickable" />
@@ -300,9 +316,10 @@
             <field name="name">is.processus.doc.form</field>
             <field name="model">is.processus.doc</field>
             <field name="arch" type="xml">
-                <form string="Document du processus">
+                <form string="Document du processus" create="0">
                     <header>
-                        <field name="active" invisible="1"/>                        
+                        <field name="active" invisible="1"/>
+                        <field name="is_readonly" invisible="1"/>
                         <field name="dynacase_id" groups="base.group_system" invisible="1"/>
                         <button 
                             string="Dynacase" name="lien_vers_dynacase_action"
@@ -317,50 +334,50 @@
                         
                         <group string="Identification du processus">
                             <group>
-                                <field name="processus_id"/>
-                                <field name="etape_id"/>
+                                <field name="processus_id" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                                <field name="etape_id" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                             </group>
                             <group>
                                 <field name="pilote_id"/>
-                                <field name="procedure_id"/>
+                                <field name="procedure_id" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                             </group>
                         </group>
 
                         <group string="Identification du document">
                             <group>
-                                <field name="reference" required="1"/>
-                                <field name="designation"/>
-                                <field name="niveau"/>
+                                <field name="reference" required="1" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                                <field name="designation" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                                <field name="niveau" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                             </group>
                             <group>
-                                <field name="auteur_id"/>
-                                <field name="version"/>
-                                <field name="modification"/>
+                                <field name="auteur_id" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                                <field name="version" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                                <field name="modification" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                             </group>
                         </group>
                         <group string="Pièces jointes">
-                            <field name="piece_jointe_ids" widget="many2many_binary" nolabel="1" colspan="2"/>
+                            <field name="piece_jointe_ids" widget="many2many_binary" nolabel="1" colspan="2" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                         </group>
                         <group string="Révision" attrs="{'invisible': [('motif_revision', '=', False)]}">
                             <field name="motif_revision" widget="text" nolabel="1" colspan="2"/>
                         </group>
                         <group>
                             <group string="Classement / Archivage">
-                                <field name="lieuclassement"/>
+                                <field name="lieuclassement" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                             </group>
                             <group string="Archivage / Destruction">
-                                <field name="lieuarchive"/>
+                                <field name="lieuarchive" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                             </group>
                         </group>
                         <group string="Cycle de validation">
                             <group>
-                                <field name="quiverifie_id"/>
-                                <field name="quiapprouve_id"/>
-                                <field name="diffusion"/>
+                                <field name="quiverifie_id" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                                <field name="quiapprouve_id" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                                <field name="diffusion" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                             </group>
                         </group>
                         <group string="Étapes du document">
-                            <field name="etape_doc_ids" nolabel="1" colspan="2">
+                            <field name="etape_doc_ids" nolabel="1" colspan="2" attrs="{'readonly': [('is_readonly', '=', True)]}">
                                 <tree string="Étapes" editable="bottom">
                                     <button name="open_etape_doc" type="object" icon="fa-search" title="Voir la fiche étape"/>
                                     <field name="numeroetape"/>

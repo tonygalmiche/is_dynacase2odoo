@@ -250,5 +250,49 @@
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
+
+        <!-- Processus - IsProcessus -->
+        <record id="access_is_processus_gestionnaire"  model="ir.model.access" >
+            <field name="name">Accès complet au groupe 'Gestionnaire des processus'</field>
+            <field name="model_id"    eval="ref('model_is_processus')"/>
+            <field name="group_id"    eval="ref('is_dynacase2odoo.is_gestionnaire_processus_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+     
+        <!-- Processus - IsProcessusEtape -->
+        <record id="access_is_processus_etape_gestionnaire"  model="ir.model.access" >
+            <field name="name">Accès complet au groupe 'Gestionnaire des processus'</field>
+            <field name="model_id"    eval="ref('model_is_processus_etape')"/>
+            <field name="group_id"    eval="ref('is_dynacase2odoo.is_gestionnaire_processus_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+      
+        <!-- Processus - IsProcessusDoc -->
+        <record id="access_is_processus_doc_pilote"  model="ir.model.access" >
+            <field name="name">Accès complet au groupe 'Pilote de processus'</field>
+            <field name="model_id"    eval="ref('model_is_processus_doc')"/>
+            <field name="group_id"    eval="ref('is_dynacase2odoo.is_pilote_processus_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Processus - IsProcessusDocEtape -->
+        <record id="access_is_processus_doc_etape_pilote"  model="ir.model.access" >
+            <field name="name">Accès complet au groupe 'Pilote de processus'</field>
+            <field name="model_id"    eval="ref('model_is_processus_doc_etape')"/>
+            <field name="group_id"    eval="ref('is_dynacase2odoo.is_pilote_processus_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
     </data>
 </odoo>

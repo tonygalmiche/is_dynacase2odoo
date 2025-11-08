@@ -40,6 +40,25 @@
         <field name="category_id" ref="is_plastigray16.is_groupe_plastigray_module_category"/>
     </record>
 
+    <!-- Catégorie Gestion des processus -->
+    <record model="ir.module.category" id="is_gestion_processus_module_category">
+        <field name="name">Gestion des processus</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <record model="res.groups" id="is_pilote_processus_group" >
+        <field name="name">Pilote de processus</field>
+        <field name="comment"></field>
+        <field name="category_id" ref="is_gestion_processus_module_category"/>
+    </record>
+
+    <record model="res.groups" id="is_gestionnaire_processus_group" >
+        <field name="name">Gestionnaire des processus</field>
+        <field name="comment"></field>
+        <field name="category_id" ref="is_gestion_processus_module_category"/>
+        <field name="implied_ids" eval="[(4, ref('is_pilote_processus_group'))]"/>
+    </record>
+
 
 </data>
 </openerp>
