@@ -288,9 +288,9 @@
             <field name="arch" type="xml">
                 <tree string="Revue de lancement">
                     <field name="name"/>
+                    <field name="rl_indice"                 optional="show"/>
                     <field name="rl_num_rcid"               optional="show" widget="many2one_clickable"/>
                     <field name="dossierf_id"               optional="show" widget="many2one_clickable"/>
-                    <field name="rl_indice"                 optional="show"/>
                     <field name="rl_mouleid"                optional="hide" widget="many2one_clickable"/>
                     <field name="rl_dossierfid"             optional="hide" widget="many2one_clickable"/>
                     <field name="rl_designation_rc"         optional="show"/>

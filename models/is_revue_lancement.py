@@ -224,19 +224,56 @@ class is_revue_lancement(models.Model):
                 raise ValidationError("Il ne faut pas saisir une revue de contrat et un dossier F en même temps")
 
 
-    # def write(self,vals):
-    #     res=super().write(vals)
-    #     self._rl_unique()
-    #     # for obj in self:
-    #     #     if obj.rl_pgrc_total != obj.rl_be_total:
-    #     #         raise ValidationError("Total moule et revue de lancement différent !")
-    #     return res
+    def write(self, vals):
+        res = super().write(vals)
+        # Si rc_mouleid ou rc_dossierfid change, recalculer l'indice
+        if 'rl_num_rcid' in vals or 'dossierf_id' in vals:
+            for obj in self:
+                # Recalculer l'indice basé sur le nouveau moule/dossier
+                obj._recalculer_indice()
+        return res
+
+
+    def _get_next_indice(self, moule_id, dossierfid, exclude_id=None):
+        """Retourne le prochain indice disponible pour un moule/dossier donné"""
+        domain = [
+            ('rl_mouleid', '=', moule_id),
+            ('rl_dossierfid', '=', dossierfid),
+        ]
+        if exclude_id:
+            domain.append(('id', '!=', exclude_id))
+        
+        lines = self.env['is.revue.lancement'].search(domain, order='rl_indice desc', limit=1)
+        if lines:
+            return lines[0].rl_indice + 1
+        else:
+            return 0
+
+
+    def _recalculer_indice(self):
+        """Recalcule l'indice en fonction du moule ou dossier F"""
+        for obj in self:
+            obj.rl_indice = obj._get_next_indice(obj.rl_mouleid.id, obj.rl_dossierfid.id, obj.id)
 
 
     def dupliquer_rl_action(self):
+        """Duplique la RL avec incrémentation de l'indice et recherche de la RC"""
         for obj in self:
-            copy=obj.copy()
-            res= {
+            default = {
+                'rl_indice': obj._get_next_indice(obj.rl_mouleid.id, obj.rl_dossierfid.id),
+            }
+            #** Recherche de la dernière revue de contrat validée *************
+            domain = [
+                ('rc_mouleid', '=', obj.rl_mouleid.id),
+                ('rc_dossierfid', '=', obj.rl_dossierfid.id),
+                ('state', '=', 'diffuse'),
+            ]
+            lines = self.env['is.revue.de.contrat'].search(domain, order='rc_indice desc', limit=1)
+            if lines:
+                default['rl_num_rcid'] = lines[0].id
+            #******************************************************************
+            copy = obj.copy(default=default)
+            res = {
                 'name': 'Copie',
                 'view_mode': 'form',
                 'res_model': 'is.revue.lancement',
@@ -247,20 +284,15 @@ class is_revue_lancement(models.Model):
 
 
     def copy(self, default=None):
+        """Duplication standard : recherche le prochain indice disponible"""
         for obj in self:
             default = dict(default or {})
-            default['rl_indice']=obj.rl_indice+1
-            #** Recherche de la dernière revue de contrat validée *************
-            domain=[
-                ('rc_mouleid'   , '=', obj.rl_mouleid.id), 
-                ('rc_dossierfid', '=', obj.rl_dossierfid.id), 
-                ('state'        , '=', 'diffuse'), 
-            ]
-            lines = self.env['is.revue.de.contrat'].search(domain,order='rc_indice desc',limit=1)
-            for line in lines:
-                default['rl_num_rcid']=line.id
-            #******************************************************************
-            res=super().copy(default=default)
+            
+            # Si l'indice n'est pas explicitement défini dans default, rechercher le dernier
+            if 'rl_indice' not in default:
+                default['rl_indice'] = obj._get_next_indice(obj.rl_mouleid.id, obj.rl_dossierfid.id)
+            
+            res = super().copy(default=default)
             return res
 
 
