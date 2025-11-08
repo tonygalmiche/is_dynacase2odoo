@@ -166,9 +166,9 @@ class is_revue_projet_jalon(models.Model):
         for obj in self:
             J=obj.rpj_j.lower()
             field_name="rpj_avancement_%s"%J
-            setattr(obj, field_name, obj.rpj_note)
+            obj.sudo().write({field_name: obj.rpj_note})
             field_name="rpj_date_valide_%s"%J
-            setattr(obj, field_name, date.today())
+            obj.sudo().write({field_name: date.today()})
             obj.sudo().state = "rpj_valide"
             if not obj.rpj_rcid or obj.rpj_rcid.state!='diffuse' or obj.rpj_rcid.active==False:
                 raise ValidationError("Une revue de contrat diffusée est obligatoire !")
