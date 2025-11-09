@@ -186,18 +186,45 @@ class IsReclamationFournisseur(models.Model):
     autre_cout_ids = fields.One2many(
         "is.reclamation.fournisseur.autre.cout",
         "reclamation_id",
-        string="Autres coûts",
+        string="Détail autres coûts",
         tracking=True,
     )
+
+    autres_couts = fields.Float(
+        string="Autres coûts",
+        tracking=True,
+        help="Somme des montants des autres coûts",
+        compute="_compute_autres_couts",
+        store=True,
+        readonly=True,
+    )
+
+    @api.depends('autre_cout_ids.montant_autre')
+    def _compute_autres_couts(self):
+        for rec in self:
+            rec.autres_couts = sum(rec.autre_cout_ids.mapped('montant_autre'))
 
     # Coûts comptables (lignes)
     cout_compta_ids = fields.One2many(
         "is.reclamation.fournisseur.cout.compta",
         "reclamation_id",
-        string="Coûts comptables",
+        string="Détail facturation des coûts",
         tracking=True,
     )
 
+    couts_compta = fields.Float(
+        string="Total facturation des coûts",
+        tracking=True,
+        help="Somme des montants des factures des coûts",
+        compute="_compute_couts_compta",
+        store=True,
+        readonly=True,
+    )
+
+    @api.depends('cout_compta_ids.montant')
+    def _compute_couts_compta(self):
+        for rec in self:
+            rec.couts_compta = sum(rec.cout_compta_ids.mapped('montant'))
 
     somme_des_couts = fields.Float(
         string="Somme des coûts",
@@ -208,12 +235,26 @@ class IsReclamationFournisseur(models.Model):
         readonly=True,
     )
 
-    @api.depends('couts_produits', 'couts_tris', 'autre_cout_ids.montant_autre', 'cout_compta_ids.montant')
+    @api.depends('couts_produits', 'couts_tris', 'autre_cout_ids.montant_autre')
     def _compute_somme_des_couts(self):
         for rec in self:
             autres_couts = sum(rec.autre_cout_ids.mapped('montant_autre'))
-            couts_compta = sum(rec.cout_compta_ids.mapped('montant'))
-            rec.somme_des_couts = (rec.couts_produits or 0.0) + (rec.couts_tris or 0.0) + autres_couts + couts_compta
+            #couts_compta = sum(rec.cout_compta_ids.mapped('montant'))
+            rec.somme_des_couts = (rec.couts_produits or 0.0) + (rec.couts_tris or 0.0) + autres_couts # + couts_compta
+
+    ecart_cout = fields.Float(
+        string="Écart coût",
+        tracking=True,
+        help="Somme des coûts - Coûts comptables",
+        compute="_compute_ecart_cout",
+        store=True,
+        readonly=True,
+    )
+
+    @api.depends('somme_des_couts', 'couts_compta')
+    def _compute_ecart_cout(self):
+        for rec in self:
+            rec.ecart_cout = (rec.somme_des_couts or 0.0) - (rec.couts_compta or 0.0)
 
 
 
@@ -234,6 +275,25 @@ class IsReclamationFournisseur(models.Model):
                 "url": url,
                 "target": "new",
             }
+
+
+    def action_recalculer_couts(self):
+        """Action serveur pour recalculer tous les champs calculés liés aux coûts"""
+        for rec in self:
+            try:
+                # Vérifie d'abord que la nature de réclamation est valide
+                rec._validate_nature_reclamation()
+                # Si pas d'erreur, on peut recalculer les coûts
+                rec._compute_couts_produits()
+                rec._compute_couts_tris()
+                rec._compute_autres_couts()
+                rec._compute_couts_compta()
+                rec._compute_somme_des_couts()
+                rec._compute_ecart_cout()
+            except Exception as e:
+                # Si la validation échoue, on passe à l'enregistrement suivant
+                continue
+        #return {'type': 'ir.actions.client', 'tag': 'reload'}
 
 
 

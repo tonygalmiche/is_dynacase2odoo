@@ -69,10 +69,12 @@
                     <field name="commentaire_reponse" optional="hide"/>
 
                     <!-- Coûts globaux -->
-                    <field name="couts_produits" optional="hide"/>
-                    <field name="couts_tris" optional="hide"/>
+                    <field name="couts_produits"  optional="hide"/>
+                    <field name="couts_tris"      optional="hide"/>
+                    <field name="autres_couts"    optional="hide"/>
                     <field name="somme_des_couts" optional="hide"/>
-
+                    <field name="couts_compta"    optional="hide"/>
+                    <field name="ecart_cout"      optional="hide"/>
                     <button 
                         title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"
                         attrs="{'invisible': [('dynacase_id', '=', 0)]}"
@@ -215,8 +217,15 @@
                                 </field>
                             </group>
 
+                            <!-- Coûts globaux -->
+                            <group string="Synthèse des coûts">
+                                <field name="couts_produits"/>
+                                <field name="couts_tris"/>
+                                <field name="autres_couts"/>
+                            </group>
+
                             <!-- Coûts comptables -->
-                            <group string="Coûts comptables">
+                            <group string="Facturation des coûts">
                                 <field name="cout_compta_ids" context="{'default_reclamation_id': active_id}" nolabel="1" colspan="2">
                                     <tree editable="bottom">
                                         <field name="num_facture"/>
@@ -225,12 +234,10 @@
                                     </tree>
                                 </field>
                             </group>
-
-                            <!-- Coûts globaux -->
-                            <group string="Coûts">
-                                <field name="couts_produits"/>
-                                <field name="couts_tris"/>
+                            <group string="Bilan des coûts">
                                 <field name="somme_des_couts"/>
+                                <field name="couts_compta"/>
+                                <field name="ecart_cout"/>
                             </group>
                         </group>
                         <group string="Pièces jointes">
@@ -256,6 +263,19 @@
             <field name="domain">[]</field>
             <field name="help" type="html">
                 <p>Créer et suivre les réclamations fournisseurs.</p>
+            </field>
+        </record>
+
+        <!-- Action serveur pour recalculer les coûts -->
+        <record id="is_reclamation_fournisseur_action_recalculer_couts" model="ir.actions.server">
+            <field name="name">Recalculer les coûts</field>
+            <field name="model_id" ref="model_is_reclamation_fournisseur"/>
+            <field name="binding_model_id" ref="model_is_reclamation_fournisseur"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    action = records.action_recalculer_couts()
             </field>
         </record>
 
