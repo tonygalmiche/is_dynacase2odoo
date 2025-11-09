@@ -24,6 +24,18 @@ class IsFNC(models.Model):
                 "target": "new",
             }
 
+    def action_recalculer_couts(self):
+        """Action serveur pour recalculer tous les champs calculés liés aux coûts"""
+        for rec in self:
+            # Force le recalcul de tous les champs compute liés aux coûts
+            rec._compute_total_non_conforme()
+            rec._compute_total_avoir()
+            rec._compute_cout_piece()
+            rec._compute_cout_total_tri()
+            rec._compute_total_autrecouts()
+            rec._compute_cout_total()
+            rec._compute_total_perte()
+
 
     site_id = fields.Many2one('is.database', "Site")
 
@@ -265,7 +277,8 @@ class IsFNC(models.Model):
         for rec in self:
             total = 0.0
             for line in rec.action_ids:
-                total += (line.nb_non_conforme or 0.0) * (line.cout_tri or 0.0)
+                #total += (line.nb_non_conforme or 0.0) * (line.cout_tri or 0.0)
+                total +=  (line.cout_tri or 0.0)
             rec.cout_total_tri = total
 
     total_autrecouts = fields.Float(
@@ -323,7 +336,7 @@ class IsFNC(models.Model):
                 + (rec.cout_facture or 0.0)
             )
 
-    cout_facture = fields.Float(string="Coût facturé FIF", digits=(16, 2), tracking=True)
+    cout_facture = fields.Float(string="Coût facturé", digits=(16, 2), tracking=True)
 
     # ------------------------------------------------------------
     # Produits
