@@ -152,13 +152,12 @@ class IsProcessusDoc(models.Model):
                 pilote_id = obj.processus_id.pilotepcs_id.id
             obj.pilote_id = pilote_id
 
-
     # Identification (frame dpcs_fr_pcs)
     processus_id = fields.Many2one('is.processus', string="Processus", tracking=True)
     etape_id     = fields.Many2one('is.processus.etape', string="Étape", tracking=True)
     procedure_id = fields.Many2one('is.processus.doc', string="Procédure", tracking=True)
+    procedure_designation = fields.Char(string="Désignation procédure", related='procedure_id.designation')
     pilote_id    = fields.Many2one('res.users', 'Pilote du processus', compute='_compute_pilote_id', store=True, readonly=True, tracking=True)
-
 
     # Identification (frame dpcs_ident)
     reference    = fields.Char(string="Référence", tracking=True)

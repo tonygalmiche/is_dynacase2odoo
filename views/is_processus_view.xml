@@ -281,6 +281,7 @@
                     <field name="processus_id"     optional="show" widget="many2one_clickable" />
                     <field name="etape_id"         optional="hide" widget="many2one_clickable" />
                     <field name="procedure_id"     optional="hide" widget="many2one_clickable" />
+                    <field name="procedure_designation" optional="hide"/>
                     <field name="pilote_id"        optional="show"/>
                     <field name="auteur_id"        optional="show"/>
                     <field name="site_id"          optional="hide"/>
@@ -340,9 +341,9 @@
                             <group>
                                 <field name="pilote_id"/>
                                 <field name="procedure_id" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                                <field name="procedure_designation" attrs="{'invisible': [('procedure_id', '=', False)]}"/>
                             </group>
                         </group>
-
                         <group string="Identification du document">
                             <group>
                                 <field name="reference" required="1" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
