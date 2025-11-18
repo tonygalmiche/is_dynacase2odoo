@@ -527,7 +527,7 @@ class IsGanttPdf(models.Model):
                         #** Traduction ****************************************
                         item_text = item.get('text')
                         if obj.traduction=='en':
-                            item_text = item.get('text_en')
+                            item_text = (item.get('text_en') or item.get('text') or '').replace('Autre','Other')
                         #******************************************************
 
                         txt = '%s %s'%('- '*item.get('niveau'),item_text)
@@ -562,14 +562,14 @@ class IsGanttPdf(models.Model):
 
                         cairo_rectangle(ctx,x,y+3,tache_height/2,height-6,fill_rgb=fill_rgb)    # Rectangle Fait/Pas fait
 
-                        #** Traduction ****************************************
-                        txt = item.get('text')
-                        if obj.traduction=='en':
-                            txt =  item.get('text_en')
-                        print(obj.traduction,txt)
-                        #******************************************************
+                        # #** Traduction ****************************************
+                        # txt = item.get('text')
+                        # if obj.traduction=='en':
+                        #     txt =  item.get('text_en') or item.get('text')
+                        # print(obj.traduction,txt)
+                        # #******************************************************
 
-                        cairo_show_text(ctx,x+tache_height,y+tache_height,txt=txt) # Nom de la tache sur le rectangle de la tache
+                        cairo_show_text(ctx,x+tache_height,y+tache_height,txt=item_text) # Nom de la tache sur le rectangle de la tache
                         nb+=1
 
                 #** Logo au format PIL et redimmensionnement **********************

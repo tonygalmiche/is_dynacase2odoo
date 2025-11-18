@@ -190,11 +190,6 @@ class IsDocMoule(models.Model):
                 priority = round(2*random()) # Nombre aléatoire entre 0 et 2
                 famille=line.param_project_id.ppr_famille
                 name=famille
-                #if famille=='Autre':
-                #    name="%s (Autre)"%(line.demande or '')
-                #else:
-                #    name=famille
-
                 if line.demande:
                    name="%s (%s)"%(line.demande,famille)
                 else:
