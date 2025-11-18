@@ -314,6 +314,7 @@ class IsProcessusDoc(models.Model):
             'auteur_id': 'Auteur',
             'niveau': 'Niveau',
             'modification': 'Modification',
+            'motif_revision': 'Motif de révision',
             'piece_jointe_noms': 'Pièces jointes',
         }
         
