@@ -64,12 +64,14 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="code_imputation"         optional="show"/>
-                    <field name="revue_lancementid"       optional="show" widget="many2one_clickable"/>
-                    <field name="num_dossierid"           optional="show" widget="many2one_clickable"/>
-                    <field name="num_erdid"               optional="show" widget="many2one_clickable"/>
+                    <field name="num_dossier"             optional="show"/>
+                    <field name="moule_dossierf"          optional="show"/>
+                    <field name="revue_lancementid"       optional="hide" widget="many2one_clickable"/>
+                    <field name="num_dossierid"           optional="hide" widget="many2one_clickable"/>
+                    <field name="num_erdid"               optional="hide" widget="many2one_clickable"/>
+                    <field name="num_mouleid"             optional="hide" widget="many2one_clickable"/>
+                    <field name="dossierf_id"             optional="hide" widget="many2one_clickable"/>
                     <field name="nature"                  optional="show"/>
-                    <field name="num_mouleid"             optional="show" widget="many2one_clickable"/>
-                    <field name="dossierf_id"             optional="show" widget="many2one_clickable"/>
                     <field name="clientid"                optional="show" widget="many2one_clickable"/>
                     <field name="projetid"                optional="show" widget="many2one_clickable"/>
                     <field name="chef_projetid"           optional="hide"/>
@@ -105,7 +107,13 @@
             <field name="model">is.inv.achat.moule</field>
             <field name="arch" type="xml">
                 <pivot>
-                    <field name="code_imputation" type="row"/>
+                    <!-- <field name="num_dossier" type="row"/> -->
+                    <field name="moule_dossierf" type="row"/>
+                    <!-- <field name="clientid" type="row"/> -->
+                    <!-- <field name="projetid" type="row"/> -->
+                    <!-- <field name="chef_projetid" type="row"/> -->
+                    <field name="prix_commande" type="measure"/>
+                    <field name="montant_facture" type="measure"/>
                 </pivot>
             </field>
         </record>

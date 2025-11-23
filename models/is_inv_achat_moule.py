@@ -59,6 +59,36 @@ class is_inv_achat_moule(models.Model):
     date_commande_ou_saisie = fields.Date(string="Date de commande ou de saisie"                 , tracking=True, compute='_compute_date',store=True, readonly=True)
     dynacase_id             = fields.Integer(string="Id Dynacase", index=True, copy=False)
     active                  = fields.Boolean('Actif', default=True                               , tracking=True)
+    num_dossier             = fields.Char(string="N°dossier"        , compute='_compute_num_dossier'   , store=True, tracking=True)
+    moule_dossierf          = fields.Char(string="Moule / Dossier F", compute='_compute_moule_dossierf', store=True, tracking=True)
+
+
+    @api.depends('revue_lancementid', 'num_erdid', 'num_dossierid', 'dossierf_id', 'num_mouleid')
+    def _compute_num_dossier(self):
+        for obj in self:
+            num = False
+            if obj.revue_lancementid:
+                num = obj.revue_lancementid.name
+            if not num and obj.num_erdid:
+                num = obj.num_erdid.numero
+            if not num and obj.num_dossierid:
+                num = obj.num_dossierid.demao_num
+            if not num and obj.dossierf_id:
+                num = obj.dossierf_id.name
+            if not num and obj.num_mouleid:
+                num = obj.num_mouleid.name
+            obj.num_dossier = num
+
+
+    @api.depends('dossierf_id', 'num_mouleid')
+    def _compute_moule_dossierf(self):
+        for obj in self:
+            res = False
+            if obj.dossierf_id:
+                res = obj.dossierf_id.name
+            if not res and obj.num_mouleid:
+                res = obj.num_mouleid.name
+            obj.moule_dossierf = res
 
 
     @api.onchange('revue_lancementid')

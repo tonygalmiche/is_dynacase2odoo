@@ -24,7 +24,7 @@
 
                     <!-- Réception concernée -->
                     <field name="num_reception" optional="show"/>
-                    <field name="fournisseur_id"  optional="hide" widget="many2one_clickable"/>
+                    <!-- <field name="fournisseur_id"  optional="hide" widget="many2one_clickable"/> -->
                     <field name="nom_fournisseur" optional="show"/>
                     <field name="adr_fournisseur" optional="hide"/>
                     <field name="code_fournisseur" optional="hide"/>
@@ -100,12 +100,12 @@
                     <field name="site_id"/>
                     <field name="num_reclamation"/>
                     <field name="type_reclamation"/>
-                    <field name="fournisseur_id"/>
+                    <field name="nom_fournisseur"/>
                     <field name="codepg"/>
                     <field name="annee_detection_defaut"/>
                     <group expand="0" string="Group By">
                         <filter name="group_type" string="Type" context="{'group_by': 'type_reclamation'}"/>
-                        <filter name="group_fournisseur" string="Fournisseur" context="{'group_by': 'fournisseur_id'}"/>
+                        <filter name="group_fournisseur" string="Fournisseur" context="{'group_by': 'nom_fournisseur'}"/>
                         <filter name="group_annee" string="Année détection" context="{'group_by': 'annee_detection_defaut'}"/>
                         <filter name="group_date_creation" string="Date création" context="{'group_by': 'date_creation'}"/>
                     </group>
