@@ -247,6 +247,18 @@ class is_revue_de_contrat(models.Model):
 
     def reviser_rc_action(self):
         for obj in self:
+
+            domain=[
+                ('rpj_mouleid', '=', obj.rc_mouleid.id), 
+                ('dossierf_id', '=', obj.rc_dossierfid.id), 
+                ('state'      , '=', 'rpj_valide'), 
+            ]
+            lines = self.env['is.revue.projet.jalon'].search(domain)
+            if len(lines)>0:
+                raise ValidationError("Il existe déjà une revue de projet jalon de validée => Duplication impossible !")
+
+
+
             default={
                 'rc_mouleid'   : obj.rc_mouleid.id,
                 'rc_dossierfid': obj.rc_dossierfid.id,
@@ -265,14 +277,6 @@ class is_revue_de_contrat(models.Model):
 
     def copy(self, default=None):
         for obj in self:
-            domain=[
-                ('rpj_mouleid', '=', obj.rc_mouleid.id), 
-                ('dossierf_id', '=', obj.rc_dossierfid.id), 
-                ('state'      , '=', 'rpj_valide'), 
-            ]
-            lines = self.env['is.revue.projet.jalon'].search(domain)
-            if len(lines)>0:
-                raise ValidationError("Il existe déjà une revue de projet jalon de validée => Duplication impossible !")
             default = dict(default or {})
             #default['rc_indice']=obj.rc_indice+1
             res=super().copy(default=default)
