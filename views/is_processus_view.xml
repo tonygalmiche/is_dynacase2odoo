@@ -103,6 +103,7 @@
                         <group string="Étapes du processus">
                             <field name="etape_ids" nolabel="1" colspan="2">
                                 <tree string="Étapes" editable="bottom">
+                                    <button name="action_view_etape" type="object" icon="fa-search" title="Voir la fiche étape"/>
                                     <field name="numetape"/>
                                     <field name="description"/>
                                     <field name="responsable"/>
@@ -337,45 +338,34 @@
                             <group>
                                 <field name="processus_id" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                                 <field name="etape_id" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                                <field name="procedure_designation" attrs="{'invisible': [('procedure_id', '=', False)]}"/>
                             </group>
                             <group>
                                 <field name="pilote_id"/>
                                 <field name="procedure_id" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
-                                <field name="procedure_designation" attrs="{'invisible': [('procedure_id', '=', False)]}"/>
                             </group>
                         </group>
-                        <group string="Identification du document">
-                            <group>
+                        <group name="identification" col="3">
+                            <group string="Identification du document">
                                 <field name="reference" required="1" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                                 <field name="designation" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
-                                <field name="niveau" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
-                            </group>
-                            <group>
-                                <field name="auteur_id" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                                 <field name="version" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
-                                <field name="modification" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                                <field name="modification" attrs="{'invisible': [('modification', '=', False)]}"/>
                             </group>
-                        </group>
-                        <group string="Pièces jointes">
-                            <field name="piece_jointe_ids" widget="many2many_binary" nolabel="1" colspan="2" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
-                        </group>
-                        <group string="Révision" attrs="{'invisible': [('motif_revision', '=', False)]}">
-                            <field name="motif_revision" widget="text" nolabel="1" colspan="2"/>
-                        </group>
-                        <group>
-                            <group string="Classement / Archivage">
-                                <field name="lieuclassement" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
-                            </group>
-                            <group string="Archivage / Destruction">
-                                <field name="lieuarchive" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
-                            </group>
-                        </group>
-                        <group string="Cycle de validation">
-                            <group>
+                            <group  string="Cycle de validation">
+                                <field name="auteur_id" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                                 <field name="quiverifie_id" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                                 <field name="quiapprouve_id" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                                 <field name="diffusion" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                             </group>
+                            <group string="Gestion documentaire">
+                                <field name="niveau" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                                <field name="lieuclassement" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                                <field name="lieuarchive" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                            </group>
+                        </group>
+                        <group string="Pièces jointes">
+                            <field name="piece_jointe_ids" widget="many2many_binary" nolabel="1" colspan="2" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                         </group>
                         <group string="Étapes du document">
                             <field name="etape_doc_ids" nolabel="1" colspan="2" attrs="{'readonly': [('is_readonly', '=', True)]}">

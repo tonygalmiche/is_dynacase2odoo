@@ -15,6 +15,7 @@ class is_prise_avance(models.Model):
 
     vers_brouillon_vsb          = fields.Boolean('vers_brouillon_vsb', compute='_compute_vsb', readonly=True, store=False)
     vers_diffuse_vsb            = fields.Boolean('vers_diffuse_vsb', compute='_compute_vsb', readonly=True, store=False)
+    vers_diffuse_user_vsb       = fields.Boolean('vers_diffuse_user_vsb', compute='_compute_vsb', readonly=True, store=False)
     vers_realise_vsb            = fields.Boolean('vers_realise_vsb', compute='_compute_vsb', readonly=True, store=False)
     num_moule_id                = fields.Many2one('is.mold', 'Numéro du moule', required=True, tracking=True)
     num_moule_id_ro             = fields.Boolean('num_moule_ro', compute='_compute_ro', readonly=True, store=False)
@@ -151,6 +152,7 @@ class is_prise_avance(models.Model):
             if obj.state == 'brouillon':
                 obj.vers_brouillon_vsb = False
                 obj.vers_diffuse_vsb = is_user or is_resp
+                obj.vers_diffuse_user_vsb = False
                 obj.vers_realise_vsb = False
                 obj.pieces_stck_vsb = False
                 obj.date_outillage_vsb = False
@@ -159,6 +161,7 @@ class is_prise_avance(models.Model):
             if obj.state == 'diffuse':
                 obj.vers_brouillon_vsb = is_user or is_resp
                 obj.vers_diffuse_vsb = False
+                obj.vers_diffuse_user_vsb = False
                 obj.vers_realise_vsb = is_resp
                 obj.pieces_stck_vsb = True
                 obj.date_outillage_vsb = True
@@ -166,6 +169,7 @@ class is_prise_avance(models.Model):
             if obj.state == 'realise':
                 obj.vers_brouillon_vsb = False
                 obj.vers_diffuse_vsb = is_resp
+                obj.vers_diffuse_user_vsb = is_user
                 obj.vers_realise_vsb = False
                 obj.pieces_stck_vsb = True
                 obj.date_outillage_vsb = True

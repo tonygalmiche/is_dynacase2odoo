@@ -57,6 +57,12 @@
                             type="object"
                             attrs="{'invisible': [('vers_realise_vsb', '=', False)]}" 
                         />
+                        <button 
+                            name="vers_diffuse_action"
+                            string="Retour vers Diffusé"
+                            type="object"
+                            attrs="{'invisible': [('vers_diffuse_user_vsb', '=', False)]}" 
+                        />
                        
                         <field name="state" widget="statusbar"/>
                     </header>
@@ -65,6 +71,7 @@
                         <field name="active" invisible="1"/>
                         <field name="vers_brouillon_vsb" invisible="1"/>
                         <field name="vers_diffuse_vsb"   invisible="1"/>
+                        <field name="vers_diffuse_user_vsb" invisible="1"/>
                         <field name="vers_realise_vsb"   invisible="1"/>
                         <group>
                             <field name="num_moule_id"              attrs="{'readonly': [('num_moule_id_ro','=',True)]}"/>

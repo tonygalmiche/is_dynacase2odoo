@@ -135,6 +135,18 @@ class IsProcessusEtape(models.Model):
                 'target': 'new',
             }
 
+    def action_view_etape(self):
+        """Ouvre la fiche de l'étape du processus"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Étape du processus',
+            'res_model': 'is.processus.etape',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'target': 'current',
+        }
+
 
 class IsProcessusDoc(models.Model):
     _name = 'is.processus.doc'
@@ -165,7 +177,7 @@ class IsProcessusDoc(models.Model):
     site_id      = fields.Many2one('is.database', "Site", tracking=True, default=lambda self: self._get_site_id(),)
     niveau       = fields.Char(string="Niveau", tracking=True)
     version      = fields.Char(string="Version", tracking=True)
-    modification = fields.Char(string="Modification", tracking=True)
+    modification = fields.Text(string="Motif de révision", readonly=True, tracking=True)
     auteur_id    = fields.Many2one('res.users', string="Auteur", tracking=True)
     dossier      = fields.Char(string="Dossier (Processus)", tracking=True)
     piece_jointe_ids = fields.Many2many("ir.attachment", "is_processus_doc_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
@@ -193,7 +205,7 @@ class IsProcessusDoc(models.Model):
     doc_ids = fields.One2many('is.processus.doc', 'procedure_id', string="Documents", readonly=True)
 
     # Champ pour le motif de révision
-    motif_revision = fields.Text(string="Motif de révision", readonly=True, tracking=True)
+    #motif_revision = fields.Text(string="Motif de révision", readonly=True, tracking=True)
 
     active      = fields.Boolean(string="Actif", default=True, tracking=True)
     dynacase_id = fields.Integer(string="Id Dynacase", index=True, copy=False)
@@ -314,7 +326,7 @@ class IsProcessusDoc(models.Model):
             'auteur_id': 'Auteur',
             'niveau': 'Niveau',
             'modification': 'Modification',
-            'motif_revision': 'Motif de révision',
+            # 'motif_revision': 'Motif de révision',
             'piece_jointe_noms': 'Pièces jointes',
         }
         
@@ -376,8 +388,6 @@ class IsProcessusDoc(models.Model):
         
         """
         
-
-        print('TEST',destinataires_ids)
 
 
         # Poster le message dans le chat ET envoyer par email à tous les destinataires
@@ -479,14 +489,16 @@ class IsProcessusDoc(models.Model):
         self.write({
             'reference': nouvelle_reference,
             'version': nouvelle_version,
-            'motif_revision': motif_revision
+            #'motif_revision': motif_revision
+            'modification': motif_revision
         })
         
         # Ensuite dupliquer le document (copie = ancienne version)
         copie_default = {
             'processus_id': processus_archive.id,
             'version': ancienne_version,
-            'motif_revision': False,  # Pas de motif pour l'ancienne version
+            #'motif_revision': False,         # Pas de motif pour l'ancienne version
+            'modification': False,            # Pas de motif pour l'ancienne version
             'reference': ancienne_reference,  # Garder l'ancienne référence
         }
         copie = self.copy(copie_default)

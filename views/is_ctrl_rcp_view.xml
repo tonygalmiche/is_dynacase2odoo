@@ -251,7 +251,7 @@
             <field name="name">is_ctrl_rcp_saisie_tree_view</field>
             <field name="model">is.ctrl.rcp.saisie</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree create="false">
                     <field name="site_id" optional="show"/>
                     <field name="rapport_id" optional="show" widget="many2one_clickable"/>
                     <field name="date_ctrl" optional="show"/>
@@ -286,7 +286,7 @@
             <field name="name">is_ctrl_rcp_saisie_form_view</field>
             <field name="model">is.ctrl.rcp.saisie</field>
             <field name="arch" type="xml">
-                <form string="Saisie Contrôle Réception">
+                <form string="Saisie Contrôle Réception" create="false">
                     <header>
                         <field name="dynacase_id" invisible="1"/>
                         <button 
@@ -370,7 +370,7 @@
             </field>
         </record>
         <record id="is_ctrl_rcp_saisie_action" model="ir.actions.act_window">
-            <field name="name">Saisies RCP</field>
+            <field name="name">Historique des saisies des contrôles RCP</field>
             <field name="res_model">is.ctrl.rcp.saisie</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="is_ctrl_rcp_saisie_search_view"/>

@@ -574,7 +574,7 @@
         </record>
 
         <record id="is_ctrl_rcp_saisie_menu" model="ir.ui.menu">
-            <field name="name">Saisies RCP</field>
+            <field name="name">Historique des saisies des contrôles RCP</field>
             <field name="sequence">30</field>
             <field name="parent_id" eval="ref('is_dynacase2odoo.is_ctrl_rcp_menu')"/>
             <field name="action" ref="is_ctrl_rcp_saisie_action"/>
