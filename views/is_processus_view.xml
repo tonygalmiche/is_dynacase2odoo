@@ -350,7 +350,7 @@
                                 <field name="reference" required="1" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                                 <field name="designation" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                                 <field name="version" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
-                                <field name="modification"/>
+                                <field name="modification" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
                             </group>
                             <group  string="Cycle de validation">
                                 <field name="auteur_id" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
