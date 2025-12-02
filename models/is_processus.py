@@ -177,7 +177,7 @@ class IsProcessusDoc(models.Model):
     site_id      = fields.Many2one('is.database', "Site", tracking=True, default=lambda self: self._get_site_id(),)
     niveau       = fields.Char(string="Niveau", tracking=True)
     version      = fields.Char(string="Version", tracking=True)
-    modification = fields.Text(string="Motif de révision", readonly=True, tracking=True)
+    modification = fields.Text(string="Motif de révision", readonly=False, tracking=True)
     auteur_id    = fields.Many2one('res.users', string="Auteur", tracking=True)
     dossier      = fields.Char(string="Dossier (Processus)", tracking=True)
     piece_jointe_ids = fields.Many2many("ir.attachment", "is_processus_doc_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
