@@ -81,40 +81,49 @@ class is_revue_projet_jalon(models.Model):
 
     def envoi_mail(self, users=[]):
         for obj in self:
-            partner_ids = []
+            emails_to = []
             destinataires_name = []
             for user in users:
-                if user.id:
+                if user.id and user.partner_id.email:
                     destinataires_name.append(user.name)
-                    partner_ids.append(user.partner_id.id)
-            if len(partner_ids)>0:
+                    emails_to.append(user.partner_id.email)
+            
+            if len(emails_to)>0:
                 etat = dict(self._fields['state'].get_description(self.env).get('selection')).get(self.state)
                 user          = self.env['res.users'].browse(self._uid)
                 nom           = user.name
                 subject       = "[CR Jalon] %s état '%s'"%(obj.rpj_chrono, etat)
                 url = '/web#id=%s&view_type=form&model=%s'%(obj.id,self._name)
-                destinataires_name = ', '.join(destinataires_name)
-                body = """ 
+                email_to_str = ', '.join(emails_to)
+                destinataires_name_str = ', '.join(destinataires_name)
+                
+                body_html = """ 
                     <p>Bonjour,</p> 
                     <p>%s vient de passer le 'CR revue projet jalon'  
                     <a href='%s'>%s</a> à l'état '%s'.</p> 
                     <p>Merci d'en prendre connaissance.</p> 
                     <p><i>(Destinataires : %s)</i></p>
-                """%(nom, url,obj.rpj_chrono,etat,destinataires_name)
-                vals={
-                    "model"         : self._name,
-                    "subject"       : subject,
-                    "body"          : body,
-                    "partner_ids"   : partner_ids,
+                """%(nom, url, obj.rpj_chrono, etat, destinataires_name_str)
+                
+                # Utiliser mail.mail pour envoyer un seul mail à tous les destinataires
+                email_from = user.partner_id.email or user.email
+                mail_values = {
+                    'email_from': email_from,
+                    'email_to': email_to_str,
+                    'subject': subject,
+                    'body_html': body_html,
+                    'auto_delete': False,
                 }
-                ctx = dict(
-                    default_model=self._name,
-                    default_res_id=obj.id,
-                    default_composition_mode='comment',
-                    custom_layout='mail.mail_notification_light', # Permet de définir la mise en page du mail
+                mail = self.env['mail.mail'].sudo().create(mail_values)
+                mail.send()
+                
+                # Poster un message dans le chatter
+                obj.sudo().message_post(
+                    body=body_html,
+                    subject=subject,
+                    message_type='notification',
+                    subtype_xmlid='mail.mt_note',
                 )
-                wizard = self.env['mail.compose.message'].with_context(ctx).create(vals)
-                wizard.action_send_mail()
 
 
     def envoi_mail_refus(self, motif_refus, user_refus):
@@ -156,7 +165,7 @@ class is_revue_projet_jalon(models.Model):
                 mail.send()
                 
                 # Poster un message dans le chatter
-                obj.message_post(
+                obj.sudo().message_post(
                     body=body_html,
                     subject=subject,
                     message_type='notification',
@@ -232,6 +241,10 @@ class is_revue_projet_jalon(models.Model):
                 raise ValidationError("Une revue de lancement diffusée est obligatoire !")
             if not obj.rpj_rrid or obj.rpj_rrid.state!='rr_diffuse' or obj.rpj_rrid.active==False:
                 raise ValidationError("Une revue des risques diffusée est obligatoire !")
+            
+            # Envoyer un mail à l'équipe projet
+            users = obj.get_equipe_projet_users()
+            obj.envoi_mail(users)
 
 
     def vers_refuse_action(self):
