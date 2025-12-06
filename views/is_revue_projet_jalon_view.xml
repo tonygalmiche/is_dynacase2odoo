@@ -90,8 +90,8 @@
                                 <field name="rpj_date_creation" attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
                                 <field name="rpj_plan_action"   invisible="1"/>
                                 <field name="rpj_niveau_ppm"    attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"          readonly="1"/>
-                                <field name="rpj_commentaire"   attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}" />
-                                <field name="rpj_motif_refus"   attrs="{'readonly': [('state', 'in', ['rpj_refus','rpj_valide'])]}" />
+                                <field name="rpj_commentaire"   attrs="{'readonly': [('state', '!=', 'rpj_brouillon')]}"/>
+                                <field name="rpj_motif_refus"   attrs="{'invisible': [('rpj_motif_refus', '=', False)]}"/>
                             </group>
                             <group string="">
                                 <field name="logo_rs" invisible="1"/>
@@ -325,8 +325,6 @@
                     <field name="rpj_date_creation"   optional="show" />
                     <field name="rpj_plan_action"     optional="hide" />
                     <field name="rpj_niveau_ppm"      optional="show" />
-                    <field name="rpj_commentaire"     optional="hide" />
-                    <field name="rpj_motif_refus"     optional="hide" />
                     <field name="rpj_plan_action"     optional="hide" />
                     <field name="rpj_niveau_ppm"      optional="hide" />
                     <field name="rpj_commentaire"     optional="hide" />
@@ -373,6 +371,7 @@
                     <field name="rpj_chrono" />
                     <field name="rpj_mouleid" />
                     <field name="dossierf_id" />
+                    <field name="state" />
                     <field name="rpj_j" />
                     <field name="rpj_indice" />
                     <field name="rpj_plan_action" />

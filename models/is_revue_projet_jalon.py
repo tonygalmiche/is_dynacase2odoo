@@ -69,6 +69,16 @@ class is_revue_projet_jalon(models.Model):
             obj.vers_j_suivante_vsb = vsb
 
 
+    def get_equipe_projet_users(self):
+        """Récupère la liste des utilisateurs de l'équipe projet"""
+        self.ensure_one()
+        users = []
+        for line in self.equipe_projet_ids:
+            if line.rpj_equipe_projet_nomid:
+                users.append(line.rpj_equipe_projet_nomid)
+        return users
+
+
     def envoi_mail(self, users=[]):
         for obj in self:
             partner_ids = []
@@ -82,8 +92,7 @@ class is_revue_projet_jalon(models.Model):
                 user          = self.env['res.users'].browse(self._uid)
                 nom           = user.name
                 subject       = "[CR Jalon] %s état '%s'"%(obj.rpj_chrono, etat)
-                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-                url = base_url + '/web#id=%s' '&view_type=form&model=%s'%(obj.id,self._name)
+                url = '/web#id=%s&view_type=form&model=%s'%(obj.id,self._name)
                 destinataires_name = ', '.join(destinataires_name)
                 body = """ 
                     <p>Bonjour,</p> 
@@ -106,6 +115,53 @@ class is_revue_projet_jalon(models.Model):
                 )
                 wizard = self.env['mail.compose.message'].with_context(ctx).create(vals)
                 wizard.action_send_mail()
+
+
+    def envoi_mail_refus(self, motif_refus, user_refus):
+        """Envoi un mail spécifique lors du refus du document"""
+        for obj in self:
+            # Récupérer les destinataires de l'équipe projet
+            users = obj.get_equipe_projet_users()
+            emails_to = []
+            destinataires_name = []
+            for user in users:
+                if user.id and user.partner_id.email:
+                    destinataires_name.append(user.name)
+                    emails_to.append(user.partner_id.email)
+            
+            if len(emails_to)>0:
+                subject = "[CR Jalon] %s refusé" % obj.rpj_chrono
+                url = '/web#id=%s&view_type=form&model=%s'%(obj.id, self._name)
+                email_to_str = ', '.join(emails_to)
+                destinataires_name_str = ', '.join(destinataires_name)
+                
+                body_html = """ 
+                    <p>Bonjour,</p>
+                    <p>Le compte rendu revue de projet jalon <a href='%s'><b>%s</b></a> vient d'être refusé.</p>
+                    <p>Motif du refus : <b>%s</b></p>
+                    <p>A bientôt</p>
+                    <p><i>(Destinataires : %s)</i></p>
+                """ % (url, obj.rpj_chrono, motif_refus, destinataires_name_str)
+                
+                # Utiliser mail.mail pour envoyer un seul mail à tous les destinataires
+                email_from = user_refus.partner_id.email or user_refus.email
+                mail_values = {
+                    'email_from': email_from,
+                    'email_to': email_to_str,
+                    'subject': subject,
+                    'body_html': body_html,
+                    'auto_delete': False,
+                }
+                mail = self.env['mail.mail'].sudo().create(mail_values)
+                mail.send()
+                
+                # Poster un message dans le chatter
+                obj.message_post(
+                    body=body_html,
+                    subject=subject,
+                    message_type='notification',
+                    subtype_xmlid='mail.mt_note',
+                )
  
 
     def vers_brouillon_action(self):
@@ -180,9 +236,17 @@ class is_revue_projet_jalon(models.Model):
 
     def vers_refuse_action(self):
         for obj in self:
-            if not obj.rpj_motif_refus:
-                raise ValidationError("Le motif du refus est obligatoire!")
-            obj.sudo().state = "rpj_refus"
+            # Ouvrir l'assistant de refus
+            return {
+                'name': 'Refuser le document',
+                'type': 'ir.actions.act_window',
+                'res_model': 'is.revue.projet.jalon.refus.wizard',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': {
+                    'default_revue_projet_jalon_id': obj.id,
+                }
+            }
 
     def vers_j_suivante_action(self):
         for obj in self:
@@ -218,7 +282,7 @@ class is_revue_projet_jalon(models.Model):
     rpj_plan_action              = fields.Char(string="Plan d'action associé", tracking=True)
     rpj_niveau_ppm               = fields.Char(string="Niveau ppm revue de contrat", tracking=True)
     rpj_commentaire              = fields.Text(string="Commentaire", tracking=True)
-    rpj_motif_refus              = fields.Text(string="Motif du refus", tracking=True)
+    rpj_motif_refus              = fields.Text(string="Motif du refus", tracking=True, copy=False, readonly=True)
     rpj_photo                    = fields.Image(string="Photo de la pièce", related='rpj_mouleid.image')
     rpj_lieu_production          = fields.Selection([
         ("g", "Gray"),

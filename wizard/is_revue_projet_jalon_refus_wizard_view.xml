@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="is_revue_projet_jalon_refus_wizard_form" model="ir.ui.view">
+        <field name="name">is.revue.projet.jalon.refus.wizard.form</field>
+        <field name="model">is.revue.projet.jalon.refus.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Refus de la revue de projet jalon">
+                <group>
+                    <field name="revue_projet_jalon_id" invisible="1"/>
+                    <field name="rpj_motif_refus" widget="text" placeholder="Veuillez saisir le motif du refus..."/>
+                </group>
+                <footer>
+                    <button name="action_confirmer_refus" string="Confirmer le refus" type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_revue_projet_jalon_refus_wizard" model="ir.actions.act_window">
+        <field name="name">Refuser le document</field>
+        <field name="res_model">is.revue.projet.jalon.refus.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_is_revue_projet_jalon"/>
+    </record>
+</odoo>

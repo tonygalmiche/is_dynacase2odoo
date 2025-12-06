@@ -448,6 +448,10 @@ class is_revue_lancement(models.Model):
                     if val>0:
                         doc = self.env['is.inv.achat.moule'].create(vals)
                         setattr(obj, field_name, doc.id)
+                
+                # Déclencher le onchange pour mettre à jour date_saisie et annee_enregistre
+                if doc:
+                    doc.onchange_code_imputation()
 
 
     def compute_project_prev(self):
