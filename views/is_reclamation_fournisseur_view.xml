@@ -99,6 +99,7 @@
                 <search string="Recherche Réclamation">
                     <field name="site_id"/>
                     <field name="num_reclamation"/>
+                    <field name="num_reception"/>
                     <field name="type_reclamation"/>
                     <field name="nom_fournisseur"/>
                     <field name="codepg"/>
@@ -228,6 +229,8 @@
                             <group string="Facturation des coûts">
                                 <field name="cout_compta_ids" context="{'default_reclamation_id': active_id}" nolabel="1" colspan="2">
                                     <tree editable="bottom">
+                                        <field name="site_id" column_invisible="1"/>
+                                        <field name="facture_id"/>
                                         <field name="num_facture"/>
                                         <field name="date_cout"/>
                                         <field name="montant"/>

@@ -543,11 +543,26 @@
             parent="is_reclamation_fournisseur_main_menu" action="is_reception_action"
         />
 
+        <menuitem 
+            name="Factures"  id="is_factures_menu" sequence="25"
+            parent="is_reclamation_fournisseur_main_menu" action="is_factures_action"
+        />
+
         <record id="is_actualiser_receptions_menu" model="ir.ui.menu" >
             <field name="name">Actualiser les réceptions</field>
             <field name="sequence">30</field>
             <field name="parent_id" eval="ref('is_reclamation_fournisseur_main_menu')"/>
             <field name="action"    ref="is_actualiser_receptions_actions_server"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('base.group_system'),
+            ])]"/>
+        </record>
+
+        <record id="is_actualiser_factures_menu" model="ir.ui.menu" >
+            <field name="name">Actualiser les factures</field>
+            <field name="sequence">40</field>
+            <field name="parent_id" eval="ref('is_reclamation_fournisseur_main_menu')"/>
+            <field name="action"    ref="is_actualiser_factures_actions_server"/>
             <field name="groups_id" eval="[(6,0,[
                 ref('base.group_system'),
             ])]"/>

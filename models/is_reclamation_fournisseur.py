@@ -401,7 +401,37 @@ class IsReclamationFournisseurCoutCompta(models.Model):
         required=True,
         ondelete="cascade",
     )
+    facture_id = fields.Many2one(
+        "is.factures",
+        string="Facture",
+        domain="[('site_id', '=', site_id), ('move_type', 'in', ['in_invoice', 'in_refund'])]"
+    )
+    site_id = fields.Many2one(
+        "is.database",
+        string="Site",
+        related="reclamation_id.site_id",
+        store=True,
+        readonly=True
+    )
     num_facture = fields.Char(string="N°facture")
     date_cout = fields.Date(string="Date")
     montant = fields.Float(string="Montant")
+
+    @api.onchange('facture_id')
+    def onchange_facture_id(self):
+        for obj in self:
+            if obj.facture_id:
+                num_facture = obj.facture_id.supplier_invoice_number
+                # Ajouter un préfixe selon le type de facture
+                if obj.facture_id.move_type == 'in_refund':
+                    num_facture = f"AVOIR - {num_facture}"
+                elif obj.facture_id.move_type == 'in_invoice':
+                    num_facture = f"FACTURE - {num_facture}"
+                obj.num_facture = num_facture
+                obj.date_cout = obj.facture_id.date_facture
+                obj.montant = obj.facture_id.montant_ht
+            else:
+                obj.num_facture = False
+                obj.date_cout = False
+                obj.montant = False
 

@@ -140,26 +140,3 @@ class is_reception(models.Model):
         }
 
 
-
-
-    # def exporter_receptions_owork_action(self):
-    #     name = "exporter-receptions-owork"
-    #     cdes = self.env['is.commande.externe'].search([('name','=',name)])
-    #     if len(cdes)==0:
-    #         raise ValidationError("Commande externe '%s' non trouvée !"%name)
-    #     for cde in cdes:
-    #         p = Popen(cde.commande, shell=True, stdout=PIPE, stderr=PIPE)
-    #         stdout, stderr = p.communicate()
-    #         _logger.info("%s => %s"%(cde.commande,stdout))
-    #         if stderr:
-    #             raise ValidationError("Erreur dans commande externe '%s' => %s"%(cde.commande,stderr))
-    #     return {
-    #         'type': 'ir.actions.client',
-    #         'tag': 'display_notification',
-    #         'params': {
-    #             'title': "Exportation vers O'Work éffectutée",
-    #             #'message': "Exportation vers O'Work éffectutée",
-    #             'type': 'success',
-    #             'sticky': False,
-    #         }
-    #     }

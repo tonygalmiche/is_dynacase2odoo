@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <record id="is_actualiser_factures_actions_server" model="ir.actions.server">
+        <field name="name">Actualiser les factures</field>
+        <field name="model_id" ref="is_dynacase2odoo.model_is_factures" />
+        <field name="binding_model_id" ref="is_dynacase2odoo.model_is_factures"/>
+        <field name="state">code</field>
+        <field name="code">action = model.actualiser_factures_action()</field>
+    </record>
+    <record id="is_actualiser_factures_cron" model="ir.cron">
+        <field name="name">Actualiser les factures</field>
+        <field name="model_id" ref="model_is_factures"/>
+        <field name="state">code</field>
+        <field name="code">model.actualiser_factures_action()</field>
+        <field name="interval_type">days</field>
+        <field name="interval_number">1</field>
+        <field name="numbercall">-1</field>
+    </record>
+
+
+    <!-- Form view -->
+    <record id="view_is_factures_form" model="ir.ui.view">
+        <field name="name">is.factures.form</field>
+        <field name="model">is.factures</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="site_id"/>
+                            <field name="date_facture" required="1"/>
+                            <field name="numero_facture" required="1"/>
+                        </group>
+                        <group>
+                            <field name="supplier_invoice_number"/>
+                            <field name="move_type"/>
+                            <field name="montant_ht"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree view -->
+    <record id="view_is_factures_tree" model="ir.ui.view">
+        <field name="name">is.factures.tree</field>
+        <field name="model">is.factures</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="site_id"                 optional="show"/>
+                <field name="date_facture"            optional="show"/>
+                <field name="numero_facture"          optional="show"/>
+                <field name="supplier_invoice_number" optional="show"/>
+                <field name="move_type"               optional="hide"/>
+                <field name="montant_ht"              optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="view_is_factures_search" model="ir.ui.view">
+        <field name="name">is.factures.search</field>
+        <field name="model">is.factures</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="numero_facture"/>
+                <field name="supplier_invoice_number"/>
+                <field name="date_facture"/>
+                <separator/>
+                <filter string="Cette semaine" name="this_week" 
+                        domain="[('date_facture', '&gt;=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%Y-%m-%d')),
+                                ('date_facture', '&lt;=', (context_today() + datetime.timedelta(days=6-context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                <filter string="Ce mois" name="this_month" 
+                        domain="[('date_facture', '&gt;=', (context_today().replace(day=1)).strftime('%Y-%m-%d')),
+                                ('date_facture', '&lt;=', ((context_today().replace(day=1) + datetime.timedelta(days=32)).replace(day=1) - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Site" name="group_site" context="{'group_by':'site_id'}"/>
+                    <filter string="Date de facture" name="group_date" context="{'group_by':'date_facture'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="is_factures_action" model="ir.actions.act_window">
+        <field name="name">Factures</field>
+        <field name="res_model">is.factures</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucune facture trouvée !
+            </p>
+            <p>
+                Ici vous pouvez consulter toutes les factures des différents sites.
+            </p>
+        </field>
+    </record>
+
+</odoo>

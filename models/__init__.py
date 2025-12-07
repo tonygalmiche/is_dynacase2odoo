@@ -45,3 +45,4 @@ from . import is_releve_dimensionnel
 from . import is_res_users_partner
 from . import is_prodstar
 from . import is_oberthur
+from . import is_factures
