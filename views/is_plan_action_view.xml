@@ -140,19 +140,14 @@
                 <search>
                     <field name="title"/>
                     <field name="resp_id"/>
+                    <field name="state"/>
                     <field name="risque"/>
                     <field name="comment"/>
-                    <field name="date"/>
-                    <field name="dateplan"/>
-                    <field name="datedo"/>
-                    <field name="datecheck"/>
                     <field name="plan_action_id"/>
                     <field name="pilot_id"/>
                     <field name="num_moule"/>
                     <field name="num_dossierf"/>
                     <field name="client"/>
-                    <field name="date_beg"/>
-                    <field name="date_end"/>
                 </search>
             </field>
         </record>
