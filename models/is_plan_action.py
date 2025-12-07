@@ -148,6 +148,23 @@ class is_plan_action(models.Model):
     responsables_ids    = fields.Many2many("res.users", string="Responsables des actions", compute="_compute_responsables_ids", store=True, readonly=True)
     readonly_all        = fields.Boolean(string="Lecture seule", compute="_compute_readonly_all", store=False)
 
+    def name_get(self):
+        result = []
+        for record in self:
+            name = str(record.num_int or '')
+            if record.title:
+                name = f"{name} - {record.title}"
+            result.append((record.id, name))
+        return result
+
+    @api.model
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        args = args or []
+        domain = []
+        if name:
+            domain = ['|', ('num_int', '=', name if name.isdigit() else 0), ('title', operator, name)]
+        return self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
+
 
     @api.depends('moule_id', 'dossierf_id')
     def _compute_designation(self):
