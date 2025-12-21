@@ -283,5 +283,20 @@ if records:
         </record>
 
 
+        <!-- Action serveur pour recalculer les coûts -->
+        <record id="maj_quantite_livree_action_serveur" model="ir.actions.server">
+            <field name="name">Mise à jour quantité livrée</field>
+            <field name="model_id" ref="model_is_reclamation_fournisseur"/>
+            <field name="binding_model_id" ref="model_is_reclamation_fournisseur"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    action = records.maj_quantite_livree_action()
+            </field>
+        </record>
+
+
+
     </data>
 </odoo>

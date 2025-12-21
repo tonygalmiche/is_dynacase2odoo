@@ -297,6 +297,28 @@ class IsReclamationFournisseur(models.Model):
 
 
 
+    def maj_quantite_livree_action(self):
+        """Action serveur pour recalculer le champ 'Quantité livrée'"""
+        for obj in self:
+            if obj.reception_id and obj.reception_id.quantite_livree>0:
+                obj.with_context(skip_nature_validation=True).write({'quantite_livree': obj.reception_id.quantite_livree})
+
+            if not obj.reception_id and obj.num_reception:
+                domain=[
+                    ('database_id','=',obj.site_id.id),
+                    ('numero_reception','=',obj.num_reception),
+                ]
+                receptions=self.env['is.reception'].search(domain,order='numero_reception desc', limit=1)
+                for reception in receptions:
+                    if reception.quantite_livree>0:
+                        vals={
+                            'reception_id'   : reception.id,
+                            'quantite_livree': reception.quantite_livree,
+                        }
+                        obj.with_context(skip_nature_validation=True).write(vals)
+
+
+
     def _validate_nature_reclamation(self, vals=None):
         """Valide qu'exactement une des trois natures est cochée"""
         if vals is None:
@@ -330,8 +352,10 @@ class IsReclamationFournisseur(models.Model):
 
     def write(self, vals):
         # Validation de la nature de réclamation pour chaque enregistrement
-        for record in self:
-            record._validate_nature_reclamation(vals)
+        # Sauf si le contexte skip_nature_validation est activé
+        if not self.env.context.get('skip_nature_validation'):
+            for record in self:
+                record._validate_nature_reclamation(vals)
         return super().write(vals)
 
 
