@@ -62,7 +62,7 @@ class is_dossier_appel_offre(models.Model):
     _inherit=['mail.thread']
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description="Dossier appels d'offres"
-    _order = "dao_date desc"
+    _order = "dao_date desc, dao_num desc, id desc"
     _rec_name = 'dao_num'
 
 
@@ -368,12 +368,14 @@ class is_dossier_appel_offre(models.Model):
             annee = str(dao_date)[0:4]
             domain = [('dao_annee', '=', annee),('dao_num','!=',False)]
             lines=self.env['is.dossier.appel.offre'].search(domain,order='dao_num desc', limit=1)
+            num = 0
             for line in lines:
-                aa = annee[-2:]
-                num=int(line.dao_num[0:3])+1
-                num = ("000%s"%num)[-3:]
-                dao_num="%s.%s"%(num,aa)
-                vals['dao_num'] = dao_num
+                num = int(line.dao_num[0:3])
+            num+=1
+            aa = annee[-2:]
+            num = ("000%s"%num)[-3:]
+            dao_num="%s.%s"%(num,aa)
+            vals['dao_num'] = dao_num
         return super().create(vals_list)
 
 
