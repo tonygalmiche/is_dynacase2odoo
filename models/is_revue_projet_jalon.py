@@ -64,8 +64,11 @@ class is_revue_projet_jalon(models.Model):
                                 if  uid in [obj.rpj_chef_projetid.id, obj.rpj_directeur_techniqueid.id, 2]:
                                     if obj.rpj_rrid and obj.rpj_rrid.state=='rr_diffuse' and obj.rpj_rrid.active==True:
                                         vsb=True
-                    # if uid==2 and obj.rpj_j==(obj.rpj_mouleid.j_actuelle or obj.dossierf_id.j_actuelle):
-                    #     vsb=True
+                    if uid==2 and obj.rpj_j==(obj.rpj_mouleid.j_actuelle or obj.dossierf_id.j_actuelle):
+                        vsb=True
+
+
+
             obj.vers_j_suivante_vsb = vsb
 
 
@@ -283,6 +286,87 @@ class is_revue_projet_jalon(models.Model):
                     if obj.dossierf_id:
                         obj.dossierf_id.date_fin_be = date.today()
 
+                # Récupérer les libellés des jalons
+                j_actuelle_key = "J%s" % j
+                j_suivante_key = "J%s" % j_suivante
+                selection_dict = dict(self._fields['rpj_j'].selection)
+                j_actuelle_label = selection_dict.get(j_actuelle_key, j_actuelle_key)
+                j_suivante_label = selection_dict.get(j_suivante_key, j_suivante_key)
+                
+                obj.envoi_mail_j_suivante(j_actuelle_label, j_suivante_label)
+
+
+    def get_equipe_projet(self):
+        for obj in self:
+            users=[]
+            champs=[
+                'rpj_chef_projetid',
+                'rpj_expert_injectionid',
+                'rpj_methode_injectionid',
+                'rpj_methode_assemblageid',
+                'rpj_qualite_devid',
+                'rpj_qualite_usineid',
+                'rpj_achatsid',
+                'rpj_logistiqueid',
+                'rpj_logistique_usineid',
+                'rpj_commercial2id',
+                'rpj_responsable_outillageid',
+                'rpj_responsable_projetid',
+                'rpj_directeur_siteid',
+                'rpj_directeur_techniqueid'
+            ]
+            for champ in champs:
+                user = getattr(obj,champ)
+                if user:
+                    users.append(user)
+            return users
+
+
+    def envoi_mail_j_suivante(self, j_actuelle_label, j_suivante_label):
+        """Envoi un mail à toute l'équipe projet lors du changement de J"""
+        for obj in self:
+            users = obj.get_equipe_projet()
+            emails_to = []
+            destinataires_name = []
+            for user in users:
+                if user.id and user.partner_id.email:
+                    destinataires_name.append(user.name)
+                    emails_to.append(user.partner_id.email)
+            if len(emails_to)>0:
+                subject = "[J suivante] %s" % obj.rpj_chrono
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                url =  '%s/web#id=%s&view_type=form&model=%s'%(base_url,obj.id,self._name)
+                email_to_str = ', '.join(emails_to)
+                destinataires_name_str = ', '.join(destinataires_name)
+                body_html = """ 
+                    <p>Bonjour,</p>
+                    <p>Le compte rendu revue de projet jalon <a href='%s'><b>%s</b></a> vient de passer le dossier à la J suivante.</p>
+                    <p>Le dossier est passé de %s à %s </p>
+                    <p>A bientôt</p>
+                    <p><i>(Destinataires : %s)</i></p>
+                """ % (url, obj.rpj_chrono, j_actuelle_label, j_suivante_label, destinataires_name_str)
+                
+                # Utiliser mail.mail pour envoyer un seul mail à tous les destinataires
+                user = self.env.user
+                email_from = user.partner_id.email or user.email
+                mail_values = {
+                    'email_from': email_from,
+                    'email_to': email_to_str,
+                    'subject': subject,
+                    'body_html': body_html,
+                    'auto_delete': False,
+                }
+                mail = self.env['mail.mail'].sudo().create(mail_values)
+                mail.send()
+                
+                # Poster un message dans le chatter
+                obj.sudo().message_post(
+                    body=body_html,
+                    subject=subject,
+                    message_type='notification',
+                    subtype_xmlid='mail.mt_note',
+                )
+ 
 
     rpj_mouleid                  = fields.Many2one("is.mold"    , string="Moule", tracking=True)
     dossierf_id                  = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
