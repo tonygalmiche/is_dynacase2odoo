@@ -191,8 +191,20 @@ class IsCtrlRcpRapport(models.Model):
     commentaire      = fields.Text(string="Commentaire", tracking=True)
     piece_jointe_ids = fields.Many2many("ir.attachment", "is_ctrl_rcp_rapport_piece_jointe_rel", "piece_jointe", "att_id", string="Pièce jointe")
     saisie_ids       = fields.One2many("is.ctrl.rcp.saisie","rapport_id",string="Saisies")
+    saisies_resume   = fields.Text(string="Résumé des saisies", compute="_compute_saisies_resume", store=True, tracking=True)
     active           = fields.Boolean(string="Actif", default=True, tracking=True)
     dynacase_id      = fields.Integer(string="Id Dynacase", index=True, copy=False, tracking=True)
+
+
+    @api.depends('saisie_ids', 'saisie_ids.rapport_lig', 'saisie_ids.controle_a_effectuer', 'saisie_ids.resultat')
+    def _compute_saisies_resume(self):
+        for obj in self:
+            lignes = []
+            for saisie in obj.saisie_ids.sorted(key=lambda s: s.rapport_lig):
+                resultat = saisie.resultat or ''
+                ligne = f"Ligne {saisie.rapport_lig} | {saisie.controle_a_effectuer or ''} | {resultat}"
+                lignes.append(ligne)
+            obj.saisies_resume = ', '.join(lignes) if lignes else False
 
 
     def _get_site_id(self):
@@ -294,6 +306,44 @@ class IsCtrlRcpRapport(models.Model):
                 "url": url,
                 "target": "new",
             }
+
+    def actualiser_saisies_depuis_gamme_action(self):
+        """Actualise la liste saisie_ids depuis la gamme.
+        Ajoute les lignes manquantes sans toucher aux lignes existantes.
+        Renuméroter toutes les lignes pour qu'elles soient dans le même ordre que la gamme.
+        """
+        for obj in self:
+            if not obj.gamme_id:
+                continue
+            
+            # Créer un dictionnaire des saisies existantes indexé par intitulé de contrôle
+            saisies_par_intitule = {s.controle_a_effectuer: s for s in obj.saisie_ids}
+            
+            # Parcourir les contrôles de la gamme dans l'ordre et ajouter/renuméroter
+            lig = 1
+            saisies_a_creer = []
+            for controle in obj.gamme_id.controle_ids:
+                if controle.intitule_controle in saisies_par_intitule:
+                    # La saisie existe déjà, mettre à jour le numéro de ligne si nécessaire
+                    saisie = saisies_par_intitule[controle.intitule_controle]
+                    if saisie.rapport_lig != lig:
+                        saisie.write({'rapport_lig': lig})
+                else:
+                    # La saisie n'existe pas, l'ajouter
+                    saisie_vals = {
+                        'rapport_id': obj.id,
+                        'rapport_lig': lig,
+                        'controle_a_effectuer': controle.intitule_controle,
+                        'tolerance_mini': controle.tolerance_mini,
+                        'tolerance_maxi': controle.tolerance_maxi,
+                    }
+                    saisies_a_creer.append(saisie_vals)
+                lig += 1
+            
+            # Créer les nouvelles saisies
+            if saisies_a_creer:
+                self.env['is.ctrl.rcp.saisie'].create(saisies_a_creer)
+                obj.message_post(body=f"{len(saisies_a_creer)} nouvelle(s) saisie(s) ajoutée(s) depuis la gamme.")
 
 
 class IsCtrlRcpSaisie(models.Model):

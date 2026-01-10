@@ -376,5 +376,15 @@
             <field name="search_view_id" ref="is_ctrl_rcp_saisie_search_view"/>
             <field name="context">{}</field>
         </record>
+
+        <!-- Action serveur : Actualiser saisies depuis gamme -->
+        <record id="is_ctrl_rcp_rapport_actualiser_saisies_action" model="ir.actions.server">
+            <field name="name">Actualiser saisies depuis gamme</field>
+            <field name="model_id" ref="model_is_ctrl_rcp_rapport"/>
+            <field name="binding_model_id" ref="model_is_ctrl_rcp_rapport"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">records.actualiser_saisies_depuis_gamme_action()</field>
+        </record>
     </data>
 </odoo>

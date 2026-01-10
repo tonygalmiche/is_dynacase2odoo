@@ -15,7 +15,7 @@ class DhtmlxganttProjectRenderer extends AbstractRendererOwl {
         //this.orm = useService("orm");
         this.state = useState({
             dict         : {},
-            lier         : false,
+            lier         : true,
             dossier_id   : false,
             dossier_model: false,
         });

@@ -93,7 +93,8 @@ class is_revue_projet_jalon(models.Model):
                 user          = self.env['res.users'].browse(self._uid)
                 nom           = user.name
                 subject       = "[CR Jalon] %s état '%s'"%(obj.rpj_chrono, etat)
-                url = '/web#id=%s&view_type=form&model=%s'%(obj.id,self._name)
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                url =  '%s/web#id=%s&view_type=form&model=%s'%(base_url,obj.id,self._name)
                 email_to_str = ', '.join(emails_to)
                 destinataires_name_str = ', '.join(destinataires_name)
                 
@@ -140,7 +141,13 @@ class is_revue_projet_jalon(models.Model):
             
             if len(emails_to)>0:
                 subject = "[CR Jalon] %s refusé" % obj.rpj_chrono
-                url = '/web#id=%s&view_type=form&model=%s'%(obj.id, self._name)
+                #url = '/web#id=%s&view_type=form&model=%s'%(obj.id, self._name)
+
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                url =  '%s/web#id=%s&view_type=form&model=%s'%(base_url,obj.id,self._name)
+
+
+
                 email_to_str = ', '.join(emails_to)
                 destinataires_name_str = ', '.join(destinataires_name)
                 
