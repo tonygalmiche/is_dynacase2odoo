@@ -562,7 +562,9 @@ class IsDocMoule(models.Model):
         ids=[]
         if docs:
             for doc in docs:
-                ids.append(doc.id)
+                if doc.suivi_projet:
+                    #print(doc,doc.suivi_projet, doc.param_project_id.ppr_famille)
+                    ids.append(doc.id)
         nb_pdf=0
         if ids!=[]:
             domain=[('id', 'in', ids)]

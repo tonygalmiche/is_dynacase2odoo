@@ -594,6 +594,14 @@ class IsDocMoule(models.Model):
             if vals['etat']=='F':
                 reponses=self.get_doc_reponse()
                 type_demande = dict(self._fields['ppr_type_demande'].get_description(self.env).get('selection')).get(self.ppr_type_demande)
+
+                if self.ppr_type_demande=='PJ' and not reponses[0]:
+                    raise ValidationError("Impossbile de passer à l'état 'Fait' car aucune pièce jointe n'est fournie !")
+                if self.ppr_type_demande=='PJ_TEXTE' and (not reponses[0] or not reponses[2]):
+                    raise ValidationError("Impossbile de passer à l'état 'Fait' car il faut fournir une pièce jointe et renseigner le champ 'Texte réponse' !")
+                if self.ppr_type_demande=='PJ_DATE' and (not reponses[0] or not reponses[1]):
+                    raise ValidationError("Impossbile de passer à l'état 'Fait' car il faut fournir une pièce jointe et renseigner le champ 'Date réponse' !")
+
                 if not reponses[0] and not reponses[1] and not reponses[2] and self.ppr_type_demande!='AUTO':
                     raise ValidationError("Impossbile de passer à l'état 'Fait' car aucune réponse n'est fournie (%s) !"%type_demande)
                 for obj in self:

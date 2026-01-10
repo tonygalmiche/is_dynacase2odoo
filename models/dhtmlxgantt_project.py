@@ -400,8 +400,8 @@ class IsDocMoule(models.Model):
                 rsp_date = obj.rsp_date.strftime('%d/%m/%y')
             rsp_texte = obj.rsp_texte
             for line in obj.array_ids:
-                if line.comment:
-                    rsp_pj=line.comment
+                #if line.comment:
+                #    rsp_pj=line.comment
                 if line.annex:
                     for pj in line.annex:
                         rsp_pj=pj.name
