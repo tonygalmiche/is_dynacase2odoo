@@ -91,6 +91,8 @@
                                 <field name="rr_rentabilite"                is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
                                 <field name="rr_investissement_necessaire"  is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
                                 <field name="rr_competence_effectif"        is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_strategie_developpement"    is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+
                             </group>
                             <group string="Commentaire">
                                 <separator string="." style="color:transparent;"/>
@@ -125,6 +127,7 @@
                                 <field name="rr_rentabilite_comment"               nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
                                 <field name="rr_investissement_necessaire_comment" nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
                                 <field name="rr_competence_effectif_comment"       nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_strategie_developpement_comment"   nolabel="1" colspan="2" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
                             </group>
                         </group>
                         <group name="rr_validation_fr" string="Validation">

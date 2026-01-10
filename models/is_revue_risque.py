@@ -110,6 +110,10 @@ class is_revue_risque(models.Model):
     rr_investissement_necessaire_comment  = fields.Char(string="Investissements nécessaires ", tracking=True)
     rr_competence_effectif                = fields.Selection(_SELECT_RISQUE, string="Compétences et effectifs / Formation", tracking=True)
     rr_competence_effectif_comment        = fields.Char(string="Compétences et effectifs / Formation.", tracking=True)
+
+    rr_strategie_developpement            = fields.Selection(_SELECT_RISQUE, string="Stratégie de développement", tracking=True)
+    rr_strategie_developpement_comment    = fields.Char(string="Stratégie de développement.", tracking=True)
+
     rr_validation_revue_risque            = fields.Selection([
         ("OK",  "OK"),
         ("nOK", "non OK"),
@@ -182,11 +186,11 @@ class is_revue_risque(models.Model):
             obj.rr_risques_risque_qualite = risque_qualite
 
  
-    @api.depends('rr_rentabilite','rr_investissement_necessaire','rr_competence_effectif')
+    @api.depends('rr_rentabilite','rr_investissement_necessaire','rr_competence_effectif','rr_strategie_developpement')
     def _compute_risque_leadership(self):
         for obj in self:
             risque_leadership   = 0
-            list=['rr_rentabilite','rr_investissement_necessaire','rr_competence_effectif']
+            list=['rr_rentabilite','rr_investissement_necessaire','rr_strategie_developpement']
             for name_field in list:
                 risque_leadership+=obj._get_val_risque(name_field)
             obj.rr_risques_risque_leadership   = risque_leadership
@@ -228,7 +232,7 @@ class is_revue_risque(models.Model):
         'rr_injection','rr_design_moule','rr_methode_mesure','rr_composant','rr_machine_speciale','rr_decoration','rr_parachevement',
         'rr_capacitaire','rr_conditionnement','rr_identification_tracabilite','rr_validation_fournisseur','rr_capacitaire_fournisseur','rr_presse_substitution',
         'rr_modification_csr','rr_critere_acceptation','rr_exigence_reglementaire','rr_engagement_qualite','rr_securite_produit','rr_impact_environnement',
-        'rr_rentabilite','rr_investissement_necessaire','rr_competence_effectif',
+        'rr_rentabilite','rr_investissement_necessaire','rr_competence_effectif','rr_strategie_developpement'
     )
     def _compute_rr_bilan_ar(self):
         for obj in self:
