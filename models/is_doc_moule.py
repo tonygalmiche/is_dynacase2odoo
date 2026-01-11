@@ -201,6 +201,14 @@ class IsDocMoule(models.Model):
     )
     droit_equipe_projet = fields.Boolean(related="param_project_id.droit_equipe_projet")
 
+    suivi_du_temps          = fields.Boolean(related="param_project_id.suivi_du_temps")
+    temps_passe             = fields.Float(string="Temps passé (HH:MM)", tracking=True)
+    temps_passe_commentaire = fields.Text(string="Commentaire sur temps passé", tracking=True)
+
+    site_ids = fields.Many2many(related='dossier_article_id.site_ids')
+
+
+
 
     def actualisation_famille_automatique_action(self):
         nb=len(self)
@@ -601,6 +609,13 @@ class IsDocMoule(models.Model):
                     raise ValidationError("Impossbile de passer à l'état 'Fait' car il faut fournir une pièce jointe et renseigner le champ 'Texte réponse' !")
                 if self.ppr_type_demande=='PJ_DATE' and (not reponses[0] or not reponses[1]):
                     raise ValidationError("Impossbile de passer à l'état 'Fait' car il faut fournir une pièce jointe et renseigner le champ 'Date réponse' !")
+
+                if self.suivi_du_temps and (not self.temps_passe or  self.temps_passe==0):
+                    raise ValidationError("Impossbile de passer à l'état 'Fait'. Il faut renseigner le champ 'Suivi du temps' !")
+
+
+
+
 
                 if not reponses[0] and not reponses[1] and not reponses[2] and self.ppr_type_demande!='AUTO':
                     raise ValidationError("Impossbile de passer à l'état 'Fait' car aucune réponse n'est fournie (%s) !"%type_demande)

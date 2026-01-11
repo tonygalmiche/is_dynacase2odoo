@@ -31,6 +31,7 @@
                             <group>
                                 <field name="type_dossier"/>
                                 <field name="code_pg"      readonly="1"/>
+                                <field name="site_ids" widget="many2many_tags"/>
                                 <field name="designation"  readonly="1"/>
                             </group>
                             <group>
@@ -128,6 +129,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="code_pg"         optional="show"/>
+                    <field name="site_ids" widget="many2many_tags" optional="show"/>
                     <field name="type_dossier"    optional="show"/>
                     <field name="designation"     optional="show"/>
                     <field name="famille"         optional="show"/>
@@ -162,6 +164,7 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="code_pg"/>
+                    <field name="site_ids"/>
                     <field name="type_dossier"/>
                     <field name="designation"/>
                     <field name="famille"/>
@@ -211,6 +214,18 @@
         </record>
 
 
+
+        <!-- Tâche cron pour actualiser les sites des dossiers articles -->
+        <record id="ir_cron_actualiser_site_ids_dossier_article" model="ir.cron">
+            <field name="name">Actualiser les sites des dossiers articles</field>
+            <field name="model_id" ref="model_is_dossier_article"/>
+            <field name="state">code</field>
+            <field name="code">model.actualiser_site_ids_action()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
 
     </data>
 </odoo>

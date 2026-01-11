@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models,fields,api  # type: ignore
+import logging
+_logger = logging.getLogger(__name__)
 
 class is_dossier_article(models.Model):
     _inherit = 'is.dossier.article'
@@ -9,6 +11,7 @@ class is_dossier_article(models.Model):
     nb_a_faire  = fields.Integer(string="Nb doc à faire", compute='_compute_fait',store=True,readonly=True)
     nb_crees    = fields.Integer(string="Nb doc créés"  , compute='_compute_fait',store=True,readonly=True)
     nb_fait     = fields.Integer(string="Nb doc fait"   , compute='_compute_fait',store=True,readonly=True)
+    site_ids    = fields.Many2many('is.database', string="Sites", readonly=True)
 
 
     @api.depends('doc_ids', 'doc_ids.doc_id', 'doc_ids.piecejointe')
@@ -85,6 +88,28 @@ class is_dossier_article(models.Model):
                 #**************************************************************
             obj._compute_fait()
         return []
+
+
+    def actualiser_site_ids_action(self):
+        """Méthode appelée par le cron pour renseigner le champ site_ids"""
+        dossiers = self.env['is.dossier.article'].search([])
+        dossiers_avec_code = dossiers.filtered(lambda d: d.code_pg)
+        total = len(dossiers_avec_code)
+        compteur = 0
+        gestionnaires_exclus = ['04', '07', '12', '14']
+        for dossier in dossiers_avec_code:
+            compteur += 1
+            # Recherche de tous les articles avec code_pg = name, en excluant les gestionnaires 04, 07, 12 et 14
+            articles = self.env['is.article'].search([
+                ('name', '=', dossier.code_pg),
+                ('gestionnaire', 'not in', gestionnaires_exclus)
+            ])
+            if articles:
+                # Récupération des sites (database_id) de tous les articles trouvés
+                sites = articles.mapped('database_id')
+                _logger.info("%s/%s - Code PG: %s - Sites: %s", compteur, total, dossier.code_pg, ', '.join(sites.mapped('name')) or 'Aucun')
+                dossier.site_ids = [(6, 0, sites.ids)]
+        return True
 
 
 class is_dossier_article_doc(models.Model):

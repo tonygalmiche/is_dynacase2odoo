@@ -44,6 +44,7 @@
                                 <field name="ppr_revue_lancement"    attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="ppr_moule_hors_auto"    attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="plan_piece"             attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
+                                <field name="suivi_du_temps"         attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="gamme_controle"         attrs="{'invisible': [('type_document', '!=', 'Article')]}" />
                             </group>
                             <group>
@@ -92,6 +93,7 @@
                     <field name="ppr_revue_lancement"       optional="hide"/>
                     <field name="ppr_moule_hors_auto"       optional="hide"/>
                     <field name="duree_attente_avant"       optional="hide"/>
+                    <field name="suivi_du_temps"            optional="hide"/>
                     <field name="ppr_color"                 optional="show" widget="color"/>
                     <field name="duree"                     optional="hide"/>
                     <field name="duree_attente_avant"       optional="hide"/>

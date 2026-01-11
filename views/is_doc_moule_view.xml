@@ -184,7 +184,12 @@
                                     <field name="rsp_date"  attrs="{'invisible': [('ppr_type_demande', 'not in', ['DATE', 'PJ_DATE'])]}"/>
                                     <field name="rsp_texte" attrs="{'invisible': [('ppr_type_demande', 'not in', ['TEXTE','PJ_TEXTE'])]}"/>
                                     <field name="rsp_auto"  attrs="{'invisible': [('rsp_auto', '=', False)]}" nolabel="1" colspan="2"/>
+
+                                    <field name="suivi_du_temps" invisible="1"/>
+                                    <field name="temps_passe"             attrs="{'invisible': [('suivi_du_temps', '=', False)]}" widget="float_time"/>
+                                    <field name="temps_passe_commentaire" attrs="{'invisible': [('suivi_du_temps', '=', False)]}"/>
                                 </group>
+                            
                             </page>
                             <page string="Autres informations">
                                 <group>
@@ -320,6 +325,10 @@
                     <field name="rsp_date"  optional="hide" />
                     <field name="rsp_texte" optional="hide" />
                     <field name="rsp_auto"  optional="hide" />
+
+                    <field name="temps_passe"  optional="hide"  widget="float_time" sum="Total"/>
+                    <field name="temps_passe_commentaire"  optional="hide" />
+
                     <field name="color"     optional="hide" />
                     <field name="fin_derogation" optional="show" />
                     <field name="param_project_array_html" optional="hide"/>
@@ -341,6 +350,7 @@
                     <field name="pp_equipe_projet_commentaire" optional="hide"/>
                     <field name="pp_maj_odoo"                  optional="hide"/>
                     <field name="pp_maj_odoo_commentaire"      optional="hide"/>
+
                     <field name="create_date"         optional="hide" string="Créé le"/>
                     <field name="create_uid"          optional="hide" string="Créé par"/>
                     <field name="write_date"          optional="hide" string="Modifié le"/>
@@ -521,6 +531,7 @@
                 <search string="Recherche pour les articles">
                     <field name="param_project_id" />
                     <field name="dossier_article_id" />
+                    <field name="site_ids" />
                     <field name="idresp" />
                     <field name="action" />
                     <field name="etat" />
@@ -536,6 +547,19 @@
             <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
             <field name="view_id" ref="is_doc_moule_tree"/>
         </record>
+
+
+        <!-- Tous les documents -->
+        <record id="is_doc_moule_suivi_temps_action" model="ir.actions.act_window">
+            <field name="name">Suivi du temps</field>
+            <field name="res_model">is.doc.moule</field>
+            <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
+            <field name="view_id" ref="is_doc_moule_tree"/>
+           <field name="domain">[('temps_passe','&gt;',0)]</field>
+        </record>
+
+
+
 
         <!-- Documents moules -->
         <record model="ir.ui.view" id="is_doc_moule_moule_tree">
@@ -687,6 +711,9 @@
             <field name="arch" type="xml">
                 <tree string="Document moule" default_order="dossier_article_id, param_project_id">
                     <field name="dossier_article_id"  optional="show" widget="many2one_clickable"/>
+
+                    <field name="site_ids" widget="many2many_tags" optional="show"/>
+
                     <field name="designation_dossier" optional="show"/>
                     <field name="gestionnaire"        optional="show"/>
                     <field name="param_project_id"    optional="show"/>

@@ -162,10 +162,8 @@ class IsParamProject(models.Model):
     plan_piece          = fields.Boolean("Afficher les champs de la famille 'Plan Pièce'", default=False, tracking=True)
     gamme_controle      = fields.Boolean("Afficher les champs de la famille 'Gamme de contrôle'", default=False, tracking=True)
     droit_equipe_projet = fields.Boolean("Accès complet au groupe 'Membres équipe projet'", default=False, tracking=True)
+    suivi_du_temps      = fields.Boolean('Suivi du temps', default=False, tracking=True, help="Activer le suivi du temps")
     active              = fields.Boolean('Actif', default=True, tracking=True)
-
-
-
 
 
     @api.depends('array_ids','array_ids.ppr_irv','array_ids.ppr_bloquant')
