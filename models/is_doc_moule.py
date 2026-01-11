@@ -139,7 +139,7 @@ class IsDocMoule(models.Model):
     moule_dossierf   = fields.Char("Moule / Dossier F"                   , compute='_compute_idproject_moule_dossierf',store=True, readonly=True)
     idproject        = fields.Many2one("is.mold.project", string="Projet", compute='_compute_idproject_moule_dossierf',store=True, readonly=True)
     client_id        = fields.Many2one("res.partner", string="Client"    , compute='_compute_idproject_moule_dossierf',store=True, readonly=True)
-    idcp             = fields.Many2one(related="idmoule.chef_projet_id", string="CP", tracking=True)
+    idcp             = fields.Many2one(related="idmoule.chef_projet_id", string="CP", tracking=True, store=True)
     idresp           = fields.Many2one("res.users", string="Responsable", tracking=True)
     j_prevue         = fields.Selection(GESTION_J, string="J Prévue", tracking=True)
     date_j_prevue    = fields.Date(string="Date J prévue", compute='_compute_date_j_prevue',store=True, readonly=True)
