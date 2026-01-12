@@ -158,7 +158,7 @@
             parent="is_doc_moule_main_menu" action="is_doc_moule_action"
         />
         <menuitem 
-            id="is_doc_moule_menu" sequence="65" name="Suivi du temps" 
+            id="is_doc_moule_suivi_temps_menu" sequence="65" name="Suivi du temps" 
             parent="is_doc_moule_main_menu" action="is_doc_moule_suivi_temps_action"
         />
         <record id="is_gantt_pdf_menu" model="ir.ui.menu" >
