@@ -3,16 +3,19 @@ from datetime import datetime, timedelta
 
 
 _TYPE = [
-         ('poste', 'Poste'),
-         ('produit', 'Produit'),
-         ('process', 'Process'),
+
+         ('client', 'Client'),
          ('fournisseur', 'Fournisseur'),
+         ('process', 'Process'),
          ('systeme', 'Système'),
-         ('application', 'Application'),
-         ('environnement', 'Environnement'),
-         ('securite', 'Sécurité'),
+         ('produit', 'Produit'),
          ('pre-serie', 'Pré-série'),
-         ('comprehension', 'Compréhension'),
+         ('securite', 'Sécurité'),
+         ('environnement', 'Environnement'),
+
+        # ('poste', 'Poste'), # Fusion de poste et process le 18/01/26
+        # ('application', 'Application'),      # Supression le 18/01/26
+        # ('comprehension', 'Compréhension'),  # Supression le 18/01/26
          ]
 
 

@@ -232,3 +232,15 @@ class is_plan_action(models.Model):
                 'url': url,
                 'target': 'new',
             }
+
+    def open_plan_action_form(self):
+        """Ouvre la fiche du plan d'action"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': "Plan d'action",
+            'res_model': 'is.plan.action',
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }

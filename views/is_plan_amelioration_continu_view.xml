@@ -46,8 +46,34 @@
                                 </tree>
                             </field>
                         </group>
-                        <group string="Plan d'action"  attrs="{'invisible': [('plan_action_ids', '=', [])]}">
-                            <field name="plan_action_ids" attrs="{'readonly': [('readonly_all', '=', True)]}"/>
+                        <group string="Plan d'action">
+                            <field name="plan_action_ids" nolabel="1" colspan="2" attrs="{'readonly': [('readonly_all', '=', True)]}">
+                                <tree editable="bottom">
+                                    <button name="open_plan_action_form" type="object" icon="fa-search" class="oe_link" title="Ouvrir le plan d'action"/>
+                                    <field name="num_int"          optional="show"/>
+                                    <field name="title"            optional="show"/>
+                                    <field name="client_id"        optional="hide" widget="many2one_clickable"/>
+                                    <field name="moule_id"         optional="hide" widget="many2one_clickable"/>
+                                    <field name="dossierf_id"      optional="hide" widget="many2one_clickable"/>
+                                    <field name="designation"      optional="hide"/>
+                                    <field name="pilot_id"         optional="show" widget="many2one_clickable"/>
+                                    <field name="group_id"         optional="hide" widget="many2one_clickable"/>
+                                    <field name="obj"              optional="hide"/>
+                                    <field name="date_beg"         optional="show"/>
+                                    <field name="date_end"         optional="show"/>
+                                    <field name="action_prev"      optional="hide"/>
+                                    <field name="create_date"      optional="hide" string="Créé le"/>
+                                    <field name="create_uid"       optional="hide" string="Créé par"/>
+                                    <field name="write_date"       optional="hide" string="Modifié le"/>
+                                    <field name="write_uid"        optional="hide" string="Modifié par"/>
+                                    <field
+                                        name="state" optional="show" widget="badge"
+                                        decoration-warning="state in ['annule']"
+                                        decoration-info="state in ['actif']"
+                                        decoration-success="state in ['solde']"
+                                    />
+                                </tree>
+                            </field>
                         </group>
                     </sheet>
                    <div class="oe_chatter">
