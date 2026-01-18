@@ -152,16 +152,21 @@ access_is_releve_dimensionnel_saisie_ligne,access_is_releve_dimensionnel_saisie_
 
 access_is_res_users_partner,access_is_res_users_partner,model_is_res_users_partner,base.group_user,1,0,0,0
 
-access_is_prodstar_fp2art,access_is_prodstar_fp2art,model_is_prodstar_fp2art,base.group_user,1,1,1,1
-access_is_prodstar_fp2nomq,access_is_prodstar_fp2nomq,model_is_prodstar_fp2nomq,base.group_user,1,1,1,1
-access_is_prodstar_fp2game,access_is_prodstar_fp2game,model_is_prodstar_fp2game,base.group_user,1,1,1,1
-access_is_prodstar_fp2gamo,access_is_prodstar_fp2gamo,model_is_prodstar_fp2gamo,base.group_user,1,1,1,1
-access_is_prodstar_fp2sec,access_is_prodstar_fp2sec,model_is_prodstar_fp2sec,base.group_user,1,1,1,1
-access_is_prodstar_fp2gams,access_is_prodstar_fp2gams,model_is_prodstar_fp2gams,base.group_user,1,1,1,1
-access_is_prodstar_fp2gamu,access_is_prodstar_fp2gamu,model_is_prodstar_fp2gamu,base.group_user,1,1,1,1
-access_is_prodstar_fa2rcp,access_is_prodstar_fa2rcp,model_is_prodstar_fa2rcp,base.group_user,1,1,1,1
-access_is_prodstar_fc2lie,access_is_prodstar_fc2lie,model_is_prodstar_fc2lie,base.group_user,1,1,1,1
-access_is_prodstar_fc2lid,access_is_prodstar_fc2lid,model_is_prodstar_fc2lid,base.group_user,1,1,1,1
+access_is_prodstar_fp2art,access_is_prodstar_fp2art,model_is_prodstar_fp2art,base.group_user,1,0,0,0
+access_is_prodstar_fp2nomq,access_is_prodstar_fp2nomq,model_is_prodstar_fp2nomq,base.group_user,1,0,0,0
+access_is_prodstar_fp2game,access_is_prodstar_fp2game,model_is_prodstar_fp2game,base.group_user,1,0,0,0
+access_is_prodstar_fp2gamo,access_is_prodstar_fp2gamo,model_is_prodstar_fp2gamo,base.group_user,1,0,0,0
+access_is_prodstar_fp2sec,access_is_prodstar_fp2sec,model_is_prodstar_fp2sec,base.group_user,1,0,0,0
+access_is_prodstar_fp2gams,access_is_prodstar_fp2gams,model_is_prodstar_fp2gams,base.group_user,1,0,0,0
+access_is_prodstar_fp2gamu,access_is_prodstar_fp2gamu,model_is_prodstar_fp2gamu,base.group_user,1,0,0,0
+access_is_prodstar_fa2rcp,access_is_prodstar_fa2rcp,model_is_prodstar_fa2rcp,base.group_user,1,0,0,0
+access_is_prodstar_fc2lid,access_is_prodstar_fc2lid,model_is_prodstar_fc2lid,base.group_user,1,0,0,0
+access_is_prodstar_fa2fou,access_is_prodstar_fa2fou,model_is_prodstar_fa2fou,base.group_user,1,0,0,0
+access_is_prodstar_tarif_cial,access_is_prodstar_tarif_cial,model_is_prodstar_tarif_cial,base.group_user,1,0,0,0
+access_is_prodstar_fc2tad,access_is_prodstar_fc2tad,model_is_prodstar_fc2tad,base.group_user,1,0,0,0
+
+
+
 
 access_is_oberthur,access_is_oberthur,model_is_oberthur,base.group_user,1,1,1,1
 

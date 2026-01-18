@@ -667,14 +667,26 @@
             <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
             <field name="action" ref="is_prodstar_fa2rcp_action"/>
         </record>
-        <record id="is_prodstar_fc2lie_menu" model="ir.ui.menu">
-            <field name="name">Livraisons-Entêtes</field>
+        <record id="is_prodstar_fa2fou_menu" model="ir.ui.menu">
+            <field name="name">Fournisseurs</field>
+            <field name="sequence">85</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
+            <field name="action" ref="is_prodstar_fa2fou_action"/>
+        </record>
+        <record id="is_prodstar_tarif_cial_menu" model="ir.ui.menu">
+            <field name="name">Tarifs Commerciaux</field>
             <field name="sequence">90</field>
             <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
-            <field name="action" ref="is_prodstar_fc2lie_action"/>
+            <field name="action" ref="is_prodstar_tarif_cial_action"/>
+        </record>
+        <record id="is_prodstar_fc2tad_menu" model="ir.ui.menu">
+            <field name="name">Tarifs Clients</field>
+            <field name="sequence">95</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
+            <field name="action" ref="is_prodstar_fc2tad_action"/>
         </record>
         <record id="is_prodstar_fc2lid_menu" model="ir.ui.menu">
-            <field name="name">Livraisons-Lignes</field>
+            <field name="name">Livraisons</field>
             <field name="sequence">100</field>
             <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
             <field name="action" ref="is_prodstar_fc2lid_action"/>

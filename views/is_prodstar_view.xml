@@ -558,40 +558,50 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <!-- is.prodstar.fc2lie -->
-        <record id="is_prodstar_fc2lie_tree_view" model="ir.ui.view">
-            <field name="name">is.prodstar.fc2lie.tree</field>
-            <field name="model">is.prodstar.fc2lie</field>
+        <!-- is.prodstar.fa2fou -->
+        <record id="is_prodstar_fa2fou_tree_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fa2fou.tree</field>
+            <field name="model">is.prodstar.fa2fou</field>
             <field name="arch" type="xml">
-                <tree string="Prodstar FC2LIE" default_order="soc, sw0003, sw0005, sw0006">
-                    <field name="soc" optional="show"/>
-                    <field name="sw0003" optional="show"/>
-                    <field name="sw0005" optional="show"/>
-                    <field name="sw0006" optional="show"/>
-                    <field name="sw0063" optional="show"/>
-                    <field name="sw0068" optional="show"/>
-                    <field name="sw0084" optional="show"/>
+                <tree string="Prodstar FA2FOU - Fournisseurs" default_order="code_fournisseur">
+                    <field name="soc"              optional="show"/>
+                    <field name="code_fournisseur" optional="show"/>
+                    <field name="raison_sociale"   optional="show"/>
+                    <field name="rue1"             optional="hide"/>
+                    <field name="rue2"             optional="hide"/>
+                    <field name="cp"               optional="show"/>
+                    <field name="ville"            optional="show"/>
+                    <field name="critere_alpha"    optional="hide"/>
+                    <field name="categorie"        optional="show"/>
+                    <field name="contact"          optional="show"/>
+                    <field name="telephone"        optional="show"/>
+                    <field name="fax"              optional="hide"/>
                 </tree>
             </field>
         </record>
 
-        <record id="is_prodstar_fc2lie_form_view" model="ir.ui.view">
-            <field name="name">is.prodstar.fc2lie.form</field>
-            <field name="model">is.prodstar.fc2lie</field>
+        <record id="is_prodstar_fa2fou_form_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fa2fou.form</field>
+            <field name="model">is.prodstar.fa2fou</field>
             <field name="arch" type="xml">
-                <form string="Prodstar FC2LIE">
+                <form string="Prodstar FA2FOU - Fournisseurs">
                     <sheet>
                         <group>
-                            <group string="Clés de jointure">
+                            <group string="Identification">
                                 <field name="soc"/>
-                                <field name="sw0003"/>
-                                <field name="sw0005"/>
-                                <field name="sw0006"/>
+                                <field name="code_fournisseur"/>
+                                <field name="raison_sociale"/>
+                                <field name="critere_alpha"/>
+                                <field name="categorie"/>
                             </group>
-                            <group string="Informations client">
-                                <field name="sw0063"/>
-                                <field name="sw0068"/>
-                                <field name="sw0084"/>
+                            <group string="Coordonnées">
+                                <field name="rue1"/>
+                                <field name="rue2"/>
+                                <field name="cp"/>
+                                <field name="ville"/>
+                                <field name="contact"/>
+                                <field name="telephone"/>
+                                <field name="fax"/>
                             </group>
                         </group>
                     </sheet>
@@ -599,32 +609,232 @@
             </field>
         </record>
 
-        <record id="is_prodstar_fc2lie_search_view" model="ir.ui.view">
-            <field name="name">is.prodstar.fc2lie.search</field>
-            <field name="model">is.prodstar.fc2lie</field>
+        <record id="is_prodstar_fa2fou_search_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fa2fou.search</field>
+            <field name="model">is.prodstar.fa2fou</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name="sw0063" string="Client" filter_domain="[('sw0063','ilike',self)]"/>
-                    <field name="sw0068" string="Adresse" filter_domain="[('sw0068','ilike',self)]"/>
-                    <field name="soc" string="Soc" filter_domain="[('soc','ilike',self)]"/>
-                    
-                    <separator/>
-                    <filter name="filter_today" string="Livraison aujourd'hui" domain="[('sw0084','=',context_today())]"/>
-                    <filter name="filter_this_week" string="Livraison cette semaine" domain="[('sw0084','&gt;=',(context_today()-datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
-                    <filter name="filter_this_month" string="Livraison ce mois" domain="[('sw0084','&gt;=',(context_today().replace(day=1)).strftime('%Y-%m-%d'))]"/>
+                    <field name="code_fournisseur" string="Code Fournisseur" filter_domain="[('code_fournisseur','ilike',self)]"/>
+                    <field name="raison_sociale" string="Raison Sociale" filter_domain="[('raison_sociale','ilike',self)]"/>
+                    <field name="ville" string="Ville" filter_domain="[('ville','ilike',self)]"/>
+                    <field name="categorie" string="Catégorie" filter_domain="[('categorie','ilike',self)]"/>
                     
                     <group expand="0" string="Grouper par">
-                        <filter name="group_sw0063" string="Client" context="{'group_by':'sw0063'}"/>
-                        <filter name="group_sw0084" string="Date livraison" context="{'group_by':'sw0084'}"/>
-                        <filter name="group_soc" string="Soc" context="{'group_by':'soc'}"/>
+                        <filter name="group_soc" string="Société" context="{'group_by':'soc'}"/>
+                        <filter name="group_categorie" string="Catégorie" context="{'group_by':'categorie'}"/>
+                        <filter name="group_ville" string="Ville" context="{'group_by':'ville'}"/>
                     </group>
                 </search>
             </field>
         </record>
 
-        <record id="is_prodstar_fc2lie_action" model="ir.actions.act_window">
-            <field name="name">Livraions-Entêtes</field>
-            <field name="res_model">is.prodstar.fc2lie</field>
+        <record id="is_prodstar_fa2fou_action" model="ir.actions.act_window">
+            <field name="name">Fournisseurs</field>
+            <field name="res_model">is.prodstar.fa2fou</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- is.prodstar.tarif_cial -->
+        <record id="is_prodstar_tarif_cial_tree_view" model="ir.ui.view">
+            <field name="name">is.prodstar.tarif_cial.tree</field>
+            <field name="model">is.prodstar.tarif_cial</field>
+            <field name="arch" type="xml">
+                <tree string="Prodstar Tarif Commercial" default_order="client, code_pg, ind_prix">
+                    <field name="client"        optional="show"/>
+                    <field name="code_pg"       optional="show"/>
+                    <field name="ind_prix"      optional="show"/>
+                    <field name="moule"         optional="show"/>
+                    <field name="plastika"      optional="hide"/>
+                    <field name="date_debut"    optional="show"/>
+                    <field name="date_fin"      optional="show"/>
+                    <field name="type_evolu"    optional="hide"/>
+                    <field name="projet"        optional="show"/>
+                    <field name="part_mat"      optional="hide"/>
+                    <field name="part_comp"     optional="hide"/>
+                    <field name="part_emb"      optional="hide"/>
+                    <field name="va_inj"        optional="hide"/>
+                    <field name="va_ass"        optional="hide"/>
+                    <field name="frais_port"    optional="hide"/>
+                    <field name="logistique"    optional="hide"/>
+                    <field name="amt_moule"     optional="hide"/>
+                    <field name="cout_preserie" optional="hide"/>
+                    <field name="prix_vente"    optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="is_prodstar_tarif_cial_form_view" model="ir.ui.view">
+            <field name="name">is.prodstar.tarif_cial.form</field>
+            <field name="model">is.prodstar.tarif_cial</field>
+            <field name="arch" type="xml">
+                <form string="Prodstar Tarif Commercial">
+                    <sheet>
+                        <group>
+                            <group string="Identification">
+                                <field name="client"/>
+                                <field name="code_pg"/>
+                                <field name="ind_prix"/>
+                                <field name="moule"/>
+                                <field name="plastika"/>
+                                <field name="projet"/>
+                            </group>
+                            <group string="Dates et évolution">
+                                <field name="date_debut"/>
+                                <field name="date_fin"/>
+                                <field name="type_evolu"/>
+                                <field name="prix_vente"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Parts matières et composants">
+                                <field name="part_mat"/>
+                                <field name="part_comp"/>
+                                <field name="part_emb"/>
+                            </group>
+                            <group string="Valeurs ajoutées">
+                                <field name="va_inj"/>
+                                <field name="va_ass"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Frais et logistique">
+                                <field name="frais_port"/>
+                                <field name="logistique"/>
+                            </group>
+                            <group string="Coûts moule et pré-série">
+                                <field name="amt_moule"/>
+                                <field name="cout_preserie"/>
+                            </group>
+                        </group>
+                        <group string="Commentaire">
+                            <field name="commentaire" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="is_prodstar_tarif_cial_search_view" model="ir.ui.view">
+            <field name="name">is.prodstar.tarif_cial.search</field>
+            <field name="model">is.prodstar.tarif_cial</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="client" string="Client" filter_domain="[('client','ilike',self)]"/>
+                    <field name="code_pg" string="Code PG" filter_domain="[('code_pg','ilike',self)]"/>
+                    <field name="moule" string="Moule" filter_domain="[('moule','ilike',self)]"/>
+                    <field name="projet" string="Projet" filter_domain="[('projet','ilike',self)]"/>
+                    
+                    <separator/>
+                    <filter name="filter_actif" string="Tarif actif" domain="[('date_debut','&lt;=',context_today()),('date_fin','&gt;=',context_today())]"/>
+                    
+                    <group expand="0" string="Grouper par">
+                        <filter name="group_client" string="Client" context="{'group_by':'client'}"/>
+                        <filter name="group_code_pg" string="Code PG" context="{'group_by':'code_pg'}"/>
+                        <filter name="group_moule" string="Moule" context="{'group_by':'moule'}"/>
+                        <filter name="group_projet" string="Projet" context="{'group_by':'projet'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="is_prodstar_tarif_cial_action" model="ir.actions.act_window">
+            <field name="name">Tarifs Commerciaux</field>
+            <field name="res_model">is.prodstar.tarif_cial</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- is.prodstar.fc2tad -->
+        <record id="is_prodstar_fc2tad_tree_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fc2tad.tree</field>
+            <field name="model">is.prodstar.fc2tad</field>
+            <field name="arch" type="xml">
+                <tree string="Prodstar FC2TAD - Tarif Valide" default_order="soc, client, code_pg">
+                    <field name="soc"          optional="show"/>
+                    <field name="client"       optional="show"/>
+                    <field name="code_pg"      optional="show"/>
+                    <field name="cat"          optional="show"/>
+                    <field name="gest"         optional="show"/>
+                    <field name="moule"        optional="show"/>
+                    <field name="designation"  optional="show"/>
+                    <field name="ref_client"   optional="show"/>
+                    <field name="uc1"          optional="hide"/>
+                    <field name="uc1_uv"       optional="hide"/>
+                    <field name="uc2"          optional="hide"/>
+                    <field name="uc2_uc1"      optional="hide"/>
+                    <field name="date_bascule" optional="show"/>
+                    <field name="date_debut"   optional="show"/>
+                    <field name="prix"         optional="show"/>
+                    <field name="dev"          optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="is_prodstar_fc2tad_form_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fc2tad.form</field>
+            <field name="model">is.prodstar.fc2tad</field>
+            <field name="arch" type="xml">
+                <form string="Prodstar FC2TAD - Tarif Valide">
+                    <sheet>
+                        <group>
+                            <group string="Identification">
+                                <field name="soc"/>
+                                <field name="client"/>
+                                <field name="code_pg"/>
+                                <field name="designation"/>
+                                <field name="ref_client"/>
+                            </group>
+                            <group string="Classification">
+                                <field name="cat"/>
+                                <field name="gest"/>
+                                <field name="moule"/>
+                                <field name="dev"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Unités de conditionnement">
+                                <field name="uc1"/>
+                                <field name="uc1_uv"/>
+                                <field name="uc2"/>
+                                <field name="uc2_uc1"/>
+                            </group>
+                            <group string="Dates et prix">
+                                <field name="date_bascule"/>
+                                <field name="date_debut"/>
+                                <field name="prix"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="is_prodstar_fc2tad_search_view" model="ir.ui.view">
+            <field name="name">is.prodstar.fc2tad.search</field>
+            <field name="model">is.prodstar.fc2tad</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="client" string="Client" filter_domain="[('client','ilike',self)]"/>
+                    <field name="code_pg" string="Code PG" filter_domain="[('code_pg','ilike',self)]"/>
+                    <field name="moule" string="Moule" filter_domain="[('moule','ilike',self)]"/>
+                    <field name="designation" string="Désignation" filter_domain="[('designation','ilike',self)]"/>
+                    
+                    <separator/>
+                    <filter name="filter_actif" string="Tarif actif" domain="[('date_debut','&lt;=',context_today())]"/>
+                    
+                    <group expand="0" string="Grouper par">
+                        <filter name="group_soc" string="Société" context="{'group_by':'soc'}"/>
+                        <filter name="group_client" string="Client" context="{'group_by':'client'}"/>
+                        <filter name="group_code_pg" string="Code PG" context="{'group_by':'code_pg'}"/>
+                        <filter name="group_cat" string="Catégorie" context="{'group_by':'cat'}"/>
+                        <filter name="group_gest" string="Gestionnaire" context="{'group_by':'gest'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="is_prodstar_fc2tad_action" model="ir.actions.act_window">
+            <field name="name">Tarifs Valides</field>
+            <field name="res_model">is.prodstar.fc2tad</field>
             <field name="view_mode">tree,form</field>
         </record>
 
@@ -633,19 +843,30 @@
             <field name="name">is.prodstar.fc2lid.tree</field>
             <field name="model">is.prodstar.fc2lid</field>
             <field name="arch" type="xml">
-                <tree string="Prodstar FC2LID" default_order="soc, sx0003, sx0005, sx0006">
-                    <field name="soc" optional="show"/>
-                    <field name="sx0003" optional="show"/>
-                    <field name="sx0005" optional="show"/>
-                    <field name="sx0006" optional="show"/>
-                    <field name="sx0052" optional="hide"/>
-                    <field name="sx0024" optional="hide"/>
-                    <field name="sx0025" optional="hide"/>
-                    <field name="sx0035" optional="hide"/>
-                    <field name="sx0016" optional="show"/>
-                    <field name="sx0097" optional="show"/>
-                    <field name="sx0303" optional="show"/>
-                    <field name="prix_unitaire" optional="show"/>
+                <tree string="Prodstar FC2LID - Livraisons" default_order="soc, num_liv, lig_liv">
+                    <field name="soc"              optional="show"/>
+                    <field name="client"           optional="show"/>
+                    <field name="adr"              optional="hide"/>
+                    <field name="code_pg"          optional="show"/>
+                    <field name="cat"              optional="show"/>
+                    <field name="fam"              optional="hide"/>
+                    <field name="gest"             optional="show"/>
+                    <field name="moule"            optional="show"/>
+                    <field name="projet"           optional="show"/>
+                    <field name="designation"      optional="show"/>
+                    <field name="ref_client"       optional="show"/>
+                    <field name="t"                optional="hide"/>
+                    <field name="num_cde_prodstar" optional="show"/>
+                    <field name="lig"              optional="hide"/>
+                    <field name="num_cde_client"   optional="show"/>
+                    <field name="num_liv"          optional="show"/>
+                    <field name="lig_liv"          optional="show"/>
+                    <field name="date_exp"         optional="show"/>
+                    <field name="date_liv"         optional="show"/>
+                    <field name="qt_liv_us"        optional="show"/>
+                    <field name="qt_liv_uc"        optional="show"/>
+                    <field name="montant"          optional="show"/>
+                    <field name="date_confirme"    optional="hide"/>
                 </tree>
             </field>
         </record>
@@ -654,29 +875,49 @@
             <field name="name">is.prodstar.fc2lid.form</field>
             <field name="model">is.prodstar.fc2lid</field>
             <field name="arch" type="xml">
-                <form string="Prodstar FC2LID">
+                <form string="Prodstar FC2LID - Livraisons">
                     <sheet>
                         <group>
-                            <group string="Clés de jointure principales">
+                            <group string="Client et article">
                                 <field name="soc"/>
-                                <field name="sx0003"/>
-                                <field name="sx0005"/>
-                                <field name="sx0006"/>
+                                <field name="client"/>
+                                <field name="adr"/>
+                                <field name="code_pg"/>
+                                <field name="designation"/>
+                                <field name="ref_client"/>
                             </group>
-                            <group string="Clés de jointure secondaires">
-                                <field name="sx0052"/>
-                                <field name="sx0024"/>
-                                <field name="sx0025"/>
-                                <field name="sx0035"/>
+                            <group string="Classification">
+                                <field name="cat"/>
+                                <field name="fam"/>
+                                <field name="gest"/>
+                                <field name="moule"/>
+                                <field name="projet"/>
                             </group>
                         </group>
                         <group>
-                            <group string="Informations livraison">
-                                <field name="sx0016"/>
-                                <field name="sx0097"/>
-                                <field name="sx0303"/>
-                                <field name="prix_unitaire"/>
+                            <group string="Commande">
+                                <field name="t"/>
+                                <field name="num_cde_prodstar"/>
+                                <field name="lig"/>
+                                <field name="num_cde_client"/>
                             </group>
+                            <group string="Livraison">
+                                <field name="num_liv"/>
+                                <field name="lig_liv"/>
+                                <field name="date_exp"/>
+                                <field name="date_liv"/>
+                                <field name="date_confirme"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Quantités">
+                                <field name="qt_liv_us"/>
+                                <field name="qt_liv_uc"/>
+                                <field name="montant"/>
+                            </group>
+                        </group>
+                        <group string="Commentaire">
+                            <field name="commentaire" nolabel="1"/>
                         </group>
                     </sheet>
                 </form>
@@ -688,29 +929,40 @@
             <field name="model">is.prodstar.fc2lid</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name="sx0016" string="N°Livraison" filter_domain="[('sx0016','ilike',self)]"/>
-                    <field name="soc" string="Soc" filter_domain="[('soc','ilike',self)]"/>
-                    <field name="sx0003" string="SX0003" filter_domain="[('sx0003','ilike',self)]"/>
+                    <field name="client" string="Client" filter_domain="[('client','ilike',self)]"/>
+                    <field name="code_pg" string="Code PG" filter_domain="[('code_pg','ilike',self)]"/>
+                    <field name="num_liv" string="N°Liv" filter_domain="[('num_liv','=',self)]"/>
+                    <field name="num_cde_client" string="N°Cde Client" filter_domain="[('num_cde_client','ilike',self)]"/>
+                    <field name="moule" string="Moule" filter_domain="[('moule','ilike',self)]"/>
+                    <field name="projet" string="Projet" filter_domain="[('projet','ilike',self)]"/>
                     
                     <separator/>
-                    <filter name="filter_today" string="Expédition aujourd'hui" domain="[('sx0097','=',context_today())]"/>
-                    <filter name="filter_this_week" string="Expédition cette semaine" domain="[('sx0097','&gt;=',(context_today()-datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
-                    <filter name="filter_this_month" string="Expédition ce mois" domain="[('sx0097','&gt;=',(context_today().replace(day=1)).strftime('%Y-%m-%d'))]"/>
+                    <filter name="filter_exp_today" string="Expédition aujourd'hui" domain="[('date_exp','=',context_today())]"/>
+                    <filter name="filter_exp_week" string="Expédition cette semaine" domain="[('date_exp','&gt;=',(context_today()-datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                    <filter name="filter_liv_today" string="Livraison aujourd'hui" domain="[('date_liv','=',context_today())]"/>
+                    <filter name="filter_liv_week" string="Livraison cette semaine" domain="[('date_liv','&gt;=',(context_today()-datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
                     
                     <group expand="0" string="Grouper par">
-                        <filter name="group_sx0016" string="N°Livraison" context="{'group_by':'sx0016'}"/>
-                        <filter name="group_sx0097" string="Date expédition" context="{'group_by':'sx0097'}"/>
-                        <filter name="group_soc" string="Soc" context="{'group_by':'soc'}"/>
+                        <filter name="group_soc" string="Société" context="{'group_by':'soc'}"/>
+                        <filter name="group_client" string="Client" context="{'group_by':'client'}"/>
+                        <filter name="group_code_pg" string="Code PG" context="{'group_by':'code_pg'}"/>
+                        <filter name="group_cat" string="Catégorie" context="{'group_by':'cat'}"/>
+                        <filter name="group_gest" string="Gestionnaire" context="{'group_by':'gest'}"/>
+                        <filter name="group_moule" string="Moule" context="{'group_by':'moule'}"/>
+                        <filter name="group_projet" string="Projet" context="{'group_by':'projet'}"/>
+                        <filter name="group_date_exp" string="Date expédition" context="{'group_by':'date_exp'}"/>
+                        <filter name="group_date_liv" string="Date livraison" context="{'group_by':'date_liv'}"/>
                     </group>
                 </search>
             </field>
         </record>
 
         <record id="is_prodstar_fc2lid_action" model="ir.actions.act_window">
-            <field name="name">Livraions-Lignes</field>
+            <field name="name">Livraisons</field>
             <field name="res_model">is.prodstar.fc2lid</field>
             <field name="view_mode">tree,form</field>
         </record>
+
 
     </data>
 </odoo>

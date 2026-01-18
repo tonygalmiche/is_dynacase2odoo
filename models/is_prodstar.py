@@ -149,42 +149,105 @@ class IsProdstarFa2rcp(models.Model):
     ope_rcp     = fields.Char(string="Ope Rcp")
 
 
-class IsProdstarFc2lie(models.Model):
-    _name = "is.prodstar.fc2lie"
-    _description = "Prodstar FC2LIE"
-    _rec_name = "sw0063"
-    _order = "soc, sw0003, sw0005, sw0006"
+class IsProdstarFa2fou(models.Model):
+    _name = "is.prodstar.fa2fou"
+    _description = "Prodstar FA2FOU - Fournisseurs"
+    _rec_name = "raison_sociale"
+    _order = "code_fournisseur"
 
-    # Champs de jointure (clés)
-    soc = fields.Char(string="Soc")
-    sw0003 = fields.Char(string="SW0003") 
-    sw0005 = fields.Char(string="SW0005")
-    sw0006 = fields.Char(string="SW0006")
-    
-    # Champs métier SW
-    sw0063 = fields.Char(string="Client")
-    sw0068 = fields.Char(string="Adr")
-    sw0084 = fields.Date(string="Date Liv")
+    soc              = fields.Char(string="Soc")               # AA0001
+    code_fournisseur = fields.Char(string="Code Fournisseur")  # AA0003
+    raison_sociale   = fields.Char(string="Raison Sociale")    # AA0074
+    rue1             = fields.Char(string="Rue1")              # AA0134
+    rue2             = fields.Char(string="Rue2")              # AA0164
+    cp               = fields.Char(string="CP")                # AA0194
+    ville            = fields.Char(string="Ville")             # AA0204
+    critere_alpha    = fields.Char(string="Critère Alpha")     # AA0031
+    categorie        = fields.Char(string="Catégorie")         # AA0487
+    contact          = fields.Char(string="Contact")           # AA0240
+    telephone        = fields.Char(string="Téléphone")         # AA0405
+    fax              = fields.Char(string="Fax")               # AA0435
+
+
+class IsProdstarTarifCial(models.Model):
+    _name = "is.prodstar.tarif_cial"
+    _description = "Prodstar Tarif Commercial"
+    _rec_name = "code_pg"
+    _order = "client, code_pg, ind_prix"
+
+    client         = fields.Char(string="Client")                          # CLIENT
+    code_pg        = fields.Char(string="CodePG")                          # CODEPG
+    ind_prix       = fields.Integer(string="Ind")                          # INDPRIX
+    moule          = fields.Char(string="Moule")                           # PA0169
+    plastika       = fields.Char(string="Plastika")                        # PLASTIKA
+    date_debut     = fields.Date(string="Date Début")                      # DATEDEB
+    date_fin       = fields.Date(string="Date Fin")                        # DATEFIN
+    type_evolu     = fields.Char(string="Type Evolu.")                     # TYPEEVOLU
+    projet         = fields.Char(string="Projet")                          # PROJET
+    part_mat       = fields.Float(string="Part Mat", digits=(12, 4))       # MATIERE
+    part_comp      = fields.Float(string="Part Comp.", digits=(12, 4))     # COMPOSANT
+    part_emb       = fields.Float(string="Part Emb.", digits=(12, 4))      # EMBALLAGE
+    va_inj         = fields.Float(string="VA Inj", digits=(12, 4))         # INJECTION
+    va_ass         = fields.Float(string="VA Ass", digits=(12, 4))         # ASSEMBLAGE
+    frais_port     = fields.Float(string="Frais Port", digits=(12, 4))     # PORT
+    logistique     = fields.Float(string="Logis.", digits=(12, 4))         # LOGISTIQUE
+    amt_moule      = fields.Float(string="Amt Moule", digits=(12, 4))      # AMTMOULE
+    cout_preserie  = fields.Float(string="Surcôut Pré-série", digits=(12, 4))  # COUTPRESERIE
+    prix_vente     = fields.Float(string="Prix Vente", digits=(12, 4))     # PRIXVENTE
+    commentaire    = fields.Text(string="Commentaire")                     # COMMENTAIR
+
+
+class IsProdstarFc2tad(models.Model):
+    _name = "is.prodstar.fc2tad"
+    _description = "Prodstar FC2TAD - Tarif Valide"
+    _rec_name = "code_pg"
+    _order = "soc, client, code_pg"
+
+    soc           = fields.Char(string="Soc")                              # PA0001
+    client        = fields.Char(string="Client")                           # SF0023
+    code_pg       = fields.Char(string="Code PG")                          # PA0003
+    cat           = fields.Integer(string="Cat")                           # PA0184
+    gest          = fields.Integer(string="Gest")                          # PA0283
+    moule         = fields.Char(string="Moule")                            # PA0169
+    designation   = fields.Char(string="Désignation")                      # PA0047
+    ref_client    = fields.Char(string="Ref Client")                       # PA0109
+    uc1           = fields.Char(string="UC1")                              # SE0208
+    uc1_uv        = fields.Integer(string="UC1/UV")                        # SE0219
+    uc2           = fields.Char(string="UC2")                              # SE0210
+    uc2_uc1       = fields.Integer(string="UC2/UC1")                       # SE0225
+    date_bascule  = fields.Date(string="Date Bascule")                     # SE0369
+    date_debut    = fields.Date(string="Date Début")                       # DateD (calculé)
+    prix          = fields.Float(string="Prix*", digits=(12, 4))           # Prix (calculé)
+    dev           = fields.Char(string="Dev")                              # SF0032
 
 
 class IsProdstarFc2lid(models.Model):
     _name = "is.prodstar.fc2lid"
-    _description = "Prodstar FC2LID"
-    _rec_name = "sx0016"
-    _order = "soc, sx0003, sx0005, sx0006"
+    _description = "Prodstar FC2LID - Livraisons"
+    _rec_name = "num_liv"
+    _order = "soc, num_liv, lig_liv"
 
-    # Champs de jointure (clés)
-    soc = fields.Char(string="Soc")
-    sx0003 = fields.Char(string="SX0003")
-    sx0005 = fields.Char(string="SX0005")
-    sx0006 = fields.Char(string="SX0006")
-    sx0052 = fields.Char(string="SX0052")
-    sx0024 = fields.Char(string="SX0024")
-    sx0025 = fields.Char(string="SX0025")
-    sx0035 = fields.Char(string="SX0035")
-    
-    # Champs métier SX
-    sx0016 = fields.Char(string="N°Liv")
-    sx0097 = fields.Date(string="Date Exp")
-    sx0303 = fields.Float(string="Qt Liv US")
-    prix_unitaire = fields.Float(string="Prix unitaire")
+    soc              = fields.Char(string="Soc")                           # PA0001
+    client           = fields.Char(string="Client")                        # SW0063
+    adr              = fields.Integer(string="Adr")                        # SW0068
+    code_pg          = fields.Char(string="CodePG")                        # PA0003
+    cat              = fields.Integer(string="Cat")                        # PA0184
+    fam              = fields.Integer(string="Fam")                        # PA0186
+    gest             = fields.Integer(string="Gest")                       # PA0283
+    moule            = fields.Char(string="Moule")                         # PA0169
+    projet           = fields.Char(string="Projet")                        # substring(PA0720,135,30)
+    designation      = fields.Char(string="Désignation")                   # PA0047
+    ref_client       = fields.Char(string="Ref Client")                    # PA0109
+    t                = fields.Integer(string="T")                          # SR0005
+    num_cde_prodstar = fields.Integer(string="N°Cde Prodstar")             # SR0006
+    lig              = fields.Integer(string="Lig cde")                    # SR0016
+    num_cde_client   = fields.Char(string="N°Cde Client")                  # SQ0030
+    num_liv          = fields.Integer(string="N°Liv")                      # SX0006
+    lig_liv          = fields.Integer(string="Lig liv")                    # SX0016
+    date_exp         = fields.Date(string="Date Exp")                      # SX0097
+    date_liv         = fields.Date(string="Date Liv")                      # SW0084
+    qt_liv_us        = fields.Float(string="Qt Liv US", digits=(12, 2))    # SX0303
+    qt_liv_uc        = fields.Integer(string="Qt Liv UC")                  # SX0303/PA0225
+    montant          = fields.Integer(string="Montant")                    # SX0303*SX0374
+    date_confirme    = fields.Date(string="Date Confirme")                 # Confirme
+    commentaire      = fields.Text(string="Commentaire")                   # Commentaire
