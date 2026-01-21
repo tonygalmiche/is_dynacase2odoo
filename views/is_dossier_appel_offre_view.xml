@@ -224,6 +224,7 @@
                     <field name="create_uid"  optional="hide" string="Créé par"/>
                     <field name="write_date"  optional="hide" string="Modifié le"/>
                     <field name="write_uid"   optional="hide" string="Modifié par"/>
+                    <field name="state_name" optional="hide"/>
                     <field 
                         name="state" optional="show" widget="badge" 
                         decoration-info="state in ['plasdiffusedcli','plasrelancecli']" 

@@ -31,17 +31,17 @@ _DAO_AVANCEMENT=([
 
 
 _STATE=([
-    ('plascreate'     , 'Créé'),
-    ('plasanalysed'   , 'Analysé'),
-    ('plastransbe'    , 'Transmis BE'),
-    ('Analyse_BE'     , 'Analysé BE'),
-    ('plasvalidbe'    , 'Validé BE'),
-    ('plasvalidcom'   , 'Validé commercial'),
-    ('plasdiffusedcli', 'Diffusé client'),
-    ('plasrelancecli' , 'Relance client'),
-    ('plaswinned'     , 'Gagné'),
-    ('plasloosed'     , 'Perdu'),
-    ('plascancelled'  , 'Annulé'),
+    ('plascreate'     , '0-Créé'),
+    ('plasanalysed'   , '1-Analysé'),
+    ('plastransbe'    , '2-Transmis BE'),
+    ('Analyse_BE'     , '3-Analysé BE'),
+    ('plasvalidbe'    , '4-Validé BE'),
+    ('plasvalidcom'   , '5-Validé commercial'),
+    ('plasdiffusedcli', '6-Diffusé client'),
+    ('plasrelancecli' , '6-Relance client'),
+    ('plaswinned'     , '7-Gagné'),
+    ('plasloosed'     , '8-Perdu'),
+    ('plascancelled'  , '9-Annulé'),
 ])
 
 
@@ -172,7 +172,7 @@ class is_dossier_appel_offre(models.Model):
     vers_annule_vsb            = fields.Boolean(string="vers Annulé"           , compute='_compute_vsb', readonly=True, store=False)
     readonly_vsb               = fields.Boolean(string="Accès en lecture seule", compute='_compute_vsb', readonly=True, store=False)
     state               = fields.Selection(_STATE, "Etat"                , tracking=True, default='plascreate')
-    state_name          = fields.Char("Etat name", compute='_compute_state_name', readonly=True, store=False)
+    state_name          = fields.Char("Etat-Intitulé", compute='_compute_state_name', store=True, readonly=True)
     destinataires_ids   = fields.Many2many('res.partner', string="destinataires_ids", compute='_compute_destinataires_ids')
     destinataires_name  = fields.Char('Destinataires'  , compute='_compute_destinataires_name')
     mail_copy           = fields.Char('Mail copy'      , compute='_compute_destinataires_ids')
