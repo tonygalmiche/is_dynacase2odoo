@@ -168,5 +168,5 @@ access_is_prodstar_fc2tad,access_is_prodstar_fc2tad,model_is_prodstar_fc2tad,bas
 
 
 
-access_is_oberthur,access_is_oberthur,model_is_oberthur,base.group_user,1,1,1,1
+access_is_oberthur,access_is_oberthur,model_is_oberthur,base.group_user,1,1,1,0
 

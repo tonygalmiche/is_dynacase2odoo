@@ -613,6 +613,30 @@
             <field name="action" ref="is_releve_dimensionnel_saisie_action"/>
         </record>
 
+        <!-- Oberthur -->
+        <record id="is_oberthur_menu" model="ir.ui.menu">
+            <field name="name">Oberthur</field>
+            <field name="sequence">44</field>
+            <field name="parent_id" eval="ref('is_plastigray16.menu_is_production')"/>
+        </record>
+        <record id="is_prodstar_oberthur_1" model="ir.ui.menu">
+            <field name="name">Oberthur saisie 1</field>
+            <field name="sequence">10</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_oberthur_menu')"/>
+            <field name="action" ref="is_oberthur_saisie_1_action"/>
+        </record>
+        <record id="is_prodstar_oberthur_2" model="ir.ui.menu">
+            <field name="name">Oberthur saisie 2</field>
+            <field name="sequence">20</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_oberthur_menu')"/>
+            <field name="action" ref="is_oberthur_saisie_2_action"/>
+        </record>
+
+
+
+
+
+
         <!-- Prodstar -->
         <record id="is_prodstar_menu" model="ir.ui.menu">
             <field name="name">Prodstar</field>
@@ -691,18 +715,5 @@
             <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
             <field name="action" ref="is_prodstar_fc2lid_action"/>
         </record>
-        <record id="is_prodstar_oberthur_1" model="ir.ui.menu">
-            <field name="name">Oberthur saisie 1</field>
-            <field name="sequence">110</field>
-            <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
-            <field name="action" ref="is_oberthur_saisie_1_action"/>
-        </record>
-        <record id="is_prodstar_oberthur_2" model="ir.ui.menu">
-            <field name="name">Oberthur saisie 2</field>
-            <field name="sequence">120</field>
-            <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
-            <field name="action" ref="is_oberthur_saisie_2_action"/>
-        </record>
-
     </data>
 </odoo>

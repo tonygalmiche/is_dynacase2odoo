@@ -6,8 +6,10 @@
             <field name="model">is.oberthur</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Form">
+                <form string="Form" delete="0">
                     <sheet>
+                        <field name="active" invisible="1"/>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group>
                             <field name="montage"/>
                             <field name="coque"/>
@@ -21,6 +23,11 @@
                             <field name="modif"/>
                         </group>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -29,8 +36,10 @@
             <field name="model">is.oberthur</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Form">
+                <form string="Form" delete="0">
                     <sheet>
+                        <field name="active" invisible="1"/>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group>
                             <field name="montage"/>
                             <field name="coque"/>
@@ -47,6 +56,11 @@
                             <field name="comment"/>
                         </group>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -55,27 +69,32 @@
             <field name="model">is.oberthur</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree delete="0">
                     <field name="montage"/>
                     <field name="coque"/>
-                    <field name="batterie"/>
                     <field name="harnais"/>
                     <field name="numof"/>
-                    <field name="continu1"/>
-                    <field name="tensiong"/>
-                    <field name="tensiond"/>
-                    <field name="bransubd"/>
-                    <field name="blocvis"/>
-                    <field name="soudure"/>
-                    <field name="continu2"/>
-                    <field name="ctrelect"/>
-                    <field name="date"/>
-                    <field name="heure"/>
-                    <field name="operateu"/>
-                    <field name="operateu2"/>
-                    <field name="controle"/>
-                    <field name="reprise"/>
-                    <field name="comment"/>
+                    <field name="batterie" optional="hide"/>
+                    <field name="continu1" optional="hide"/>
+                    <field name="tensiong" optional="hide"/>
+                    <field name="tensiond" optional="hide"/>
+                    <field name="bransubd" optional="hide"/>
+                    <field name="blocvis" optional="hide"/>
+                    <field name="soudure" optional="hide"/>
+                    <field name="continu2" optional="hide"/>
+                    <field name="ctrelect" optional="hide"/>
+                    <field name="date" optional="show"/>
+                    <field name="heure" optional="show"/>
+                    <field name="date_heure_saisie" optional="show"  widget="float_time"/>
+                    <field name="operateu" optional="hide"/>
+                    <field name="operateu2" optional="hide"/>
+                    <field name="controle" optional="hide"/>
+                    <field name="reprise" optional="hide"/>
+                    <field name="comment" optional="hide"/>
+                    <field name="create_date"                optional="hide" string="Créé le"/>
+                    <field name="create_uid"                 optional="hide" string="Créé par"/>
+                    <field name="write_date"                 optional="hide" string="Modifié le"/>
+                    <field name="write_uid"                  optional="hide" string="Modifié par"/>
                 </tree>
         </field>
         </record>

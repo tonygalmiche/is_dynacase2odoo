@@ -149,6 +149,13 @@ class IsProdstarFa2rcp(models.Model):
     ope_rcp     = fields.Char(string="Ope Rcp")
 
 
+# UPDATE is_prodstar_fa2rcp rcp
+# SET fournisseur = fou.raison_sociale
+# FROM is_prodstar_fa2fou fou
+# WHERE rcp.soc = fou.soc 
+# AND rcp.code_fou = fou.code_fournisseur;
+
+
 class IsProdstarFa2fou(models.Model):
     _name = "is.prodstar.fa2fou"
     _description = "Prodstar FA2FOU - Fournisseurs"
