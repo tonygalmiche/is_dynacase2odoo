@@ -13,6 +13,10 @@
                         <group>
                             <field name="montage"/>
                             <field name="coque"/>
+
+                            <field name="date_heure_saisie"/>
+
+
                             <field name="harnais" attrs="{'readonly': [('modif', '==', False)]}"/>
                             <field name="numof" attrs="{'readonly': [('modif', '==', False)]}"/>
                             <field name="continu1"/>
@@ -85,7 +89,7 @@
                     <field name="ctrelect" optional="hide"/>
                     <field name="date" optional="show"/>
                     <field name="heure" optional="show"/>
-                    <field name="date_heure_saisie" optional="show"  widget="float_time"/>
+                    <field name="date_heure_saisie" optional="show"/>
                     <field name="operateu" optional="hide"/>
                     <field name="operateu2" optional="hide"/>
                     <field name="controle" optional="hide"/>

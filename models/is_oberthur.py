@@ -12,8 +12,8 @@ class is_oberthur(models.Model):
     _name='is.oberthur'
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description="Oberthur"
-#    _rec_name = "numero"
-#    _order='create_date desc'
+    _rec_name = "id"
+    _order='date_heure_saisie desc'
 
     active    = fields.Boolean("Actif", default=True, tracking=True)
     montage   = fields.Char("Montage 1ier Flux", tracking=True, required=True)
@@ -35,7 +35,7 @@ class is_oberthur(models.Model):
     date      = fields.Char("Date saisie", tracking=True)
     heure     = fields.Char("Heure saisie", tracking=True)
 
-    date_heure_saisie = fields.Integer("Date-Heure saisie", tracking=True)
+    date_heure_saisie = fields.Datetime("Date-Heure saisie", default=fields.Datetime.now, readonly=True, tracking=True)
 
     operateu  = fields.Char("Opérateur 1", tracking=True)
     operateu2 = fields.Char("Opérateur 2", tracking=True)
