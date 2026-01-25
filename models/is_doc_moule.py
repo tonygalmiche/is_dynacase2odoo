@@ -205,7 +205,7 @@ class IsDocMoule(models.Model):
     temps_passe             = fields.Float(string="Temps passé (HH:MM)", tracking=True)
     temps_passe_commentaire = fields.Text(string="Commentaire sur temps passé", tracking=True)
 
-    site_ids = fields.Many2many(related='dossier_article_id.site_ids')
+    site_ids = fields.Many2many('is.database', string="Sites", compute='_compute_site_ids', store=True, readonly=True)
 
 
 
@@ -575,6 +575,21 @@ class IsDocMoule(models.Model):
             if obj.idmoule.is_database_id:
                 site_id = obj.idmoule.is_database_id.id
             obj.site_id = site_id
+
+
+    @api.depends('type_document', 'idmoule.is_database_id', 'dossierf_id.is_database_id', 'dossier_modif_variante_id.site_id', 'dossier_article_id.site_ids')
+    def _compute_site_ids(self):
+        for obj in self:
+            site_ids = self.env['is.database']
+            if obj.type_document == 'Moule' and obj.idmoule.is_database_id:
+                site_ids = obj.idmoule.is_database_id
+            elif obj.type_document == 'Dossier F' and obj.dossierf_id.is_database_id:
+                site_ids = obj.dossierf_id.is_database_id
+            elif obj.type_document == 'Dossier Modif Variante' and obj.dossier_modif_variante_id.site_id:
+                site_ids = obj.dossier_modif_variante_id.site_id
+            elif obj.type_document == 'Article' and obj.dossier_article_id.site_ids:
+                site_ids = obj.dossier_article_id.site_ids
+            obj.site_ids = site_ids
 
 
     def write(self,vals):
