@@ -61,11 +61,11 @@ class is_revue_projet_jalon(models.Model):
                     if obj.rpj_note>=80:                                  # Note >= 80
                         if obj.rpj_point_bloquant==0:                     # Pas de point bloquant
                             if obj.rpj_j==(obj.rpj_mouleid.j_actuelle or obj.dossierf_id.j_actuelle):     # Uniquement si J moule = J CR
-                                if  uid in [obj.rpj_chef_projetid.id, obj.rpj_directeur_techniqueid.id, 2]:
+                                if  uid in [obj.rpj_chef_projetid.id, obj.rpj_directeur_techniqueid.id, obj.rpj_responsable_projetid.id]:
                                     if obj.rpj_rrid and obj.rpj_rrid.state=='rr_diffuse' and obj.rpj_rrid.active==True:
                                         vsb=True
-                    if uid==2 and obj.rpj_j==(obj.rpj_mouleid.j_actuelle or obj.dossierf_id.j_actuelle):
-                        vsb=True
+                    #if uid==2 and obj.rpj_j==(obj.rpj_mouleid.j_actuelle or obj.dossierf_id.j_actuelle):
+                    #    vsb=True
 
 
 

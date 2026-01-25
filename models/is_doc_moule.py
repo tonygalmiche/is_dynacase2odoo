@@ -988,7 +988,9 @@ class IsDocMoule(models.Model):
 class IsDocMouleArray(models.Model):
     _name        = "is.doc.moule.array"
     _description = "Document moule array"
+    _order       = "sequence, id"
 
+    sequence      = fields.Integer(string="Séquence", default=10)
     annex         = fields.Many2many("ir.attachment", "attach_annex_rel"    , "annex_id"    , "attachment_id", string="Fichiers")
     annex_pdf     = fields.Many2many("ir.attachment", "attach_annex_pdf_rel", "annex_pdf_id", "attachment_id", string="Fichiers PDF", compute='_compute_annex_pdf', store=True, readonly=True)
     demandmodif   = fields.Char(string="Demande de modification")

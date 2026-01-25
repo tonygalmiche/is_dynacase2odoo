@@ -225,10 +225,17 @@ class is_demande_essai(models.Model):
     dynacase_id         = fields.Integer(string="Id Dynacase", index=True, copy=False)
     mail_to_ids = fields.Many2many('res.users', compute='_compute_mail_to_cc_ids', string="Mail To")
     mail_cc_ids = fields.Many2many('res.users', compute='_compute_mail_to_cc_ids', string="Mail Cc")
-    ro_user     = fields.Boolean("ro_user"    , compute='_compute_ro', store=False, readonly=True)
-    ro_essai    = fields.Boolean("ro_essai"   , compute='_compute_ro', store=False, readonly=True)
-    ro_planning = fields.Boolean("ro_planning", compute='_compute_ro', store=False, readonly=True)
-    ro_metro    = fields.Boolean("ro_metro"   , compute='_compute_ro', store=False, readonly=True)
+    ro_user       = fields.Boolean("ro_user"      , compute='_compute_ro', store=False, readonly=True)
+    ro_essai      = fields.Boolean("ro_essai"     , compute='_compute_ro', store=False, readonly=True)
+    ro_planning   = fields.Boolean("ro_planning"  , compute='_compute_ro', store=False, readonly=True)
+    ro_metro      = fields.Boolean("ro_metro"     , compute='_compute_ro', store=False, readonly=True)
+    required_essai = fields.Boolean("required_essai", compute='_compute_required_essai', store=False, readonly=True)
+
+
+    @api.depends('state', 'type_essai')
+    def _compute_required_essai(self):
+        for obj in self:
+            obj.required_essai = obj.state in ('planifie', 'cr') and obj.type_essai == 'moule'
 
 
     @api.depends('state','user_id','resp_essai_id','resp_planning_id','resp_metrologie_id')
@@ -240,7 +247,7 @@ class is_demande_essai(models.Model):
                 ro_user = False
             if obj.state in ('diffuse') and uid==obj.resp_planning_id.id:
                 ro_planning = False
-            if obj.state in ('planifie','cr') and uid==obj.resp_essai_id.id:
+            if obj.state in ('planifie','cr') and (uid==obj.resp_essai_id.id or uid==2):
                 ro_essai = False
             if obj.state in ('metrologie') and uid==obj.resp_metrologie_id.id:
                 ro_metro = False

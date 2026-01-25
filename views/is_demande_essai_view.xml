@@ -41,6 +41,7 @@
                         <field name="ro_essai" invisible="1"/>
                         <field name="ro_planning" invisible="1"/>
                         <field name="ro_metro" invisible="1"/>
+                        <field name="required_essai" invisible="1"/>
                         <button
                             name="vers_brouillon_action"
                             string="vers Brouillon"
@@ -169,9 +170,9 @@
                                             <field name="nb_mo_objectif"              attrs="{'readonly': [('ro_user','=',True)]}"/>
                                         </group>
                                         <group string="Résultat" attrs="{'invisible': [('state','in',['brouillon'])]}">
-                                            <field name="tps_cycle_resultat"          attrs="{'readonly': [('ro_essai','=',True)]}"/>
-                                            <field name="poids_piece_resultat"        attrs="{'readonly': [('ro_essai','=',True)]}"/>
-                                            <field name="presse_resultat_id"          attrs="{'readonly': [('ro_essai','=',True)]}"/>
+                                            <field name="tps_cycle_resultat"          attrs="{'readonly': [('ro_essai','=',True)], 'required': [('required_essai','=',True)]}"/>
+                                            <field name="poids_piece_resultat"        attrs="{'readonly': [('ro_essai','=',True)], 'required': [('required_essai','=',True)]}"/>
+                                            <field name="presse_resultat_id"          attrs="{'readonly': [('ro_essai','=',True)], 'required': [('required_essai','=',True)]}"/>
                                             <field name="nb_mo_resultat"              attrs="{'readonly': [('ro_essai','=',True)]}"/>
                                             <field name="de_piece_jointe_ids"         attrs="{'readonly': [('ro_essai','=',True)]}" widget="many2many_binary"/>
                                             <field name="de_commentaire_deroulement"  attrs="{'readonly': [('ro_essai','=',True)]}"/>
