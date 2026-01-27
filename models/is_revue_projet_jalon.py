@@ -271,6 +271,18 @@ class is_revue_projet_jalon(models.Model):
                 }
             }
 
+    def voir_documents_action(self):
+        """Ouvre la vue liste des documents liés à ce CR jalon"""
+        self.ensure_one()
+        return {
+            'name': 'Documents - %s' % self.rpj_chrono,
+            'type': 'ir.actions.act_window',
+            'res_model': 'is.revue.projet.jalon.documents',
+            'view_mode': 'tree,form',
+            'domain': [('is_revue_project_jalon_id', '=', self.id)],
+            'context': {'create': False, 'delete': False},
+        }
+
     def vers_j_suivante_action(self):
         for obj in self:
             if obj.vers_j_suivante_vsb:

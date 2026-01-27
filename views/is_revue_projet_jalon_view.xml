@@ -71,6 +71,13 @@
                             attrs="{'invisible': [('vers_j_suivante_vsb', '!=', True)]}"
                             type="object"
                         />
+                        <button
+                            name="voir_documents_action"
+                            string="Voir les documents"
+                            type="object"
+                            class="btn btn-secondary"
+                            icon="fa-list"
+                        />
                         <field 
                             name="state" widget="statusbar"
                             statusbar_visible="rpj_brouillon,rpj_directeur_technique,rpj_directeur_site,rpj_valide"
@@ -219,7 +226,7 @@
                                     <button title="Document" name="acceder_doc_action" type="object" icon="fa-search-plus" attrs="{'invisible': [('rpj_doc_documentid', '=', False)]}"/>
                                     <field name="rpj_doc_documentid" readonly="1" widget="many2one_clickable"/>
                                     <field name="rpj_doc_document"   readonly="1"/>
-                                    <field name="rpj_doc_action"     readonly="1" widget="badge" />
+                                    <field name="rpj_doc_action"     readonly="1" widget="badge"/>
                                     <field name="rpj_doc_bloquant"   readonly="1"/>
                                     <field name="rpj_doc_respid"     readonly="1"/>
                                     <field 
@@ -386,6 +393,85 @@
             <field name="name">CR revue projet jalon</field>
             <field name="res_model">is.revue.projet.jalon</field>
             <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Vue liste pour les documents de revue projet jalon -->
+        <record model="ir.ui.view" id="is_revue_projet_jalon_documents_tree">
+            <field name="name">view.is.revue.projet.jalon.documents.tree</field>
+            <field name="model">is.revue.projet.jalon.documents</field>
+            <field name="arch" type="xml">
+                <tree string="Documents" create="false" delete="false"
+                    decoration-danger="rpj_doc_bloquant==True and rpj_doc_etat=='AF'"
+                    decoration-warning="rpj_doc_etat=='AF'"
+                    decoration-muted="rpj_doc_etat==False"
+                    decoration-success="rpj_doc_etat=='F'"
+                >
+                    <field name="rpj_doc_documentid" widget="many2one_clickable"/>
+                    <field name="rpj_doc_document"/>
+                    <field name="rpj_doc_action" widget="badge"/>
+                    <field name="rpj_doc_bloquant"/>
+                    <field name="rpj_doc_respid"/>
+                    <field name="rpj_doc_etat" widget="badge" 
+                        decoration-success="rpj_doc_etat == 'F'" 
+                        decoration-warning="rpj_doc_etat == 'D'"
+                        decoration-danger="rpj_doc_etat == 'AF'"
+                    />
+                    <field name="rpj_doc_coeff" sum="Total"/>
+                    <field name="rpj_doc_note" sum="Total"/>
+                    <field name="is_revue_project_jalon_id" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="is_revue_projet_jalon_documents_form">
+            <field name="name">view.is.revue.projet.jalon.documents.form</field>
+            <field name="model">is.revue.projet.jalon.documents</field>
+            <field name="arch" type="xml">
+                <form string="Document" create="false" delete="false">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="rpj_doc_documentid"/>
+                                <field name="rpj_doc_document"/>
+                                <field name="rpj_doc_action"/>
+                                <field name="rpj_doc_bloquant"/>
+                            </group>
+                            <group>
+                                <field name="rpj_doc_respid"/>
+                                <field name="rpj_doc_etat"/>
+                                <field name="rpj_doc_coeff"/>
+                                <field name="rpj_doc_note"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="is_revue_project_jalon_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="is_revue_projet_jalon_documents_search">
+            <field name="name">view.is.revue.projet.jalon.documents.search</field>
+            <field name="model">is.revue.projet.jalon.documents</field>
+            <field name="arch" type="xml">
+                <search string="Documents">
+                    <field name="rpj_doc_documentid"/>
+                    <field name="rpj_doc_document"/>
+                    <field name="rpj_doc_action"/>
+                    <field name="rpj_doc_etat"/>
+                    <field name="rpj_doc_respid"/>
+                    <field name="is_revue_project_jalon_id"/>
+                    <filter name="filter_bloquant" string="Points bloquants" domain="[('rpj_doc_bloquant', '=', True)]"/>
+                    <filter name="filter_a_faire" string="À Faire" domain="[('rpj_doc_etat', '=', 'AF')]"/>
+                    <filter name="filter_fait" string="Fait" domain="[('rpj_doc_etat', '=', 'F')]"/>
+                    <group expand="0" string="Regrouper par">
+                        <filter name="group_etat" string="État" context="{'group_by': 'rpj_doc_etat'}"/>
+                        <filter name="group_action" string="Action" context="{'group_by': 'rpj_doc_action'}"/>
+                        <filter name="group_resp" string="Responsable" context="{'group_by': 'rpj_doc_respid'}"/>
+                    </group>
+                </search>
+            </field>
         </record>
 
     </data>
