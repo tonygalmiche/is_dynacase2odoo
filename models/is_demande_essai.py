@@ -235,7 +235,7 @@ class is_demande_essai(models.Model):
     @api.depends('state', 'type_essai')
     def _compute_required_essai(self):
         for obj in self:
-            obj.required_essai = obj.state in ('planifie', 'cr') and obj.type_essai == 'moule'
+            obj.required_essai = obj.state in ('cr') and obj.type_essai == 'moule'
 
 
     @api.depends('state','user_id','resp_essai_id','resp_planning_id','resp_metrologie_id')
