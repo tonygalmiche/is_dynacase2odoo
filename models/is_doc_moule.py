@@ -844,15 +844,9 @@ class IsDocMoule(models.Model):
                 self.env['mail.message'].create(vals)
                 vals['res_id'] = doc.id
                 self.env['mail.message'].create(vals)
-            obj.etat='F'
-                #     vals={
-                #         'is_doc_id': obj.id,
-                #         'annex'    : line.annex,
-                #         'comment'  : line.comment,
-                #     }
-                #     self.env['is.doc.moule.array'].create(vals)
-                # obj.etat='F'
-                # doc.array_ids.unlink()
+            
+            #TODO : Désactivé le 31/01/2026 à la demande de SM
+            #obj.etat='F'
 
 
     @api.onchange('date_debut_gantt','duree')

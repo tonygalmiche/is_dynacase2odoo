@@ -34,6 +34,7 @@
                                 <field name="revue_lancement_id"            attrs="{'invisible': [('revue_lancement_id', '=', False)]}"/>
                                 <field name="j_actuelle"                    attrs="{'invisible': [('type_document', '!=', 'Moule')]}"/>
                                 <field name="copier_sup_j_actuelle"         attrs="{'invisible': [('type_document', '!=', 'Moule')]}"/>
+                                <field name="ajuster_date"/>
                             </group>
                             <group>
                                 <field name="date_debut"/>  

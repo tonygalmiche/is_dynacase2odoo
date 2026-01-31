@@ -99,7 +99,7 @@ class is_revue_lancement(models.Model):
     rl_qualite_devid                  = fields.Many2one("res.users", string="Métrologie", tracking=True)
     rl_qualite_usineid                = fields.Many2one("res.users", string="Qualité développement", tracking=True)
     rl_achatsid                       = fields.Many2one("res.users", string="Achats", tracking=True)
-    rl_logistiqueid                   = fields.Many2one("res.users", string="Logistique", tracking=True)
+    rl_logistiqueid                   = fields.Many2one("res.users", string="Logistique Chine", tracking=True)
     rl_logistique_usineid             = fields.Many2one("res.users", string="Logistique Usine", tracking=True)
     rl_commercial2id                  = fields.Many2one("res.users", string="Commercial ", tracking=True)
     rl_responsable_outillageid        = fields.Many2one("res.users", string="Responsable outillage", tracking=True)

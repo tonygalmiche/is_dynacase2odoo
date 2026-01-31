@@ -81,7 +81,8 @@
                             <field name="user_id_vsb"               invisible="1"/>
                             <field name="resp_prise_avance_id"      attrs="{'readonly': [('resp_prise_avance_id_ro','=',True)]}"/>
                             <field name="resp_prise_avance_id_ro"   invisible="1"/>
-                            <field name="motif_prise_avance"        attrs="{'readonly': [('motif_prise_avance_ro','=',True)]}"/>
+                            <field name="motif_prise_avance"        attrs="{'invisible': [('motif_prise_avance','=',False)]}"/>
+                            <field name="motif_prise_avance_libre"  attrs="{'readonly': [('motif_prise_avance_ro','=',True)], 'invisible': [('duree_immobilisation_vsb','!=',True)]}"/>
                             <field name="motif_prise_avance_ro"     invisible="1"/>
                             <field name="immobilisation"            attrs="{'readonly': [('immobilisation_ro','=',True)], 'invisible': [('immobilisation_vsb','!=',True)]}"/>
                             <field name="immobilisation_ro"         invisible="1"/>
@@ -123,7 +124,8 @@
                     <field name="num_moule_id"              optional="show" widget="many2one_clickable"/>
                     <field name="user_id"                   optional="show"/>
                     <field name="resp_prise_avance_id"      optional="show"/>
-                    <field name="motif_prise_avance"        optional="show"/>
+                    <field name="motif_prise_avance"        optional="hide"/>
+                    <field name="motif_prise_avance_libre"  optional="show"/>
                     <field name="immobilisation"            optional="show"/>
                     <field name="pieces_modif"              optional="show"/>
                     <field name="duree_immobilisation"      optional="show"/>
@@ -162,7 +164,7 @@
                     <field name="num_moule_id"/>
                     <field name="user_id"/>
                     <field name="resp_prise_avance_id"/>
-                    <field name="motif_prise_avance"/>
+                    <field name="motif_prise_avance_libre"/>
                     <field name="state"/>
                 </search>
             </field>

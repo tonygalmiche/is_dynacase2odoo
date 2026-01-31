@@ -70,9 +70,12 @@ class IsGanttCopie(models.Model):
     active                        = fields.Boolean('Actif', default=True, tracking=True)
     j_actuelle                    = fields.Selection(related="dst_idmoule.j_actuelle")
     copier_sup_j_actuelle         = fields.Boolean('Ne copier que les tâches >= J actuelle', default=True, tracking=True)
-
+    ajuster_date                  = fields.Boolean('Copier en ajustant les dates', default=True, tracking=True)
     revue_lancement_id            = fields.Many2one("is.revue.lancement", string="Revue de lancement", compute='_compute_revue_lancement_id', store=False, readonly=True)
-    #revue_lancement_id            = fields.Many2one(related="dst_idmoule.revue_lancement_id")
+
+
+
+
 
 
     @api.depends('dst_idmoule', 'dst_dossierf_id')
@@ -250,15 +253,11 @@ class IsGanttCopie(models.Model):
                                 dst_doc.dependance_id = src2dst[dst_doc.dependance_id].id
 
                     #** Calage du Gantt sur date_debut ************************
-                    for dst_doc in dst_docs:
-                        start_date = str(obj.date_debut -timedelta(days=1))
-                        dst_doc.write_task(start_date=start_date, duration=dst_doc.duree, lier=True)
-
-
-                        #delta = (obj.date_debut - dst_doc.date_debut_gantt).days
-                        #dst_doc.date_debut_gantt = obj.date_debut
-                        #dst_doc.move_task_lier(delta)
-                        break
+                    if obj.ajuster_date:
+                        for dst_doc in dst_docs:
+                            start_date = str(obj.date_debut -timedelta(days=1))
+                            dst_doc.write_task(start_date=start_date, duration=dst_doc.duree, lier=True)
+                            break
 
 
                     for dst_doc in dst_docs:

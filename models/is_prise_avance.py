@@ -25,8 +25,11 @@ class is_prise_avance(models.Model):
     user_id_vsb                 = fields.Boolean('user_id_vsb', compute='_compute_vsb', readonly=True, store=False)
     resp_prise_avance_id        = fields.Many2one('res.users', "Responsable de la prise d'avance", help="Membres du groupe <Chef d'équipe et assistante logistique>", domain=lambda self: [( "groups_id", "=", self.env.ref("is_plastigray16.is_chef_equipe_group").id)], tracking=True)
     resp_prise_avance_id_ro     = fields.Boolean('resp_prise_avance_id_ro', compute="_compute_ro", readonly=True, store=False)
-    motif_prise_avance          = fields.Selection([('m', 'Modification outillage'), ('t', 'Transfert outillage')], "Motif de la prise d'avance", tracking=True)
+
+    motif_prise_avance          = fields.Selection([('m', 'Modification outillage'), ('t', 'Transfert outillage')], "Motif de la prise d'avance (archivé)", tracking=True, readonly=True, copy=False)
+    motif_prise_avance_libre    = fields.Char("Motif de la prise d'avance", tracking=True)
     motif_prise_avance_ro       = fields.Boolean('motif_prise_avance_ro', compute="_compute_ro", readonly=True, store=False)
+
     immobilisation              = fields.Boolean("Immobilisation complète", tracking=True)
     immobilisation_ro           = fields.Boolean('immobilisation_ro', compute="_compute_ro", readonly=True, store=False)
     immobilisation_vsb          = fields.Boolean('immobilisation_vsb', compute="_compute_vsb", readonly=True, store=False)
