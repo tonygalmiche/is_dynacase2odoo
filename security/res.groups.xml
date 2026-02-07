@@ -59,6 +59,12 @@
         <field name="implied_ids" eval="[(4, ref('is_pilote_processus_group'))]"/>
     </record>
 
+    <record model="res.groups" id="is_gestion_oberthur_group" >
+        <field name="name">Gestionnaire Oberthur</field>
+        <field name="comment"></field>
+        <field name="category_id" ref="is_plastigray16.is_groupe_plastigray_module_category"/>
+    </record>
+
 
 </data>
 </openerp>

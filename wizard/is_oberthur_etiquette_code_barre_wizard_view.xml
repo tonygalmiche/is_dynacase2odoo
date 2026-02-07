@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Vue formulaire du wizard -->
+        <record id="is_etiquette_code_barre_wizard_form" model="ir.ui.view">
+            <field name="name">is.oberthur.etiquette.code.barre.wizard.form</field>
+            <field name="model">is.oberthur.etiquette.code.barre.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Impression d'étiquettes code-barres">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="reference_coque"/>
+                                <field name="numero_chrono"/>
+                            </group>
+                            <group groups="base.group_no_one">
+                                <field name="nb_etiquettes"/>
+                                <field name="afficher_bordure"/>
+                                <field name="afficher_bordure_page"/>
+                                <field name="hauteur_etiquette"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Imprimer" name="action_imprimer" type="object" class="btn-primary"/>
+                        <button string="Annuler" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action pour ouvrir le wizard -->
+        <record id="is_oberthur_etiquette_code_barre_wizard_action" model="ir.actions.act_window">
+            <field name="name">Étiquettes code-barres</field>
+            <field name="res_model">is.oberthur.etiquette.code.barre.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Définition du format de papier pour les étiquettes -->
+        <record id="is_etiquette_code_barre_paperformat" model="report.paperformat">
+            <field name="name">Étiquettes code-barres</field>
+            <field name="default" eval="False"/>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">5</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <!-- Définition du rapport -->
+        <record id="is_oberthur_etiquette_code_barre_report" model="ir.actions.report">
+            <field name="name">Étiquettes code-barres</field>
+            <field name="model">is.oberthur.etiquette.code.barre.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">is_dynacase2odoo.report_is_oberthur_etiquette_code_barre</field>
+            <field name="report_file">is_dynacase2odoo.report_is_oberthur_etiquette_code_barre</field>
+            <field name="paperformat_id" ref="is_etiquette_code_barre_paperformat"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Template QWeb du rapport -->
+        <template id="report_is_oberthur_etiquette_code_barre">
+            <t t-call="web.basic_layout">
+                <style>
+                    @page {
+                        size: A4 portrait;
+                        margin: 5mm;
+                    }
+                    .page-etiquettes {
+                        width: 100%;
+                        font-family: Arial, sans-serif;
+                    }
+                    .etiquette-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        table-layout: fixed;
+                    }
+                    .etiquette-table-page-border {
+                        border: 1px solid #000;
+                    }
+                    .etiquette-cell {
+                        width: 33.33%;
+                        text-align: center;
+                        vertical-align: middle;
+                        padding: 0;
+                        overflow: hidden;
+                    }
+                    .etiquette-cell:first-child {
+                        padding-right: 5mm;
+                    }
+                    .etiquette-cell:nth-child(2) {
+                        padding-left: 5mm;
+                        padding-right: 5mm;
+                    }
+                    .etiquette-cell:last-child {
+                        padding-left: 5mm;
+                    }
+                    .etiquette-cell-border {
+                        border: 1px solid #000;
+                    }
+                    .barcode-img {
+                        width: 100%;
+                        height: auto;
+                    }
+                    .label-text {
+                        font-family: Arial, sans-serif;
+                        font-size: 12pt;
+                        font-weight: bold;
+                        margin-top: 1mm;
+                        white-space: nowrap;
+                    }
+                </style>
+
+                <t t-foreach="pages" t-as="page">
+                    <div class="page-etiquettes" t-attf-style="#{ 'page-break-before: always;' if not page_first else '' }">
+                        <table t-attf-class="etiquette-table #{'etiquette-table-page-border' if afficher_bordure_page else ''}">
+                            <t t-foreach="page" t-as="ligne">
+                                <tr t-attf-style="height: {{hauteur_etiquette}}mm;">
+                                    <t t-foreach="ligne" t-as="eti">
+                                        <td t-attf-class="etiquette-cell #{'etiquette-cell-border' if afficher_bordure else ''}" t-attf-style="height: {{hauteur_etiquette}}mm; padding-top: 2.5mm; padding-bottom: 2.5mm;">
+                                            <t t-if="eti['code']">
+                                                <img class="barcode-img"
+                                                     t-attf-src="/report/barcode/Standard39/{{eti['barcode']}}?width=350&amp;height=80&amp;humanreadable=0"/>
+                                                <div class="label-text">
+                                                    <t t-esc="eti['code']"/>
+                                                </div>
+                                            </t>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+                        </table>
+                    </div>
+                </t>
+
+            </t>
+        </template>
+
+    </data>
+</odoo>
