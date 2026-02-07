@@ -2,3 +2,4 @@
 from . import is_processus_doc_revision_wizard
 from . import is_revue_projet_jalon_refus_wizard
 from . import is_oberthur_etiquette_code_barre_wizard
+from . import is_oberthur_recherche_montage_wizard

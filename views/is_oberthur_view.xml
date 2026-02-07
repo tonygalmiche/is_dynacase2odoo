@@ -13,17 +13,14 @@
                         <group>
                             <field name="montage"/>
                             <field name="coque"/>
-
                             <field name="date_heure_saisie"/>
-
-
                             <field name="harnais" attrs="{'readonly': [('modif', '==', False)]}"/>
                             <field name="numof" attrs="{'readonly': [('modif', '==', False)]}"/>
-                            <field name="continu1"/>
-                            <field name="tensiong"/>
-                            <field name="tensiond"/>
-                            <field name="bransubd"/>
-                            <field name="blocvis"/>
+                            <field name="continu1" required="1"/>
+                            <field name="tensiong" required="1"/>
+                            <field name="tensiond" required="1"/>
+                            <field name="bransubd" required="1"/>
+                            <field name="blocvis"  required="1"/>
                             <field name="modif"/>
                         </group>
                     </sheet>
@@ -45,17 +42,17 @@
                         <field name="active" invisible="1"/>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group>
-                            <field name="montage"/>
-                            <field name="coque"/>
-                            <field name="batterie"/>
-                            <field name="harnais"/>
-                            <field name="numof"/>
-                            <field name="soudure"/>
-                            <field name="continu2"/>
-                            <field name="ctrelect"/>
-                            <field name="operateu"/>
+                            <field name="montage"   readonly="1"/>
+                            <field name="coque"     readonly="1"/>
+                            <field name="batterie"  readonly="1"/>
+                            <field name="harnais"   readonly="1"/>
+                            <field name="numof"     readonly="1"/>
+                            <field name="soudure"   required="1"/>
+                            <field name="continu2"  required="1"/>
+                            <field name="ctrelect"  required="1"/>
+                            <field name="operateu"  required="1"/>
                             <field name="operateu2"/>
-                            <field name="controle"/>
+                            <field name="controle"  required="1"/>
                             <field name="reprise"/>
                             <field name="comment"/>
                         </group>
@@ -115,7 +112,14 @@
                 </search>
             </field>
         </record>
-        <record model="ir.actions.act_window" id="is_oberthur_saisie_1_action">
+        <record model="ir.actions.act_window" id="is_oberthur_nouvelle_saisie_action">
+            <field name="name">Nouvelle saisie</field>
+            <field name="res_model">is.oberthur</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="is_oberthur_saisie_1_view"/>
+            <field name="target">current</field>
+        </record>
+        <!-- <record model="ir.actions.act_window" id="is_oberthur_saisie_1_action">
             <field name="name">Oberthur saisie 1</field>
             <field name="res_model">is.oberthur</field>
             <field name="view_mode">tree,form</field>
@@ -125,8 +129,19 @@
                 (0, 0, {'view_mode': 'form', 'view_id': ref('is_oberthur_saisie_1_view'), 'sequence': 2})
             ]"/>
             <field name="context">{}</field>
+        </record> -->
+        <record model="ir.actions.act_window" id="is_oberthur_liste_saisies_action">
+            <field name="name">Liste des saisies</field>
+            <field name="res_model">is.oberthur</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_ids" eval="[
+                (5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('is_oberthur_tree_view'), 'sequence': 1}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('is_oberthur_saisie_2_view'), 'sequence': 2})
+            ]"/>
+            <field name="context">{'create': False}</field>
         </record>
-        <record model="ir.actions.act_window" id="is_oberthur_saisie_2_action">
+        <!-- <record model="ir.actions.act_window" id="is_oberthur_saisie_2_action">
             <field name="name">Oberthur saisie 2</field>
             <field name="res_model">is.oberthur</field>
             <field name="view_mode">tree,form</field>
@@ -136,6 +151,6 @@
                 (0, 0, {'view_mode': 'form', 'view_id': ref('is_oberthur_saisie_2_view'), 'sequence': 2})
             ]"/>
             <field name="context">{}</field>
-        </record>
+        </record> -->
     </data>
 </odoo>
