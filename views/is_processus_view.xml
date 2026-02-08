@@ -424,10 +424,28 @@
                 </search>
             </field>
         </record>
+        <record id="is_processus_doc_graph_view" model="ir.ui.view">
+            <field name="name">is_processus_doc_graph_view</field>
+            <field name="model">is.processus.doc</field>
+            <field name="arch" type="xml">
+                <graph string="Documents des processus" type="bar">
+                    <field name="pilote_id" type="row"/>
+                </graph>
+            </field>
+        </record>
+        <record id="is_processus_doc_pivot_view" model="ir.ui.view">
+            <field name="name">is_processus_doc_pivot_view</field>
+            <field name="model">is.processus.doc</field>
+            <field name="arch" type="xml">
+                <pivot string="Documents des processus">
+                    <field name="pilote_id" type="row"/>
+                </pivot>
+            </field>
+        </record>
         <record id="is_processus_doc_action" model="ir.actions.act_window">
             <field name="name">Documents des processus</field>
             <field name="res_model">is.processus.doc</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
             <field name="search_view_id" ref="is_processus_doc_search"/>
             <field name="context">{'search_default_hors_archive': 1}</field>
         </record>

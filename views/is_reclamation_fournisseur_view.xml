@@ -257,11 +257,34 @@
         </record>
 
 
+        <!-- Graph view -->
+        <record id="is_reclamation_fournisseur_graph_view" model="ir.ui.view">
+            <field name="name">is_reclamation_fournisseur_graph_view</field>
+            <field name="model">is.reclamation.fournisseur</field>
+            <field name="arch" type="xml">
+                <graph string="Réclamations fournisseurs" type="bar">
+                    <field name="nom_fournisseur" type="row"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Pivot view -->
+        <record id="is_reclamation_fournisseur_pivot_view" model="ir.ui.view">
+            <field name="name">is_reclamation_fournisseur_pivot_view</field>
+            <field name="model">is.reclamation.fournisseur</field>
+            <field name="arch" type="xml">
+                <pivot string="Réclamations fournisseurs">
+                    <field name="type_reclamation" type="col"/>
+                    <field name="nom_fournisseur" type="row"/>
+                </pivot>
+            </field>
+        </record>
+
         <!-- Action -->
         <record id="is_reclamation_fournisseur_action" model="ir.actions.act_window">
             <field name="name">Réclamations fournisseurs</field>
             <field name="res_model">is.reclamation.fournisseur</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
             <field name="context">{}</field>
             <field name="domain">[]</field>
             <field name="help" type="html">

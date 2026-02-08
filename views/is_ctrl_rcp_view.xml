@@ -237,10 +237,32 @@
                 </search>
             </field>
         </record>
+        <!-- Graph view -->
+        <record id="is_ctrl_rcp_rapport_graph_view" model="ir.ui.view">
+            <field name="name">is_ctrl_rcp_rapport_graph_view</field>
+            <field name="model">is.ctrl.rcp.rapport</field>
+            <field name="arch" type="xml">
+                <graph string="Rapports RCP" type="bar">
+                    <field name="fournisseur" type="row"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Pivot view -->
+        <record id="is_ctrl_rcp_rapport_pivot_view" model="ir.ui.view">
+            <field name="name">is_ctrl_rcp_rapport_pivot_view</field>
+            <field name="model">is.ctrl.rcp.rapport</field>
+            <field name="arch" type="xml">
+                <pivot string="Rapports RCP">
+                    <field name="fournisseur" type="row"/>
+                </pivot>
+            </field>
+        </record>
+
         <record id="is_ctrl_rcp_rapport_action" model="ir.actions.act_window">
             <field name="name">Rapports RCP</field>
             <field name="res_model">is.ctrl.rcp.rapport</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
             <field name="search_view_id" ref="is_ctrl_rcp_rapport_search_view"/>
             <field name="context">{}</field>
         </record>
@@ -369,6 +391,8 @@
                </search>
             </field>
         </record>
+    
+
         <record id="is_ctrl_rcp_saisie_action" model="ir.actions.act_window">
             <field name="name">Historique des saisies des contrôles RCP</field>
             <field name="res_model">is.ctrl.rcp.saisie</field>

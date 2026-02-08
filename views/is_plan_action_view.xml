@@ -151,10 +151,29 @@
                 </search>
             </field>
         </record>
+        <record model="ir.ui.view" id="is_action_graph_view">
+            <field name="name">is_action_graph_view</field>
+            <field name="model">is.action</field>
+            <field name="arch" type="xml">
+                <graph string="Actions" type="bar">
+                    <field name="resp_id" type="row"/>
+                </graph>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_action_pivot_view">
+            <field name="name">is_action_pivot_view</field>
+            <field name="model">is.action</field>
+            <field name="arch" type="xml">
+                <pivot string="Actions">
+                    <field name="state" type="col"/>
+                    <field name="resp_id" type="row"/>
+                </pivot>
+            </field>
+        </record>
         <record model="ir.actions.act_window" id="is_action_action">
             <field name="name">Action</field>
             <field name="res_model">is.action</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
             <field name="context">{}
             </field>
         </record>
@@ -326,10 +345,29 @@
                 </search>
             </field>
         </record>
+        <record model="ir.ui.view" id="is_plan_action_graph_view">
+            <field name="name">is_plan_action_graph_view</field>
+            <field name="model">is.plan.action</field>
+            <field name="arch" type="xml">
+                <graph string="Plans d'action" type="bar">
+                    <field name="pilot_id" type="row"/>
+                </graph>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_plan_action_pivot_view">
+            <field name="name">is_plan_action_pivot_view</field>
+            <field name="model">is.plan.action</field>
+            <field name="arch" type="xml">
+                <pivot string="Plans d'action">
+                    <field name="state" type="col"/>
+                    <field name="pilot_id" type="row"/>
+                </pivot>
+            </field>
+        </record>
         <record model="ir.actions.act_window" id="is_plan_action_action">
             <field name="name">Plan d'action</field>
             <field name="res_model">is.plan.action</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
             <field name="context">{}
             </field>
         </record>
