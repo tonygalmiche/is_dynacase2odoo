@@ -212,11 +212,10 @@
                                         <field name="bloquant"           attrs="{'invisible': [('type_document', '=', 'Article')]}"/>
                                         <field name="note"               attrs="{'invisible': [('type_document', '=', 'Article')]}"/>
                                         <field name="color"              attrs="{'invisible': [('type_document', '=', 'Article')]}"/>
-                                        <!-- <field name="site_id"            attrs="{'invisible': [('type_document', '=', 'Article')]}"/> -->
                                         <field name="site_ids" widget="many2many_tags" optional="hide"/>
                                         <field name="gantt_pdf"          attrs="{'readonly': [('acces_chef_projet', '=', False)], 'invisible': [('type_document', '=', 'Article')]}"/>
                                         <field name="suivi_projet"/>
-                                        <field name="dateend" readonly="1"/>
+                                        <field name="date_fin_agenda"    readonly="1"/>
                                         <field name="dynacase_id"        readonly="1"/>
                                         <field name="date_creation_auto" attrs="{'invisible': [('type_document', '=', 'Article')]}"/>
                                     </group>
@@ -312,7 +311,6 @@
                     <field name="dossier_modif_variante_id" optional="hide"           widget="many2one_clickable"/>
                     <field name="dossier_article_id"        optional="hide"           widget="many2one_clickable"/>
                     <field name="moule_dossierf"            optional="hide" />
-                    <!-- <field name="site_id"                   optional="hide" /> -->
                     <field name="site_ids" widget="many2many_tags" optional="show"/>
                     <field name="designation_dossier"       optional="hide" />
                     <button title="Gantt du projet" name="doc_projet_action" type="object" icon="fa-indent" attrs="{'invisible': [('idproject', '=', False)]}"/>
@@ -331,10 +329,8 @@
                     <field name="rsp_date"  optional="hide" />
                     <field name="rsp_texte" optional="hide" />
                     <field name="rsp_auto"  optional="hide" />
-
                     <field name="temps_passe"  optional="hide"  widget="float_time" sum="Total"/>
                     <field name="temps_passe_commentaire"  optional="hide" />
-
                     <field name="color"     optional="hide" />
                     <field name="fin_derogation" optional="show" />
                     <field name="param_project_array_html" optional="hide"/>
@@ -346,7 +342,7 @@
                     <field name="duree_gantt"         optional="hide"/>
                     <field name="date_debut_gantt"    optional="hide" />
                     <field name="date_fin_gantt"      optional="hide" />
-                    <field name="dateend"             optional="hide" />
+                    <field name="date_fin_agenda"     optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="gantt_pdf"           optional="hide"/>
                     <field name="suivi_projet"        optional="hide"/>
@@ -476,7 +472,7 @@
             <field name="arch" type="xml">
                 <calendar 
                     date_start="date_debut_gantt" 
-                    date_stop="date_fin_gantt" 
+                    date_stop="date_fin_agenda" 
                     color="param_project_id" 
                     hide_time="false" 
                     event_limit="100"
@@ -489,7 +485,7 @@
                 <field name="demande"/> 
                 <field name="date_debut_gantt"/> 
                 <field name="duree"/> 
-                <field name="date_fin_gantt"/> 
+                <field name="date_fin_agenda"/> 
                 <field name="indicateur"/> 
                 </calendar>
             </field>
@@ -573,13 +569,6 @@
             <field name="name">is_doc_moule_moule_tree</field>
             <field name="model">is.doc.moule</field>
             <field name="arch" type="xml">
-                <!-- <tree 
-                    string="Document moule"
-                    decoration-muted="etat=='F'"
-                    decoration-info="color=='cornflowerblue'"
-                    decoration-warning="color=='Red'"
-                    decoration-danger="color=='Gray'"
-                > -->
                  <tree string="Document moule">
                     <field name="section_id"          optional="show"/>
                     <field name="sequence"            optional="show"/>
@@ -588,10 +577,7 @@
                     <field name="type_document"       optional="hide"/>
                     <button title="Gantt du moule" name="doc_moule_action" type="object" icon="fa-indent"/>
                     <field name="idmoule"             optional="show"           widget="many2one_clickable"/>
-                    <!-- <field name="site_id"             optional="hide" /> -->
                     <field name="site_ids" widget="many2many_tags" optional="hide"/>
-
-                   
                     <button title="Gantt du projet" name="doc_projet_action" type="object" icon="fa-indent"/>
                     <field name="idproject"           optional="show"         widget="many2one_clickable"/>
                     <field name="client_id"           optional="show"         widget="many2one_clickable"/>
@@ -614,6 +600,7 @@
                     <field name="duree_gantt"         optional="hide"/>
                     <field name="date_debut_gantt"    optional="show"/>
                     <field name="date_fin_gantt"      optional="show"/>
+                    <field name="date_fin_agenda"     optional="hide"/>
                     <field name="duree_attente_avant" optional="hide" />
                     <field name="dependance_id"       optional="hide" widget="many2one_clickable"/>
                     <field name="suivi_projet"        optional="hide"/>
@@ -659,10 +646,7 @@
                     <field name="type_document" optional="hide"/>
                     <button title="Gantt du Dossier F" name="doc_dossierf_action" type="object" icon="fa-indent"/>
                     <field name="dossierf_id"               optional="show"           widget="many2one_clickable"/>
-                    <!-- <field name="site_id"                   optional="hide" /> -->
-
                     <field name="site_ids" widget="many2many_tags" optional="hide"/>
-
                     <button title="Gantt du projet" name="doc_projet_action" type="object" icon="fa-indent"/>
                     <field name="idproject" optional="show"         widget="many2one_clickable"/>
                     <field name="client_id" optional="show"         widget="many2one_clickable"/>

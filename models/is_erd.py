@@ -185,15 +185,13 @@ class is_erd(models.Model):
                 users.append(assistante_commerciale)
             if obj.state=='Gagne':
                 users.append(assistante_commerciale)
+                mail_copy =directeur_technique.email
             for user in users:
                 if user.id:
                     ids.append(user.partner_id.id)
             obj.destinataires_ids  = ids
             obj.mail_copy          = mail_copy
 
-
-
-        
 
     def get_doc_url(self):
         for obj in self:

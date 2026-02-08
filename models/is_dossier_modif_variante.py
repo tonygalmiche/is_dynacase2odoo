@@ -6,19 +6,37 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+# _STATE=([
+#     ('plascreate'     , 'Créé'),
+#     ('plasanalysed'   , 'Analysé'),
+#     ('plastransbe'    , 'Transmis BE'),
+#     ('Analyse_BE'     , 'Analysé BE'),
+#     ('plasvalidbe'    , 'Validé BE'),
+#     ('plasvalidcom'   , 'Validé commercial'),
+#     ('plasdiffusedcli', 'Diffusé client'),
+#     ('plasrelancecli' , 'Relance client'),
+#     ('plaswinned'     , 'Gagné'),
+#     ('plasloosed'     , 'Perdu'),
+#     ('plascancelled'  , 'Annulé'),
+# ])
+
+
 _STATE=([
-    ('plascreate'     , 'Créé'),
-    ('plasanalysed'   , 'Analysé'),
-    ('plastransbe'    , 'Transmis BE'),
-    ('Analyse_BE'     , 'Analysé BE'),
-    ('plasvalidbe'    , 'Validé BE'),
-    ('plasvalidcom'   , 'Validé commercial'),
-    ('plasdiffusedcli', 'Diffusé client'),
-    ('plasrelancecli' , 'Relance client'),
-    ('plaswinned'     , 'Gagné'),
-    ('plasloosed'     , 'Perdu'),
-    ('plascancelled'  , 'Annulé'),
+    ('plascreate'     , '0-Créé'),
+    ('plasanalysed'   , '1-Analysé'),
+    ('plastransbe'    , '2-Transmis BE'),
+    ('Analyse_BE'     , '3-Analysé BE'),
+    ('plasvalidbe'    , '4-Validé BE'),
+    ('plasvalidcom'   , '5-Validé commercial'),
+    ('plasdiffusedcli', '6-Diffusé client'),
+    ('plasrelancecli' , '6-Relance client'),
+    ('plaswinned'     , '7-Gagné'),
+    ('plasloosed'     , '8-Perdu'),
+    ('plascancelled'  , '9-Annulé'),
 ])
+
+
+
 
 
 class is_dossier_modif_variante(models.Model):
@@ -250,7 +268,7 @@ class is_dossier_modif_variante(models.Model):
     fiche_codification_ids      = fields.One2many("is.fiche.codification", "dossier_modif_variante_id", readonly=True)
     active                      = fields.Boolean('Actif', default=True, tracking=True)
     readonly_vsb                = fields.Boolean(string="Accès en lecture seule", compute='_compute_vsb', readonly=True, store=False)
-    state_name          = fields.Char("Etat name", compute='_compute_state_name', readonly=True, store=False)
+    state_name          = fields.Char("Etat-Intitulé", compute='_compute_state_name', readonly=True, store=True)
     destinataires_ids   = fields.Many2many('res.partner', string="destinataires_ids", compute='_compute_destinataires_ids')
     destinataires_name  = fields.Char('Destinataires', compute='_compute_destinataires_name')
     mail_copy           = fields.Char('Mail copy'    , compute='_compute_destinataires_ids')
@@ -283,17 +301,18 @@ class is_dossier_modif_variante(models.Model):
             ids=[]
             if obj.state=='plastransbe':
                 users.append(obj.demao_idbe)
-                mail_copy = directeur_technique.email
+                mail_copy = "%s,%s"%(directeur_technique.email,obj.demao_idcommercial.email)
             if obj.state=='Analyse_BE':
                 users.append(directeur_technique)
             if obj.state=='plasvalidbe':
                 users.append(obj.demao_idcommercial)
+                mail_copy = directeur_technique.email
             if obj.state=='plasdiffusedcli':
                 users.append(assistante_commerciale)
-            if obj.state=='plaswinned':
-                users.append(directeur_technique)
                 users.append(obj.demao_idbe)
-                mail_copy = assistante_commerciale.email
+            if obj.state=='plaswinned':
+                users.append(obj.demao_idbe)
+                mail_copy = "%s,%s"%(assistante_commerciale.email,directeur_technique.email)
             if obj.state=='plasanalysed':
                 users.append(obj.demao_idcommercial)
             for user in users:

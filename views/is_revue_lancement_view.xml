@@ -134,6 +134,7 @@
                                         <field name="rl_methode_assemblageid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                         <field name="rl_qualite_devid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                         <field name="rl_qualite_usineid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
+                                        <field name="rl_rheologieid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                         <field name="rl_achatsid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                         <field name="rl_logistiqueid"   attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}"/>
                                         <field name="rl_logistique_usineid"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
@@ -309,6 +310,7 @@
                     <field name="rl_methode_assemblageid" optional="hide"/>
                     <field name="rl_qualite_devid" optional="hide"/>
                     <field name="rl_qualite_usineid" optional="hide"/>
+                    <field name="rl_rheologieid" optional="hide"/>
                     <field name="rl_achatsid" optional="hide"/>
                     <field name="rl_logistiqueid" optional="hide"/>
                     <field name="rl_logistique_usineid" optional="hide"/>

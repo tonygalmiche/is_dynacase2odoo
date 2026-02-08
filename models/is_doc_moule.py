@@ -102,6 +102,19 @@ class IsDocMoule(models.Model):
             obj.date_j_prevue = date_j_prevue
 
 
+    @api.depends('date_debut_gantt', 'duree_gantt')
+    def _compute_date_fin_agenda(self):
+        for obj in self:
+            date_fin_agenda = False
+            if obj.date_debut_gantt and obj.duree_gantt:
+                date_fin_agenda = obj.date_debut_gantt + timedelta(days=obj.duree_gantt - 1)
+                if date_fin_agenda < obj.date_debut_gantt:
+                    date_fin_agenda = obj.date_debut_gantt
+            elif obj.date_debut_gantt:
+                date_fin_agenda = obj.date_debut_gantt
+            obj.date_fin_agenda = date_fin_agenda
+
+
     @api.depends('type_document', 'idmoule', 'dossierf_id', 'dossier_modif_variante_id', 'dossier_article_id', 'dossier_appel_offre_id')
     def _compute_designation_dossier(self):
         for obj in self:
@@ -160,6 +173,7 @@ class IsDocMoule(models.Model):
     duree_attente_avant = fields.Integer("Durée attente avant (J)", help="Utilisée dans le Gantt")
     date_debut_gantt    = fields.Date(string="Date début", default=lambda self: self._date_debut_gantt(), tracking=True)
     date_fin_gantt      = fields.Date(string="Date fin", tracking=True)
+    date_fin_agenda     = fields.Date(string="Date fin agenda", compute='_compute_date_fin_agenda', store=True, readonly=True)
     section_id          = fields.Many2one("is.section.gantt", string="Section Gantt",index=True, tracking=True, copy=False)
     gantt_pdf           = fields.Boolean("Gantt PDF", default=True, help="Afficher dans Gantt PDF")
     dependance_id       = fields.Many2one("is.doc.moule", string="Dépendance",index=True, tracking=True, copy=False)

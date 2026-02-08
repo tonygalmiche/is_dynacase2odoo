@@ -147,6 +147,8 @@ class IsParamProject(models.Model):
         ("10", "10-Logistique Usine"),
         ("11", "11-Achats"),
         ("12", "12-Responsable projets"),
+        ("13", "13-Rhéologie"),
+
     ], string="Responsable du document", tracking=True)
     ppr_revue_lancement    = fields.Selection(PPR_REVUE_LANCEMENT, string="Revue de lancement", tracking=True)
     ppr_moule_hors_auto = fields.Boolean(string="Famille pour moule hors automobile", tracking=True)

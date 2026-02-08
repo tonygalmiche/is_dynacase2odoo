@@ -276,17 +276,17 @@ class is_dossier_appel_offre(models.Model):
             ids=[]
             if obj.state=='plastransbe':
                 users.append(obj.chef_projet_id)
-                mail_copy = directeur_technique.email
+                mail_copy = "%s,%s"%(directeur_technique.email,obj.commercial_id.email)
             if obj.state=='Analyse_BE':
                 users.append(directeur_technique)
             if obj.state=='plasvalidbe':
                 users.append(obj.commercial_id)
+                mail_copy = directeur_technique.email
             if obj.state=='plasdiffusedcli':
                 users.append(assistante_commerciale)
             if obj.state=='plaswinned':
-                users.append(directeur_technique)
                 users.append(obj.chef_projet_id)
-                mail_copy = assistante_commerciale.email
+                mail_copy = "%s,%s"%(assistante_commerciale.email,directeur_technique.email)
             if obj.state=='plasanalysed':
                 users.append(obj.commercial_id)
             for user in users:

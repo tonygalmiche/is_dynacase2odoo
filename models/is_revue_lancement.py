@@ -16,6 +16,7 @@ _RESPONSABLES={
     '10': 'rl_logistique_usineid',
     '11': 'rl_achatsid',
     '12': 'rl_responsable_projetid',
+    '13': 'rl_rheologieid',
 }
 
 
@@ -98,6 +99,7 @@ class is_revue_lancement(models.Model):
     rl_methode_assemblageid           = fields.Many2one("res.users", string="Méthode assemblage", tracking=True)
     rl_qualite_devid                  = fields.Many2one("res.users", string="Métrologie", tracking=True)
     rl_qualite_usineid                = fields.Many2one("res.users", string="Qualité développement", tracking=True)
+    rl_rheologieid                    = fields.Many2one("res.users", string="Rhéologie", tracking=True)
     rl_achatsid                       = fields.Many2one("res.users", string="Achats", tracking=True)
     rl_logistiqueid                   = fields.Many2one("res.users", string="Logistique Chine", tracking=True)
     rl_logistique_usineid             = fields.Many2one("res.users", string="Logistique Usine", tracking=True)
@@ -520,6 +522,7 @@ class is_revue_lancement(models.Model):
                 "rl_methode_assemblageid", 
                 "rl_qualite_devid", 
                 "rl_qualite_usineid", 
+                "rl_rheologieid", 
                 "rl_achatsid", 
                 "rl_logistiqueid", 
                 "rl_commercial2id",
