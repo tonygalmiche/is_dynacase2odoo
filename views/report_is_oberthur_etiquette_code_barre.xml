@@ -8,10 +8,10 @@
             <field name="default" eval="False"/>
             <field name="format">A4</field>
             <field name="orientation">Portrait</field>
-            <field name="margin_top">5</field>
+            <field name="margin_top">10</field>
             <field name="margin_bottom">0</field>
-            <field name="margin_left">5</field>
-            <field name="margin_right">5</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
             <field name="header_line" eval="False"/>
             <field name="header_spacing">0</field>
             <field name="dpi">90</field>
@@ -32,6 +32,12 @@
         <template id="report_is_oberthur_etiquette_code_barre">
             <t t-call="web.basic_layout">
                 <style>
+                    @font-face {
+                        font-family: 'Libre Barcode 39';
+                        src: url('/is_dynacase2odoo/static/src/fonts/LibreBarcode39-Regular.ttf') format('truetype');
+                        font-weight: normal;
+                        font-style: normal;
+                    }
                     @page {
                         size: A4 portrait;
                         margin: 5mm;
@@ -56,27 +62,37 @@
                         overflow: hidden;
                     }
                     .etiquette-cell:first-child {
-                        padding-right: 5mm;
+                        padding-right: 0mm;
                     }
                     .etiquette-cell:nth-child(2) {
                         padding-left: 5mm;
                         padding-right: 5mm;
                     }
                     .etiquette-cell:last-child {
-                        padding-left: 5mm;
+                        padding-left: 0mm;
                     }
                     .etiquette-cell-border {
                         border: 1px solid #000;
                     }
-                    .barcode-img {
-                        width: 100%;
+                    .barcode-svg-img {
+                        width: 80%;
                         height: auto;
+                    }
+                    .barcode-font {
+                        font-family: 'Libre Barcode 39' !important;
+                        font-size: 32pt;
+                        line-height: 1;
+                        white-space: nowrap;
+                        -webkit-transform: scaleY(2);
+                        -webkit-transform-origin: top center;
+                        margin-bottom: 22pt;
                     }
                     .label-text {
                         font-family: Arial, sans-serif;
                         font-size: 12pt;
                         font-weight: bold;
-                        margin-top: 1mm;
+                        margin-top: -2pt;
+                        padding-top: 0;
                         white-space: nowrap;
                     }
                 </style>
@@ -89,8 +105,18 @@
                                     <t t-foreach="ligne" t-as="eti">
                                         <td t-attf-class="etiquette-cell #{'etiquette-cell-border' if afficher_bordure else ''}" t-attf-style="height: {{hauteur_etiquette}}mm; padding-top: 2.5mm; padding-bottom: 2.5mm;">
                                             <t t-if="eti['code']">
-                                                <img class="barcode-img"
-                                                     t-attf-src="/report/barcode/Standard39/{{eti['barcode']}}?width=350&amp;height=80&amp;humanreadable=0"/>
+                                                <t t-if="type_code_barre == 'svg' and eti.get('svg')">
+                                                    <img class="barcode-svg-img" t-att-src="eti['svg']"/>
+                                                </t>
+                                                <t t-elif="type_code_barre == 'fonte'">
+                                                    <div class="barcode-font">
+                                                        <t t-esc="eti['barcode']"/>
+                                                    </div>
+                                                </t>
+                                                <t t-else="">
+                                                    <img style="width: 100%; height: auto;"
+                                                         t-attf-src="/report/barcode/Standard39/{{eti['barcode']}}?width=350&amp;height=80&amp;humanreadable=0"/>
+                                                </t>
                                                 <div class="label-text">
                                                     <t t-esc="eti['code']"/>
                                                 </div>

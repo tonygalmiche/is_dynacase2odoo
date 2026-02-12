@@ -16,6 +16,7 @@
                             </group>
                             <group groups="base.group_no_one">
                                 <field name="nb_etiquettes"/>
+                                <field name="type_code_barre"/>
                                 <field name="afficher_bordure"/>
                                 <field name="afficher_bordure_page"/>
                                 <field name="hauteur_etiquette"/>
