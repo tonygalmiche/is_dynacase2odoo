@@ -43,15 +43,15 @@ class is_oberthur(models.Model):
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
     _description="Oberthur"
     _rec_name = "id"
-    _order='date_heure_saisie desc'
+    _order='date desc, heure desc'
 
     active    = fields.Boolean("Actif", default=True, tracking=True)
     montage   = fields.Char("Montage 1ier Flux", tracking=True, required=True)
     coque     = fields.Char("Coque Interne", tracking=True, required=True)
     batterie  = fields.Char("Batterie", tracking=True, default='1031000000000')
 
-    harnais   = fields.Char("Harnais CE-CI", tracking=True, default=lambda self: self._default_harnais())
-    numof     = fields.Char("N° OF", tracking=True, default=lambda self: self._default_numof())
+    harnais   = fields.Char("Harnais CE-CI", tracking=True, default=lambda self: self._default_harnais(), required=True)
+    numof     = fields.Char("N° OF", tracking=True, default=lambda self: self._default_numof(), required=True)
     
     
     continu1  = fields.Selection(_TYPE, "Continuité Maillage 1", tracking=True)
@@ -73,51 +73,33 @@ class is_oberthur(models.Model):
     reprise   = fields.Char("Ordre Reprise", tracking=True)
     comment   = fields.Char("Commentaire", tracking=True)
     modif     = fields.Boolean(string="Modifier le harnais et numof", store=False)
+    montage_coque_alerte = fields.Char("Alerte Montage/Coque", compute='_compute_montage_coque_alerte', store=False)
+
+    def _is_montage_coque_valide(self):
+        """Vérifie si la combinaison montage/coque est autorisée via la table is.oberthur.combinaison"""
+        combinaisons = self.env['is.oberthur.combinaison'].search([], order='nb_car desc')
+        for combi in combinaisons:
+            n = combi.nb_car
+            if self.montage[:n].upper() == combi.montage.upper() and self.coque[:n].upper() == combi.coque.upper():
+                return True
+        return False
+
+    @api.depends('montage', 'coque')
+    def _compute_montage_coque_alerte(self):
+        for rec in self:
+            alerte = ''
+            if rec.montage and rec.coque and not rec._is_montage_coque_valide():
+                alerte = "⚠ Montage '%s' non concordant avec Coque '%s'" % (rec.montage, rec.coque)
+            rec.montage_coque_alerte = alerte
 
     @api.constrains('montage', 'coque')
     def _check_montage_coque(self):
-        """Vérifie que la combinaison montage/coque est autorisée"""
-        combinaisons_7 = [
-            ('K0123AB', 'K0081AA'),
-            ('K0109AA', 'K0108AA'),
-            ('K0029BC', 'K0008AA'),
-            ('K0126AB', 'K0008AA'),
-            ('K0110AA', 'K0081AA'),
-            ('K0128AB', 'K0108AA'),
-            ('J0007B0', 'K0008B'),
-            ('J0049A0', 'K0008B'),
-            ('K0301A',  'K0081B'),
-            ('K0301A',  'K0008B'),
-        ]
-        combinaisons_6 = [
-            ('K0278C', 'K0008B'),
-            ('J0007B', 'K0008B'),
-            ('J0031A', 'K00810'),
-            ('K0295A', 'K0008B'),
-            ('J0049A', 'K0008B'),
-            ('K0301A', 'K0081B'),
-            ('K0301A', 'K0008B'),
-        ]
+        """Vérifie que la combinaison montage/coque est autorisée via la table is.oberthur.combinaison"""
         for rec in self:
-            if rec.montage and rec.coque:
-                test = False
-                montage7 = rec.montage[:7].upper()
-                coque7   = rec.coque[:7].upper()
-                for m, c in combinaisons_7:
-                    if montage7 == m and coque7 == c:
-                        test = True
-                        break
-                if not test:
-                    montage6 = rec.montage[:6].upper()
-                    coque6   = rec.coque[:6].upper()
-                    for m, c in combinaisons_6:
-                        if montage6 == m and coque6 == c:
-                            test = True
-                            break
-                if not test:
-                    raise ValidationError(
-                        "Montage '%s' non concordant avec Coque '%s'" % (rec.montage, rec.coque)
-                    )
+            if rec.montage and rec.coque and not rec._is_montage_coque_valide():
+                raise ValidationError(
+                    "Montage '%s' non concordant avec Coque '%s'" % (rec.montage, rec.coque)
+                )
 
     @api.constrains('harnais')
     def _check_harnais(self):
@@ -139,16 +121,13 @@ class is_oberthur(models.Model):
                 if val < 1031000000000 or val >= 1032000000000:
                     raise ValidationError("La référence de la batterie doit être un nombre à 13 chiffres commençant par 1031.")
 
-    @api.constrains('tensiong', 'tensiond')
-    def _check_tensions(self):
-        for rec in self:
-
-            print(rec,rec.tensiong, rec.tensiond)
-
-            if rec.tensiong <= 0:
-                raise ValidationError("La Tension Batterie Gauche doit être supérieure à 0.")
-            if rec.tensiond <= 0:
-                raise ValidationError("La Tension Batterie Droite doit être supérieure à 0.")
+    # @api.constrains('tensiong', 'tensiond')
+    # def _check_tensions(self):
+    #     for rec in self:
+    #         if rec.tensiong <= 0:
+    #             raise ValidationError("La Tension Batterie Gauche doit être supérieure à 0.")
+    #         if rec.tensiond <= 0:
+    #             raise ValidationError("La Tension Batterie Droite doit être supérieure à 0.")
 
     @api.constrains('numof')
     def _check_numof(self):
@@ -230,3 +209,30 @@ class is_oberthur(models.Model):
             self._memoriser_harnais_numof(vals)
         
         return res
+
+
+
+
+
+class is_oberthur_combinaison(models.Model):
+    _name = 'is.oberthur.combinaison'
+    _description = "Combinaison Montage/Coque Oberthur"
+    _order = 'nb_car desc, montage, coque'
+    _rec_name = 'display_name'
+
+    montage = fields.Char("Montage", required=True)
+    coque   = fields.Char("Coque", required=True)
+    nb_car  = fields.Integer("Nb caractères à comparer", required=True, default=7,
+                             help="Nombre de caractères à comparer pour le montage et la coque (6 ou 7)")
+
+    display_name = fields.Char("Nom", compute='_compute_display_name', store=True)
+
+    _sql_constraints = [
+        ('montage_coque_uniq', 'unique(montage, coque, nb_car)',
+         'Cette combinaison montage/coque existe déjà !'),
+    ]
+
+    @api.depends('montage', 'coque', 'nb_car')
+    def _compute_display_name(self):
+        for rec in self:
+            rec.display_name = "%s / %s (%s car.)" % (rec.montage or '', rec.coque or '', rec.nb_car or '')

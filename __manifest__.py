@@ -63,6 +63,7 @@ Module Odoo 16 pour Plastigray pour migrer les développements de Dynacase dans 
         "views/is_res_users_partner_view.xml",
         "views/is_prodstar_view.xml",
         "views/is_oberthur_view.xml",
+        "data/is_oberthur_combinaison_data.xml",
         "wizard/is_processus_doc_revision_wizard_view.xml",
         "wizard/is_revue_projet_jalon_refus_wizard_view.xml",
         "wizard/is_oberthur_etiquette_code_barre_wizard_view.xml",

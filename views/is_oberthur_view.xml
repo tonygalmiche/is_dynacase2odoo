@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!-- is.oberthur -->
         <record model="ir.ui.view" id="is_oberthur_saisie_1_view">
             <field name="name">is_oberthur_saisie_1_view</field>
             <field name="model">is.oberthur</field>
@@ -9,7 +10,11 @@
                 <form string="Form" delete="0">
                     <sheet>
                         <field name="active" invisible="1"/>
+                        <field name="montage_coque_alerte" invisible="1"/>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <div class="alert alert-warning text-center" role="alert" attrs="{'invisible': [('montage_coque_alerte', 'in', ['', False])]}">
+                            <field name="montage_coque_alerte" nolabel="1"/>
+                        </div>
                         <group>
                             <field name="montage"/>
                             <field name="coque"/>
@@ -24,11 +29,6 @@
                             <field name="modif"/>
                         </group>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="activity_ids"/>
-                        <field name="message_ids"/>
-                    </div>
                 </form>
             </field>
         </record>
@@ -40,7 +40,11 @@
                 <form string="Form" delete="0">
                     <sheet>
                         <field name="active" invisible="1"/>
+                        <field name="montage_coque_alerte" invisible="1"/>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <div class="alert alert-warning text-center" role="alert" attrs="{'invisible': [('montage_coque_alerte', 'in', ['', False])]}">
+                            <field name="montage_coque_alerte" nolabel="1"/>
+                        </div>
                         <group>
                             <field name="montage"   readonly="1"/>
                             <field name="coque"     readonly="1"/>
@@ -55,6 +59,52 @@
                             <field name="controle"  required="1"/>
                             <field name="reprise"/>
                             <field name="comment"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_oberthur_saisie_complete_view">
+            <field name="name">is_oberthur_saisie_complete_view</field>
+            <field name="model">is.oberthur</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Form" delete="0">
+                    <sheet>
+                        <field name="active" invisible="1"/>
+                        <field name="montage_coque_alerte" invisible="1"/>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <div class="alert alert-warning text-center" role="alert" attrs="{'invisible': [('montage_coque_alerte', 'in', ['', False])]}">
+                            <field name="montage_coque_alerte" nolabel="1"/>
+                        </div>
+                        <group>
+                            <group string="Identification">
+                                <field name="montage"  readonly="1"/>
+                                <field name="coque"    readonly="1"/>
+                                <field name="batterie" readonly="1"/>
+                                <field name="harnais"  readonly="1"/>
+                                <field name="numof"    readonly="1"/>
+                                <field name="date_heure_saisie"/>
+                            </group>
+                            <group string="Contrôles">
+                                <field name="continu1" required="1"/>
+                                <field name="tensiong" required="1"/>
+                                <field name="tensiond" required="1"/>
+                                <field name="bransubd" required="1"/>
+                                <field name="blocvis"  required="1"/>
+                                <field name="soudure"  required="1"/>
+                                <field name="continu2" required="1"/>
+                                <field name="ctrelect" required="1"/>
+                            </group>
+                            <group string="Opérateurs">
+                                <field name="operateu"  required="1"/>
+                                <field name="operateu2" required="1"/>
+                                <field name="controle"  required="1"/>
+                            </group>
+                            <group string="Divers">
+                                <field name="reprise"/>
+                                <field name="comment"/>
+                            </group>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -119,17 +169,6 @@
             <field name="view_id" ref="is_oberthur_saisie_1_view"/>
             <field name="target">current</field>
         </record>
-        <!-- <record model="ir.actions.act_window" id="is_oberthur_saisie_1_action">
-            <field name="name">Oberthur saisie 1</field>
-            <field name="res_model">is.oberthur</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_ids" eval="[
-                (5, 0, 0),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('is_oberthur_tree_view'), 'sequence': 1}),
-                (0, 0, {'view_mode': 'form', 'view_id': ref('is_oberthur_saisie_1_view'), 'sequence': 2})
-            ]"/>
-            <field name="context">{}</field>
-        </record> -->
         <record model="ir.actions.act_window" id="is_oberthur_liste_saisies_action">
             <field name="name">Liste des saisies</field>
             <field name="res_model">is.oberthur</field>
@@ -137,20 +176,43 @@
             <field name="view_ids" eval="[
                 (5, 0, 0),
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('is_oberthur_tree_view'), 'sequence': 1}),
-                (0, 0, {'view_mode': 'form', 'view_id': ref('is_oberthur_saisie_2_view'), 'sequence': 2})
+                (0, 0, {'view_mode': 'form', 'view_id': ref('is_oberthur_saisie_complete_view'), 'sequence': 2})
             ]"/>
             <field name="context">{'create': False}</field>
         </record>
-        <!-- <record model="ir.actions.act_window" id="is_oberthur_saisie_2_action">
-            <field name="name">Oberthur saisie 2</field>
-            <field name="res_model">is.oberthur</field>
+
+
+        <!-- is.oberthur.combinaison -->
+        <record model="ir.ui.view" id="is_oberthur_combinaison_tree_view">
+            <field name="name">is_oberthur_combinaison_tree_view</field>
+            <field name="model">is.oberthur.combinaison</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="montage"/>
+                    <field name="coque"/>
+                    <field name="nb_car"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_oberthur_combinaison_form_view">
+            <field name="name">is_oberthur_combinaison_form_view</field>
+            <field name="model">is.oberthur.combinaison</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="montage"/>
+                            <field name="coque"/>
+                            <field name="nb_car"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_oberthur_combinaison_action">
+            <field name="name">Combinaisons Montage/Coque</field>
+            <field name="res_model">is.oberthur.combinaison</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_ids" eval="[
-                (5, 0, 0),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('is_oberthur_tree_view'), 'sequence': 1}),
-                (0, 0, {'view_mode': 'form', 'view_id': ref('is_oberthur_saisie_2_view'), 'sequence': 2})
-            ]"/>
-            <field name="context">{}</field>
-        </record> -->
+        </record>
     </data>
 </odoo>

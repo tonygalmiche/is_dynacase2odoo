@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Combinaisons à 7 caractères -->
+        <record id="oberthur_combi_01" model="is.oberthur.combinaison">
+            <field name="montage">K0123AB</field>
+            <field name="coque">K0081AA</field>
+            <field name="nb_car">7</field>
+        </record>
+        <record id="oberthur_combi_02" model="is.oberthur.combinaison">
+            <field name="montage">K0109AA</field>
+            <field name="coque">K0108AA</field>
+            <field name="nb_car">7</field>
+        </record>
+        <record id="oberthur_combi_03" model="is.oberthur.combinaison">
+            <field name="montage">K0029BC</field>
+            <field name="coque">K0008AA</field>
+            <field name="nb_car">7</field>
+        </record>
+        <record id="oberthur_combi_04" model="is.oberthur.combinaison">
+            <field name="montage">K0126AB</field>
+            <field name="coque">K0008AA</field>
+            <field name="nb_car">7</field>
+        </record>
+        <record id="oberthur_combi_05" model="is.oberthur.combinaison">
+            <field name="montage">K0110AA</field>
+            <field name="coque">K0081AA</field>
+            <field name="nb_car">7</field>
+        </record>
+        <record id="oberthur_combi_06" model="is.oberthur.combinaison">
+            <field name="montage">K0128AB</field>
+            <field name="coque">K0108AA</field>
+            <field name="nb_car">7</field>
+        </record>
+        <record id="oberthur_combi_07" model="is.oberthur.combinaison">
+            <field name="montage">J0007B0</field>
+            <field name="coque">K0008B</field>
+            <field name="nb_car">7</field>
+        </record>
+        <record id="oberthur_combi_08" model="is.oberthur.combinaison">
+            <field name="montage">J0049A0</field>
+            <field name="coque">K0008B</field>
+            <field name="nb_car">7</field>
+        </record>
+        <record id="oberthur_combi_09" model="is.oberthur.combinaison">
+            <field name="montage">K0301A</field>
+            <field name="coque">K0081B</field>
+            <field name="nb_car">7</field>
+        </record>
+        <record id="oberthur_combi_10" model="is.oberthur.combinaison">
+            <field name="montage">K0301A</field>
+            <field name="coque">K0008B</field>
+            <field name="nb_car">7</field>
+        </record>
+
+        <!-- Combinaisons à 6 caractères -->
+        <record id="oberthur_combi_11" model="is.oberthur.combinaison">
+            <field name="montage">K0278C</field>
+            <field name="coque">K0008B</field>
+            <field name="nb_car">6</field>
+        </record>
+        <record id="oberthur_combi_12" model="is.oberthur.combinaison">
+            <field name="montage">J0007B</field>
+            <field name="coque">K0008B</field>
+            <field name="nb_car">6</field>
+        </record>
+        <record id="oberthur_combi_13" model="is.oberthur.combinaison">
+            <field name="montage">J0031A</field>
+            <field name="coque">K00810</field>
+            <field name="nb_car">6</field>
+        </record>
+        <record id="oberthur_combi_14" model="is.oberthur.combinaison">
+            <field name="montage">K0295A</field>
+            <field name="coque">K0008B</field>
+            <field name="nb_car">6</field>
+        </record>
+        <record id="oberthur_combi_15" model="is.oberthur.combinaison">
+            <field name="montage">J0049A</field>
+            <field name="coque">K0008B</field>
+            <field name="nb_car">6</field>
+        </record>
+        <record id="oberthur_combi_16" model="is.oberthur.combinaison">
+            <field name="montage">K0301A</field>
+            <field name="coque">K0081B</field>
+            <field name="nb_car">6</field>
+        </record>
+        <record id="oberthur_combi_17" model="is.oberthur.combinaison">
+            <field name="montage">K0301A</field>
+            <field name="coque">K0008B</field>
+            <field name="nb_car">6</field>
+        </record>
+    </data>
+</odoo>
