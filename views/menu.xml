@@ -17,18 +17,18 @@
         <!-- Oberthur -->
         <record id="is_oberthur_menu" model="ir.ui.menu">
             <field name="name">Oberthur</field>
-            <field name="sequence">19</field>
-            <field name="parent_id" eval="ref('is_plastigray16.menu_is_production')"/>
+            <field name="sequence">3</field>
+            <field name="parent_id" eval=""/>
             <field name="groups_id" eval="[(6,0,[ref('is_dynacase2odoo.is_gestion_oberthur_group')])]"/>
         </record>
         <record id="is_prodstar_oberthur_1" model="ir.ui.menu">
-            <field name="name">Nouvelle saisie (Saisie 1)</field>
+            <field name="name">Saisie 1</field>
             <field name="sequence">10</field>
             <field name="parent_id" eval="ref('is_dynacase2odoo.is_oberthur_menu')"/>
             <field name="action" ref="is_oberthur_nouvelle_saisie_action"/>
         </record>
         <record id="is_prodstar_oberthur_2" model="ir.ui.menu">
-            <field name="name">Saisie des contrôles (Saisie 2)</field>
+            <field name="name">Saisie 2</field>
             <field name="sequence">20</field>
             <field name="parent_id" eval="ref('is_dynacase2odoo.is_oberthur_menu')"/>
             <field name="action" ref="is_oberthur_recherche_montage_wizard_action"/>
@@ -40,15 +40,21 @@
             <field name="action" ref="is_oberthur_liste_saisies_action"/>
         </record>
         <record id="is_etiquette_code_barre_menu" model="ir.ui.menu">
-            <field name="name">Étiquettes code-barres</field>
+            <field name="name">Étiquettes</field>
             <field name="sequence">40</field>
             <field name="parent_id" eval="ref('is_dynacase2odoo.is_oberthur_menu')"/>
             <field name="action" ref="is_oberthur_etiquette_code_barre_wizard_action"/>
         </record>
+        <record id="is_oberthur_configuration_menu" model="ir.ui.menu">
+            <field name="name">Configuration</field>
+            <field name="sequence">50</field>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_oberthur_menu')"/>
+            <field name="action" ref="is_oberthur_combinaison_action"/>
+        </record>
         <record id="is_oberthur_combinaison_menu" model="ir.ui.menu">
             <field name="name">Combinaisons Montage/Coque</field>
             <field name="sequence">50</field>
-            <field name="parent_id" eval="ref('is_dynacase2odoo.is_oberthur_menu')"/>
+            <field name="parent_id" eval="ref('is_dynacase2odoo.is_oberthur_configuration_menu')"/>
             <field name="action" ref="is_oberthur_combinaison_action"/>
         </record>
 
