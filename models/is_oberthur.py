@@ -2,6 +2,7 @@ from odoo import models, fields, api         # type: ignore
 from odoo.exceptions import ValidationError  # type: ignore
 from datetime import datetime
 import pytz
+import re
 
 
 _TYPE = [
@@ -10,32 +11,32 @@ _TYPE = [
         ("M", "Mauvais"),
         ]
 
-_OPERATEURS = [
-        ("", ""),
-        ("116", "116"),
-        ("131", "131"),
-        ("147", "147"),
-        ("241", "241"),
-        ("288", "288"),
-        ("338", "338"),
-        ("354", "354"),
-        ("399", "399"),
-        ("412", "412"),
-        ("453", "453"),
-        ("477", "477"),
-        ("484", "484"),
-        ("537", "537"),
-        ("INT", "INT"),
-        ]
+# _OPERATEURS = [
+#         ("", ""),
+#         ("116", "116"),
+#         ("131", "131"),
+#         ("147", "147"),
+#         ("241", "241"),
+#         ("288", "288"),
+#         ("338", "338"),
+#         ("354", "354"),
+#         ("399", "399"),
+#         ("412", "412"),
+#         ("453", "453"),
+#         ("477", "477"),
+#         ("484", "484"),
+#         ("537", "537"),
+#         ("INT", "INT"),
+#         ]
 
-_CONTROLEURS = [
-        ("", ""),
-        ("CF", "CF"),
-        ("CT", "CT"),
-        ("267", "267"),
-        ("416", "416"),
-        ("524", "524"),
-        ]
+# _CONTROLEURS = [
+#         ("", ""),
+#         ("CF", "CF"),
+#         ("CT", "CT"),
+#         ("267", "267"),
+#         ("416", "416"),
+#         ("524", "524"),
+#         ]
 
 
 class is_oberthur(models.Model):
@@ -67,9 +68,9 @@ class is_oberthur(models.Model):
 
     date_heure_saisie = fields.Datetime("Date-Heure saisie", default=fields.Datetime.now, readonly=True, tracking=True)
 
-    operateu  = fields.Selection(_OPERATEURS, "Opérateur 1", tracking=True)
-    operateu2 = fields.Selection(_OPERATEURS, "Opérateur 2", tracking=True)
-    controle  = fields.Selection(_CONTROLEURS, "Controleur", tracking=True)
+    operateu  = fields.Char("Opérateur 1", tracking=True)
+    operateu2 = fields.Char("Opérateur 2", tracking=True)
+    controle  = fields.Char("Controleur", tracking=True)
     reprise   = fields.Char("Ordre Reprise", tracking=True)
     comment   = fields.Char("Commentaire", tracking=True)
     modif     = fields.Boolean(string="Modifier le harnais et numof", store=False)
@@ -105,8 +106,10 @@ class is_oberthur(models.Model):
     def _check_harnais(self):
         for rec in self:
             if rec.harnais:
-                if len(rec.harnais) != 13 or not rec.harnais.isdigit():
-                    raise ValidationError("La référence de l'harnais doit être un nombre à 13 chiffres.")
+                # if len(rec.harnais) != 13 or not rec.harnais.isdigit():
+                #     raise ValidationError("La référence de l'harnais doit être un nombre à 13 chiffres.")
+                if len(rec.harnais) != 13:
+                    raise ValidationError("La référence de l'harnais doit avoir 13 caractères")
                 #val = int(rec.harnais)
                 #if val < 1032000000000 or val >= 1033000000000:
                 #    raise ValidationError("La référence de l'harnais doit être comprise entre 1032000000000 et 1032999999999.")
@@ -128,6 +131,23 @@ class is_oberthur(models.Model):
     #             raise ValidationError("La Tension Batterie Gauche doit être supérieure à 0.")
     #         if rec.tensiond <= 0:
     #             raise ValidationError("La Tension Batterie Droite doit être supérieure à 0.")
+
+    @api.constrains('operateu', 'operateu2', 'controle')
+    def _check_operateur_controleur(self):
+        """Vérifie que les codes opérateur et contrôleur sont au format 2 lettres + 4 chiffres (ex: AA8888)"""
+        pattern = re.compile(r'^[A-Za-z]{2}\d{4}$')
+        labels = {
+            'operateu': 'Opérateur 1',
+            'operateu2': 'Opérateur 2',
+            'controle': 'Controleur',
+        }
+        for rec in self:
+            for field_name, label in labels.items():
+                val = rec[field_name]
+                if val and not pattern.match(val):
+                    raise ValidationError(
+                        "%s : le code '%s' est invalide. Format attendu : 2 lettres suivies de 4 chiffres (ex: AA8888)." % (label, val)
+                    )
 
     @api.constrains('numof')
     def _check_numof(self):

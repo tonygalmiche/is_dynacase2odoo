@@ -19,8 +19,8 @@
                             <field name="montage"/>
                             <field name="coque"/>
                             <field name="date_heure_saisie"/>
-                            <field name="harnais" attrs="{'readonly': [('modif', '==', False)]}"/>
-                            <field name="numof" attrs="{'readonly': [('modif', '==', False)]}"/>
+                            <field name="harnais" force_save="1" attrs="{'readonly': [('modif', '==', False)]}"/>
+                            <field name="numof"   force_save="1" attrs="{'readonly': [('modif', '==', False)]}"/>
                             <field name="continu1" required="1"/>
                             <field name="tensiong" required="1"/>
                             <field name="tensiond" required="1"/>
