@@ -228,7 +228,7 @@ class IsDocMoule(models.Model):
         nb=len(self)
         ct=1
         for obj in self:
-            if obj.ppr_type_demande=='AUTO':
+            if obj.ppr_type_demande=='AUTO' and obj.etat!='F':
                 html_head = """
                     <table class="table table-sm">
                         <tbody>
@@ -259,39 +259,76 @@ class IsDocMoule(models.Model):
                 dao = obj.idmoule.dossier_appel_offre_id or obj.dossierf_id.dossier_appel_offre_id
                 if dao:
                     if obj.param_project_id.ppr_famille=="Dossier commercial":
-                        #rsp_auto=obj.get_pj(dao.dao_offre_validee)
                         if len(dao.dao_offre_validee)>0:
                             res = self.render_attachments(dao.dao_offre_validee)
                             rsp_auto="%s<tr><td>%s</td></tr>%s"%(html_head,res,html_foot)
                     if obj.param_project_id.ppr_famille=="Commande client":
-                        #rsp_auto=obj.get_pj(dao.dao_commande_client)
                         if len(dao.dao_commande_client)>0:
                             res = self.render_attachments(dao.dao_commande_client)
                             rsp_auto="%s<tr><td>%s</td></tr>%s"%(html_head,res,html_foot)
                     if obj.param_project_id.ppr_famille=="Lettre de nomination et contrats":
-                        #rsp_auto=obj.get_pj(dao.dao_lettre_nomination)
                         if len(dao.dao_lettre_nomination)>0:
                             res = self.render_attachments(dao.dao_lettre_nomination)
                             rsp_auto="%s<tr><td>%s</td></tr>%s"%(html_head,res,html_foot)
                 rc = obj.idmoule.revue_contrat_id or obj.dossierf_id.revue_contrat_id
                 if rc:
                     if obj.param_project_id.ppr_famille=="Engagement de faisabilité":
-                        #rsp_auto=obj.get_pj(rc.rc_df_engagement_faisabilite)
-
-                        print(obj,rc,rc.rc_df_engagement_faisabilite)
-
                         if len(rc.rc_df_engagement_faisabilite)>0:
                             res = self.render_attachments(rc.rc_df_engagement_faisabilite)
                             rsp_auto="%s<tr><td>%s</td></tr>%s"%(html_head,res,html_foot)
 
                     if obj.param_project_id.ppr_famille=="Fiche capacitaire":
-                        #rsp_auto=obj.get_pj(rc.rc_df_fiche_capacitaire)
                         if len(rc.rc_df_fiche_capacitaire)>0:
                             res = self.render_attachments(rc.rc_df_fiche_capacitaire)
                             rsp_auto="%s<tr><td>%s</td></tr>%s"%(html_head,res,html_foot)
+
+
+                #** Revue de projet J *****************************************
+                if obj.param_project_id.ppr_famille[0:17]=="Revue de projet J":
+                    J = obj.param_project_id.ppr_famille[16:18]
+                    if J in ('J0','J1','J2','J3','J4','J5'):
+                        domain=[
+                            ('state','=','rpj_valide'),
+                            ('rpj_j','=',J),
+                            ('rpj_mouleid'  ,'=',obj.idmoule.id),
+                            ('dossierf_id'  ,'=',obj.dossierf_id.id),
+                        ]
+                        docs=self.env['is.revue.projet.jalon'].search(domain,order='id desc',limit=1)
+                        for doc in docs:
+                            date_j = getattr(doc, "rpj_date_valide_%s"%J.lower())
+                            obj.rsp_date = date_j
+                            rsp_auto = "Date validation %s: %s"%(J,date_j.strftime('%d/%m/%Y'))
+                #**************************************************************
+
+                #** Revue des risques projet Plastigray ***********************
+                if obj.param_project_id.ppr_famille=="Revue des risques projet Plastigray":
+                    domain=[
+                        ('state','=','rr_diffuse'),
+                        ('rr_mouleid'  ,'=',obj.idmoule.id),
+                        ('dossierf_id'  ,'=',obj.dossierf_id.id),
+                    ]
+                    docs=self.env['is.revue.risque'].search(domain,order='id desc',limit=1)
+                    for doc in docs:
+                        rsp_auto = "Revue des risques projet diffusée le: %s"%(doc.write_date.strftime('%d/%m/%Y'))
+                #**************************************************************
+
+                #**  Obtenir la Commande client *******************************
                 if obj.param_project_id.ppr_famille=="Obtenir la Commande client":
-                    if obj.dossier_modif_variante_id:
-                        rsp_auto = obj.dossier_modif_variante_id.demao_numcmd
+                    domain=[
+                        ('state','=','plaswinned'),
+                        ('demao_idmoule','=',obj.idmoule.id),
+                        ('dossierf_id'  ,'=',obj.dossierf_id.id),
+                        ('demao_numcmd' ,'!=',False),
+                    ]
+                    docs=self.env['is.dossier.modif.variante'].search(domain,order='id desc',limit=1)
+                    for doc in docs:
+                        rsp_auto = "Cde client n°: %s"%(doc.demao_numcmd)
+                #**************************************************************
+
+                # if obj.param_project_id.ppr_famille=="Obtenir la Commande client":
+                #     if obj.dossier_modif_variante_id:
+                #         rsp_auto = obj.dossier_modif_variante_id.demao_numcmd
+
                 if rsp_auto:
                     obj.etat='F'
                 obj.rsp_auto = rsp_auto
