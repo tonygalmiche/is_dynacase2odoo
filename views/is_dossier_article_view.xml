@@ -56,12 +56,18 @@
                                     <group string="Informations">
                                         <field name="gamme_commerciale_id" attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                         <field name="producteur_id"        attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
+                                        <field name="couleur_ral"/>
                                         <field name="taux_de_recycle"      attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                         <field name="traitement1_id"/>
                                         <field name="traitement2_id"/>
                                         <field name="utilisation_id"       attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                         <field name="carte_jaune"          attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
-                                        <field name="couleur_ral"/>
+                                        <field name="reglementation_tsca"  attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
+                                        <field name="presence_pfas"        
+                                            attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"
+                                            is_widget="background_color" 
+                                            options="[{'value':'Non','color':'GreenYellow'},{'value':'Oui','color':'red'}]" 
+                                        />
                                     </group>
                                     <group string="Propriétés">
                                         <field name="densite"              attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>

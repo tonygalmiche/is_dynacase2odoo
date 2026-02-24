@@ -91,7 +91,7 @@ class is_plan_amelioration_continu(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if 'numero' not in vals:
-                last = self.env[self._name].search([('numero', '!=', None)], order="numero desc", limit=1)
+                last = self.env[self._name].sudo().search([('numero', '!=', None)], order="numero desc", limit=1)
                 if last:
                     vals['numero'] = last.numero + 1
                 else:

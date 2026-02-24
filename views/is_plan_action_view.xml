@@ -81,7 +81,7 @@
                             </group>
                         </group>
                         <group string="Fichiers">
-                            <field name="file_ids" widget="many2many_binary" attrs="{'invisible': [('readonly_all','=',True)]}"/>
+                            <field name="file_ids" widget="many2many_binary" attrs="{'readonly': [('readonly_all','=',True)]}"/>
                         </group>
                     </sheet>
                    <div class="oe_chatter">

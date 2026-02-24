@@ -198,6 +198,13 @@ class IsGanttPdf(models.Model):
 
     def generer_pdf_action(self):
         for obj in self:
+            #** Si logo_droite est vide, utiliser l'image du moule ou du dossier F
+            if not obj.logo_droite:
+                if obj.type_document == "Moule" and obj.moule_id and obj.moule_id.image:
+                    obj.logo_droite = obj.moule_id.image
+                elif obj.type_document == "Dossier F" and obj.dossierf_id and obj.dossierf_id.image:
+                    obj.logo_droite = obj.dossierf_id.image
+
             section_ids=obj.get_sections()
             items,titre,jour_fermeture_ids,markers = obj.get_taches(section_ids=section_ids, gantt_pdf=True)
 
@@ -584,7 +591,9 @@ class IsGanttPdf(models.Model):
                 ratio = height/max_height
                 new_width = int(width/ratio)
                 image_logo_resize = image_logo.resize((new_width, max_height))
+                logo_width  = new_width
 
+                #Le 24/02/2026, il faut mettre le logo à gauche et non pas à droite
                 if obj.logo_droite:
                     logo_path="/tmp/logo-droite.png"
                     f = open(logo_path,'wb')
@@ -593,8 +602,13 @@ class IsGanttPdf(models.Model):
                     image_logo = Image.open(logo_path)  
                     width, height = image_logo.size 
                     max_height = entete_height
+                    max_width  = 210
                     ratio = height/max_height
                     new_width = int(width/ratio)
+                    if new_width > max_width:
+                        ratio = width/max_width
+                        new_width  = max_width
+                        max_height = int(height/ratio)
                     logo_droite_resize = image_logo.resize((new_width, max_height))
                     logo_droite_width  = new_width
 
@@ -633,10 +647,13 @@ class IsGanttPdf(models.Model):
                         )
                     surface_pil = surface_to_pil(surface)    # Convertir le Gantt au format 'surface' au format PIL
                     result_pil.paste(surface_pil)            # Ajout du Gantt au format PIL
-                    result_pil.paste(image_logo_resize)      # Ajout du logo au format PIL
-                    if obj.logo_droite:
-                        x = WIDTH - logo_droite_width
-                        result_pil.paste(logo_droite_resize, (x, 0)) # Ajout du logo_droite au format PIL
+                    result_pil.paste(logo_droite_resize)      # Ajout du logo au format PIL
+                    #result_pil.paste(image_logo_resize)      # Ajout du logo au format PIL
+                    if image_logo_resize:
+                        x = WIDTH - logo_width
+                        #x = WIDTH - logo_droite_width
+                        result_pil.paste(image_logo_resize, (x, 0)) # Ajout du logo_droite au format PIL
+                        #result_pil.paste(logo_droite_resize, (x, 0)) # Ajout du logo_droite au format PIL
                     surface = pil_to_surface(result_pil)     # Convertir le format PIL en format 'surface'
 
 
