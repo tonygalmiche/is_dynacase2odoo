@@ -114,6 +114,7 @@ class is_dossier_modif_variante(models.Model):
     def vers_analyse_action(self):
         for obj in self:
             obj.state='plasanalysed'
+            obj.envoi_mail()
 
     def vers_transmis_be_action(self):
         for obj in self:

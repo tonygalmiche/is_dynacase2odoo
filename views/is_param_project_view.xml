@@ -37,7 +37,8 @@
                                 <field name="dossier_colorant"       attrs="{'invisible': [('type_document', '!=', 'Article')]}" />
                                 <field name="dossier_composant"      attrs="{'invisible': [('type_document', '!=', 'Article')]}" />
                                 <field name="ppr_demande"            attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
-                                <field name="ppr_type_demande" />
+                                <field name="ppr_type_demande"/>
+                                <field name="date_reponse_auto"/>
                                 <field name="ppr_maj_amdec"          attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="ppr_responsable"        attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="droit_equipe_projet"/>
@@ -87,6 +88,7 @@
                     <field name="dossier_composant"         optional="hide"/>
                     <field name="ppr_demande"               optional="hide"/>
                     <field name="ppr_type_demande"          optional="show"/>
+                    <field name="date_reponse_auto"         optional="hide"/>
                     <field name="ppr_maj_amdec"             optional="hide"/>
                     <field name="ppr_responsable"           optional="show"/>
                     <field name="droit_equipe_projet"       optional="hide"/>

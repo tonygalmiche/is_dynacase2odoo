@@ -65,8 +65,8 @@
                                         <field name="reglementation_tsca"  attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                         <field name="presence_pfas"        
                                             attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"
-                                            is_widget="background_color" 
-                                            options="[{'value':'Non','color':'GreenYellow'},{'value':'Oui','color':'red'}]" 
+                                            widget="is_background_color" 
+                                            options="{'color_map': [{'value':'Non','color':'GreenYellow'},{'value':'Oui','color':'red'}]}" 
                                         />
                                     </group>
                                     <group string="Propriétés">

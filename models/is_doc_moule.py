@@ -451,10 +451,11 @@ class IsDocMoule(models.Model):
         for obj in self:
             type_demande = obj.param_project_id.ppr_type_demande
             if type_demande in ['DATE','PJ_DATE']:
+                rsp_date = False
                 if obj.etat=='F':
-                    obj.rsp_date = date.today()
-                else:
-                    obj.rsp_date=False
+                    if obj.param_project_id.date_reponse_auto:
+                        rsp_date = date.today()
+                obj.rsp_date=rsp_date
 
 
     @api.depends('etat','date_fin_gantt','date_j_prevue','fin_derogation')

@@ -130,7 +130,9 @@ class IsParamProject(models.Model):
         ("PJ_DATE",  "Pièce-jointe et date"),
         ("AUTO",     "Automatique"),
     ], string="Type de demande", required=True, default='PJ', tracking=True)
-    ppr_maj_amdec          = fields.Selection([
+    date_reponse_auto = fields.Boolean(string="Date réponse automatique", tracking=True, default=True, 
+        help="Si coché, le champ 'Date de réponse' sera mis automatiquement à la date du jour lors du passage à l'état 'Fait'")
+    ppr_maj_amdec     = fields.Selection([
         ("Oui", "Oui"),
         ("Non", "Non"),
     ], string="Mise à jour de l’AMDEC", tracking=True)

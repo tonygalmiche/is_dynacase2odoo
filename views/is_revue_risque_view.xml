@@ -60,38 +60,38 @@
                             <group string="Evaluation" style="width:550px;">
                                 <separator string="DESIGN / INDUSTRIALISATION"/>
 
-                                <field name="rr_retour_experience"     is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_exigence_specifique"   is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_planning_previsionnel" is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_plan_piece"            is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_norme_applicable"      is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_conception_piece"      is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_injection"             is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_design_moule"          is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_methode_mesure"        is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_composant"             is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_machine_speciale"      is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_decoration"            is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_parachevement"         is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_retour_experience"     widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_exigence_specifique"   widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_planning_previsionnel" widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_plan_piece"            widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_norme_applicable"      widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_conception_piece"      widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_injection"             widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_design_moule"          widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_methode_mesure"        widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_composant"             widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_machine_speciale"      widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_decoration"            widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_parachevement"         widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
                                 <separator string="SUPPLY CHAIN / ACHAT" />
-                                <field name="rr_capacitaire"                 is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_conditionnement"             is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_identification_tracabilite"  is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_validation_fournisseur"      is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_capacitaire_fournisseur"     is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_presse_substitution"         is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_capacitaire"                 widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_conditionnement"             widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_identification_tracabilite"  widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_validation_fournisseur"      widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_capacitaire_fournisseur"     widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_presse_substitution"         widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
                                 <separator string="QUALITE"/>
-                                <field name="rr_modification_csr"        is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_critere_acceptation"     is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_exigence_reglementaire"  is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_engagement_qualite"      is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_securite_produit"        is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_impact_environnement"    is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_modification_csr"        widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_critere_acceptation"     widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_exigence_reglementaire"  widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_engagement_qualite"      widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_securite_produit"        widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_impact_environnement"    widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
                                 <separator string="LEADERSHIP / FINANCES" />
-                                <field name="rr_rentabilite"                is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_investissement_necessaire"  is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_competence_effectif"        is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
-                                <field name="rr_strategie_developpement"    is_widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_rentabilite"                widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_investissement_necessaire"  widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_competence_effectif"        widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
+                                <field name="rr_strategie_developpement"    widget="is_revue_risque" style="width:60px;" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}"/>
 
                             </group>
                             <group string="Commentaire">
@@ -132,7 +132,7 @@
                         </group>
                         <group name="rr_validation_fr" string="Validation">
                             <group>
-                                <field name="rr_validation_revue_risque" is_widget="background_color" options="[{'value':'OK','color':'GreenYellow'},{'value':'nOK','color':'red'}]" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
+                                <field name="rr_validation_revue_risque" widget="is_background_color" options="{'color_map': [{'value':'OK','color':'GreenYellow'},{'value':'nOK','color':'red'}]}" attrs="{'readonly': [('state', '!=', 'rr_brouillon')]}" />
                             </group>
                             <group></group>
                         </group>
