@@ -73,6 +73,20 @@
             ])]"/>
         </record>
 
+
+        <!-- Gestion commcerciale / Tous les menus -->
+       <!-- <record id="is_gestion_commerciale_tous_menus" model="ir.ui.menu">
+            <field name="name">🏠</field>
+            <field name="sequence">1</field>
+            <field name="parent_id" ref="is_gestion_commerciale_menu"/>
+            <field name="action" ref="is_top_menu.menu_navigator_action"/>
+        </record> -->
+
+
+
+
+
+
         <!-- Gestion commcerciale / Dossiers -->
         <menuitem 
             name="Dossiers" id="is_dossiers_commerciaux_menu" sequence="5"
@@ -180,6 +194,20 @@
                 ref('is_plastigray16.is_employes_hors_production_group'),
             ])]"/>
         </record>
+
+
+
+        <!-- Gestion de la qualité / Tous les menus -->
+       <!-- <record id="gestion_des_projets_tous_menus" model="ir.ui.menu">
+            <field name="name">🏠</field>
+            <field name="sequence">1</field>
+            <field name="parent_id" ref="gestion_des_projets_menu"/>
+            <field name="action" ref="is_top_menu.menu_navigator_action"/>
+        </record> -->
+
+
+
+
 
 
 
@@ -510,6 +538,30 @@
                 ref('is_plastigray16.is_employes_hors_production_group'),
             ])]"/>
         </record>
+
+
+        <!-- Gestion de la qualité / Tous les menus -->
+       <!-- <record id="gestion_qualite_tous_menus" model="ir.ui.menu">
+            <field name="name">🏠</field>
+            <field name="sequence">1</field>
+            <field name="parent_id" ref="gestion_qualite_menu"/>
+            <field name="action" ref="is_top_menu.menu_navigator_action"/>
+        </record>
+ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <menuitem id="menu_is_norme_cdc"
               name="Normes CDC"
               action="action_is_norme_cdc"

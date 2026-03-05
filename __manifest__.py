@@ -15,6 +15,7 @@ Module Odoo 16 pour Plastigray pour migrer les développements de Dynacase dans 
         "utm",
         "is_plastigray16",
         "is_background_color_widget",
+        # "is_top_menu"
     ],
     "data" : [
         "security/res.groups.xml",
