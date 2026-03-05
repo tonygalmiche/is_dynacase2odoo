@@ -72,6 +72,7 @@ class IsGanttPdf(models.Model):
     date_debut                = fields.Date("Date début", tracking=True)
     date_fin                  = fields.Date("Date fin", tracking=True)
     bordure_jour              = fields.Boolean("Bordure jour", default=False, tracking=True)
+    afficher_liens            = fields.Boolean("Afficher les liens", default=True, tracking=True)
     logo_droite               = fields.Image(string="Logo de droite", tracking=True)
     format_fichier            = fields.Selection([
         ("png"  , "PNG"),
@@ -89,7 +90,7 @@ class IsGanttPdf(models.Model):
     @api.onchange('type_document','moule_id','dossierf_id','dossier_modif_variante_id','dossier_article_id','dossier_appel_offre_id')
     def onchange_moule(self):
         for obj in self:
-            items,titre,jour_fermeture_ids,markers = obj.get_taches()
+            items,titre,jour_fermeture_ids,markers,links = obj.get_taches()
             lines=[]
             ids=[]
             for item in items:
@@ -160,6 +161,7 @@ class IsGanttPdf(models.Model):
             domain=[]
             jour_fermeture_ids=[]
             markers=[]
+            links=[]
             if gantt_pdf:
                 domain.append(('gantt_pdf','=',True))
             if section_ids:
@@ -184,7 +186,8 @@ class IsGanttPdf(models.Model):
                 items              = res['items']
                 jour_fermeture_ids = res['jour_fermeture_ids']
                 markers            = res['markers']
-            return items,titre,jour_fermeture_ids,markers
+                links              = res['links']
+            return items,titre,jour_fermeture_ids,markers,links
 
 
     def get_sections(self):
@@ -206,7 +209,7 @@ class IsGanttPdf(models.Model):
                     obj.logo_droite = obj.dossierf_id.image
 
             section_ids=obj.get_sections()
-            items,titre,jour_fermeture_ids,markers = obj.get_taches(section_ids=section_ids, gantt_pdf=True)
+            items,titre,jour_fermeture_ids,markers,links = obj.get_taches(section_ids=section_ids, gantt_pdf=True)
 
             #** Calcul start_date *********************************************
             for item in items:
@@ -515,6 +518,7 @@ class IsGanttPdf(models.Model):
 
                 #** Ajout des tâches **********************************************
                 nb=0
+                taches_positions = {}  # Dictionnaire pour stocker les positions des tâches
                 for item in items:
                     duration   = item.get('duration')
                     end_date   = get_date(item.get('end_date'),0)
@@ -530,6 +534,15 @@ class IsGanttPdf(models.Model):
                         y      = entete_height + entete_table_height + nb*tache_height
                         width  = duration*jour_width
                         height = tache_height
+
+                        # Stocker la position de la tâche pour le dessin des flèches
+                        taches_positions[item.get('id')] = {
+                            'x': x,
+                            'y': y,
+                            'width': width,
+                            'height': height,
+                            'nb': nb
+                        }
 
                         #** Traduction ****************************************
                         item_text = item.get('text')
@@ -579,6 +592,67 @@ class IsGanttPdf(models.Model):
                         cairo_show_text(ctx,x+tache_height,y+tache_height,txt=item_text) # Nom de la tache sur le rectangle de la tache
                         nb+=1
 
+                #** Dessin des flèches entre les tâches liées *********************
+                def cairo_draw_arrow(ctx, x1, y1, x2, y2, color_rgb=(0.2, 0.2, 0.2)):
+                    """Dessine une flèche de (x1, y1) à (x2, y2) avec des angles droits"""
+                    ctx.set_source_rgb(color_rgb[0], color_rgb[1], color_rgb[2])
+                    ctx.set_line_width(1.5)
+                    
+                    # Espacement horizontal pour la flèche
+                    spacing = 10
+                    
+                    # Point de départ (fin de la tâche source)
+                    ctx.move_to(x1, y1)
+                    
+                    # Ligne horizontale vers la droite
+                    ctx.line_to(x1 + spacing, y1)
+                    
+                    # Ligne verticale vers le niveau de la tâche cible
+                    ctx.line_to(x1 + spacing, y2)
+                    
+                    # Ligne horizontale vers la gauche jusqu'à la tâche cible
+                    ctx.line_to(x2 - spacing, y2)
+                    
+                    # Ligne horizontale jusqu'au point d'arrivée
+                    ctx.line_to(x2, y2)
+                    ctx.stroke()
+                    
+                    # Dessiner la pointe de la flèche (triangle pointant vers la droite)
+                    arrow_size = 6
+                    ctx.move_to(x2, y2)
+                    ctx.line_to(x2 - arrow_size, y2 - arrow_size/2)
+                    ctx.line_to(x2 - arrow_size, y2 + arrow_size/2)
+                    ctx.close_path()
+                    ctx.fill()
+
+                # Dessiner les flèches uniquement si afficher_liens est coché
+                if obj.afficher_liens:
+                    for link in links:
+                        source_id = link.get('source')
+                        target_id = link.get('target')
+                        
+                        # Gérer le cas où source et target sont des tuples
+                        if isinstance(source_id, tuple):
+                            source_id = source_id[0]
+                        if isinstance(target_id, tuple):
+                            target_id = target_id[0]
+                        
+                        if source_id in taches_positions and target_id in taches_positions:
+                            source_pos = taches_positions[source_id]
+                            target_pos = taches_positions[target_id]
+                            
+                            # Coordonnées de départ (fin de la tâche source)
+                            x1 = source_pos['x'] + source_pos['width']
+                            y1 = source_pos['y'] + source_pos['height'] / 2
+                            
+                            # Coordonnées d'arrivée (début de la tâche cible)
+                            x2 = target_pos['x']
+                            y2 = target_pos['y'] + target_pos['height'] / 2
+                            
+                            # Dessiner la flèche
+                            cairo_draw_arrow(ctx, x1, y1, x2, y2)
+                #******************************************************************
+
                 #** Logo au format PIL et redimmensionnement **********************
                 logo_path="/tmp/logo-gantt-pdf.png"
                 company = self.env.user.company_id
@@ -594,6 +668,8 @@ class IsGanttPdf(models.Model):
                 logo_width  = new_width
 
                 #Le 24/02/2026, il faut mettre le logo à gauche et non pas à droite
+                logo_droite_resize = None
+                logo_droite_width = 0
                 if obj.logo_droite:
                     logo_path="/tmp/logo-droite.png"
                     f = open(logo_path,'wb')
@@ -647,13 +723,11 @@ class IsGanttPdf(models.Model):
                         )
                     surface_pil = surface_to_pil(surface)    # Convertir le Gantt au format 'surface' au format PIL
                     result_pil.paste(surface_pil)            # Ajout du Gantt au format PIL
-                    result_pil.paste(logo_droite_resize)      # Ajout du logo au format PIL
-                    #result_pil.paste(image_logo_resize)      # Ajout du logo au format PIL
+                    if logo_droite_resize:
+                        result_pil.paste(logo_droite_resize)      # Ajout du logo à gauche au format PIL
                     if image_logo_resize:
                         x = WIDTH - logo_width
-                        #x = WIDTH - logo_droite_width
-                        result_pil.paste(image_logo_resize, (x, 0)) # Ajout du logo_droite au format PIL
-                        #result_pil.paste(logo_droite_resize, (x, 0)) # Ajout du logo_droite au format PIL
+                        result_pil.paste(image_logo_resize, (x, 0)) # Ajout du logo de la compagnie à droite au format PIL
                     surface = pil_to_surface(result_pil)     # Convertir le format PIL en format 'surface'
 
 

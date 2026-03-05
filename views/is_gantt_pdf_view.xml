@@ -36,6 +36,7 @@
                                 <field name="date_debut"/>  
                                 <field name="date_fin"/>  
                                 <field name="bordure_jour" attrs="{'invisible': [('format_fichier', '=', 'xlsx')]}"/>  
+                                <field name="afficher_liens" attrs="{'invisible': [('format_fichier', '=', 'xlsx')]}"/>  
                             </group>
                         </group>
                         <group string="Sections">
