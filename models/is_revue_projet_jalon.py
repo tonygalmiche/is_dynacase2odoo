@@ -5,6 +5,17 @@ from odoo.exceptions import AccessError, ValidationError, UserError  # type: ign
 from datetime import datetime, timedelta, date
 
 
+JALON_SELECTION = [
+    ("J0", "Préparation J0"),
+    ("J1", "Préparation J1"),
+    ("J2", "Préparation J2"),
+    ("J3", "Préparation J3"),
+    ("J4", "Préparation J4"),
+    ("J5", "Préparation J5"),
+    ("J6", "J5 validé"),
+]
+
+
 class is_revue_projet_jalon(models.Model):
     _name        = "is.revue.projet.jalon"
     _inherit     = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
@@ -56,20 +67,32 @@ class is_revue_projet_jalon(models.Model):
             obj.vers_refuse_vsb = vsb
 
             vsb = False
-            if obj.state=='rpj_valide':                                   # Etat Validé uniquement
-                if obj.rpj_j!='J6':                                       # Pas en J6
-                    if obj.rpj_note>=80:                                  # Note >= 80
-                        if obj.rpj_point_bloquant==0:                     # Pas de point bloquant
-                            if obj.rpj_j==(obj.rpj_mouleid.j_actuelle or obj.dossierf_id.j_actuelle):     # Uniquement si J moule = J CR
-                                if  uid in [obj.rpj_chef_projetid.id, obj.rpj_directeur_techniqueid.id, obj.rpj_responsable_projetid.id]:
-                                    if obj.rpj_rrid and obj.rpj_rrid.state=='rr_diffuse' and obj.rpj_rrid.active==True:
-                                        vsb=True
-                    #if uid==2 and obj.rpj_j==(obj.rpj_mouleid.j_actuelle or obj.dossierf_id.j_actuelle):
-                    #    vsb=True
-
-
+            info_messages = []
+            j_moule_cr = obj.rpj_j == (obj.rpj_mouleid.j_actuelle or obj.dossierf_id.j_actuelle)
+            if obj.state=='rpj_valide' and j_moule_cr:                    # Etat Validé et J moule = J CR
+                # Vérifier toutes les conditions et collecter les raisons
+                if obj.rpj_j == 'J6':
+                    info_messages.append("Impossible de passer à la J suivante en J6")
+                if obj.rpj_note < 80:
+                    info_messages.append("La note finale doit être >= 80%% (actuellement %s%%)" % obj.rpj_note)
+                if obj.rpj_point_bloquant > 0:
+                    info_messages.append("Il y a %s point(s) bloquant(s)" % obj.rpj_point_bloquant)
+                if uid not in [obj.rpj_chef_projetid.id, obj.rpj_directeur_techniqueid.id, obj.rpj_responsable_projetid.id]:
+                    info_messages.append("Vous devez être Chef de projet, Directeur technique ou Responsable projets")
+                if not obj.rpj_rrid or obj.rpj_rrid.state != 'rr_diffuse' or obj.rpj_rrid.active == False:
+                    info_messages.append("La revue des risques doit être diffusée et active")
+                
+                # Si aucune raison bloquante, le bouton est visible
+                if not info_messages:
+                    vsb = True
 
             obj.vers_j_suivante_vsb = vsb
+            # Afficher le message info uniquement si état validé et J moule = J CR
+            if obj.state == 'rpj_valide' and j_moule_cr and not vsb:
+                raisons = "\n".join(["- " + msg for msg in info_messages])
+                obj.vers_j_suivante_info = "Vous ne pouvez pas passer à la J suivante, car :\n" + raisons
+            else:
+                obj.vers_j_suivante_info = False
 
 
     def get_equipe_projet_users(self):
@@ -382,17 +405,10 @@ class is_revue_projet_jalon(models.Model):
 
     rpj_mouleid                  = fields.Many2one("is.mold"    , string="Moule", tracking=True)
     dossierf_id                  = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
+    j_actuelle_dossier = fields.Selection(JALON_SELECTION, string="J actuelle dossier", compute='_compute_j_actuelle_dossier', store=True, readonly=True)
     rpj_chrono                   = fields.Char(string="Chrono"   , copy=False, compute='_compute_rpj_chrono',store=True, readonly=True)
     rpj_indice                   = fields.Integer(string="Indice", copy=False, compute='_compute_rpj_chrono',store=True, readonly=True)
-    rpj_j = fields.Selection([
-        ("J0", "Préparation J0"),
-        ("J1", "Préparation J1"),
-        ("J2", "Préparation J2"),
-        ("J3", "Préparation J3"),
-        ("J4", "Préparation J4"),
-        ("J5", "Préparation J5"),
-        ("J6", "J5 validé"),
-    ], string="J actuelle", copy=False, compute='_compute_rpj_chrono',store=True, readonly=True)
+    rpj_j = fields.Selection(JALON_SELECTION, string="J actuelle", copy=False, compute='_compute_rpj_chrono',store=True, readonly=True)
     rpj_date_planning_j          = fields.Date(string="Date planning J", tracking=True)
     rpj_date_creation            = fields.Date(string="Date de réalisation", default=fields.Date.context_today, copy=False, tracking=True)
     rpj_plan_action              = fields.Char(string="Plan d'action associé", tracking=True)
@@ -484,6 +500,7 @@ class is_revue_projet_jalon(models.Model):
     vers_valide_vsb              = fields.Boolean(string="Validé"             , compute='_compute_vsb', readonly=True, store=False)
     vers_refuse_vsb              = fields.Boolean(string="Refusé"             , compute='_compute_vsb', readonly=True, store=False)
     vers_j_suivante_vsb          = fields.Boolean(string="J suivante"         , compute='_compute_vsb', readonly=True, store=False)
+    vers_j_suivante_info         = fields.Text(string="Info J suivante"       , compute='_compute_vsb', readonly=True, store=False)
     logo_rs                      = fields.Char(string="Logo RS"               , compute='_compute_logo_rs', readonly=True, store=False)
     active                       = fields.Boolean('Actif', default=True, tracking=True)
 
@@ -530,6 +547,12 @@ class is_revue_projet_jalon(models.Model):
             if vente_moule>0:
                 marge_brute_moule = round(100*(1 - (achat_moule / vente_moule)),2)
             obj.rp_marge_brute_moule = marge_brute_moule
+
+
+    @api.depends('rpj_mouleid', 'rpj_mouleid.j_actuelle', 'dossierf_id', 'dossierf_id.j_actuelle')
+    def _compute_j_actuelle_dossier(self):
+        for obj in self:
+            obj.j_actuelle_dossier = obj.rpj_mouleid.j_actuelle or obj.dossierf_id.j_actuelle or False
 
 
     @api.depends('rpj_mouleid','dossierf_id')
@@ -826,15 +849,7 @@ class is_revue_projet_jalon_bilan(models.Model):
     _description = "Compte-rendu revue de projet jalon - Bilan"
     _rec_name    = "rpj_bilan_risque_j"
 
-    rpj_bilan_risque_j            = fields.Selection([
-        ("J0", "Préparation J0"),
-        ("J1", "Préparation J1"),
-        ("J2", "Préparation J2"),
-        ("J3", "Préparation J3"),
-        ("J4", "Préparation J4"),
-        ("J5", "Préparation J5"),
-        ("J6", "J5 validé"),
-    ], string="Jalon")
+    rpj_bilan_risque_j            = fields.Selection(JALON_SELECTION, string="Jalon")
     rpj_bilan_risque_design       = fields.Integer(string="Design/Industrialisation ")
     rpj_bilan_risque_supply_chain = fields.Integer(string="Supply chain/Achat")
     rpj_bilan_risque_qualite      = fields.Integer(string="Qualite")

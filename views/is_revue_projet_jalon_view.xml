@@ -86,11 +86,16 @@
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/> 
+                        <field name="vers_j_suivante_info" invisible="1" />
+                        <div class="alert alert-info" role="alert" style="white-space: pre-wrap;" attrs="{'invisible': [('vers_j_suivante_info', '=', False)]}">
+                            <i class="fa fa-info-circle" title="Information"/> <field name="vers_j_suivante_info" nolabel="1" readonly="1"/>
+                        </div>
                         <group>
                             <group name="rpj_fr_identification" string="Identification">
                                 <field name="rpj_chrono"              readonly="1"/>
                                 <field name="rpj_mouleid" attrs="{'readonly': ['|',('rpj_mouleid', '!=', False),('dossierf_id', '!=', False)]}" force_save="1"/>
                                 <field name="dossierf_id" attrs="{'readonly': ['|',('rpj_mouleid', '!=', False),('dossierf_id', '!=', False)]}" force_save="1"/>
+                                <field name="j_actuelle_dossier"      readonly="1"/>
                                 <field name="rpj_j"                   readonly="1"/>
                                 <field name="rpj_date_planning_j"     readonly="1"/>
                                 <field name="rpj_indice"              readonly="1"/>
@@ -326,6 +331,7 @@
                     <field name="rpj_chrono"          optional="show" />
                     <field name="rpj_mouleid"         optional="show" widget="many2one_clickable"/>
                     <field name="dossierf_id"         optional="show" widget="many2one_clickable"/>
+                    <field name="j_actuelle_dossier"  optional="hide" />
                     <field name="rpj_j"               optional="hide" />
                     <field name="rpj_indice"          optional="hide" />
                     <field name="rpj_date_planning_j" optional="show" />
