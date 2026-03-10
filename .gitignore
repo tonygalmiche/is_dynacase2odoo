@@ -5,6 +5,9 @@
 
 static/src/css/is.param.project.css
 
+# Fichiers de configuration sensibles
+script-divers/config.py
+
 
 
 
