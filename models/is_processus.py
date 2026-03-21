@@ -549,6 +549,7 @@ class IsProcessusDocEtape(models.Model):
     _order = "doc_id, numeroetape"
     _rec_name = 'nometape'
 
+    active         = fields.Boolean(string="Actif", default=True, tracking=True)
     doc_id         = fields.Many2one('is.processus.doc', string="Document", required=True, tracking=True)
     numeroetape    = fields.Integer(string="Numéro étape", tracking=True)
     nometape       = fields.Char(string="Nom de l'étape", tracking=True)

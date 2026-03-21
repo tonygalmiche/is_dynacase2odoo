@@ -337,7 +337,7 @@
                         <group string="Identification du processus">
                             <group>
                                 <field name="processus_id" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
-                                <field name="etape_id" attrs="{'readonly': [('is_readonly', '=', True)]}"/>
+                                <field name="etape_id" attrs="{'readonly': [('is_readonly', '=', True)]}" domain="[('processus_id', '=', processus_id)]"/>
                                 <field name="procedure_designation" attrs="{'invisible': [('procedure_id', '=', False)]}"/>
                             </group>
                             <group>
@@ -371,12 +371,12 @@
                             <field name="etape_doc_ids" nolabel="1" colspan="2" attrs="{'readonly': [('is_readonly', '=', True)]}">
                                 <tree string="Étapes" editable="bottom">
                                     <button name="open_etape_doc" type="object" icon="fa-search" title="Voir la fiche étape"/>
-                                    <field name="numeroetape"/>
-                                    <field name="nometape"/>
-                                    <field name="responsable"/>
-                                    <field name="responsable_id"/>
-                                    <field name="description"/>
-                                    <field name="doclibre"/>
+                                    <field name="numeroetape" string="N°"/>
+                                    <field name="nometape"       optional="show"/>
+                                    <field name="responsable"    optional="hide"/>
+                                    <field name="responsable_id" optional="hide"/>
+                                    <field name="description"    optional="show"/>
+                                    <field name="doclibre"       optional="show"/>
                                 </tree>
                             </field>
                             <field name="etape_doc_texte" invisible="1"/>
@@ -457,7 +457,11 @@
             <field name="model">is.processus.doc.etape</field>
             <field name="arch" type="xml">
                 <form string="Étape du document">
+                    <header>
+                        <field name="active" invisible="1"/>
+                    </header>
                     <sheet>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group string="Identification">
                             <field name="doc_id"/>
                             <field name="numeroetape"/>

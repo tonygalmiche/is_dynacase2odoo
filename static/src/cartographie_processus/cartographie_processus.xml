@@ -20,10 +20,10 @@
                         <div class="col-12">
                             <div class="card shadow-sm">
                                 <div class="card-body text-center">
-                                    <img src="/is_dynacase2odoo/static/src/cartographie_processus/Cartographie.png" 
+                                    <img src="/is_dynacase2odoo/static/src/cartographie_processus/Cartographie-2026-2.png" 
                                          alt="Cartographie des processus" 
                                          class="img-fluid rounded shadow-sm" 
-                                         style="max-height: 600px; width: auto;"/>
+                                         style="max-width: 1700px"/>
                                 </div>
                             </div>
                         </div>
@@ -100,7 +100,7 @@
                                             t-att-data-res-model="'is.processus'"
                                         >
                                             <i class="fa fa-external-link text-primary me-2"></i>
-                                            PCS-COM : Commercial
+                                            PCS-COM : Commercial et service client
                                         </a>
                                         <a href="#" 
                                             class="list-group-item list-group-item-action d-flex align-items-center" 
