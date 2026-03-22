@@ -29,3 +29,9 @@
 .width100{
     width: 100% !important;
 }
+
+/* Retour à la ligne automatique dans les champs char d'une vue liste */
+.is_text_wrap {
+    white-space: pre-wrap !important;
+    word-break: break-word;
+}

@@ -656,16 +656,18 @@ class IsGanttPdf(models.Model):
                 #** Logo au format PIL et redimmensionnement **********************
                 logo_path="/tmp/logo-gantt-pdf.png"
                 company = self.env.user.company_id
-                f = open(logo_path,'wb')
-                f.write(base64.b64decode(company.logo))
-                f.close()
-                image_logo = Image.open(logo_path)  
-                width, height = image_logo.size 
-                max_height = entete_height
-                ratio = height/max_height
-                new_width = int(width/ratio)
-                image_logo_resize = image_logo.resize((new_width, max_height))
-                logo_width  = new_width
+                image_logo_resize = False
+                if company.logo:
+                    f = open(logo_path,'wb')
+                    f.write(base64.b64decode(company.logo))
+                    f.close()
+                    image_logo = Image.open(logo_path)  
+                    width, height = image_logo.size 
+                    max_height = entete_height
+                    ratio = height/max_height
+                    new_width = int(width/ratio)
+                    image_logo_resize = image_logo.resize((new_width, max_height))
+                    logo_width  = new_width
 
                 #Le 24/02/2026, il faut mettre le logo à gauche et non pas à droite
                 logo_droite_resize = None
@@ -725,6 +727,10 @@ class IsGanttPdf(models.Model):
                     result_pil.paste(surface_pil)            # Ajout du Gantt au format PIL
                     if logo_droite_resize:
                         result_pil.paste(logo_droite_resize)      # Ajout du logo à gauche au format PIL
+
+
+
+
                     if image_logo_resize:
                         x = WIDTH - logo_width
                         result_pil.paste(image_logo_resize, (x, 0)) # Ajout du logo de la compagnie à droite au format PIL

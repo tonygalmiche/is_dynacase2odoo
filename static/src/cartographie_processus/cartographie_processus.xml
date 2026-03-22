@@ -270,8 +270,8 @@
                                         <a href="#" 
                                             class="list-group-item list-group-item-action d-flex align-items-center" 
                                             t-on-click="onOpenDocument"
-                                            t-att-data-res-id="630"
-                                            t-att-data-res-model="'is.norme.cdc'"
+                                            t-att-data-res-id="1773"
+                                            t-att-data-res-model="'is.processus.doc'"
                                         >
                                             <i class="fa fa-external-link text-warning me-2"></i>
                                             Référentiel ISO 9001 : 2015
@@ -279,8 +279,8 @@
                                         <a href="#" 
                                             class="list-group-item list-group-item-action d-flex align-items-center" 
                                             t-on-click="onOpenDocument"
-                                            t-att-data-res-id="667"
-                                            t-att-data-res-model="'is.norme.cdc'"
+                                            t-att-data-res-id="1774"
+                                            t-att-data-res-model="'is.processus.doc'"
                                         >
                                             <i class="fa fa-external-link text-warning me-2"></i>
                                             Référentiel IATF 16949 : 2016
@@ -288,8 +288,8 @@
                                         <a href="#" 
                                             class="list-group-item list-group-item-action d-flex align-items-center" 
                                             t-on-click="onOpenDocument"
-                                            t-att-data-res-id="369"
-                                            t-att-data-res-model="'is.norme.cdc'"
+                                            t-att-data-res-id="1776"
+                                            t-att-data-res-model="'is.processus.doc'"
                                         >
                                             <i class="fa fa-external-link text-warning me-2"></i>
                                             Référentiel ISO 14001 : 2015

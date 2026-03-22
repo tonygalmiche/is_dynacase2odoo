@@ -371,9 +371,9 @@
                             <field name="etape_doc_ids" nolabel="1" colspan="2" attrs="{'readonly': [('is_readonly', '=', True)]}">
                                 <tree string="Étapes" editable="bottom">
                                     <button name="open_etape_doc" type="object" icon="fa-search" title="Voir la fiche étape"/>
-                                    <field name="numeroetape" string="N°"/>
-                                    <field name="nometape"       optional="show"/>
-                                    <field name="responsable"    optional="hide"/>
+                                    <field name="numeroetape" string="N°" width="20px"/>
+                                    <field name="nometape"       optional="show" class="is_text_wrap"/>
+                                    <field name="responsable"    optional="hide" class="is_text_wrap"/>
                                     <field name="responsable_id" optional="hide"/>
                                     <field name="description"    optional="show"/>
                                     <field name="doclibre"       optional="show"/>
