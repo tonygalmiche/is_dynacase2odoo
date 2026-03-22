@@ -373,8 +373,8 @@
                                     <button name="open_etape_doc" type="object" icon="fa-search" title="Voir la fiche étape"/>
                                     <field name="numeroetape" string="N°" width="20px"/>
                                     <field name="nometape"       optional="show" class="is_text_wrap"/>
-                                    <field name="responsable"    optional="hide" class="is_text_wrap"/>
-                                    <field name="responsable_id" optional="hide"/>
+                                    <field name="responsable"    optional="show" class="is_text_wrap"/>
+                                    <!-- <field name="responsable_id" optional="hide"/> -->
                                     <field name="description"    optional="show"/>
                                     <field name="doclibre"       optional="show"/>
                                 </tree>
@@ -466,7 +466,8 @@
                             <field name="doc_id"/>
                             <field name="numeroetape"/>
                             <field name="nometape"/>
-                            <field name="responsable_id"/>
+                            <field name="responsable"/>
+                            <!-- <field name="responsable_id"/> -->
                         </group>
                         <group string="Description">
                             <field name="description" widget="text"/>
