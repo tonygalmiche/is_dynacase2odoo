@@ -202,7 +202,18 @@ class IsProcessusDoc(models.Model):
     etape_doc_ids   = fields.One2many('is.processus.doc.etape', 'doc_id', string="Étapes du document")
     etape_doc_texte = fields.Text(string="Étapes (texte)", compute='_compute_etape_doc_texte', store=True, tracking=True)
 
-    doc_ids = fields.One2many('is.processus.doc', 'procedure_id', string="Documents", readonly=True)
+    doc_ids = fields.One2many('is.processus.doc', compute='_compute_doc_ids', string="Documents", readonly=True)
+
+    @api.depends('procedure_id', 'processus_id')
+    def _compute_doc_ids(self):
+        for record in self:
+            if record.id and record.processus_id:
+                record.doc_ids = self.search([
+                    ('procedure_id', '=', record.id),
+                    ('processus_id', '=', record.processus_id.id),
+                ])
+            else:
+                record.doc_ids = self.env['is.processus.doc']
 
     # Champ pour le motif de révision
     #motif_revision = fields.Text(string="Motif de révision", readonly=True, tracking=True)

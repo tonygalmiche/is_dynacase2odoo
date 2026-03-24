@@ -62,9 +62,8 @@
                                         <field name="traitement2_id"/>
                                         <field name="utilisation_id"       attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                         <field name="carte_jaune"          attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
-                                        <field name="reglementation_tsca"  attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
+                                        <field name="reglementation_tsca"/>
                                         <field name="presence_pfas"        
-                                            attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"
                                             widget="is_background_color" 
                                             options="{'color_map': [{'value':'Non','color':'GreenYellow'},{'value':'Oui','color':'red'}]}" 
                                         />

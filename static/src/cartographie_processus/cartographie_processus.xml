@@ -30,7 +30,7 @@
                     </div>
 
                     <!-- Légende -->
-                    <div class="row mb-4">
+                    <!-- <div class="row mb-4">
                         <div class="col-12">
                             <div class="card shadow-sm">
                                 <div class="card-header bg-light">
@@ -59,7 +59,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- Sections principales -->
                     <div class="row">

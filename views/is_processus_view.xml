@@ -390,6 +390,7 @@
                                     <field name="etape_id"/>
                                     <field name="auteur_id"/>
                                     <field name="version"/>
+                                    <field name="processus_id" optional="hide"/>
                                 </tree>
                             </field>
                         </group>
