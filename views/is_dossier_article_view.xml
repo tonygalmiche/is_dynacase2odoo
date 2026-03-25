@@ -17,11 +17,18 @@
                 <form string="Form">  
                     <header>
                         <field name="dynacase_id" invisible="1"/>
+                        <field name="has_prompt_ia" invisible="1"/>
                         <button 
                             string="Dynacase" name="lien_vers_dynacase_action" 
                             type="object" class="btn btn-info"
                             attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
                             groups="base.group_system"
+                        />
+                        <button 
+                            string="Analyse IA" name="analyse_ia_action" 
+                            type="object" class="btn btn-primary"
+                            attrs="{'invisible': [('has_prompt_ia', '=', False)]}" 
+                            groups="is_vllm2odoo.group_ia_gestionnaire_prompts"                            confirm="Lancer l'analyse IA sur les pièces jointes de ce dossier ?"
                         />
                     </header>
                     <sheet class="oe_form_sheet_width_wider">
@@ -117,6 +124,18 @@
                                     <field name="nb_crees"/>
                                     <field name="nb_fait"/>
                                 </group>    
+                            </page>
+                            <page string="Analyse IA" attrs="{'invisible': [('has_prompt_ia', '=', False)]}" groups="is_vllm2odoo.group_ia_gestionnaire_prompts">
+                                <field name="analyse_ia_ids" nolabel="1" readonly="1">
+                                    <tree>
+                                        <field name="field_id"/>
+                                        <field name="prompt"/>
+                                        <field name="reponse"/>
+                                        <field name="temps_traitement" sum="Total"/>
+                                        <field name="taille_envoi"/>
+                                        <field name="etat"/>
+                                    </tree>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>
