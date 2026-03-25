@@ -214,5 +214,76 @@
             <field name="res_model">is.oberthur.combinaison</field>
             <field name="view_mode">tree,form</field>
         </record>
+
+
+        <record model="ir.ui.view" id="is_oberthur_liste_saisies_form_view">
+            <field name="name">is_oberthur_liste_saisies_form_view</field>
+            <field name="model">is.oberthur.liste.saisies</field>
+            <field name="arch" type="xml">
+                <form string="Imprimer liste des saisies" create="0" delete="0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="date_saisie"/>
+                                <field name="montage_debut"/>
+                                <field name="montage_fin"/>
+                            </group>
+                            <group>
+                                <field name="create_uid" string="Créateur" readonly="1"/>
+                                <field name="nb_lines"/>
+                            </group>
+                        </group>
+                        <div class="oe_button_box mb-3">
+                            <button name="action_mise_a_jour" type="object" string="Mise à jour de la liste" class="btn-primary"/>
+                            <button name="action_liste_saisies" type="object" string="Liste des saisies" class="btn-secondary ms-2"/>
+                            <button name="action_imprimer" type="object" string="Imprimer la liste" class="btn-primary ms-2" icon="fa-print"/>
+                        </div>
+                        <field name="line_ids" nolabel="1" readonly="1">
+                            <tree limit="500">
+                                <field name="montage"/>
+                                <field name="coque"/>
+                                <field name="harnais"/>
+                                <field name="numof"          optional="show"/>
+                                <field name="batterie"       optional="show"/>
+                                <field name="continu1"       optional="hide"/>
+                                <field name="tensiong"       optional="hide"/>
+                                <field name="tensiond"       optional="hide"/>
+                                <field name="bransubd"       optional="hide"/>
+                                <field name="blocvis"        optional="hide"/>
+                                <field name="soudure"        optional="hide"/>
+                                <field name="continu2"       optional="hide"/>
+                                <field name="ctrelect"       optional="hide"/>
+                                <field name="date_heure_saisie" optional="show"/>
+                                <field name="operateu"       optional="show"/>
+                                <field name="operateu2"      optional="show"/>
+                                <field name="controle"       optional="show"/>
+                                <field name="reprise"        optional="hide"/>
+                                <field name="comment"        optional="hide"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="is_oberthur_liste_saisies_server_action">
+            <field name="name">Imprimer liste des saisies</field>
+            <field name="model_id" ref="model_is_oberthur_liste_saisies"/>
+            <field name="state">code</field>
+            <field name="code">
+record = env['is.oberthur.liste.saisies'].search([('create_uid', '=', env.uid)], limit=1)
+if not record:
+    record = env['is.oberthur.liste.saisies'].create({'montage_debut': '', 'montage_fin': ''})
+action = {
+    'type': 'ir.actions.act_window',
+    'name': 'Imprimer liste des saisies',
+    'res_model': 'is.oberthur.liste.saisies',
+    'res_id': record.id,
+    'view_mode': 'form',
+    'view_id': env.ref('is_dynacase2odoo.is_oberthur_liste_saisies_form_view').id,
+    'target': 'current',
+}
+            </field>
+        </record>
     </data>
 </odoo>

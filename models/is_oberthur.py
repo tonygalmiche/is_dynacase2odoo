@@ -1,6 +1,7 @@
 from odoo import models, fields, api         # type: ignore
 from odoo.exceptions import ValidationError  # type: ignore
 from datetime import datetime
+from odoo.exceptions import UserError
 import pytz
 import re
 
@@ -10,33 +11,6 @@ _TYPE = [
         ("B", "Bon"),
         ("M", "Mauvais"),
         ]
-
-# _OPERATEURS = [
-#         ("", ""),
-#         ("116", "116"),
-#         ("131", "131"),
-#         ("147", "147"),
-#         ("241", "241"),
-#         ("288", "288"),
-#         ("338", "338"),
-#         ("354", "354"),
-#         ("399", "399"),
-#         ("412", "412"),
-#         ("453", "453"),
-#         ("477", "477"),
-#         ("484", "484"),
-#         ("537", "537"),
-#         ("INT", "INT"),
-#         ]
-
-# _CONTROLEURS = [
-#         ("", ""),
-#         ("CF", "CF"),
-#         ("CT", "CT"),
-#         ("267", "267"),
-#         ("416", "416"),
-#         ("524", "524"),
-#         ]
 
 
 class is_oberthur(models.Model):
@@ -256,3 +230,66 @@ class is_oberthur_combinaison(models.Model):
     def _compute_display_name(self):
         for rec in self:
             rec.display_name = "%s / %s (%s car.)" % (rec.montage or '', rec.coque or '', rec.nb_car or '')
+
+
+
+
+class IsOberthurListeSaisies(models.Model):
+    _name = 'is.oberthur.liste.saisies'
+    _description = "Imprimer liste des saisies Oberthur"
+    _rec_name = 'create_uid'
+
+    date_saisie = fields.Date(string="Date de saisie")
+    montage_debut = fields.Char(string="Montage 1ier flux début")
+    montage_fin = fields.Char(string="Montage 1ier flux fin")
+    line_ids = fields.Many2many('is.oberthur', string="Saisies")
+    nb_lines = fields.Integer(string="Nombre de lignes", compute='_compute_nb_lines')
+
+    @api.depends('line_ids')
+    def _compute_nb_lines(self):
+        for rec in self:
+            rec.nb_lines = len(rec.line_ids)
+
+    def action_mise_a_jour(self):
+        """Recherche les saisies selon les critères et met à jour la liste"""
+        self.ensure_one()
+        if not self.montage_debut or not self.montage_fin:
+            raise UserError("Les champs 'Montage 1ier flux début' et 'Montage 1ier flux fin' sont obligatoires.")
+        domain = [
+            ('montage', '>=', self.montage_debut),
+            ('montage', '<=', self.montage_fin),
+        ]
+        if self.date_saisie:
+            date_str = self.date_saisie.strftime('%Y%m%d')
+            domain.append(('date', '=', date_str))
+        saisies = self.env['is.oberthur'].search(domain)
+        self.line_ids = [(6, 0, saisies.ids)]
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    def action_liste_saisies(self):
+        """Ouvre la liste des saisies filtrée"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Liste des saisies',
+            'res_model': 'is.oberthur',
+            'view_mode': 'tree,form',
+            'view_ids': [
+                (5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': self.env.ref('is_dynacase2odoo.is_oberthur_tree_view').id, 'sequence': 1}),
+                (0, 0, {'view_mode': 'form', 'view_id': self.env.ref('is_dynacase2odoo.is_oberthur_saisie_complete_view').id, 'sequence': 2}),
+            ],
+            'domain': [('id', 'in', self.line_ids.ids)],
+            'target': 'current',
+        }
+
+    def action_imprimer(self):
+        """Génère le PDF de la liste des saisies"""
+        self.ensure_one()
+        return self.env.ref('is_dynacase2odoo.is_oberthur_liste_saisies_report').report_action(self)

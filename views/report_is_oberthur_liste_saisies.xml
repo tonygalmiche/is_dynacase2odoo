@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Format papier paysage -->
+        <record id="is_oberthur_liste_saisies_paperformat" model="report.paperformat">
+            <field name="name">Liste des saisies Oberthur (Paysage)</field>
+            <field name="default" eval="False"/>
+            <field name="format">A4</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">5</field>
+            <field name="margin_bottom">15</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <!-- Définition du rapport -->
+        <record id="is_oberthur_liste_saisies_report" model="ir.actions.report">
+            <field name="name">Liste des saisies Oberthur</field>
+            <field name="model">is.oberthur.liste.saisies</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">is_dynacase2odoo.report_is_oberthur_liste_saisies</field>
+            <field name="report_file">is_dynacase2odoo.report_is_oberthur_liste_saisies</field>
+            <field name="paperformat_id" ref="is_oberthur_liste_saisies_paperformat"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Template QWeb du rapport -->
+        <template id="report_is_oberthur_liste_saisies">
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="company" t-value="o.env.company"/>
+
+                    <style>
+                        .report-header {
+                            border-bottom: 1px solid #000;
+                            padding-bottom: 3px;
+                            margin-bottom: 0;
+                        }
+                        .report-filters {
+                            font-size: 10px;
+                            margin: 3px 0;
+                            padding: 0;
+                        }
+                        .saisies-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            font-size: 9px;
+                            margin-top: 2px;
+                        }
+                        .saisies-table th {
+                            background-color: #f0f0f0;
+                            border: 1px solid #ccc;
+                            padding: 3px 5px;
+                            text-align: center;
+                            font-weight: bold;
+                        }
+                        .saisies-table td {
+                            border: 1px solid #ccc;
+                            padding: 2px 5px;
+                            text-align: center;
+                        }
+                    </style>
+
+                    <div class="footer" style="border-top: 1px solid #000; padding-top: 3px; font-size: 9px;">
+                        <table style="width:100%;">
+                            <tr>
+                                <td style="text-align:left;">
+                                    Imprimé le <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                                </td>
+                                <td style="text-align:right;">
+                                    Page <span class="page"/> / <span class="topage"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="report-header">
+                        <table style="width:100%;">
+                            <tr>
+                                <td style="width:20%; vertical-align:middle;">
+                                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height:50px;" alt="Logo"/>
+                                </td>
+                                <td style="width:80%; text-align:right; vertical-align:middle;">
+                                    <h3 style="margin:0;">Liste des saisies Oberthur du <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/></h3>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="report-filters">
+                        <table style="width:100%;">
+                            <tr>
+                                <td>
+                                    <b>Date de saisie :</b>
+                                    <span t-if="o.date_saisie" t-esc="o.date_saisie" t-options='{"widget": "date"}'/>
+                                    <span t-if="not o.date_saisie">Toutes</span>
+                                </td>
+                                <td>
+                                    <b>Montage début :</b>
+                                    <span t-esc="o.montage_debut"/>
+                                </td>
+                                <td>
+                                    <b>Montage fin :</b>
+                                    <span t-esc="o.montage_fin"/>
+                                </td>
+                                <td style="text-align:right;">
+                                    <b>Nombre de saisies :</b> <t t-esc="len(o.line_ids)"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <table class="saisies-table">
+                        <thead>
+                            <tr>
+                                <th>Montage</th>
+                                <th>Coque</th>
+                                <th>Harnais</th>
+                                <th>N° OF</th>
+                                <th>Batterie</th>
+                                <th>Conti. 1</th>
+                                <th>Tens. G</th>
+                                <th>Tens. D</th>
+                                <th>SubD25</th>
+                                <th>Vis 8059</th>
+                                <th>Soudure</th>
+                                <th>Conti. 2</th>
+                                <th>Ctrl Élec.</th>
+                                <th>Date-Heure</th>
+                                <th>Opér. 1</th>
+                                <th>Opér. 2</th>
+                                <th>Contrôleur</th>
+                                <th>Reprise</th>
+                                <th>Commentaire</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="o.line_ids" t-as="line">
+                                <tr>
+                                    <td><t t-esc="line.montage"/></td>
+                                    <td><t t-esc="line.coque"/></td>
+                                    <td><t t-esc="line.harnais"/></td>
+                                    <td><t t-esc="line.numof"/></td>
+                                    <td><t t-esc="line.batterie"/></td>
+                                    <td><t t-esc="line.continu1"/></td>
+                                    <td><t t-esc="'%.2f' % line.tensiong if line.tensiong else ''"/></td>
+                                    <td><t t-esc="'%.2f' % line.tensiond if line.tensiond else ''"/></td>
+                                    <td><t t-esc="line.bransubd"/></td>
+                                    <td><t t-esc="line.blocvis"/></td>
+                                    <td><t t-esc="line.soudure"/></td>
+                                    <td><t t-esc="line.continu2"/></td>
+                                    <td><t t-esc="line.ctrelect"/></td>
+                                    <td><t t-if="line.date_heure_saisie" t-esc="line.date_heure_saisie" t-options='{"widget": "datetime"}'/></td>
+                                    <td><t t-esc="line.operateu"/></td>
+                                    <td><t t-esc="line.operateu2"/></td>
+                                    <td><t t-esc="line.controle"/></td>
+                                    <td><t t-esc="line.reprise"/></td>
+                                    <td><t t-esc="line.comment"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>
