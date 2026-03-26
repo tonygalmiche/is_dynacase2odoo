@@ -72,6 +72,7 @@ class is_dossier_article(models.Model):
                     mimetype = attachment.mimetype or ''
                     if not attachment.datas:
                         continue
+                    _logger.info("Analyse IA - Pièce jointe : %s (type: %s)", attachment.name, mimetype)
                     if mimetype in ('image/jpeg', 'image/png', 'image/gif', 'image/webp'):
                         img_b64 = attachment.datas.decode('utf-8') if isinstance(attachment.datas, bytes) else attachment.datas
                         images.append((img_b64, mimetype))
