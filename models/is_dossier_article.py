@@ -2,6 +2,7 @@
 from odoo import models, fields, api  # type: ignore
 from odoo.exceptions import UserError  # type: ignore
 import base64
+import difflib
 import logging
 import time
 _logger = logging.getLogger(__name__)
@@ -123,8 +124,8 @@ class is_dossier_article(models.Model):
                         if comodel:
                             records = self.env[comodel].sudo().search([], limit=300)
                             if records:
-                                choix = ', '.join("'%s' (id=%s)" % (rec.display_name, rec.id) for rec in records)
-                                prompt_complet += "\n\nLa réponse doit être exactement l'id numérique d'un de ces choix : %s" % choix
+                                choix = ', '.join("'%s'" % rec.display_name for rec in records)
+                                prompt_complet += "\n\nLa réponse doit être exactement le nom d'un de ces choix (retourne uniquement le nom, sans ID, sans guillemets, sans explication) : %s" % choix
             # Calculer la taille des données envoyées (prompt + images) en Mo
             taille_prompt = len(prompt_complet.encode('utf-8'))
             taille_images = sum(len(img_b64.encode('utf-8') if isinstance(img_b64, str) else img_b64) for img_b64, _ in images)
@@ -181,17 +182,12 @@ class is_dossier_article(models.Model):
                             val = reponse.lower() in ('true', '1', 'oui', 'yes')
                             self.write({field_name: val})
                         elif ttype == 'many2one':
-                            import re
-                            match = re.search(r'\d+', reponse)
-                            if match:
-                                rec_id = int(match.group())
-                                comodel = field_meta.comodel_name
-                                if self.env[comodel].sudo().browse(rec_id).exists():
-                                    self.write({field_name: rec_id})
-                                else:
-                                    raise ValueError("Id %s non trouvé dans %s" % (rec_id, comodel))
+                            comodel = field_meta.comodel_name
+                            rec_id = self._match_many2one(comodel, reponse)
+                            if rec_id:
+                                self.write({field_name: rec_id})
                             else:
-                                raise ValueError("Aucun id trouvé dans la réponse : %s" % reponse)
+                                raise ValueError("Aucune correspondance trouvée pour '%s' dans %s" % (reponse, comodel))
                         else:
                             self.write({field_name: reponse})
                         # Mettre à jour l'état de la ligne
@@ -203,6 +199,39 @@ class is_dossier_article(models.Model):
                         ligne = self.analyse_ia_ids.filtered(lambda l: l.prompt_ia_id.id == prompt_rec.id)
                         if ligne:
                             ligne.etat = "Erreur : %s" % str(e)
+
+    def _match_many2one(self, comodel, reponse):
+        """Recherche intelligente d'un enregistrement many2one à partir du nom retourné par l'IA.
+        Stratégie : exact → ilike → fuzzy (difflib).
+        Retourne l'ID ou False.
+        """
+        reponse = reponse.strip().strip("'\"")
+        if not reponse:
+            return False
+        Model = self.env[comodel].sudo()
+        # 1. Recherche exacte
+        rec = Model.search([('name', '=', reponse)], limit=1)
+        if rec:
+            return rec.id
+        # 2. Recherche insensible à la casse
+        rec = Model.search([('name', '=ilike', reponse)], limit=1)
+        if rec:
+            return rec.id
+        # 3. Recherche partielle (le nom contient la réponse ou inversement)
+        rec = Model.search([('name', 'ilike', reponse)], limit=1)
+        if rec:
+            return rec.id
+        # 4. Fuzzy matching avec difflib
+        records = Model.search([], limit=300)
+        if records:
+            noms = {rec.display_name: rec.id for rec in records}
+            matches = difflib.get_close_matches(reponse.upper(), [n.upper() for n in noms], n=1, cutoff=0.6)
+            if matches:
+                # Retrouver le nom original correspondant
+                for nom, rid in noms.items():
+                    if nom.upper() == matches[0]:
+                        return rid
+        return False
 
 
     @api.depends('code_pg')

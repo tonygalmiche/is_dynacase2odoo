@@ -10,6 +10,7 @@
                 <field name="field_id"/>
                 <field name="famille_ids" widget="many2many_tags"/>
                 <field name="prompt"/>
+                <field name="active" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -20,7 +21,9 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
+                    <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
+                        <field name="active" invisible="1"/>
                         <field name="modele_id"/>
                         <field name="field_id" domain="[('model_id', '=', modele_id), ('ttype', 'not in', ['many2many', 'one2many', 'reference', 'binary', 'serialized']), ('store', '=', True)]"/>
                         <field name="famille_ids" widget="many2many_tags" domain="[('type_document', '=', 'Article')]"/>
@@ -38,6 +41,7 @@
             <search>
                 <field name="modele_id"/>
                 <field name="field_id"/>
+                <filter string="Archivé" name="inactive" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Regrouper par">
                     <filter string="Modèle" name="group_modele" context="{'group_by': 'modele_id'}"/>
                 </group>

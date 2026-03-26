@@ -11,6 +11,7 @@ class IsPromptIa(models.Model):
     field_id    = fields.Many2one("ir.model.fields", string="Champ")
     famille_ids = fields.Many2many("is.param.project", string="Familles", domain=[("type_document", "=", "Article")])
     prompt      = fields.Text(string="Prompt")
+    active      = fields.Boolean(string="Actif", default=True)
 
     @api.onchange("modele_id")
     def _onchange_modele_id(self):
