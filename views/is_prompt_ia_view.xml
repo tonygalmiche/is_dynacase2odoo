@@ -6,11 +6,17 @@
         <field name="model">is.prompt.ia</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="modele_id"/>
-                <field name="field_id"/>
-                <field name="famille_ids" widget="many2many_tags"/>
-                <field name="prompt"/>
-                <field name="active" invisible="1"/>
+                <field name="modele_id" optional="show"/>
+                <field name="field_id" optional="show"/>
+                <field name="famille_ids" widget="many2many_tags" optional="show"/>
+                <field name="prompt" optional="show"/>
+                <field name="prompt_actif" optional="show" widget="boolean_toggle"/>
+                <field name="detail_analyse_ia" optional="show" widget="boolean_toggle"/>
+                <field name="reflexion" optional="show" widget="boolean_toggle"/>
+                <field name="create_date" optional="hide" string="Créé le"/>
+                <field name="create_uid" optional="hide" string="Créé par"/>
+                <field name="write_date" optional="hide" string="Modifié le"/>
+                <field name="write_uid" optional="hide" string="Modifié par"/>
             </tree>
         </field>
     </record>
@@ -21,15 +27,29 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
+                    <field name="active" invisible="1"/>
                     <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
-                        <field name="active" invisible="1"/>
-                        <field name="modele_id"/>
-                        <field name="field_id" domain="[('model_id', '=', modele_id), ('ttype', 'not in', ['many2many', 'one2many', 'reference', 'binary', 'serialized']), ('store', '=', True)]"/>
-                        <field name="famille_ids" widget="many2many_tags" domain="[('type_document', '=', 'Article')]"/>
-                        <field name="prompt"/>
+                        <group>
+                            <field name="modele_id"/>
+                            <field name="field_id" domain="[('model_id', '=', modele_id), ('ttype', 'not in', ['many2many', 'one2many', 'reference', 'binary', 'serialized']), ('store', '=', True)]"/>
+                            <field name="famille_ids" widget="many2many_tags" domain="[('type_document', '=', 'Article')]"/>
+                        </group>
+                        <group>
+                            <field name="prompt_actif" widget="boolean_toggle"/>
+                            <field name="detail_analyse_ia" widget="boolean_toggle"/>
+                            <field name="reflexion" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group string="Prompt">
+                        <field name="prompt" nolabel="1" colspan="2"/>
                     </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>

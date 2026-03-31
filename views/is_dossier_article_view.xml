@@ -2,6 +2,38 @@
 <odoo>
     <data>     
 
+        <record id="is_analyse_ia_ligne_form_view" model="ir.ui.view">
+            <field name="name">is.analyse.ia.ligne.form</field>
+            <field name="model">is.analyse.ia.ligne</field>
+            <field name="arch" type="xml">
+                <form string="Résultats analyse IA">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="dossier_article_id" readonly="1"/>
+                                <field name="prompt_ia_id" readonly="1"/>
+                                <field name="field_id" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="temps_traitement" readonly="1"/>
+                                <field name="taille_envoi" readonly="1"/>
+                                <field name="etat" readonly="1"/>
+                            </group>
+                        </group>
+                        <group string="Prompt envoyé">
+                            <field name="prompt" nolabel="1" readonly="1" colspan="2"/>
+                        </group>
+                        <group string="Réponse IA">
+                            <field name="reponse" nolabel="1" readonly="1" colspan="2"/>
+                        </group>
+                        <group string="Réflexion">
+                            <field name="reflexion" nolabel="1" readonly="1" colspan="2"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record id="initialiser_documents_dossier_article_action_server" model="ir.actions.server">
             <field name="name">Initialisation des documents</field>
             <field name="model_id" ref="is_plastigray16.model_is_dossier_article"/>
@@ -125,15 +157,16 @@
                                     <field name="nb_fait"/>
                                 </group>    
                             </page>
-                            <page string="Analyse IA" attrs="{'invisible': [('has_prompt_ia', '=', False)]}" groups="is_vllm2odoo.group_ia_gestionnaire_prompts">
+                            <page string="Analyse IA" attrs="{'invisible': ['|', ('has_prompt_ia', '=', False), ('analyse_ia_ids', '=', [])]}" groups="is_vllm2odoo.group_ia_gestionnaire_prompts">
                                 <field name="analyse_ia_ids" nolabel="1" readonly="1">
                                     <tree>
-                                        <field name="field_id"/>
-                                        <field name="prompt"/>
-                                        <field name="reponse"/>
-                                        <field name="temps_traitement" sum="Total"/>
-                                        <field name="taille_envoi"/>
-                                        <field name="etat"/>
+                                        <field name="field_id" optional="show"/>
+                                        <field name="prompt" optional="show"/>
+                                        <field name="reponse" optional="show"/>
+                                        <field name="reflexion" optional="show"/>
+                                        <field name="temps_traitement" sum="Total" optional="show"/>
+                                        <field name="taille_envoi" optional="show"/>
+                                        <field name="etat" optional="show"/>
                                     </tree>
                                 </field>
                             </page>

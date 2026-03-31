@@ -46,11 +46,11 @@ class is_dossier_article(models.Model):
         """Analyse IA : récupérer les PJ des familles puis envoyer les prompts à l'IA"""
         self.ensure_one()
 
-        # 1. Rechercher les prompts pour ce modèle
+        # 1. Rechercher les prompts actifs pour ce modèle
         model_id = self.env['ir.model']._get_id('is.dossier.article')
-        prompts = self.env['is.prompt.ia'].sudo().search([('modele_id', '=', model_id)])
+        prompts = self.env['is.prompt.ia'].sudo().search([('modele_id', '=', model_id), ('prompt_actif', '=', True)])
         if not prompts:
-            raise UserError("Aucun prompt IA configuré pour le modèle 'Dossier article'.")
+            raise UserError("Aucun prompt IA actif configuré pour le modèle 'Dossier article'.")
 
         # 2. Collecter toutes les familles référencées dans les prompts
         familles = prompts.mapped('famille_ids')
@@ -126,6 +126,11 @@ class is_dossier_article(models.Model):
                             if records:
                                 choix = ', '.join("'%s'" % rec.display_name for rec in records)
                                 prompt_complet += "\n\nLa réponse doit être exactement le nom d'un de ces choix (retourne uniquement le nom, sans ID, sans guillemets, sans explication) : %s" % choix
+
+            # TOUJOURS demander le format avec réflexion (pour que l'IA raisonne correctement)
+            # Le champ reflexion sert juste à décider si on enregistre ou non la réflexion
+            prompt_complet += "\n\nFormate ta réponse EXACTEMENT comme suit (dans CET ORDRE) :\n<<<REFLEXION>>>\n<Fais d'abord TON RAISONNEMENT COMPLET : analyse le document, applique TOUTES les règles ci-dessus, et conclus par la valeur FINALE>\n<<<FIN_REFLEXION>>>\n<<<REPONSE>>>\n<Écris ICI UNIQUEMENT la valeur FINALE que tu as conclue dans ta réflexion (rien d'autre)>\n<<<FIN_REPONSE>>>\n\nIMPORTANT : Fais d'abord ta REFLEXION complète, puis écris dans REPONSE la DERNIERE valeur que tu as calculée."
+
             # Calculer la taille des données envoyées (prompt + images) en Mo
             taille_prompt = len(prompt_complet.encode('utf-8'))
             taille_images = sum(len(img_b64.encode('utf-8') if isinstance(img_b64, str) else img_b64) for img_b64, _ in images)
@@ -138,25 +143,53 @@ class is_dossier_article(models.Model):
             )
             duree = round(time.time() - t0, 1)
             reponse = ""
+            reflexion_text = ""
             success = result.get('success', False)
             if success:
-                reponse = result.get('response', '')
+                reponse_brute = result.get('response', '')
+                _logger.info("=== RÉPONSE BRUTE IA (prompt_id=%s) ===\n%s\n=== FIN RÉPONSE ===", prompt_rec.id, reponse_brute)
+                # TOUJOURS parser le format avec marqueurs (car l'IA retourne toujours ce format)
+                try:
+                    # Parser le format <<<REPONSE>>>...<<<FIN_REPONSE>>> <<<REFLEXION>>>...<<<FIN_REFLEXION>>>
+                    if '<<<REPONSE>>>' in reponse_brute and '<<<FIN_REPONSE>>>' in reponse_brute:
+                        reponse_start = reponse_brute.find('<<<REPONSE>>>') + len('<<<REPONSE>>>')
+                        reponse_end = reponse_brute.find('<<<FIN_REPONSE>>>')
+                        reponse = reponse_brute[reponse_start:reponse_end].strip()
+                    else:
+                        # Fallback si les marqueurs ne sont pas trouvés
+                        reponse = reponse_brute
+                    
+                    # Parser la réflexion (mais on l'enregistrera ou non selon prompt_rec.reflexion)
+                    if '<<<REFLEXION>>>' in reponse_brute and '<<<FIN_REFLEXION>>>' in reponse_brute:
+                        reflexion_start = reponse_brute.find('<<<REFLEXION>>>') + len('<<<REFLEXION>>>')
+                        reflexion_end = reponse_brute.find('<<<FIN_REFLEXION>>>')
+                        reflexion_text = reponse_brute[reflexion_start:reflexion_end].strip()
+                    else:
+                        reflexion_text = ""
+                except Exception as e:
+                    _logger.warning("Erreur parsing format avec marqueurs : %s", str(e))
+                    reponse = reponse_brute
+                    reflexion_text = "Erreur de parsing : %s" % str(e)
             else:
                 reponse = "Erreur : %s" % result.get('error', 'Erreur inconnue')
 
-            result_map[prompt_rec.id] = {'success': success, 'response': reponse}
+            result_map[prompt_rec.id] = {'success': success, 'response': reponse, 'reflexion': reflexion_text}
 
-            lignes_vals.append({
-                'dossier_article_id': self.id,
-                'prompt_ia_id'      : prompt_rec.id,
-                'field_id'          : prompt_rec.field_id.id,
-                'prompt'            : prompt_complet,
-                'reponse'           : reponse,
-                'temps_traitement'  : duree,
-                'taille_envoi'      : taille_envoi,
-            })
+            # Ne créer une ligne de détail que si demandé
+            if prompt_rec.detail_analyse_ia:
+                lignes_vals.append({
+                    'dossier_article_id': self.id,
+                    'prompt_ia_id'      : prompt_rec.id,
+                    'field_id'          : prompt_rec.field_id.id,
+                    'prompt'            : prompt_complet,
+                    'reponse'           : reponse,
+                    'reflexion'         : reflexion_text if prompt_rec.reflexion else False,
+                    'temps_traitement'  : duree,
+                    'taille_envoi'      : taille_envoi,
+                })
 
-        self.env['is.analyse.ia.ligne'].create(lignes_vals)
+        if lignes_vals:
+            self.env['is.analyse.ia.ligne'].create(lignes_vals)
 
         # 7. Mettre à jour les champs du dossier article avec les réponses
         for prompt_rec in prompts:
@@ -356,6 +389,7 @@ class IsAnalyseIaLigne(models.Model):
     field_id           = fields.Many2one("ir.model.fields", string="Champ")
     prompt             = fields.Text(string="Prompt envoyé")
     reponse            = fields.Text(string="Réponse IA")
+    reflexion          = fields.Text(string="Réflexion")
     temps_traitement   = fields.Float(string="Temps (s)", digits=(10, 1))
     taille_envoi       = fields.Float(string="Taille envoi (Mo)", digits=(10, 2))
     etat               = fields.Char(string="État")
