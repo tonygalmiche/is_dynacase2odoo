@@ -426,6 +426,76 @@ class IsFNC(models.Model):
 
 
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for rec in records:
+            rec._send_mail_commercial_creation()
+        return records
+
+    def _send_mail_commercial_creation(self):
+        if not self.mail_commercial:
+            return
+
+        # Récupération des destinataires en Cc depuis la liste de diffusion du site
+        cc_emails = []
+        cc_names = []
+        if self.site_id:
+            code = "FNC-%s" % self.site_id.name
+            diffusion_users = self.env['is.liste.diffusion.mail'].get_users('is.fnc', code)
+            if diffusion_users:
+                cc_emails_raw = self.env['is.liste.diffusion.mail'].users2mail(users=diffusion_users)
+                if cc_emails_raw:
+                    cc_emails = cc_emails_raw
+                for user in diffusion_users:
+                    cc_names.append("%s <%s>" % (user.name, user.email))
+
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        fnc_url = "%s/web#id=%s&view_type=form&model=is.fnc" % (base_url, self.id)
+
+        subject = "Nouvelle FNC créée : %s" % (self.num_non_conformite or "N/A")
+        body = """
+<p>Bonjour,</p>
+<p>Une nouvelle Fiche Non-Conformité (FNC) vient d'être créée :</p>
+<ul>
+    <li><b>N° FNC :</b> %s</li>
+    <li><b>Type :</b> %s</li>
+    <li><b>Client :</b> %s</li>
+    <li><b>Date de détection :</b> %s</li>
+    <li><b>Description :</b> %s</li>
+</ul>
+<p><a href="%s">Accéder à la FNC</a></p>
+<p>Cordialement,</p>
+""" % (
+            self.num_non_conformite or "",
+            self.type_non_conformite or "",
+            self.client_id.name if self.client_id else (self.client_autre or ""),
+            self.date_detection or "",
+            self.description_probleme or "",
+            fnc_url,
+        )
+
+        mail_values = {
+            'subject'   : subject,
+            'body_html' : body,
+            'email_to'  : self.mail_commercial,
+            'email_cc'  : cc_emails,
+            'email_from': self.env.user.email or self.env.company.email or 'noreply@plastigray.fr',
+            'auto_delete': False,
+        }
+        self.env['mail.mail'].create(mail_values).send()
+
+        # Copie du mail dans le chatter avec les adresses email
+        chatter_body = "<p><b>Email envoyé à :</b> %s" % self.mail_commercial
+        if cc_emails:
+            chatter_body += "<br/><b>Cc :</b> %s" % cc_emails
+        chatter_body += "</p>" + body
+        self.message_post(
+            body=chatter_body,
+            message_type='comment',
+            subtype_xmlid='mail.mt_note',
+        )
+
     @api.onchange('client_id')
     def onchange_client_id(self):
         for obj in self:
