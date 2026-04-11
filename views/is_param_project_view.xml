@@ -44,6 +44,7 @@
                                 <field name="droit_equipe_projet"/>
                                 <field name="ppr_revue_lancement"    attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="ppr_moule_hors_auto"    attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
+                                <field name="moule_a_version"        attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="plan_piece"             attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="suivi_du_temps"         attrs="{'invisible': [('type_document', '!=', 'Moule')]}" />
                                 <field name="gamme_controle"         attrs="{'invisible': [('type_document', '!=', 'Article')]}" />
@@ -94,6 +95,7 @@
                     <field name="droit_equipe_projet"       optional="hide"/>
                     <field name="ppr_revue_lancement"       optional="hide"/>
                     <field name="ppr_moule_hors_auto"       optional="hide"/>
+                    <field name="moule_a_version"           optional="hide"/>
                     <field name="duree_attente_avant"       optional="hide"/>
                     <field name="suivi_du_temps"            optional="hide"/>
                     <field name="ppr_color"                 optional="show" widget="color"/>
@@ -127,6 +129,7 @@
                     <field name="ppr_responsable" />
                     <field name="ppr_revue_lancement" />
                     <field name="ppr_moule_hors_auto" />
+                    <field name="moule_a_version"/>
                     <field name="gantt_pdf" />
                     <field name="ppr_color" />
                 </search>

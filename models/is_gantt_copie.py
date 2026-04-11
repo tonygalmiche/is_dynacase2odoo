@@ -194,6 +194,15 @@ class IsGanttCopie(models.Model):
                     name_field = TYPE_TO_FIELD[key]
                     src_docs=obj.get_docs(name_field,prefix='src')
                     src2dst={}
+
+
+
+                    moule_a_version = False
+                    if obj.dst_idmoule:
+                        if obj.dst_idmoule.moule_a_version=='oui':
+                            moule_a_version = True
+                        #print(obj.dst_idmoule.name, obj.dst_idmoule.moule_a_version)
+
                     for src_doc in src_docs:
 
                         test=True
@@ -202,6 +211,11 @@ class IsGanttCopie(models.Model):
                         if obj.copier_sup_j_actuelle:
                             if src_doc.j_prevue and obj.j_actuelle and src_doc.j_prevue<obj.j_actuelle:
                                 test=False
+
+                        #print(src_doc, src_doc.param_project_id.moule_a_version, src_doc.param_project_id.ppr_famille)
+                        if src_doc.param_project_id.moule_a_version==True and moule_a_version==False:
+                            test=False
+
                         if test:
                             if src_doc.section_id.id in section_ids:
                                 dst_docs=obj.get_docs(name_field,prefix='dst')

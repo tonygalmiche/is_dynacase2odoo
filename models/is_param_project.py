@@ -152,8 +152,9 @@ class IsParamProject(models.Model):
         ("13", "13-Rhéologie"),
 
     ], string="Responsable du document", tracking=True)
-    ppr_revue_lancement    = fields.Selection(PPR_REVUE_LANCEMENT, string="Revue de lancement", tracking=True)
+    ppr_revue_lancement = fields.Selection(PPR_REVUE_LANCEMENT, string="Revue de lancement", tracking=True)
     ppr_moule_hors_auto = fields.Boolean(string="Famille pour moule hors automobile", tracking=True)
+    moule_a_version     = fields.Boolean(string="Famille uniquement pour moule à version", help="Cette famille sera initialisée lors de la copie que pour les moules à version", default=False, tracking=True)
     ppr_project_colors  = fields.Serialized()
     ppr_color           = fields.Char("Color", sparse="ppr_project_colors", tracking=True)
     dynacase_id         = fields.Integer(string="Id Dynacase"     ,index=True,copy=False)
