@@ -517,18 +517,19 @@ class is_revue_lancement(models.Model):
     def get_users(self):
         for obj in self:
             equipe=[
-                "rl_chef_projetid", 
-                "rl_methode_injectionid", 
-                "rl_methode_assemblageid", 
-                "rl_qualite_devid", 
-                "rl_qualite_usineid", 
-                "rl_rheologieid", 
-                "rl_achatsid", 
-                "rl_logistiqueid", 
-                "rl_commercial2id",
-                "rl_responsable_outillageid",
-                "rl_directeur_siteid",
-                "rl_directeur_techniqueid",
+                'rl_commercial2id',
+                'rl_chef_projetid',
+                'rl_responsable_outillageid',
+                'rl_expert_injectionid',
+                'rl_methode_injectionid',
+                'rl_methode_assemblageid',
+                'rl_qualite_devid',
+                'rl_qualite_usineid',
+                'rl_logistiqueid',
+                'rl_logistique_usineid',
+                'rl_achatsid',
+                'rl_responsable_projetid',
+                'rl_rheologieid',
             ]
             users=[]
             for key in equipe:
