@@ -499,18 +499,42 @@
             <field name="parent_id" ref="gestion_des_achats_menu"/>
             <field name="action" ref="is_top_menu.menu_navigator_action"/>
         </record>
+
+        <record id="is_demandes_fournisseur_menu" model="ir.ui.menu" >
+           <field name="name">Demandes</field>
+           <field name="sequence">10</field>
+           <field name="parent_id" eval="ref('gestion_des_achats_menu')"/>
+        </record>
         <record id="is_demande_modif_compte_fournisseur_menu" model="ir.ui.menu" >
            <field name="name">Demande de création ou de modification d'un compte Fournisseur</field>
-           <field name="sequence">20</field>
-           <field name="parent_id" eval="ref('gestion_des_achats_menu')"/>
+           <field name="sequence">10</field>
+           <field name="parent_id" eval="ref('is_demandes_fournisseur_menu')"/>
            <field name="action"    ref="is_demande_modif_compte_fournisseur_action"/>
         </record>
         <record id="is_demande_modif_tarif_fournisseur_menu" model="ir.ui.menu" >
             <field name="name">Demande de création ou de modification d'un tarif Fournisseur</field>
-            <field name="sequence">30</field>
-            <field name="parent_id" eval="ref('gestion_des_achats_menu')"/>
+            <field name="sequence">20</field>
+            <field name="parent_id" eval="ref('is_demandes_fournisseur_menu')"/>
             <field name="action"    ref="is_demande_modif_tarif_fournisseur_action"/>
         </record>
+
+        <!-- Achats / Demandes de consultation -->
+        <record id="is_demande_consultation_menu" model="ir.ui.menu">
+            <field name="name">Consultations</field>
+            <field name="sequence">20</field>
+            <field name="parent_id" eval="ref('gestion_des_achats_menu')"/>
+            <field name="action"    ref="is_demande_consultation_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray16.is_employes_hors_production_group'),
+            ])]"/>
+        </record>
+
+
+
+
+
+
+
 
         <!-- Indicateurs -->
         <record id="is_indicateur_bei_menu" model="ir.ui.menu" >
