@@ -204,7 +204,7 @@ class is_revue_de_contrat(models.Model):
         ("Classe 3", "Classe 3 : 150T - 250T"),
         ("Classe 4", "Classe 4 : 350T - 450T"),
         ("Classe 5", "Classe 5 : 600T - 700T"),
-        ("Classe 6", "Classe 6 : 800T - 1000T"),
+        ("Classe 6", "Classe 6 : 800T - 1500T"),
     ], string="Classe commerciale", tracking=True)
     version_ids                        = fields.One2many("is.revue.de.contrat.version", "is_revue_id", tracking=True, copy=True, string="Versions Moule")
     rc_dfi_temp_occ_pm                 = fields.Float(string="Temps occupation presse mensuelle", compute="_compute_rc_dfi_temp_occ_pm", store=True, readonly=True)
