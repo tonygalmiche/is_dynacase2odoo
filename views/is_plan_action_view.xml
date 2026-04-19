@@ -253,9 +253,9 @@
                                     <field name="resp_id"          optional="show"/>
                                     <field name="risque"           optional="show"/>
                                     <field name="comment"          optional="show"/>
-                                    <field name="date"             optional="hide"/>
-                                    <field name="dateplan"         optional="hide"/>
-                                    <field name="datedo"           optional="hide"/>
+                                    <field name="date"             optional="show"/>
+                                    <field name="dateplan"         optional="show"/>
+                                    <field name="datedo"           optional="show"/>
                                     <field name="datecheck"        optional="hide"/>
                                     <field name="plan_action_id"   optional="hide"/>
                                     <field name="num_moule"        optional="hide"/>
