@@ -93,6 +93,13 @@ class is_dossier_article(models.Model):
         lignes_vals = []
         result_map = {}
         for prompt_rec in prompts:
+            # Si ce prompt n'a pas de famille, supprimer sa ligne d'analyse et passer au suivant
+            if not prompt_rec.famille_ids:
+                ligne = self.analyse_ia_ids.filtered(lambda l: l.prompt_ia_id.id == prompt_rec.id)
+                if ligne:
+                    ligne.unlink()
+                continue
+
             # Compléter le prompt avec les contraintes du type de champ
             prompt_complet = prompt_rec.prompt or ''
             if prompt_rec.field_id:
@@ -125,7 +132,8 @@ class is_dossier_article(models.Model):
                             records = self.env[comodel].sudo().search([], limit=300)
                             if records:
                                 choix = ', '.join("'%s'" % rec.display_name for rec in records)
-                                prompt_complet += "\n\nLa réponse doit être exactement le nom d'un de ces choix (retourne uniquement le nom, sans ID, sans guillemets, sans explication) : %s" % choix
+                                prompt_complet += "\n\nLa réponse doit être EXACTEMENT l'un de ces choix (retourne uniquement le nom, sans ID, sans guillemets, sans explication) : %s" % choix
+                                prompt_complet += "\n\nIMPORTANT : La comparaison est insensible à la casse et aux symboles spéciaux (®, ™, etc.). Par exemple 'Bayblend' et 'BAYBLEND' sont identiques. Retourne TOUJOURS le nom le plus proche de la liste."
 
             # TOUJOURS demander le format avec réflexion (pour que l'IA raisonne correctement)
             # Le champ reflexion sert juste à décider si on enregistre ou non la réflexion
@@ -155,10 +163,16 @@ class is_dossier_article(models.Model):
                         reponse_start = reponse_brute.find('<<<REPONSE>>>') + len('<<<REPONSE>>>')
                         reponse_end = reponse_brute.find('<<<FIN_REPONSE>>>')
                         reponse = reponse_brute[reponse_start:reponse_end].strip()
+                    elif '<<<FIN_REFLEXION>>>' in reponse_brute:
+                        # L'IA a produit la réflexion mais pas le bloc REPONSE :
+                        # extraire le texte après <<<FIN_REFLEXION>>>
+                        fin_refl_end = reponse_brute.find('<<<FIN_REFLEXION>>>') + len('<<<FIN_REFLEXION>>>')
+                        reponse = reponse_brute[fin_refl_end:].strip()
+                        _logger.warning("Bloc <<<REPONSE>>> absent - extraction après <<<FIN_REFLEXION>>> : '%s'", reponse)
                     else:
-                        # Fallback si les marqueurs ne sont pas trouvés
+                        # Fallback si aucun marqueur trouvé
                         reponse = reponse_brute
-                    
+
                     # Parser la réflexion (mais on l'enregistrera ou non selon prompt_rec.reflexion)
                     if '<<<REFLEXION>>>' in reponse_brute and '<<<FIN_REFLEXION>>>' in reponse_brute:
                         reflexion_start = reponse_brute.find('<<<REFLEXION>>>') + len('<<<REFLEXION>>>')
@@ -235,12 +249,20 @@ class is_dossier_article(models.Model):
 
     def _match_many2one(self, comodel, reponse):
         """Recherche intelligente d'un enregistrement many2one à partir du nom retourné par l'IA.
-        Stratégie : exact → ilike → fuzzy (difflib).
+        Stratégie : exact → ilike → normalisé → fuzzy (difflib).
         Retourne l'ID ou False.
         """
+        import re as _re
         reponse = reponse.strip().strip("'\"")
         if not reponse:
             return False
+
+        def _normalize(s):
+            """Supprime les caractères spéciaux (\u00ae, \u2122, etc.) et normalise les espaces."""
+            s = _re.sub(r'[\u00ae\u2122\u00a9\u2120]', '', s)  # \u00ae \u2122 \u00a9 \u2120
+            s = _re.sub(r'\s+', ' ', s).strip()
+            return s
+
         Model = self.env[comodel].sudo()
         # 1. Recherche exacte
         rec = Model.search([('name', '=', reponse)], limit=1)
@@ -250,20 +272,29 @@ class is_dossier_article(models.Model):
         rec = Model.search([('name', '=ilike', reponse)], limit=1)
         if rec:
             return rec.id
-        # 3. Recherche partielle (le nom contient la réponse ou inversement)
+        # 3. Recherche avec nom normalisé (sans \u00ae, \u2122...)
+        reponse_norm = _normalize(reponse)
+        if reponse_norm != reponse:
+            rec = Model.search([('name', '=ilike', reponse_norm)], limit=1)
+            if rec:
+                return rec.id
+            rec = Model.search([('name', 'ilike', reponse_norm)], limit=1)
+            if rec:
+                return rec.id
+        # 4. Recherche partielle (le nom contient la réponse ou inversement)
         rec = Model.search([('name', 'ilike', reponse)], limit=1)
         if rec:
             return rec.id
-        # 4. Fuzzy matching avec difflib
+        # 5. Fuzzy matching avec difflib (sur noms normalisés)
         records = Model.search([], limit=300)
         if records:
             noms = {rec.display_name: rec.id for rec in records}
-            matches = difflib.get_close_matches(reponse.upper(), [n.upper() for n in noms], n=1, cutoff=0.6)
+            noms_norm = {_normalize(n).upper(): (n, rid) for n, rid in noms.items()}
+            reponse_up = reponse_norm.upper()
+            matches = difflib.get_close_matches(reponse_up, list(noms_norm.keys()), n=1, cutoff=0.6)
             if matches:
-                # Retrouver le nom original correspondant
-                for nom, rid in noms.items():
-                    if nom.upper() == matches[0]:
-                        return rid
+                _, rid = noms_norm[matches[0]]
+                return rid
         return False
 
 
