@@ -8,6 +8,7 @@ static/src/css/is.param.project.css
 # Fichiers de configuration sensibles
 script-divers/config.py
 script-divers/test-vlan-config.py
+script-divers/test-vlan-deploiement.py
 
 
 

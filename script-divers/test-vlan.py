@@ -1,14 +1,75 @@
 #!/usr/bin/env python3
 import asyncio
+import json
 import socket
 import unicodedata
+import urllib.request
 import dns.name
 import dns.resolver
 from dns.resolver import NXDOMAIN
 from time import time
 import importlib
-_cfg = importlib.import_module("test-vlan-config")
-SERVICES = _cfg.SERVICES
+
+# Chemin vers le fichier JSON de configuration des services.
+# Si le fichier existe et est valide, il est utilisé en priorité.
+# Laisser vide ('') pour toujours utiliser test-vlan-config.py.
+# JSON_FILES = [
+#     #'http://pg-raspberry-theia4/odoo-glpi/ports_ordinateurs.json',
+#     '/tmp/ports_ordinateurs.json',
+# ]
+
+
+#JSON_FILE = 'http://pg-raspberry-theia4/odoo-glpi/ports_ordinateurs.json'
+JSON_FILE = '/tmp/ports_ordinateurs.json'
+
+
+
+
+
+
+
+def _load_services_from_json(path):
+    """Charge SERVICES depuis un fichier JSON.
+
+    Format attendu :
+        [{"nom_poste": "vm-ldap", "ports": [{"nom": "ssh", "type": "tcp", "numero": 22}]}]
+
+    Retourne une liste de tuples (host, port, proto) ou None si le fichier
+    est absent, vide ou mal formé.
+    """
+    try:
+        if path.startswith('http://') or path.startswith('https://'):
+            with urllib.request.urlopen(path, timeout=10) as resp:
+                data = json.load(resp)
+        else:
+            with open(path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+        if not isinstance(data, list) or not data:
+            return None
+        services = []
+        for entry in data:
+            host = entry.get('nom_poste', '').strip().lower()
+            ports = entry.get('ports', [])
+            if not host or not isinstance(ports, list):
+                continue
+            for p in ports:
+                if isinstance(p, dict):
+                    port_num = p.get('numero')
+                    proto = str(p.get('type', 'tcp')).strip().lower()
+                    if port_num is not None:
+                        services.append((host, str(port_num), proto))
+        return services if services else None
+    except (OSError, json.JSONDecodeError, KeyError, ValueError):
+        return None
+
+
+# Priorité au fichier JSON ; fallback sur test-vlan-config.py
+_json_services = _load_services_from_json(JSON_FILE)
+if _json_services is not None:
+    SERVICES = _json_services
+else:
+    _cfg = importlib.import_module("test-vlan-config")
+    SERVICES = _cfg.SERVICES
 
 
 TIMEOUT = 5
