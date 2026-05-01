@@ -48,3 +48,4 @@ from . import is_oberthur
 from . import is_factures
 from . import is_prompt_ia
 from . import is_demande_consultation
+from . import res_partner_contact_details

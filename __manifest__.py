@@ -91,6 +91,7 @@ Module Odoo 16 pour Plastigray pour migrer les développements de Dynacase dans 
         'web.assets_backend': [
             #'is_dynacase2odoo/static/src/js/custom_one2many_widget.js',
 
+            'is_dynacase2odoo/static/src/js/many2many_tags_contact.js',
             'is_dynacase2odoo/static/src/css/*',
             'is_dynacase2odoo/static/lib/dhtmlxGantt/*',
             'is_dynacase2odoo/static/src/dhtmlxgantt_project/*',

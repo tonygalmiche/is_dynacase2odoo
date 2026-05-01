@@ -777,10 +777,19 @@ class IsDemandeConsultation(models.Model):
             
             for line in obj.line_ids:
                 for fournisseur in line.fournisseur_ids:
-                    # Nom à afficher
+                    # Nom à afficher : "Société (code), Contact" ou juste le nom si pas de parent
                     nom_fournisseur = ""
                     if fournisseur.fournisseur_id:
-                        nom_fournisseur = fournisseur.fournisseur_id.name
+                        partner = fournisseur.fournisseur_id
+                        if partner.parent_id:
+                            code = partner.parent_id.is_code or ''
+                            company_part = partner.parent_id.name or ''
+                            if code:
+                                company_part += f' ({code})'
+                            nom_fournisseur = f'{company_part}, {partner.name}'
+                        else:
+                            code = partner.is_code or ''
+                            nom_fournisseur = f'{partner.name} ({code})' if code else partner.name
                     elif fournisseur.fournisseur_hors_panel:
                         nom_fournisseur = fournisseur.fournisseur_hors_panel
                     
@@ -1156,7 +1165,8 @@ class IsDemandeConsultationDemandeLine(models.Model):
         'is_demande_cons_demande_line_partner_rel',
         'line_id', 'partner_id',
         string="Fournisseurs",
-        domain=[('is_company', '=', True), ('supplier', '=', True)]
+        domain=[('parent_id.supplier', '!=', False)],
+        context={'show_contact_details': True},
     )
     autres_fournisseurs = fields.Text("Autres fournisseurs", help="Fournisseurs hors panel, un par ligne")
     mails_autres_fournisseurs = fields.Text("Mails autres fournisseurs", help="Un email par ligne, dans le même ordre que les autres fournisseurs")

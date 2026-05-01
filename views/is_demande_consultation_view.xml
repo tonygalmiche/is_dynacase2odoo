@@ -93,7 +93,7 @@
                         </group>
                         <!-- Fournisseurs -->
                         <group>
-                            <field name="fournisseur_ids" widget="many2many_tags"/>
+                            <field name="fournisseur_ids" widget="many2many_tags_contact" context="{'show_contact_details': True}"/>
                             <field name="autres_fournisseurs"/>
                             <field name="mails_autres_fournisseurs"/>
                         </group>
@@ -270,7 +270,7 @@
                                         <!-- Champs communs DC-MAT, DC-COMP et DC-EMB -->
                                         <field name="quantite_annuelle" attrs="{'column_invisible': [('parent.type_consultation', 'in', ['dc_port', 'dc_chine'])]}"/>
                                         <field name="lot" attrs="{'column_invisible': [('parent.type_consultation', 'in', ['dc_port', 'dc_chine'])]}"/>
-                                        <field name="fournisseur_ids" widget="many2many_tags" attrs="{'column_invisible': [('parent.state', 'not in', ['transmis_achat'])]}"/>
+                                        <field name="fournisseur_ids" widget="many2many_tags_contact" attrs="{'column_invisible': [('parent.state', 'in', ['brouillon'])]}" context="{'show_contact_details': True}"/>
                                         <field name="autres_fournisseurs" attrs="{'column_invisible': [('parent.state', 'not in', ['transmis_achat'])]}"/>
                                         <field name="mails_autres_fournisseurs" attrs="{'column_invisible': [('parent.state', 'not in', ['transmis_achat'])]}"/>
                                     </tree>
