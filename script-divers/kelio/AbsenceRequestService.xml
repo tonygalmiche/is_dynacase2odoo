@@ -1,0 +1,537 @@
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://echange.service.open.bodet.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="AbsenceRequestService" targetNamespace="http://echange.service.open.bodet.com">
+<wsdl:types>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://lang.java" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://lang.java">
+<xsd:complexType name="Throwable">
+<xsd:sequence/>
+</xsd:complexType>
+<xsd:complexType name="Exception">
+<xsd:complexContent>
+<xsd:extension base="tns:Throwable">
+<xsd:sequence/>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+</xsd:schema>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://echange.service.open.bodet.com" xmlns:ns0="http://lang.java" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://echange.service.open.bodet.com">
+<xsd:complexType name="AbsencePeriod">
+<xsd:complexContent>
+<xsd:extension base="tns:EmployeeInformation">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="absenceTypeAbbreviation" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="absenceTypeDescription" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="absenceTypeKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="date" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endTime" nillable="true" type="xsd:time"/>
+<xsd:element minOccurs="0" name="endTimePosition" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="limitedToAPeriod" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="offset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="splitHolidaysWaiver" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="startTime" nillable="true" type="xsd:time"/>
+<xsd:element minOccurs="0" name="startTimePosition" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="AbsenceRequest">
+<xsd:complexContent>
+<xsd:extension base="tns:EmployeeInformation">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="absenceFileKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="absenceRequestKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="absenceTypeAbbreviation" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="absenceTypeDescription" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="absenceTypeKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="comment" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="creationDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="creationTime" nillable="true" type="xsd:time"/>
+<xsd:element minOccurs="0" name="durationInDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="durationInHours" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endingTheAfternoon" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="firstEndTime" nillable="true" type="xsd:time"/>
+<xsd:element minOccurs="0" name="firstEndTimePosition" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="firstStartTime" nillable="true" type="xsd:time"/>
+<xsd:element minOccurs="0" name="firstStartTimePosition" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="lastModificationDate" nillable="true" type="xsd:dateTime"/>
+<xsd:element minOccurs="0" name="requestState" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="requestType" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="secondEndTime" nillable="true" type="xsd:time"/>
+<xsd:element minOccurs="0" name="secondEndTimePosition" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="secondStartTime" nillable="true" type="xsd:time"/>
+<xsd:element minOccurs="0" name="secondStartTimePosition" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="splitHolidaysWaiver" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="startInTheMorning" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="totalInDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="totalInHours" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="validatorsBadgeCodes" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="validatorsFirstNames" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="validatorsIdentificationCode" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="validatorsIdentificationNumbers" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="validatorsKeys" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="validatorsLogins" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="validatorsSurnames" nillable="true" type="xsd:string"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="AbsenceRequestFilter">
+<xsd:complexContent>
+<xsd:extension base="tns:AskedPopulationWithPeriod">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="limitedToAPeriod" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="requestState" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="validatorBadgeCode" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="validatorFirstName" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="validatorIdentificationNumber" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="validatorKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="validatorLogin" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="validatorSurname" nillable="true" type="xsd:string"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="AbsenceRequestPeriod">
+<xsd:complexContent>
+<xsd:extension base="tns:AbsencePeriod">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="absenceRequestKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="requestState" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="requestType" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="validatorsBadgeCodes" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="validatorsFirstNames" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="validatorsIdentificationCode" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="validatorsIdentificationNumbers" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="validatorsKeys" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="validatorsLogins" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="validatorsSurnames" nillable="true" type="xsd:string"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfAbsenceRequest">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="AbsenceRequest" nillable="true" type="tns:AbsenceRequest"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfAbsenceRequestFilter">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="AbsenceRequestFilter" nillable="true" type="tns:AbsenceRequestFilter"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfAbsenceRequestPeriod">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="AbsenceRequestPeriod" nillable="true" type="tns:AbsenceRequestPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfAskedEmployee">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="askedEmployee" nillable="true" type="tns:askedEmployee"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfAskedPopulationWithPeriod">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="AskedPopulationWithPeriod" nillable="true" type="tns:AskedPopulationWithPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="AskedPopulation">
+<xsd:complexContent>
+<xsd:extension base="tns:EmployeeInformation">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="populationEndDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="populationMode" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="populationStartDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="AskedPopulationWithPeriod">
+<xsd:complexContent>
+<xsd:extension base="tns:AskedPopulation">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="dateMode" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endOffset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="startOffset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="EmployeeInformation">
+<xsd:complexContent>
+<xsd:extension base="tns:Object">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="archivedEmployee" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="employeeBadgeCode" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="employeeFirstName" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="employeeIdentificationCode" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="employeeIdentificationNumber" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="employeeKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="employeeSurname" nillable="true" type="xsd:string"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType abstract="true" name="Object">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="errorMessage" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="technicalString" nillable="true" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="askedEmployee">
+<xsd:complexContent>
+<xsd:extension base="tns:EmployeeInformation">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="dateMode" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endOffset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="startOffset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="exportAbsenceRequestPeriods" type="tns:exportAbsenceRequestPeriods"/>
+<xsd:complexType name="exportAbsenceRequestPeriods">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceRequestPeriodsResponse" type="tns:exportAbsenceRequestPeriodsResponse"/>
+<xsd:complexType name="exportAbsenceRequestPeriodsResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedAbsenceRequestPeriods" type="tns:ArrayOfAbsenceRequestPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceRequestPeriodsFromEmployeeList" type="tns:exportAbsenceRequestPeriodsFromEmployeeList"/>
+<xsd:complexType name="exportAbsenceRequestPeriodsFromEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployee"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceRequestPeriodsFromEmployeeListResponse" type="tns:exportAbsenceRequestPeriodsFromEmployeeListResponse"/>
+<xsd:complexType name="exportAbsenceRequestPeriodsFromEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedAbsenceRequestPeriods" type="tns:ArrayOfAbsenceRequestPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceRequestPeriodsList" type="tns:exportAbsenceRequestPeriodsList"/>
+<xsd:complexType name="exportAbsenceRequestPeriodsList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportFilter" type="tns:ArrayOfAskedPopulationWithPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceRequestPeriodsListResponse" type="tns:exportAbsenceRequestPeriodsListResponse"/>
+<xsd:complexType name="exportAbsenceRequestPeriodsListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedAbsenceRequestPeriods" type="tns:ArrayOfAbsenceRequestPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceRequests" type="tns:exportAbsenceRequests"/>
+<xsd:complexType name="exportAbsenceRequests">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceRequestsResponse" type="tns:exportAbsenceRequestsResponse"/>
+<xsd:complexType name="exportAbsenceRequestsResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedAbsenceRequests" type="tns:ArrayOfAbsenceRequest"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceRequestsFromEmployeeList" type="tns:exportAbsenceRequestsFromEmployeeList"/>
+<xsd:complexType name="exportAbsenceRequestsFromEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployee"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceRequestsFromEmployeeListResponse" type="tns:exportAbsenceRequestsFromEmployeeListResponse"/>
+<xsd:complexType name="exportAbsenceRequestsFromEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedAbsenceRequests" type="tns:ArrayOfAbsenceRequest"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceRequestsLimitedToAPeriod" type="tns:exportAbsenceRequestsLimitedToAPeriod"/>
+<xsd:complexType name="exportAbsenceRequestsLimitedToAPeriod">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceRequestsLimitedToAPeriodResponse" type="tns:exportAbsenceRequestsLimitedToAPeriodResponse"/>
+<xsd:complexType name="exportAbsenceRequestsLimitedToAPeriodResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedAbsenceRequests" type="tns:ArrayOfAbsenceRequest"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceRequestsLimitedToAPeriodFromEmployeeList" type="tns:exportAbsenceRequestsLimitedToAPeriodFromEmployeeList"/>
+<xsd:complexType name="exportAbsenceRequestsLimitedToAPeriodFromEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployee"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceRequestsLimitedToAPeriodFromEmployeeListResponse" type="tns:exportAbsenceRequestsLimitedToAPeriodFromEmployeeListResponse"/>
+<xsd:complexType name="exportAbsenceRequestsLimitedToAPeriodFromEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedAbsenceRequests" type="tns:ArrayOfAbsenceRequest"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceRequestsLimitedToAPeriodList" type="tns:exportAbsenceRequestsLimitedToAPeriodList"/>
+<xsd:complexType name="exportAbsenceRequestsLimitedToAPeriodList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportFilter" type="tns:ArrayOfAskedPopulationWithPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceRequestsLimitedToAPeriodListResponse" type="tns:exportAbsenceRequestsLimitedToAPeriodListResponse"/>
+<xsd:complexType name="exportAbsenceRequestsLimitedToAPeriodListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedAbsenceRequests" type="tns:ArrayOfAbsenceRequest"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceRequestsList" type="tns:exportAbsenceRequestsList"/>
+<xsd:complexType name="exportAbsenceRequestsList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportFilter" type="tns:ArrayOfAbsenceRequestFilter"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceRequestsListResponse" type="tns:exportAbsenceRequestsListResponse"/>
+<xsd:complexType name="exportAbsenceRequestsListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedAbsenceRequests" type="tns:ArrayOfAbsenceRequest"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="Exception" nillable="true" type="ns0:Exception"/>
+</xsd:schema>
+</wsdl:types>
+<wsdl:message name="Exception">
+<wsdl:part element="tns:Exception" name="Exception"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceRequestPeriods">
+<wsdl:part element="tns:exportAbsenceRequestPeriods" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceRequestPeriodsResponse">
+<wsdl:part element="tns:exportAbsenceRequestPeriodsResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceRequestPeriodsFromEmployeeList">
+<wsdl:part element="tns:exportAbsenceRequestPeriodsFromEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceRequestPeriodsFromEmployeeListResponse">
+<wsdl:part element="tns:exportAbsenceRequestPeriodsFromEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceRequestPeriodsList">
+<wsdl:part element="tns:exportAbsenceRequestPeriodsList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceRequestPeriodsListResponse">
+<wsdl:part element="tns:exportAbsenceRequestPeriodsListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceRequests">
+<wsdl:part element="tns:exportAbsenceRequests" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceRequestsResponse">
+<wsdl:part element="tns:exportAbsenceRequestsResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceRequestsFromEmployeeList">
+<wsdl:part element="tns:exportAbsenceRequestsFromEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceRequestsFromEmployeeListResponse">
+<wsdl:part element="tns:exportAbsenceRequestsFromEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceRequestsLimitedToAPeriod">
+<wsdl:part element="tns:exportAbsenceRequestsLimitedToAPeriod" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceRequestsLimitedToAPeriodResponse">
+<wsdl:part element="tns:exportAbsenceRequestsLimitedToAPeriodResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceRequestsLimitedToAPeriodFromEmployeeList">
+<wsdl:part element="tns:exportAbsenceRequestsLimitedToAPeriodFromEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceRequestsLimitedToAPeriodFromEmployeeListResponse">
+<wsdl:part element="tns:exportAbsenceRequestsLimitedToAPeriodFromEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceRequestsLimitedToAPeriodList">
+<wsdl:part element="tns:exportAbsenceRequestsLimitedToAPeriodList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceRequestsLimitedToAPeriodListResponse">
+<wsdl:part element="tns:exportAbsenceRequestsLimitedToAPeriodListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceRequestsList">
+<wsdl:part element="tns:exportAbsenceRequestsList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceRequestsListResponse">
+<wsdl:part element="tns:exportAbsenceRequestsListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:portType name="AbsenceRequestServicePortType">
+<wsdl:operation name="exportAbsenceRequestPeriods">
+<wsdl:input message="tns:exportAbsenceRequestPeriods" name="exportAbsenceRequestPeriods"/>
+<wsdl:output message="tns:exportAbsenceRequestPeriodsResponse" name="exportAbsenceRequestPeriodsResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceRequestPeriodsFromEmployeeList">
+<wsdl:input message="tns:exportAbsenceRequestPeriodsFromEmployeeList" name="exportAbsenceRequestPeriodsFromEmployeeList"/>
+<wsdl:output message="tns:exportAbsenceRequestPeriodsFromEmployeeListResponse" name="exportAbsenceRequestPeriodsFromEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceRequestPeriodsList">
+<wsdl:input message="tns:exportAbsenceRequestPeriodsList" name="exportAbsenceRequestPeriodsList"/>
+<wsdl:output message="tns:exportAbsenceRequestPeriodsListResponse" name="exportAbsenceRequestPeriodsListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceRequests">
+<wsdl:input message="tns:exportAbsenceRequests" name="exportAbsenceRequests"/>
+<wsdl:output message="tns:exportAbsenceRequestsResponse" name="exportAbsenceRequestsResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceRequestsFromEmployeeList">
+<wsdl:input message="tns:exportAbsenceRequestsFromEmployeeList" name="exportAbsenceRequestsFromEmployeeList"/>
+<wsdl:output message="tns:exportAbsenceRequestsFromEmployeeListResponse" name="exportAbsenceRequestsFromEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceRequestsLimitedToAPeriod">
+<wsdl:input message="tns:exportAbsenceRequestsLimitedToAPeriod" name="exportAbsenceRequestsLimitedToAPeriod"/>
+<wsdl:output message="tns:exportAbsenceRequestsLimitedToAPeriodResponse" name="exportAbsenceRequestsLimitedToAPeriodResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceRequestsLimitedToAPeriodFromEmployeeList">
+<wsdl:input message="tns:exportAbsenceRequestsLimitedToAPeriodFromEmployeeList" name="exportAbsenceRequestsLimitedToAPeriodFromEmployeeList"/>
+<wsdl:output message="tns:exportAbsenceRequestsLimitedToAPeriodFromEmployeeListResponse" name="exportAbsenceRequestsLimitedToAPeriodFromEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceRequestsLimitedToAPeriodList">
+<wsdl:input message="tns:exportAbsenceRequestsLimitedToAPeriodList" name="exportAbsenceRequestsLimitedToAPeriodList"/>
+<wsdl:output message="tns:exportAbsenceRequestsLimitedToAPeriodListResponse" name="exportAbsenceRequestsLimitedToAPeriodListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceRequestsList">
+<wsdl:input message="tns:exportAbsenceRequestsList" name="exportAbsenceRequestsList"/>
+<wsdl:output message="tns:exportAbsenceRequestsListResponse" name="exportAbsenceRequestsListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="AbsenceRequestServiceSoapBinding" type="tns:AbsenceRequestServicePortType">
+<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="exportAbsenceRequestPeriods">
+<soap:operation soapAction="urn:exportAbsenceRequestPeriods" style="document"/>
+<wsdl:input name="exportAbsenceRequestPeriods">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportAbsenceRequestPeriodsResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceRequestPeriodsFromEmployeeList">
+<soap:operation soapAction="urn:exportAbsenceRequestPeriodsFromEmployeeList" style="document"/>
+<wsdl:input name="exportAbsenceRequestPeriodsFromEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportAbsenceRequestPeriodsFromEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceRequestPeriodsList">
+<soap:operation soapAction="urn:exportAbsenceRequestPeriodsList" style="document"/>
+<wsdl:input name="exportAbsenceRequestPeriodsList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportAbsenceRequestPeriodsListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceRequests">
+<soap:operation soapAction="urn:exportAbsenceRequests" style="document"/>
+<wsdl:input name="exportAbsenceRequests">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportAbsenceRequestsResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceRequestsFromEmployeeList">
+<soap:operation soapAction="urn:exportAbsenceRequestsFromEmployeeList" style="document"/>
+<wsdl:input name="exportAbsenceRequestsFromEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportAbsenceRequestsFromEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceRequestsLimitedToAPeriod">
+<soap:operation soapAction="urn:exportAbsenceRequestsLimitedToAPeriod" style="document"/>
+<wsdl:input name="exportAbsenceRequestsLimitedToAPeriod">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportAbsenceRequestsLimitedToAPeriodResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceRequestsLimitedToAPeriodFromEmployeeList">
+<soap:operation soapAction="urn:exportAbsenceRequestsLimitedToAPeriodFromEmployeeList" style="document"/>
+<wsdl:input name="exportAbsenceRequestsLimitedToAPeriodFromEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportAbsenceRequestsLimitedToAPeriodFromEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceRequestsLimitedToAPeriodList">
+<soap:operation soapAction="urn:exportAbsenceRequestsLimitedToAPeriodList" style="document"/>
+<wsdl:input name="exportAbsenceRequestsLimitedToAPeriodList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportAbsenceRequestsLimitedToAPeriodListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceRequestsList">
+<soap:operation soapAction="urn:exportAbsenceRequestsList" style="document"/>
+<wsdl:input name="exportAbsenceRequestsList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportAbsenceRequestsListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="AbsenceRequestService">
+<wsdl:port binding="tns:AbsenceRequestServiceSoapBinding" name="AbsenceRequestServiceHttpPort">
+<soap:address location="https://sandbox-ws.kelio.io/open/services/AbsenceRequestService"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>
