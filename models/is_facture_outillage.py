@@ -228,28 +228,6 @@ class is_facture_outillage_ligne(models.Model):
         cr_odoo1,test = self.get_cr_odoo1()
         #**********************************************************************
 
-        ##** Connexion à CEGID ************************************************
-        SERVER   = company.is_cegid_ip    or ''
-        UID      = company.is_cegid_login or ''
-        PWD      = company.is_cegid_mdp   or ''
-        DATABASE = company.is_cegid_base  or ''
-        try:
-            cnx = 'DRIVER={FreeTDS};SERVER=%s;PORT=1433;UID=%s;PWD=%s;DATABASE=%s;UseNTLMv2=yes;TDS_Version=8.0;Trusted_Domain=domain.local;'%(
-                SERVER,
-                UID,
-                PWD,
-                DATABASE
-            )
-            cnx_cegid = pyodbc.connect(cnx)
-            cr_cegid = cnx_cegid.cursor()
-        except Exception as err:
-            msg="La connexion à CEGID sur la base '%s' et le serveur '%s' a échouée !"%(DATABASE,SERVER)
-            msg="%s\n[%s] %s"%(msg,type(err),err)
-            _logger.error(msg)
-            test=False
-            #raise ValidationError(msg)
-        #**********************************************************************
-
         if test:
             for obj in self:
                 type_facture = obj.type_facture
@@ -257,7 +235,6 @@ class is_facture_outillage_ligne(models.Model):
                 montant_ht = montant_ttc = montant_paye_ht = 0
                 date_facture = date_reglement = date_echeance = ''
                 if type_facture in ('Facture','Avoir'):
-                
                     if type_facture=="Facture":
                         move_type='out_invoice'
                     if type_facture=="Avoir":
@@ -273,64 +250,66 @@ class is_facture_outillage_ligne(models.Model):
                     for row in rows:                
                         montant_ht  = row['amount_untaxed_signed']
                         montant_ttc = row['amount_total_signed']
-                        
-                        #** Recherche Date Facture dans CEGID **************************************
-                        SQL="""
-                            select E_DATECOMPTABLE
-                            from ECRITURE
-                            where 
-                                E_GENERAL='411000' and
-                                E_JOURNAL='VTE' and 
-                                E_REFINTERNE='%s'
-                        """%num_facture
-                        rows_cegid = cr_cegid.execute(SQL)
-                        for row_cegid in rows_cegid:
-                            date_facture = row_cegid[0]
-                        #***************************************************************************
 
-                        #** Recherche Date Réglement dans CEGID ************************************
-                        SQL="""
-                            select E_DATECOMPTABLE
-                            from ECRITURE
-                            where 
-                                E_GENERAL='411000' and
-                                E_JOURNAL!='VTE' and 
-                                E_REFINTERNE='%s' and
-                                E_DATECOMPTABLE>'2024-01-01'
-                        """%num_facture
-                        rows_cegid = cr_cegid.execute(SQL)
-                        for row_cegid in rows_cegid:
-                            date_reglement = row_cegid[0]
-                        #***************************************************************************
+                        #** Recherche Date Facture dans IsCegidEcriture ****************************
+                        ecriture = self.env['is.cegid.ecriture'].search([
+                            ('e_general'   , '=', '411000'),
+                            ('e_journal'   , '=', 'VTE'),
+                            ('e_refinterne', '=', num_facture),
+                        ], limit=1)
+                        if ecriture:
+                            date_facture = ecriture.e_datecomptable
+                        #**************************************************************************
 
-                        #** Recherche Date Echéance dans CEGID *************************************
-                        SQL="""
-                            select E_DATPER
-                            from ECRITURE
-                            where 
-                                E_GENERAL='411000' and
-                                E_JOURNAL!='VTE' and 
-                                E_REFINTERNE='%s'
-                        """%num_facture
-                        rows_cegid = cr_cegid.execute(SQL)
-                        for row_cegid in rows_cegid:
-                            date_echeance = row_cegid[0]
-                        #***************************************************************************
+                        #** Recherche Date Réglement dans IsCegidEcriture *************************
+                        ecriture_regl = self.env['is.cegid.ecriture'].search([
+                            ('e_general'        , '=', '411000'),
+                            ('e_journal'        , '!=', 'VTE'),
+                            ('e_refinterne'     , '=', num_facture),
+                            ('e_datecomptable'  , '>', '2024-01-01'),
+                        ], order='e_datecomptable desc', limit=1)
+                        if ecriture_regl:
+                            date_reglement = ecriture_regl.e_datecomptable
+                        #**************************************************************************
 
-                        #** Montant payé CEGID *****************************************************
-                        SQL="""
-                            select E_CREDIT,E_GENERAL
-                            from ECRITURE
-                            where 
-                                E_JOURNAL<>'VTE' and 
-                                E_REFINTERNE='%s' and 
-                                E_AUXILIAIRE>='C500000' and 
-                                E_AUXILIAIRE<='C509999'
-                        """%num_facture
-                        rows_cegid = cr_cegid.execute(SQL)
-                        for row_cegid in rows_cegid:
-                            montant_paye_ht += row_cegid[0] / 10000
-                        #***************************************************************************
+                        #** Montant payé dans IsCegidEcriture **************************************
+                        ecritures_paye = self.env['is.cegid.ecriture'].search([
+                            ('e_journal'    , '!=', 'VTE'),
+                            ('e_refinterne' , '=', num_facture),
+                            ('e_auxiliaire' , '>=', 'C500000'),
+                            ('e_auxiliaire' , '<=', 'C509999'),
+                        ])
+                        montant_paye_ht = sum(e.e_credit for e in ecritures_paye)
+                        #**************************************************************************
+
+
+                        #** Recherche Date Echéance dans IsCegidEcriture **************************
+                        ecriture_ech = self.env['is.cegid.ecriture'].search([
+                            ('e_general'   , '=', '411000'),
+                            ('e_journal'   , '!=', 'VTE'),
+                            ('e_refinterne', '=', num_facture),
+                        ], limit=1)
+                        if ecriture_ech:
+                            date_echeance = ecriture_ech.e_datper
+                        #**************************************************************************
+
+                        # #** Recherche Date Echéance dans CEGID *************************************
+                        # SQL="""
+                        #     select E_DATPER
+                        #     from ECRITURE
+                        #     where 
+                        #         E_GENERAL='411000' and
+                        #         E_JOURNAL!='VTE' and 
+                        #         E_REFINTERNE='%s'
+                        # """%num_facture
+                        # rows_cegid = cr_cegid.execute(SQL)
+                        # for row_cegid in rows_cegid:
+                        #     date_echeance = row_cegid[0]
+                        # #***************************************************************************
+
+
+
+
 
                 if type_facture=='Proforma':
                     SQL="""
