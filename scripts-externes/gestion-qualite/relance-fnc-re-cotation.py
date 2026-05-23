@@ -10,12 +10,13 @@ via le serveur de messagerie sortant d'Odoo (XML-RPC).
 """
 
 import sys
+import os
 import ssl
 import xmlrpc.client
 from datetime import date
 
-# --- chemin vers config.py (répertoire parent) ---
-sys.path.insert(0, "../")
+# --- chemin vers config.py (répertoire parent du script) ---
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from config import ODOO_USER, ODOO_PASSWORD, DATABASES, SOURCE_DB, ROBOT_EMAIL, MAIL_TEST, MAIL_TEST_CC
 
 
