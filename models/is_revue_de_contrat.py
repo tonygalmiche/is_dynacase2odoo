@@ -4,6 +4,19 @@ from odoo.exceptions import ValidationError  # type: ignore
 import logging
 _logger = logging.getLogger(__name__)
 
+SELECTION_MOD = [
+    ("0.25", "0.25"),
+    ("0.5" , "0.5"),
+    ("0.75", "0.75"),
+    ("1"   , "1"),
+    ("1.5" , "1.5"),
+    ("2"   , "2"),
+    ("2.5" , "2.5"),
+    ("3"   , "3"),
+    ("3.5" , "3.5"),
+    ("4"   , "4"),
+]
+
 
 #TODO : 
 # Vérfier la class et la methode en PHP dans Dynacase
@@ -778,18 +791,7 @@ class is_revue_de_contrat_version(models.Model):
 
     rc_dfi_cycle               = fields.Float(string="Cycle par pièce", digits=(12, 2))
     rc_dfi_nb_emp              = fields.Integer(string="Nb empreintes par référence")
-    rc_dfi_mod                 = fields.Selection([
-        ("0.25", "0.25"),
-        ("0.5" , "0.5"),
-        ("0.75", "0.75"),
-        ("1"   , "1"),
-        ("1.5" , "1.5"),
-        ("2"   , "2"),
-        ("2.5" , "2.5"),
-        ("3"   , "3"),
-        ("3.5" , "3.5"),
-        ("4"   , "4"),
-    ], string="MOD totale pour le poste")
+    rc_dfi_mod                 = fields.Selection(SELECTION_MOD, string="MOD totale pour le poste")
     rc_dfi_taux_rebut          = fields.Float(string="Tx rebut vendu (%)")
 
     rc_dfi_matiere             = fields.Text(string="Matière 1")

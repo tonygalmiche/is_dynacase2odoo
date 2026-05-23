@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api # type: ignore
 from odoo.addons.is_dynacase2odoo.models.is_param_project import DOCUMENT_ACTION, DOCUMENT_ETAT # type: ignore
+from odoo.addons.is_dynacase2odoo.models.is_revue_de_contrat import SELECTION_MOD # type: ignore
 from odoo.exceptions import AccessError, ValidationError, UserError  # type: ignore
 from datetime import datetime, timedelta, date
 
@@ -915,14 +916,7 @@ class is_revue_projet_jalon_revue_de_contrat(models.Model):
     rpj_de1_article           = fields.Char(string="Article")
     rpj_de1_cycle             = fields.Char(string="Cycle par pièce")
     rpj_de1_nb_emp            = fields.Char(string="Nb empreintes")
-    rpj_de1_mod               = fields.Selection([
-        ("0.25", "0.25"),
-        ("0.5",  "0.5"),
-        ("0.75", "0.75"),
-        ("1",    "1"),
-        ("1.5",  "1.5"),
-        ("2",    "2"),
-    ], string="MOD")
+    rpj_de1_mod               = fields.Selection(SELECTION_MOD, string="MOD")
     rpj_de1_taux_rebut        = fields.Char(string="Tx rebut vendu")
     rpj_de1_poids_piece       = fields.Char(string="Poids pièce (en g)")
     rpj_de1_poids_carotte     = fields.Char(string="Poids carotte (en g)")
@@ -937,14 +931,7 @@ class is_revue_projet_jalon_revue_de_projet_jalon(models.Model):
     rpj_de2_article = fields.Char(string="Article")
     rpj_de2_cycle = fields.Char(string="Cycle par pièce")
     rpj_de2_nb_emp = fields.Char(string="Nb empreintes")
-    rpj_de2_mod = fields.Selection([
-        ("0.25", "0.25"),
-        ("0.5", "0.5"),
-        ("0.75", "0.75"),
-        ("1", "1"),
-        ("1.5", "1.5"),
-        ("2", "2"),
-    ], string="MOD")
+    rpj_de2_mod = fields.Selection(SELECTION_MOD, string="MOD")
     rpj_de2_taux_rebut        = fields.Char(string="Tx rebut vendu")
     rpj_de2_poids_piece       = fields.Char(string="Poids pièce (en g)")
     rpj_de2_poids_carotte     = fields.Char(string="Poids carotte (en g)")
