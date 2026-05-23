@@ -26,6 +26,7 @@ class IsDemandeConsultation(models.Model):
                 'dc_emb': 'DC-EMB',
                 'dc_port': 'DC-PORT',
                 'dc_chine': 'DC-CHINE',
+                'dc_export': 'DC-CHINE',
             }
             obj.prefix = prefixes.get(obj.type_consultation, '')
 
@@ -41,13 +42,13 @@ class IsDemandeConsultation(models.Model):
                 if obj.state in ['validation_technique', 'transmis_achat'] and (uid == obj.validateur_technique_id.id or uid == obj.acheteur_id.id):
                     vsb = True
                 # Pour DC-EMB, DC-COMP, DC-PORT et DC-CHINE : le demandeur peut aussi revenir en brouillon depuis transmis_achat
-                if obj.state == 'transmis_achat' and obj.type_consultation in ['dc_emb', 'dc_comp', 'dc_port', 'dc_chine'] and uid == obj.demandeur_id.id:
+                if obj.state == 'transmis_achat' and obj.type_consultation in ['dc_emb', 'dc_comp', 'dc_port', 'dc_chine', 'dc_export'] and uid == obj.demandeur_id.id:
                     vsb = True
             obj.vers_brouillon_vsb = vsb
             
             # Bouton vers validation technique (pas pour DC-EMB, DC-COMP, DC-PORT et DC-CHINE)
             vsb = False
-            if obj.state == 'brouillon' and uid == obj.demandeur_id.id and obj.type_consultation not in ['dc_emb', 'dc_comp', 'dc_port', 'dc_chine']:
+            if obj.state == 'brouillon' and uid == obj.demandeur_id.id and obj.type_consultation not in ['dc_emb', 'dc_comp', 'dc_port', 'dc_chine', 'dc_export']:
                 vsb = True
             obj.vers_validation_technique_vsb = vsb
             
@@ -56,7 +57,7 @@ class IsDemandeConsultation(models.Model):
             if obj.state == 'validation_technique' and uid == obj.validateur_technique_id.id:
                 vsb = True
             # Pour DC-EMB, DC-COMP, DC-PORT et DC-CHINE : passage direct de brouillon à transmis_achat par le demandeur
-            if obj.state == 'brouillon' and obj.type_consultation in ['dc_emb', 'dc_comp', 'dc_port', 'dc_chine'] and uid == obj.demandeur_id.id:
+            if obj.state == 'brouillon' and obj.type_consultation in ['dc_emb', 'dc_comp', 'dc_port', 'dc_chine', 'dc_export'] and uid == obj.demandeur_id.id:
                 vsb = True
             obj.vers_transmis_achat_vsb = vsb
             
@@ -75,7 +76,7 @@ class IsDemandeConsultation(models.Model):
             if obj.state in ['transmis_achat', 'consultation_en_cours'] and uid == obj.acheteur_id.id:
                 vsb = True
             # Pour DC-EMB, DC-COMP, DC-PORT et DC-CHINE : le demandeur peut aussi annuler depuis transmis_achat
-            if obj.state == 'transmis_achat' and obj.type_consultation in ['dc_emb', 'dc_comp', 'dc_port', 'dc_chine'] and uid == obj.demandeur_id.id:
+            if obj.state == 'transmis_achat' and obj.type_consultation in ['dc_emb', 'dc_comp', 'dc_port', 'dc_chine', 'dc_export'] and uid == obj.demandeur_id.id:
                 vsb = True
             obj.vers_annule_vsb = vsb
             
@@ -94,7 +95,7 @@ class IsDemandeConsultation(models.Model):
 
             # Bouton générer les lignes (dc_mat/dc_comp/dc_emb/dc_port/dc_chine, transmis_achat, demande_line_ids présentes, line_ids vides)
             vsb = False
-            if obj.state == 'transmis_achat' and obj.type_consultation in ['dc_mat', 'dc_comp', 'dc_emb', 'dc_port', 'dc_chine'] and obj.demande_line_ids and not obj.line_ids:
+            if obj.state == 'transmis_achat' and obj.type_consultation in ['dc_mat', 'dc_comp', 'dc_emb', 'dc_port', 'dc_chine', 'dc_export'] and obj.demande_line_ids and not obj.line_ids:
                 vsb = True
             obj.generer_lignes_vsb = vsb
 
@@ -113,6 +114,7 @@ class IsDemandeConsultation(models.Model):
         ('dc_emb', 'Emballages (DC-EMB)'),
         ('dc_port', 'Transport (DC-PORT)'),
         ('dc_chine', 'Import Chine (DC-CHINE)'),
+        ('dc_export', 'Export Chine (DC-CHINE)'),
     ], string="Type de consultation", required=True, default='dc_mat', tracking=True)
     prefix = fields.Char("Préfixe", compute='_compute_prefix', store=False)
     
@@ -154,15 +156,16 @@ class IsDemandeConsultation(models.Model):
     
     # Champs spécifiques DC-PORT (Transport)
     adresse_enlevement_id = fields.Many2one('res.partner', "Adresse d'enlèvement", tracking=True,
-                                            domain=[('is_company', '=', True)],
+                                            domain=[('is_company', '=', True),('supplier', '=', True)],
                                             help="Adresse d'enlèvement si existante")
     adresse_livraison_id = fields.Many2one('res.partner', "Adresse de livraison", tracking=True,
-                                           domain=[('is_company', '=', True)],
+                                           domain=[('is_company', '=', True),('supplier', '=', True)],
                                            help="Adresse de livraison si existante")
     date_dms = fields.Date("Date DMS", tracking=True, help="Date de mise à disposition")
     incoterm_id = fields.Many2one('account.incoterms', "Incoterm", tracking=True,
                                   help="DAP à privilégier")
     lieu = fields.Char("Lieu", tracking=True)
+    mode_transport = fields.Selection(MODE_TRANSPORT_SELECTION, string="Mode de transport", tracking=True)
     
     # État
     state = fields.Selection([
@@ -208,7 +211,9 @@ class IsDemandeConsultation(models.Model):
         for vals in vals_list:
             # Génère le numéro de séquence en fonction du type de consultation
             type_consultation = vals.get('type_consultation', 'dc_mat')
-            sequence_code = f'is.demande.consultation.{type_consultation}'
+            # DC-EXPORT partage la même séquence que DC-CHINE
+            seq_type = 'dc_chine' if type_consultation == 'dc_export' else type_consultation
+            sequence_code = f'is.demande.consultation.{seq_type}'
             vals['name'] = self.env['ir.sequence'].next_by_code(sequence_code)
         return super().create(vals_list)
 
@@ -244,10 +249,23 @@ class IsDemandeConsultation(models.Model):
                 if not obj.lieu:
                     obj.lieu = 'SHENZHEN'
                 if not obj.incoterm_id:
-                    # Chercher l'incoterm FOB
                     fob = self.env['account.incoterms'].search([('code', '=', 'FOB')], limit=1)
                     if fob:
                         obj.incoterm_id = fob.id
+            if obj.type_consultation == 'dc_export':
+                # Valeurs par défaut pour DC-EXPORT : Incoterm DDP, Lieu SHENZHEN, mode avion, adresse enlèvement = fournisseur réf. 7503
+                if not obj.lieu:
+                    obj.lieu = 'SHENZHEN'
+                if not obj.incoterm_id:
+                    ddp = self.env['account.incoterms'].search([('code', '=', 'DDP')], limit=1)
+                    if ddp:
+                        obj.incoterm_id = ddp.id
+                if not obj.mode_transport:
+                    obj.mode_transport = 'avion'
+                if not obj.adresse_enlevement_id:
+                    plastigray = self.env['res.partner'].search([('is_code', '=', '7503')], limit=1)
+                    if plastigray:
+                        obj.adresse_enlevement_id = plastigray.id
 
     def vers_brouillon_action(self):
         """Retour à l'état brouillon"""
@@ -309,6 +327,8 @@ class IsDemandeConsultation(models.Model):
                 if obj.type_consultation == 'dc_port':
                     ligne_nom = line.colisage or f"Ligne {line.sequence or ''}"
                 if obj.type_consultation == 'dc_chine':
+                    ligne_nom = (line.mold_id.name if line.mold_id else '') or f"Ligne {line.sequence or ''}"
+                if obj.type_consultation == 'dc_export':
                     ligne_nom = (line.mold_id.name if line.mold_id else '') or f"Ligne {line.sequence or ''}"
                 if obj.type_consultation == 'dc_mat':
                     ligne_nom = line.designation or f"Ligne {line.sequence or ''}"
@@ -461,8 +481,8 @@ class IsDemandeConsultation(models.Model):
                             </tr>
                         """
                 tableau_html += "</table>"
-            if obj.type_consultation == 'dc_chine':
-                # Tableau pour DC-CHINE (Import Chine)
+            if obj.type_consultation in ['dc_chine', 'dc_export']:
+                # Tableau pour DC-CHINE / DC-EXPORT
                 tableau_html = """
                     <table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
                         <tr style="background-color: #f0f0f0;">
@@ -605,10 +625,10 @@ class IsDemandeConsultation(models.Model):
         return partner.email or ''
 
     def generer_lignes_action(self):
-        """Génère les lignes depuis la saisie commerciale (dc_mat, dc_comp, dc_emb, dc_port, dc_chine)"""
+        """Génère les lignes depuis la saisie commerciale (dc_mat, dc_comp, dc_emb, dc_port, dc_chine, dc_export)"""
         for obj in self:
-            if obj.type_consultation not in ['dc_mat', 'dc_comp', 'dc_emb', 'dc_port', 'dc_chine']:
-                raise ValidationError("La génération de lignes n'est disponible que pour les types DC-MAT, DC-COMP, DC-EMB, DC-PORT et DC-CHINE.")
+            if obj.type_consultation not in ['dc_mat', 'dc_comp', 'dc_emb', 'dc_port', 'dc_chine', 'dc_export']:
+                raise ValidationError("La génération de lignes n'est disponible que pour les types DC-MAT, DC-COMP, DC-EMB, DC-PORT, DC-CHINE et DC-EXPORT.")
             if not obj.demande_line_ids:
                 raise ValidationError("Aucune ligne de demande à générer.")
             if obj.line_ids:
@@ -622,6 +642,8 @@ class IsDemandeConsultation(models.Model):
                 elif obj.type_consultation == 'dc_port':
                     label_ligne = dl.colisage or f"Ligne {dl.sequence or ''}"
                 elif obj.type_consultation == 'dc_chine':
+                    label_ligne = (dl.mold_id.name if dl.mold_id else '') or f"Ligne {dl.sequence or ''}"
+                elif obj.type_consultation == 'dc_export':
                     label_ligne = (dl.mold_id.name if dl.mold_id else '') or f"Ligne {dl.sequence or ''}"
                 else:
                     label_ligne = dl.designation or f"Ligne {dl.sequence or ''}"
@@ -706,7 +728,7 @@ class IsDemandeConsultation(models.Model):
                             'frequence': dl.frequence,
                             'fournisseur_ids': fournisseur_vals,
                         }
-                    elif obj.type_consultation == 'dc_chine':
+                    elif obj.type_consultation in ['dc_chine', 'dc_export']:
                         line_vals = {
                             'demande_id': obj.id,
                             'sequence': seq,
@@ -744,6 +766,7 @@ class IsDemandeConsultation(models.Model):
                 'dc_emb': 'is_dynacase2odoo.is_demande_consultation_line_fournisseur_list_view_dc_emb',
                 'dc_port': 'is_dynacase2odoo.is_demande_consultation_line_fournisseur_list_view_dc_port',
                 'dc_chine': 'is_dynacase2odoo.is_demande_consultation_line_fournisseur_list_view_dc_chine',
+                'dc_export': 'is_dynacase2odoo.is_demande_consultation_line_fournisseur_list_view_dc_chine',
             }.get(obj.type_consultation)
             view_id = self.env.ref(view_xmlid).id if view_xmlid else False
             return {
@@ -1004,7 +1027,7 @@ class IsDemandeConsultation(models.Model):
                         <p>{user.name}</p>
                     """
 
-                if obj.type_consultation == 'dc_chine':
+                if obj.type_consultation in ['dc_chine', 'dc_export']:
                     for line in lignes:
                         mode_transport_txt = dict(line._fields['mode_transport'].selection).get(line.mode_transport, '') if line.mode_transport else ''
                         lignes_html += f"""
