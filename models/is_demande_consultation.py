@@ -728,7 +728,7 @@ class IsDemandeConsultation(models.Model):
                             'frequence': dl.frequence,
                             'fournisseur_ids': fournisseur_vals,
                         }
-                    elif obj.type_consultation in ['dc_chine', 'dc_export']:
+                    elif obj.type_consultation == 'dc_chine':
                         line_vals = {
                             'demande_id': obj.id,
                             'sequence': seq,
@@ -738,6 +738,23 @@ class IsDemandeConsultation(models.Model):
                             'date_disponibilite_outillage': dl.date_disponibilite_outillage,
                             'date_livraison_souhaitee': dl.date_livraison_souhaitee,
                             'mode_transport': dl.mode_transport,
+                            'fournisseur_ids': fournisseur_vals,
+                        }
+                    elif obj.type_consultation == 'dc_export':
+                        line_vals = {
+                            'demande_id': obj.id,
+                            'sequence': seq,
+                            'mold_id': dl.mold_id.id if dl.mold_id else False,
+                            'dam': dl.dam,
+                            'article_id': dl.article_id.id if dl.article_id else False,
+                            'designation': dl.designation,
+                            'couleur_export': dl.couleur_export,
+                            'fournisseur_export_id': dl.fournisseur_export_id.id if dl.fournisseur_export_id else False,
+                            'quantite_export': dl.quantite_export,
+                            'uom_export_id': dl.uom_export_id.id if dl.uom_export_id else False,
+                            'prix_unitaire': dl.prix_unitaire,
+                            'disponibilite': dl.disponibilite,
+                            'date_reception_dispo': dl.date_reception_dispo,
                             'fournisseur_ids': fournisseur_vals,
                         }
                     else:  # dc_mat
@@ -858,6 +875,14 @@ class IsDemandeConsultation(models.Model):
                 # Construire le tableau des produits selon le type de consultation
                 lignes_html = ""
                 subject = f"Demande de consultation {obj.name}"
+                # Adresses communes (affichées si renseignées)
+                adresse_enlevement = obj.adresse_enlevement_id.name if obj.adresse_enlevement_id else ''
+                adresse_livraison = obj.adresse_livraison_id.name if obj.adresse_livraison_id else ''
+                adresses_html = ""
+                if adresse_enlevement:
+                    adresses_html += f"<p><strong>Adresse d'enlèvement :</strong> {adresse_enlevement}</p>"
+                if adresse_livraison:
+                    adresses_html += f"<p><strong>Adresse de livraison :</strong> {adresse_livraison}</p>"
                 if obj.type_consultation == 'dc_mat':
                     for line in lignes:
                         lignes_html += f"""
@@ -874,6 +899,7 @@ class IsDemandeConsultation(models.Model):
                         <p>Madame, Monsieur,</p>
                         <p>Dans le cadre d'une consultation prix, nous vous serions reconnaissant de nous 
                         transmettre votre meilleure offre de prix pour la fourniture éventuelle de :</p>
+                        {adresses_html}
                         <table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
                             <tr style="background-color: #f0f0f0;">
                                 <th style="border: 1px solid #ccc; padding: 5px;">Désignation</th>
@@ -919,6 +945,7 @@ class IsDemandeConsultation(models.Model):
                         <p>Madame, Monsieur,</p>
                         <p>Dans le cadre d'une consultation prix, nous vous serions reconnaissant de nous 
                         transmettre votre meilleure offre de prix pour la fourniture éventuelle de :</p>
+                        {adresses_html}
                         <table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
                             <tr style="background-color: #f0f0f0;">
                                 <th style="border: 1px solid #ccc; padding: 5px;">Type de produit</th>
@@ -963,6 +990,7 @@ class IsDemandeConsultation(models.Model):
                         <p>Madame, Monsieur,</p>
                         <p>Dans le cadre d'une consultation prix, nous vous serions reconnaissant de nous 
                         transmettre votre meilleure offre de prix pour la fourniture éventuelle de :</p>
+                        {adresses_html}
                         <table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
                             <tr style="background-color: #f0f0f0;">
                                 <th style="border: 1px solid #ccc; padding: 5px;">Type de produit</th>
@@ -1027,7 +1055,7 @@ class IsDemandeConsultation(models.Model):
                         <p>{user.name}</p>
                     """
 
-                if obj.type_consultation in ['dc_chine', 'dc_export']:
+                if obj.type_consultation == 'dc_chine':
                     for line in lignes:
                         mode_transport_txt = dict(line._fields['mode_transport'].selection).get(line.mode_transport, '') if line.mode_transport else ''
                         lignes_html += f"""
@@ -1069,6 +1097,45 @@ class IsDemandeConsultation(models.Model):
                         <p>Cordialement,</p>
                         <p>{user.name}</p>
                     """
+
+                if obj.type_consultation == 'dc_export':
+                    for line in lignes:
+                        disponibilite_txt = dict(line._fields['disponibilite'].selection).get(line.disponibilite, '') if line.disponibilite else ''
+                        date_reception_txt = line.date_reception_dispo.strftime('%d/%m/%Y') if line.date_reception_dispo else ''
+                        dispo_txt = f"{disponibilite_txt} ({date_reception_txt})" if date_reception_txt else disponibilite_txt
+                        lignes_html += f"""
+                            <tr>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{line.dam or ''}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{line.article_id.name if line.article_id else ''}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{line.designation or ''}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{line.couleur_export or ''}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{line.quantite_export or ''}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{line.uom_export_id.name if line.uom_export_id else ''}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{dispo_txt}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;"></td>
+                            </tr>
+                        """
+                    body_html = f"""
+                        <p>Madame, Monsieur,</p>
+                        <p>Dans le cadre d'une consultation prix, nous vous serions reconnaissant de nous 
+                        transmettre votre meilleure offre de prix pour l'export suivant :</p>
+                        <table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
+                            <tr style="background-color: #f0f0f0;">
+                                <th style="border: 1px solid #ccc; padding: 5px;">N° de DAM</th>
+                                <th style="border: 1px solid #ccc; padding: 5px;">Code PG</th>
+                                <th style="border: 1px solid #ccc; padding: 5px;">Désignation</th>
+                                <th style="border: 1px solid #ccc; padding: 5px;">Couleur</th>
+                                <th style="border: 1px solid #ccc; padding: 5px;">Quantité</th>
+                                <th style="border: 1px solid #ccc; padding: 5px;">Unité</th>
+                                <th style="border: 1px solid #ccc; padding: 5px;">Disponibilité</th>
+                                <th style="border: 1px solid #ccc; padding: 5px;">Prix unitaire (€)</th>
+                            </tr>
+                            {lignes_html}
+                        </table>
+                        <p><strong>Date de réponse souhaitée :</strong> {obj.date_reponse_souhaitee.strftime('%d/%m/%Y') if obj.date_reponse_souhaitee else ''}</p>
+                        <p>Cordialement,</p>
+                        <p>{user.name}</p>
+                    """
                 
                 # Envoyer le mail
                 vals = {
@@ -1089,32 +1156,27 @@ class IsDemandeConsultation(models.Model):
                 
                 mails_envoyes.append({'nom': nom_fournisseur, 'email': email_to, 'body_html': body_html})
             
-            # Logger dans le chatter
-            message = "<p><strong>Consultations envoyées aux fournisseurs :</strong></p><ul>"
+            # Logger dans le chatter : un message par fournisseur
             for mail_info in mails_envoyes:
-                message += f"<li>{mail_info['nom']} ({mail_info['email']})</li>"
-            message += "</ul>"
+                message = f"<p><strong>Mail envoyé à :</strong> {mail_info['nom']} ({mail_info['email']})</p>"
+                message += "<hr/>"
+                message += mail_info['body_html']
+                obj.message_post(body=message, subject=f"Consultation envoyée - {mail_info['nom']}")
             
-            # Ajouter le contenu du mail envoyé (identique pour tous les fournisseurs)
-            if mails_envoyes:
-                message += "<hr/><p><strong>Contenu du mail envoyé :</strong></p>"
-                message += mails_envoyes[0]['body_html']
-            
-            # Ajouter les fournisseurs sans email
+            # Ajouter un message récapitulatif si fournisseurs sans email ou déjà contactés
+            avertissements = ""
             if fournisseurs_sans_email:
-                message += "<p><strong style='color: red;'>Fournisseurs sans email (non envoyés) :</strong></p><ul>"
+                avertissements += "<p><strong style='color: red;'>Fournisseurs sans email (non envoyés) :</strong></p><ul>"
                 for nom in fournisseurs_sans_email:
-                    message += f"<li>{nom}</li>"
-                message += "</ul>"
-            
-            # Ajouter les fournisseurs déjà contactés
+                    avertissements += f"<li>{nom}</li>"
+                avertissements += "</ul>"
             if fournisseurs_deja_envoyes:
-                message += "<p><strong style='color: orange;'>Fournisseurs déjà contactés (non renvoyés) :</strong></p><ul>"
+                avertissements += "<p><strong style='color: orange;'>Fournisseurs déjà contactés (non renvoyés) :</strong></p><ul>"
                 for nom in fournisseurs_deja_envoyes:
-                    message += f"<li>{nom}</li>"
-                message += "</ul>"
-            
-            obj.message_post(body=message, subject="Envoi des consultations")
+                    avertissements += f"<li>{nom}</li>"
+                avertissements += "</ul>"
+            if avertissements:
+                obj.message_post(body=avertissements, subject="Envoi des consultations - Avertissements")
             
             # Vérifier si tous les fournisseurs ont reçu le mail => passer en 'Consultation en cours'
             tous_envoyes = True
@@ -1181,6 +1243,22 @@ class IsDemandeConsultationDemandeLine(models.Model):
     # Champs communs DC-MAT, DC-COMP et DC-EMB
     quantite_annuelle = fields.Float("Quantité annuelle", digits=(14, 2))
     lot = fields.Text("Lot (Mettre un lot par ligne)", help="Lots à consulter (un par ligne)")
+    # Champs spécifiques DC-EXPORT
+    dam = fields.Char("N° de DAM")
+    article_id = fields.Many2one('is.article', "Code PG")
+    couleur_export = fields.Char("Couleur")
+    fournisseur_export_id = fields.Many2one('res.partner', "Fournisseur",
+                                            domain=[('supplier', '=', True)])
+    quantite_export = fields.Float("Quantité", digits=(14, 2))
+    uom_export_id = fields.Many2one('uom.uom', "Unité",
+                                    default=lambda self: self.env['uom.uom'].search([('name', 'ilike', 'kg')], limit=1))
+    prix_unitaire = fields.Float("Prix unitaire (€)", digits=(14, 4))
+    disponibilite = fields.Selection([
+        ('matiere_stock_be', 'Matière au stock BE'),
+        ('matiere_stock_usine', 'Matière en stock usine'),
+        ('date_reception', 'Date de réception'),
+    ], string="Disponibilité")
+    date_reception_dispo = fields.Date("Date de réception")
 
     # Fournisseurs (saisis par l'acheteur en état Transmis achat)
     fournisseur_ids = fields.Many2many(
@@ -1204,6 +1282,19 @@ class IsDemandeConsultationDemandeLine(models.Model):
             else:
                 obj.dimensions_moule = ""
                 obj.poids = 0.0
+
+    @api.onchange('article_id')
+    def _onchange_article_id(self):
+        for obj in self:
+            article = obj.article_id
+            if article:
+                obj.designation = article.designation or ''
+                obj.couleur_export = article.couleur or ''
+                obj.fournisseur_export_id = article.fournisseur_id
+            else:
+                obj.designation = ''
+                obj.couleur_export = ''
+                obj.fournisseur_export_id = False
 
 
 class IsDemandeConsultationLine(models.Model):
@@ -1266,7 +1357,23 @@ class IsDemandeConsultationLine(models.Model):
     date_disponibilite_outillage = fields.Date("Date de disponibilité de l'outillage")
     date_livraison_souhaitee = fields.Date("Date de livraison maxi souhaitée")
     mode_transport = fields.Selection(MODE_TRANSPORT_SELECTION, string="Mode de transport")
-    
+
+    # Champs spécifiques DC-EXPORT (Export Chine)
+    dam = fields.Char("N° de DAM")
+    article_id = fields.Many2one('is.article', "Code PG")
+    couleur_export = fields.Char("Couleur")
+    fournisseur_export_id = fields.Many2one('res.partner', "Fournisseur", domain=[('supplier', '=', True)])
+    quantite_export = fields.Float("Quantité", digits=(14, 2))
+    uom_export_id = fields.Many2one('uom.uom', "Unité",
+                                    default=lambda self: self.env['uom.uom'].search([('name', 'ilike', 'kg')], limit=1))
+    prix_unitaire = fields.Float("Prix unitaire (€)", digits=(14, 4))
+    disponibilite = fields.Selection([
+        ('matiere_stock_be', 'Matière au stock BE'),
+        ('matiere_stock_usine', 'Matière en stock usine'),
+        ('date_reception', 'Date de réception'),
+    ], string="Disponibilité")
+    date_reception_dispo = fields.Date("Date de réception")
+
     # Champs communs
     quantite_annuelle = fields.Float("Quantité annuelle", digits=(14, 2))
     lot = fields.Integer("Lot", help="Lots à consulter (un par ligne)")

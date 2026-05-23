@@ -128,8 +128,9 @@
                                     </group>
                                 </group>
                                 <group>
-                                    <field name="piece_jointe_ids"            attrs="{'readonly': [('ro_user','=',True)]}" widget="many2many_binary"/>
-                                    <field name="images_ids"                  attrs="{'readonly': [('ro_user','=',True)]}" widget="many2many_binary"/>
+                                    <field name="piece_jointe_ids"                attrs="{'readonly': [('ro_user','=',True)]}" widget="many2many_binary"/>
+                                    <field name="images_ids"                      attrs="{'readonly': [('ro_user','=',True)]}" widget="many2many_binary"/>
+                                    <field name="extrait_plan_ids"                attrs="{'readonly': [('ro_user','=',True)]}" widget="many2many_binary"/>
                                 </group>
                                 <group string="Matière / Colorant" col="3">
                                     <group string="Matière">
@@ -275,6 +276,7 @@
                     <field name="fiche_tech_mat_ids"          optional="hide"/>
                     <field name="piece_jointe_ids"            optional="hide"/>
                     <field name="images_ids"                  optional="hide"/>
+                    <field name="extrait_plan_ids"             optional="hide"/>
                     <field name="te_piece_jointe_ids"         optional="hide"/>
                     <field name="tps_cycle_objectif"          optional="hide"/>
                     <field name="tps_cycle_resultat"          optional="hide"/>

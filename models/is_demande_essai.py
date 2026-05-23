@@ -187,6 +187,7 @@ class is_demande_essai(models.Model):
     fiche_tech_mat_ids          = fields.Many2many("ir.attachment", "is_demande_essai_fiche_tech_mat_rel", "fiche_tech_mat", "att_id", string="Fiche technique matière")
     piece_jointe_ids            = fields.Many2many("ir.attachment", "is_demande_essai_pieces_jointes_rel", "piece_jointe", "att_id", string="Pièce jointe")
     images_ids                  = fields.Many2many("ir.attachment", "is_demande_essai_images_rel", "images", "att_id", string="Images")
+    extrait_plan_ids            = fields.Many2many("ir.attachment", "is_demande_essai_extrait_plan_rel", "extrait_plan", "att_id", string="Extrait plan / image indiquant la cote à suivre lors des essais")
     te_piece_jointe_ids         = fields.Many2many("ir.attachment", "is_demande_essai_te_pieces_jointes_rel", "te_piece_jointe", "att_id", string="Compte-rendu")
     tps_cycle_standard          = fields.Char("Tps cycle standard", tracking=True)
     tps_cycle_objectif          = fields.Char("Tps cycle objectif", tracking=True,copy=False)
