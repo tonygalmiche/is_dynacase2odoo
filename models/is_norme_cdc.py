@@ -21,7 +21,7 @@ class IsNormeCdc(models.Model):
     date_prochaine_alerte    = fields.Date(string='Date prochaine alerte',                        tracking=True)
     lieu_physique            = fields.Char(string='Lieu physique',                                tracking=True)
     lieu_info                = fields.Char(string='Lieu informatique',                            tracking=True)
-    etat                     = fields.Selection([('active', 'Active'), ('archive', 'Archive')], string='État', default='active', tracking=True, readonly=True)
+    etat                     = fields.Selection([('active', 'Active'), ('archive', 'Archivé')], string='État', compute='_compute_etat', store=True, tracking=True)
     date_verif               = fields.Date(string='Date de dernière vérification de mise à jour', tracking=True)
     duree_conserv            = fields.Char(string='Durée de conservation',                        tracking=True)
     lien_internet            = fields.Char(string='Lien vers Internet',                           tracking=True)
@@ -30,8 +30,8 @@ class IsNormeCdc(models.Model):
     dynacase_id              = fields.Integer(string="Id Dynacase", index=True, copy=False)
 
 
-    @api.onchange('active')
-    def _onchange_active(self):
+    @api.depends('active')
+    def _compute_etat(self):
         for obj in self:
             obj.etat = 'active' if obj.active else 'archive'
 
