@@ -164,6 +164,8 @@
                             <group string="8D et modification documentation">
                                 <group>
                                     <field name="doc_amdec"/>
+                                    <field name="date_prev_recotation_amdec" attrs="{'invisible': [('doc_amdec', '!=', 'OUI')], 'required': [('doc_amdec', '=', 'OUI')]}"/>
+                                    <field name="date_recotation_amdec"      attrs="{'invisible': [('doc_amdec', '!=', 'OUI')]}"/>
                                     <field name="doc_plan_surveillance"/>
                                     <field name="doc_moyen_controle"/>
                                     <field name="doc_mode_operatoire"/>

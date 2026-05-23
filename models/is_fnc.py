@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api  # type: ignore
+from odoo.exceptions import ValidationError
 
 
 class IsFNC(models.Model):
@@ -194,6 +195,8 @@ class IsFNC(models.Model):
         string="Modification AMDEC",
         tracking=True,
     )
+    date_prev_recotation_amdec = fields.Date(string="Date prévisionnelle re-cotation AMDEC", tracking=True)
+    date_recotation_amdec = fields.Date(string="Date re-cotation AMDEC", tracking=True)
     doc_plan_surveillance = fields.Selection(
         selection=[("", ""), ("OUI", "OUI"), ("NON", "NON")],
         string="Modification Plans de surveillance, fiche de contrôle",
@@ -220,6 +223,29 @@ class IsFNC(models.Model):
         tracking=True,
     )
     date_cloture = fields.Date(string="Date de clôture", tracking=True)
+
+    @api.constrains('date_cloture')
+    def _check_date_cloture(self):
+        champs_8d = [
+            ('doc_amdec', 'Modification AMDEC'),
+            ('doc_plan_surveillance', 'Modification Plans de surveillance, fiche de contrôle'),
+            ('doc_moyen_controle', 'Modification Moyens de contrôle, gabarits'),
+            ('doc_mode_operatoire', 'Modification Mode opératoire'),
+            ('doc_plans', 'Modification Plans'),
+            ('doc_autres', 'Modification Autres'),
+        ]
+        for rec in self:
+            if rec.date_cloture:
+                manquants = [label for field, label in champs_8d if not rec[field]]
+                if manquants:
+                    raise ValidationError(
+                        "Pour renseigner la Date de clôture, vous devez d'abord renseigner les champs suivants :\n- %s"
+                        % "\n- ".join(manquants)
+                    )
+                if rec.doc_amdec == 'OUI' and not rec.date_recotation_amdec:
+                    raise ValidationError(
+                        "Modification AMDEC = OUI : vous devez renseigner la Date re-cotation AMDEC avant de saisir la Date de clôture."
+                    )
 
     # ------------------------------------------------------------
     # Coûts / Bilan
