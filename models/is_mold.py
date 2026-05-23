@@ -155,6 +155,15 @@ class is_mold(models.Model):
             for doc in docs:
                 doc.active = False
 
+    def get_dimensions(self):
+        """Retourne les dimensions du moule sous la forme Largeur*Hauteur*Epaisseur.
+        Utilise les dimensions hors tout si renseignées, sinon les dimensions standard."""
+        self.ensure_one()
+        larg = self.largeur_hors_tout or self.largeur
+        haut = self.hauteur_hors_tout or self.hauteur
+        epai = self.epaisseur_hors_tout or self.epaisseur
+        return f"{larg}*{haut}*{epai}" if (larg or haut or epai) else ""
+
 
 class is_mold_dossierf_article(models.Model):
     _name        = "is.mold.dossierf.article"

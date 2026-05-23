@@ -1171,6 +1171,17 @@ class IsDemandeConsultationDemandeLine(models.Model):
     autres_fournisseurs = fields.Text("Autres fournisseurs", help="Fournisseurs hors panel, un par ligne")
     mails_autres_fournisseurs = fields.Text("Mails autres fournisseurs", help="Un email par ligne, dans le même ordre que les autres fournisseurs")
 
+    @api.onchange('mold_id')
+    def _onchange_mold_id(self):
+        for obj in self:
+            mold = obj.mold_id
+            if mold:
+                obj.dimensions_moule = mold.get_dimensions()
+                obj.poids = mold.poids
+            else:
+                obj.dimensions_moule = ""
+                obj.poids = 0.0
+
 
 class IsDemandeConsultationLine(models.Model):
     _name = 'is.demande.consultation.line'
@@ -1246,6 +1257,17 @@ class IsDemandeConsultationLine(models.Model):
                                             compute='_compute_fournisseur_retenu', store=True)
     fournisseur_retenu_name = fields.Char("Fournisseur retenu", compute='_compute_fournisseur_retenu', store=True)
     prix_retenu = fields.Float("Prix retenu", digits=(14, 4), compute='_compute_fournisseur_retenu', store=True)
+
+    @api.onchange('mold_id')
+    def _onchange_mold_id(self):
+        for obj in self:
+            mold = obj.mold_id
+            if mold:
+                obj.dimensions_moule = mold.get_dimensions()
+                obj.poids = mold.poids
+            else:
+                obj.dimensions_moule = ""
+                obj.poids = 0.0
 
     def copy_line_action(self):
         """Copie la ligne avec ses fournisseurs (copy=True par défaut sur One2many)"""

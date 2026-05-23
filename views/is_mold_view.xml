@@ -126,6 +126,13 @@
                     <field name="j_actuelle"             optional="show"/>
                     <field name="j_avancement"           optional="show"/>
                     <field name="date_fin_be"            optional="show"/>                            
+                    <field name="largeur"                optional="hide"/>
+                    <field name="hauteur"                optional="hide"/>
+                    <field name="epaisseur"              optional="hide"/>
+                    <field name="largeur_hors_tout"      optional="hide"/>
+                    <field name="hauteur_hors_tout"      optional="hide"/>
+                    <field name="epaisseur_hors_tout"    optional="hide"/>
+                    <field name="poids"                  optional="hide"/>
                     <field name="date_export"            optional="hide"/>
                     <field name="type_export"            optional="hide"/>
                     <field name="marche_ce_export"       optional="hide"/>
