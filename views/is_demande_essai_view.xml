@@ -108,7 +108,7 @@
                                         <field name="etat_stock"       required="1" attrs="{'readonly': [('ro_user','=',True)]}"/>
                                         <field name="lieu_essai_id"                 attrs="{'readonly': [('ro_user','=',True)]}"/>
                                         <field name="lieu_essai_autre"              attrs="{'readonly': [('ro_user','=',True)]}"/>
-                                        <field name="resp_essai_id"    required="1" attrs="{'readonly': [('ro_user','=',True)]}"/>
+                                        <field name="resp_essai_id"    required="1" attrs="{'readonly': [('state', 'in', ['termine', 'solde'])]}"/>
                                         <field name="resp_planning_id" required="1" attrs="{'readonly': [('ro_user','=',True)]}"/>
                                         <field name="resp_metrologie_id"            attrs="{'readonly': [('ro_user','=',True)]}"/>
                                         <field name="ident_commentaire"             attrs="{'readonly': [('ro_user','=',True)]}"/>
