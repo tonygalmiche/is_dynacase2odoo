@@ -26,7 +26,7 @@
                             <field name="sujet"/>
                             <field name="createur"/>
                             <field name="indice"/>
-                            <field name="etat"/>
+                            <field name="etat" force_save="1"/>
                         </group>
                         <group>
                             <field name="date"/>

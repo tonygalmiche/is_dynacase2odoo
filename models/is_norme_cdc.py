@@ -21,7 +21,7 @@ class IsNormeCdc(models.Model):
     date_prochaine_alerte    = fields.Date(string='Date prochaine alerte',                        tracking=True)
     lieu_physique            = fields.Char(string='Lieu physique',                                tracking=True)
     lieu_info                = fields.Char(string='Lieu informatique',                            tracking=True)
-    etat                     = fields.Char(string='État',                                         tracking=True)
+    etat                     = fields.Selection([('active', 'Active'), ('archive', 'Archive')], string='État', default='active', tracking=True, readonly=True)
     date_verif               = fields.Date(string='Date de dernière vérification de mise à jour', tracking=True)
     duree_conserv            = fields.Char(string='Durée de conservation',                        tracking=True)
     lien_internet            = fields.Char(string='Lien vers Internet',                           tracking=True)
@@ -29,6 +29,11 @@ class IsNormeCdc(models.Model):
     attachment_names         = fields.Text(string='Noms des fichiers', compute='_compute_attachment_names', store=True, tracking=True)
     dynacase_id              = fields.Integer(string="Id Dynacase", index=True, copy=False)
 
+
+    @api.onchange('active')
+    def _onchange_active(self):
+        for obj in self:
+            obj.etat = 'active' if obj.active else 'archive'
 
     @api.depends('attachment_ids.name')
     def _compute_attachment_names(self):
