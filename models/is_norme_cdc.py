@@ -14,6 +14,7 @@ class IsNormeCdc(models.Model):
     reference                = fields.Char(string='Référence', required=True,                     tracking=True)
     designation              = fields.Text(string='Désignation-Projet', required=True,            tracking=True)
     sujet                    = fields.Char(string='Sujet',                                        tracking=True)
+    project_id               = fields.Many2one('is.mold.project', 'Projet')
     createur                 = fields.Char(string='Créateur',                                     tracking=True)
     indice                   = fields.Char(string='Indice',                                       tracking=True)
     date                     = fields.Date(string='Date',                                         tracking=True)

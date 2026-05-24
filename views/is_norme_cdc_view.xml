@@ -24,6 +24,7 @@
                             <field name="reference"/>
                             <field name="designation"/>
                             <field name="sujet"/>
+                            <field name="project_id"/>
                             <field name="createur"/>
                             <field name="indice"/>
                             <field name="etat" force_save="1"/>
@@ -61,6 +62,7 @@
                 <field name="reference" optional="show"/>
                 <field name="designation" optional="show"/>
                 <field name="sujet" optional="show"/>
+                <field name="project_id" optional="show"/>
                 <field name="createur" optional="show"/>
                 <field name="indice" optional="show"/>
                 <field name="etat" optional="show"/>
@@ -94,6 +96,7 @@
             <search>
                 <field name="reference"/>
                 <field name="designation"/>
+                <field name="project_id"/>
                 <field name="niveau"/>
                 <field name="createur"/>
                 <field name="attachment_names"/>
