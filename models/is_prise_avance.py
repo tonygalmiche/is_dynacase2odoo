@@ -178,15 +178,35 @@ class is_prise_avance(models.Model):
                 obj.date_outillage_vsb = True
                 obj.date_retour_outillage_vsb = True
 
+    def _sync_date_retour_to_moule(self):
+        for obj in self:
+            if obj.num_moule_id and obj.date_retour_outillage:
+                if obj.num_moule_id.date_retour_prise_avance != obj.date_retour_outillage:
+                    obj.num_moule_id.sudo().date_retour_prise_avance = obj.date_retour_outillage
+                    url = "/web#id=%s&model=%s&view_type=form" % (obj.id, obj._name)
+                    date_str = obj.date_retour_outillage.strftime('%d/%m/%Y')
+                    msg = "Date retour prise d'avance mise à jour : <b>%s</b><br/>Source : <a href=\"%s\">Prise d'avance %s</a>" % (date_str, url, obj.display_name)
+                    obj.num_moule_id.sudo().message_post(body=msg)
+
     def vers_diffuse_action(self):
         for obj in self:
             obj.state='diffuse'
+            obj._sync_date_retour_to_moule()
             obj.envoi_mail()
 
     def vers_realise_action(self):
         for obj in self:
             obj.state='realise'
+            obj._sync_date_retour_to_moule()
             obj.envoi_mail()
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'date_retour_outillage' in vals:
+            for obj in self:
+                if obj.state in ('diffuse', 'realise'):
+                    obj._sync_date_retour_to_moule()
+        return res
 
     def vers_brouillon_action(self):
         for obj in self:
