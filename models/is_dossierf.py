@@ -16,6 +16,13 @@ class is_dossierf(models.Model):
     date_fin_be            = fields.Date(string="Date fin BE"                                        , copy=False, tracking=True)
     article_ids            = fields.One2many('is.mold.dossierf.article', 'dossierf_id'               , copy=False)
     fermeture_id           = fields.Many2one("is.fermeture.gantt", string="Fermeture planning")
+    is_modele              = fields.Boolean("Modèle", default=False, tracking=True,
+        help="Cochez cette case pour marquer ce dossier F comme un modèle.\n"
+             "Seul le groupe 'Directeur technique' peut cocher/décocher ce champ.\n"
+             "Un dossier F modèle est visible par tous les utilisateurs en lecture seule,\n"
+             "mais il ne peut être modifié, et aucun document ne peut y être créé ou modifié,\n"
+             "sauf par le groupe 'Directeur technique'.")
+    is_modele_rw           = fields.Boolean(string="Modèle rw", compute='_compute_is_modele_rw', store=False, readonly=True)
     j_actuelle_rw          = fields.Boolean(string="J Actuelle rw", compute='_compute_j_actuelle_rw', store=False, readonly=True)
 
 
@@ -79,6 +86,11 @@ class is_dossierf(models.Model):
 
 
 
+
+    def _compute_is_modele_rw(self):
+        rw = self.env.user.has_group('is_plastigray16.is_directeur_technique_group')
+        for obj in self:
+            obj.is_modele_rw = rw
 
     @api.depends('j_actuelle')
     def _compute_j_actuelle_rw(self):

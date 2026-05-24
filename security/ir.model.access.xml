@@ -2,6 +2,108 @@
 <odoo>
     <data noupdate="0">
 
+        <!-- is.mold : restriction d'accès aux moules marqués "Modèle" -->
+        <!-- Les utilisateurs standard voient tous les moules (y compris modèles) -->
+        <record id="is_mold_read_all_rule" model="ir.rule">
+            <field name="name">Moules - lecture de tous les moules pour tous</field>
+            <field name="model_id" ref="is_plastigray16.model_is_mold"/>
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="0" name="perm_create"/>
+            <field eval="0" name="perm_unlink"/>
+        </record>
+        <!-- Les utilisateurs standard ne peuvent modifier/créer/supprimer que les moules non-modèles -->
+        <record id="is_mold_write_non_modele_rule" model="ir.rule">
+            <field name="name">Moules - modification/création uniquement sur les moules non-modèles</field>
+            <field name="model_id" ref="is_plastigray16.model_is_mold"/>
+            <field name="domain_force">[('is_modele', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="0" name="perm_read"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field eval="1" name="perm_unlink"/>
+        </record>
+        <!-- Le groupe Directeur technique a tous les droits sur tous les moules -->
+        <record id="is_mold_directeur_technique_rule" model="ir.rule">
+            <field name="name">Moules - accès complet pour le Directeur technique</field>
+            <field name="model_id" ref="is_plastigray16.model_is_mold"/>
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('is_plastigray16.is_directeur_technique_group'))]"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field eval="1" name="perm_unlink"/>
+        </record>
+
+        <!-- is.doc.moule : restriction sur les documents liés aux moules "Modèle" -->
+        <!-- Les utilisateurs standard voient tous les documents -->
+        <record id="is_doc_moule_read_all_rule" model="ir.rule">
+            <field name="name">Documents moule - lecture de tous les documents pour tous</field>
+            <field name="model_id" ref="model_is_doc_moule"/>
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="0" name="perm_create"/>
+            <field eval="0" name="perm_unlink"/>
+        </record>
+        <!-- Les utilisateurs standard ne peuvent modifier/créer/supprimer que les documents liés à des moules non-modèles -->
+        <record id="is_doc_moule_write_non_modele_rule" model="ir.rule">
+            <field name="name">Documents moule - modification/création uniquement sur les documents de moules non-modèles</field>
+            <field name="model_id" ref="model_is_doc_moule"/>
+            <field name="domain_force">['&amp;', '|', ('idmoule', '=', False), ('idmoule.is_modele', '=', False), '|', ('dossierf_id', '=', False), ('dossierf_id.is_modele', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="0" name="perm_read"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field eval="1" name="perm_unlink"/>
+        </record>
+        <!-- Le groupe Directeur technique a tous les droits sur tous les documents -->
+        <record id="is_doc_moule_directeur_technique_rule" model="ir.rule">
+            <field name="name">Documents moule - accès complet pour le Directeur technique</field>
+            <field name="model_id" ref="model_is_doc_moule"/>
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('is_plastigray16.is_directeur_technique_group'))]"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field eval="1" name="perm_unlink"/>
+        </record>
+
+        <!-- is.dossierf : restriction d'accès aux dossiers F marqués "Modèle" -->
+        <record id="is_dossierf_read_all_rule" model="ir.rule">
+            <field name="name">Dossiers F - lecture de tous les dossiers pour tous</field>
+            <field name="model_id" ref="is_plastigray16.model_is_dossierf"/>
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="0" name="perm_create"/>
+            <field eval="0" name="perm_unlink"/>
+        </record>
+        <record id="is_dossierf_write_non_modele_rule" model="ir.rule">
+            <field name="name">Dossiers F - modification/création uniquement sur les dossiers non-modèles</field>
+            <field name="model_id" ref="is_plastigray16.model_is_dossierf"/>
+            <field name="domain_force">[('is_modele', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="0" name="perm_read"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field eval="1" name="perm_unlink"/>
+        </record>
+        <record id="is_dossierf_directeur_technique_rule" model="ir.rule">
+            <field name="name">Dossiers F - accès complet pour le Directeur technique</field>
+            <field name="model_id" ref="is_plastigray16.model_is_dossierf"/>
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('is_plastigray16.is_directeur_technique_group'))]"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field eval="1" name="perm_unlink"/>
+        </record>
+
         <!-- Dossier d'appel d'offre -->
         <record id="access_is_dossier_appel_offre_create"  model="ir.model.access" >
             <field name="name">Accès en création au groupe 'Responsable des ventes - Commerciaux'</field>

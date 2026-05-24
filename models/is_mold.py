@@ -38,6 +38,14 @@ class is_mold(models.Model):
     logo_rs                = fields.Char(string="Logo RS"         , compute='_compute_logo_rs'      , store=False, readonly=True)
     j_actuelle_rw          = fields.Boolean(string="J Actuelle rw", compute='_compute_j_actuelle_rw', store=False, readonly=True)
 
+    is_modele              = fields.Boolean("Modèle", default=False, tracking=True,
+        help="Cochez cette case pour marquer ce moule comme un modèle.\n"
+             "Seul le groupe 'Directeur technique' peut cocher/décocher ce champ.\n"
+             "Un moule modèle est visible par tous les utilisateurs en lecture seule,\n"
+             "mais il ne peut être modifié, et aucun document ne peut y être créé ou modifié,\n"
+             "sauf par le groupe 'Directeur technique'.")
+    is_modele_rw           = fields.Boolean(string="Modèle rw", compute='_compute_is_modele_rw', store=False, readonly=True)
+
     date_export            = fields.Date("Date d'exportation", tracking=True)
     type_export            = fields.Selection(TYPE_EXPORT, string="Type d'exportation", tracking=True)
     marche_ce_export       = fields.Selection(OUI_NON, string="Outillage pour marché CE", tracking=True)
@@ -109,6 +117,11 @@ class is_mold(models.Model):
             if admin:
                 rw=True
             obj.j_actuelle_rw = rw
+
+    def _compute_is_modele_rw(self):
+        rw = self.env.user.has_group('is_plastigray16.is_directeur_technique_group')
+        for obj in self:
+            obj.is_modele_rw = rw
 
 
     @api.depends('revue_contrat_id')

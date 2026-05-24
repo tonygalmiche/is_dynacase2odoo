@@ -644,7 +644,26 @@ class IsDocMoule(models.Model):
             obj.site_ids = site_ids
 
 
+    def _check_idmoule_modele(self, vals):
+        """Empêche un utilisateur non-Directeur technique d'associer un moule ou dossier F modèle."""
+        if not self.env.user.has_group('is_plastigray16.is_directeur_technique_group'):
+            if 'idmoule' in vals and vals['idmoule']:
+                mold = self.env['is.mold'].browse(vals['idmoule'])
+                if mold.is_modele:
+                    raise UserError(_("Vous ne pouvez pas associer le moule '%s' car il est marqué comme 'Modèle'. Cette action est réservée au groupe 'Directeur technique'.") % mold.name)
+            if 'dossierf_id' in vals and vals['dossierf_id']:
+                dossierf = self.env['is.dossierf'].browse(vals['dossierf_id'])
+                if dossierf.is_modele:
+                    raise UserError(_("Vous ne pouvez pas associer le dossier F '%s' car il est marqué comme 'Modèle'. Cette action est réservée au groupe 'Directeur technique'.") % dossierf.name)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            self._check_idmoule_modele(vals)
+        return super().create(vals_list)
+
     def write(self,vals):
+        self._check_idmoule_modele(vals)
         nb=len(self)
         if nb==1:
             mem_date_debut_gantt = self.date_debut_gantt

@@ -46,6 +46,8 @@
                     </header>
                 </sheet>
                 <field name="name" position="after">
+                    <field name="is_modele_rw" invisible="1"/>
+                    <field name="is_modele" attrs="{'readonly': [('is_modele_rw', '=', False)]}"/>
                     <field name="dossier_appel_offre_id"/>
                 </field>
                 <group name="identification" position="after">
@@ -86,6 +88,7 @@
                     <field name="image" optional="show" widget="image" options='{"size": [80, 80]}'/>                            
                 </field>
                 <field name="is_database_id" position="before">
+                    <field name="is_modele"              optional="show" readonly="1"/>
                     <field name="fermeture_id"           optional="hide" widget="many2one_clickable"/>
                     <field name="dossier_appel_offre_id" optional="hide" widget="many2one_clickable"/>
                     <field name="revue_contrat_id"       optional="hide" widget="many2one_clickable"/>
@@ -112,6 +115,7 @@
             <field name="arch" type="xml">
                 <field name="is_database_id" position="before">
                     <field name="j_actuelle"/>
+                    <filter string="Modèles" name="modeles_dossierf" domain="[('is_modele','=',True)]" groups="is_plastigray16.is_directeur_technique_group"/>
                     <filter string="Dossiers F BE en cours" name="dossierf_be_en_cours" domain="[('date_fin_be','=',False)]"/>
                 </field>
             </field>
