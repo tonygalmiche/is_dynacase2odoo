@@ -365,13 +365,13 @@ class is_dossier_article(models.Model):
         dossiers_avec_code = dossiers.filtered(lambda d: d.code_pg)
         total = len(dossiers_avec_code)
         compteur = 0
-        gestionnaires_exclus = ['04', '07', '12', '14']
+        #gestionnaires_exclus = ['04', '07', '12', '14']
         for dossier in dossiers_avec_code:
             compteur += 1
             # Recherche de tous les articles avec code_pg = name, en excluant les gestionnaires 04, 07, 12 et 14
             articles = self.env['is.article'].search([
                 ('name', '=', dossier.code_pg),
-                ('gestionnaire', 'not in', gestionnaires_exclus)
+                #('gestionnaire', 'not in', gestionnaires_exclus)
             ])
             if articles:
                 # Récupération des sites (database_id) de tous les articles trouvés
