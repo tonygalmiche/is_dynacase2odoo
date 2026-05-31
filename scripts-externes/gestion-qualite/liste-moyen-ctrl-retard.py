@@ -76,7 +76,7 @@ def get_sites(db, uid, models):
             [[["id", "in", site["moyen_controle_user_ids"]]]],
             {"fields": ["email"]},
         )
-        dest_emails = ";".join(u["email"] for u in dest_users if u.get("email"))
+        dest_emails = ",".join(u["email"] for u in dest_users if u.get("email"))
         dir_emails = ""
         if site.get("directeur_site_ids"):
             dir_users = models.execute_kw(
@@ -85,7 +85,7 @@ def get_sites(db, uid, models):
                 [[["id", "in", site["directeur_site_ids"]]]],
                 {"fields": ["email"]},
             )
-            dir_emails = ";".join(u["email"] for u in dir_users if u.get("email"))
+            dir_emails = ",".join(u["email"] for u in dir_users if u.get("email"))
         if dest_emails:
             result.append({
                 "name":       site["name"],
@@ -232,7 +232,7 @@ def send_email(db, uid, models, site_name, dest_email, cc_email, subject, body, 
         "email_from":  ROBOT_EMAIL,
         "email_to":    dest_email,
         "state":       "outgoing",
-        "auto_delete": True,
+        "auto_delete": False,
     }
     if MAIL_TEST_CC:
         mail_vals["email_cc"] = MAIL_TEST_CC
