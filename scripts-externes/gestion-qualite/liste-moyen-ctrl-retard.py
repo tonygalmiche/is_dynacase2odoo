@@ -131,9 +131,9 @@ def get_records_en_retard(db, uid, models, odoo_model, site_name):
         # Date de fin d'utilisation = Date prochain contrôle + 10% périodicité
         date_fin = d1 + timedelta(days=avance_jours)
         # Nombre de jours avant fin d'utilisation :
-        #   si périodicité <= 12 mois : Date de fin d'utilisation - 10% périodicité par rapport à aujourd'hui
-        #   si périodicité > 12 mois  : Date de fin d'utilisation - 60 jours par rapport à aujourd'hui
-        if p <= 12:
+        #   si périodicité < 12 mois   : Date de fin d'utilisation - 10% périodicité par rapport à aujourd'hui
+        #   si périodicité >= 12 mois  : Date de fin d'utilisation - 60 jours par rapport à aujourd'hui
+        if p < 12:
             d_alert = date_fin - timedelta(days=avance_jours)
         else:
             d_alert = date_fin - timedelta(days=60)
@@ -177,8 +177,8 @@ def build_html_body(db, uid, models, site_name):
                 "<th style='border:1px solid #cccccc;padding:4px;text-align:left'>Code PG</th>"
                 "<th style='border:1px solid #cccccc;padding:4px;text-align:left'>Désignation</th>"
                 "<th style='border:1px solid #cccccc;padding:4px;text-align:center'>Périodicité</th>"
-                "<th style='border:1px solid #cccccc;padding:4px;text-align:center'>Date prochain<br/>contrôle</th>"
-                "<th style='border:1px solid #cccccc;padding:4px;text-align:center'>Date prochain contrôle<br/>+ 10 % de la périodicité</th>"
+                #"<th style='border:1px solid #cccccc;padding:4px;text-align:center'>Date prochain<br/>contrôle</th>"
+                "<th style='border:1px solid #cccccc;padding:4px;text-align:center'>Date de fin<br/>d'utilisation</th>"
                 "<th style='border:1px solid #cccccc;padding:4px;text-align:right'>Nombre de jours avant<br/>fin d'utilisation *</th>"
                 "<th style='border:1px solid #cccccc;padding:4px;text-align:center'>Date de fin<br/>d'utilisation *</th>"
                 "</tr>\n"
@@ -195,7 +195,7 @@ def build_html_body(db, uid, models, site_name):
                     f"<td style='border:1px solid #cccccc;padding:4px'><a href='{url}'>{code_pg}</a></td>"
                     f"<td style='border:1px solid #cccccc;padding:4px;font-size:0.9em'>{designation}</td>"
                     f"<td style='border:1px solid #cccccc;padding:4px;text-align:center'>{periodicite}</td>"
-                    f"<td style='border:1px solid #cccccc;padding:4px;text-align:center'>{datetime.strptime(rec['date_prochain_controle'], '%Y-%m-%d').strftime('%d/%m/%Y')}</td>"
+                    #f"<td style='border:1px solid #cccccc;padding:4px;text-align:center'>{datetime.strptime(rec['date_prochain_controle'], '%Y-%m-%d').strftime('%d/%m/%Y')}</td>"
                     f"<td style='border:1px solid #cccccc;padding:4px;text-align:center'>{rec['_date_fin_fmt']}</td>"
                     f"<td style='border:1px solid #cccccc;padding:4px;text-align:right;color:{'red' if rec['_nb_jours'] < 0 else 'black'}'>{rec['_nb_jours']}</td>"
                     f"<td style='border:1px solid #cccccc;padding:4px;text-align:center;color:{'red' if rec['_nb_jours'] < 0 else 'black'}'>{rec['_d_alert_fmt']}</td>"
