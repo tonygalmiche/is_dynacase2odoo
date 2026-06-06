@@ -252,7 +252,7 @@ class is_facture_outillage_ligne(models.Model):
                         montant_ttc = row['amount_total_signed']
 
                         #** Recherche Date Facture dans IsCegidEcriture ****************************
-                        ecriture = self.env['is.cegid.ecriture'].search([
+                        ecriture = self.env['is.cegid.ecriture'].sudo().search([
                             ('e_general'   , '=', '411000'),
                             ('e_journal'   , '=', 'VTE'),
                             ('e_refinterne', '=', num_facture),
@@ -262,7 +262,7 @@ class is_facture_outillage_ligne(models.Model):
                         #**************************************************************************
 
                         #** Recherche Date Réglement dans IsCegidEcriture *************************
-                        ecriture_regl = self.env['is.cegid.ecriture'].search([
+                        ecriture_regl = self.env['is.cegid.ecriture'].sudo().search([
                             ('e_general'        , '=', '411000'),
                             ('e_journal'        , '!=', 'VTE'),
                             ('e_refinterne'     , '=', num_facture),
@@ -273,7 +273,7 @@ class is_facture_outillage_ligne(models.Model):
                         #**************************************************************************
 
                         #** Montant payé dans IsCegidEcriture **************************************
-                        ecritures_paye = self.env['is.cegid.ecriture'].search([
+                        ecritures_paye = self.env['is.cegid.ecriture'].sudo().search([
                             ('e_journal'    , '!=', 'VTE'),
                             ('e_refinterne' , '=', num_facture),
                             ('e_auxiliaire' , '>=', 'C500000'),
@@ -284,7 +284,7 @@ class is_facture_outillage_ligne(models.Model):
 
 
                         #** Recherche Date Echéance dans IsCegidEcriture **************************
-                        ecriture_ech = self.env['is.cegid.ecriture'].search([
+                        ecriture_ech = self.env['is.cegid.ecriture'].sudo().search([
                             ('e_general'   , '=', '411000'),
                             ('e_journal'   , '!=', 'VTE'),
                             ('e_refinterne', '=', num_facture),

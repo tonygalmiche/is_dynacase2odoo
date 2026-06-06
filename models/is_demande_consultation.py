@@ -14,7 +14,7 @@ class IsDemandeConsultation(models.Model):
     _name = 'is.demande.consultation'
     _description = "Demande de consultation"
     _inherit = ['mail.thread']
-    _order = 'name desc'
+    _order = 'id desc'
 
     @api.depends('type_consultation')
     def _compute_prefix(self):
@@ -161,6 +161,8 @@ class IsDemandeConsultation(models.Model):
     adresse_livraison_id = fields.Many2one('res.partner', "Adresse de livraison", tracking=True,
                                            domain=[('is_company', '=', True),('supplier', '=', True)],
                                            help="Adresse de livraison si existante")
+    date_livraison_max_souhaitee = fields.Date("Date de livraison maximale souhaitée", tracking=True,
+                                               help="Spécifique à DC-EXPORT")
     date_dms = fields.Date("Date DMS", tracking=True, help="Date de mise à disposition")
     incoterm_id = fields.Many2one('account.incoterms', "Incoterm", tracking=True,
                                   help="DAP à privilégier")
@@ -182,6 +184,9 @@ class IsDemandeConsultation(models.Model):
     
     # Lignes saisie commerciale (onglet Demande)
     demande_line_ids = fields.One2many('is.demande.consultation.demande.line', 'demande_id', string="Lignes demande", copy=True)
+    
+    # Champs spécifiques DC-EXPORT
+    packaging_list = fields.Text("Packaging list", tracking=True, help="Zone libre pour la liste d'emballage (DC-EXPORT uniquement)")
     
     # Champs techniques pour visibilité des boutons
     vers_brouillon_vsb = fields.Boolean('Champ technique vers_brouillon_vsb', compute='_compute_vsb', store=False)
@@ -1027,19 +1032,10 @@ class IsDemandeConsultation(models.Model):
                                 <td style="border: 1px solid #ccc; padding: 5px;"></td>
                             </tr>
                         """
-                    # Informations transport
-                    adresse_enlevement = obj.adresse_enlevement_id.name if obj.adresse_enlevement_id else ''
-                    adresse_livraison = obj.adresse_livraison_id.name if obj.adresse_livraison_id else ''
-                    incoterm = obj.incoterm_id.code if obj.incoterm_id else ''
                     body_html = f"""
                         <p>Madame, Monsieur,</p>
                         <p>Dans le cadre d'une consultation prix, nous vous serions reconnaissant de nous 
                         transmettre votre meilleure offre de prix pour le transport suivant :</p>
-                        <p><strong>Adresse d'enlèvement :</strong> {adresse_enlevement}</p>
-                        <p><strong>Adresse de livraison :</strong> {adresse_livraison}</p>
-                        <p><strong>Date DMS :</strong> {obj.date_dms.strftime('%d/%m/%Y') if obj.date_dms else ''}</p>
-                        <p><strong>Incoterm :</strong> {incoterm}</p>
-                        <p><strong>Lieu :</strong> {obj.lieu or ''}</p>
                         <table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
                             <tr style="background-color: #f0f0f0;">
                                 <th style="border: 1px solid #ccc; padding: 5px;">Colisage</th>
@@ -1100,39 +1096,39 @@ class IsDemandeConsultation(models.Model):
 
                 if obj.type_consultation == 'dc_export':
                     for line in lignes:
-                        disponibilite_txt = dict(line._fields['disponibilite'].selection).get(line.disponibilite, '') if line.disponibilite else ''
-                        date_reception_txt = line.date_reception_dispo.strftime('%d/%m/%Y') if line.date_reception_dispo else ''
-                        dispo_txt = f"{disponibilite_txt} ({date_reception_txt})" if date_reception_txt else disponibilite_txt
                         lignes_html += f"""
                             <tr>
-                                <td style="border: 1px solid #ccc; padding: 5px;">{line.dam or ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.article_id.name if line.article_id else ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.designation or ''}</td>
-                                <td style="border: 1px solid #ccc; padding: 5px;">{line.couleur_export or ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.quantite_export or ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.uom_export_id.name if line.uom_export_id else ''}</td>
-                                <td style="border: 1px solid #ccc; padding: 5px;">{dispo_txt}</td>
-                                <td style="border: 1px solid #ccc; padding: 5px;"></td>
                             </tr>
                         """
+                   # Informations transport
+                    adresse_enlevement = obj.adresse_enlevement_id.name if obj.adresse_enlevement_id else ''
+                    adresse_livraison = obj.adresse_livraison_id.name if obj.adresse_livraison_id else ''
+                    incoterm = obj.incoterm_id.code if obj.incoterm_id else ''
+                    mode_transport_txt = dict(self._fields['mode_transport'].selection).get(obj.mode_transport, '') if obj.mode_transport else ''
                     body_html = f"""
                         <p>Madame, Monsieur,</p>
                         <p>Dans le cadre d'une consultation prix, nous vous serions reconnaissant de nous 
                         transmettre votre meilleure offre de prix pour l'export suivant :</p>
+                        <p><strong>Adresse d'enlèvement :</strong> {adresse_enlevement}</p>
+                        <p><strong>Adresse de livraison :</strong> {adresse_livraison}</p>
+                        <p><strong>Date de livraison maximale souhaitée :</strong> {obj.date_dms.strftime('%d/%m/%Y') if obj.date_dms else ''}</p>
+                        <p><strong>Incoterm :</strong> {incoterm}</p>
+                        <p><strong>Lieu :</strong> {obj.lieu or ''}</p>
+                        <p><strong>Mode de transport :</strong> {mode_transport_txt}</p>
                         <table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
                             <tr style="background-color: #f0f0f0;">
-                                <th style="border: 1px solid #ccc; padding: 5px;">N° de DAM</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Code PG</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Désignation</th>
-                                <th style="border: 1px solid #ccc; padding: 5px;">Couleur</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Quantité</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Unité</th>
-                                <th style="border: 1px solid #ccc; padding: 5px;">Disponibilité</th>
-                                <th style="border: 1px solid #ccc; padding: 5px;">Prix unitaire (€)</th>
                             </tr>
                             {lignes_html}
                         </table>
-                        <p><strong>Date de réponse souhaitée :</strong> {obj.date_reponse_souhaitee.strftime('%d/%m/%Y') if obj.date_reponse_souhaitee else ''}</p>
+                        <p><strong>Date de livraison souhaitée :</strong> {obj.date_livraison_max_souhaitee.strftime('%d/%m/%Y') if obj.date_livraison_max_souhaitee else ''}</p>
                         <p>Cordialement,</p>
                         <p>{user.name}</p>
                     """

@@ -240,6 +240,7 @@
                             <group string="Adresses">
                                 <field name="adresse_enlevement_id" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                 <field name="adresse_livraison_id" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                                <field name="date_livraison_max_souhaitee" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                             </group>
                             <group string="Conditions export">
                                 <field name="incoterm_id" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
@@ -303,6 +304,9 @@
                                         <field name="mails_autres_fournisseurs" attrs="{'column_invisible': [('parent.state', 'not in', ['transmis_achat'])]}"/>
                                     </tree>
                                 </field>
+                                <group>
+                                    <field name="packaging_list" attrs="{'invisible': [('type_consultation', '!=', 'dc_export')], 'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                                </group>
                             </page>
                             <page string="Lignes" name="lignes" attrs="{'invisible': ['|', ('state', 'in', ['brouillon', 'validation_technique']), ('line_ids', '=', [])]}">
                                 <field name="type_consultation" invisible="1"/>
