@@ -95,56 +95,90 @@ def get_sites(db, uid, models):
     return result
 
 
-# ---------------------------------------------------------------------------
-# Récupération des enregistrements en retard pour un modèle et un site
-# ---------------------------------------------------------------------------
+
+
+# # ---------------------------------------------------------------------------
+# # Récupération des enregistrements en retard pour un modèle et un site
+# # ---------------------------------------------------------------------------
+
+# def get_records_en_retard(db, uid, models, odoo_model, site_name):
+#     """
+#     Retourne les enregistrements dont la date prochain contrôle - 10% de la
+#     périodicité est dépassée aujourd'hui.
+#     """
+#     domain = [
+#         ("date_prochain_controle", "!=", False),
+#         ("periodicite", "!=", False),
+#         ("site_id.name", "=", site_name),
+#     ]
+#     records = models.execute_kw(
+#         db, uid, ODOO_PASSWORD,
+#         odoo_model, "search_read",
+#         [domain],
+#         {"fields": ["id", "code_pg", "designation", "date_prochain_controle", "periodicite", "site_id"],
+#          "order": "date_prochain_controle asc"},
+#     )
+
+#     today = date.today()
+#     results = []
+#     for rec in records:
+#         date_prochain_controle = rec.get("date_prochain_controle")
+#         periodicite            = rec.get("periodicite") or 0
+
+#         #d1 = datetime.strptime(d1_str, "%Y-%m-%d").date()
+        
+#         #p = float(periodicite)
+#         #avance_jours = int((p / 10) * 30)
+#         # Date de fin d'utilisation = Date prochain contrôle + 10% périodicité
+#         #date_fin = d1 + timedelta(days=avance_jours)
+#         # Nombre de jours avant fin d'utilisation :
+#         #   si périodicité < 12 mois   : Date de fin d'utilisation - 10% périodicité par rapport à aujourd'hui
+#         #   si périodicité >= 12 mois  : Date de fin d'utilisation - 60 jours par rapport à aujourd'hui
+#         #if p < 12:
+#         #    date_alert = date_fin - timedelta(days=avance_jours)
+#         #else:
+#         #    date_alert = date_fin - timedelta(days=60)
+
+#         date_alert = date_prochain_controle - timedelta(days=60)
+#         nb_jours = (date_prochain_controle - today).days
+
+#         if nb_jours < 60:
+#             rec["date_prochain_controle"] = date_prochain_controle.strftime("%d/%m/%Y")
+#             rec["date_alert"]             = date_alert.strftime("%d/%m/%Y")
+#             rec["nb_jours"]               = nb_jours
+#             results.append(rec)
+
+#     return results
+
 
 def get_records_en_retard(db, uid, models, odoo_model, site_name):
-    """
-    Retourne les enregistrements dont la date prochain contrôle - 10% de la
-    périodicité est dépassée aujourd'hui.
-    """
     domain = [
         ("date_prochain_controle", "!=", False),
+        ("periodicite", "!=", False),
         ("site_id.name", "=", site_name),
     ]
     records = models.execute_kw(
         db, uid, ODOO_PASSWORD,
         odoo_model, "search_read",
         [domain],
-        {"fields": ["id", "code_pg", "designation",
-                    "date_prochain_controle", "periodicite", "site_id"],
-         "order": "date_prochain_controle asc"},
+        {"fields": ["id", "code_pg", "designation", "date_prochain_controle", "periodicite", "site_id"],
+        "order": "date_prochain_controle asc"},
     )
 
     today = date.today()
     results = []
     for rec in records:
-        d1_str = rec.get("date_prochain_controle")
-        periodicite = rec.get("periodicite") or 0
-        if not d1_str or not periodicite:
-            continue
-
-        d1 = datetime.strptime(d1_str, "%Y-%m-%d").date()
-        p = float(periodicite)
-        avance_jours = int((p / 10) * 30)
-        # Date de fin d'utilisation = Date prochain contrôle + 10% périodicité
-        date_fin = d1 + timedelta(days=avance_jours)
-        # Nombre de jours avant fin d'utilisation :
-        #   si périodicité < 12 mois   : Date de fin d'utilisation - 10% périodicité par rapport à aujourd'hui
-        #   si périodicité >= 12 mois  : Date de fin d'utilisation - 60 jours par rapport à aujourd'hui
-        if p < 12:
-            d_alert = date_fin - timedelta(days=avance_jours)
-        else:
-            d_alert = date_fin - timedelta(days=60)
-        nb_jours = (d_alert - today).days
-
+        d1  = rec.get("date_prochain_controle")
+        date_prochain_controle = datetime.strptime(d1, "%Y-%m-%d").date()
+        nb_jours = (date_prochain_controle - today).days
+        nb_jours_color='white'
+        if nb_jours<0:
+            nb_jours_color='red'
         if nb_jours < 60:
-            rec["_date_fin_fmt"]   = date_fin.strftime("%d/%m/%Y")
-            rec["_d_alert_fmt"]   = d_alert.strftime("%d/%m/%Y")
-            rec["_nb_jours"]      = nb_jours
+            rec["date_prochain_controle_fmt"] = date_prochain_controle.strftime("%d/%m/%Y")
+            rec["nb_jours"]                   = nb_jours
+            rec["nb_jours_color"]             = nb_jours_color
             results.append(rec)
-
     return results
 
 
@@ -160,8 +194,10 @@ def build_html_body(db, uid, models, site_name):
     sections_html = ""
     for odoo_model, titre in TABLES.items():
         records = get_records_en_retard(db, uid, models, odoo_model, site_name)
+
+
         ct += len(records)
-        if any(r["_nb_jours"] < 0 for r in records):
+        if any(r["nb_jours"] < 0 for r in records):
             has_retard = True
 
         sections_html += f"<div style='font-size:1.2em;font-weight:bold;margin-top:12px'>{titre}</div>\n"
@@ -171,16 +207,14 @@ def build_html_body(db, uid, models, site_name):
             sections_html += "<div style='color:red'>Aucun résultat !</div>\n"
         else:
             sections_html += (
-                "<table style='width:980px;border-spacing:0;border-collapse:collapse;border:1px solid #cccccc'>\n"
+                "<table style='width:1200px;border-spacing:0;border-collapse:collapse;border:1px solid #cccccc'>\n"
                 "<tr style='background-color:#f2f2f2'>"
-                "<th style='border:1px solid #cccccc;padding:4px;text-align:center'>Site</th>"
-                "<th style='border:1px solid #cccccc;padding:4px;text-align:left'>Code PG</th>"
-                "<th style='border:1px solid #cccccc;padding:4px;text-align:left'>Désignation</th>"
-                "<th style='border:1px solid #cccccc;padding:4px;text-align:center'>Périodicité</th>"
-                #"<th style='border:1px solid #cccccc;padding:4px;text-align:center'>Date prochain<br/>contrôle</th>"
-                "<th style='border:1px solid #cccccc;padding:4px;text-align:center'>Date de fin<br/>d'utilisation</th>"
-                "<th style='border:1px solid #cccccc;padding:4px;text-align:right'>Nombre de jours avant<br/>fin d'utilisation *</th>"
-                "<th style='border:1px solid #cccccc;padding:4px;text-align:center'>Date de fin<br/>d'utilisation *</th>"
+                "<th style='border:1px solid #cccccc;padding:2px;text-align:center'>Site</th>"
+                "<th style='border:1px solid #cccccc;padding:2px;text-align:left'>Code PG</th>"
+                "<th style='border:1px solid #cccccc;padding:2px;text-align:left'>Désignation</th>"
+                "<th style='border:1px solid #cccccc;padding:2px;text-align:center'>Périodicité<br/>en mois</th>"
+                "<th style='border:1px solid #cccccc;padding:2px;text-align:center'>Date prochain<br/>contrôle</th>"
+                "<th style='border:1px solid #cccccc;padding:2px;text-align:right'>Nb jours avant<br/>prochain contrôle</th>"
                 "</tr>\n"
             )
             for rec in records:
@@ -188,17 +222,16 @@ def build_html_body(db, uid, models, site_name):
                 code_pg     = rec.get("code_pg") or ""
                 designation = rec.get("designation") or ""
                 periodicite = rec.get("periodicite") or ""
+
                 url = f"{odoo_url}/web#id={rec['id']}&view_type=form&model={odoo_model}"
                 sections_html += (
                     "<tr>"
-                    f"<td style='border:1px solid #cccccc;padding:4px;text-align:center'>{site_label}</td>"
+                    f"<td style='border:1px solid #cccccc;padding:2px;text-align:center'>{site_label}</td>"
                     f"<td style='border:1px solid #cccccc;padding:4px'><a href='{url}'>{code_pg}</a></td>"
-                    f"<td style='border:1px solid #cccccc;padding:4px;font-size:0.9em'>{designation}</td>"
-                    f"<td style='border:1px solid #cccccc;padding:4px;text-align:center'>{periodicite}</td>"
-                    #f"<td style='border:1px solid #cccccc;padding:4px;text-align:center'>{datetime.strptime(rec['date_prochain_controle'], '%Y-%m-%d').strftime('%d/%m/%Y')}</td>"
-                    f"<td style='border:1px solid #cccccc;padding:4px;text-align:center'>{rec['_date_fin_fmt']}</td>"
-                    f"<td style='border:1px solid #cccccc;padding:4px;text-align:right;color:{'red' if rec['_nb_jours'] < 0 else 'black'}'>{rec['_nb_jours']}</td>"
-                    f"<td style='border:1px solid #cccccc;padding:4px;text-align:center;color:{'red' if rec['_nb_jours'] < 0 else 'black'}'>{rec['_d_alert_fmt']}</td>"
+                    f"<td style='border:1px solid #cccccc;padding:2px;font-size:0.9em'>{designation}</td>"
+                    f"<td style='border:1px solid #cccccc;padding:2px;text-align:center'>{periodicite}</td>"
+                    f"<td style='border:1px solid #cccccc;padding:2px;text-align:center'>{rec['date_prochain_controle_fmt']}</td>"
+                    f"<td style='border:1px solid #cccccc;padding:2px;text-align:right;background-color:{rec['nb_jours_color']}'>{rec['nb_jours']}</td>"
                     "</tr>\n"
                 )
             sections_html += "</table><br/><br/>\n"
@@ -209,13 +242,6 @@ def build_html_body(db, uid, models, site_name):
 pour le site <strong>{site_name}</strong> :</p>
 
 {sections_html}
-<p>
-* Nombre de jours avant fin d'utilisation :<br/>
-- Si périodicité &lt; 12 mois : Date de fin d'utilisation - 10 % de la périodicité par rapport à aujourd'hui<br/>
-- Si périodicité &gt;= 12 mois : Date de fin d'utilisation - 60 jours par rapport à aujourd'hui<br/>
-<br/>
-Alerte si Nombre de jours &lt; 60
-</p>
 </body></html>"""
 
     return body, ct, has_retard
@@ -234,10 +260,17 @@ def send_email(db, uid, models, site_name, dest_email, cc_email, subject, body, 
         "state":       "outgoing",
         "auto_delete": False,
     }
+    if MAIL_TEST:
+        mail_vals["email_to"] = MAIL_TEST
+    elif dest_email:
+        mail_vals["email_to"] = dest_email
     if MAIL_TEST_CC:
         mail_vals["email_cc"] = MAIL_TEST_CC
     elif cc_email:
         mail_vals["email_cc"] = cc_email
+
+
+
 
     mail_id = models.execute_kw(
         db, uid, ODOO_PASSWORD,
@@ -252,7 +285,7 @@ def send_email(db, uid, models, site_name, dest_email, cc_email, subject, body, 
     suffix = f" [TEST]" if MAIL_TEST else ""
     cc_info = f" | CC : {mail_vals.get('email_cc', '')}" if mail_vals.get("email_cc") else ""
     retard_info = " | Retard détecté" if has_retard and cc_email else ""
-    print(f"  Site {site_name} — {ct} enregistrement(s){retard_info} → {dest_email}{cc_info}{suffix} [OK]")
+    print(f"  Site {site_name} — {ct} enregistrement(s){retard_info} → {dest_email}{cc_info}{suffix} [has_retard={has_retard}]")
 
 
 # ---------------------------------------------------------------------------
