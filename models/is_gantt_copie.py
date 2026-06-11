@@ -201,7 +201,6 @@ class IsGanttCopie(models.Model):
                     if obj.dst_idmoule:
                         if obj.dst_idmoule.moule_a_version=='oui':
                             moule_a_version = True
-                        #print(obj.dst_idmoule.name, obj.dst_idmoule.moule_a_version)
 
                     for src_doc in src_docs:
 
@@ -212,7 +211,6 @@ class IsGanttCopie(models.Model):
                             if src_doc.j_prevue and obj.j_actuelle and src_doc.j_prevue<obj.j_actuelle:
                                 test=False
 
-                        #print(src_doc, src_doc.param_project_id.moule_a_version, src_doc.param_project_id.ppr_famille)
                         if src_doc.param_project_id.moule_a_version==True and moule_a_version==False:
                             test=False
 
@@ -233,13 +231,9 @@ class IsGanttCopie(models.Model):
                                             break
                                 #** Création du doc si non trouvé avant ***************
                                 if not copie:
-                                    copie=src_doc.copy()
-                                    copie.idresp = src_doc.idresp.id
                                     dst_name_field =  'dst_%s'%name_field
                                     dst_dossier_id = getattr(obj,dst_name_field).id
-                                    setattr(copie, name_field, dst_dossier_id)
-
-
+                                    copie=src_doc.copy(default={name_field: dst_dossier_id})
                                 vals={
                                     'section_id'      : src_doc.section_id.id,
                                     'sequence'        : src_doc.sequence,
@@ -252,6 +246,7 @@ class IsGanttCopie(models.Model):
                                     'date_fin_gantt'  : src_doc.date_fin_gantt,
                                     'origine_copie_id': src_doc.id,
                                     'dependance_id'   : src_doc.dependance_id.id,
+                                    'idresp'          : src_doc.idresp.id,
                                 }
                                 copie.write(vals)
                                 copie._compute_idproject_moule_dossierf()
