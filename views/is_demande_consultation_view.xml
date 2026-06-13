@@ -199,13 +199,20 @@
                                 <field name="client_id" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                 <field name="prospect" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                 <field name="confidentialite" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
-                                <field name="secteur_application" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                                <field name="industry_id" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                             </group>
                             <group string="Dates" attrs="{'invisible': [('type_consultation', 'in', ['dc_chine', 'dc_export'])]}">
                                 <field name="date_retour_consultation" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                 <field name="date_reponse_souhaitee" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                 <field name="date_sop" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                 <field name="duree_vie" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                            </group>
+                        </group>
+                        <!-- Groupe Conditions pour DC-MAT et DC-EMB -->
+                        <group attrs="{'invisible': [('type_consultation', 'not in', ['dc_mat', 'dc_emb'])]}">
+                            <group string="Conditions">
+                                <field name="incoterm_id" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                                <field name="lieu_id" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                             </group>
                         </group>
                         <!-- Groupe Transport pour DC-PORT -->
@@ -455,23 +462,28 @@
             <field name="model">is.demande.consultation</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree decoration-muted="state in ['solde','annule']" decoration-danger="state=='transmis_achat'" decoration-warning="state=='consultation_en_cours'" decoration-info="state=='validation_technique'">
+                <tree>
                     <field name="name"/>
                     <field name="type_consultation"/>
-                    <field name="demandeur_id"/>
-                    <field name="date_creation"/>
-                    <field name="validateur_technique_id"/>
+                    <field name="demandeur_id" optional="show"/>
+                    <field name="date_creation" optional="show"/>
+                    <field name="validateur_technique_id" optional="show"/>
                     <field name="acheteur_id"/>
-                    <field name="dossier_ao_id" widget="many2one_clickable"/>
-                    <field name="mold_id" widget="many2one_clickable"/>
-                    <field name="dossierf_id" widget="many2one_clickable"/>
-                    <field name="client_id" widget="many2one_clickable"/>
-                    <field name="prospect"/>
-                    <field name="confidentialite"/>
-                    <field name="date_retour_consultation"/>
-                    <field name="date_reponse_souhaitee"/>
-                    <field name="date_sop"/>
-                    <field name="state"/>
+                    <field name="dossier_ao_id" widget="many2one_clickable" optional="show"/>
+                    <field name="mold_id" widget="many2one_clickable" optional="show"/>
+                    <field name="dossierf_id" widget="many2one_clickable" optional="show"/>
+                    <field name="client_id" widget="many2one_clickable" optional="show"/>
+                    <field name="prospect" optional="show"/>
+                    <field name="confidentialite" optional="show"/>
+                    <field name="date_retour_consultation" optional="show"/>
+                    <field name="date_reponse_souhaitee" optional="show"/>
+                    <field name="date_sop" optional="show"/>
+                    <field name="state" widget="badge" 
+                        decoration-info="state == 'brouillon'" 
+                        decoration-danger="state == 'validation_technique'" 
+                        decoration-warning="state == 'transmis_achat'" 
+                        decoration-success="state == 'consultation_en_cours'" 
+                        decoration-muted="state in ['solde', 'annule']"/>
                 </tree>
             </field>
         </record>

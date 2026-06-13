@@ -115,7 +115,7 @@ class IsDemandeConsultation(models.Model):
         ('dc_port', 'Transport (DC-PORT)'),
         ('dc_chine', 'Import Chine (DC-CHINE)'),
         ('dc_export', 'Export Chine (DC-CHINE)'),
-    ], string="Type de consultation", required=True, default='dc_mat', tracking=True)
+    ], string="Type de consultation", required=True, tracking=True)
     prefix = fields.Char("Préfixe", compute='_compute_prefix', store=False)
     
     # Utilisateurs
@@ -141,7 +141,7 @@ class IsDemandeConsultation(models.Model):
     ], string="Confidentialité sur client", tracking=True, default='non')
     
     # Secteur
-    secteur_application = fields.Char("Secteur / Application", tracking=True)
+    industry_id = fields.Many2one('res.partner.industry', "Secteur d'activité", tracking=True)
     
     # Dates
     date_retour_consultation = fields.Date("Date souhaitée pour le retour de consultation", tracking=True,
@@ -167,6 +167,9 @@ class IsDemandeConsultation(models.Model):
     incoterm_id = fields.Many2one('account.incoterms', "Incoterm", tracking=True,
                                   help="DAP à privilégier")
     lieu = fields.Char("Lieu", tracking=True)
+    lieu_id = fields.Many2one('res.partner', "Lieu (Fournisseur)", tracking=True,
+                              domain=[('is_company', '=', True), ('supplier', '=', True)],
+                              help="Lieu pointant vers la liste des fournisseurs")
     mode_transport = fields.Selection(MODE_TRANSPORT_SELECTION, string="Mode de transport", tracking=True)
     
     # État
@@ -222,6 +225,13 @@ class IsDemandeConsultation(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code(sequence_code)
         return super().create(vals_list)
 
+    @api.onchange('client_id')
+    def _onchange_client_id(self):
+        """Remplit le secteur d'activité depuis le client sélectionné"""
+        for obj in self:
+            if obj.client_id and obj.client_id.industry_id:
+                obj.industry_id = obj.client_id.industry_id
+
     @api.onchange('dossier_ao_id')
     def _onchange_dossier_ao_id(self):
         """Remplit les champs de l'en-tête depuis le dossier appel d'offre sélectionné"""
@@ -232,8 +242,8 @@ class IsDemandeConsultation(models.Model):
                     obj.client_id = dao.client_id
                 if dao.prospect:
                     obj.prospect = dao.prospect
-                if dao.secteur_activite:
-                    obj.secteur_application = dao.secteur_activite.name
+                if dao.client_id and dao.client_id.industry_id:
+                    obj.industry_id = dao.client_id.industry_id
                 if dao.dao_datedms:
                     obj.date_sop = dao.dao_datedms
                 # Chercher le moule lié à ce dossier AO
@@ -245,32 +255,34 @@ class IsDemandeConsultation(models.Model):
                 if dossierf:
                     obj.dossierf_id = dossierf
 
+    def _get_incoterm_id(self, code):
+        """Récupère l'ID d'un incoterm par son code"""
+        incoterm = self.env['account.incoterms'].search([('code', '=', code)], limit=1)
+        return incoterm.id if incoterm else False
+
+    def _get_partner_id_by_code(self, code):
+        """Récupère l'ID d'un partenaire par son code is_code"""
+        partner = self.env['res.partner'].search([('is_code', '=', code)], limit=1)
+        return partner.id if partner else False
+
     @api.onchange('type_consultation')
     def _onchange_type_consultation(self):
         """Définit les valeurs par défaut selon le type de consultation"""
         for obj in self:
-            if obj.type_consultation == 'dc_chine':
+            if obj.type_consultation in ['dc_mat', 'dc_emb']:
+                # Valeurs par défaut pour DC-MAT et DC-EMB : Incoterm DAP et Lieu fournisseur 7503
+                obj.incoterm_id = self._get_incoterm_id('DAP')
+                obj.lieu_id = self._get_partner_id_by_code('7503')
+            elif obj.type_consultation == 'dc_chine':
                 # Valeurs par défaut pour DC-CHINE : Incoterm FOB et Lieu SHENZHEN
-                if not obj.lieu:
-                    obj.lieu = 'SHENZHEN'
-                if not obj.incoterm_id:
-                    fob = self.env['account.incoterms'].search([('code', '=', 'FOB')], limit=1)
-                    if fob:
-                        obj.incoterm_id = fob.id
-            if obj.type_consultation == 'dc_export':
+                obj.lieu = 'SHENZHEN'
+                obj.incoterm_id = self._get_incoterm_id('FOB')
+            elif obj.type_consultation == 'dc_export':
                 # Valeurs par défaut pour DC-EXPORT : Incoterm DDP, Lieu SHENZHEN, mode avion, adresse enlèvement = fournisseur réf. 7503
-                if not obj.lieu:
-                    obj.lieu = 'SHENZHEN'
-                if not obj.incoterm_id:
-                    ddp = self.env['account.incoterms'].search([('code', '=', 'DDP')], limit=1)
-                    if ddp:
-                        obj.incoterm_id = ddp.id
-                if not obj.mode_transport:
-                    obj.mode_transport = 'avion'
-                if not obj.adresse_enlevement_id:
-                    plastigray = self.env['res.partner'].search([('is_code', '=', '7503')], limit=1)
-                    if plastigray:
-                        obj.adresse_enlevement_id = plastigray.id
+                obj.lieu = 'SHENZHEN'
+                obj.incoterm_id = self._get_incoterm_id('DDP')
+                obj.mode_transport = 'avion'
+                obj.adresse_enlevement_id = self._get_partner_id_by_code('7503')
 
     def vers_brouillon_action(self):
         """Retour à l'état brouillon"""
@@ -801,6 +813,30 @@ class IsDemandeConsultation(models.Model):
                 'context': {'no_create': True},
             }
 
+    def _format_full_address(self, partner):
+        """Formate l'adresse complète d'un partner"""
+        if not partner:
+            return ''
+        parts = []
+        if partner.name:
+            parts.append(partner.name)
+        if partner.street:
+            parts.append(partner.street)
+        if partner.street2:
+            parts.append(partner.street2)
+        zip_city = []
+        if partner.zip:
+            zip_city.append(partner.zip)
+        if partner.city:
+            zip_city.append(partner.city)
+        if zip_city:
+            parts.append(' '.join(zip_city))
+        if partner.state_id:
+            parts.append(partner.state_id.name)
+        if partner.country_id:
+            parts.append(partner.country_id.name)
+        return ', '.join(parts) if parts else ''
+
     def envoi_consultation_fournisseurs_action(self):
         """Envoie les mails de consultation aux fournisseurs sélectionnés"""
         for obj in self:
@@ -880,9 +916,9 @@ class IsDemandeConsultation(models.Model):
                 # Construire le tableau des produits selon le type de consultation
                 lignes_html = ""
                 subject = f"Demande de consultation {obj.name}"
-                # Adresses communes (affichées si renseignées)
-                adresse_enlevement = obj.adresse_enlevement_id.name if obj.adresse_enlevement_id else ''
-                adresse_livraison = obj.adresse_livraison_id.name if obj.adresse_livraison_id else ''
+                # Adresses communes (affichées si renseignées) - Formatées une seule fois
+                adresse_enlevement = self._format_full_address(obj.adresse_enlevement_id)
+                adresse_livraison = self._format_full_address(obj.adresse_livraison_id)
                 adresses_html = ""
                 if adresse_enlevement:
                     adresses_html += f"<p><strong>Adresse d'enlèvement :</strong> {adresse_enlevement}</p>"
@@ -902,7 +938,7 @@ class IsDemandeConsultation(models.Model):
                         """
                     body_html = f"""
                         <p>Madame, Monsieur,</p>
-                        <p>Dans le cadre d'une consultation prix, nous vous serions reconnaissant de nous 
+                        <p>Dans le cadre d'une consultation, nous vous serions reconnaissant de nous 
                         transmettre votre meilleure offre de prix pour la fourniture éventuelle de :</p>
                         {adresses_html}
                         <table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
@@ -917,10 +953,12 @@ class IsDemandeConsultation(models.Model):
                             {lignes_html}
                         </table>
                         <p><strong>En conformité avec REACH/ROHS</strong></p>
-                        <p><strong>Secteur / Application :</strong> {obj.secteur_application or ''}</p>
+                        <p><strong>Secteur d'activité :</strong> {obj.industry_id.name if obj.industry_id else ''}</p>
                         <p><strong>Date de réponse souhaitée :</strong> {obj.date_reponse_souhaitee.strftime('%d/%m/%Y') if obj.date_reponse_souhaitee else ''}</p>
                         <p><strong>SOP :</strong> {obj.date_sop.strftime('%d/%m/%Y') if obj.date_sop else ''}</p>
                         <p><strong>Durée de vie :</strong> {obj.duree_vie or ''} {' années' if obj.duree_vie else ''}</p>
+                        <p><strong>Incoterm :</strong> {obj.incoterm_id.code if obj.incoterm_id else ''}</p>
+                        <p><strong>Lieu :</strong> {self._format_full_address(obj.lieu_id)}</p>
                         <p><strong>Documents à nous transmettre :</strong></p>
                         <ul>
                             <li>Fiche de Données Technique</li>
@@ -948,7 +986,7 @@ class IsDemandeConsultation(models.Model):
                         """
                     body_html = f"""
                         <p>Madame, Monsieur,</p>
-                        <p>Dans le cadre d'une consultation prix, nous vous serions reconnaissant de nous 
+                        <p>Dans le cadre d'une consultation, nous vous serions reconnaissant de nous 
                         transmettre votre meilleure offre de prix pour la fourniture éventuelle de :</p>
                         {adresses_html}
                         <table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
@@ -965,7 +1003,7 @@ class IsDemandeConsultation(models.Model):
                             </tr>
                             {lignes_html}
                         </table>
-                        <p><strong>Secteur / Application :</strong> {obj.secteur_application or ''}</p>
+                        <p><strong>Secteur d'activité :</strong> {obj.industry_id.name if obj.industry_id else ''}</p>
                         <p><strong>Date de réponse souhaitée :</strong> {obj.date_reponse_souhaitee.strftime('%d/%m/%Y') if obj.date_reponse_souhaitee else ''}</p>
                         <p><strong>SOP :</strong> {obj.date_sop.strftime('%d/%m/%Y') if obj.date_sop else ''}</p>
                         <p><strong>Durée de vie :</strong> {obj.duree_vie or ''} {' années' if obj.duree_vie else ''}</p>
@@ -993,7 +1031,7 @@ class IsDemandeConsultation(models.Model):
                         """
                     body_html = f"""
                         <p>Madame, Monsieur,</p>
-                        <p>Dans le cadre d'une consultation prix, nous vous serions reconnaissant de nous 
+                        <p>Dans le cadre d'une consultation, nous vous serions reconnaissant de nous 
                         transmettre votre meilleure offre de prix pour la fourniture éventuelle de :</p>
                         {adresses_html}
                         <table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
@@ -1009,10 +1047,12 @@ class IsDemandeConsultation(models.Model):
                             </tr>
                             {lignes_html}
                         </table>
-                        <p><strong>Secteur / Application :</strong> {obj.secteur_application or ''}</p>
+                        <p><strong>Secteur d'activité :</strong> {obj.industry_id.name if obj.industry_id else ''}</p>
                         <p><strong>Date de réponse souhaitée :</strong> {obj.date_reponse_souhaitee.strftime('%d/%m/%Y') if obj.date_reponse_souhaitee else ''}</p>
                         <p><strong>SOP :</strong> {obj.date_sop.strftime('%d/%m/%Y') if obj.date_sop else ''}</p>
                         <p><strong>Durée de vie :</strong> {obj.duree_vie or ''} {' années' if obj.duree_vie else ''}</p>
+                        <p><strong>Incoterm :</strong> {obj.incoterm_id.code if obj.incoterm_id else ''}</p>
+                        <p><strong>Lieu :</strong> {self._format_full_address(obj.lieu_id)}</p>
                         <p><strong>Documents à nous transmettre :</strong></p>
                         <ul>
                             <li>Plan</li>
@@ -1034,7 +1074,7 @@ class IsDemandeConsultation(models.Model):
                         """
                     body_html = f"""
                         <p>Madame, Monsieur,</p>
-                        <p>Dans le cadre d'une consultation prix, nous vous serions reconnaissant de nous 
+                        <p>Dans le cadre d'une consultation, nous vous serions reconnaissant de nous 
                         transmettre votre meilleure offre de prix pour le transport suivant :</p>
                         <table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
                             <tr style="background-color: #f0f0f0;">
@@ -1065,13 +1105,11 @@ class IsDemandeConsultation(models.Model):
                                 <td style="border: 1px solid #ccc; padding: 5px;"></td>
                             </tr>
                         """
-                    # Informations import Chine
-                    adresse_enlevement = obj.adresse_enlevement_id.name if obj.adresse_enlevement_id else ''
-                    adresse_livraison = obj.adresse_livraison_id.name if obj.adresse_livraison_id else ''
+                     # Informations import Chine (adresses déjà formatées ci-dessus)
                     incoterm = obj.incoterm_id.code if obj.incoterm_id else ''
                     body_html = f"""
                         <p>Madame, Monsieur,</p>
-                        <p>Dans le cadre d'une consultation prix, nous vous serions reconnaissant de nous 
+                        <p>Dans le cadre d'une consultation, nous vous serions reconnaissant de nous 
                         transmettre votre meilleure offre de prix pour l'import suivant :</p>
                         <p><strong>Adresse d'enlèvement :</strong> {adresse_enlevement}</p>
                         <p><strong>Adresse de livraison :</strong> {adresse_livraison}</p>
@@ -1104,14 +1142,12 @@ class IsDemandeConsultation(models.Model):
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.uom_export_id.name if line.uom_export_id else ''}</td>
                             </tr>
                         """
-                   # Informations transport
-                    adresse_enlevement = obj.adresse_enlevement_id.name if obj.adresse_enlevement_id else ''
-                    adresse_livraison = obj.adresse_livraison_id.name if obj.adresse_livraison_id else ''
+                    # Informations transport (adresses déjà formatées ci-dessus)
                     incoterm = obj.incoterm_id.code if obj.incoterm_id else ''
                     mode_transport_txt = dict(self._fields['mode_transport'].selection).get(obj.mode_transport, '') if obj.mode_transport else ''
                     body_html = f"""
                         <p>Madame, Monsieur,</p>
-                        <p>Dans le cadre d'une consultation prix, nous vous serions reconnaissant de nous 
+                        <p>Dans le cadre d'une consultation, nous vous serions reconnaissant de nous 
                         transmettre votre meilleure offre de prix pour l'export suivant :</p>
                         <p><strong>Adresse d'enlèvement :</strong> {adresse_enlevement}</p>
                         <p><strong>Adresse de livraison :</strong> {adresse_livraison}</p>
@@ -1134,10 +1170,15 @@ class IsDemandeConsultation(models.Model):
                     """
                 
                 # Envoyer le mail
+                email_cc = email_from
+                # Pour DC-MAT, ajouter le validateur technique en copie
+                if obj.type_consultation == 'dc_mat' and obj.validateur_technique_id and obj.validateur_technique_id.email:
+                    email_cc = f"{email_from},{obj.validateur_technique_id.email}"
+                
                 vals = {
                     'email_from': email_from,
                     'email_to': email_to,
-                    'email_cc': email_from,
+                    'email_cc': email_cc,
                     'subject': subject,
                     'body_html': body_html,
                 }
@@ -1155,6 +1196,16 @@ class IsDemandeConsultation(models.Model):
             # Logger dans le chatter : un message par fournisseur
             for mail_info in mails_envoyes:
                 message = f"<p><strong>Mail envoyé à :</strong> {mail_info['nom']} ({mail_info['email']})</p>"
+                
+                # Ajouter les personnes en copie
+                personnes_cc = []
+                if user:
+                    personnes_cc.append(user.name)
+                if obj.validateur_technique_id:
+                    personnes_cc.append(obj.validateur_technique_id.name)
+                if personnes_cc:
+                    message += f"<p><strong>En copie :</strong> {', '.join(personnes_cc)}</p>"
+                
                 message += "<hr/>"
                 message += mail_info['body_html']
                 obj.message_post(body=message, subject=f"Consultation envoyée - {mail_info['nom']}")
