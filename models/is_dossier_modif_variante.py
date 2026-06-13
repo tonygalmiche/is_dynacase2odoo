@@ -111,51 +111,66 @@ class is_dossier_modif_variante(models.Model):
             obj.vers_annule_vsb = vsb
 
 
+    @api.onchange('state')
+    def _onchange_state(self):
+        self.solde = False
+
+
     def vers_analyse_action(self):
         for obj in self:
             obj.state='plasanalysed'
+            obj.solde = False
             obj.envoi_mail()
 
     def vers_transmis_be_action(self):
         for obj in self:
             obj.state='plastransbe'
+            obj.solde = False
             obj.envoi_mail()
 
     def vers_analyse_be_action(self):
         for obj in self:
             obj.state='Analyse_BE'
+            obj.solde = False
             obj.envoi_mail()
 
     def vers_valide_be_action(self):
         for obj in self:
             obj.state='plasvalidbe'
+            obj.solde = False
             obj.envoi_mail()
 
     def vers_valide_commercial_action(self):
         for obj in self:
             obj.state='plasvalidcom'
+            obj.solde = False
 
     def vers_diffuse_client_action(self):
         for obj in self:
             obj.state='plasdiffusedcli'
+            obj.solde = False
             obj.envoi_mail()
 
     def vers_relance_client_action(self):
         for obj in self:
             obj.state='plasrelancecli'
+            obj.solde = False
 
     def vers_gagne_action(self):
         for obj in self:
             obj.state='plaswinned'
+            obj.solde = False
             obj.envoi_mail()
 
     def vers_perdu_action(self):
         for obj in self:
             obj.state='plasloosed'
+            obj.solde = False
 
     def vers_annule_action(self):
         for obj in self:
             obj.state='plascancelled'
+            obj.solde = False
 
 
     def envoi_mail(self, destinataires_ids=False):
