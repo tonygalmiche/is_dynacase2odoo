@@ -187,6 +187,9 @@ class IsDemandeConsultation(models.Model):
     
     # Lignes saisie commerciale (onglet Demande)
     demande_line_ids = fields.One2many('is.demande.consultation.demande.line', 'demande_id', string="Lignes demande", copy=True)
+
+    # Pièces jointes à transmettre au fournisseur (dc_mat, dc_comp, dc_emb)
+    piece_jointe_ids = fields.One2many('is.demande.consultation.piece.jointe', 'demande_id', string="Pièces jointes fournisseur", copy=True)
     
     # Champs spécifiques DC-EXPORT
     packaging_list = fields.Text("Packaging list", tracking=True, help="Zone libre pour la liste d'emballage (DC-EXPORT uniquement)")
@@ -924,6 +927,32 @@ class IsDemandeConsultation(models.Model):
                     adresses_html += f"<p><strong>Adresse d'enlèvement :</strong> {adresse_enlevement}</p>"
                 if adresse_livraison:
                     adresses_html += f"<p><strong>Adresse de livraison :</strong> {adresse_livraison}</p>"
+                # Pièces jointes à transmettre (dc_mat, dc_comp, dc_emb)
+                pieces_jointes_html = ""
+                attachment_ids_to_send = []
+                if obj.type_consultation in ['dc_mat', 'dc_comp', 'dc_emb'] and obj.piece_jointe_ids:
+                    pieces_jointes_html = """
+                        <p><strong>Pièce jointe transmise au fournisseur :</strong></p>
+                        <table style="border-collapse: collapse; margin: 10px 0;">
+                            <tr style="background-color: #f0f0f0;">
+                                <th style="border: 1px solid #ccc; padding: 5px;">Nom</th>
+                                <th style="border: 1px solid #ccc; padding: 5px;">Fichier</th>
+                            </tr>"""
+                    for pj in obj.piece_jointe_ids:
+                        attachment_ids_to_send += pj.attachment_ids.ids
+                        for att in pj.attachment_ids:
+                            pieces_jointes_html += f"""
+                                <tr>
+                                    <td style="border: 1px solid #ccc; padding: 5px;">{pj.nom}</td>
+                                    <td style="border: 1px solid #ccc; padding: 5px;">{att.name}</td>
+                                </tr>"""
+                        if not pj.attachment_ids:
+                            pieces_jointes_html += f"""
+                                <tr>
+                                    <td style="border: 1px solid #ccc; padding: 5px;">{pj.nom}</td>
+                                    <td style="border: 1px solid #ccc; padding: 5px;"></td>
+                                </tr>"""
+                    pieces_jointes_html += "</table>"
                 if obj.type_consultation == 'dc_mat':
                     for line in lignes:
                         lignes_html += f"""
@@ -964,6 +993,7 @@ class IsDemandeConsultation(models.Model):
                             <li>Fiche de Données Technique</li>
                             <li>Fiche de Données de Sécurité</li>
                         </ul>
+                        {pieces_jointes_html}
                         <p>Cordialement,</p>
                         <p>{user.name}</p>
                     """
@@ -1007,6 +1037,7 @@ class IsDemandeConsultation(models.Model):
                         <p><strong>Date de réponse souhaitée :</strong> {obj.date_reponse_souhaitee.strftime('%d/%m/%Y') if obj.date_reponse_souhaitee else ''}</p>
                         <p><strong>SOP :</strong> {obj.date_sop.strftime('%d/%m/%Y') if obj.date_sop else ''}</p>
                         <p><strong>Durée de vie :</strong> {obj.duree_vie or ''} {' années' if obj.duree_vie else ''}</p>
+                        {pieces_jointes_html}
                         <p>Cordialement,</p>
                         <p>{user.name}</p>
                     """
@@ -1049,10 +1080,7 @@ class IsDemandeConsultation(models.Model):
                         <p><strong>Durée de vie :</strong> {obj.duree_vie or ''} {' années' if obj.duree_vie else ''}</p>
                         <p><strong>Incoterm :</strong> {obj.incoterm_id.code if obj.incoterm_id else ''}</p>
                         <p><strong>Lieu :</strong> {self._format_full_address(obj.lieu_id)}</p>
-                        <p><strong>Documents à nous transmettre :</strong></p>
-                        <ul>
-                            <li>Plan</li>
-                        </ul>
+                        {pieces_jointes_html}
                         <p>Cordialement,</p>
                         <p>{user.name}</p>
                     """
@@ -1178,6 +1206,8 @@ class IsDemandeConsultation(models.Model):
                     'subject': subject,
                     'body_html': body_html,
                 }
+                if attachment_ids_to_send:
+                    vals['attachment_ids'] = [(6, 0, list(set(attachment_ids_to_send)))]
                 email = self.env['mail.mail'].sudo().create(vals)
                 if email:
                     self.env['mail.mail'].sudo().send(email)
@@ -1518,4 +1548,15 @@ class IsDemandeConsultationLineFournisseur(models.Model):
     # Suivi envoi mail
     date_envoi_mail = fields.Datetime("Date d'envoi du mail", copy=False,
                                       help="Effacer ce champ pour renvoyer le mail")
+
+
+class IsDemandeConsultationPieceJointe(models.Model):
+    _name = 'is.demande.consultation.piece.jointe'
+    _description = "Pièce jointe transmise au fournisseur"
+    _order = 'demande_id, sequence'
+
+    demande_id = fields.Many2one('is.demande.consultation', string="Demande", ondelete='cascade')
+    sequence = fields.Integer("Séquence", default=10)
+    nom = fields.Char("Nom de la pièce jointe", required=True)
+    attachment_ids = fields.Many2many('ir.attachment', string="Fichiers")
 

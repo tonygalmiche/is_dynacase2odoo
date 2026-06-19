@@ -176,6 +176,26 @@ class is_dossier_appel_offre(models.Model):
     destinataires_ids   = fields.Many2many('res.partner', string="destinataires_ids", compute='_compute_destinataires_ids')
     destinataires_name  = fields.Char('Destinataires'  , compute='_compute_destinataires_name')
     mail_copy           = fields.Char('Mail copy'      , compute='_compute_destinataires_ids')
+    demande_consultation_count = fields.Integer("Nb consultations", compute='_compute_demande_consultation_count', store=False)
+
+
+    @api.depends()
+    def _compute_demande_consultation_count(self):
+        for obj in self:
+            obj.demande_consultation_count = self.env['is.demande.consultation'].search_count([
+                ('dossier_ao_id', '=', obj.id)
+            ])
+
+    def demande_consultation_action(self):
+        for obj in self:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Demandes de consultation',
+                'res_model': 'is.demande.consultation',
+                'view_mode': 'tree,form',
+                'domain': [('dossier_ao_id', '=', obj.id)],
+                'context': {'default_dossier_ao_id': obj.id},
+            }
 
 
     @api.depends("state")

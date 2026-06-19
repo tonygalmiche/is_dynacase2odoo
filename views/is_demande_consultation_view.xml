@@ -314,6 +314,15 @@
                                 <group>
                                     <field name="packaging_list" attrs="{'invisible': [('type_consultation', '!=', 'dc_export')], 'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                 </group>
+                                <separator string="Pièce jointe transmise au fournisseur" attrs="{'invisible': [('type_consultation', 'not in', ['dc_mat', 'dc_comp', 'dc_emb'])]}"/>
+                                <field name="piece_jointe_ids" nolabel="1"
+                                       attrs="{'invisible': [('type_consultation', 'not in', ['dc_mat', 'dc_comp', 'dc_emb'])], 'readonly': [('state', 'in', ['solde', 'annule'])]}">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="nom" string="Nom de la pièce jointe"/>
+                                        <field name="attachment_ids" widget="many2many_binary" string="Fichiers"/>
+                                    </tree>
+                                </field>
                             </page>
                             <page string="Lignes" name="lignes" attrs="{'invisible': ['|', ('state', 'in', ['brouillon', 'validation_technique']), ('line_ids', '=', [])]}">
                                 <field name="type_consultation" invisible="1"/>

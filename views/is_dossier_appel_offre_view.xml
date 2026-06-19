@@ -128,6 +128,7 @@
                         <field name="active" invisible="1"/>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="readonly_vsb" invisible="1"/>
+                        <field name="demande_consultation_count" invisible="1"/>
                         <group>
                             <group>
                                 <field name="dao_num"/>
@@ -178,6 +179,18 @@
                             <field name="dao_lettre_nomination" widget="many2many_binary" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                             <separator string="Fichier de devis des achats"/>
                             <field name="dao_devis_achat"       widget="many2many_binary" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                            <div style="display:flex; margin-top:8px;" attrs="{'invisible': [('demande_consultation_count', '=', 0)]}">
+                                <button name="demande_consultation_action"
+                                        type="object"
+                                        class="btn btn-primary"
+                                        style="display:inline-flex; flex-direction:row; align-items:center; gap:8px; padding:6px 14px;">
+                                    <i class="fa fa-file-text-o" style="font-size:1.4em;"/>
+                                    <div style="display:flex; flex-direction:column; align-items:center; line-height:1.2;">
+                                        <strong><field name="demande_consultation_count"/></strong>
+                                        <span>Consultations</span>
+                                    </div>
+                                </button>
+                            </div>
                          </group>
                     </sheet>
                    <div class="oe_chatter">
