@@ -1007,10 +1007,6 @@ class IsDemandeConsultation(models.Model):
                         <p><strong>Date de réponse souhaitée :</strong> {obj.date_reponse_souhaitee.strftime('%d/%m/%Y') if obj.date_reponse_souhaitee else ''}</p>
                         <p><strong>SOP :</strong> {obj.date_sop.strftime('%d/%m/%Y') if obj.date_sop else ''}</p>
                         <p><strong>Durée de vie :</strong> {obj.duree_vie or ''} {' années' if obj.duree_vie else ''}</p>
-                        <p><strong>Documents à nous transmettre :</strong></p>
-                        <ul>
-                            <li>Plan</li>
-                        </ul>
                         <p>Cordialement,</p>
                         <p>{user.name}</p>
                     """
