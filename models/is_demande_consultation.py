@@ -395,10 +395,10 @@ class IsDemandeConsultation(models.Model):
                     if fournisseur_retenu:
                         nom_fournisseur = ""
                         if fournisseur_retenu.fournisseur_id:
-                            nom_fournisseur = fournisseur_retenu.fournisseur_id.name
+                            nom_fournisseur = fournisseur_retenu.fournisseur_id.commercial_partner_id.name
                         elif fournisseur_retenu.fournisseur_hors_panel:
                             nom_fournisseur = fournisseur_retenu.fournisseur_hors_panel
-                        
+
                         tableau_html += f"""
                             <tr>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.type_produit or ''}</td>
@@ -440,10 +440,10 @@ class IsDemandeConsultation(models.Model):
                     if fournisseur_retenu:
                         nom_fournisseur = ""
                         if fournisseur_retenu.fournisseur_id:
-                            nom_fournisseur = fournisseur_retenu.fournisseur_id.name
+                            nom_fournisseur = fournisseur_retenu.fournisseur_id.commercial_partner_id.name
                         elif fournisseur_retenu.fournisseur_hors_panel:
                             nom_fournisseur = fournisseur_retenu.fournisseur_hors_panel
-                        
+
                         standard_txt = dict(line._fields['standard'].selection).get(line.standard, '') if line.standard else ''
                         tableau_html += f"""
                             <tr>
@@ -483,7 +483,7 @@ class IsDemandeConsultation(models.Model):
                     if fournisseur_retenu:
                         nom_fournisseur = ""
                         if fournisseur_retenu.fournisseur_id:
-                            nom_fournisseur = fournisseur_retenu.fournisseur_id.name
+                            nom_fournisseur = fournisseur_retenu.fournisseur_id.commercial_partner_id.name
                         elif fournisseur_retenu.fournisseur_hors_panel:
                             nom_fournisseur = fournisseur_retenu.fournisseur_hors_panel
                         
@@ -524,7 +524,7 @@ class IsDemandeConsultation(models.Model):
                     if fournisseur_retenu:
                         nom_fournisseur = ""
                         if fournisseur_retenu.fournisseur_id:
-                            nom_fournisseur = fournisseur_retenu.fournisseur_id.name
+                            nom_fournisseur = fournisseur_retenu.fournisseur_id.commercial_partner_id.name
                         elif fournisseur_retenu.fournisseur_hors_panel:
                             nom_fournisseur = fournisseur_retenu.fournisseur_hors_panel
                         
@@ -567,7 +567,7 @@ class IsDemandeConsultation(models.Model):
                     if fournisseur_retenu:
                         nom_fournisseur = ""
                         if fournisseur_retenu.fournisseur_id:
-                            nom_fournisseur = fournisseur_retenu.fournisseur_id.name
+                            nom_fournisseur = fournisseur_retenu.fournisseur_id.commercial_partner_id.name
                         elif fournisseur_retenu.fournisseur_hors_panel:
                             nom_fournisseur = fournisseur_retenu.fournisseur_hors_panel
                         
