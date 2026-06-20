@@ -424,6 +424,7 @@ class is_revue_lancement(models.Model):
                 val = getattr(obj,field_name)
                 vals={
                     'num_mouleid': obj.rl_mouleid.id,
+                    'dossierf_id': obj.rl_dossierfid.id or obj.dossierf_id.id,
                     'revue_lancementid': obj.id,
                     'clientid': obj.rl_client_rcid.id,
                     'projetid': obj.rl_projet_rcid.id,
