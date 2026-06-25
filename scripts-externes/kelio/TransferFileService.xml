@@ -1,0 +1,566 @@
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://echange.service.open.bodet.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="TransferFileService" targetNamespace="http://echange.service.open.bodet.com">
+<wsdl:types>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://lang.java" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://lang.java">
+<xsd:complexType name="Throwable">
+<xsd:sequence/>
+</xsd:complexType>
+<xsd:complexType name="Exception">
+<xsd:complexContent>
+<xsd:extension base="tns:Throwable">
+<xsd:sequence/>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+</xsd:schema>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://echange.service.open.bodet.com" xmlns:ns0="http://lang.java" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://echange.service.open.bodet.com">
+<xsd:complexType name="AbsenceBalanceInitialization">
+<xsd:complexContent>
+<xsd:extension base="tns:AbstractTransferFile">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="absenceBalanceInitializationKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="comment" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="keepTheRemainder" nillable="true" type="xsd:boolean"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType abstract="true" name="AbstractTransferFile">
+<xsd:complexContent>
+<xsd:extension base="tns:EmployeeInformation">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="accountAbbreviation" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="accountDescription" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="accountType" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="date" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="days" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="hours" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="isCyclical" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="isDayly" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="isPeriodical" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="isTotal" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="isWeekly" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="visualizedInThePrintouts" nillable="true" type="xsd:boolean"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="AccountInitialization">
+<xsd:complexContent>
+<xsd:extension base="tns:AbstractTransferFile">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="accountInitialisationKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="calculableType" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="comment" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="impactedResult" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="initializationType" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="keepTheRemainder" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="number" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="processingPeriodicity" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="AddDeduct">
+<xsd:complexContent>
+<xsd:extension base="tns:AbstractTransferFile">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="addDeductsAssignmentKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="comment" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="dayOfMonth" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="frequency" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="number" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="recurrence" nillable="true" type="xsd:short"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfAbsenceBalanceInitialization">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="AbsenceBalanceInitialization" nillable="true" type="tns:AbsenceBalanceInitialization"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfAccountInitialization">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="AccountInitialization" nillable="true" type="tns:AccountInitialization"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfAddDeduct">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="AddDeduct" nillable="true" type="tns:AddDeduct"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfAskedAccountInitialization">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="AskedAccountInitialization" nillable="true" type="tns:AskedAccountInitialization"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfAskedPopulationWithPeriod">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="AskedPopulationWithPeriod" nillable="true" type="tns:AskedPopulationWithPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="AskedAccountInitialization">
+<xsd:complexContent>
+<xsd:extension base="tns:AskedPopulationWithPeriod">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="initializationType" nillable="true" type="xsd:short"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="AskedPopulation">
+<xsd:complexContent>
+<xsd:extension base="tns:EmployeeInformation">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="populationEndDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="populationMode" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="populationStartDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="AskedPopulationWithPeriod">
+<xsd:complexContent>
+<xsd:extension base="tns:AskedPopulation">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="dateMode" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endOffset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="startOffset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="EmployeeInformation">
+<xsd:complexContent>
+<xsd:extension base="tns:Object">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="archivedEmployee" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="employeeBadgeCode" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="employeeFirstName" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="employeeIdentificationCode" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="employeeIdentificationNumber" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="employeeKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="employeeSurname" nillable="true" type="xsd:string"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType abstract="true" name="Object">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="errorMessage" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="technicalString" nillable="true" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="deleteAccountInitializations" type="tns:deleteAccountInitializations"/>
+<xsd:complexType name="deleteAccountInitializations">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="accountInitializationsToDelete" type="tns:ArrayOfAccountInitialization"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="deleteAccountInitializationsResponse" type="tns:deleteAccountInitializationsResponse"/>
+<xsd:complexType name="deleteAccountInitializationsResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="accountInitializationsInError" type="tns:ArrayOfAccountInitialization"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="deleteAddDeductsAssignment" type="tns:deleteAddDeductsAssignment"/>
+<xsd:complexType name="deleteAddDeductsAssignment">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="addDeductsAssignmentToDelete" type="tns:ArrayOfAddDeduct"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="deleteAddDeductsAssignmentResponse" type="tns:deleteAddDeductsAssignmentResponse"/>
+<xsd:complexType name="deleteAddDeductsAssignmentResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="addDeductsAssignmentInError" type="tns:ArrayOfAddDeduct"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAccountInitializations" type="tns:exportAccountInitializations"/>
+<xsd:complexType name="exportAccountInitializations">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportFilter" type="tns:ArrayOfAskedAccountInitialization"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAccountInitializationsResponse" type="tns:exportAccountInitializationsResponse"/>
+<xsd:complexType name="exportAccountInitializationsResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedAccountInitializations" type="tns:ArrayOfAccountInitialization"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAddDeducts" type="tns:exportAddDeducts"/>
+<xsd:complexType name="exportAddDeducts">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAddDeductsResponse" type="tns:exportAddDeductsResponse"/>
+<xsd:complexType name="exportAddDeductsResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedAddDeducts" type="tns:ArrayOfAddDeduct"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAddDeductsAssignmentList" type="tns:exportAddDeductsAssignmentList"/>
+<xsd:complexType name="exportAddDeductsAssignmentList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportFilter" type="tns:ArrayOfAskedPopulationWithPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAddDeductsAssignmentListResponse" type="tns:exportAddDeductsAssignmentListResponse"/>
+<xsd:complexType name="exportAddDeductsAssignmentListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedAddDeductsAssignment" type="tns:ArrayOfAddDeduct"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAddDeductsList" type="tns:exportAddDeductsList"/>
+<xsd:complexType name="exportAddDeductsList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportFilter" type="tns:ArrayOfAskedPopulationWithPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAddDeductsListResponse" type="tns:exportAddDeductsListResponse"/>
+<xsd:complexType name="exportAddDeductsListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedAddDeducts" type="tns:ArrayOfAddDeduct"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportBalanceInitializations" type="tns:exportBalanceInitializations"/>
+<xsd:complexType name="exportBalanceInitializations">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportBalanceInitializationsResponse" type="tns:exportBalanceInitializationsResponse"/>
+<xsd:complexType name="exportBalanceInitializationsResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedBalanceInitializations" type="tns:ArrayOfAbsenceBalanceInitialization"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importAccountInitializations" type="tns:importAccountInitializations"/>
+<xsd:complexType name="importAccountInitializations">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="accountInitializationsToImport" type="tns:ArrayOfAccountInitialization"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importAccountInitializationsResponse" type="tns:importAccountInitializationsResponse"/>
+<xsd:complexType name="importAccountInitializationsResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="accountInitializationsInError" type="tns:ArrayOfAccountInitialization"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importAddDeducts" type="tns:importAddDeducts"/>
+<xsd:complexType name="importAddDeducts">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="addDeductsToImport" type="tns:ArrayOfAddDeduct"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importAddDeductsResponse" type="tns:importAddDeductsResponse"/>
+<xsd:complexType name="importAddDeductsResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="addDeductsInError" type="tns:ArrayOfAddDeduct"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importAddDeductsAssignment" type="tns:importAddDeductsAssignment"/>
+<xsd:complexType name="importAddDeductsAssignment">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="addDeductsAssignmentToImport" type="tns:ArrayOfAddDeduct"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importAddDeductsAssignmentResponse" type="tns:importAddDeductsAssignmentResponse"/>
+<xsd:complexType name="importAddDeductsAssignmentResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="addDeductsAssignmentInError" type="tns:ArrayOfAddDeduct"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importBalanceInitializations" type="tns:importBalanceInitializations"/>
+<xsd:complexType name="importBalanceInitializations">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="balanceInitializationsToImport" type="tns:ArrayOfAbsenceBalanceInitialization"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importBalanceInitializationsResponse" type="tns:importBalanceInitializationsResponse"/>
+<xsd:complexType name="importBalanceInitializationsResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="balanceInitializationsInError" type="tns:ArrayOfAbsenceBalanceInitialization"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="Exception" nillable="true" type="ns0:Exception"/>
+</xsd:schema>
+</wsdl:types>
+<wsdl:message name="Exception">
+<wsdl:part element="tns:Exception" name="Exception"/>
+</wsdl:message>
+<wsdl:message name="deleteAccountInitializations">
+<wsdl:part element="tns:deleteAccountInitializations" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="deleteAccountInitializationsResponse">
+<wsdl:part element="tns:deleteAccountInitializationsResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="deleteAddDeductsAssignment">
+<wsdl:part element="tns:deleteAddDeductsAssignment" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="deleteAddDeductsAssignmentResponse">
+<wsdl:part element="tns:deleteAddDeductsAssignmentResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAccountInitializations">
+<wsdl:part element="tns:exportAccountInitializations" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAccountInitializationsResponse">
+<wsdl:part element="tns:exportAccountInitializationsResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAddDeducts">
+<wsdl:part element="tns:exportAddDeducts" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAddDeductsResponse">
+<wsdl:part element="tns:exportAddDeductsResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAddDeductsAssignmentList">
+<wsdl:part element="tns:exportAddDeductsAssignmentList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAddDeductsAssignmentListResponse">
+<wsdl:part element="tns:exportAddDeductsAssignmentListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAddDeductsList">
+<wsdl:part element="tns:exportAddDeductsList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAddDeductsListResponse">
+<wsdl:part element="tns:exportAddDeductsListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportBalanceInitializations">
+<wsdl:part element="tns:exportBalanceInitializations" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportBalanceInitializationsResponse">
+<wsdl:part element="tns:exportBalanceInitializationsResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importAccountInitializations">
+<wsdl:part element="tns:importAccountInitializations" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importAccountInitializationsResponse">
+<wsdl:part element="tns:importAccountInitializationsResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importAddDeducts">
+<wsdl:part element="tns:importAddDeducts" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importAddDeductsResponse">
+<wsdl:part element="tns:importAddDeductsResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importAddDeductsAssignment">
+<wsdl:part element="tns:importAddDeductsAssignment" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importAddDeductsAssignmentResponse">
+<wsdl:part element="tns:importAddDeductsAssignmentResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importBalanceInitializations">
+<wsdl:part element="tns:importBalanceInitializations" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importBalanceInitializationsResponse">
+<wsdl:part element="tns:importBalanceInitializationsResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:portType name="TransferFileServicePortType">
+<wsdl:operation name="deleteAccountInitializations">
+<wsdl:input message="tns:deleteAccountInitializations" name="deleteAccountInitializations"/>
+<wsdl:output message="tns:deleteAccountInitializationsResponse" name="deleteAccountInitializationsResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="deleteAddDeductsAssignment">
+<wsdl:input message="tns:deleteAddDeductsAssignment" name="deleteAddDeductsAssignment"/>
+<wsdl:output message="tns:deleteAddDeductsAssignmentResponse" name="deleteAddDeductsAssignmentResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportAccountInitializations">
+<wsdl:input message="tns:exportAccountInitializations" name="exportAccountInitializations"/>
+<wsdl:output message="tns:exportAccountInitializationsResponse" name="exportAccountInitializationsResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportAddDeducts">
+<wsdl:input message="tns:exportAddDeducts" name="exportAddDeducts"/>
+<wsdl:output message="tns:exportAddDeductsResponse" name="exportAddDeductsResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportAddDeductsAssignmentList">
+<wsdl:input message="tns:exportAddDeductsAssignmentList" name="exportAddDeductsAssignmentList"/>
+<wsdl:output message="tns:exportAddDeductsAssignmentListResponse" name="exportAddDeductsAssignmentListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportAddDeductsList">
+<wsdl:input message="tns:exportAddDeductsList" name="exportAddDeductsList"/>
+<wsdl:output message="tns:exportAddDeductsListResponse" name="exportAddDeductsListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportBalanceInitializations">
+<wsdl:input message="tns:exportBalanceInitializations" name="exportBalanceInitializations"/>
+<wsdl:output message="tns:exportBalanceInitializationsResponse" name="exportBalanceInitializationsResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="importAccountInitializations">
+<wsdl:input message="tns:importAccountInitializations" name="importAccountInitializations"/>
+<wsdl:output message="tns:importAccountInitializationsResponse" name="importAccountInitializationsResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="importAddDeducts">
+<wsdl:input message="tns:importAddDeducts" name="importAddDeducts"/>
+<wsdl:output message="tns:importAddDeductsResponse" name="importAddDeductsResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="importAddDeductsAssignment">
+<wsdl:input message="tns:importAddDeductsAssignment" name="importAddDeductsAssignment"/>
+<wsdl:output message="tns:importAddDeductsAssignmentResponse" name="importAddDeductsAssignmentResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="importBalanceInitializations">
+<wsdl:input message="tns:importBalanceInitializations" name="importBalanceInitializations"/>
+<wsdl:output message="tns:importBalanceInitializationsResponse" name="importBalanceInitializationsResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="TransferFileServiceSoapBinding" type="tns:TransferFileServicePortType">
+<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="deleteAccountInitializations">
+<soap:operation soapAction="urn:deleteAccountInitializations" style="document"/>
+<wsdl:input name="deleteAccountInitializations">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="deleteAccountInitializationsResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="deleteAddDeductsAssignment">
+<soap:operation soapAction="urn:deleteAddDeductsAssignment" style="document"/>
+<wsdl:input name="deleteAddDeductsAssignment">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="deleteAddDeductsAssignmentResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportAccountInitializations">
+<soap:operation soapAction="urn:exportAccountInitializations" style="document"/>
+<wsdl:input name="exportAccountInitializations">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportAccountInitializationsResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportAddDeducts">
+<soap:operation soapAction="urn:exportAddDeducts" style="document"/>
+<wsdl:input name="exportAddDeducts">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportAddDeductsResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportAddDeductsAssignmentList">
+<soap:operation soapAction="urn:exportAddDeductsAssignmentList" style="document"/>
+<wsdl:input name="exportAddDeductsAssignmentList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportAddDeductsAssignmentListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportAddDeductsList">
+<soap:operation soapAction="urn:exportAddDeductsList" style="document"/>
+<wsdl:input name="exportAddDeductsList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportAddDeductsListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportBalanceInitializations">
+<soap:operation soapAction="urn:exportBalanceInitializations" style="document"/>
+<wsdl:input name="exportBalanceInitializations">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportBalanceInitializationsResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="importAccountInitializations">
+<soap:operation soapAction="urn:importAccountInitializations" style="document"/>
+<wsdl:input name="importAccountInitializations">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="importAccountInitializationsResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="importAddDeducts">
+<soap:operation soapAction="urn:importAddDeducts" style="document"/>
+<wsdl:input name="importAddDeducts">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="importAddDeductsResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="importAddDeductsAssignment">
+<soap:operation soapAction="urn:importAddDeductsAssignment" style="document"/>
+<wsdl:input name="importAddDeductsAssignment">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="importAddDeductsAssignmentResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="importBalanceInitializations">
+<soap:operation soapAction="urn:importBalanceInitializations" style="document"/>
+<wsdl:input name="importBalanceInitializations">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="importBalanceInitializationsResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="TransferFileService">
+<wsdl:port binding="tns:TransferFileServiceSoapBinding" name="TransferFileServiceHttpPort">
+<soap:address location="https://plastigray.kelio.io/open/services/TransferFileService"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>

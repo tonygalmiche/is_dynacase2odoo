@@ -1,0 +1,2891 @@
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://echange.service.open.bodet.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="AbsenceBalanceTotalService" targetNamespace="http://echange.service.open.bodet.com">
+<wsdl:types>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://lang.java" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://lang.java">
+<xsd:complexType name="Throwable">
+<xsd:sequence/>
+</xsd:complexType>
+<xsd:complexType name="Exception">
+<xsd:complexContent>
+<xsd:extension base="tns:Throwable">
+<xsd:sequence/>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+</xsd:schema>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://echange.service.open.bodet.com" xmlns:ns0="http://lang.java" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://echange.service.open.bodet.com">
+<xsd:complexType abstract="true" name="AbstractDailyTotal">
+<xsd:complexContent>
+<xsd:extension base="tns:AbstractTotal">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="date" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType abstract="true" name="AbstractFromDateToDateTotal">
+<xsd:complexContent>
+<xsd:extension base="tns:AbstractTotal">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType abstract="true" name="AbstractPeriodicTotal">
+<xsd:complexContent>
+<xsd:extension base="tns:AbstractTotal">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeEndDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="employeeStartDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="payrollCalendarDescription" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="payrollCalendarKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="periodEndDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="periodStartDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType abstract="true" name="AbstractTotal">
+<xsd:complexContent>
+<xsd:extension base="tns:EmployeeInformation">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="sectionAbbreviation" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="sectionDescription" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="sectionKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="typeAbbreviation" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="typeDescription" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="typeKey" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType abstract="true" name="AbstractWeeklyTotal">
+<xsd:complexContent>
+<xsd:extension base="tns:AbstractTotal">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="AccountFilter">
+<xsd:complexContent>
+<xsd:extension base="tns:PopulationFilter">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="calculationMode" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="transferEmptyAccount" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="typeKey" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfAccountFilter">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="AccountFilter" nillable="true" type="tns:AccountFilter"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfAskedEmployee">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="askedEmployee" nillable="true" type="tns:askedEmployee"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfAskedEmployeeWithPeriod">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="askedEmployeeWithPeriod" nillable="true" type="tns:askedEmployeeWithPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfAskedEmployeeWithRelativeDates">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="askedEmployeeWithRelativeDates" nillable="true" type="tns:askedEmployeeWithRelativeDates"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfDailyAbsenceBalanceTotal">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="DailyAbsenceBalanceTotal" nillable="true" type="tns:DailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfFromDateToDateAbsenceBalanceTotal">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="FromDateToDateAbsenceBalanceTotal" nillable="true" type="tns:FromDateToDateAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfPeriodicAbsenceBalanceTotal">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="PeriodicAbsenceBalanceTotal" nillable="true" type="tns:PeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfWeeklyAbsenceBalanceTotal">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="WeeklyAbsenceBalanceTotal" nillable="true" type="tns:WeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="DailyAbsenceBalanceTotal">
+<xsd:complexContent>
+<xsd:extension base="tns:AbstractDailyTotal">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="endDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="endHours" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="gainedDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="gainedHours" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="startDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="startHours" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="takenDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="takenHours" nillable="true" type="xsd:double"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="EmployeeInformation">
+<xsd:complexContent>
+<xsd:extension base="tns:Object">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="archivedEmployee" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="employeeBadgeCode" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="employeeFirstName" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="employeeIdentificationCode" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="employeeIdentificationNumber" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="employeeKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="employeeSurname" nillable="true" type="xsd:string"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="FromDateToDateAbsenceBalanceTotal">
+<xsd:complexContent>
+<xsd:extension base="tns:AbstractFromDateToDateTotal">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="adjustmentDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="adjustmentHours" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="endDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="endHours" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="gainedDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="gainedHours" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="startDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="startHours" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="takenDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="takenHours" nillable="true" type="xsd:double"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType abstract="true" name="Object">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="errorMessage" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="technicalString" nillable="true" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="PeriodicAbsenceBalanceTotal">
+<xsd:complexContent>
+<xsd:extension base="tns:AbstractPeriodicTotal">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="adjustmentDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="adjustmentHours" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="endDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="endHours" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="gainedDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="gainedHours" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="startDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="startHours" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="takenDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="takenHours" nillable="true" type="xsd:double"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType abstract="true" name="PopulationFilter">
+<xsd:complexContent>
+<xsd:extension base="tns:EmployeeInformation">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="dateMode" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endOffset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="populationEndDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="populationMode" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="populationStartDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="startOffset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="WeeklyAbsenceBalanceTotal">
+<xsd:complexContent>
+<xsd:extension base="tns:AbstractWeeklyTotal">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="adjustmentDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="adjustmentHours" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="endDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="endHours" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="gainedDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="gainedHours" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="startDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="startHours" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="takenDays" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="takenHours" nillable="true" type="xsd:double"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="askedEmployee">
+<xsd:complexContent>
+<xsd:extension base="tns:EmployeeInformation">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="dateMode" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endOffset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="startOffset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="askedEmployeeWithPeriod">
+<xsd:complexContent>
+<xsd:extension base="tns:EmployeeInformation">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="offset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="askedEmployeeWithRelativeDates">
+<xsd:complexContent>
+<xsd:extension base="tns:EmployeeInformation">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="endOffset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="startOffset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="exportActualAbsenceBalanceTotalsFromDateToDate" type="tns:exportActualAbsenceBalanceTotalsFromDateToDate"/>
+<xsd:complexType name="exportActualAbsenceBalanceTotalsFromDateToDate">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualAbsenceBalanceTotalsFromDateToDateResponse" type="tns:exportActualAbsenceBalanceTotalsFromDateToDateResponse"/>
+<xsd:complexType name="exportActualAbsenceBalanceTotalsFromDateToDateResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedFromDateToDateAbsenceBalanceTotals" type="tns:ArrayOfFromDateToDateAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeList" type="tns:exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeList"/>
+<xsd:complexType name="exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployee"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse" type="tns:exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse"/>
+<xsd:complexType name="exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedFromDateToDateAbsenceBalanceTotals" type="tns:ArrayOfFromDateToDateAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualAbsenceBalanceTotalsFromRelativeDates" type="tns:exportActualAbsenceBalanceTotalsFromRelativeDates"/>
+<xsd:complexType name="exportActualAbsenceBalanceTotalsFromRelativeDates">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startOffset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="endOffset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualAbsenceBalanceTotalsFromRelativeDatesResponse" type="tns:exportActualAbsenceBalanceTotalsFromRelativeDatesResponse"/>
+<xsd:complexType name="exportActualAbsenceBalanceTotalsFromRelativeDatesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedFromDateToDateAbsenceBalanceTotals" type="tns:ArrayOfFromDateToDateAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" type="tns:exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeList"/>
+<xsd:complexType name="exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithRelativeDates"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse" type="tns:exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse"/>
+<xsd:complexType name="exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedFromDateToDateAbsenceBalanceTotals" type="tns:ArrayOfFromDateToDateAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualDailyAbsenceBalanceTotalsFromDateToDate" type="tns:exportActualDailyAbsenceBalanceTotalsFromDateToDate"/>
+<xsd:complexType name="exportActualDailyAbsenceBalanceTotalsFromDateToDate">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualDailyAbsenceBalanceTotalsFromDateToDateResponse" type="tns:exportActualDailyAbsenceBalanceTotalsFromDateToDateResponse"/>
+<xsd:complexType name="exportActualDailyAbsenceBalanceTotalsFromDateToDateResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList" type="tns:exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList"/>
+<xsd:complexType name="exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployee"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse" type="tns:exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse"/>
+<xsd:complexType name="exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualDailyAbsenceBalanceTotalsFromPeriod" type="tns:exportActualDailyAbsenceBalanceTotalsFromPeriod"/>
+<xsd:complexType name="exportActualDailyAbsenceBalanceTotalsFromPeriod">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="offset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualDailyAbsenceBalanceTotalsFromPeriodResponse" type="tns:exportActualDailyAbsenceBalanceTotalsFromPeriodResponse"/>
+<xsd:complexType name="exportActualDailyAbsenceBalanceTotalsFromPeriodResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeList" type="tns:exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeList"/>
+<xsd:complexType name="exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse" type="tns:exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse"/>
+<xsd:complexType name="exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualDailyAbsenceBalanceTotalsFromRelativeDates" type="tns:exportActualDailyAbsenceBalanceTotalsFromRelativeDates"/>
+<xsd:complexType name="exportActualDailyAbsenceBalanceTotalsFromRelativeDates">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startOffset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="endOffset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualDailyAbsenceBalanceTotalsFromRelativeDatesResponse" type="tns:exportActualDailyAbsenceBalanceTotalsFromRelativeDatesResponse"/>
+<xsd:complexType name="exportActualDailyAbsenceBalanceTotalsFromRelativeDatesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" type="tns:exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList"/>
+<xsd:complexType name="exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithRelativeDates"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse" type="tns:exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse"/>
+<xsd:complexType name="exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualPeriodicalAbsenceBalanceTotals" type="tns:exportActualPeriodicalAbsenceBalanceTotals"/>
+<xsd:complexType name="exportActualPeriodicalAbsenceBalanceTotals">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="offset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualPeriodicalAbsenceBalanceTotalsResponse" type="tns:exportActualPeriodicalAbsenceBalanceTotalsResponse"/>
+<xsd:complexType name="exportActualPeriodicalAbsenceBalanceTotalsResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualPeriodicalAbsenceBalanceTotalsForEmployeeList" type="tns:exportActualPeriodicalAbsenceBalanceTotalsForEmployeeList"/>
+<xsd:complexType name="exportActualPeriodicalAbsenceBalanceTotalsForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualPeriodicalAbsenceBalanceTotalsForEmployeeListResponse" type="tns:exportActualPeriodicalAbsenceBalanceTotalsForEmployeeListResponse"/>
+<xsd:complexType name="exportActualPeriodicalAbsenceBalanceTotalsForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualPeriodicalAbsenceBalanceTotalsList" type="tns:exportActualPeriodicalAbsenceBalanceTotalsList"/>
+<xsd:complexType name="exportActualPeriodicalAbsenceBalanceTotalsList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startOffset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="endOffset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualPeriodicalAbsenceBalanceTotalsListResponse" type="tns:exportActualPeriodicalAbsenceBalanceTotalsListResponse"/>
+<xsd:complexType name="exportActualPeriodicalAbsenceBalanceTotalsListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeList" type="tns:exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeList"/>
+<xsd:complexType name="exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithRelativeDates"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse" type="tns:exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse"/>
+<xsd:complexType name="exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDate" type="tns:exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDate"/>
+<xsd:complexType name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDate">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse" type="tns:exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse"/>
+<xsd:complexType name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList" type="tns:exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList"/>
+<xsd:complexType name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployee"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse" type="tns:exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse"/>
+<xsd:complexType name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualWeeklyAbsenceBalanceTotals" type="tns:exportActualWeeklyAbsenceBalanceTotals"/>
+<xsd:complexType name="exportActualWeeklyAbsenceBalanceTotals">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="offset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualWeeklyAbsenceBalanceTotalsResponse" type="tns:exportActualWeeklyAbsenceBalanceTotalsResponse"/>
+<xsd:complexType name="exportActualWeeklyAbsenceBalanceTotalsResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualWeeklyAbsenceBalanceTotalsForEmployeeList" type="tns:exportActualWeeklyAbsenceBalanceTotalsForEmployeeList"/>
+<xsd:complexType name="exportActualWeeklyAbsenceBalanceTotalsForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualWeeklyAbsenceBalanceTotalsForEmployeeListResponse" type="tns:exportActualWeeklyAbsenceBalanceTotalsForEmployeeListResponse"/>
+<xsd:complexType name="exportActualWeeklyAbsenceBalanceTotalsForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualWeeklyAbsenceBalanceTotalsList" type="tns:exportActualWeeklyAbsenceBalanceTotalsList"/>
+<xsd:complexType name="exportActualWeeklyAbsenceBalanceTotalsList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startOffset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="endOffset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualWeeklyAbsenceBalanceTotalsListResponse" type="tns:exportActualWeeklyAbsenceBalanceTotalsListResponse"/>
+<xsd:complexType name="exportActualWeeklyAbsenceBalanceTotalsListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualWeeklyAbsenceBalanceTotalsListForEmployeeList" type="tns:exportActualWeeklyAbsenceBalanceTotalsListForEmployeeList"/>
+<xsd:complexType name="exportActualWeeklyAbsenceBalanceTotalsListForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithRelativeDates"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualWeeklyAbsenceBalanceTotalsListForEmployeeListResponse" type="tns:exportActualWeeklyAbsenceBalanceTotalsListForEmployeeListResponse"/>
+<xsd:complexType name="exportActualWeeklyAbsenceBalanceTotalsListForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDate" type="tns:exportActualWeeklyAbsenceBalanceTotalsListFromDateToDate"/>
+<xsd:complexType name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDate">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateResponse" type="tns:exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateResponse"/>
+<xsd:complexType name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList" type="tns:exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList"/>
+<xsd:complexType name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployee"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse" type="tns:exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse"/>
+<xsd:complexType name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportDailyAbsenceBalanceTotals" type="tns:exportDailyAbsenceBalanceTotals"/>
+<xsd:complexType name="exportDailyAbsenceBalanceTotals">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="accountFilter" type="tns:ArrayOfAccountFilter"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportDailyAbsenceBalanceTotalsResponse" type="tns:exportDailyAbsenceBalanceTotalsResponse"/>
+<xsd:complexType name="exportDailyAbsenceBalanceTotalsResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedFromDateToDateAbsenceBalanceTotals" type="tns:ArrayOfFromDateToDateAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportDailyAbsenceBalanceTotalsList" type="tns:exportDailyAbsenceBalanceTotalsList"/>
+<xsd:complexType name="exportDailyAbsenceBalanceTotalsList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="accountFilter" type="tns:ArrayOfAccountFilter"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportDailyAbsenceBalanceTotalsListResponse" type="tns:exportDailyAbsenceBalanceTotalsListResponse"/>
+<xsd:complexType name="exportDailyAbsenceBalanceTotalsListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedAbsenceBalanceTotalsFromDateToDate" type="tns:exportEstimatedAbsenceBalanceTotalsFromDateToDate"/>
+<xsd:complexType name="exportEstimatedAbsenceBalanceTotalsFromDateToDate">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedAbsenceBalanceTotalsFromDateToDateResponse" type="tns:exportEstimatedAbsenceBalanceTotalsFromDateToDateResponse"/>
+<xsd:complexType name="exportEstimatedAbsenceBalanceTotalsFromDateToDateResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedFromDateToDateAbsenceBalanceTotals" type="tns:ArrayOfFromDateToDateAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeList" type="tns:exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeList"/>
+<xsd:complexType name="exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployee"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse" type="tns:exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse"/>
+<xsd:complexType name="exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedFromDateToDateAbsenceBalanceTotals" type="tns:ArrayOfFromDateToDateAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedAbsenceBalanceTotalsFromRelativeDates" type="tns:exportEstimatedAbsenceBalanceTotalsFromRelativeDates"/>
+<xsd:complexType name="exportEstimatedAbsenceBalanceTotalsFromRelativeDates">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startOffset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="endOffset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedAbsenceBalanceTotalsFromRelativeDatesResponse" type="tns:exportEstimatedAbsenceBalanceTotalsFromRelativeDatesResponse"/>
+<xsd:complexType name="exportEstimatedAbsenceBalanceTotalsFromRelativeDatesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedFromDateToDateAbsenceBalanceTotals" type="tns:ArrayOfFromDateToDateAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" type="tns:exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList"/>
+<xsd:complexType name="exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithRelativeDates"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse" type="tns:exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse"/>
+<xsd:complexType name="exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedFromDateToDateAbsenceBalanceTotals" type="tns:ArrayOfFromDateToDateAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDate" type="tns:exportEstimatedDailyAbsenceBalanceTotalsFromDateToDate"/>
+<xsd:complexType name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDate">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateResponse" type="tns:exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateResponse"/>
+<xsd:complexType name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList" type="tns:exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList"/>
+<xsd:complexType name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployee"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse" type="tns:exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse"/>
+<xsd:complexType name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriod" type="tns:exportEstimatedDailyAbsenceBalanceTotalsFromPeriod"/>
+<xsd:complexType name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriod">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="offset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriodResponse" type="tns:exportEstimatedDailyAbsenceBalanceTotalsFromPeriodResponse"/>
+<xsd:complexType name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriodResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList" type="tns:exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList"/>
+<xsd:complexType name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse" type="tns:exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse"/>
+<xsd:complexType name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDates" type="tns:exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDates"/>
+<xsd:complexType name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDates">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startOffset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="endOffset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesResponse" type="tns:exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesResponse"/>
+<xsd:complexType name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" type="tns:exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList"/>
+<xsd:complexType name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithRelativeDates"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse" type="tns:exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse"/>
+<xsd:complexType name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedPeriodicalAbsenceBalanceTotals" type="tns:exportEstimatedPeriodicalAbsenceBalanceTotals"/>
+<xsd:complexType name="exportEstimatedPeriodicalAbsenceBalanceTotals">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="offset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedPeriodicalAbsenceBalanceTotalsResponse" type="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsResponse"/>
+<xsd:complexType name="exportEstimatedPeriodicalAbsenceBalanceTotalsResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeList" type="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeList"/>
+<xsd:complexType name="exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeListResponse" type="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeListResponse"/>
+<xsd:complexType name="exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedPeriodicalAbsenceBalanceTotalsList" type="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsList"/>
+<xsd:complexType name="exportEstimatedPeriodicalAbsenceBalanceTotalsList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startOffset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="endOffset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedPeriodicalAbsenceBalanceTotalsListResponse" type="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListResponse"/>
+<xsd:complexType name="exportEstimatedPeriodicalAbsenceBalanceTotalsListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeList" type="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeList"/>
+<xsd:complexType name="exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithRelativeDates"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse" type="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse"/>
+<xsd:complexType name="exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDate" type="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDate"/>
+<xsd:complexType name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDate">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse" type="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse"/>
+<xsd:complexType name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList" type="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList"/>
+<xsd:complexType name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployee"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse" type="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse"/>
+<xsd:complexType name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedWeeklyAbsenceBalanceTotals" type="tns:exportEstimatedWeeklyAbsenceBalanceTotals"/>
+<xsd:complexType name="exportEstimatedWeeklyAbsenceBalanceTotals">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="offset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedWeeklyAbsenceBalanceTotalsResponse" type="tns:exportEstimatedWeeklyAbsenceBalanceTotalsResponse"/>
+<xsd:complexType name="exportEstimatedWeeklyAbsenceBalanceTotalsResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeList" type="tns:exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeList"/>
+<xsd:complexType name="exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeListResponse" type="tns:exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeListResponse"/>
+<xsd:complexType name="exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedWeeklyAbsenceBalanceTotalsList" type="tns:exportEstimatedWeeklyAbsenceBalanceTotalsList"/>
+<xsd:complexType name="exportEstimatedWeeklyAbsenceBalanceTotalsList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startOffset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="endOffset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedWeeklyAbsenceBalanceTotalsListResponse" type="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListResponse"/>
+<xsd:complexType name="exportEstimatedWeeklyAbsenceBalanceTotalsListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeList" type="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeList"/>
+<xsd:complexType name="exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithRelativeDates"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeListResponse" type="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeListResponse"/>
+<xsd:complexType name="exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDate" type="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDate"/>
+<xsd:complexType name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDate">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateResponse" type="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateResponse"/>
+<xsd:complexType name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList" type="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList"/>
+<xsd:complexType name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployee"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse" type="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse"/>
+<xsd:complexType name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPeriodicalAbsenceBalanceTotals" type="tns:exportPeriodicalAbsenceBalanceTotals"/>
+<xsd:complexType name="exportPeriodicalAbsenceBalanceTotals">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="accountFilter" type="tns:ArrayOfAccountFilter"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPeriodicalAbsenceBalanceTotalsResponse" type="tns:exportPeriodicalAbsenceBalanceTotalsResponse"/>
+<xsd:complexType name="exportPeriodicalAbsenceBalanceTotalsResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPeriodicalAbsenceBalanceTotalsList" type="tns:exportPeriodicalAbsenceBalanceTotalsList"/>
+<xsd:complexType name="exportPeriodicalAbsenceBalanceTotalsList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="accountFilter" type="tns:ArrayOfAccountFilter"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPeriodicalAbsenceBalanceTotalsListResponse" type="tns:exportPeriodicalAbsenceBalanceTotalsListResponse"/>
+<xsd:complexType name="exportPeriodicalAbsenceBalanceTotalsListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedAbsenceBalanceTotalsFromDateToDate" type="tns:exportPlannedAbsenceBalanceTotalsFromDateToDate"/>
+<xsd:complexType name="exportPlannedAbsenceBalanceTotalsFromDateToDate">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedAbsenceBalanceTotalsFromDateToDateResponse" type="tns:exportPlannedAbsenceBalanceTotalsFromDateToDateResponse"/>
+<xsd:complexType name="exportPlannedAbsenceBalanceTotalsFromDateToDateResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedFromDateToDateAbsenceBalanceTotals" type="tns:ArrayOfFromDateToDateAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeList" type="tns:exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeList"/>
+<xsd:complexType name="exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployee"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse" type="tns:exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse"/>
+<xsd:complexType name="exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedFromDateToDateAbsenceBalanceTotals" type="tns:ArrayOfFromDateToDateAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedAbsenceBalanceTotalsFromRelativeDates" type="tns:exportPlannedAbsenceBalanceTotalsFromRelativeDates"/>
+<xsd:complexType name="exportPlannedAbsenceBalanceTotalsFromRelativeDates">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startOffset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="endOffset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedAbsenceBalanceTotalsFromRelativeDatesResponse" type="tns:exportPlannedAbsenceBalanceTotalsFromRelativeDatesResponse"/>
+<xsd:complexType name="exportPlannedAbsenceBalanceTotalsFromRelativeDatesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedFromDateToDateAbsenceBalanceTotals" type="tns:ArrayOfFromDateToDateAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" type="tns:exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList"/>
+<xsd:complexType name="exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithRelativeDates"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse" type="tns:exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse"/>
+<xsd:complexType name="exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedFromDateToDateAbsenceBalanceTotals" type="tns:ArrayOfFromDateToDateAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDate" type="tns:exportPlannedDailyAbsenceBalanceTotalsFromDateToDate"/>
+<xsd:complexType name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDate">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDateResponse" type="tns:exportPlannedDailyAbsenceBalanceTotalsFromDateToDateResponse"/>
+<xsd:complexType name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDateResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList" type="tns:exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList"/>
+<xsd:complexType name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployee"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse" type="tns:exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse"/>
+<xsd:complexType name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedDailyAbsenceBalanceTotalsFromPeriod" type="tns:exportPlannedDailyAbsenceBalanceTotalsFromPeriod"/>
+<xsd:complexType name="exportPlannedDailyAbsenceBalanceTotalsFromPeriod">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="offset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedDailyAbsenceBalanceTotalsFromPeriodResponse" type="tns:exportPlannedDailyAbsenceBalanceTotalsFromPeriodResponse"/>
+<xsd:complexType name="exportPlannedDailyAbsenceBalanceTotalsFromPeriodResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList" type="tns:exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList"/>
+<xsd:complexType name="exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse" type="tns:exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse"/>
+<xsd:complexType name="exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDates" type="tns:exportPlannedDailyAbsenceBalanceTotalsFromRelativeDates"/>
+<xsd:complexType name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDates">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startOffset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="endOffset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesResponse" type="tns:exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesResponse"/>
+<xsd:complexType name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" type="tns:exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList"/>
+<xsd:complexType name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithRelativeDates"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse" type="tns:exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse"/>
+<xsd:complexType name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedDailyAbsenceBalanceTotals" type="tns:ArrayOfDailyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedPeriodicalAbsenceBalanceTotals" type="tns:exportPlannedPeriodicalAbsenceBalanceTotals"/>
+<xsd:complexType name="exportPlannedPeriodicalAbsenceBalanceTotals">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="offset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedPeriodicalAbsenceBalanceTotalsResponse" type="tns:exportPlannedPeriodicalAbsenceBalanceTotalsResponse"/>
+<xsd:complexType name="exportPlannedPeriodicalAbsenceBalanceTotalsResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeList" type="tns:exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeList"/>
+<xsd:complexType name="exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeListResponse" type="tns:exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeListResponse"/>
+<xsd:complexType name="exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedPeriodicalAbsenceBalanceTotalsList" type="tns:exportPlannedPeriodicalAbsenceBalanceTotalsList"/>
+<xsd:complexType name="exportPlannedPeriodicalAbsenceBalanceTotalsList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startOffset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="endOffset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedPeriodicalAbsenceBalanceTotalsListResponse" type="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListResponse"/>
+<xsd:complexType name="exportPlannedPeriodicalAbsenceBalanceTotalsListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeList" type="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeList"/>
+<xsd:complexType name="exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithRelativeDates"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse" type="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse"/>
+<xsd:complexType name="exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDate" type="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDate"/>
+<xsd:complexType name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDate">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse" type="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse"/>
+<xsd:complexType name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList" type="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList"/>
+<xsd:complexType name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployee"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse" type="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse"/>
+<xsd:complexType name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedPeriodicalAbsenceBalanceTotals" type="tns:ArrayOfPeriodicAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedWeeklyAbsenceBalanceTotals" type="tns:exportPlannedWeeklyAbsenceBalanceTotals"/>
+<xsd:complexType name="exportPlannedWeeklyAbsenceBalanceTotals">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="offset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedWeeklyAbsenceBalanceTotalsResponse" type="tns:exportPlannedWeeklyAbsenceBalanceTotalsResponse"/>
+<xsd:complexType name="exportPlannedWeeklyAbsenceBalanceTotalsResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeList" type="tns:exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeList"/>
+<xsd:complexType name="exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithPeriod"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeListResponse" type="tns:exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeListResponse"/>
+<xsd:complexType name="exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedWeeklyAbsenceBalanceTotalsList" type="tns:exportPlannedWeeklyAbsenceBalanceTotalsList"/>
+<xsd:complexType name="exportPlannedWeeklyAbsenceBalanceTotalsList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startOffset" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="endOffset" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedWeeklyAbsenceBalanceTotalsListResponse" type="tns:exportPlannedWeeklyAbsenceBalanceTotalsListResponse"/>
+<xsd:complexType name="exportPlannedWeeklyAbsenceBalanceTotalsListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeList" type="tns:exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeList"/>
+<xsd:complexType name="exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployeeWithRelativeDates"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeListResponse" type="tns:exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeListResponse"/>
+<xsd:complexType name="exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDate" type="tns:exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDate"/>
+<xsd:complexType name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDate">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="populationFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="groupFilter" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="startDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="endDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateResponse" type="tns:exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateResponse"/>
+<xsd:complexType name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList" type="tns:exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList"/>
+<xsd:complexType name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="employeeList" type="tns:ArrayOfAskedEmployee"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse" type="tns:exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse"/>
+<xsd:complexType name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportWeeklyAbsenceBalanceTotals" type="tns:exportWeeklyAbsenceBalanceTotals"/>
+<xsd:complexType name="exportWeeklyAbsenceBalanceTotals">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="accountFilter" type="tns:ArrayOfAccountFilter"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportWeeklyAbsenceBalanceTotalsResponse" type="tns:exportWeeklyAbsenceBalanceTotalsResponse"/>
+<xsd:complexType name="exportWeeklyAbsenceBalanceTotalsResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportWeeklyAbsenceBalanceTotalsList" type="tns:exportWeeklyAbsenceBalanceTotalsList"/>
+<xsd:complexType name="exportWeeklyAbsenceBalanceTotalsList">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="accountFilter" type="tns:ArrayOfAccountFilter"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportWeeklyAbsenceBalanceTotalsListResponse" type="tns:exportWeeklyAbsenceBalanceTotalsListResponse"/>
+<xsd:complexType name="exportWeeklyAbsenceBalanceTotalsListResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedWeeklyAbsenceBalanceTotals" type="tns:ArrayOfWeeklyAbsenceBalanceTotal"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="Exception" nillable="true" type="ns0:Exception"/>
+</xsd:schema>
+</wsdl:types>
+<wsdl:message name="Exception">
+<wsdl:part element="tns:Exception" name="Exception"/>
+</wsdl:message>
+<wsdl:message name="exportActualAbsenceBalanceTotalsFromDateToDate">
+<wsdl:part element="tns:exportActualAbsenceBalanceTotalsFromDateToDate" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualAbsenceBalanceTotalsFromDateToDateResponse">
+<wsdl:part element="tns:exportActualAbsenceBalanceTotalsFromDateToDateResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<wsdl:part element="tns:exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse">
+<wsdl:part element="tns:exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualAbsenceBalanceTotalsFromRelativeDates">
+<wsdl:part element="tns:exportActualAbsenceBalanceTotalsFromRelativeDates" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualAbsenceBalanceTotalsFromRelativeDatesResponse">
+<wsdl:part element="tns:exportActualAbsenceBalanceTotalsFromRelativeDatesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<wsdl:part element="tns:exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse">
+<wsdl:part element="tns:exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualDailyAbsenceBalanceTotalsFromDateToDate">
+<wsdl:part element="tns:exportActualDailyAbsenceBalanceTotalsFromDateToDate" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualDailyAbsenceBalanceTotalsFromDateToDateResponse">
+<wsdl:part element="tns:exportActualDailyAbsenceBalanceTotalsFromDateToDateResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<wsdl:part element="tns:exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse">
+<wsdl:part element="tns:exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualDailyAbsenceBalanceTotalsFromPeriod">
+<wsdl:part element="tns:exportActualDailyAbsenceBalanceTotalsFromPeriod" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualDailyAbsenceBalanceTotalsFromPeriodResponse">
+<wsdl:part element="tns:exportActualDailyAbsenceBalanceTotalsFromPeriodResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeList">
+<wsdl:part element="tns:exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse">
+<wsdl:part element="tns:exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualDailyAbsenceBalanceTotalsFromRelativeDates">
+<wsdl:part element="tns:exportActualDailyAbsenceBalanceTotalsFromRelativeDates" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualDailyAbsenceBalanceTotalsFromRelativeDatesResponse">
+<wsdl:part element="tns:exportActualDailyAbsenceBalanceTotalsFromRelativeDatesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<wsdl:part element="tns:exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse">
+<wsdl:part element="tns:exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualPeriodicalAbsenceBalanceTotals">
+<wsdl:part element="tns:exportActualPeriodicalAbsenceBalanceTotals" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualPeriodicalAbsenceBalanceTotalsResponse">
+<wsdl:part element="tns:exportActualPeriodicalAbsenceBalanceTotalsResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualPeriodicalAbsenceBalanceTotalsForEmployeeList">
+<wsdl:part element="tns:exportActualPeriodicalAbsenceBalanceTotalsForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualPeriodicalAbsenceBalanceTotalsForEmployeeListResponse">
+<wsdl:part element="tns:exportActualPeriodicalAbsenceBalanceTotalsForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualPeriodicalAbsenceBalanceTotalsList">
+<wsdl:part element="tns:exportActualPeriodicalAbsenceBalanceTotalsList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualPeriodicalAbsenceBalanceTotalsListResponse">
+<wsdl:part element="tns:exportActualPeriodicalAbsenceBalanceTotalsListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeList">
+<wsdl:part element="tns:exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse">
+<wsdl:part element="tns:exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDate">
+<wsdl:part element="tns:exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDate" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse">
+<wsdl:part element="tns:exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<wsdl:part element="tns:exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse">
+<wsdl:part element="tns:exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualWeeklyAbsenceBalanceTotals">
+<wsdl:part element="tns:exportActualWeeklyAbsenceBalanceTotals" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualWeeklyAbsenceBalanceTotalsResponse">
+<wsdl:part element="tns:exportActualWeeklyAbsenceBalanceTotalsResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualWeeklyAbsenceBalanceTotalsForEmployeeList">
+<wsdl:part element="tns:exportActualWeeklyAbsenceBalanceTotalsForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualWeeklyAbsenceBalanceTotalsForEmployeeListResponse">
+<wsdl:part element="tns:exportActualWeeklyAbsenceBalanceTotalsForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualWeeklyAbsenceBalanceTotalsList">
+<wsdl:part element="tns:exportActualWeeklyAbsenceBalanceTotalsList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualWeeklyAbsenceBalanceTotalsListResponse">
+<wsdl:part element="tns:exportActualWeeklyAbsenceBalanceTotalsListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualWeeklyAbsenceBalanceTotalsListForEmployeeList">
+<wsdl:part element="tns:exportActualWeeklyAbsenceBalanceTotalsListForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualWeeklyAbsenceBalanceTotalsListForEmployeeListResponse">
+<wsdl:part element="tns:exportActualWeeklyAbsenceBalanceTotalsListForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDate">
+<wsdl:part element="tns:exportActualWeeklyAbsenceBalanceTotalsListFromDateToDate" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateResponse">
+<wsdl:part element="tns:exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<wsdl:part element="tns:exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse">
+<wsdl:part element="tns:exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportDailyAbsenceBalanceTotals">
+<wsdl:part element="tns:exportDailyAbsenceBalanceTotals" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportDailyAbsenceBalanceTotalsResponse">
+<wsdl:part element="tns:exportDailyAbsenceBalanceTotalsResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportDailyAbsenceBalanceTotalsList">
+<wsdl:part element="tns:exportDailyAbsenceBalanceTotalsList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportDailyAbsenceBalanceTotalsListResponse">
+<wsdl:part element="tns:exportDailyAbsenceBalanceTotalsListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedAbsenceBalanceTotalsFromDateToDate">
+<wsdl:part element="tns:exportEstimatedAbsenceBalanceTotalsFromDateToDate" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedAbsenceBalanceTotalsFromDateToDateResponse">
+<wsdl:part element="tns:exportEstimatedAbsenceBalanceTotalsFromDateToDateResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<wsdl:part element="tns:exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse">
+<wsdl:part element="tns:exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedAbsenceBalanceTotalsFromRelativeDates">
+<wsdl:part element="tns:exportEstimatedAbsenceBalanceTotalsFromRelativeDates" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedAbsenceBalanceTotalsFromRelativeDatesResponse">
+<wsdl:part element="tns:exportEstimatedAbsenceBalanceTotalsFromRelativeDatesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<wsdl:part element="tns:exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse">
+<wsdl:part element="tns:exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDate">
+<wsdl:part element="tns:exportEstimatedDailyAbsenceBalanceTotalsFromDateToDate" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateResponse">
+<wsdl:part element="tns:exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<wsdl:part element="tns:exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse">
+<wsdl:part element="tns:exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriod">
+<wsdl:part element="tns:exportEstimatedDailyAbsenceBalanceTotalsFromPeriod" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriodResponse">
+<wsdl:part element="tns:exportEstimatedDailyAbsenceBalanceTotalsFromPeriodResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList">
+<wsdl:part element="tns:exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse">
+<wsdl:part element="tns:exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDates">
+<wsdl:part element="tns:exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDates" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesResponse">
+<wsdl:part element="tns:exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<wsdl:part element="tns:exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse">
+<wsdl:part element="tns:exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedPeriodicalAbsenceBalanceTotals">
+<wsdl:part element="tns:exportEstimatedPeriodicalAbsenceBalanceTotals" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedPeriodicalAbsenceBalanceTotalsResponse">
+<wsdl:part element="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeList">
+<wsdl:part element="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeListResponse">
+<wsdl:part element="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedPeriodicalAbsenceBalanceTotalsList">
+<wsdl:part element="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedPeriodicalAbsenceBalanceTotalsListResponse">
+<wsdl:part element="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeList">
+<wsdl:part element="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse">
+<wsdl:part element="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDate">
+<wsdl:part element="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDate" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse">
+<wsdl:part element="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<wsdl:part element="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse">
+<wsdl:part element="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedWeeklyAbsenceBalanceTotals">
+<wsdl:part element="tns:exportEstimatedWeeklyAbsenceBalanceTotals" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedWeeklyAbsenceBalanceTotalsResponse">
+<wsdl:part element="tns:exportEstimatedWeeklyAbsenceBalanceTotalsResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeList">
+<wsdl:part element="tns:exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeListResponse">
+<wsdl:part element="tns:exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedWeeklyAbsenceBalanceTotalsList">
+<wsdl:part element="tns:exportEstimatedWeeklyAbsenceBalanceTotalsList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedWeeklyAbsenceBalanceTotalsListResponse">
+<wsdl:part element="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeList">
+<wsdl:part element="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeListResponse">
+<wsdl:part element="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDate">
+<wsdl:part element="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDate" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateResponse">
+<wsdl:part element="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<wsdl:part element="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse">
+<wsdl:part element="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPeriodicalAbsenceBalanceTotals">
+<wsdl:part element="tns:exportPeriodicalAbsenceBalanceTotals" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPeriodicalAbsenceBalanceTotalsResponse">
+<wsdl:part element="tns:exportPeriodicalAbsenceBalanceTotalsResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPeriodicalAbsenceBalanceTotalsList">
+<wsdl:part element="tns:exportPeriodicalAbsenceBalanceTotalsList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPeriodicalAbsenceBalanceTotalsListResponse">
+<wsdl:part element="tns:exportPeriodicalAbsenceBalanceTotalsListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedAbsenceBalanceTotalsFromDateToDate">
+<wsdl:part element="tns:exportPlannedAbsenceBalanceTotalsFromDateToDate" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedAbsenceBalanceTotalsFromDateToDateResponse">
+<wsdl:part element="tns:exportPlannedAbsenceBalanceTotalsFromDateToDateResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<wsdl:part element="tns:exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse">
+<wsdl:part element="tns:exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedAbsenceBalanceTotalsFromRelativeDates">
+<wsdl:part element="tns:exportPlannedAbsenceBalanceTotalsFromRelativeDates" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedAbsenceBalanceTotalsFromRelativeDatesResponse">
+<wsdl:part element="tns:exportPlannedAbsenceBalanceTotalsFromRelativeDatesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<wsdl:part element="tns:exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse">
+<wsdl:part element="tns:exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDate">
+<wsdl:part element="tns:exportPlannedDailyAbsenceBalanceTotalsFromDateToDate" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDateResponse">
+<wsdl:part element="tns:exportPlannedDailyAbsenceBalanceTotalsFromDateToDateResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<wsdl:part element="tns:exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse">
+<wsdl:part element="tns:exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedDailyAbsenceBalanceTotalsFromPeriod">
+<wsdl:part element="tns:exportPlannedDailyAbsenceBalanceTotalsFromPeriod" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedDailyAbsenceBalanceTotalsFromPeriodResponse">
+<wsdl:part element="tns:exportPlannedDailyAbsenceBalanceTotalsFromPeriodResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList">
+<wsdl:part element="tns:exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse">
+<wsdl:part element="tns:exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDates">
+<wsdl:part element="tns:exportPlannedDailyAbsenceBalanceTotalsFromRelativeDates" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesResponse">
+<wsdl:part element="tns:exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<wsdl:part element="tns:exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse">
+<wsdl:part element="tns:exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedPeriodicalAbsenceBalanceTotals">
+<wsdl:part element="tns:exportPlannedPeriodicalAbsenceBalanceTotals" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedPeriodicalAbsenceBalanceTotalsResponse">
+<wsdl:part element="tns:exportPlannedPeriodicalAbsenceBalanceTotalsResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeList">
+<wsdl:part element="tns:exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeListResponse">
+<wsdl:part element="tns:exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedPeriodicalAbsenceBalanceTotalsList">
+<wsdl:part element="tns:exportPlannedPeriodicalAbsenceBalanceTotalsList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedPeriodicalAbsenceBalanceTotalsListResponse">
+<wsdl:part element="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeList">
+<wsdl:part element="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse">
+<wsdl:part element="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDate">
+<wsdl:part element="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDate" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse">
+<wsdl:part element="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<wsdl:part element="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse">
+<wsdl:part element="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedWeeklyAbsenceBalanceTotals">
+<wsdl:part element="tns:exportPlannedWeeklyAbsenceBalanceTotals" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedWeeklyAbsenceBalanceTotalsResponse">
+<wsdl:part element="tns:exportPlannedWeeklyAbsenceBalanceTotalsResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeList">
+<wsdl:part element="tns:exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeListResponse">
+<wsdl:part element="tns:exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedWeeklyAbsenceBalanceTotalsList">
+<wsdl:part element="tns:exportPlannedWeeklyAbsenceBalanceTotalsList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedWeeklyAbsenceBalanceTotalsListResponse">
+<wsdl:part element="tns:exportPlannedWeeklyAbsenceBalanceTotalsListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeList">
+<wsdl:part element="tns:exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeListResponse">
+<wsdl:part element="tns:exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDate">
+<wsdl:part element="tns:exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDate" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateResponse">
+<wsdl:part element="tns:exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<wsdl:part element="tns:exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse">
+<wsdl:part element="tns:exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportWeeklyAbsenceBalanceTotals">
+<wsdl:part element="tns:exportWeeklyAbsenceBalanceTotals" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportWeeklyAbsenceBalanceTotalsResponse">
+<wsdl:part element="tns:exportWeeklyAbsenceBalanceTotalsResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportWeeklyAbsenceBalanceTotalsList">
+<wsdl:part element="tns:exportWeeklyAbsenceBalanceTotalsList" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportWeeklyAbsenceBalanceTotalsListResponse">
+<wsdl:part element="tns:exportWeeklyAbsenceBalanceTotalsListResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:portType name="AbsenceBalanceTotalServicePortType">
+<wsdl:operation name="exportActualAbsenceBalanceTotalsFromDateToDate">
+<wsdl:input message="tns:exportActualAbsenceBalanceTotalsFromDateToDate" name="exportActualAbsenceBalanceTotalsFromDateToDate"/>
+<wsdl:output message="tns:exportActualAbsenceBalanceTotalsFromDateToDateResponse" name="exportActualAbsenceBalanceTotalsFromDateToDateResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<wsdl:input message="tns:exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeList" name="exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeList"/>
+<wsdl:output message="tns:exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse" name="exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualAbsenceBalanceTotalsFromRelativeDates">
+<wsdl:input message="tns:exportActualAbsenceBalanceTotalsFromRelativeDates" name="exportActualAbsenceBalanceTotalsFromRelativeDates"/>
+<wsdl:output message="tns:exportActualAbsenceBalanceTotalsFromRelativeDatesResponse" name="exportActualAbsenceBalanceTotalsFromRelativeDatesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<wsdl:input message="tns:exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" name="exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeList"/>
+<wsdl:output message="tns:exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse" name="exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualDailyAbsenceBalanceTotalsFromDateToDate">
+<wsdl:input message="tns:exportActualDailyAbsenceBalanceTotalsFromDateToDate" name="exportActualDailyAbsenceBalanceTotalsFromDateToDate"/>
+<wsdl:output message="tns:exportActualDailyAbsenceBalanceTotalsFromDateToDateResponse" name="exportActualDailyAbsenceBalanceTotalsFromDateToDateResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<wsdl:input message="tns:exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList" name="exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList"/>
+<wsdl:output message="tns:exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse" name="exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualDailyAbsenceBalanceTotalsFromPeriod">
+<wsdl:input message="tns:exportActualDailyAbsenceBalanceTotalsFromPeriod" name="exportActualDailyAbsenceBalanceTotalsFromPeriod"/>
+<wsdl:output message="tns:exportActualDailyAbsenceBalanceTotalsFromPeriodResponse" name="exportActualDailyAbsenceBalanceTotalsFromPeriodResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeList">
+<wsdl:input message="tns:exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeList" name="exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeList"/>
+<wsdl:output message="tns:exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse" name="exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualDailyAbsenceBalanceTotalsFromRelativeDates">
+<wsdl:input message="tns:exportActualDailyAbsenceBalanceTotalsFromRelativeDates" name="exportActualDailyAbsenceBalanceTotalsFromRelativeDates"/>
+<wsdl:output message="tns:exportActualDailyAbsenceBalanceTotalsFromRelativeDatesResponse" name="exportActualDailyAbsenceBalanceTotalsFromRelativeDatesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<wsdl:input message="tns:exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" name="exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList"/>
+<wsdl:output message="tns:exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse" name="exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualPeriodicalAbsenceBalanceTotals">
+<wsdl:input message="tns:exportActualPeriodicalAbsenceBalanceTotals" name="exportActualPeriodicalAbsenceBalanceTotals"/>
+<wsdl:output message="tns:exportActualPeriodicalAbsenceBalanceTotalsResponse" name="exportActualPeriodicalAbsenceBalanceTotalsResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualPeriodicalAbsenceBalanceTotalsForEmployeeList">
+<wsdl:input message="tns:exportActualPeriodicalAbsenceBalanceTotalsForEmployeeList" name="exportActualPeriodicalAbsenceBalanceTotalsForEmployeeList"/>
+<wsdl:output message="tns:exportActualPeriodicalAbsenceBalanceTotalsForEmployeeListResponse" name="exportActualPeriodicalAbsenceBalanceTotalsForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualPeriodicalAbsenceBalanceTotalsList">
+<wsdl:input message="tns:exportActualPeriodicalAbsenceBalanceTotalsList" name="exportActualPeriodicalAbsenceBalanceTotalsList"/>
+<wsdl:output message="tns:exportActualPeriodicalAbsenceBalanceTotalsListResponse" name="exportActualPeriodicalAbsenceBalanceTotalsListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeList">
+<wsdl:input message="tns:exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeList" name="exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeList"/>
+<wsdl:output message="tns:exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse" name="exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDate">
+<wsdl:input message="tns:exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDate" name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDate"/>
+<wsdl:output message="tns:exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse" name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<wsdl:input message="tns:exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList" name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList"/>
+<wsdl:output message="tns:exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse" name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualWeeklyAbsenceBalanceTotals">
+<wsdl:input message="tns:exportActualWeeklyAbsenceBalanceTotals" name="exportActualWeeklyAbsenceBalanceTotals"/>
+<wsdl:output message="tns:exportActualWeeklyAbsenceBalanceTotalsResponse" name="exportActualWeeklyAbsenceBalanceTotalsResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualWeeklyAbsenceBalanceTotalsForEmployeeList">
+<wsdl:input message="tns:exportActualWeeklyAbsenceBalanceTotalsForEmployeeList" name="exportActualWeeklyAbsenceBalanceTotalsForEmployeeList"/>
+<wsdl:output message="tns:exportActualWeeklyAbsenceBalanceTotalsForEmployeeListResponse" name="exportActualWeeklyAbsenceBalanceTotalsForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualWeeklyAbsenceBalanceTotalsList">
+<wsdl:input message="tns:exportActualWeeklyAbsenceBalanceTotalsList" name="exportActualWeeklyAbsenceBalanceTotalsList"/>
+<wsdl:output message="tns:exportActualWeeklyAbsenceBalanceTotalsListResponse" name="exportActualWeeklyAbsenceBalanceTotalsListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualWeeklyAbsenceBalanceTotalsListForEmployeeList">
+<wsdl:input message="tns:exportActualWeeklyAbsenceBalanceTotalsListForEmployeeList" name="exportActualWeeklyAbsenceBalanceTotalsListForEmployeeList"/>
+<wsdl:output message="tns:exportActualWeeklyAbsenceBalanceTotalsListForEmployeeListResponse" name="exportActualWeeklyAbsenceBalanceTotalsListForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDate">
+<wsdl:input message="tns:exportActualWeeklyAbsenceBalanceTotalsListFromDateToDate" name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDate"/>
+<wsdl:output message="tns:exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateResponse" name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<wsdl:input message="tns:exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList" name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList"/>
+<wsdl:output message="tns:exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse" name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportDailyAbsenceBalanceTotals">
+<wsdl:input message="tns:exportDailyAbsenceBalanceTotals" name="exportDailyAbsenceBalanceTotals"/>
+<wsdl:output message="tns:exportDailyAbsenceBalanceTotalsResponse" name="exportDailyAbsenceBalanceTotalsResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportDailyAbsenceBalanceTotalsList">
+<wsdl:input message="tns:exportDailyAbsenceBalanceTotalsList" name="exportDailyAbsenceBalanceTotalsList"/>
+<wsdl:output message="tns:exportDailyAbsenceBalanceTotalsListResponse" name="exportDailyAbsenceBalanceTotalsListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedAbsenceBalanceTotalsFromDateToDate">
+<wsdl:input message="tns:exportEstimatedAbsenceBalanceTotalsFromDateToDate" name="exportEstimatedAbsenceBalanceTotalsFromDateToDate"/>
+<wsdl:output message="tns:exportEstimatedAbsenceBalanceTotalsFromDateToDateResponse" name="exportEstimatedAbsenceBalanceTotalsFromDateToDateResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<wsdl:input message="tns:exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeList" name="exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeList"/>
+<wsdl:output message="tns:exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse" name="exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedAbsenceBalanceTotalsFromRelativeDates">
+<wsdl:input message="tns:exportEstimatedAbsenceBalanceTotalsFromRelativeDates" name="exportEstimatedAbsenceBalanceTotalsFromRelativeDates"/>
+<wsdl:output message="tns:exportEstimatedAbsenceBalanceTotalsFromRelativeDatesResponse" name="exportEstimatedAbsenceBalanceTotalsFromRelativeDatesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<wsdl:input message="tns:exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" name="exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList"/>
+<wsdl:output message="tns:exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse" name="exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDate">
+<wsdl:input message="tns:exportEstimatedDailyAbsenceBalanceTotalsFromDateToDate" name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDate"/>
+<wsdl:output message="tns:exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateResponse" name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<wsdl:input message="tns:exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList" name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList"/>
+<wsdl:output message="tns:exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse" name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriod">
+<wsdl:input message="tns:exportEstimatedDailyAbsenceBalanceTotalsFromPeriod" name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriod"/>
+<wsdl:output message="tns:exportEstimatedDailyAbsenceBalanceTotalsFromPeriodResponse" name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriodResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList">
+<wsdl:input message="tns:exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList" name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList"/>
+<wsdl:output message="tns:exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse" name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDates">
+<wsdl:input message="tns:exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDates" name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDates"/>
+<wsdl:output message="tns:exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesResponse" name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<wsdl:input message="tns:exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList"/>
+<wsdl:output message="tns:exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse" name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedPeriodicalAbsenceBalanceTotals">
+<wsdl:input message="tns:exportEstimatedPeriodicalAbsenceBalanceTotals" name="exportEstimatedPeriodicalAbsenceBalanceTotals"/>
+<wsdl:output message="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsResponse" name="exportEstimatedPeriodicalAbsenceBalanceTotalsResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeList">
+<wsdl:input message="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeList" name="exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeList"/>
+<wsdl:output message="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeListResponse" name="exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedPeriodicalAbsenceBalanceTotalsList">
+<wsdl:input message="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsList" name="exportEstimatedPeriodicalAbsenceBalanceTotalsList"/>
+<wsdl:output message="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListResponse" name="exportEstimatedPeriodicalAbsenceBalanceTotalsListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeList">
+<wsdl:input message="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeList" name="exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeList"/>
+<wsdl:output message="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse" name="exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDate">
+<wsdl:input message="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDate" name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDate"/>
+<wsdl:output message="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse" name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<wsdl:input message="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList" name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList"/>
+<wsdl:output message="tns:exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse" name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedWeeklyAbsenceBalanceTotals">
+<wsdl:input message="tns:exportEstimatedWeeklyAbsenceBalanceTotals" name="exportEstimatedWeeklyAbsenceBalanceTotals"/>
+<wsdl:output message="tns:exportEstimatedWeeklyAbsenceBalanceTotalsResponse" name="exportEstimatedWeeklyAbsenceBalanceTotalsResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeList">
+<wsdl:input message="tns:exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeList" name="exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeList"/>
+<wsdl:output message="tns:exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeListResponse" name="exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedWeeklyAbsenceBalanceTotalsList">
+<wsdl:input message="tns:exportEstimatedWeeklyAbsenceBalanceTotalsList" name="exportEstimatedWeeklyAbsenceBalanceTotalsList"/>
+<wsdl:output message="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListResponse" name="exportEstimatedWeeklyAbsenceBalanceTotalsListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeList">
+<wsdl:input message="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeList" name="exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeList"/>
+<wsdl:output message="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeListResponse" name="exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDate">
+<wsdl:input message="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDate" name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDate"/>
+<wsdl:output message="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateResponse" name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<wsdl:input message="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList" name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList"/>
+<wsdl:output message="tns:exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse" name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPeriodicalAbsenceBalanceTotals">
+<wsdl:input message="tns:exportPeriodicalAbsenceBalanceTotals" name="exportPeriodicalAbsenceBalanceTotals"/>
+<wsdl:output message="tns:exportPeriodicalAbsenceBalanceTotalsResponse" name="exportPeriodicalAbsenceBalanceTotalsResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPeriodicalAbsenceBalanceTotalsList">
+<wsdl:input message="tns:exportPeriodicalAbsenceBalanceTotalsList" name="exportPeriodicalAbsenceBalanceTotalsList"/>
+<wsdl:output message="tns:exportPeriodicalAbsenceBalanceTotalsListResponse" name="exportPeriodicalAbsenceBalanceTotalsListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedAbsenceBalanceTotalsFromDateToDate">
+<wsdl:input message="tns:exportPlannedAbsenceBalanceTotalsFromDateToDate" name="exportPlannedAbsenceBalanceTotalsFromDateToDate"/>
+<wsdl:output message="tns:exportPlannedAbsenceBalanceTotalsFromDateToDateResponse" name="exportPlannedAbsenceBalanceTotalsFromDateToDateResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<wsdl:input message="tns:exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeList" name="exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeList"/>
+<wsdl:output message="tns:exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse" name="exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedAbsenceBalanceTotalsFromRelativeDates">
+<wsdl:input message="tns:exportPlannedAbsenceBalanceTotalsFromRelativeDates" name="exportPlannedAbsenceBalanceTotalsFromRelativeDates"/>
+<wsdl:output message="tns:exportPlannedAbsenceBalanceTotalsFromRelativeDatesResponse" name="exportPlannedAbsenceBalanceTotalsFromRelativeDatesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<wsdl:input message="tns:exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" name="exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList"/>
+<wsdl:output message="tns:exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse" name="exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDate">
+<wsdl:input message="tns:exportPlannedDailyAbsenceBalanceTotalsFromDateToDate" name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDate"/>
+<wsdl:output message="tns:exportPlannedDailyAbsenceBalanceTotalsFromDateToDateResponse" name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDateResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<wsdl:input message="tns:exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList" name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList"/>
+<wsdl:output message="tns:exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse" name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedDailyAbsenceBalanceTotalsFromPeriod">
+<wsdl:input message="tns:exportPlannedDailyAbsenceBalanceTotalsFromPeriod" name="exportPlannedDailyAbsenceBalanceTotalsFromPeriod"/>
+<wsdl:output message="tns:exportPlannedDailyAbsenceBalanceTotalsFromPeriodResponse" name="exportPlannedDailyAbsenceBalanceTotalsFromPeriodResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList">
+<wsdl:input message="tns:exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList" name="exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList"/>
+<wsdl:output message="tns:exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse" name="exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDates">
+<wsdl:input message="tns:exportPlannedDailyAbsenceBalanceTotalsFromRelativeDates" name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDates"/>
+<wsdl:output message="tns:exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesResponse" name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<wsdl:input message="tns:exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList"/>
+<wsdl:output message="tns:exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse" name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedPeriodicalAbsenceBalanceTotals">
+<wsdl:input message="tns:exportPlannedPeriodicalAbsenceBalanceTotals" name="exportPlannedPeriodicalAbsenceBalanceTotals"/>
+<wsdl:output message="tns:exportPlannedPeriodicalAbsenceBalanceTotalsResponse" name="exportPlannedPeriodicalAbsenceBalanceTotalsResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeList">
+<wsdl:input message="tns:exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeList" name="exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeList"/>
+<wsdl:output message="tns:exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeListResponse" name="exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedPeriodicalAbsenceBalanceTotalsList">
+<wsdl:input message="tns:exportPlannedPeriodicalAbsenceBalanceTotalsList" name="exportPlannedPeriodicalAbsenceBalanceTotalsList"/>
+<wsdl:output message="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListResponse" name="exportPlannedPeriodicalAbsenceBalanceTotalsListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeList">
+<wsdl:input message="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeList" name="exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeList"/>
+<wsdl:output message="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse" name="exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDate">
+<wsdl:input message="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDate" name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDate"/>
+<wsdl:output message="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse" name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<wsdl:input message="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList" name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList"/>
+<wsdl:output message="tns:exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse" name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedWeeklyAbsenceBalanceTotals">
+<wsdl:input message="tns:exportPlannedWeeklyAbsenceBalanceTotals" name="exportPlannedWeeklyAbsenceBalanceTotals"/>
+<wsdl:output message="tns:exportPlannedWeeklyAbsenceBalanceTotalsResponse" name="exportPlannedWeeklyAbsenceBalanceTotalsResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeList">
+<wsdl:input message="tns:exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeList" name="exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeList"/>
+<wsdl:output message="tns:exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeListResponse" name="exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedWeeklyAbsenceBalanceTotalsList">
+<wsdl:input message="tns:exportPlannedWeeklyAbsenceBalanceTotalsList" name="exportPlannedWeeklyAbsenceBalanceTotalsList"/>
+<wsdl:output message="tns:exportPlannedWeeklyAbsenceBalanceTotalsListResponse" name="exportPlannedWeeklyAbsenceBalanceTotalsListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeList">
+<wsdl:input message="tns:exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeList" name="exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeList"/>
+<wsdl:output message="tns:exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeListResponse" name="exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDate">
+<wsdl:input message="tns:exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDate" name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDate"/>
+<wsdl:output message="tns:exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateResponse" name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<wsdl:input message="tns:exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList" name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList"/>
+<wsdl:output message="tns:exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse" name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportWeeklyAbsenceBalanceTotals">
+<wsdl:input message="tns:exportWeeklyAbsenceBalanceTotals" name="exportWeeklyAbsenceBalanceTotals"/>
+<wsdl:output message="tns:exportWeeklyAbsenceBalanceTotalsResponse" name="exportWeeklyAbsenceBalanceTotalsResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportWeeklyAbsenceBalanceTotalsList">
+<wsdl:input message="tns:exportWeeklyAbsenceBalanceTotalsList" name="exportWeeklyAbsenceBalanceTotalsList"/>
+<wsdl:output message="tns:exportWeeklyAbsenceBalanceTotalsListResponse" name="exportWeeklyAbsenceBalanceTotalsListResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="AbsenceBalanceTotalServiceSoapBinding" type="tns:AbsenceBalanceTotalServicePortType">
+<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="exportActualAbsenceBalanceTotalsFromDateToDate">
+<soap:operation soapAction="urn:exportActualAbsenceBalanceTotalsFromDateToDate" style="document"/>
+<wsdl:input name="exportActualAbsenceBalanceTotalsFromDateToDate">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualAbsenceBalanceTotalsFromDateToDateResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<soap:operation soapAction="urn:exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeList" style="document"/>
+<wsdl:input name="exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualAbsenceBalanceTotalsFromRelativeDates">
+<soap:operation soapAction="urn:exportActualAbsenceBalanceTotalsFromRelativeDates" style="document"/>
+<wsdl:input name="exportActualAbsenceBalanceTotalsFromRelativeDates">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualAbsenceBalanceTotalsFromRelativeDatesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<soap:operation soapAction="urn:exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" style="document"/>
+<wsdl:input name="exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualDailyAbsenceBalanceTotalsFromDateToDate">
+<soap:operation soapAction="urn:exportActualDailyAbsenceBalanceTotalsFromDateToDate" style="document"/>
+<wsdl:input name="exportActualDailyAbsenceBalanceTotalsFromDateToDate">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualDailyAbsenceBalanceTotalsFromDateToDateResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<soap:operation soapAction="urn:exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList" style="document"/>
+<wsdl:input name="exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualDailyAbsenceBalanceTotalsFromPeriod">
+<soap:operation soapAction="urn:exportActualDailyAbsenceBalanceTotalsFromPeriod" style="document"/>
+<wsdl:input name="exportActualDailyAbsenceBalanceTotalsFromPeriod">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualDailyAbsenceBalanceTotalsFromPeriodResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeList">
+<soap:operation soapAction="urn:exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeList" style="document"/>
+<wsdl:input name="exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualDailyAbsenceBalanceTotalsFromRelativeDates">
+<soap:operation soapAction="urn:exportActualDailyAbsenceBalanceTotalsFromRelativeDates" style="document"/>
+<wsdl:input name="exportActualDailyAbsenceBalanceTotalsFromRelativeDates">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualDailyAbsenceBalanceTotalsFromRelativeDatesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<soap:operation soapAction="urn:exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" style="document"/>
+<wsdl:input name="exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualPeriodicalAbsenceBalanceTotals">
+<soap:operation soapAction="urn:exportActualPeriodicalAbsenceBalanceTotals" style="document"/>
+<wsdl:input name="exportActualPeriodicalAbsenceBalanceTotals">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualPeriodicalAbsenceBalanceTotalsResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualPeriodicalAbsenceBalanceTotalsForEmployeeList">
+<soap:operation soapAction="urn:exportActualPeriodicalAbsenceBalanceTotalsForEmployeeList" style="document"/>
+<wsdl:input name="exportActualPeriodicalAbsenceBalanceTotalsForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualPeriodicalAbsenceBalanceTotalsForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualPeriodicalAbsenceBalanceTotalsList">
+<soap:operation soapAction="urn:exportActualPeriodicalAbsenceBalanceTotalsList" style="document"/>
+<wsdl:input name="exportActualPeriodicalAbsenceBalanceTotalsList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualPeriodicalAbsenceBalanceTotalsListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeList">
+<soap:operation soapAction="urn:exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeList" style="document"/>
+<wsdl:input name="exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDate">
+<soap:operation soapAction="urn:exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDate" style="document"/>
+<wsdl:input name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDate">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<soap:operation soapAction="urn:exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList" style="document"/>
+<wsdl:input name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualWeeklyAbsenceBalanceTotals">
+<soap:operation soapAction="urn:exportActualWeeklyAbsenceBalanceTotals" style="document"/>
+<wsdl:input name="exportActualWeeklyAbsenceBalanceTotals">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualWeeklyAbsenceBalanceTotalsResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualWeeklyAbsenceBalanceTotalsForEmployeeList">
+<soap:operation soapAction="urn:exportActualWeeklyAbsenceBalanceTotalsForEmployeeList" style="document"/>
+<wsdl:input name="exportActualWeeklyAbsenceBalanceTotalsForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualWeeklyAbsenceBalanceTotalsForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualWeeklyAbsenceBalanceTotalsList">
+<soap:operation soapAction="urn:exportActualWeeklyAbsenceBalanceTotalsList" style="document"/>
+<wsdl:input name="exportActualWeeklyAbsenceBalanceTotalsList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualWeeklyAbsenceBalanceTotalsListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualWeeklyAbsenceBalanceTotalsListForEmployeeList">
+<soap:operation soapAction="urn:exportActualWeeklyAbsenceBalanceTotalsListForEmployeeList" style="document"/>
+<wsdl:input name="exportActualWeeklyAbsenceBalanceTotalsListForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualWeeklyAbsenceBalanceTotalsListForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDate">
+<soap:operation soapAction="urn:exportActualWeeklyAbsenceBalanceTotalsListFromDateToDate" style="document"/>
+<wsdl:input name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDate">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<soap:operation soapAction="urn:exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList" style="document"/>
+<wsdl:input name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportActualWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportDailyAbsenceBalanceTotals">
+<soap:operation soapAction="urn:exportDailyAbsenceBalanceTotals" style="document"/>
+<wsdl:input name="exportDailyAbsenceBalanceTotals">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportDailyAbsenceBalanceTotalsResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportDailyAbsenceBalanceTotalsList">
+<soap:operation soapAction="urn:exportDailyAbsenceBalanceTotalsList" style="document"/>
+<wsdl:input name="exportDailyAbsenceBalanceTotalsList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportDailyAbsenceBalanceTotalsListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedAbsenceBalanceTotalsFromDateToDate">
+<soap:operation soapAction="urn:exportEstimatedAbsenceBalanceTotalsFromDateToDate" style="document"/>
+<wsdl:input name="exportEstimatedAbsenceBalanceTotalsFromDateToDate">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedAbsenceBalanceTotalsFromDateToDateResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<soap:operation soapAction="urn:exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeList" style="document"/>
+<wsdl:input name="exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedAbsenceBalanceTotalsFromRelativeDates">
+<soap:operation soapAction="urn:exportEstimatedAbsenceBalanceTotalsFromRelativeDates" style="document"/>
+<wsdl:input name="exportEstimatedAbsenceBalanceTotalsFromRelativeDates">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedAbsenceBalanceTotalsFromRelativeDatesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<soap:operation soapAction="urn:exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" style="document"/>
+<wsdl:input name="exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDate">
+<soap:operation soapAction="urn:exportEstimatedDailyAbsenceBalanceTotalsFromDateToDate" style="document"/>
+<wsdl:input name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDate">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<soap:operation soapAction="urn:exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList" style="document"/>
+<wsdl:input name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriod">
+<soap:operation soapAction="urn:exportEstimatedDailyAbsenceBalanceTotalsFromPeriod" style="document"/>
+<wsdl:input name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriod">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriodResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList">
+<soap:operation soapAction="urn:exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList" style="document"/>
+<wsdl:input name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDates">
+<soap:operation soapAction="urn:exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDates" style="document"/>
+<wsdl:input name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDates">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<soap:operation soapAction="urn:exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" style="document"/>
+<wsdl:input name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedPeriodicalAbsenceBalanceTotals">
+<soap:operation soapAction="urn:exportEstimatedPeriodicalAbsenceBalanceTotals" style="document"/>
+<wsdl:input name="exportEstimatedPeriodicalAbsenceBalanceTotals">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedPeriodicalAbsenceBalanceTotalsResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeList">
+<soap:operation soapAction="urn:exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeList" style="document"/>
+<wsdl:input name="exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedPeriodicalAbsenceBalanceTotalsForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedPeriodicalAbsenceBalanceTotalsList">
+<soap:operation soapAction="urn:exportEstimatedPeriodicalAbsenceBalanceTotalsList" style="document"/>
+<wsdl:input name="exportEstimatedPeriodicalAbsenceBalanceTotalsList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedPeriodicalAbsenceBalanceTotalsListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeList">
+<soap:operation soapAction="urn:exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeList" style="document"/>
+<wsdl:input name="exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDate">
+<soap:operation soapAction="urn:exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDate" style="document"/>
+<wsdl:input name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDate">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<soap:operation soapAction="urn:exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList" style="document"/>
+<wsdl:input name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedWeeklyAbsenceBalanceTotals">
+<soap:operation soapAction="urn:exportEstimatedWeeklyAbsenceBalanceTotals" style="document"/>
+<wsdl:input name="exportEstimatedWeeklyAbsenceBalanceTotals">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedWeeklyAbsenceBalanceTotalsResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeList">
+<soap:operation soapAction="urn:exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeList" style="document"/>
+<wsdl:input name="exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedWeeklyAbsenceBalanceTotalsForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedWeeklyAbsenceBalanceTotalsList">
+<soap:operation soapAction="urn:exportEstimatedWeeklyAbsenceBalanceTotalsList" style="document"/>
+<wsdl:input name="exportEstimatedWeeklyAbsenceBalanceTotalsList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedWeeklyAbsenceBalanceTotalsListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeList">
+<soap:operation soapAction="urn:exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeList" style="document"/>
+<wsdl:input name="exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedWeeklyAbsenceBalanceTotalsListForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDate">
+<soap:operation soapAction="urn:exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDate" style="document"/>
+<wsdl:input name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDate">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<soap:operation soapAction="urn:exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList" style="document"/>
+<wsdl:input name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportEstimatedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPeriodicalAbsenceBalanceTotals">
+<soap:operation soapAction="urn:exportPeriodicalAbsenceBalanceTotals" style="document"/>
+<wsdl:input name="exportPeriodicalAbsenceBalanceTotals">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPeriodicalAbsenceBalanceTotalsResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPeriodicalAbsenceBalanceTotalsList">
+<soap:operation soapAction="urn:exportPeriodicalAbsenceBalanceTotalsList" style="document"/>
+<wsdl:input name="exportPeriodicalAbsenceBalanceTotalsList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPeriodicalAbsenceBalanceTotalsListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedAbsenceBalanceTotalsFromDateToDate">
+<soap:operation soapAction="urn:exportPlannedAbsenceBalanceTotalsFromDateToDate" style="document"/>
+<wsdl:input name="exportPlannedAbsenceBalanceTotalsFromDateToDate">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedAbsenceBalanceTotalsFromDateToDateResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<soap:operation soapAction="urn:exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeList" style="document"/>
+<wsdl:input name="exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedAbsenceBalanceTotalsFromRelativeDates">
+<soap:operation soapAction="urn:exportPlannedAbsenceBalanceTotalsFromRelativeDates" style="document"/>
+<wsdl:input name="exportPlannedAbsenceBalanceTotalsFromRelativeDates">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedAbsenceBalanceTotalsFromRelativeDatesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<soap:operation soapAction="urn:exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" style="document"/>
+<wsdl:input name="exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDate">
+<soap:operation soapAction="urn:exportPlannedDailyAbsenceBalanceTotalsFromDateToDate" style="document"/>
+<wsdl:input name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDate">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDateResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<soap:operation soapAction="urn:exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList" style="document"/>
+<wsdl:input name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedDailyAbsenceBalanceTotalsFromDateToDateForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedDailyAbsenceBalanceTotalsFromPeriod">
+<soap:operation soapAction="urn:exportPlannedDailyAbsenceBalanceTotalsFromPeriod" style="document"/>
+<wsdl:input name="exportPlannedDailyAbsenceBalanceTotalsFromPeriod">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedDailyAbsenceBalanceTotalsFromPeriodResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList">
+<soap:operation soapAction="urn:exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList" style="document"/>
+<wsdl:input name="exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedDailyAbsenceBalanceTotalsFromPeriodForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDates">
+<soap:operation soapAction="urn:exportPlannedDailyAbsenceBalanceTotalsFromRelativeDates" style="document"/>
+<wsdl:input name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDates">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<soap:operation soapAction="urn:exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList" style="document"/>
+<wsdl:input name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedDailyAbsenceBalanceTotalsFromRelativeDatesForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedPeriodicalAbsenceBalanceTotals">
+<soap:operation soapAction="urn:exportPlannedPeriodicalAbsenceBalanceTotals" style="document"/>
+<wsdl:input name="exportPlannedPeriodicalAbsenceBalanceTotals">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedPeriodicalAbsenceBalanceTotalsResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeList">
+<soap:operation soapAction="urn:exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeList" style="document"/>
+<wsdl:input name="exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedPeriodicalAbsenceBalanceTotalsForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedPeriodicalAbsenceBalanceTotalsList">
+<soap:operation soapAction="urn:exportPlannedPeriodicalAbsenceBalanceTotalsList" style="document"/>
+<wsdl:input name="exportPlannedPeriodicalAbsenceBalanceTotalsList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedPeriodicalAbsenceBalanceTotalsListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeList">
+<soap:operation soapAction="urn:exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeList" style="document"/>
+<wsdl:input name="exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedPeriodicalAbsenceBalanceTotalsListForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDate">
+<soap:operation soapAction="urn:exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDate" style="document"/>
+<wsdl:input name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDate">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<soap:operation soapAction="urn:exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList" style="document"/>
+<wsdl:input name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedPeriodicalAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedWeeklyAbsenceBalanceTotals">
+<soap:operation soapAction="urn:exportPlannedWeeklyAbsenceBalanceTotals" style="document"/>
+<wsdl:input name="exportPlannedWeeklyAbsenceBalanceTotals">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedWeeklyAbsenceBalanceTotalsResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeList">
+<soap:operation soapAction="urn:exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeList" style="document"/>
+<wsdl:input name="exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedWeeklyAbsenceBalanceTotalsForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedWeeklyAbsenceBalanceTotalsList">
+<soap:operation soapAction="urn:exportPlannedWeeklyAbsenceBalanceTotalsList" style="document"/>
+<wsdl:input name="exportPlannedWeeklyAbsenceBalanceTotalsList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedWeeklyAbsenceBalanceTotalsListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeList">
+<soap:operation soapAction="urn:exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeList" style="document"/>
+<wsdl:input name="exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedWeeklyAbsenceBalanceTotalsListForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDate">
+<soap:operation soapAction="urn:exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDate" style="document"/>
+<wsdl:input name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDate">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<soap:operation soapAction="urn:exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList" style="document"/>
+<wsdl:input name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportPlannedWeeklyAbsenceBalanceTotalsListFromDateToDateForEmployeeListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportWeeklyAbsenceBalanceTotals">
+<soap:operation soapAction="urn:exportWeeklyAbsenceBalanceTotals" style="document"/>
+<wsdl:input name="exportWeeklyAbsenceBalanceTotals">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportWeeklyAbsenceBalanceTotalsResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportWeeklyAbsenceBalanceTotalsList">
+<soap:operation soapAction="urn:exportWeeklyAbsenceBalanceTotalsList" style="document"/>
+<wsdl:input name="exportWeeklyAbsenceBalanceTotalsList">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportWeeklyAbsenceBalanceTotalsListResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="AbsenceBalanceTotalService">
+<wsdl:port binding="tns:AbsenceBalanceTotalServiceSoapBinding" name="AbsenceBalanceTotalServiceHttpPort">
+<soap:address location="https://plastigray.kelio.io/open/services/AbsenceBalanceTotalService"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>

@@ -29,7 +29,7 @@ from datetime import date, timedelta
 logging.getLogger('zeep').setLevel(logging.WARNING)
 
 # Ajout du dossier parent au path pour importer config.py
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 import config
 
 from zeep import Client, Settings

@@ -1,0 +1,1355 @@
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://echange.service.open.bodet.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="TypeService" targetNamespace="http://echange.service.open.bodet.com">
+<wsdl:types>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://lang.java" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://lang.java">
+<xsd:complexType name="Throwable">
+<xsd:sequence/>
+</xsd:complexType>
+<xsd:complexType name="Exception">
+<xsd:complexContent>
+<xsd:extension base="tns:Throwable">
+<xsd:sequence/>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+</xsd:schema>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://echange.service.open.bodet.com" xmlns:ns0="http://lang.java" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://echange.service.open.bodet.com">
+<xsd:complexType name="AbsenceBalanceType">
+<xsd:complexContent>
+<xsd:extension base="tns:Type">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="anomalyIfNegativeAbsenceBalance" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="balanceResetAtPeriodStartDate" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="entryHelpComment" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="estimated" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="exerciseDate1" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="exerciseDate2" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="exerciseDate3" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="exerciseDate4" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="exerciseType" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="macroCommandBalance" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="monthlyPeriodEndDay" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="resetDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="roundingAbsenceBalance" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="trainingAccount" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="unit" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="visualizableAddDeductBalanceInit" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="visualizableInResult" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="visualizedInThePrintouts" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="visualizedOnTheNextExercice" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="weekNumber" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="yearlyPeriodEndDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="AbsenceType">
+<xsd:complexContent>
+<xsd:extension base="tns:Type">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="absenceBalanceAbbreviation" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="absenceBalanceDescription" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="absenceBalanceKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="absenceTimeTakenIntoAccountForActivity" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="actual" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="additionMinimumTimeToRecover" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="balanceAbbreviationDisplayedInAbsenceRequests" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="balanceDescriptionDisplayedInAbsenceRequests" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="businessTripLimitedToTheDay" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="calculationModeInAnnualisedHoursPeriod" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="calculationOfExoneratedOvertimeHours" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="calculationOfOvertimeHours" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="calculationOfSpecialHoursAndBonuses" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="calculationOfTimeOffInLieu" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="calculationWithinTheWindows" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="colour" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="commentRequired" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="convertedIntoAnAbsenceFile" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="defaultComment" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="displayBalancesDetail" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="displayBalancesTotal" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="displayTypeDescriptionInMailCalendar" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="documentRequired" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="durationDeduction" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="durationOfAbsence" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="durationType" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="enterAbsencesOnTerminal" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="entryMode" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="estimated" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="grid" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="halfDayAbsence" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="halfDayAbsenceOnPublicHoliday" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="identicalHourlyAbsence" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="includedHourlyAbsence" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="includedInTheAnnualisedHoursActualTotal" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="includingHourlyAbsence" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="includingRoudingTimeWindows" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="isMission" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="limitDurationOfClockedAbsences" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="limitedDurationForClockedAbsences" nillable="true" type="xsd:double"/>
+<xsd:element minOccurs="0" name="maintainsHomeworking" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="modifiesTheBalance" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="noticeCessationWorkTypeAssociated" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="oneDayAbsence" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="outOfControlledTotal" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="paid" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="resetDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="splitHolidaysMessage" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="splitHolidaysWaiver" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="splitHolidaysWaiverDefault" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="straddleHourlyAbsence" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="swipedOnTerminal" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="synchroniseAbsenceInMailCalendar" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="totalMode" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="typePriorityLevel" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="visualizedInThePrintouts" nillable="true" type="xsd:boolean"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="AccountType">
+<xsd:complexContent>
+<xsd:extension base="tns:Type">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="unit" nillable="true" type="xsd:short"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfAbsenceBalanceType">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="AbsenceBalanceType" nillable="true" type="tns:AbsenceBalanceType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfAbsenceType">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="AbsenceType" nillable="true" type="tns:AbsenceType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfAccountType">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="AccountType" nillable="true" type="tns:AccountType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfBalanceType">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="BalanceType" nillable="true" type="tns:BalanceType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfBonusType">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="BonusType" nillable="true" type="tns:BonusType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfCostCentreType">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="CostCentreType" nillable="true" type="tns:CostCentreType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfCustomerType">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="CustomerType" nillable="true" type="tns:CustomerType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfGenericType">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="GenericType" nillable="true" type="tns:GenericType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfJobType">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="JobType" nillable="true" type="tns:JobType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfJobTypeCostCentreTypeLink">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="JobTypeCostCentreTypeLink" nillable="true" type="tns:JobTypeCostCentreTypeLink"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfJobTypeCostCentreTypeLinkFilter">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="JobTypeCostCentreTypeLinkFilter" nillable="true" type="tns:JobTypeCostCentreTypeLinkFilter"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfLatenessEarlyDepartureType">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="LatenessEarlyDepartureType" nillable="true" type="tns:LatenessEarlyDepartureType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfOnCallDutyType">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="OnCallDutyType" nillable="true" type="tns:OnCallDutyType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfOvertimeHourType">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="OvertimeHourType" nillable="true" type="tns:OvertimeHourType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfRemoteWorkingType">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="RemoteWorkingType" nillable="true" type="tns:RemoteWorkingType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfSpecialHourType">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="SpecialHourType" nillable="true" type="tns:SpecialHourType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfTypeFilter">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="TypeFilter" nillable="true" type="tns:TypeFilter"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="BalanceType">
+<xsd:complexContent>
+<xsd:extension base="tns:Type">
+<xsd:sequence>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="BonusType">
+<xsd:complexContent>
+<xsd:extension base="tns:Type">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="balanceAbbreviation" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="balanceDescription" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="balanceKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="resetDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="visualizedInThePrintouts" nillable="true" type="xsd:boolean"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="CostCentreType">
+<xsd:complexContent>
+<xsd:extension base="tns:Type">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="code" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="colour" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="comment" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="customerLink" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="grid" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="iconKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="jobLink" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="toBeScheduled" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="usabilityEndDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="usabilityStartDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="CustomerType">
+<xsd:complexContent>
+<xsd:extension base="tns:Type">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="code" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="comment" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="costCentreLink" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="jobLink" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="toBeScheduled" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="usabilityEndDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="usabilityStartDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="GenericType">
+<xsd:complexContent>
+<xsd:extension base="tns:Object">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="accountType" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="calculableType" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="code" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="typeAbbreviation" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="typeDescription" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="typeKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="unit" nillable="true" type="xsd:short"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="JobType">
+<xsd:complexContent>
+<xsd:extension base="tns:Type">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="code" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="colour" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="comment" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="costCentreLink" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="customerLink" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="grid" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="iconKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="toBeScheduled" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="usabilityEndDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="usabilityStartDate" nillable="true" type="xsd:date"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="JobTypeCostCentreTypeLink">
+<xsd:complexContent>
+<xsd:extension base="tns:Object">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="costCentreTypeAbbreviation" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="costCentreTypeCode" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="costCentreTypeDescription" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="costCentreTypeExternalReference" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="costCentreTypeKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="customerTypeAbbreviation" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="customerTypeCode" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="customerTypeDescription" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="customerTypeExternalReference" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="customerTypeKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="entityDescription" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="entityKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="jobTypeAbbreviation" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="jobTypeCode" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="jobTypeDescription" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="jobTypeExternalReference" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="jobTypeKey" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="workbookDescription" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="workbookKey" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="JobTypeCostCentreTypeLinkFilter">
+<xsd:complexContent>
+<xsd:extension base="tns:Object">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="masterType" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="masterTypeAbbreviation" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="masterTypeCode" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="masterTypeDescription" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="masterTypeKey" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="LatenessEarlyDepartureType">
+<xsd:complexContent>
+<xsd:extension base="tns:Type">
+<xsd:sequence>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType abstract="true" name="Object">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="errorMessage" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="technicalString" nillable="true" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="OnCallDutyType">
+<xsd:complexContent>
+<xsd:extension base="tns:Type">
+<xsd:sequence>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="OvertimeHourType">
+<xsd:complexContent>
+<xsd:extension base="tns:Type">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="calculationFrequency" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="calculationOfExoneratedOvertimeHours" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="calculationOverTimeWithItalian" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="resetDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="selectedOnTerminalToSuspendBalance" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="toDeductFromBalance" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="visualizedInThePrintouts" nillable="true" type="xsd:boolean"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="RemoteWorkingType">
+<xsd:complexContent>
+<xsd:extension base="tns:Type">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="balanceAbbreviationDisplayedInRemoteWorkingRequests" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="balanceDescriptionDisplayedInRemoteWorkingRequests" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="colour" nillable="true" type="xsd:int"/>
+<xsd:element minOccurs="0" name="displayBalancesDetail" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="displayBalancesTotal" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="grid" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="synchroniseRemoteWorkingInMailCalendar" nillable="true" type="xsd:boolean"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="SpecialHourType">
+<xsd:complexContent>
+<xsd:extension base="tns:Type">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="resetDate" nillable="true" type="xsd:date"/>
+<xsd:element minOccurs="0" name="toDeductFromBalance" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="toDeductFromNormalHours" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="visualizedInThePrintouts" nillable="true" type="xsd:boolean"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType abstract="true" name="Type">
+<xsd:complexContent>
+<xsd:extension base="tns:Object">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="defaultExternalReferenceType" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="defaultTypeAbbreviation" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="defaultTypeDescription" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="externalReference" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="searchUsingAbbreviation" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="searchUsingDescription" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="searchUsingExternalReference" nillable="true" type="xsd:boolean"/>
+<xsd:element minOccurs="0" name="typeAbbreviation" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="typeDescription" nillable="true" type="xsd:string"/>
+<xsd:element minOccurs="0" name="typeKey" nillable="true" type="xsd:int"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="TypeFilter">
+<xsd:complexContent>
+<xsd:extension base="tns:Object">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="accountType" nillable="true" type="xsd:short"/>
+<xsd:element minOccurs="0" name="physicalHours" nillable="true" type="xsd:boolean"/>
+</xsd:sequence>
+</xsd:extension>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="deleteJobTypeCostCentreTypeLinks" type="tns:deleteJobTypeCostCentreTypeLinks"/>
+<xsd:complexType name="deleteJobTypeCostCentreTypeLinks">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="jobTypeCostCentreTypeLinksToDelete" type="tns:ArrayOfJobTypeCostCentreTypeLink"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="deleteJobTypeCostCentreTypeLinksResponse" type="tns:deleteJobTypeCostCentreTypeLinksResponse"/>
+<xsd:complexType name="deleteJobTypeCostCentreTypeLinksResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="jobTypeCostCentreTypeLinksInError" type="tns:ArrayOfJobTypeCostCentreTypeLink"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceBalanceTypes" type="tns:exportAbsenceBalanceTypes"/>
+<xsd:complexType name="exportAbsenceBalanceTypes">
+<xsd:sequence/>
+</xsd:complexType>
+<xsd:element name="exportAbsenceBalanceTypesResponse" type="tns:exportAbsenceBalanceTypesResponse"/>
+<xsd:complexType name="exportAbsenceBalanceTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedAbsenceBalanceTypes" type="tns:ArrayOfAbsenceBalanceType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAbsenceTypes" type="tns:exportAbsenceTypes"/>
+<xsd:complexType name="exportAbsenceTypes">
+<xsd:sequence/>
+</xsd:complexType>
+<xsd:element name="exportAbsenceTypesResponse" type="tns:exportAbsenceTypesResponse"/>
+<xsd:complexType name="exportAbsenceTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedAbsenceTypes" type="tns:ArrayOfAbsenceType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportAccountTypes" type="tns:exportAccountTypes"/>
+<xsd:complexType name="exportAccountTypes">
+<xsd:sequence/>
+</xsd:complexType>
+<xsd:element name="exportAccountTypesResponse" type="tns:exportAccountTypesResponse"/>
+<xsd:complexType name="exportAccountTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedAccountTypes" type="tns:ArrayOfAccountType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportBalanceTypes" type="tns:exportBalanceTypes"/>
+<xsd:complexType name="exportBalanceTypes">
+<xsd:sequence/>
+</xsd:complexType>
+<xsd:element name="exportBalanceTypesResponse" type="tns:exportBalanceTypesResponse"/>
+<xsd:complexType name="exportBalanceTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedBalanceTypes" type="tns:ArrayOfBalanceType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportBonusTypes" type="tns:exportBonusTypes"/>
+<xsd:complexType name="exportBonusTypes">
+<xsd:sequence/>
+</xsd:complexType>
+<xsd:element name="exportBonusTypesResponse" type="tns:exportBonusTypesResponse"/>
+<xsd:complexType name="exportBonusTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedBonusTypes" type="tns:ArrayOfBonusType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportBreakTypes" type="tns:exportBreakTypes"/>
+<xsd:complexType name="exportBreakTypes">
+<xsd:sequence/>
+</xsd:complexType>
+<xsd:element name="exportBreakTypesResponse" type="tns:exportBreakTypesResponse"/>
+<xsd:complexType name="exportBreakTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedBreakTypes" type="tns:ArrayOfAccountType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportCostCentreTypes" type="tns:exportCostCentreTypes"/>
+<xsd:complexType name="exportCostCentreTypes">
+<xsd:sequence/>
+</xsd:complexType>
+<xsd:element name="exportCostCentreTypesResponse" type="tns:exportCostCentreTypesResponse"/>
+<xsd:complexType name="exportCostCentreTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedCostCentreTypes" type="tns:ArrayOfCostCentreType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportCustomerTypes" type="tns:exportCustomerTypes"/>
+<xsd:complexType name="exportCustomerTypes">
+<xsd:sequence/>
+</xsd:complexType>
+<xsd:element name="exportCustomerTypesResponse" type="tns:exportCustomerTypesResponse"/>
+<xsd:complexType name="exportCustomerTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedCustomerTypes" type="tns:ArrayOfCustomerType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportGenericTypes" type="tns:exportGenericTypes"/>
+<xsd:complexType name="exportGenericTypes">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportFilter" type="tns:ArrayOfTypeFilter"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportGenericTypesResponse" type="tns:exportGenericTypesResponse"/>
+<xsd:complexType name="exportGenericTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedGenericTypes" type="tns:ArrayOfGenericType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportJobTypeCostCentreTypeLinks" type="tns:exportJobTypeCostCentreTypeLinks"/>
+<xsd:complexType name="exportJobTypeCostCentreTypeLinks">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportFilter" type="tns:ArrayOfJobTypeCostCentreTypeLinkFilter"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportJobTypeCostCentreTypeLinksResponse" type="tns:exportJobTypeCostCentreTypeLinksResponse"/>
+<xsd:complexType name="exportJobTypeCostCentreTypeLinksResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedJobTypeCostCentreTypeLinks" type="tns:ArrayOfJobTypeCostCentreTypeLink"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportJobTypes" type="tns:exportJobTypes"/>
+<xsd:complexType name="exportJobTypes">
+<xsd:sequence/>
+</xsd:complexType>
+<xsd:element name="exportJobTypesResponse" type="tns:exportJobTypesResponse"/>
+<xsd:complexType name="exportJobTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedJobTypes" type="tns:ArrayOfJobType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportLatenessEarlyDepartureTypes" type="tns:exportLatenessEarlyDepartureTypes"/>
+<xsd:complexType name="exportLatenessEarlyDepartureTypes">
+<xsd:sequence/>
+</xsd:complexType>
+<xsd:element name="exportLatenessEarlyDepartureTypesResponse" type="tns:exportLatenessEarlyDepartureTypesResponse"/>
+<xsd:complexType name="exportLatenessEarlyDepartureTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedLatenessEarlyDepartureTypes" type="tns:ArrayOfLatenessEarlyDepartureType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportOnCallDutyTypes" type="tns:exportOnCallDutyTypes"/>
+<xsd:complexType name="exportOnCallDutyTypes">
+<xsd:sequence/>
+</xsd:complexType>
+<xsd:element name="exportOnCallDutyTypesResponse" type="tns:exportOnCallDutyTypesResponse"/>
+<xsd:complexType name="exportOnCallDutyTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedOnCallDutyTypes" type="tns:ArrayOfOnCallDutyType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportOvertimeHourTypes" type="tns:exportOvertimeHourTypes"/>
+<xsd:complexType name="exportOvertimeHourTypes">
+<xsd:sequence/>
+</xsd:complexType>
+<xsd:element name="exportOvertimeHourTypesResponse" type="tns:exportOvertimeHourTypesResponse"/>
+<xsd:complexType name="exportOvertimeHourTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedOvertimeHourTypes" type="tns:ArrayOfOvertimeHourType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportRemoteWorkingTypes" type="tns:exportRemoteWorkingTypes"/>
+<xsd:complexType name="exportRemoteWorkingTypes">
+<xsd:sequence/>
+</xsd:complexType>
+<xsd:element name="exportRemoteWorkingTypesResponse" type="tns:exportRemoteWorkingTypesResponse"/>
+<xsd:complexType name="exportRemoteWorkingTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedRemoteWorkingTypes" type="tns:ArrayOfRemoteWorkingType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="exportSpecialHourTypes" type="tns:exportSpecialHourTypes"/>
+<xsd:complexType name="exportSpecialHourTypes">
+<xsd:sequence/>
+</xsd:complexType>
+<xsd:element name="exportSpecialHourTypesResponse" type="tns:exportSpecialHourTypesResponse"/>
+<xsd:complexType name="exportSpecialHourTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="exportedSpecialHourTypes" type="tns:ArrayOfSpecialHourType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importAbsenceBalanceTypes" type="tns:importAbsenceBalanceTypes"/>
+<xsd:complexType name="importAbsenceBalanceTypes">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="absenceBalanceTypesToImport" type="tns:ArrayOfAbsenceBalanceType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importAbsenceBalanceTypesResponse" type="tns:importAbsenceBalanceTypesResponse"/>
+<xsd:complexType name="importAbsenceBalanceTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="absenceBalanceTypesInError" type="tns:ArrayOfAbsenceBalanceType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importAbsenceTypes" type="tns:importAbsenceTypes"/>
+<xsd:complexType name="importAbsenceTypes">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="absenceTypesToImport" type="tns:ArrayOfAbsenceType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importAbsenceTypesResponse" type="tns:importAbsenceTypesResponse"/>
+<xsd:complexType name="importAbsenceTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="absenceTypesInError" type="tns:ArrayOfAbsenceType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importBonusTypes" type="tns:importBonusTypes"/>
+<xsd:complexType name="importBonusTypes">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="bonusTypesToImport" type="tns:ArrayOfBonusType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importBonusTypesResponse" type="tns:importBonusTypesResponse"/>
+<xsd:complexType name="importBonusTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="bonusTypesInError" type="tns:ArrayOfBonusType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importCostCentreTypes" type="tns:importCostCentreTypes"/>
+<xsd:complexType name="importCostCentreTypes">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="CostCentreTypesToImport" type="tns:ArrayOfCostCentreType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importCostCentreTypesResponse" type="tns:importCostCentreTypesResponse"/>
+<xsd:complexType name="importCostCentreTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="CostCentreTypesInError" type="tns:ArrayOfCostCentreType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importCustomerTypes" type="tns:importCustomerTypes"/>
+<xsd:complexType name="importCustomerTypes">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="customerTypesToImport" type="tns:ArrayOfCustomerType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importCustomerTypesResponse" type="tns:importCustomerTypesResponse"/>
+<xsd:complexType name="importCustomerTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="customerTypesInError" type="tns:ArrayOfCustomerType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importJobTypeCostCentreTypeLinks" type="tns:importJobTypeCostCentreTypeLinks"/>
+<xsd:complexType name="importJobTypeCostCentreTypeLinks">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="jobTypeCostCentreTypeLinksToImport" type="tns:ArrayOfJobTypeCostCentreTypeLink"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importJobTypeCostCentreTypeLinksResponse" type="tns:importJobTypeCostCentreTypeLinksResponse"/>
+<xsd:complexType name="importJobTypeCostCentreTypeLinksResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="jobTypeCostCentreTypeLinksInError" type="tns:ArrayOfJobTypeCostCentreTypeLink"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importJobTypes" type="tns:importJobTypes"/>
+<xsd:complexType name="importJobTypes">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="JobTypesToImport" type="tns:ArrayOfJobType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importJobTypesResponse" type="tns:importJobTypesResponse"/>
+<xsd:complexType name="importJobTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="JobTypesInError" type="tns:ArrayOfJobType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importOvertimeHourTypes" type="tns:importOvertimeHourTypes"/>
+<xsd:complexType name="importOvertimeHourTypes">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="overtimeHourTypesToImport" type="tns:ArrayOfOvertimeHourType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importOvertimeHourTypesResponse" type="tns:importOvertimeHourTypesResponse"/>
+<xsd:complexType name="importOvertimeHourTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="overtimeHourTypesInError" type="tns:ArrayOfOvertimeHourType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importRemoteWorkingTypes" type="tns:importRemoteWorkingTypes"/>
+<xsd:complexType name="importRemoteWorkingTypes">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="remoteWorkingTypesToImport" type="tns:ArrayOfRemoteWorkingType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importRemoteWorkingTypesResponse" type="tns:importRemoteWorkingTypesResponse"/>
+<xsd:complexType name="importRemoteWorkingTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="remoteWorkingTypesInError" type="tns:ArrayOfRemoteWorkingType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importSpecialHourTypes" type="tns:importSpecialHourTypes"/>
+<xsd:complexType name="importSpecialHourTypes">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="specialHourTypesToImport" type="tns:ArrayOfSpecialHourType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="importSpecialHourTypesResponse" type="tns:importSpecialHourTypesResponse"/>
+<xsd:complexType name="importSpecialHourTypesResponse">
+<xsd:sequence>
+<xsd:element minOccurs="0" name="specialHourTypesInError" type="tns:ArrayOfSpecialHourType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="Exception" nillable="true" type="ns0:Exception"/>
+</xsd:schema>
+</wsdl:types>
+<wsdl:message name="Exception">
+<wsdl:part element="tns:Exception" name="Exception"/>
+</wsdl:message>
+<wsdl:message name="deleteJobTypeCostCentreTypeLinks">
+<wsdl:part element="tns:deleteJobTypeCostCentreTypeLinks" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="deleteJobTypeCostCentreTypeLinksResponse">
+<wsdl:part element="tns:deleteJobTypeCostCentreTypeLinksResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceBalanceTypes">
+<wsdl:part element="tns:exportAbsenceBalanceTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceBalanceTypesResponse">
+<wsdl:part element="tns:exportAbsenceBalanceTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceTypes">
+<wsdl:part element="tns:exportAbsenceTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAbsenceTypesResponse">
+<wsdl:part element="tns:exportAbsenceTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAccountTypes">
+<wsdl:part element="tns:exportAccountTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportAccountTypesResponse">
+<wsdl:part element="tns:exportAccountTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportBalanceTypes">
+<wsdl:part element="tns:exportBalanceTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportBalanceTypesResponse">
+<wsdl:part element="tns:exportBalanceTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportBonusTypes">
+<wsdl:part element="tns:exportBonusTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportBonusTypesResponse">
+<wsdl:part element="tns:exportBonusTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportBreakTypes">
+<wsdl:part element="tns:exportBreakTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportBreakTypesResponse">
+<wsdl:part element="tns:exportBreakTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportCostCentreTypes">
+<wsdl:part element="tns:exportCostCentreTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportCostCentreTypesResponse">
+<wsdl:part element="tns:exportCostCentreTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportCustomerTypes">
+<wsdl:part element="tns:exportCustomerTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportCustomerTypesResponse">
+<wsdl:part element="tns:exportCustomerTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportGenericTypes">
+<wsdl:part element="tns:exportGenericTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportGenericTypesResponse">
+<wsdl:part element="tns:exportGenericTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportJobTypeCostCentreTypeLinks">
+<wsdl:part element="tns:exportJobTypeCostCentreTypeLinks" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportJobTypeCostCentreTypeLinksResponse">
+<wsdl:part element="tns:exportJobTypeCostCentreTypeLinksResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportJobTypes">
+<wsdl:part element="tns:exportJobTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportJobTypesResponse">
+<wsdl:part element="tns:exportJobTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportLatenessEarlyDepartureTypes">
+<wsdl:part element="tns:exportLatenessEarlyDepartureTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportLatenessEarlyDepartureTypesResponse">
+<wsdl:part element="tns:exportLatenessEarlyDepartureTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportOnCallDutyTypes">
+<wsdl:part element="tns:exportOnCallDutyTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportOnCallDutyTypesResponse">
+<wsdl:part element="tns:exportOnCallDutyTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportOvertimeHourTypes">
+<wsdl:part element="tns:exportOvertimeHourTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportOvertimeHourTypesResponse">
+<wsdl:part element="tns:exportOvertimeHourTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportRemoteWorkingTypes">
+<wsdl:part element="tns:exportRemoteWorkingTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportRemoteWorkingTypesResponse">
+<wsdl:part element="tns:exportRemoteWorkingTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportSpecialHourTypes">
+<wsdl:part element="tns:exportSpecialHourTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="exportSpecialHourTypesResponse">
+<wsdl:part element="tns:exportSpecialHourTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importAbsenceBalanceTypes">
+<wsdl:part element="tns:importAbsenceBalanceTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importAbsenceBalanceTypesResponse">
+<wsdl:part element="tns:importAbsenceBalanceTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importAbsenceTypes">
+<wsdl:part element="tns:importAbsenceTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importAbsenceTypesResponse">
+<wsdl:part element="tns:importAbsenceTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importBonusTypes">
+<wsdl:part element="tns:importBonusTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importBonusTypesResponse">
+<wsdl:part element="tns:importBonusTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importCostCentreTypes">
+<wsdl:part element="tns:importCostCentreTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importCostCentreTypesResponse">
+<wsdl:part element="tns:importCostCentreTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importCustomerTypes">
+<wsdl:part element="tns:importCustomerTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importCustomerTypesResponse">
+<wsdl:part element="tns:importCustomerTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importJobTypeCostCentreTypeLinks">
+<wsdl:part element="tns:importJobTypeCostCentreTypeLinks" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importJobTypeCostCentreTypeLinksResponse">
+<wsdl:part element="tns:importJobTypeCostCentreTypeLinksResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importJobTypes">
+<wsdl:part element="tns:importJobTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importJobTypesResponse">
+<wsdl:part element="tns:importJobTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importOvertimeHourTypes">
+<wsdl:part element="tns:importOvertimeHourTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importOvertimeHourTypesResponse">
+<wsdl:part element="tns:importOvertimeHourTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importRemoteWorkingTypes">
+<wsdl:part element="tns:importRemoteWorkingTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importRemoteWorkingTypesResponse">
+<wsdl:part element="tns:importRemoteWorkingTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importSpecialHourTypes">
+<wsdl:part element="tns:importSpecialHourTypes" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="importSpecialHourTypesResponse">
+<wsdl:part element="tns:importSpecialHourTypesResponse" name="parameters"/>
+</wsdl:message>
+<wsdl:portType name="TypeServicePortType">
+<wsdl:operation name="deleteJobTypeCostCentreTypeLinks">
+<wsdl:input message="tns:deleteJobTypeCostCentreTypeLinks" name="deleteJobTypeCostCentreTypeLinks"/>
+<wsdl:output message="tns:deleteJobTypeCostCentreTypeLinksResponse" name="deleteJobTypeCostCentreTypeLinksResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceBalanceTypes">
+<wsdl:input message="tns:exportAbsenceBalanceTypes" name="exportAbsenceBalanceTypes"/>
+<wsdl:output message="tns:exportAbsenceBalanceTypesResponse" name="exportAbsenceBalanceTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceTypes">
+<wsdl:input message="tns:exportAbsenceTypes" name="exportAbsenceTypes"/>
+<wsdl:output message="tns:exportAbsenceTypesResponse" name="exportAbsenceTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportAccountTypes">
+<wsdl:input message="tns:exportAccountTypes" name="exportAccountTypes"/>
+<wsdl:output message="tns:exportAccountTypesResponse" name="exportAccountTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportBalanceTypes">
+<wsdl:input message="tns:exportBalanceTypes" name="exportBalanceTypes"/>
+<wsdl:output message="tns:exportBalanceTypesResponse" name="exportBalanceTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportBonusTypes">
+<wsdl:input message="tns:exportBonusTypes" name="exportBonusTypes"/>
+<wsdl:output message="tns:exportBonusTypesResponse" name="exportBonusTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportBreakTypes">
+<wsdl:input message="tns:exportBreakTypes" name="exportBreakTypes"/>
+<wsdl:output message="tns:exportBreakTypesResponse" name="exportBreakTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportCostCentreTypes">
+<wsdl:input message="tns:exportCostCentreTypes" name="exportCostCentreTypes"/>
+<wsdl:output message="tns:exportCostCentreTypesResponse" name="exportCostCentreTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportCustomerTypes">
+<wsdl:input message="tns:exportCustomerTypes" name="exportCustomerTypes"/>
+<wsdl:output message="tns:exportCustomerTypesResponse" name="exportCustomerTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportGenericTypes">
+<wsdl:input message="tns:exportGenericTypes" name="exportGenericTypes"/>
+<wsdl:output message="tns:exportGenericTypesResponse" name="exportGenericTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportJobTypeCostCentreTypeLinks">
+<wsdl:input message="tns:exportJobTypeCostCentreTypeLinks" name="exportJobTypeCostCentreTypeLinks"/>
+<wsdl:output message="tns:exportJobTypeCostCentreTypeLinksResponse" name="exportJobTypeCostCentreTypeLinksResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportJobTypes">
+<wsdl:input message="tns:exportJobTypes" name="exportJobTypes"/>
+<wsdl:output message="tns:exportJobTypesResponse" name="exportJobTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportLatenessEarlyDepartureTypes">
+<wsdl:input message="tns:exportLatenessEarlyDepartureTypes" name="exportLatenessEarlyDepartureTypes"/>
+<wsdl:output message="tns:exportLatenessEarlyDepartureTypesResponse" name="exportLatenessEarlyDepartureTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportOnCallDutyTypes">
+<wsdl:input message="tns:exportOnCallDutyTypes" name="exportOnCallDutyTypes"/>
+<wsdl:output message="tns:exportOnCallDutyTypesResponse" name="exportOnCallDutyTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportOvertimeHourTypes">
+<wsdl:input message="tns:exportOvertimeHourTypes" name="exportOvertimeHourTypes"/>
+<wsdl:output message="tns:exportOvertimeHourTypesResponse" name="exportOvertimeHourTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportRemoteWorkingTypes">
+<wsdl:input message="tns:exportRemoteWorkingTypes" name="exportRemoteWorkingTypes"/>
+<wsdl:output message="tns:exportRemoteWorkingTypesResponse" name="exportRemoteWorkingTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="exportSpecialHourTypes">
+<wsdl:input message="tns:exportSpecialHourTypes" name="exportSpecialHourTypes"/>
+<wsdl:output message="tns:exportSpecialHourTypesResponse" name="exportSpecialHourTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="importAbsenceBalanceTypes">
+<wsdl:input message="tns:importAbsenceBalanceTypes" name="importAbsenceBalanceTypes"/>
+<wsdl:output message="tns:importAbsenceBalanceTypesResponse" name="importAbsenceBalanceTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="importAbsenceTypes">
+<wsdl:input message="tns:importAbsenceTypes" name="importAbsenceTypes"/>
+<wsdl:output message="tns:importAbsenceTypesResponse" name="importAbsenceTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="importBonusTypes">
+<wsdl:input message="tns:importBonusTypes" name="importBonusTypes"/>
+<wsdl:output message="tns:importBonusTypesResponse" name="importBonusTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="importCostCentreTypes">
+<wsdl:input message="tns:importCostCentreTypes" name="importCostCentreTypes"/>
+<wsdl:output message="tns:importCostCentreTypesResponse" name="importCostCentreTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="importCustomerTypes">
+<wsdl:input message="tns:importCustomerTypes" name="importCustomerTypes"/>
+<wsdl:output message="tns:importCustomerTypesResponse" name="importCustomerTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="importJobTypeCostCentreTypeLinks">
+<wsdl:input message="tns:importJobTypeCostCentreTypeLinks" name="importJobTypeCostCentreTypeLinks"/>
+<wsdl:output message="tns:importJobTypeCostCentreTypeLinksResponse" name="importJobTypeCostCentreTypeLinksResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="importJobTypes">
+<wsdl:input message="tns:importJobTypes" name="importJobTypes"/>
+<wsdl:output message="tns:importJobTypesResponse" name="importJobTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="importOvertimeHourTypes">
+<wsdl:input message="tns:importOvertimeHourTypes" name="importOvertimeHourTypes"/>
+<wsdl:output message="tns:importOvertimeHourTypesResponse" name="importOvertimeHourTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="importRemoteWorkingTypes">
+<wsdl:input message="tns:importRemoteWorkingTypes" name="importRemoteWorkingTypes"/>
+<wsdl:output message="tns:importRemoteWorkingTypesResponse" name="importRemoteWorkingTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+<wsdl:operation name="importSpecialHourTypes">
+<wsdl:input message="tns:importSpecialHourTypes" name="importSpecialHourTypes"/>
+<wsdl:output message="tns:importSpecialHourTypesResponse" name="importSpecialHourTypesResponse"/>
+<wsdl:fault message="tns:Exception" name="Exception"/>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="TypeServiceSoapBinding" type="tns:TypeServicePortType">
+<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="deleteJobTypeCostCentreTypeLinks">
+<soap:operation soapAction="urn:deleteJobTypeCostCentreTypeLinks" style="document"/>
+<wsdl:input name="deleteJobTypeCostCentreTypeLinks">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="deleteJobTypeCostCentreTypeLinksResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceBalanceTypes">
+<soap:operation soapAction="urn:exportAbsenceBalanceTypes" style="document"/>
+<wsdl:input name="exportAbsenceBalanceTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportAbsenceBalanceTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportAbsenceTypes">
+<soap:operation soapAction="urn:exportAbsenceTypes" style="document"/>
+<wsdl:input name="exportAbsenceTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportAbsenceTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportAccountTypes">
+<soap:operation soapAction="urn:exportAccountTypes" style="document"/>
+<wsdl:input name="exportAccountTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportAccountTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportBalanceTypes">
+<soap:operation soapAction="urn:exportBalanceTypes" style="document"/>
+<wsdl:input name="exportBalanceTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportBalanceTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportBonusTypes">
+<soap:operation soapAction="urn:exportBonusTypes" style="document"/>
+<wsdl:input name="exportBonusTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportBonusTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportBreakTypes">
+<soap:operation soapAction="urn:exportBreakTypes" style="document"/>
+<wsdl:input name="exportBreakTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportBreakTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportCostCentreTypes">
+<soap:operation soapAction="urn:exportCostCentreTypes" style="document"/>
+<wsdl:input name="exportCostCentreTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportCostCentreTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportCustomerTypes">
+<soap:operation soapAction="urn:exportCustomerTypes" style="document"/>
+<wsdl:input name="exportCustomerTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportCustomerTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportGenericTypes">
+<soap:operation soapAction="urn:exportGenericTypes" style="document"/>
+<wsdl:input name="exportGenericTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportGenericTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportJobTypeCostCentreTypeLinks">
+<soap:operation soapAction="urn:exportJobTypeCostCentreTypeLinks" style="document"/>
+<wsdl:input name="exportJobTypeCostCentreTypeLinks">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportJobTypeCostCentreTypeLinksResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportJobTypes">
+<soap:operation soapAction="urn:exportJobTypes" style="document"/>
+<wsdl:input name="exportJobTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportJobTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportLatenessEarlyDepartureTypes">
+<soap:operation soapAction="urn:exportLatenessEarlyDepartureTypes" style="document"/>
+<wsdl:input name="exportLatenessEarlyDepartureTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportLatenessEarlyDepartureTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportOnCallDutyTypes">
+<soap:operation soapAction="urn:exportOnCallDutyTypes" style="document"/>
+<wsdl:input name="exportOnCallDutyTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportOnCallDutyTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportOvertimeHourTypes">
+<soap:operation soapAction="urn:exportOvertimeHourTypes" style="document"/>
+<wsdl:input name="exportOvertimeHourTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportOvertimeHourTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportRemoteWorkingTypes">
+<soap:operation soapAction="urn:exportRemoteWorkingTypes" style="document"/>
+<wsdl:input name="exportRemoteWorkingTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportRemoteWorkingTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="exportSpecialHourTypes">
+<soap:operation soapAction="urn:exportSpecialHourTypes" style="document"/>
+<wsdl:input name="exportSpecialHourTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="exportSpecialHourTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="importAbsenceBalanceTypes">
+<soap:operation soapAction="urn:importAbsenceBalanceTypes" style="document"/>
+<wsdl:input name="importAbsenceBalanceTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="importAbsenceBalanceTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="importAbsenceTypes">
+<soap:operation soapAction="urn:importAbsenceTypes" style="document"/>
+<wsdl:input name="importAbsenceTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="importAbsenceTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="importBonusTypes">
+<soap:operation soapAction="urn:importBonusTypes" style="document"/>
+<wsdl:input name="importBonusTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="importBonusTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="importCostCentreTypes">
+<soap:operation soapAction="urn:importCostCentreTypes" style="document"/>
+<wsdl:input name="importCostCentreTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="importCostCentreTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="importCustomerTypes">
+<soap:operation soapAction="urn:importCustomerTypes" style="document"/>
+<wsdl:input name="importCustomerTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="importCustomerTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="importJobTypeCostCentreTypeLinks">
+<soap:operation soapAction="urn:importJobTypeCostCentreTypeLinks" style="document"/>
+<wsdl:input name="importJobTypeCostCentreTypeLinks">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="importJobTypeCostCentreTypeLinksResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="importJobTypes">
+<soap:operation soapAction="urn:importJobTypes" style="document"/>
+<wsdl:input name="importJobTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="importJobTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="importOvertimeHourTypes">
+<soap:operation soapAction="urn:importOvertimeHourTypes" style="document"/>
+<wsdl:input name="importOvertimeHourTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="importOvertimeHourTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="importRemoteWorkingTypes">
+<soap:operation soapAction="urn:importRemoteWorkingTypes" style="document"/>
+<wsdl:input name="importRemoteWorkingTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="importRemoteWorkingTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="importSpecialHourTypes">
+<soap:operation soapAction="urn:importSpecialHourTypes" style="document"/>
+<wsdl:input name="importSpecialHourTypes">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="importSpecialHourTypesResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="TypeService">
+<wsdl:port binding="tns:TypeServiceSoapBinding" name="TypeServiceHttpPort">
+<soap:address location="https://plastigray.kelio.io/open/services/TypeService"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>
