@@ -85,65 +85,72 @@ def lire_initialisations_soldes(start_date, end_date):
 
 
 # =============================================================================
-# Créer une initialisation de solde (importBalanceInitializations)
+# Import SOAP : créer ou mettre à jour des initialisations de solde
 # =============================================================================
-def _balance_init_xml(matricule, date_debut, account_abbreviation,
-                      days=None, hours=None,
-                      keep_remainder=False,
-                      visible_in_printouts=False,
-                      comment=None,
-                      account_type=4):
-    """Construit le XML d'un élément <AbsenceBalanceInitialization>."""
-    def b(v): return "true" if v else "false"
-    days_xml    = f"<ns0:days>{days}</ns0:days>" if days is not None else ""
-    hours_xml   = f"<ns0:hours>{hours}</ns0:hours>" if hours is not None else ""
-    comment_xml = f"<ns0:comment>{comment}</ns0:comment>" if comment else ""
+def _balance_init_xml(matricule, date_debut, account_abbreviation, hours, account_type=4):
     return f"""        <ns0:AbsenceBalanceInitialization xmlns:ns0="{NS}">
           <ns0:employeeIdentificationNumber>{matricule}</ns0:employeeIdentificationNumber>
           <ns0:accountAbbreviation>{account_abbreviation}</ns0:accountAbbreviation>
           <ns0:accountType>{account_type}</ns0:accountType>
           <ns0:date>{date_debut}</ns0:date>
-          {days_xml}
-          {hours_xml}
-          <ns0:keepTheRemainder>{b(keep_remainder)}</ns0:keepTheRemainder>
-          <ns0:visualizedInThePrintouts>{b(visible_in_printouts)}</ns0:visualizedInThePrintouts>
-          {comment_xml}
+          <ns0:hours>{hours}</ns0:hours>
+          <ns0:keepTheRemainder>false</ns0:keepTheRemainder>
+          <ns0:visualizedInThePrintouts>false</ns0:visualizedInThePrintouts>
         </ns0:AbsenceBalanceInitialization>"""
 
 
-def creer_initialisation_solde(matricule, date_debut, account_abbreviation, hours):
-    """
-    Crée une initialisation de solde pour un salarié via SOAP brut.
-    Retourne le texte XML de la réponse.
-    """
-    item_xml = _balance_init_xml(
-        matricule=matricule,
-        date_debut=date_debut,
-        account_abbreviation=account_abbreviation,
-        hours=hours,
-    )
+def importer_initialisations(items_xml_list):
+    """Envoie une liste d'éléments XML AbsenceBalanceInitialization via SOAP."""
+    items_xml = "\n".join(items_xml_list)
     body = f"""<?xml version='1.0' encoding='utf-8'?>
 <soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
   <soap-env:Body>
     <ns0:importBalanceInitializations xmlns:ns0="{NS}">
       <ns0:balanceInitializationsToImport>
-{item_xml}
+{items_xml}
       </ns0:balanceInitializationsToImport>
     </ns0:importBalanceInitializations>
   </soap-env:Body>
 </soap-env:Envelope>"""
     url = f"{config.KELIO_BASE_URL}/open/services/TransferFileService"
-    headers = {
-        "Content-Type": "text/xml; charset=utf-8",
-        "SOAPAction": "urn:importBalanceInitializations",
-    }
-    response = req.post(
-        url, data=body.encode("utf-8"), headers=headers,
-        auth=(config.KELIO_USER, config.KELIO_PASSWORD),
-        timeout=30,
-    )
+    headers = {"Content-Type": "text/xml; charset=utf-8", "SOAPAction": "urn:importBalanceInitializations"}
+    response = req.post(url, data=body.encode("utf-8"), headers=headers,
+                        auth=(config.KELIO_USER, config.KELIO_PASSWORD), timeout=60)
     if not response.ok:
-        raise Exception(f"HTTP {response.status_code} — {response.text[:2000]}")
+        raise Exception(f"HTTP {response.status_code} — {response.text[:500]}")
+    return response.text
+
+
+def supprimer_initialisations_soldes(matricule, dates, account_abbreviation, account_type=4):
+    """
+    Tente de supprimer des initialisations de solde via deleteAccountInitializations.
+    Limité à un matricule précis, une abréviation de compteur précise, et des dates précises.
+    """
+    items_xml = "\n".join(
+        f"""        <ns0:AccountInitialization xmlns:ns0="{NS}">
+          <ns0:employeeIdentificationNumber>{matricule}</ns0:employeeIdentificationNumber>
+          <ns0:accountAbbreviation>{account_abbreviation}</ns0:accountAbbreviation>
+          <ns0:accountType>{account_type}</ns0:accountType>
+          <ns0:date>{dt}</ns0:date>
+        </ns0:AccountInitialization>"""
+        for dt in dates
+    )
+    body = f"""<?xml version='1.0' encoding='utf-8'?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap-env:Body>
+    <ns0:deleteAccountInitializations xmlns:ns0="{NS}">
+      <ns0:accountInitializationsToDelete>
+{items_xml}
+      </ns0:accountInitializationsToDelete>
+    </ns0:deleteAccountInitializations>
+  </soap-env:Body>
+</soap-env:Envelope>"""
+    url = f"{config.KELIO_BASE_URL}/open/services/TransferFileService"
+    headers = {"Content-Type": "text/xml; charset=utf-8", "SOAPAction": "urn:deleteAccountInitializations"}
+    response = req.post(url, data=body.encode("utf-8"), headers=headers,
+                        auth=(config.KELIO_USER, config.KELIO_PASSWORD), timeout=60)
+    if not response.ok:
+        raise Exception(f"HTTP {response.status_code} — {response.text[:500]}")
     return response.text
 
 
@@ -264,31 +271,69 @@ if __name__ == "__main__":
 
     print(f"\n  Total : {len(rc_par_matricule)} employé(s) avec RC.")
 
-    # --- 2. Création/MAJ dans Kelio ---
-    print(f"\n[2] {'Création' if CREATION_ACTIVE else 'Simulation'} des initialisations "
-          f"'{COMPTEUR_ABBREVIATION}' dans Kelio (date={COMPTEUR_DATE}) :")
+    # --- 2. Export de tous les S_RC existants dans Kelio ---
+    # Kelio ne retourne pas de clé utilisable (absenceBalanceInitializationKey = nil).
+    # On identifie les entrées existantes par (matricule, date) comme clé naturelle.
+    # Stratégie : 1ère entrée trouvée → MAJ date=aujourd'hui + valeur Odoo
+    #             Autres entrées → mise à zéro (hours=0) pour leur date d'origine
+    print(f"\n[2] Récupération des {COMPTEUR_ABBREVIATION} existants dans Kelio :")
+    src_par_matricule = {}  # {matricule: [date_str, ...]}  — toutes les dates S_RC
+    try:
+        DATE_DEBUT = date(date.today().year - 1, 1, 1)
+        DATE_FIN   = date(date.today().year + 1, 12, 31)
+        xml_response = lire_initialisations_soldes(DATE_DEBUT, DATE_FIN)
+        root = ET.fromstring(xml_response)
+        items = find_all(root, 'AbsenceBalanceInitialization')
+        for item in items:
+            if tag_text(item, 'accountAbbreviation') != COMPTEUR_ABBREVIATION:
+                continue
+            mat = tag_text(item, 'employeeIdentificationNumber')
+            dt  = tag_text(item, 'date')
+            if mat and dt:
+                src_par_matricule.setdefault(mat, []).append(dt)
+        print(f"  {len(src_par_matricule)} matricule(s) avec {COMPTEUR_ABBREVIATION} existant(s).")
+    except Exception as e:
+        print(f"  Erreur lecture Kelio : {e}")
+
+    # --- 3. Mise à jour / création dans Kelio ---
+    # Stratégie : si une entrée existe → réimporter à sa date la plus récente avec la nouvelle valeur
+    #             (même date = mise à jour en place, pas de nouvelle entrée créée)
+    #             les autres entrées plus anciennes sont mises à zéro
+    #             si aucune entrée → créer avec la date du jour
+    print(f"\n[3] {'MAJ/Création' if CREATION_ACTIVE else 'Simulation'} des initialisations "
+          f"'{COMPTEUR_ABBREVIATION}' dans Kelio :")
 
     ok = err = 0
     for matricule, info in sorted(rc_par_matricule.items(), key=lambda x: x[1]['nom']):
+        dates_existantes = src_par_matricule.get(matricule, [])
+        items_xml = []
+
+        if dates_existantes:
+            dates_triees = sorted(dates_existantes)
+            date_recente = dates_triees[-1]
+            # Réimporter à la date la plus récente avec la nouvelle valeur → mise à jour en place
+            items_xml.append(_balance_init_xml(matricule, date_recente, COMPTEUR_ABBREVIATION, info['nombre']))
+            # Toutes les entrées plus anciennes → valeur 0 (date inchangée)
+            for dt in dates_triees[:-1]:
+                items_xml.append(_balance_init_xml(matricule, dt, COMPTEUR_ABBREVIATION, 0))
+            n_zeroed = len(dates_triees) - 1
+            action = f"MAJ {date_recente}" + (f" ({n_zeroed} ancienne(s) à zéro)" if n_zeroed else "")
+        else:
+            # Aucune entrée → création avec la date du jour
+            items_xml.append(_balance_init_xml(matricule, COMPTEUR_DATE, COMPTEUR_ABBREVIATION, info['nombre']))
+            action = f"NOUVEAU {COMPTEUR_DATE}"
+
         if not CREATION_ACTIVE:
-            print(f"  {matricule:12s}  {info['nom']:30s}  {COMPTEUR_ABBREVIATION} = {info['nombre']:.2f}h  [simulation]")
+            print(f"  {matricule:12s}  {info['nom']:30s}  {COMPTEUR_ABBREVIATION} = {info['nombre']:.2f}h  [{action} - simulation]")
             continue
         try:
-            result_xml = creer_initialisation_solde(
-                matricule=matricule,
-                date_debut=COMPTEUR_DATE,
-                account_abbreviation=COMPTEUR_ABBREVIATION,
-                hours=info['nombre'],
-            )
-            errors = re.findall(
-                r'<(?:ns\d+:)?errorMessage>(.+?)</(?:ns\d+:)?errorMessage>',
-                result_xml,
-            )
+            result_xml = importer_initialisations(items_xml)
+            errors = re.findall(r'<(?:ns\d+:)?errorMessage>(.+?)</(?:ns\d+:)?errorMessage>', result_xml)
             if errors:
                 print(f"  {matricule:12s}  {info['nom']:30s}  ERREUR : {errors}")
                 err += 1
             else:
-                print(f"  {matricule:12s}  {info['nom']:30s}  OK — {COMPTEUR_ABBREVIATION} = {info['nombre']:.2f}h")
+                print(f"  {matricule:12s}  {info['nom']:30s}  {action} — {COMPTEUR_ABBREVIATION} = {info['nombre']:.2f}h")
                 ok += 1
         except Exception as ex:
             print(f"  {matricule:12s}  {info['nom']:30s}  EXCEPTION : {ex}")
@@ -297,5 +342,5 @@ if __name__ == "__main__":
     if CREATION_ACTIVE:
         print(f"\n  Résultat : {ok} OK, {err} erreur(s).")
 
-    # --- 3. Afficher les initialisations S_RC dans Kelio ---
-    afficher_initialisations(f"[3] Initialisations '{COMPTEUR_ABBREVIATION}' dans Kelio")
+    # --- 4. Afficher les initialisations S_RC dans Kelio ---
+    afficher_initialisations(f"[4] Initialisations '{COMPTEUR_ABBREVIATION}' dans Kelio")
