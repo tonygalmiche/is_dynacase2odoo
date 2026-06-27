@@ -184,7 +184,7 @@
                                         type="object"
                                         class="btn btn-primary"
                                         style="display:inline-flex; flex-direction:row; align-items:center; gap:8px; padding:6px 14px;">
-                                    <i class="fa fa-file-text-o" style="font-size:1.4em;"/>
+                                    <i class="fa fa-file-text-o" title="Consultations" style="font-size:1.4em;"/>
                                     <div style="display:flex; flex-direction:column; align-items:center; line-height:1.2;">
                                         <strong><field name="demande_consultation_count"/></strong>
                                         <span>Consultations</span>

@@ -51,7 +51,9 @@
                         <group attrs="{'invisible': [('type_consultation', '!=', 'dc_mat')]}">
                             <field name="designation"/>
                             <field name="coloris"/>
+                            <field name="infos_complementaires"/>
                             <field name="quantite_annuelle"/>
+                            <field name="uom_id" options="{'no_create': True}"/>
                             <field name="lot"/>
                         </group>
                         <!-- DC-COMP -->
@@ -61,7 +63,9 @@
                             <field name="dimension"/>
                             <field name="environnement"/>
                             <field name="standard"/>
+                            <field name="infos_complementaires"/>
                             <field name="quantite_annuelle"/>
+                            <field name="uom_id" options="{'no_create': True}"/>
                             <field name="lot"/>
                         </group>
                         <!-- DC-EMB -->
@@ -73,7 +77,9 @@
                             <field name="type_cannelure"/>
                             <field name="poids_emballage"/>
                             <field name="standard"/>
+                            <field name="infos_complementaires"/>
                             <field name="quantite_annuelle"/>
+                            <field name="uom_id" options="{'no_create': True}"/>
                             <field name="lot"/>
                         </group>
                         <!-- DC-PORT -->
@@ -190,6 +196,7 @@
                             </group>
                             <group string="Références" attrs="{'invisible': [('type_consultation', 'in', ['dc_chine', 'dc_export'])]}">
                                 <field name="dossier_ao_id" widget="many2one_clickable" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                                <field name="dossier_modif_variante_id" widget="many2one_clickable" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                 <field name="mold_id" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                 <field name="dossierf_id" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                             </group>
@@ -257,9 +264,9 @@
                         </group>
                         <notebook>
                             <field name="lignes_generees" invisible="1"/>
-                            <page string="Demande" name="demande" attrs="{'invisible': [('type_consultation', 'not in', ['dc_mat', 'dc_comp', 'dc_emb', 'dc_port', 'dc_chine', 'dc_export'])]}">
-                                <field name="demande_line_ids" nolabel="1" attrs="{'readonly': [('lignes_generees', '=', True)]}"
-                                       context="{'form_view_ref': 'is_dynacase2odoo.is_demande_consultation_demande_line_form_view'}">
+                            <page string="Demande" name="demande" attrs="{'invisible': [('type_consultation', 'not in', [False, 'dc_mat', 'dc_comp', 'dc_emb', 'dc_port', 'dc_chine', 'dc_export'])]}">
+                                <field name="demande_line_ids" nolabel="1" attrs="{'readonly': [('lignes_generees', '=', True)], 'invisible': [('type_consultation', 'not in', ['dc_mat', 'dc_comp', 'dc_emb', 'dc_port', 'dc_chine', 'dc_export'])]}"
+                                       context="{'form_view_ref': 'is_dynacase2odoo.is_demande_consultation_demande_line_form_view', 'default_type_consultation': type_consultation}">
                                     <tree editable="bottom">
                                         <field name="state" invisible="1"/>
                                         <field name="type_consultation" invisible="1"/>
@@ -304,7 +311,9 @@
                                         <field name="disponibilite" attrs="{'column_invisible': [('parent.type_consultation', '!=', 'dc_export')]}"/>
                                         <field name="date_reception_dispo" attrs="{'column_invisible': [('parent.type_consultation', '!=', 'dc_export')], 'required': [('disponibilite', '=', 'date_reception')]}"/>
                                         <!-- Champs communs DC-MAT, DC-COMP et DC-EMB -->
+                                        <field name="infos_complementaires" attrs="{'column_invisible': [('parent.type_consultation', 'not in', ['dc_mat', 'dc_comp', 'dc_emb'])]}"/>
                                         <field name="quantite_annuelle" attrs="{'column_invisible': [('parent.type_consultation', 'in', ['dc_port', 'dc_chine', 'dc_export'])]}"/>
+                                        <field name="uom_id" attrs="{'column_invisible': [('parent.type_consultation', 'not in', ['dc_mat', 'dc_comp', 'dc_emb'])]}" options="{'no_create': True}"/>
                                         <field name="lot" attrs="{'column_invisible': [('parent.type_consultation', 'in', ['dc_port', 'dc_chine', 'dc_export'])]}"/>
                                         <field name="fournisseur_ids" widget="many2many_tags_contact" attrs="{'column_invisible': [('parent.state', 'in', ['brouillon'])]}" context="{'show_contact_details': True}"/>
                                         <field name="autres_fournisseurs" attrs="{'column_invisible': [('parent.state', 'not in', ['transmis_achat'])]}"/>
@@ -360,7 +369,9 @@
                                         <field name="date_livraison_souhaitee" attrs="{'column_invisible': [('parent.type_consultation', '!=', 'dc_chine')]}"/>
                                         <field name="mode_transport" attrs="{'column_invisible': [('parent.type_consultation', '!=', 'dc_chine')]}"/>
                                         <!-- Champs communs -->
+                                        <field name="infos_complementaires" attrs="{'column_invisible': [('parent.type_consultation', 'not in', ['dc_mat', 'dc_comp', 'dc_emb'])]}"/>
                                         <field name="quantite_annuelle" attrs="{'column_invisible': [('parent.type_consultation', 'in', ['dc_chine', 'dc_export'])]}"/>
+                                        <field name="uom_id" attrs="{'column_invisible': [('parent.type_consultation', 'not in', ['dc_mat', 'dc_comp', 'dc_emb'])]}" options="{'no_create': True}"/>
                                         <field name="lot" attrs="{'column_invisible': [('parent.type_consultation', 'in', ['dc_chine', 'dc_export', 'dc_port'])]}"/>
                                         <field name="fournisseur_retenu_name" attrs="{'column_invisible': [('parent.state', '=', 'brouillon')]}"/>
                                         <field name="fournisseur_retenu_id" widget="many2one_clickable" invisible="1"/>
@@ -373,7 +384,9 @@
                                                 <field name="type_consultation" invisible="1"/>
                                                 <field name="designation" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                                 <field name="coloris" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                                                <field name="infos_complementaires" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                                 <field name="quantite_annuelle" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                                                <field name="uom_id" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}" options="{'no_create': True}"/>
                                                 <field name="lot" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                             </group>
                                             <!-- Groupe Emballage pour DC-EMB -->
@@ -385,7 +398,9 @@
                                                 <field name="type_cannelure" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                                 <field name="poids_emballage" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                                 <field name="standard" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                                                <field name="infos_complementaires" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                                 <field name="quantite_annuelle" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                                                <field name="uom_id" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}" options="{'no_create': True}"/>
                                                 <field name="lot" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                             </group>
                                             <!-- Groupe Composant pour DC-COMP -->
@@ -394,8 +409,10 @@
                                                 <field name="matiere" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                                 <field name="dimension" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                                 <field name="environnement" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
-                                                <field name="quantite_annuelle" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                                 <field name="standard" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                                                <field name="infos_complementaires" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                                                <field name="quantite_annuelle" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                                                <field name="uom_id" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}" options="{'no_create': True}"/>
                                                 <field name="lot" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                             </group>
                                             <!-- Groupe Transport pour DC-PORT -->
@@ -478,9 +495,10 @@
                     <field name="date_creation" optional="show"/>
                     <field name="validateur_technique_id" optional="show"/>
                     <field name="acheteur_id"/>
-                    <field name="dossier_ao_id" widget="many2one_clickable" optional="show"/>
-                    <field name="mold_id" widget="many2one_clickable" optional="show"/>
-                    <field name="dossierf_id" widget="many2one_clickable" optional="show"/>
+                    <field name="dossier_ao_id" widget="many2one_clickable" optional="hide"/>
+                    <field name="dossier_modif_variante_id" widget="many2one_clickable" optional="hide"/>
+                    <field name="mold_id" widget="many2one_clickable" optional="hide"/>
+                    <field name="dossierf_id" widget="many2one_clickable" optional="hide"/>
                     <field name="client_id" widget="many2one_clickable" optional="show"/>
                     <field name="prospect" optional="show"/>
                     <field name="confidentialite" optional="show"/>
@@ -509,6 +527,7 @@
                     <field name="validateur_technique_id"/>
                     <field name="acheteur_id"/>
                     <field name="dossier_ao_id"/>
+                    <field name="dossier_modif_variante_id"/>
                     <field name="mold_id"/>
                     <field name="dossierf_id"/>
                     <field name="client_id"/>
@@ -562,7 +581,9 @@
                     <field name="line_id" readonly="1"/>
                     <field name="designation" readonly="1"/>
                     <field name="coloris" readonly="1"/>
+                    <field name="infos_complementaires" readonly="1"/>
                     <field name="quantite_annuelle" readonly="1"/>
+                    <field name="uom_id" readonly="1"/>
                     <field name="lot" readonly="1"/>
                     <field name="fournisseur_id" readonly="1"/>
                     <field name="fournisseur_hors_panel" readonly="1"/>
@@ -591,7 +612,9 @@
                     <field name="dimension" readonly="1"/>
                     <field name="environnement" readonly="1"/>
                     <field name="standard" readonly="1"/>
+                    <field name="infos_complementaires" readonly="1"/>
                     <field name="quantite_annuelle" readonly="1"/>
+                    <field name="uom_id" readonly="1"/>
                     <field name="lot" readonly="1"/>
                     <field name="fournisseur_id" readonly="1"/>
                     <field name="fournisseur_hors_panel" readonly="1"/>
@@ -622,7 +645,9 @@
                     <field name="type_cannelure" readonly="1"/>
                     <field name="poids_emballage" readonly="1"/>
                     <field name="standard" readonly="1"/>
+                    <field name="infos_complementaires" readonly="1"/>
                     <field name="quantite_annuelle" readonly="1"/>
+                    <field name="uom_id" readonly="1"/>
                     <field name="lot" readonly="1"/>
                     <field name="fournisseur_id" readonly="1"/>
                     <field name="fournisseur_hors_panel" readonly="1"/>

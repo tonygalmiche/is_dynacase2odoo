@@ -129,6 +129,7 @@ class IsDemandeConsultation(models.Model):
     
     # Références
     dossier_ao_id = fields.Many2one('is.dossier.appel.offre', "Dossier appel d'offre", tracking=True, copy=False)
+    dossier_modif_variante_id = fields.Many2one('is.dossier.modif.variante', "Dossier modif/variante", tracking=True, copy=False)
     mold_id = fields.Many2one('is.mold', 'N° moule', tracking=True)
     dossierf_id = fields.Many2one('is.dossierf', 'N° de dossier F', tracking=True)
     
@@ -258,6 +259,16 @@ class IsDemandeConsultation(models.Model):
                 if dossierf:
                     obj.dossierf_id = dossierf
 
+    @api.onchange('dossier_modif_variante_id')
+    def _onchange_dossier_modif_variante_id(self):
+        for obj in self:
+            dmv = obj.dossier_modif_variante_id
+            if dmv:
+                if dmv.demao_idclient:
+                    obj.client_id = dmv.demao_idclient
+                    if dmv.demao_idclient.industry_id:
+                        obj.industry_id = dmv.demao_idclient.industry_id
+
     def _get_incoterm_id(self, code):
         """Récupère l'ID d'un incoterm par son code"""
         incoterm = self.env['account.incoterms'].search([('code', '=', code)], limit=1)
@@ -381,7 +392,9 @@ class IsDemandeConsultation(models.Model):
                             <th style="border: 1px solid #ccc; padding: 5px;">Matière</th>
                             <th style="border: 1px solid #ccc; padding: 5px;">Dim. int.</th>
                             <th style="border: 1px solid #ccc; padding: 5px;">Dim. ext.</th>
+                            <th style="border: 1px solid #ccc; padding: 5px;">Infos complémentaires</th>
                             <th style="border: 1px solid #ccc; padding: 5px;">Qté annuelle</th>
+                            <th style="border: 1px solid #ccc; padding: 5px;">Unité</th>
                             <th style="border: 1px solid #ccc; padding: 5px;">Lot</th>
                             <th style="border: 1px solid #ccc; padding: 5px;">Fournisseur retenu</th>
                             <th style="border: 1px solid #ccc; padding: 5px;">Prix</th>
@@ -394,7 +407,7 @@ class IsDemandeConsultation(models.Model):
                         if f.fournisseur_retenu:
                             fournisseur_retenu = f
                             break
-                    
+
                     if fournisseur_retenu:
                         nom_fournisseur = ""
                         if fournisseur_retenu.fournisseur_id:
@@ -408,7 +421,9 @@ class IsDemandeConsultation(models.Model):
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.matiere or ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.dimensions_int or ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.dimensions_ext or ''}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{(line.infos_complementaires or '').replace(chr(10), '<br/>')}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.quantite_annuelle}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{line.uom_id.name if line.uom_id else ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.lot or ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{nom_fournisseur}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{fournisseur_retenu.reponse_prix}</td>
@@ -425,7 +440,9 @@ class IsDemandeConsultation(models.Model):
                             <th style="border: 1px solid #ccc; padding: 5px;">Matière</th>
                             <th style="border: 1px solid #ccc; padding: 5px;">Dimension</th>
                             <th style="border: 1px solid #ccc; padding: 5px;">Environnement</th>
+                            <th style="border: 1px solid #ccc; padding: 5px;">Infos complémentaires</th>
                             <th style="border: 1px solid #ccc; padding: 5px;">Qté annuelle</th>
+                            <th style="border: 1px solid #ccc; padding: 5px;">Unité</th>
                             <th style="border: 1px solid #ccc; padding: 5px;">Standard</th>
                             <th style="border: 1px solid #ccc; padding: 5px;">Lot</th>
                             <th style="border: 1px solid #ccc; padding: 5px;">Fournisseur retenu</th>
@@ -439,7 +456,7 @@ class IsDemandeConsultation(models.Model):
                         if f.fournisseur_retenu:
                             fournisseur_retenu = f
                             break
-                    
+
                     if fournisseur_retenu:
                         nom_fournisseur = ""
                         if fournisseur_retenu.fournisseur_id:
@@ -454,7 +471,9 @@ class IsDemandeConsultation(models.Model):
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.matiere or ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.dimension or ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.environnement or ''}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{(line.infos_complementaires or '').replace(chr(10), '<br/>')}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.quantite_annuelle}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{line.uom_id.name if line.uom_id else ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{standard_txt}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.lot or ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{nom_fournisseur}</td>
@@ -553,7 +572,9 @@ class IsDemandeConsultation(models.Model):
                         <tr style="background-color: #f0f0f0;">
                             <th style="border: 1px solid #ccc; padding: 5px;">Désignation</th>
                             <th style="border: 1px solid #ccc; padding: 5px;">Coloris</th>
+                            <th style="border: 1px solid #ccc; padding: 5px;">Infos complémentaires</th>
                             <th style="border: 1px solid #ccc; padding: 5px;">Quantité annuelle</th>
+                            <th style="border: 1px solid #ccc; padding: 5px;">Unité</th>
                             <th style="border: 1px solid #ccc; padding: 5px;">Lot</th>
                             <th style="border: 1px solid #ccc; padding: 5px;">Fournisseur retenu</th>
                             <th style="border: 1px solid #ccc; padding: 5px;">Prix</th>
@@ -566,19 +587,21 @@ class IsDemandeConsultation(models.Model):
                         if f.fournisseur_retenu:
                             fournisseur_retenu = f
                             break
-                    
+
                     if fournisseur_retenu:
                         nom_fournisseur = ""
                         if fournisseur_retenu.fournisseur_id:
                             nom_fournisseur = fournisseur_retenu.fournisseur_id.commercial_partner_id.name
                         elif fournisseur_retenu.fournisseur_hors_panel:
                             nom_fournisseur = fournisseur_retenu.fournisseur_hors_panel
-                        
+
                         tableau_html += f"""
                             <tr>
-                                <td style="border: 1px solid #ccc; padding: 5px;">{line.designation or ''}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{(line.designation or '').replace(chr(10), '<br/>')}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.coloris or ''}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{(line.infos_complementaires or '').replace(chr(10), '<br/>')}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.quantite_annuelle}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{line.uom_id.name if line.uom_id else ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.lot or ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{nom_fournisseur}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{fournisseur_retenu.reponse_prix}</td>
@@ -586,7 +609,7 @@ class IsDemandeConsultation(models.Model):
                             </tr>
                         """
                 tableau_html += "</table>"
-            
+
             # Envoi du mail au demandeur
             user = self.env['res.users'].browse(self._uid)
             email_from = user.email
@@ -720,7 +743,9 @@ class IsDemandeConsultation(models.Model):
                             'dimension': dl.dimension,
                             'environnement': dl.environnement,
                             'standard': dl.standard,
+                            'infos_complementaires': dl.infos_complementaires,
                             'quantite_annuelle': dl.quantite_annuelle,
+                            'uom_id': dl.uom_id.id if dl.uom_id else False,
                             'lot': int(lot_val) if lot_val.isdigit() else 0,
                             'fournisseur_ids': fournisseur_vals,
                         }
@@ -735,7 +760,9 @@ class IsDemandeConsultation(models.Model):
                             'type_cannelure': dl.type_cannelure,
                             'poids_emballage': dl.poids_emballage,
                             'standard': dl.standard,
+                            'infos_complementaires': dl.infos_complementaires,
                             'quantite_annuelle': dl.quantite_annuelle,
+                            'uom_id': dl.uom_id.id if dl.uom_id else False,
                             'lot': int(lot_val) if lot_val.isdigit() else 0,
                             'fournisseur_ids': fournisseur_vals,
                         }
@@ -783,7 +810,9 @@ class IsDemandeConsultation(models.Model):
                             'sequence': seq,
                             'designation': dl.designation,
                             'coloris': dl.coloris,
+                            'infos_complementaires': dl.infos_complementaires,
                             'quantite_annuelle': dl.quantite_annuelle,
+                            'uom_id': dl.uom_id.id if dl.uom_id else False,
                             'lot': int(lot_val) if lot_val.isdigit() else 0,
                             'fournisseur_ids': fournisseur_vals,
                         }
@@ -957,9 +986,11 @@ class IsDemandeConsultation(models.Model):
                     for line in lignes:
                         lignes_html += f"""
                             <tr>
-                                <td style="border: 1px solid #ccc; padding: 5px;">{line.designation or ''}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{(line.designation or '').replace(chr(10), '<br/>')}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.coloris or ''}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{(line.infos_complementaires or '').replace(chr(10), '<br/>')}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.quantite_annuelle}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{line.uom_id.name if line.uom_id else ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.lot or ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;"></td>
                                 <td style="border: 1px solid #ccc; padding: 5px;"></td>
@@ -967,14 +998,16 @@ class IsDemandeConsultation(models.Model):
                         """
                     body_html = f"""
                         <p>Madame, Monsieur,</p>
-                        <p>Dans le cadre d'une consultation, nous vous serions reconnaissant de nous 
+                        <p>Dans le cadre d'une consultation, nous vous serions reconnaissant de nous
                         transmettre votre meilleure offre de prix pour la fourniture éventuelle de :</p>
                         {adresses_html}
                         <table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
                             <tr style="background-color: #f0f0f0;">
                                 <th style="border: 1px solid #ccc; padding: 5px;">Désignation</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Coloris</th>
+                                <th style="border: 1px solid #ccc; padding: 5px;">Infos complémentaires</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Quantité annuelle</th>
+                                <th style="border: 1px solid #ccc; padding: 5px;">Unité</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Lot</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Prix</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Délai</th>
@@ -1007,7 +1040,9 @@ class IsDemandeConsultation(models.Model):
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.matiere or ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.dimension or ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.environnement or ''}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{(line.infos_complementaires or '').replace(chr(10), '<br/>')}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.quantite_annuelle}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{line.uom_id.name if line.uom_id else ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{standard_txt}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.lot or ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;"></td>
@@ -1016,7 +1051,7 @@ class IsDemandeConsultation(models.Model):
                         """
                     body_html = f"""
                         <p>Madame, Monsieur,</p>
-                        <p>Dans le cadre d'une consultation, nous vous serions reconnaissant de nous 
+                        <p>Dans le cadre d'une consultation, nous vous serions reconnaissant de nous
                         transmettre votre meilleure offre de prix pour la fourniture éventuelle de :</p>
                         {adresses_html}
                         <table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
@@ -1025,7 +1060,9 @@ class IsDemandeConsultation(models.Model):
                                 <th style="border: 1px solid #ccc; padding: 5px;">Matière</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Dimension</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Environnement</th>
+                                <th style="border: 1px solid #ccc; padding: 5px;">Infos complémentaires</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Quantité annuelle</th>
+                                <th style="border: 1px solid #ccc; padding: 5px;">Unité</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Standard</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Lot</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Prix</th>
@@ -1050,7 +1087,9 @@ class IsDemandeConsultation(models.Model):
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.matiere or ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.dimensions_int or ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.dimensions_ext or ''}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{(line.infos_complementaires or '').replace(chr(10), '<br/>')}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.quantite_annuelle}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{line.uom_id.name if line.uom_id else ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.lot or ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;"></td>
                                 <td style="border: 1px solid #ccc; padding: 5px;"></td>
@@ -1058,7 +1097,7 @@ class IsDemandeConsultation(models.Model):
                         """
                     body_html = f"""
                         <p>Madame, Monsieur,</p>
-                        <p>Dans le cadre d'une consultation, nous vous serions reconnaissant de nous 
+                        <p>Dans le cadre d'une consultation, nous vous serions reconnaissant de nous
                         transmettre votre meilleure offre de prix pour la fourniture éventuelle de :</p>
                         {adresses_html}
                         <table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
@@ -1067,7 +1106,9 @@ class IsDemandeConsultation(models.Model):
                                 <th style="border: 1px solid #ccc; padding: 5px;">Matière</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Dim. intérieures</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Dim. extérieures</th>
+                                <th style="border: 1px solid #ccc; padding: 5px;">Infos complémentaires</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Quantité annuelle</th>
+                                <th style="border: 1px solid #ccc; padding: 5px;">Unité</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Lot</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Prix</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Délai</th>
@@ -1161,7 +1202,7 @@ class IsDemandeConsultation(models.Model):
                         lignes_html += f"""
                             <tr>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.article_id.name if line.article_id else ''}</td>
-                                <td style="border: 1px solid #ccc; padding: 5px;">{line.designation or ''}</td>
+                                <td style="border: 1px solid #ccc; padding: 5px;">{(line.designation or '').replace(chr(10), '<br/>')}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.quantite_export or ''}</td>
                                 <td style="border: 1px solid #ccc; padding: 5px;">{line.uom_export_id.name if line.uom_export_id else ''}</td>
                             </tr>
@@ -1290,7 +1331,7 @@ class IsDemandeConsultationDemandeLine(models.Model):
     type_consultation = fields.Selection(related='demande_id.type_consultation', string="Type de consultation", store=False)
     sequence = fields.Integer('Ordre')
     # Champs spécifiques DC-MAT
-    designation = fields.Char("Désignation")
+    designation = fields.Text("Désignation")
     coloris = fields.Char("Coloris")
     # Champs spécifiques DC-COMP
     type_produit = fields.Char("Type de produit", help="vis, mousse, carton...")
@@ -1314,7 +1355,9 @@ class IsDemandeConsultationDemandeLine(models.Model):
     date_livraison_souhaitee = fields.Date("Date de livraison maxi souhaitée")
     mode_transport = fields.Selection(MODE_TRANSPORT_SELECTION, string="Mode de transport")
     # Champs communs DC-MAT, DC-COMP et DC-EMB
+    infos_complementaires = fields.Text("Infos complémentaires")
     quantite_annuelle = fields.Float("Quantité annuelle", digits=(14, 2))
+    uom_id = fields.Many2one('uom.uom', "Unité")
     lot = fields.Text("Lot (Mettre un lot par ligne)", help="Lots à consulter (un par ligne)")
     # Champs spécifiques DC-EXPORT
     dam = fields.Char("N° de DAM")
@@ -1323,7 +1366,7 @@ class IsDemandeConsultationDemandeLine(models.Model):
     fournisseur_export_id = fields.Many2one('res.partner', "Fournisseur",
                                             domain=[('supplier', '=', True)])
     quantite_export = fields.Float("Quantité", digits=(14, 2))
-    uom_export_id = fields.Many2one('uom.uom', "Unité",
+    uom_export_id = fields.Many2one('uom.uom', "Unité ",
                                     default=lambda self: self.env['uom.uom'].search([('name', 'ilike', 'kg')], limit=1))
     prix_unitaire = fields.Float("Prix unitaire (€)", digits=(14, 4))
     disponibilite = fields.Selection([
@@ -1344,6 +1387,23 @@ class IsDemandeConsultationDemandeLine(models.Model):
     )
     autres_fournisseurs = fields.Text("Autres fournisseurs", help="Fournisseurs hors panel, un par ligne")
     mails_autres_fournisseurs = fields.Text("Mails autres fournisseurs", help="Un email par ligne, dans le même ordre que les autres fournisseurs")
+
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super().default_get(fields_list)
+        if 'uom_id' in fields_list and not defaults.get('uom_id'):
+            type_consultation = self.env.context.get('default_type_consultation')
+            categ_kg = self.env.ref('uom.product_uom_categ_kgm', raise_if_not_found=False)
+            categ_unit = self.env.ref('uom.product_uom_categ_unit', raise_if_not_found=False)
+            if type_consultation == 'dc_mat' and categ_kg:
+                uom = self.env['uom.uom'].search([('uom_type', '=', 'reference'), ('category_id', '=', categ_kg.id)], limit=1)
+                if uom:
+                    defaults['uom_id'] = uom.id
+            elif type_consultation in ['dc_comp', 'dc_emb'] and categ_unit:
+                uom = self.env['uom.uom'].search([('uom_type', '=', 'reference'), ('category_id', '=', categ_unit.id)], limit=1)
+                if uom:
+                    defaults['uom_id'] = uom.id
+        return defaults
 
     @api.onchange('mold_id')
     def _onchange_mold_id(self):
@@ -1403,7 +1463,7 @@ class IsDemandeConsultationLine(models.Model):
     sequence = fields.Integer('Ordre')
     
     # Champs communs (sauf DC-EMB)
-    designation = fields.Char("Désignation")
+    designation = fields.Text("Désignation")
     coloris = fields.Char("Coloris")
     
     # Champs spécifiques DC-EMB (Emballages)
@@ -1437,7 +1497,7 @@ class IsDemandeConsultationLine(models.Model):
     couleur_export = fields.Char("Couleur")
     fournisseur_export_id = fields.Many2one('res.partner', "Fournisseur", domain=[('supplier', '=', True)])
     quantite_export = fields.Float("Quantité", digits=(14, 2))
-    uom_export_id = fields.Many2one('uom.uom', "Unité",
+    uom_export_id = fields.Many2one('uom.uom', "Unité ",
                                     default=lambda self: self.env['uom.uom'].search([('name', 'ilike', 'kg')], limit=1))
     prix_unitaire = fields.Float("Prix unitaire (€)", digits=(14, 4))
     disponibilite = fields.Selection([
@@ -1448,7 +1508,9 @@ class IsDemandeConsultationLine(models.Model):
     date_reception_dispo = fields.Date("Date de réception")
 
     # Champs communs
+    infos_complementaires = fields.Text("Infos complémentaires")
     quantite_annuelle = fields.Float("Quantité annuelle", digits=(14, 2))
+    uom_id = fields.Many2one('uom.uom', "Unité")
     lot = fields.Integer("Lot", help="Lots à consulter (un par ligne)")
     
     # Fournisseurs
@@ -1509,7 +1571,7 @@ class IsDemandeConsultationLineFournisseur(models.Model):
     sequence = fields.Integer('Ordre')
 
     # Champs related pour la saisie rapide (lecture seule)
-    designation = fields.Char(related='line_id.designation', string="Désignation", store=False, readonly=True)
+    designation = fields.Text(related='line_id.designation', string="Désignation", store=False, readonly=True)
     coloris = fields.Char(related='line_id.coloris', string="Coloris", store=False, readonly=True)
     type_produit = fields.Char(related='line_id.type_produit', string="Type de produit", store=False, readonly=True)
     matiere = fields.Char(related='line_id.matiere', string="Matière", store=False, readonly=True)
@@ -1523,7 +1585,9 @@ class IsDemandeConsultationLineFournisseur(models.Model):
     colisage = fields.Char(related='line_id.colisage', string="Colisage", store=False, readonly=True)
     poids = fields.Float(related='line_id.poids', string="Poids", store=False, readonly=True)
     frequence = fields.Char(related='line_id.frequence', string="Fréquence", store=False, readonly=True)
+    infos_complementaires = fields.Text(related='line_id.infos_complementaires', string="Infos complémentaires", store=False, readonly=True)
     quantite_annuelle = fields.Float(related='line_id.quantite_annuelle', string="Quantité annuelle", store=False, readonly=True)
+    uom_id = fields.Many2one(related='line_id.uom_id', string="Unité", store=False, readonly=True)
     lot = fields.Integer(related='line_id.lot', string="Lot", store=False, readonly=True)
     # Champs related DC-CHINE
     mold_id = fields.Many2one(related='line_id.mold_id', string="N° moule", store=False, readonly=True)

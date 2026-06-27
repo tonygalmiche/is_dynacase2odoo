@@ -236,31 +236,24 @@ class IsDocMoule(models.Model):
                 html_foot = "</tbody></table>"
                 rsp_auto=False
                 if obj.param_project_id.ppr_famille=="Fiche technique matière":
-                    _logger.info(">>> [FTM] obj=%s idmoule=%s", obj.id, obj.idmoule)
                     if obj.idmoule:
                         #** Recherche des articles liés au moule **************
-                        _logger.info(">>> [FTM] article_ids=%s", obj.idmoule.article_ids.mapped('article_id.code_pg'))
                         for line in obj.idmoule.article_ids:
                             code_pg = line.article_id.code_pg or ''
-                            _logger.info(">>> [FTM] line article=%s code_pg=%r → filtre 50: %s", line.article_id.id, code_pg, code_pg[0:2]=='50')
                             if code_pg[0:2]=='50':
                                 domain=[
                                     ('ppr_famille'  ,'=', 'Caractéristiques techniques'),
                                     ('type_document','=', 'Article'),
                                 ]
                                 familles=self.env['is.param.project'].search(domain,limit=1)
-                                _logger.info(">>> [FTM] familles trouvées: %s", familles.ids)
                                 for famille in familles:
                                     domain=[
                                         ('etat','=','F'),
                                         ('param_project_id'  ,'=',famille.id),
                                         ('dossier_article_id','=',line.article_id.id),
                                     ]
-                                    _logger.info(">>> [FTM] recherche docs avec domain=%s", domain)
                                     docs=self.env['is.doc.moule'].search(domain,order='j_prevue desc',limit=1)
-                                    _logger.info(">>> [FTM] docs trouvés: %s", docs.ids)
                                     for doc in docs:
-                                        _logger.info(">>> [FTM] doc=%s rsp_pj=%r", doc.id, doc.rsp_pj)
                                         rsp_auto = doc.rsp_pj
 
                 dao = obj.idmoule.dossier_appel_offre_id or obj.dossierf_id.dossier_appel_offre_id
