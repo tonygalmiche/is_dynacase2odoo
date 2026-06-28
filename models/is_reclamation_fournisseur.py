@@ -372,20 +372,20 @@ class IsReclamationFournisseur(models.Model):
 
 
 
-    def init_nature_reclamation_action(self):
-        """Initialise nature_reclamation depuis type_reclamation + nature_qualite/logistique.
-        Utilise un UPDATE SQL direct pour ne pas modifier write_date.
-        À supprimer après la migration des données."""
-        self.env.cr.execute("""
-            UPDATE is_reclamation_fournisseur
-            SET nature_reclamation = CASE
-                WHEN type_reclamation = 'Réclamation' AND nature_qualite    = true THEN 'reclamation_qualite'
-                WHEN type_reclamation = 'Réclamation' AND nature_logistique = true THEN 'reclamation_logistique'
-                WHEN type_reclamation = 'Alerte'      AND nature_qualite    = true THEN 'alerte_qualite'
-                WHEN type_reclamation = 'Alerte'      AND nature_logistique = true THEN 'alerte_logistique'
-                ELSE 'alerte_qualite'
-            END
-        """)
+    # def init_nature_reclamation_action(self):
+    #     """Initialise nature_reclamation depuis type_reclamation + nature_qualite/logistique.
+    #     Utilise un UPDATE SQL direct pour ne pas modifier write_date.
+    #     À supprimer après la migration des données."""
+    #     self.env.cr.execute("""
+    #         UPDATE is_reclamation_fournisseur
+    #         SET nature_reclamation = CASE
+    #             WHEN type_reclamation = 'Réclamation' AND nature_qualite    = true THEN 'reclamation_qualite'
+    #             WHEN type_reclamation = 'Réclamation' AND nature_logistique = true THEN 'reclamation_logistique'
+    #             WHEN type_reclamation = 'Alerte'      AND nature_qualite    = true THEN 'alerte_qualite'
+    #             WHEN type_reclamation = 'Alerte'      AND nature_logistique = true THEN 'alerte_logistique'
+    #             ELSE 'alerte_qualite'
+    #         END
+    #     """)
 
     def maj_quantite_livree_action(self):
         """Action serveur pour recalculer le champ 'Quantité livrée'"""

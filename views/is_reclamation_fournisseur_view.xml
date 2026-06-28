@@ -331,8 +331,10 @@ if records:
             </field>
         </record>
 
+
+
         <!-- Action serveur pour initialiser nature_reclamation (à supprimer après migration) -->
-        <record id="init_nature_reclamation_action_serveur" model="ir.actions.server">
+        <!-- <record id="init_nature_reclamation_action_serveur" model="ir.actions.server">
             <field name="name">Initialiser Nature réclamation (migration)</field>
             <field name="model_id" ref="model_is_reclamation_fournisseur"/>
             <field name="binding_model_id" ref="model_is_reclamation_fournisseur"/>
@@ -344,7 +346,7 @@ if records:
     action = records.init_nature_reclamation_action()
             </field>
         </record>
-
+ -->
 
 
     </data>
