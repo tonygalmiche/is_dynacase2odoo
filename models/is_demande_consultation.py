@@ -63,7 +63,7 @@ class IsDemandeConsultation(models.Model):
             
             # Bouton vers soldé
             vsb = False
-            if obj.state == 'consultation_en_cours' and uid == obj.acheteur_id.id:
+            if obj.state in ('consultation_en_cours','transmis_achat') and uid == obj.acheteur_id.id:
                 vsb = True
             obj.vers_solde_vsb = vsb
             
@@ -142,7 +142,7 @@ class IsDemandeConsultation(models.Model):
     ], string="Confidentialité sur client", tracking=True, default='non')
     
     # Secteur
-    industry_id = fields.Many2one('res.partner.industry', "Secteur d'activité", tracking=True)
+    industry_id = fields.Many2one('is.secteur.activite', "Secteur d'activité", tracking=True)
     
     # Dates
     date_retour_consultation = fields.Date("Date souhaitée pour le retour de consultation", tracking=True,
@@ -233,8 +233,8 @@ class IsDemandeConsultation(models.Model):
     def _onchange_client_id(self):
         """Remplit le secteur d'activité depuis le client sélectionné"""
         for obj in self:
-            if obj.client_id and obj.client_id.industry_id:
-                obj.industry_id = obj.client_id.industry_id
+            if obj.client_id and obj.client_id.is_secteur_activite:
+                obj.industry_id = obj.client_id.is_secteur_activite
 
     @api.onchange('dossier_ao_id')
     def _onchange_dossier_ao_id(self):
@@ -246,8 +246,8 @@ class IsDemandeConsultation(models.Model):
                     obj.client_id = dao.client_id
                 if dao.prospect:
                     obj.prospect = dao.prospect
-                if dao.client_id and dao.client_id.industry_id:
-                    obj.industry_id = dao.client_id.industry_id
+                if dao.client_id and dao.client_id.is_secteur_activite:
+                    obj.industry_id = dao.client_id.is_secteur_activite
                 if dao.dao_datedms:
                     obj.date_sop = dao.dao_datedms
                 # Chercher le moule lié à ce dossier AO
@@ -266,8 +266,8 @@ class IsDemandeConsultation(models.Model):
             if dmv:
                 if dmv.demao_idclient:
                     obj.client_id = dmv.demao_idclient
-                    if dmv.demao_idclient.industry_id:
-                        obj.industry_id = dmv.demao_idclient.industry_id
+                    if dmv.demao_idclient.is_secteur_activite:
+                        obj.industry_id = dmv.demao_idclient.is_secteur_activite
 
     def _get_incoterm_id(self, code):
         """Récupère l'ID d'un incoterm par son code"""

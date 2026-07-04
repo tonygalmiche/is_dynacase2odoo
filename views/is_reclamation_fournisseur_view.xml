@@ -168,6 +168,7 @@
                                         <group string="Synthèse des coûts">
                                             <field name="cout_ctrl_qualite_vendu_fournisseur"/>
                                             <field name="couts_tris"/>
+                                            <field name="forfait_qualite" readonly="1"/>
                                             <separator colspan="2"/>
                                             <field name="couts_produits"/>
                                             <field name="autres_couts"/>
@@ -330,24 +331,5 @@ if records:
     action = records.maj_quantite_livree_action()
             </field>
         </record>
-
-
-
-        <!-- Action serveur pour initialiser nature_reclamation (à supprimer après migration) -->
-        <!-- <record id="init_nature_reclamation_action_serveur" model="ir.actions.server">
-            <field name="name">Initialiser Nature réclamation (migration)</field>
-            <field name="model_id" ref="model_is_reclamation_fournisseur"/>
-            <field name="binding_model_id" ref="model_is_reclamation_fournisseur"/>
-            <field name="binding_view_types">list,form</field>
-            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
-            <field name="state">code</field>
-            <field name="code">
-if records:
-    action = records.init_nature_reclamation_action()
-            </field>
-        </record>
- -->
-
-
     </data>
 </odoo>

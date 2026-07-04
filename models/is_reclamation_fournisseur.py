@@ -310,12 +310,12 @@ class IsReclamationFournisseur(models.Model):
         readonly=True,
     )
 
-    @api.depends('couts_produits', 'couts_tris', 'autre_cout_ids.montant_autre')
+    @api.depends('couts_produits', 'couts_tris', 'autre_cout_ids.montant_autre','forfait_qualite')
     def _compute_somme_des_couts(self):
         for rec in self:
             autres_couts = sum(rec.autre_cout_ids.mapped('montant_autre'))
             #couts_compta = sum(rec.cout_compta_ids.mapped('montant'))
-            rec.somme_des_couts = (rec.couts_produits or 0.0) + (rec.couts_tris or 0.0) + autres_couts # + couts_compta
+            rec.somme_des_couts = (rec.couts_produits or 0.0) + (rec.couts_tris or 0.0)  + (rec.forfait_qualite or 0.0) + autres_couts # + couts_compta
 
     ecart_cout = fields.Float(
         string="Écart coût",
