@@ -454,16 +454,6 @@ class is_revue_de_contrat(models.Model):
                     raise ValidationError("La revue de contrat %s %s indice %s existe déjà !"%(obj.rc_mouleid.name or '',obj.rc_dossierfid.name or '',obj.rc_indice))
 
 
-    def lien_vers_dynacase_action(self):
-        for obj in self:
-            url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
-            return {
-                'type' : 'ir.actions.act_url',
-                'url': url,
-                'target': 'new',
-            }
-            
-
     def get_state_name(self):
         for obj in self:
             return dict(self._fields['state'].selection).get(self.state)

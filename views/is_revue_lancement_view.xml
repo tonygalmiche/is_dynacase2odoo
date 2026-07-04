@@ -35,16 +35,8 @@
             <field name="arch" type="xml">
                 <form string="Revue de lancement">
                     <header>
-                        <field name="dynacase_id" invisible="1"/>
-                        <button 
-                            name="lien_vers_dynacase_action"
-                            string="Dynacase"
-                            type="object" class="btn btn-info"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
-                            groups="base.group_system"
-                        />
-                        <button 
-                            name="copie_rc_action" 
+                        <button
+                            name="copie_rc_action"
                             string="Copie données revue de contrat" 
                             type="object" class="btn" 
                             attrs="{'invisible': ['|',('state', '=', 'rl_diffuse'),('rl_num_rcid','=',False)]}"
@@ -337,8 +329,6 @@
                         decoration-muted="state == 'rl_diffuse'" 
                         decoration-warning="state == 'rl_brouillon'" 
                     />
-                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" groups="base.group_system"/>
                 </tree>
             </field>
         </record>

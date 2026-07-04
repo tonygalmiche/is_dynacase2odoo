@@ -29,15 +29,7 @@
             <field name="arch" type="xml">
                 <form string="Form" create="1">
                     <header>
-                        <field name="dynacase_id" invisible="1"/>
-                        <button 
-                            name="lien_vers_dynacase_action"
-                            string="Dynacase"
-                            type="object" class="btn btn-info"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
-                            groups="base.group_system"
-                        />
-                        <button 
+                        <button
                             name="gantt_action"
                             string="Gantt"
                             type="object" class="btn-success"
@@ -245,13 +237,7 @@
                         decoration-success="state in ['plaswinned']"
                     />
                     <field name="destinataires_ids" optional="hide" groups="base.group_system" widget="many2many_tags"/>   
-                    <field name="mail_copy"         optional="hide" groups="base.group_system"/>    
-                    <button 
-                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
-                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                        groups="base.group_system"
-                    />
-                    <field name="dynacase_id"  optional="hide" groups="base.group_system"/>
+                    <field name="mail_copy"         optional="hide" groups="base.group_system"/>
                 </tree>
             </field>
         </record>

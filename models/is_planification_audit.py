@@ -141,16 +141,6 @@ class is_planification_audit(models.Model):
         return site_id
 
 
-
-    def lien_vers_dynacase_action(self):
-        for obj in self:
-            url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
-            return {
-                'type' : 'ir.actions.act_url',
-                'url': url,
-                'target': 'new',
-            }
-
     @api.onchange('article_id')
     def onchange_article_id(self):
         if self.article_id:

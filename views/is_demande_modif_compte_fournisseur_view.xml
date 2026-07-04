@@ -34,15 +34,7 @@
             <field name="arch" type="xml">
                 <form string="Form">
                     <header>
-                        <field name="dynacase_id" invisible="1"/>
-                        <button 
-                            name="lien_vers_dynacase_action"
-                            string="Dynacase"
-                            type="object" class="btn btn-info"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
-                            groups="base.group_system"
-                        />
-                        <!-- <button 
+                        <!-- <button
                             name="vers_brouillon_action"
                             string="vers Brouillon"
                             type="object"
@@ -147,12 +139,6 @@
                         decoration-info="state in ['brouillon']" 
                         decoration-warning="state in ['diffuse']"
                         decoration-success="state in ['termine']"
-                    />
-                    <field name="dynacase_id"               optional="hide" groups="base.group_system"/>
-                    <button 
-                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
-                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                        groups="base.group_system"
                     />
                 </tree>
             </field>

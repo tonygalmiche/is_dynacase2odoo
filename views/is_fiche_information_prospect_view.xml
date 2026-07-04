@@ -9,16 +9,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Form">
-                    <header>
-                        <button 
-                            name="lien_vers_dynacase_action"
-                            string="Dynacase"
-                            type="object" class="btn btn-info"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
-                            groups="base.group_system"
-                        />
-                        <field name="dynacase_id" invisible="1"/>
-                    </header>
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/> 
@@ -92,12 +82,6 @@
                     <field name="site_internet"             optional="show"/>
                     <field name="etat"                      optional="show"/>
                     <field name="appel_offre_id"            optional="show" widget="many2one_clickable"/>
-                    <field name="dynacase_id"               optional="hide" groups="base.group_system"/>
-                    <button 
-                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
-                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                        groups="base.group_system"
-                    />
 
                 </tree>
             </field>

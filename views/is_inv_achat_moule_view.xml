@@ -6,16 +6,7 @@
             <field name="model">is.inv.achat.moule</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Form">  
-                    <header>
-                        <field name="dynacase_id" invisible="1"/>
-                        <button 
-                            string="Dynacase" name="lien_vers_dynacase_action"
-                            type="object" class="btn btn-info"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
-                            groups="base.group_system"
-                        />
-                    </header>
+                <form string="Form">
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/> 
@@ -93,12 +84,6 @@
                     <field name="create_uid"  optional="hide" string="Créé par"/>
                     <field name="write_date"  optional="hide" string="Modifié le"/>
                     <field name="write_uid"   optional="hide" string="Modifié par"/>
-                    <button 
-                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
-                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                        groups="base.group_system"
-                    />
-                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
                  </tree>
             </field>
         </record>

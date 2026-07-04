@@ -36,16 +36,8 @@
             <field name="arch" type="xml">
                 <form string="Revue de contrat">
                     <header>
-                        <field name="dynacase_id" invisible="1"/>
                         <field name="readonly"    invisible="1"/>
-                        <button 
-                            name="lien_vers_dynacase_action"
-                            string="Dynacase"
-                            type="object" class="btn btn-info"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
-                            groups="base.group_system"
-                        />
-                        <button 
+                        <button
                             name="copie_assemblage_action"
                             string="Copie du dossier F"
                             type="object"
@@ -754,8 +746,6 @@
                         decoration-muted="state == 'diffuse'" 
                         decoration-warning="state == 'brouillon'" 
                     />
-                    <field name="dynacase_id"              optional="hide" groups="base.group_system"/>
-                    <button title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" groups="base.group_system"/>
                 </tree>
             </field>
         </record>

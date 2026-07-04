@@ -37,15 +37,6 @@ class is_fiche_information_prospect(models.Model):
 
     piece_jointe_ids           = fields.Many2many("ir.attachment", "is_fiche_information_prospect_piece_jointe_rel", "piece_jointe"  , "att_id", string="Pièce jointe")
 
-    def lien_vers_dynacase_action(self):
-        for obj in self:
-            url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
-            return {
-                'type' : 'ir.actions.act_url',
-                'url': url,
-                'target': 'new',
-            }
-
 
 class is_fiche_information_prospect_contact_line(models.Model):
     _name        = "is.fiche.information.prospect.contact.line"

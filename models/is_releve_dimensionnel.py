@@ -22,16 +22,6 @@ class IsReleveDimensionnel(models.Model):
     ligne_ids   = fields.One2many("is.releve.dimensionnel.saisie.ligne", "releve_id", string="Lignes de saisies")
 
 
-    def lien_vers_dynacase_action(self):
-        for obj in self:
-            url = "https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s" % obj.dynacase_id
-            return {
-                "type": "ir.actions.act_url",
-                "url": url,
-                "target": "new",
-            }
-
-
 class IsReleveDimensionnelSaisie(models.Model):
     _name        = "is.releve.dimensionnel.saisie"
     _description = "Saisie de relevé dimensionnel"
@@ -53,17 +43,6 @@ class IsReleveDimensionnelSaisie(models.Model):
             'res_id': self.id,
             'view_mode': 'form',
         }
-
-
-    def lien_vers_dynacase_action(self):
-        for obj in self:
-            url = "https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s" % obj.dynacase_id
-            return {
-                "type": "ir.actions.act_url",
-                "url": url,
-                "target": "new",
-            }
-
 
 
 

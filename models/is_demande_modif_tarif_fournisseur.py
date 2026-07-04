@@ -169,15 +169,6 @@ class is_demande_modif_tarif_fournisseur(models.Model):
             #     title += obj.article_id.name
             obj.titre = title
 
-    def lien_vers_dynacase_action(self):
-        for obj in self:
-            url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
-            return {
-                'type' : 'ir.actions.act_url',
-                'url': url,
-                'target': 'new',
-            }
-
 
 class is_demande_modif_tarif_fournisseur_lot_line(models.Model):
     _name        = 'is.demande.modif.tarif.fournisseur.lot.line'

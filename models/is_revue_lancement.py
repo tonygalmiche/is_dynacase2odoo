@@ -310,17 +310,6 @@ class is_revue_lancement(models.Model):
             if len(lines) > 1:
                 raise ValidationError("Cette revue de lancement existe déjà %s %s indice %s !"%( obj.rl_mouleid.name or '', obj.rl_dossierfid.name or '',obj.rl_indice))
 
-
-    def lien_vers_dynacase_action(self):
-        for obj in self:
-            url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
-            return {
-                'type' : 'ir.actions.act_url',
-                'url': url,
-                'target': 'new',
-            }
-            
-            
     def initialiser_responsable_doc_action(self):
         for obj in self:
             moule_id    = obj.rl_num_rcid.rc_mouleid.id

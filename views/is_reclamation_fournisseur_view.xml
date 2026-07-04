@@ -74,12 +74,6 @@
                     <field name="somme_des_couts" optional="hide"/>
                     <field name="couts_compta"    optional="hide"/>
                     <field name="ecart_cout"      optional="hide"/>
-                    <button 
-                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"
-                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                        groups="base.group_system"
-                    />
-                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
 
                     <!-- Champs d'audit -->
                     <field name="create_date" optional="hide" string="Créé le"/>
@@ -119,15 +113,6 @@
             <field name="model">is.reclamation.fournisseur</field>
             <field name="arch" type="xml">
                 <form string="Réclamation fournisseur">
-                    <header>
-                        <field name="dynacase_id" invisible="1"/>
-                        <button
-                            string="Dynacase" name="lien_vers_dynacase_action"
-                            type="object" class="btn btn-info"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                            groups="base.group_system"
-                        />
-                    </header>
                     <sheet>
                         <field name="active" invisible="1"/>
                         <field name="annee_detection_defaut" invisible="1"/>

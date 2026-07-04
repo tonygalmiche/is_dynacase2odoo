@@ -31,15 +31,7 @@
             <field name="arch" type="xml">
                 <form string="Form">
                     <header>
-                        <field name="dynacase_id" invisible="1"/>
-                        <button 
-                            name="lien_vers_dynacase_action"
-                            string="Dynacase"
-                            type="object" class="btn btn-info"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
-                            groups="base.group_system"
-                        />
-                        <button 
+                        <button
                             name="vers_brouillon_action"
                             string="vers Brouillon"
                             type="object"
@@ -162,19 +154,12 @@
                     <field name="write_date"                     optional="hide" string="Modifié le"/>
                     <field name="write_uid"                      optional="hide" string="Modifié par"/>
                     <field name="mail_to_ids"                    optional="hide" widget="many2many_tags"/>
-                    <field name="dynacase_id"                    optional="hide" groups="base.group_system"/>
-                    <field 
-                        name="state" optional="show" widget="badge" 
-                        decoration-info="state in ['brouillon']" 
+                    <field
+                        name="state" optional="show" widget="badge"
+                        decoration-info="state in ['brouillon']"
                         decoration-warning="state in ['diffuse']"
                         decoration-success="state in ['termine']"
                     />
-                    <button 
-                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
-                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                        groups="base.group_system"
-                    />
-
                 </tree>
             </field>
         </record>

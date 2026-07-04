@@ -69,18 +69,6 @@ class IsProcessus(models.Model):
             }
         }
 
-    def lien_vers_dynacase_action(self):
-        for obj in self:
-            url = "https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s" % obj.dynacase_id
-            return {
-                'type': 'ir.actions.act_url',
-                'url': url,
-                'target': 'new',
-            }
-
-
-
-
 class IsProcessusEtape(models.Model):
     _name = 'is.processus.etape'
     _inherit = ["portal.mixin", "mail.thread", "mail.activity.mixin", "utm.mixin"]
@@ -125,15 +113,6 @@ class IsProcessusEtape(models.Model):
                 'default_processus_id': self.processus_id.id,
             }
         }
-
-    def lien_vers_dynacase_action(self):
-        for obj in self:
-            url = "https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s" % obj.dynacase_id
-            return {
-                'type': 'ir.actions.act_url',
-                'url': url,
-                'target': 'new',
-            }
 
     def action_view_etape(self):
         """Ouvre la fiche de l'étape du processus"""
@@ -542,16 +521,6 @@ class IsProcessusDoc(models.Model):
         copie.message_post(body=message_copie, subject="Document archivé suite à révision")
         
         return True
-
-    def lien_vers_dynacase_action(self):
-        for obj in self:
-            url = "https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s" % obj.dynacase_id
-            return {
-                'type': 'ir.actions.act_url',
-                'url': url,
-                'target': 'new',
-            }
-
 
 class IsProcessusDocEtape(models.Model):
     _name = 'is.processus.doc.etape'

@@ -95,15 +95,6 @@ class is_action(models.Model):
         for obj in self:
             obj.state='annule'
 
-    def lien_vers_dynacase_action(self):
-        for obj in self:
-            url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
-            return {
-                'type' : 'ir.actions.act_url',
-                'url': url,
-                'target': 'new',
-            }
-
     def open_action_form(self):
         """Ouvre la fiche complète de l'action"""
         self.ensure_one()
@@ -233,15 +224,6 @@ class is_plan_action(models.Model):
     def vers_annule_action(self):
         for obj in self:
             obj.state='annule'
-
-    def lien_vers_dynacase_action(self):
-        for obj in self:
-            url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
-            return {
-                'type' : 'ir.actions.act_url',
-                'url': url,
-                'target': 'new',
-            }
 
     def open_plan_action_form(self):
         """Ouvre la fiche du plan d'action"""

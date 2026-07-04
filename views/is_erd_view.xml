@@ -27,15 +27,8 @@
             <field name="model">is.erd</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Form">  
+                <form string="Form">
                     <header>
-                        <field name="dynacase_id" invisible="1"/>
-                        <button 
-                            string="Dynacase" name="lien_vers_dynacase_action"
-                            type="object" class="btn btn-info"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
-                            groups="base.group_system"
-                        />
                         <field name="vers_transmis_be_vsb" invisible="1"/>
                         <field name="vers_valide_be_vsb" invisible="1"/>
                         <field name="vers_diffuse_client_vsb" invisible="1"/>
@@ -135,12 +128,6 @@
                         decoration-warning="state in ['Cree','Transmis_BE','Valide_BE']"
                         decoration-success="state in ['Gagne']"
                     />
-                    <button 
-                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
-                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                        groups="base.group_system"
-                    />
-                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
                  </tree>
             </field>
         </record>

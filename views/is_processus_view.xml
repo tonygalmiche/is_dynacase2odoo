@@ -39,12 +39,6 @@
                     <field name="create_uid" optional="hide" string="Créé par"/>
                     <field name="write_date" optional="hide" string="Modifié le"/>
                     <field name="write_uid" optional="hide" string="Modifié par"/>
-                    <button 
-                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
-                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                        groups="base.group_system"
-                    />
-                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
                 </tree>
             </field>
         </record>
@@ -63,13 +57,6 @@
                             class="btn btn-primary"
                             attrs="{'invisible': ['|', ('can_create_document', '=', False), ('id', '=', False)]}"
                         />
-                        <button 
-                            string="Dynacase" name="lien_vers_dynacase_action"
-                            type="object" class="btn btn-info"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
-                            groups="base.group_system"
-                        />
-                        <field name="dynacase_id" groups="base.group_system" invisible="1"/>
                     </header>
                     <sheet>
                         <field name="active" invisible="1"/>
@@ -161,12 +148,6 @@
                     <field name="create_uid" optional="hide" string="Créé par"/>
                     <field name="write_date" optional="hide" string="Modifié le"/>
                     <field name="write_uid" optional="hide" string="Modifié par"/>
-                    <button 
-                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
-                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                        groups="base.group_system"
-                    />
-                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
                 </tree>
             </field>
         </record>
@@ -185,13 +166,6 @@
                             class="btn btn-primary"
                             attrs="{'invisible': ['|', ('can_create_document', '=', False), ('id', '=', False)]}"
                         />
-                        <button 
-                            string="Dynacase" name="lien_vers_dynacase_action"
-                            type="object" class="btn btn-info"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
-                            groups="base.group_system"
-                        />
-                        <field name="dynacase_id" groups="base.group_system" invisible="1"/>
                     </header>
                     <sheet>
                         <field name="active" invisible="1"/>
@@ -305,12 +279,6 @@
                     <field name="create_uid"       optional="hide" string="Créé par"/>
                     <field name="write_date"       optional="hide" string="Modifié le"/>
                     <field name="write_uid"        optional="hide" string="Modifié par"/>
-                    <button 
-                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
-                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                        groups="base.group_system"
-                    />
-                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
                 </tree>
             </field>
         </record>
@@ -322,13 +290,6 @@
                     <header>
                         <field name="active" invisible="1"/>
                         <field name="is_readonly" invisible="1"/>
-                        <field name="dynacase_id" groups="base.group_system" invisible="1"/>
-                        <button 
-                            string="Dynacase" name="lien_vers_dynacase_action"
-                            type="object" class="btn btn-info"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
-                            groups="base.group_system"
-                        />
                     </header>
                     <sheet>
                         <field name="active" invisible="1"/>

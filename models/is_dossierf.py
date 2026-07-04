@@ -102,15 +102,6 @@ class is_dossierf(models.Model):
             obj.j_actuelle_rw = rw
 
 
-    def lien_vers_dynacase_action(self):
-        for obj in self:
-            url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s"%obj.dynacase_id
-            return {
-                'type' : 'ir.actions.act_url',
-                'url': url,
-                'target': 'new',
-            }
-
     def gantt_action(self):
         for obj in self:
             domain=[ ('dossierf_id', '=', obj.id) ]

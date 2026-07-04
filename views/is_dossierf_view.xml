@@ -35,13 +35,6 @@
             <field name="arch" type="xml">
                 <sheet position="before">
                     <header>
-                        <field name="dynacase_id" invisible="1"/>
-                        <button 
-                            string="Dynacase" name="lien_vers_dynacase_action"
-                            type="object" class="btn btn-info"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}" 
-                            groups="base.group_system"
-                        />
                         <button name="gantt_action" string="Gantt" type="object" class="btn-success"/>
                     </header>
                 </sheet>
@@ -98,13 +91,7 @@
                     <field name="j_avancement"           optional="show"/>
                     <field name="date_fin_be"            optional="show"/>                            
                 </field>
-                <field name="is_database_origine_id" position="after">      
-                    <button 
-                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
-                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                        groups="base.group_system"
-                    />
-                    <field name="dynacase_id"  optional="hide" groups="base.group_system"/>
+                <field name="is_database_origine_id" position="after">
                 </field>
             </field>
         </record>

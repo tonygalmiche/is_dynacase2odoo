@@ -25,12 +25,6 @@
                     <field name="write_date"          optional="hide" string="Modifié le"/>
                     <field name="write_uid"           optional="hide" string="Modifié par"/>
                     <field name="id"                  optional="hide" groups="base.group_system"/>
-                    <button 
-                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
-                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"   
-                        groups="base.group_system"
-                    />
-                    <field name="dynacase_id"  optional="hide" groups="base.group_system"/>
                 </tree>
             </field>
         </record>
@@ -115,12 +109,6 @@
                         decoration-danger="decision_rcp=='Livraison refusée'"
                     />
                     <field name="commentaire" optional="hide"/>
-                    <button 
-                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
-                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                        groups="base.group_system"
-                    />
-                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
                     <field name="create_date" optional="hide" string="Créé le"/>
                     <field name="create_uid"  optional="hide" string="Créé par"/>
                     <field name="write_date"  optional="hide" string="Modifié le"/>
@@ -133,15 +121,6 @@
             <field name="model">is.ctrl.rcp.rapport</field>
             <field name="arch" type="xml">
                 <form string="Rapport Contrôle Réception">
-                    <header>
-                        <field name="dynacase_id" invisible="1"/>
-                        <button 
-                            string="Dynacase" name="lien_vers_dynacase_action"
-                            type="object" class="btn btn-info"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                            groups="base.group_system"
-                        />
-                    </header>
                     <sheet>
                         <field name="active" invisible="1"/>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
@@ -291,12 +270,6 @@
                     <field name="tolerance_mini" optional="show"/>
                     <field name="tolerance_maxi" optional="show"/>
                     <field name="resultat_display" optional="show"/>
-                    <button 
-                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
-                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                        groups="base.group_system"
-                    />
-                    <field name="dynacase_id" optional="hide" groups="base.group_system"/>
                     <field name="create_date" optional="hide" string="Créé le"/>
                     <field name="create_uid"  optional="hide" string="Créé par"/>
                     <field name="write_date"  optional="hide" string="Modifié le"/>
@@ -309,15 +282,6 @@
             <field name="model">is.ctrl.rcp.saisie</field>
             <field name="arch" type="xml">
                 <form string="Saisie Contrôle Réception" create="false">
-                    <header>
-                        <field name="dynacase_id" invisible="1"/>
-                        <button 
-                            string="Dynacase" name="lien_vers_dynacase_action"
-                            type="object" class="btn btn-info"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                            groups="base.group_system"
-                        />
-                    </header>
                     <sheet>
                         <field name="active" invisible="1"/>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>

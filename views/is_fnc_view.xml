@@ -6,15 +6,6 @@
         <field name="model">is.fnc</field>
         <field name="arch" type="xml">
             <form>
-                <header>
-                    <field name="dynacase_id" invisible="1"/>
-                    <button 
-                        string="Dynacase" name="lien_vers_dynacase_action"
-                        type="object" class="btn btn-info"
-                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                        groups="base.group_system"
-                    />
-                </header>
                 <sheet>
                     <field name="active" invisible="1"/>
                     <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
@@ -287,13 +278,6 @@
                 <field name="cout_total"                 optional="hide"/>
                 <field name="cout_facture"               optional="hide"/>
                 <field name="total_perte"                optional="hide"/>
-
-                <button 
-                    title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file"
-                    attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                    groups="base.group_system"
-                />
-                <field name="dynacase_id"                optional="hide" groups="base.group_system"/>
 
                 <!-- Métadonnées -->
                 <field name="create_date"                optional="hide" string="Créé le"/>

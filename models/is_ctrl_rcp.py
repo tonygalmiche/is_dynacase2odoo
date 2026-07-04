@@ -298,15 +298,6 @@ class IsCtrlRcpRapport(models.Model):
             obj.code_fournisseur = code_fournisseur
 
 
-    def lien_vers_dynacase_action(self):
-        for obj in self:
-            url = "https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s" % obj.dynacase_id
-            return {
-                "type": "ir.actions.act_url",
-                "url": url,
-                "target": "new",
-            }
-
     def actualiser_saisies_depuis_gamme_action(self):
         """Actualise la liste saisie_ids depuis la gamme.
         Ajoute les lignes manquantes sans toucher aux lignes existantes.
@@ -424,15 +415,6 @@ class IsCtrlRcpSaisie(models.Model):
                 res = '<span style="color: red; font-size: 16px;">✗ nOK</span>'
             record.resultat_display = res
 
-
-    def lien_vers_dynacase_action(self):
-        for obj in self:
-            url = "https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s" % obj.dynacase_id
-            return {
-                "type": "ir.actions.act_url",
-                "url": url,
-                "target": "new",
-            }
 
     def ouvrir_fiche_saisie_action(self):
         """Action pour ouvrir la fiche complète de la saisie"""

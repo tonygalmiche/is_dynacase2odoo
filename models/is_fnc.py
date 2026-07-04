@@ -16,15 +16,6 @@ class IsFNC(models.Model):
     # Intégration Dynacase
     dynacase_id = fields.Integer(string="Id Dynacase", index=True, copy=False)
 
-    def lien_vers_dynacase_action(self):
-        for obj in self:
-            url = "https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id=%s" % obj.dynacase_id
-            return {
-                "type": "ir.actions.act_url",
-                "url": url,
-                "target": "new",
-            }
-
     def action_recalculer_couts(self):
         """Action serveur pour recalculer tous les champs calculés liés aux coûts"""
         for rec in self:

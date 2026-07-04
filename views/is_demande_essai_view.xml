@@ -29,14 +29,6 @@
             <field name="arch" type="xml">
                 <form string="Form">
                     <header>
-                        <button
-                            name="lien_vers_dynacase_action"
-                            string="Dynacase"
-                            type="object" class="btn btn-info"
-                            attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                            groups="base.group_system"
-                        />
-                        <field name="dynacase_id" invisible="1"/>
                         <field name="ro_user" invisible="1"/>
                         <field name="ro_essai" invisible="1"/>
                         <field name="ro_planning" invisible="1"/>
@@ -317,12 +309,6 @@
                         decoration-warning="state in ['brouillon']"
                         decoration-info="state in ['diffuse', 'planifie', 'cr', 'metrologie']"
                         decoration-success="state in ['termine', 'solde']"
-                    />
-                    <field name="dynacase_id"               optional="hide" groups="base.group_system"/>
-                    <button 
-                        title="Dynacase" name="lien_vers_dynacase_action" type="object" icon="fa-file" 
-                        attrs="{'invisible': [('dynacase_id', '=', 0)]}"
-                        groups="base.group_system"
                     />
                 </tree>
             </field>
