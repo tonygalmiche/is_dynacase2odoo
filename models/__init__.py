@@ -2,6 +2,7 @@
 from . import ir_ui_view
 from . import is_param_project
 from . import is_mold
+from . import is_mold_maintenance_preventive
 from . import is_dossierf
 from . import is_doc_moule
 from . import dhtmlxgantt_project

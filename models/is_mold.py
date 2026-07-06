@@ -142,6 +142,18 @@ class is_mold(models.Model):
             obj.logo_rs = logo_rs
 
 
+    def creer_fiche_maintenance_preventive_action(self):
+        self.ensure_one()
+        return {
+            'name': 'Maintenance préventive moule',
+            'type': 'ir.actions.act_window',
+            'res_model': 'is.mold.maintenance.preventive',
+            'view_mode': 'form',
+            'target': 'current',
+            'context': {'default_moule_id': self.id},
+        }
+
+
     def gantt_action(self):
         for obj in self:
             domain=[('idmoule', '=', obj.id)]

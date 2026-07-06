@@ -387,7 +387,6 @@
         </record>
 
 
-
         <record id="is_projet_menu" model="ir.ui.menu" >
             <field name="name">Projets</field>
             <field name="sequence">80</field>
@@ -838,5 +837,18 @@
             <field name="parent_id" eval="ref('is_dynacase2odoo.is_prodstar_menu')"/>
             <field name="action" ref="is_prodstar_fc2lid_action"/>
         </record>
+
+
+
+        <!-- Production / Préventif moule -->
+        <record id="is_mold_maintenance_preventive_menu" model="ir.ui.menu" >
+            <field name="name">Maintenance préventive moule</field>
+            <field name="sequence">25</field>
+            <field name="parent_id" eval="ref('is_plastigray16.is_preventif_moule_main_menu')"/>
+            <field name="action"    ref="is_mold_maintenance_preventive_action"/>
+        </record>
+
+
+
     </data>
 </odoo>

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- is.mold.maintenance.preventive -->
+        <record id="is_mold_maintenance_preventive_seq" model="ir.sequence">
+            <field name="name">Maintenance préventive moule</field>
+            <field name="code">is.mold.maintenance.preventive</field>
+            <field name="prefix"></field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="is_mold_maintenance_preventive_form" model="ir.ui.view">
+            <field name="name">is_mold_maintenance_preventive_form</field>
+            <field name="model">is.mold.maintenance.preventive</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="open_lines_operation_systematique_action" string="Opérations systématiques" type="object" class="btn-secondary"/>
+                        <button name="open_lines_operation_particuliere_action" string="Spécifications particulières" type="object" class="btn-secondary"/>
+                        <button name="open_lines_circuit_eau_fixe_action"       string="Circuit d'eau partie fixe"  type="object" class="btn-secondary"/>
+                        <button name="open_lines_circuit_eau_mobile_action"     string="Circuit d'eau partie mobile" type="object" class="btn-secondary"/>
+                        <button name="open_lines_torpille_action"               string="Torpilles"                  type="object" class="btn-secondary"/>
+                        <button name="open_lines_point_injection_action"        string="Points d'injection"         type="object" class="btn-secondary"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="date"/>
+                                <field name="createur_id"/>
+                                <field name="moule_id" widget="many2one_clickable"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Infos">
+                                <group string="Opérations spécifiques (information)">
+                                    <field name="operations_specifiques_info" nolabel="1" colspan="2"/>
+                                </group>
+                                <group string="Autres travaux réalisés">
+                                    <field name="autres_travaux" nolabel="1" colspan="2"/>
+                                </group>
+                            </page>
+                            <page string="Lignes">
+                                <field name="line_ids" readonly="1">
+                                    <tree>
+                                        <field name="type_controle"/>
+                                        <field name="nom_controle"/>
+                                        <field name="numero"/>
+                                        <field name="valeur"/>
+                                        <field name="empreinte_numero" optional="hide"/>
+                                        <field name="hauteur_torpille" optional="hide"/>
+                                        <field name="etat_torpille" optional="hide"/>
+                                        <field name="hauteur_torpille_remplacee" optional="hide"/>
+                                        <field name="diametre_point_injection" optional="hide"/>
+                                        <field name="etat_point_injection" optional="hide"/>
+                                        <field name="diametre_point_injection_repare" optional="hide"/>
+                                        <field name="ok_nok" optional="hide"/>
+                                        <field name="commentaire" optional="hide"/>
+                                        <field name="historique_html" optional="hide"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="is_mold_maintenance_preventive_line_tree_operation" model="ir.ui.view">
+            <field name="name">is_mold_maintenance_preventive_line_tree_operation</field>
+            <field name="model">is.mold.maintenance.preventive.line</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="nom_controle"/>
+                    <field name="numero"/>
+                    <field name="ok_nok"/>
+                    <field name="commentaire"/>
+                    <field name="historique_html"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="is_mold_maintenance_preventive_line_form_operation" model="ir.ui.view">
+            <field name="name">is_mold_maintenance_preventive_line_form_operation</field>
+            <field name="model">is.mold.maintenance.preventive.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <button name="action_precedent" string="◀ Précédent" type="object" class="btn-secondary"/>
+                            <field name="pager_info" nolabel="1" readonly="1" style="margin:0;"/>
+                            <button name="action_suivant"   string="Suivant ▶"   type="object" class="btn-secondary"/>
+                        </div>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="nom_controle" required="1"/>
+                            <field name="numero" required="1"/>
+                            <field name="ok_nok"/>
+                            <field name="commentaire" attrs="{'required': [('ok_nok','=','nok')]}"/>
+                            <field name="historique_html"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="is_mold_maintenance_preventive_line_tree_circuit" model="ir.ui.view">
+            <field name="name">is_mold_maintenance_preventive_line_tree_circuit</field>
+            <field name="model">is.mold.maintenance.preventive.line</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="numero"/>
+                    <field name="valeur"/>
+                    <field name="ok_nok"/>
+                    <field name="commentaire"/>
+                    <field name="historique_html"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="is_mold_maintenance_preventive_line_form_circuit" model="ir.ui.view">
+            <field name="name">is_mold_maintenance_preventive_line_form_circuit</field>
+            <field name="model">is.mold.maintenance.preventive.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <button name="action_precedent" string="◀ Précédent" type="object" class="btn-secondary"/>
+                            <field name="pager_info" nolabel="1" readonly="1" style="margin:0;"/>
+                            <button name="action_suivant"   string="Suivant ▶"   type="object" class="btn-secondary"/>
+                        </div>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="numero" required="1"/>
+                            <field name="valeur" required="1"/>
+                            <field name="ok_nok" required="1"/>
+                            <field name="commentaire" attrs="{'required': [('ok_nok','=','nok')]}"/>
+                            <field name="historique_html"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="is_mold_maintenance_preventive_line_tree_torpille" model="ir.ui.view">
+            <field name="name">is_mold_maintenance_preventive_line_tree_torpille</field>
+            <field name="model">is.mold.maintenance.preventive.line</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="empreinte_numero"/>
+                    <field name="hauteur_torpille"/>
+                    <field name="etat_torpille"/>
+                    <field name="hauteur_torpille_remplacee"/>
+                    <field name="commentaire"/>
+                    <field name="historique_html"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="is_mold_maintenance_preventive_line_form_torpille" model="ir.ui.view">
+            <field name="name">is_mold_maintenance_preventive_line_form_torpille</field>
+            <field name="model">is.mold.maintenance.preventive.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <button name="action_precedent" string="◀ Précédent" type="object" class="btn-secondary"/>
+                            <field name="pager_info" nolabel="1" readonly="1" style="margin:0;"/>
+                            <button name="action_suivant"   string="Suivant ▶"   type="object" class="btn-secondary"/>
+                        </div>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="empreinte_numero" required="1"/>
+                            <field name="hauteur_torpille" required="1"/>
+                            <field name="etat_torpille" required="1"/>
+                            <field name="hauteur_torpille_remplacee" attrs="{'required': [('etat_torpille','=','remplacee')]}"/>
+                            <field name="commentaire"/>
+                            <field name="historique_html"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="is_mold_maintenance_preventive_line_tree_point_injection" model="ir.ui.view">
+            <field name="name">is_mold_maintenance_preventive_line_tree_point_injection</field>
+            <field name="model">is.mold.maintenance.preventive.line</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="empreinte_numero"/>
+                    <field name="diametre_point_injection"/>
+                    <field name="etat_point_injection"/>
+                    <field name="diametre_point_injection_repare"/>
+                    <field name="commentaire"/>
+                    <field name="historique_html"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="is_mold_maintenance_preventive_line_form_point_injection" model="ir.ui.view">
+            <field name="name">is_mold_maintenance_preventive_line_form_point_injection</field>
+            <field name="model">is.mold.maintenance.preventive.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <button name="action_precedent" string="◀ Précédent" type="object" class="btn-secondary"/>
+                            <field name="pager_info" nolabel="1" readonly="1" style="margin:0;"/>
+                            <button name="action_suivant"   string="Suivant ▶"   type="object" class="btn-secondary"/>
+                        </div>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="empreinte_numero" required="1"/>
+                            <field name="diametre_point_injection" required="1"/>
+                            <field name="etat_point_injection" required="1"/>
+                            <field name="diametre_point_injection_repare" attrs="{'required': [('etat_point_injection','=','repare')]}"/>
+                            <field name="commentaire"/>
+                            <field name="historique_html"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="is_mold_maintenance_preventive_tree" model="ir.ui.view">
+            <field name="name">is_mold_maintenance_preventive_tree</field>
+            <field name="model">is.mold.maintenance.preventive</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="moule_id" widget="many2one_clickable"/>
+                    <field name="createur_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="is_mold_maintenance_preventive_search" model="ir.ui.view">
+            <field name="name">is_mold_maintenance_preventive_search</field>
+            <field name="model">is.mold.maintenance.preventive</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="moule_id"/>
+                    <field name="date"/>
+                    <field name="createur_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="is_mold_maintenance_preventive_action" model="ir.actions.act_window">
+            <field name="name">Maintenance préventive moule</field>
+            <field name="res_model">is.mold.maintenance.preventive</field>
+            <field name="view_mode">tree,form</field>
+            <field name="limit">200</field>
+        </record>
+    </data>
+</odoo>

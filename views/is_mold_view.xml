@@ -36,6 +36,7 @@
                 <sheet position="before">
                     <header>
                          <button name="gantt_action" string="Gantt" type="object" class="btn-success"/>
+                         <button name="creer_fiche_maintenance_preventive_action" string="Créer fiche maintenance moule" type="object" class="btn-primary"/>
                     </header>
                 </sheet>
                 <field name="name" position="after">
