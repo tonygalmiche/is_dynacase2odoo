@@ -162,13 +162,22 @@
                                         </group>
 
                                         <group string="Suivi des facturations" style="overflow:hidden">
+                                            <!-- overflow:hidden : nécessaire pour l'alignement de la grille du formulaire,
+                                                 sinon le tableau (trop large à cause de la colonne bouton ci-dessous)
+                                                 déborde et décale les champs voisins.
+                                                 delete="false" + bouton unlink manuel : la poubelle native d'Odoo est
+                                                 clippée par le layout 2 colonnes du formulaire (col-6). Le bouton manuel
+                                                 prend une colonne trop large (Odoo classe un <button> isolé en colonne
+                                                 "relative", il n'y a pas moyen de la forcer plus étroite sans casser
+                                                 l'affichage de la poubelle) mais au moins elle est visible et utilisable. -->
                                             <field name="cout_compta_ids" context="{'default_reclamation_id': active_id}" nolabel="1" colspan="2">
-                                                <tree editable="bottom">
+                                                <tree editable="bottom" delete="false">
                                                     <field name="site_id" column_invisible="1"/>
                                                     <field name="facture_id"/>
                                                     <field name="num_facture"/>
                                                     <field name="date_cout"/>
                                                     <field name="montant"/>
+                                                    <button name="unlink" type="object" icon="fa-trash-o" string="" confirm="Voulez-vous supprimer cette ligne ?"/>
                                                 </tree>
                                             </field>
                                             <field name="couts_compta"/>
@@ -202,10 +211,13 @@
                                         <group string="Conclusion sur la non-conformité" style="overflow:hidden">
                                             <field name="quantite_a_facturer"/>
                                             <field name="forfait_qualite"/>
+                                            <!-- overflow:hidden + delete="false" + bouton unlink manuel : voir commentaire
+                                                 sur cout_compta_ids ci-dessus (même bug d'affichage, même contournement). -->
                                             <field name="autre_cout_ids" string="Coûts supplémentaires" context="{'default_reclamation_id': active_id}" nolabel="1" colspan="2">
-                                                <tree editable="bottom">
+                                                <tree editable="bottom" delete="false">
                                                     <field name="type_cout" string="Coûts supplémentaires"/>
                                                     <field name="montant_autre" string="Montant"/>
+                                                    <button name="unlink" type="object" icon="fa-trash-o" string="" confirm="Voulez-vous supprimer cette ligne ?"/>
                                                 </tree>
                                             </field>
                                             <field name="suppression_aqp"/>
