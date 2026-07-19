@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="is_mold_maintenance_preventive_historique_template">
+            <t t-set="company" t-value="res_company"/>
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
+                        <table style="width:100%">
+                            <tr>
+                                <td style="width:20%">
+                                    <img t-if="company.is_logo" t-att-src="image_data_uri(company.is_logo)" style="max-height:60px;" alt="Logo"/>
+                                    <img t-if="not company.is_logo and company.logo" t-att-src="image_data_uri(company.logo)" style="max-height:60px;" alt="Logo"/>
+                                </td>
+                                <td style="width:60%; text-align:center; font-size:16px; font-weight:bold;">
+                                    Maintenance préventive - Historique
+                                </td>
+                                <td style="width:20%; text-align:right;">
+                                    <div><b>N° moule:</b> <span t-field="o.name"/></div>
+                                    <div><b>Désignation:</b> <span t-field="o.designation"/></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="page is_mold_preventive_page">
+                        <style>
+                            .is_mold_preventive_page h2 {
+                                background-color: #f8f9fa;
+                                padding: 6px;
+                                margin: 12px 0 8px 0;
+                                border-left: 4px solid #007bff;
+                                font-size: 12px;
+                            }
+                            .is_mold_preventive_table {
+                                border-collapse: collapse;
+                                width: 100%;
+                                margin: 0 0 10px 0;
+                            }
+                            .is_mold_preventive_table th,
+                            .is_mold_preventive_table td {
+                                border: 1px solid #dee2e6;
+                                padding: 3px 4px;
+                                font-size: 8px;
+                                text-align: center;
+                            }
+                            .is_mold_preventive_table th {
+                                background-color: #f8f9fa;
+                                font-weight: bold;
+                            }
+                            .is_mold_preventive_table td.is_label {
+                                text-align: left;
+                                font-weight: bold;
+                                white-space: nowrap;
+                            }
+                            .is_mold_preventive_cell_ok {
+                                background-color: #28a745;
+                                color: #fff;
+                                font-weight: bold;
+                            }
+                            .is_mold_preventive_cell_nok {
+                                background-color: #dc3545;
+                                color: #fff;
+                                font-weight: bold;
+                            }
+                        </style>
+
+                        <t t-set="blocks" t-value="o._get_preventive_matrix()"/>
+                        <t t-if="not blocks">
+                            <p>Aucune maintenance préventive enregistrée pour ce moule.</p>
+                        </t>
+                        <t t-foreach="blocks" t-as="block">
+                            <h2><t t-esc="block['label']"/></h2>
+                            <table class="is_mold_preventive_table">
+                                <thead>
+                                    <tr>
+                                        <th class="is_label">N° / Désignation</th>
+                                        <th t-foreach="block['fiches']" t-as="fiche">
+                                            <t t-esc="fiche.date and fiche.date.strftime('%d/%m/%y') or ''"/>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="block['rows']" t-as="row">
+                                        <td class="is_label"><t t-esc="row['label']"/></td>
+                                        <td t-foreach="row['cells']" t-as="cell"
+                                            t-attf-class="#{cell and cell['etat'] == 'ok' and 'is_mold_preventive_cell_ok' or cell and cell['etat'] == 'nok' and 'is_mold_preventive_cell_nok' or ''}">
+                                            <t t-if="cell">
+                                                <div t-esc="cell['badge_label']"/>
+                                                <div t-if="cell['valeur']"><t t-esc="cell['valeur']"/></div>
+                                                <div t-if="cell['nouvelle_valeur']">→ <t t-esc="cell['nouvelle_valeur']"/></div>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                    </div>
+
+                    <div class="footer">
+                        <div class="text-right">Page <span class="page"/>/<span class="topage"/></div>
+                    </div>
+                    <p style="page-break-before:always;"> </p>
+                </t>
+            </t>
+        </template>
+
+        <record id="is_mold_maintenance_preventive_historique_paperformat" model="report.paperformat">
+            <field name="name">Maintenance préventive - Historique</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="margin_top">20</field>
+            <field name="margin_bottom">15</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">20</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="is_mold_maintenance_preventive_historique_report" model="ir.actions.report">
+            <field name="name">Maintenance préventive - Historique</field>
+            <field name="model">is.mold</field>
+            <field name="binding_model_id" ref="model_is_mold"/>
+            <field name="paperformat_id" ref="is_mold_maintenance_preventive_historique_paperformat"/>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">is_dynacase2odoo.is_mold_maintenance_preventive_historique_template</field>
+            <field name="report_file">is_dynacase2odoo.is_mold_maintenance_preventive_historique_template</field>
+        </record>
+    </data>
+</odoo>

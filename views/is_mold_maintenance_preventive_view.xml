@@ -55,8 +55,13 @@
                         </group>
                         <notebook>
                             <page string="Infos">
-                                <group string="Opérations spécifiques (information)">
-                                    <field name="operations_specifiques_info" nolabel="1" colspan="2" force_save="1"/>
+                                <group>
+                                    <group string="Opérations spécifiques (information)">
+                                        <field name="operations_specifiques_info" nolabel="1" colspan="2" force_save="1"/>
+                                    </group>
+                                    <group string="Articles liés au moule (information)">
+                                        <field name="articles_moule_html" nolabel="1" colspan="2"/>
+                                    </group>
                                 </group>
                                 <group string="Autres travaux réalisés">
                                     <field name="autres_travaux" nolabel="1" colspan="2" attrs="{'readonly': [('state','=','termine')]}"/>
@@ -99,7 +104,7 @@
             <field name="arch" type="xml">
                 <tree create="not context.get('readonly_lines')" delete="not context.get('readonly_lines')">
                     <field name="nom_controle"/>
-                    <field name="numero"/>
+                    <field name="numero" readonly="1"/>
                     <field name="ok_nok" widget="badge" decoration-success="ok_nok == 'ok'" decoration-danger="ok_nok == 'nok'"/>
                     <field name="commentaire"/>
                     <field name="historique_html"/>
@@ -123,7 +128,7 @@
                         <field name="maintenance_state" invisible="1"/>
                         <group>
                             <field name="nom_controle" required="1"/>
-                            <field name="numero" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="numero" required="1" readonly="1"/>
                             <field name="ok_nok" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
                             <field name="commentaire" attrs="{'required': [('ok_nok','=','nok')], 'readonly': [('maintenance_state','=','termine')]}"/>
                             <field name="historique_html"/>
@@ -140,7 +145,7 @@
                 <tree create="not context.get('readonly_lines')" delete="not context.get('readonly_lines')">
                     <field name="numero"/>
                     <field name="valeur"/>
-                    <field name="ok_nok" widget="badge" decoration-success="ok_nok == 'ok'" decoration-danger="ok_nok == 'nok'"/>
+                    <field name="ok_nok" widget="badge" decoration-success="ok_nok == 'ok'" decoration-danger="ok_nok == 'nok'" readonly="1"/>
                     <field name="commentaire"/>
                     <field name="historique_html"/>
                 </tree>
@@ -164,7 +169,7 @@
                         <group>
                             <field name="numero" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
                             <field name="valeur" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
-                            <field name="ok_nok" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="ok_nok" readonly="1" force_save="1"/>
                             <field name="commentaire" attrs="{'required': [('ok_nok','=','nok')], 'readonly': [('maintenance_state','=','termine')]}"/>
                             <field name="historique_html"/>
                         </group>

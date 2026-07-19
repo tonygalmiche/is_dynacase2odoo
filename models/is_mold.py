@@ -1,5 +1,12 @@
 from odoo import models, fields, api # type: ignore
 from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J, TYPE_DOCUMENT # type: ignore
+from odoo.addons.is_dynacase2odoo.models.is_mold_maintenance_preventive import TYPE_CONTROLE # type: ignore
+
+
+NOK_LABEL_BY_TYPE_CONTROLE = {
+    'torpille':        'Remplacée',
+    'point_injection': 'Réparé',
+}
 
 
 TYPE_EXPORT = [
@@ -175,6 +182,48 @@ class is_mold(models.Model):
             docs=self.env['is.doc.moule'].search(domain)
             for doc in docs:
                 doc.active = False
+
+    def _get_preventive_matrix(self):
+        self.ensure_one()
+        fiches = self.env['is.mold.maintenance.preventive'].search([('moule_id', '=', self.id)], order='date, id')
+        blocks = []
+        for type_value, type_label in TYPE_CONTROLE:
+            key_field = 'empreinte_numero' if type_value in ('torpille', 'point_injection') else 'numero'
+            row_labels = {}
+            row_order = []
+            cell_map = {}
+            for fiche in fiches:
+                lines = fiche.line_ids.filtered(lambda line, tv=type_value: line.type_controle == tv)
+                for line in lines:
+                    key = line[key_field]
+                    if key not in row_labels:
+                        row_labels[key] = line.nom_controle or str(key)
+                        row_order.append(key)
+                    cell_map[(key, fiche.id)] = line
+            if not row_order:
+                continue
+            row_order.sort(key=lambda k: k or 0)
+            rows = []
+            for key in row_order:
+                cells = [self._build_preventive_cell(cell_map.get((key, fiche.id))) for fiche in fiches]
+                rows.append({'label': row_labels[key], 'numero': key, 'cells': cells})
+            blocks.append({'type_controle': type_value, 'label': type_label, 'fiches': fiches, 'rows': rows})
+        return blocks
+
+
+    def _build_preventive_cell(self, line):
+        if not line:
+            return False
+        etat = line.maintenance_id._line_etat(line)
+        badge_label = {'ok': 'OK', 'nok': NOK_LABEL_BY_TYPE_CONTROLE.get(line.type_controle, 'nOK')}.get(etat, '')
+        return {
+            'etat'           : etat,
+            'badge_label'    : badge_label,
+            'valeur'         : line._historique_valeur(),
+            'nouvelle_valeur': line._historique_nouvelle_valeur() if etat == 'nok' else False,
+            'commentaire'    : line.commentaire,
+        }
+
 
     def get_dimensions(self):
         """Retourne les dimensions du moule sous la forme Largeur*Hauteur*Epaisseur.

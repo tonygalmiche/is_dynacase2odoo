@@ -94,6 +94,7 @@ class is_mold_maintenance_preventive(models.Model):
     autres_travaux = fields.Text("Autres travaux réalisés", tracking=True)
     line_ids       = fields.One2many("is.mold.maintenance.preventive.line", "maintenance_id", string="Contrôles")
     operations_specifiques_info = fields.Text("Opérations spécifiques (information)", readonly=True)
+    articles_moule_html = fields.Html("Articles liés au moule (information)", compute='_compute_articles_moule_html')
     state          = fields.Selection(STATE_MAINTENANCE, string="État", default="en_cours", required=True, copy=False, tracking=True)
     avancement_ids = fields.One2many("is.mold.maintenance.preventive.avancement", "maintenance_id", string="Avancement")
     nb_lines_operation_systematique = fields.Integer(compute='_compute_nb_lines')
@@ -178,6 +179,37 @@ class is_mold_maintenance_preventive(models.Model):
                 obj['nb_lines_%s' % type_value] = len(obj.line_ids.filtered(lambda line, type_value=type_value: line.type_controle == type_value))
 
 
+    @api.depends('moule_id.article_ids.article_id.sous_famille', 'moule_id.article_ids.article_id.temp_transformation')
+    def _compute_articles_moule_html(self):
+        for obj in self:
+            obj.articles_moule_html = obj._build_articles_moule_html()
+
+
+    def _build_articles_moule_html(self):
+        self.ensure_one()
+        links = self.moule_id.article_ids
+        if not links:
+            return False
+        rows = []
+        for link in links:
+            article = link.article_id
+            rows.append(
+                '<tr>'
+                '<td style="padding:4px 8px;">%s</td>'
+                '<td style="padding:4px 8px;">%s</td>'
+                '<td style="padding:4px 8px;">%s</td>'
+                '</tr>' % (article.code_pg or '', article.sous_famille or '', article.temp_transformation or '')
+            )
+        header = (
+            '<tr>'
+            '<th style="padding:4px 8px;text-align:left;">Dossier article</th>'
+            '<th style="padding:4px 8px;text-align:left;">Sous-Famille</th>'
+            '<th style="padding:4px 8px;text-align:left;">T°C transformation (°C)</th>'
+            '</tr>'
+        )
+        return '<table style="width:100%%;border-collapse:collapse;"><thead>%s</thead><tbody>%s</tbody></table>' % (header, ''.join(rows))
+
+
     @api.constrains('moule_id', 'state')
     def _check_unique_en_cours(self):
         for obj in self:
@@ -208,11 +240,13 @@ class is_mold_maintenance_preventive(models.Model):
             commands.append((0, 0, {
                 'type_controle': 'operation_systematique',
                 'nom_controle' : op.operation_systematique_id.name,
+                'numero'       : op.id,
             }))
         for spec in moule.specification_ids.filtered('activer'):
             commands.append((0, 0, {
                 'type_controle': 'operation_particuliere',
                 'nom_controle' : spec.specification_particuliere_id.name,
+                'numero'       : spec.id,
             }))
         for _ in range(int(moule.nb_circuit_eau_fixe or 0)):
             commands.append((0, 0, {'type_controle': 'circuit_eau_fixe'}))
@@ -383,9 +417,19 @@ class is_mold_maintenance_preventive_line(models.Model):
         return False
 
 
+    def _historique_nouvelle_valeur(self):
+        self.ensure_one()
+        if self.type_controle == 'torpille':
+            return self.hauteur_torpille_remplacee
+        if self.type_controle == 'point_injection':
+            return self.diametre_point_injection_repare
+        return False
+
+
     @api.depends(
         'maintenance_id.moule_id', 'maintenance_id.date', 'type_controle', 'numero', 'empreinte_numero',
         'valeur', 'hauteur_torpille', 'diametre_point_injection', 'ok_nok', 'etat_torpille', 'etat_point_injection',
+        'hauteur_torpille_remplacee', 'diametre_point_injection_repare',
     )
     def _compute_historique_html(self):
         for obj in self:
@@ -408,31 +452,43 @@ class is_mold_maintenance_preventive_line(models.Model):
         if not siblings:
             return False
         has_valeur = self.type_controle not in ('operation_systematique', 'operation_particuliere')
+        has_nouvelle_valeur = self.type_controle in ('torpille', 'point_injection')
         badge_style = 'display:inline-block;padding:2px 10px;border-radius:10px;color:#fff;font-weight:bold;'
         rows = []
+        nok_label = {'torpille': 'Remplacée', 'point_injection': 'Réparé'}.get(self.type_controle, 'nOK')
         for line in siblings:
             etat = self.maintenance_id._line_etat(line)
             if etat == 'ok':
                 badge = '<span style="%sbackground-color:#28a745;">OK</span>' % badge_style
             elif etat == 'nok':
-                badge = '<span style="%sbackground-color:#dc3545;">nOK</span>' % badge_style
+                badge = '<span style="%sbackground-color:#dc3545;">%s</span>' % (badge_style, nok_label)
             else:
                 badge = ''
             cell_valeur = '<td style="padding:4px 8px;">%s</td>' % line._historique_valeur() if has_valeur else ''
+            if has_nouvelle_valeur:
+                nouvelle_valeur = line._historique_nouvelle_valeur() if etat == 'nok' else ''
+                cell_nouvelle_valeur = '<td style="padding:4px 8px;">%s</td>' % (nouvelle_valeur or '')
+            else:
+                cell_nouvelle_valeur = ''
             date_str = line.maintenance_id.date.strftime('%d/%m/%Y') if line.maintenance_id.date else ''
             rows.append(
                 '<tr>'
                 '<td style="padding:4px 8px;">%s</td>'
                 '%s'
+                '%s'
                 '<td style="padding:4px 8px;">%s</td>'
-                '</tr>' % (date_str, cell_valeur, badge)
+                '</tr>' % (date_str, cell_valeur, cell_nouvelle_valeur, badge)
             )
         header = (
             '<tr>'
             '<th style="padding:4px 8px;text-align:left;">Date</th>'
             '%s'
+            '%s'
             '<th style="padding:4px 8px;text-align:left;">État</th>'
-            '</tr>' % ('<th style="padding:4px 8px;text-align:left;">Valeur</th>' if has_valeur else '')
+            '</tr>' % (
+                '<th style="padding:4px 8px;text-align:left;">Valeur</th>' if has_valeur else '',
+                '<th style="padding:4px 8px;text-align:left;">Nouvelle valeur</th>' if has_nouvelle_valeur else '',
+            )
         )
         return '<table style="width:100%%;border-collapse:collapse;"><thead>%s</thead><tbody>%s</tbody></table>' % (header, ''.join(rows))
 
@@ -441,6 +497,9 @@ class is_mold_maintenance_preventive_line(models.Model):
     def create(self, vals_list):
         lines = super().create(vals_list)
         lines.mapped('maintenance_id')._sync_avancement()
+        for obj in lines:
+            if obj.type_controle in ('circuit_eau_fixe', 'circuit_eau_mobile'):
+                obj._update_ok_nok_circuit()
         return lines
 
 
@@ -451,10 +510,52 @@ class is_mold_maintenance_preventive_line(models.Model):
         return res
 
 
+    def _compute_ok_nok_circuit(self):
+        self.ensure_one()
+        moule = self.maintenance_id.moule_id
+        if not moule or not self.numero or not self.valeur:
+            return False
+        domain = [
+            ('maintenance_id.moule_id', '=', moule.id),
+            ('type_controle', '=', self.type_controle),
+            ('numero', '=', self.numero),
+            ('valeur', '!=', 0),
+        ]
+        if isinstance(self.id, int):
+            domain.append(('id', '!=', self.id))
+        siblings = self.search(domain)
+        siblings = siblings.sorted(key=lambda line: (line.maintenance_id.date or date.min, line.id))
+        if not siblings:
+            return 'ok'
+        premiere_valeur = siblings[0].valeur
+        if not premiere_valeur:
+            return 'ok'
+        ecart = abs(self.valeur - premiere_valeur) / premiere_valeur
+        return 'nok' if ecart > 0.25 else 'ok'
+
+
+    def _update_ok_nok_circuit(self):
+        self.ensure_one()
+        ok_nok = self._compute_ok_nok_circuit()
+        if ok_nok and self.ok_nok != ok_nok:
+            super(is_mold_maintenance_preventive_line, self).write({'ok_nok': ok_nok})
+
+
+    @api.onchange('valeur', 'numero')
+    def _onchange_valeur_circuit(self):
+        for obj in self:
+            if obj.type_controle in ('circuit_eau_fixe', 'circuit_eau_mobile'):
+                ok_nok = obj._compute_ok_nok_circuit()
+                if ok_nok:
+                    obj.ok_nok = ok_nok
+
+
     def write(self, vals):
         res = super().write(vals)
         self.mapped('maintenance_id')._sync_avancement()
         for obj in self:
+            if obj.type_controle in ('circuit_eau_fixe', 'circuit_eau_mobile'):
+                obj._update_ok_nok_circuit()
             if obj.type_controle in ('operation_systematique', 'operation_particuliere') and obj.numero <= 0:
                 raise ValidationError("Le N° doit être supérieur à 0 pour une opération systématique ou particulière.")
             if obj.type_controle in ('circuit_eau_fixe', 'circuit_eau_mobile'):
@@ -493,3 +594,32 @@ class is_mold_maintenance_preventive_line(models.Model):
         if doublon:
             label = "N° empreinte" if field_name == 'empreinte_numero' else "N°"
             raise ValidationError("Ce %s est déjà utilisé pour ce type de contrôle sur cette fiche." % label)
+
+
+def _check_no_preventive_maintenance_line(records, type_controle):
+    lines = records.env['is.mold.maintenance.preventive.line'].search([
+        ('type_controle', '=', type_controle),
+        ('numero', 'in', records.ids),
+    ])
+    if lines:
+        numeros = ', '.join(str(numero) for numero in sorted(set(lines.mapped('numero'))))
+        raise ValidationError(
+            "Impossible de supprimer cette ligne : une saisie de maintenance préventive existe déjà "
+            "pour le(s) N° %s." % numeros
+        )
+
+
+class is_mold_systematique_array(models.Model):
+    _inherit = 'is.mold.systematique.array'
+
+    def unlink(self):
+        _check_no_preventive_maintenance_line(self, 'operation_systematique')
+        return super().unlink()
+
+
+class is_mold_specification_array(models.Model):
+    _inherit = 'is.mold.specification.array'
+
+    def unlink(self):
+        _check_no_preventive_maintenance_line(self, 'operation_particuliere')
+        return super().unlink()
