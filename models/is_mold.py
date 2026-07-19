@@ -144,11 +144,16 @@ class is_mold(models.Model):
 
     def creer_fiche_maintenance_preventive_action(self):
         self.ensure_one()
+        fiche_en_cours = self.env['is.mold.maintenance.preventive'].search([
+            ('moule_id', '=', self.id),
+            ('state', '=', 'en_cours'),
+        ], limit=1)
         return {
             'name': 'Maintenance préventive moule',
             'type': 'ir.actions.act_window',
             'res_model': 'is.mold.maintenance.preventive',
             'view_mode': 'form',
+            'res_id': fiche_en_cours.id,
             'target': 'current',
             'context': {'default_moule_id': self.id},
         }

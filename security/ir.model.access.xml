@@ -375,6 +375,17 @@
             <field name="perm_unlink" eval="False"/>
         </record>
       
+        <!-- Plan d'amélioration continu -->
+        <record id="access_is_plan_amelioration_continu_gestionnaire"  model="ir.model.access" >
+            <field name="name">Accès complet au groupe 'Gestionnaire des processus'</field>
+            <field name="model_id"    eval="ref('model_is_plan_amelioration_continu')"/>
+            <field name="group_id"    eval="ref('is_dynacase2odoo.is_gestionnaire_processus_group')"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
         <!-- Processus - IsProcessusDoc -->
         <record id="access_is_processus_doc_pilote"  model="ir.model.access" >
             <field name="name">Accès complet au groupe 'Pilote de processus'</field>

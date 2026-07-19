@@ -177,7 +177,7 @@
                                                     <field name="num_facture"/>
                                                     <field name="date_cout"/>
                                                     <field name="montant"/>
-                                                    <button name="unlink" type="object" icon="fa-trash-o" string="" confirm="Voulez-vous supprimer cette ligne ?"/>
+                                                    <button name="unlink" type="object" icon="fa-trash-o" string="" title="Supprimer cette ligne" confirm="Voulez-vous supprimer cette ligne ?"/>
                                                 </tree>
                                             </field>
                                             <field name="couts_compta"/>
@@ -217,7 +217,7 @@
                                                 <tree editable="bottom" delete="false">
                                                     <field name="type_cout" string="Coûts supplémentaires"/>
                                                     <field name="montant_autre" string="Montant"/>
-                                                    <button name="unlink" type="object" icon="fa-trash-o" string="" confirm="Voulez-vous supprimer cette ligne ?"/>
+                                                    <button name="unlink" type="object" icon="fa-trash-o" string="" title="Supprimer cette ligne" confirm="Voulez-vous supprimer cette ligne ?"/>
                                                 </tree>
                                             </field>
                                             <field name="suppression_aqp"/>

@@ -65,6 +65,16 @@
             <field eval="1" name="perm_read"/>
             <field eval="1" name="perm_create"/>
         </record>
+        <record id="is_plan_amelioration_continu_gestionnaire_rule" model="ir.rule">
+            <field name="name">Accès complet au groupe 'Gestionnaire des processus'</field>
+            <field name="model_id" ref="model_is_plan_amelioration_continu"/>
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('is_dynacase2odoo.is_gestionnaire_processus_group'))]"/>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="1" name="perm_create"/>
+        </record>
 
 
 

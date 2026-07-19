@@ -1,3 +1,4 @@
+from datetime import date # type: ignore
 from odoo import models, fields, api # type: ignore
 from odoo.exceptions import ValidationError # type: ignore
 
@@ -30,6 +31,12 @@ ETAT_POINT_INJECTION = [
 ]
 
 
+STATE_MAINTENANCE = [
+    ("en_cours", "En cours"),
+    ("termine",  "Terminé"),
+]
+
+
 FORM_VIEW_BY_TYPE_CONTROLE = {
     'operation_systematique': 'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_operation',
     'operation_particuliere': 'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_operation',
@@ -40,18 +47,148 @@ FORM_VIEW_BY_TYPE_CONTROLE = {
 }
 
 
+LINES_ACTION_INFO = {
+    'operation_systematique': (
+        "Opérations systématiques",
+        'is_dynacase2odoo.is_mold_maintenance_preventive_line_tree_operation',
+        'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_operation',
+    ),
+    'operation_particuliere': (
+        "Spécifications particulières",
+        'is_dynacase2odoo.is_mold_maintenance_preventive_line_tree_operation',
+        'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_operation',
+    ),
+    'circuit_eau_fixe': (
+        "Circuit d'eau partie fixe",
+        'is_dynacase2odoo.is_mold_maintenance_preventive_line_tree_circuit',
+        'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_circuit',
+    ),
+    'circuit_eau_mobile': (
+        "Circuit d'eau partie mobile",
+        'is_dynacase2odoo.is_mold_maintenance_preventive_line_tree_circuit',
+        'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_circuit',
+    ),
+    'torpille': (
+        "Torpilles",
+        'is_dynacase2odoo.is_mold_maintenance_preventive_line_tree_torpille',
+        'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_torpille',
+    ),
+    'point_injection': (
+        "Points d'injection",
+        'is_dynacase2odoo.is_mold_maintenance_preventive_line_tree_point_injection',
+        'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_point_injection',
+    ),
+}
+
+
 class is_mold_maintenance_preventive(models.Model):
     _name        = "is.mold.maintenance.preventive"
     _description = "Maintenance préventive moule"
     _order       = "id desc"
+    _inherit     = ["mail.thread", "mail.activity.mixin"]
 
-    name           = fields.Char("Chrono", readonly=True, copy=False)
-    date           = fields.Date("Date", default=fields.Date.context_today)
-    createur_id    = fields.Many2one("res.users", string="Créateur", default=lambda self: self.env.user)
-    moule_id       = fields.Many2one("is.mold", string="Moule", required=True)
-    autres_travaux = fields.Text("Autres travaux réalisés")
+    name           = fields.Char("Chrono", readonly=True, copy=False, tracking=True)
+    date           = fields.Date("Date", default=fields.Date.context_today, tracking=True)
+    createur_id    = fields.Many2one("res.users", string="Créateur", default=lambda self: self.env.user, tracking=True)
+    moule_id       = fields.Many2one("is.mold", string="Moule", required=True, tracking=True)
+    autres_travaux = fields.Text("Autres travaux réalisés", tracking=True)
     line_ids       = fields.One2many("is.mold.maintenance.preventive.line", "maintenance_id", string="Contrôles")
-    operations_specifiques_info = fields.Text("Opérations spécifiques (information)")
+    operations_specifiques_info = fields.Text("Opérations spécifiques (information)", readonly=True)
+    state          = fields.Selection(STATE_MAINTENANCE, string="État", default="en_cours", required=True, copy=False, tracking=True)
+    avancement_ids = fields.One2many("is.mold.maintenance.preventive.avancement", "maintenance_id", string="Avancement")
+    nb_lines_operation_systematique = fields.Integer(compute='_compute_nb_lines')
+    nb_lines_operation_particuliere = fields.Integer(compute='_compute_nb_lines')
+    nb_lines_circuit_eau_fixe       = fields.Integer(compute='_compute_nb_lines')
+    nb_lines_circuit_eau_mobile     = fields.Integer(compute='_compute_nb_lines')
+    nb_lines_torpille               = fields.Integer(compute='_compute_nb_lines')
+    nb_lines_point_injection        = fields.Integer(compute='_compute_nb_lines')
+
+
+    def action_terminer(self):
+        self._check_lines_completed()
+        self.write({'state': 'termine'})
+
+
+    def action_remettre_en_cours(self):
+        self.write({'state': 'en_cours'})
+
+
+    def _line_is_completed(self, line):
+        if line.type_controle in ('operation_systematique', 'operation_particuliere'):
+            return bool(line.numero and line.numero > 0 and line.ok_nok)
+        if line.type_controle in ('circuit_eau_fixe', 'circuit_eau_mobile'):
+            return bool(line.numero and line.numero > 0 and line.valeur and line.ok_nok)
+        if line.type_controle == 'torpille':
+            return bool(line.empreinte_numero and line.empreinte_numero > 0 and line.hauteur_torpille and line.etat_torpille)
+        if line.type_controle == 'point_injection':
+            return bool(line.empreinte_numero and line.empreinte_numero > 0 and line.diametre_point_injection and line.etat_point_injection)
+        return True
+
+
+    def _check_lines_completed(self):
+        for obj in self:
+            nb_restant = len(obj.line_ids.filtered(lambda line: not obj._line_is_completed(line)))
+            if nb_restant:
+                raise ValidationError(
+                    "Toutes les lignes doivent être renseignées avant de passer la fiche à l'état 'Terminé'.\n"
+                    "Il reste %s point(s) à traiter." % nb_restant
+                )
+
+
+    def _line_etat(self, line):
+        if line.type_controle in ('operation_systematique', 'operation_particuliere', 'circuit_eau_fixe', 'circuit_eau_mobile'):
+            return line.ok_nok or False
+        if line.type_controle == 'torpille':
+            return {'ok': 'ok', 'remplacee': 'nok'}.get(line.etat_torpille, False)
+        if line.type_controle == 'point_injection':
+            return {'ok': 'ok', 'repare': 'nok'}.get(line.etat_point_injection, False)
+        return False
+
+
+    def _build_avancement_commands(self):
+        self.ensure_one()
+        commands = [(5, 0, 0)]
+        for type_value, type_label in TYPE_CONTROLE:
+            lines = self.line_ids.filtered(lambda line, type_value=type_value: line.type_controle == type_value)
+            total = len(lines)
+            if not total:
+                continue
+            traites = len(lines.filtered(self._line_is_completed))
+            nb_ok = len(lines.filtered(lambda line: self._line_etat(line) == 'ok'))
+            nb_nok = len(lines.filtered(lambda line: self._line_etat(line) == 'nok'))
+            commands.append((0, 0, {
+                'type_controle': type_value,
+                'nb_ok'        : nb_ok,
+                'nb_nok'       : nb_nok,
+                'nb_traites'   : traites,
+                'nb_total'     : total,
+            }))
+        return commands
+
+
+    def _sync_avancement(self):
+        for obj in self:
+            obj.avancement_ids = obj._build_avancement_commands()
+
+
+    @api.depends('line_ids.type_controle')
+    def _compute_nb_lines(self):
+        for obj in self:
+            for type_value, _ in TYPE_CONTROLE:
+                obj['nb_lines_%s' % type_value] = len(obj.line_ids.filtered(lambda line, type_value=type_value: line.type_controle == type_value))
+
+
+    @api.constrains('moule_id', 'state')
+    def _check_unique_en_cours(self):
+        for obj in self:
+            if obj.state == 'en_cours':
+                doublon = self.search([
+                    ('moule_id', '=', obj.moule_id.id),
+                    ('state', '=', 'en_cours'),
+                    ('id', '!=', obj.id),
+                ])
+                if doublon:
+                    raise ValidationError("Il existe déjà une fiche de maintenance préventive en cours pour ce moule.")
 
 
     @api.model_create_multi
@@ -60,7 +197,9 @@ class is_mold_maintenance_preventive(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('is.mold.maintenance.preventive')
             if vals.get('moule_id') and not vals.get('line_ids'):
                 vals['line_ids'] = self._get_default_line_commands(self.env['is.mold'].browse(vals['moule_id']))
-        return super().create(vals_list)
+        records = super().create(vals_list)
+        records._sync_avancement()
+        return records
 
 
     def _get_default_line_commands(self, moule):
@@ -92,10 +231,12 @@ class is_mold_maintenance_preventive(models.Model):
             obj.line_ids = obj._get_default_line_commands(obj.moule_id) if obj.moule_id else [(5, 0, 0)]
             noms = obj.moule_id.specifique_ids.filtered('activer').mapped('operation_specifique_id.name')
             obj.operations_specifiques_info = '\n'.join(noms) if noms else False
+            obj.avancement_ids = obj._build_avancement_commands()
 
 
-    def _open_lines_action(self, type_controle, name, tree_view_xmlid, form_view_xmlid):
+    def _open_lines_action(self, type_controle):
         self.ensure_one()
+        name, tree_view_xmlid, form_view_xmlid = LINES_ACTION_INFO[type_controle]
         tree_id = self.env.ref(tree_view_xmlid).id
         form_id = self.env.ref(form_view_xmlid).id
         return {
@@ -105,40 +246,57 @@ class is_mold_maintenance_preventive(models.Model):
             'view_mode': 'tree,form',
             'views': [(tree_id, 'tree'), (form_id, 'form')],
             'domain': [('maintenance_id', '=', self.id), ('type_controle', '=', type_controle)],
-            'context': {'default_maintenance_id': self.id, 'default_type_controle': type_controle},
+            'context': {
+                'default_maintenance_id': self.id,
+                'default_type_controle': type_controle,
+                'readonly_lines': self.state == 'termine',
+            },
             'target': 'current',
         }
 
 
     def open_lines_operation_systematique_action(self):
-        return self._open_lines_action('operation_systematique', "Opérations systématiques",
-            'is_dynacase2odoo.is_mold_maintenance_preventive_line_tree_operation',
-            'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_operation')
+        return self._open_lines_action('operation_systematique')
 
     def open_lines_operation_particuliere_action(self):
-        return self._open_lines_action('operation_particuliere', "Spécifications particulières",
-            'is_dynacase2odoo.is_mold_maintenance_preventive_line_tree_operation',
-            'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_operation')
+        return self._open_lines_action('operation_particuliere')
 
     def open_lines_circuit_eau_fixe_action(self):
-        return self._open_lines_action('circuit_eau_fixe', "Circuit d'eau partie fixe",
-            'is_dynacase2odoo.is_mold_maintenance_preventive_line_tree_circuit',
-            'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_circuit')
+        return self._open_lines_action('circuit_eau_fixe')
 
     def open_lines_circuit_eau_mobile_action(self):
-        return self._open_lines_action('circuit_eau_mobile', "Circuit d'eau partie mobile",
-            'is_dynacase2odoo.is_mold_maintenance_preventive_line_tree_circuit',
-            'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_circuit')
+        return self._open_lines_action('circuit_eau_mobile')
 
     def open_lines_torpille_action(self):
-        return self._open_lines_action('torpille', "Torpilles",
-            'is_dynacase2odoo.is_mold_maintenance_preventive_line_tree_torpille',
-            'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_torpille')
+        return self._open_lines_action('torpille')
 
     def open_lines_point_injection_action(self):
-        return self._open_lines_action('point_injection', "Points d'injection",
-            'is_dynacase2odoo.is_mold_maintenance_preventive_line_tree_point_injection',
-            'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_point_injection')
+        return self._open_lines_action('point_injection')
+
+
+class is_mold_maintenance_preventive_avancement(models.Model):
+    _name        = "is.mold.maintenance.preventive.avancement"
+    _description = "Avancement maintenance préventive moule"
+    _rec_name    = "type_controle"
+
+    maintenance_id = fields.Many2one("is.mold.maintenance.preventive", ondelete='cascade', required=True)
+    type_controle   = fields.Selection(TYPE_CONTROLE, string="Type de contrôle", readonly=True)
+    nb_ok           = fields.Integer("OK", readonly=True)
+    nb_nok          = fields.Integer("nOK", readonly=True)
+    nb_traites      = fields.Integer("Traités", readonly=True)
+    nb_total        = fields.Integer("Total", readonly=True)
+    avancement      = fields.Char("Avancement", compute='_compute_avancement')
+    is_complete     = fields.Boolean(compute='_compute_avancement')
+
+    @api.depends('nb_traites', 'nb_total')
+    def _compute_avancement(self):
+        for obj in self:
+            obj.avancement = "%s/%s" % (obj.nb_traites, obj.nb_total)
+            obj.is_complete = obj.nb_traites == obj.nb_total
+
+    def open_lines_action(self):
+        self.ensure_one()
+        return self.maintenance_id._open_lines_action(self.type_controle)
 
 
 class is_mold_maintenance_preventive_line(models.Model):
@@ -147,14 +305,15 @@ class is_mold_maintenance_preventive_line(models.Model):
     _rec_name    = "id"
 
 
-    maintenance_id  = fields.Many2one("is.mold.maintenance.preventive", ondelete='cascade', required=True)
+    maintenance_id     = fields.Many2one("is.mold.maintenance.preventive", ondelete='cascade', required=True)
+    maintenance_state  = fields.Selection(related='maintenance_id.state', string="État maintenance")
     type_controle   = fields.Selection(TYPE_CONTROLE, string="Type de contrôle", required=True)
     nom_controle    = fields.Char("Nom du contrôle", readonly=True)
     numero          = fields.Integer("N°")
     valeur          = fields.Float("Valeur", digits=(16, 2))
     ok_nok          = fields.Selection(OK_NOK, string="OK ou nOK")
     commentaire     = fields.Text("Commentaire")
-    historique_html = fields.Html("Historique", readonly=True)
+    historique_html = fields.Html("Historique", compute='_compute_historique_html')
 
     empreinte_numero            = fields.Integer("N° empreinte")
     hauteur_torpille             = fields.Float("Hauteur torpille (mm)", digits=(16, 2))
@@ -208,15 +367,93 @@ class is_mold_maintenance_preventive_line(models.Model):
         return self._navigate_action(1)
 
 
-    @api.onchange('etat_torpille')
-    def _onchange_etat_torpille(self):
+    def _historique_key_field(self):
+        self.ensure_one()
+        return 'empreinte_numero' if self.type_controle in ('torpille', 'point_injection') else 'numero'
+
+
+    def _historique_valeur(self):
+        self.ensure_one()
+        if self.type_controle in ('circuit_eau_fixe', 'circuit_eau_mobile'):
+            return self.valeur
+        if self.type_controle == 'torpille':
+            return self.hauteur_torpille
+        if self.type_controle == 'point_injection':
+            return self.diametre_point_injection
+        return False
+
+
+    @api.depends(
+        'maintenance_id.moule_id', 'maintenance_id.date', 'type_controle', 'numero', 'empreinte_numero',
+        'valeur', 'hauteur_torpille', 'diametre_point_injection', 'ok_nok', 'etat_torpille', 'etat_point_injection',
+    )
+    def _compute_historique_html(self):
         for obj in self:
-            if obj.etat_torpille == 'remplacee':
-                obj.historique_html = (obj.historique_html or '') + '<p>R</p>'
+            obj.historique_html = obj._build_historique_html()
+
+
+    def _build_historique_html(self):
+        self.ensure_one()
+        moule = self.maintenance_id.moule_id
+        key_field = self._historique_key_field()
+        key_value = self[key_field]
+        if not moule or not key_value:
+            return False
+        siblings = self.search([
+            ('maintenance_id.moule_id', '=', moule.id),
+            ('type_controle', '=', self.type_controle),
+            (key_field, '=', key_value),
+        ])
+        siblings = siblings.sorted(key=lambda line: (line.maintenance_id.date or date.min, line.id))
+        if not siblings:
+            return False
+        has_valeur = self.type_controle not in ('operation_systematique', 'operation_particuliere')
+        badge_style = 'display:inline-block;padding:2px 10px;border-radius:10px;color:#fff;font-weight:bold;'
+        rows = []
+        for line in siblings:
+            etat = self.maintenance_id._line_etat(line)
+            if etat == 'ok':
+                badge = '<span style="%sbackground-color:#28a745;">OK</span>' % badge_style
+            elif etat == 'nok':
+                badge = '<span style="%sbackground-color:#dc3545;">nOK</span>' % badge_style
+            else:
+                badge = ''
+            cell_valeur = '<td style="padding:4px 8px;">%s</td>' % line._historique_valeur() if has_valeur else ''
+            date_str = line.maintenance_id.date.strftime('%d/%m/%Y') if line.maintenance_id.date else ''
+            rows.append(
+                '<tr>'
+                '<td style="padding:4px 8px;">%s</td>'
+                '%s'
+                '<td style="padding:4px 8px;">%s</td>'
+                '</tr>' % (date_str, cell_valeur, badge)
+            )
+        header = (
+            '<tr>'
+            '<th style="padding:4px 8px;text-align:left;">Date</th>'
+            '%s'
+            '<th style="padding:4px 8px;text-align:left;">État</th>'
+            '</tr>' % ('<th style="padding:4px 8px;text-align:left;">Valeur</th>' if has_valeur else '')
+        )
+        return '<table style="width:100%%;border-collapse:collapse;"><thead>%s</thead><tbody>%s</tbody></table>' % (header, ''.join(rows))
+
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super().create(vals_list)
+        lines.mapped('maintenance_id')._sync_avancement()
+        return lines
+
+
+    def unlink(self):
+        maintenances = self.mapped('maintenance_id')
+        res = super().unlink()
+        maintenances._sync_avancement()
+        return res
 
 
     def write(self, vals):
         res = super().write(vals)
+        self.mapped('maintenance_id')._sync_avancement()
         for obj in self:
             if obj.type_controle in ('operation_systematique', 'operation_particuliere') and obj.numero <= 0:
                 raise ValidationError("Le N° doit être supérieur à 0 pour une opération systématique ou particulière.")

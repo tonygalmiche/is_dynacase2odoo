@@ -16,29 +16,50 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="open_lines_operation_systematique_action" string="Opérations systématiques" type="object" class="btn-secondary"/>
-                        <button name="open_lines_operation_particuliere_action" string="Spécifications particulières" type="object" class="btn-secondary"/>
-                        <button name="open_lines_circuit_eau_fixe_action"       string="Circuit d'eau partie fixe"  type="object" class="btn-secondary"/>
-                        <button name="open_lines_circuit_eau_mobile_action"     string="Circuit d'eau partie mobile" type="object" class="btn-secondary"/>
-                        <button name="open_lines_torpille_action"               string="Torpilles"                  type="object" class="btn-secondary"/>
-                        <button name="open_lines_point_injection_action"        string="Points d'injection"         type="object" class="btn-secondary"/>
+                        <button name="action_terminer"           string="Terminé"                    type="object" class="oe_highlight" attrs="{'invisible': [('state','=','termine')]}"/>
+                        <button name="action_remettre_en_cours"  string="Remettre en cours"           type="object" attrs="{'invisible': [('state','=','en_cours')]}"/>
+                        <button name="open_lines_operation_systematique_action" string="Opérations systématiques" type="object" class="btn-secondary" attrs="{'invisible': [('nb_lines_operation_systematique','=',0)]}"/>
+                        <button name="open_lines_operation_particuliere_action" string="Spécifications particulières" type="object" class="btn-secondary" attrs="{'invisible': [('nb_lines_operation_particuliere','=',0)]}"/>
+                        <button name="open_lines_circuit_eau_fixe_action"       string="Circuit d'eau partie fixe"  type="object" class="btn-secondary" attrs="{'invisible': [('nb_lines_circuit_eau_fixe','=',0)]}"/>
+                        <button name="open_lines_circuit_eau_mobile_action"     string="Circuit d'eau partie mobile" type="object" class="btn-secondary" attrs="{'invisible': [('nb_lines_circuit_eau_mobile','=',0)]}"/>
+                        <button name="open_lines_torpille_action"               string="Torpilles"                  type="object" class="btn-secondary" attrs="{'invisible': [('nb_lines_torpille','=',0)]}"/>
+                        <button name="open_lines_point_injection_action"        string="Points d'injection"         type="object" class="btn-secondary" attrs="{'invisible': [('nb_lines_point_injection','=',0)]}"/>
+                        <field name="nb_lines_operation_systematique" invisible="1"/>
+                        <field name="nb_lines_operation_particuliere" invisible="1"/>
+                        <field name="nb_lines_circuit_eau_fixe" invisible="1"/>
+                        <field name="nb_lines_circuit_eau_mobile" invisible="1"/>
+                        <field name="nb_lines_torpille" invisible="1"/>
+                        <field name="nb_lines_point_injection" invisible="1"/>
+                        <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <group>
                             <group>
                                 <field name="name"/>
-                                <field name="date"/>
-                                <field name="createur_id"/>
-                                <field name="moule_id" widget="many2one_clickable"/>
+                                <field name="date" attrs="{'readonly': [('state','=','termine')]}"/>
+                                <field name="createur_id" attrs="{'readonly': [('state','=','termine')]}"/>
+                                <field name="moule_id" widget="many2one_clickable" attrs="{'readonly': [('state','=','termine')]}"/>
+                            </group>
+                            <group>
+                                <field name="avancement_ids" nolabel="1" colspan="2">
+                                    <tree create="0" delete="0" editable="bottom">
+                                        <field name="type_controle"/>
+                                        <field name="nb_ok" widget="badge" decoration-success="1" attrs="{'invisible': [('nb_ok','=',0)]}"/>
+                                        <field name="nb_nok" widget="badge" decoration-danger="1" attrs="{'invisible': [('nb_nok','=',0)]}"/>
+                                        <field name="avancement" widget="badge" decoration-success="is_complete == True" decoration-warning="is_complete == False"/>
+                                        <field name="is_complete" invisible="1"/>
+                                        <button name="open_lines_action" type="object" string="Voir" icon="fa-arrow-right" class="btn-link"/>
+                                    </tree>
+                                </field>
                             </group>
                         </group>
                         <notebook>
                             <page string="Infos">
                                 <group string="Opérations spécifiques (information)">
-                                    <field name="operations_specifiques_info" nolabel="1" colspan="2"/>
+                                    <field name="operations_specifiques_info" nolabel="1" colspan="2" force_save="1"/>
                                 </group>
                                 <group string="Autres travaux réalisés">
-                                    <field name="autres_travaux" nolabel="1" colspan="2"/>
+                                    <field name="autres_travaux" nolabel="1" colspan="2" attrs="{'readonly': [('state','=','termine')]}"/>
                                 </group>
                             </page>
                             <page string="Lignes">
@@ -50,12 +71,12 @@
                                         <field name="valeur"/>
                                         <field name="empreinte_numero" optional="hide"/>
                                         <field name="hauteur_torpille" optional="hide"/>
-                                        <field name="etat_torpille" optional="hide"/>
+                                        <field name="etat_torpille" optional="hide" widget="badge" decoration-success="etat_torpille == 'ok'" decoration-warning="etat_torpille == 'remplacee'"/>
                                         <field name="hauteur_torpille_remplacee" optional="hide"/>
                                         <field name="diametre_point_injection" optional="hide"/>
-                                        <field name="etat_point_injection" optional="hide"/>
+                                        <field name="etat_point_injection" optional="hide" widget="badge" decoration-success="etat_point_injection == 'ok'" decoration-warning="etat_point_injection == 'repare'"/>
                                         <field name="diametre_point_injection_repare" optional="hide"/>
-                                        <field name="ok_nok" optional="hide"/>
+                                        <field name="ok_nok" optional="hide" widget="badge" decoration-success="ok_nok == 'ok'" decoration-danger="ok_nok == 'nok'"/>
                                         <field name="commentaire" optional="hide"/>
                                         <field name="historique_html" optional="hide"/>
                                     </tree>
@@ -63,6 +84,11 @@
                             </page>
                         </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -71,10 +97,10 @@
             <field name="name">is_mold_maintenance_preventive_line_tree_operation</field>
             <field name="model">is.mold.maintenance.preventive.line</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree create="not context.get('readonly_lines')" delete="not context.get('readonly_lines')">
                     <field name="nom_controle"/>
                     <field name="numero"/>
-                    <field name="ok_nok"/>
+                    <field name="ok_nok" widget="badge" decoration-success="ok_nok == 'ok'" decoration-danger="ok_nok == 'nok'"/>
                     <field name="commentaire"/>
                     <field name="historique_html"/>
                 </tree>
@@ -94,11 +120,12 @@
                         </div>
                     </header>
                     <sheet>
+                        <field name="maintenance_state" invisible="1"/>
                         <group>
                             <field name="nom_controle" required="1"/>
-                            <field name="numero" required="1"/>
-                            <field name="ok_nok"/>
-                            <field name="commentaire" attrs="{'required': [('ok_nok','=','nok')]}"/>
+                            <field name="numero" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="ok_nok" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="commentaire" attrs="{'required': [('ok_nok','=','nok')], 'readonly': [('maintenance_state','=','termine')]}"/>
                             <field name="historique_html"/>
                         </group>
                     </sheet>
@@ -110,10 +137,10 @@
             <field name="name">is_mold_maintenance_preventive_line_tree_circuit</field>
             <field name="model">is.mold.maintenance.preventive.line</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree create="not context.get('readonly_lines')" delete="not context.get('readonly_lines')">
                     <field name="numero"/>
                     <field name="valeur"/>
-                    <field name="ok_nok"/>
+                    <field name="ok_nok" widget="badge" decoration-success="ok_nok == 'ok'" decoration-danger="ok_nok == 'nok'"/>
                     <field name="commentaire"/>
                     <field name="historique_html"/>
                 </tree>
@@ -133,11 +160,12 @@
                         </div>
                     </header>
                     <sheet>
+                        <field name="maintenance_state" invisible="1"/>
                         <group>
-                            <field name="numero" required="1"/>
-                            <field name="valeur" required="1"/>
-                            <field name="ok_nok" required="1"/>
-                            <field name="commentaire" attrs="{'required': [('ok_nok','=','nok')]}"/>
+                            <field name="numero" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="valeur" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="ok_nok" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="commentaire" attrs="{'required': [('ok_nok','=','nok')], 'readonly': [('maintenance_state','=','termine')]}"/>
                             <field name="historique_html"/>
                         </group>
                     </sheet>
@@ -149,10 +177,10 @@
             <field name="name">is_mold_maintenance_preventive_line_tree_torpille</field>
             <field name="model">is.mold.maintenance.preventive.line</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree create="not context.get('readonly_lines')" delete="not context.get('readonly_lines')">
                     <field name="empreinte_numero"/>
                     <field name="hauteur_torpille"/>
-                    <field name="etat_torpille"/>
+                    <field name="etat_torpille" widget="badge" decoration-success="etat_torpille == 'ok'" decoration-warning="etat_torpille == 'remplacee'"/>
                     <field name="hauteur_torpille_remplacee"/>
                     <field name="commentaire"/>
                     <field name="historique_html"/>
@@ -173,12 +201,13 @@
                         </div>
                     </header>
                     <sheet>
+                        <field name="maintenance_state" invisible="1"/>
                         <group>
-                            <field name="empreinte_numero" required="1"/>
-                            <field name="hauteur_torpille" required="1"/>
-                            <field name="etat_torpille" required="1"/>
-                            <field name="hauteur_torpille_remplacee" attrs="{'required': [('etat_torpille','=','remplacee')]}"/>
-                            <field name="commentaire"/>
+                            <field name="empreinte_numero" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="hauteur_torpille" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="etat_torpille" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="hauteur_torpille_remplacee" attrs="{'required': [('etat_torpille','=','remplacee')], 'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="commentaire" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
                             <field name="historique_html"/>
                         </group>
                     </sheet>
@@ -190,10 +219,10 @@
             <field name="name">is_mold_maintenance_preventive_line_tree_point_injection</field>
             <field name="model">is.mold.maintenance.preventive.line</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree create="not context.get('readonly_lines')" delete="not context.get('readonly_lines')">
                     <field name="empreinte_numero"/>
                     <field name="diametre_point_injection"/>
-                    <field name="etat_point_injection"/>
+                    <field name="etat_point_injection" widget="badge" decoration-success="etat_point_injection == 'ok'" decoration-warning="etat_point_injection == 'repare'"/>
                     <field name="diametre_point_injection_repare"/>
                     <field name="commentaire"/>
                     <field name="historique_html"/>
@@ -214,12 +243,13 @@
                         </div>
                     </header>
                     <sheet>
+                        <field name="maintenance_state" invisible="1"/>
                         <group>
-                            <field name="empreinte_numero" required="1"/>
-                            <field name="diametre_point_injection" required="1"/>
-                            <field name="etat_point_injection" required="1"/>
-                            <field name="diametre_point_injection_repare" attrs="{'required': [('etat_point_injection','=','repare')]}"/>
-                            <field name="commentaire"/>
+                            <field name="empreinte_numero" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="diametre_point_injection" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="etat_point_injection" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="diametre_point_injection_repare" attrs="{'required': [('etat_point_injection','=','repare')], 'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="commentaire" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
                             <field name="historique_html"/>
                         </group>
                     </sheet>
@@ -236,6 +266,7 @@
                     <field name="date"/>
                     <field name="moule_id" widget="many2one_clickable"/>
                     <field name="createur_id"/>
+                    <field name="state" widget="badge" decoration-success="state == 'termine'" decoration-warning="state == 'en_cours'"/>
                 </tree>
             </field>
         </record>
@@ -249,6 +280,12 @@
                     <field name="moule_id"/>
                     <field name="date"/>
                     <field name="createur_id"/>
+                    <field name="state"/>
+                    <filter string="En cours" name="filter_en_cours" domain="[('state','=','en_cours')]"/>
+                    <filter string="Terminé"  name="filter_termine"  domain="[('state','=','termine')]"/>
+                    <group expand="0" string="Grouper par">
+                        <filter string="État" name="groupby_state" context="{'group_by': 'state'}"/>
+                    </group>
                 </search>
             </field>
         </record>
