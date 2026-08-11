@@ -29,7 +29,9 @@ Prérequis :
 import sys
 import os
 import re
+import html
 import ssl
+import argparse
 import xmlrpc.client
 import requests as req
 from datetime import date
@@ -42,12 +44,49 @@ NS = "http://echange.service.open.bodet.com"
 # =============================================================================
 # Paramètres
 # =============================================================================
-CREATION_ACTIVE       = True            # True = écriture réelle, False = lecture seule
-COMPTEUR_ABBREVIATION = "S_RC"           # Abréviation du compteur à créer
-COMPTEUR_DATE         = date.today()     # Date de début de l'initialisation
+CREATION_ACTIVE       = True                # True = écriture réelle, False = lecture seule
+COMPTEUR_ABBREVIATION = "S_RCt"             # Abréviation du compteur à créer
+COMPTEUR_DATE         = date(2026, 7, 6)    # Date de début de l'initialisation (fixe, pour n'avoir qu'un seul compteur par salarié)
 ODOO_BASES            = ["odoo1", "odoo4"]  # Bases Odoo source
-ODOO_TYPE_RC          = "RC"             # Valeur du champ `name` dans is.droit.conges
+ODOO_TYPE_RC          = "RC"                # Valeur du champ `name` dans is.droit.conges
 
+
+
+# =============================================================================
+# Lister les types de compteurs (exportAbsenceBalanceTypes)
+# =============================================================================
+def lister_types_compteurs():
+    """Retourne la liste des types de compteurs (AbsenceBalanceType) définis dans Kelio :
+    [{'abbreviation': str, 'description': str, 'key': str}, ...]
+    """
+    body = f"""<?xml version='1.0' encoding='utf-8'?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap-env:Body>
+    <ns0:exportAbsenceBalanceTypes xmlns:ns0="{NS}"/>
+  </soap-env:Body>
+</soap-env:Envelope>"""
+    url = f"{config.KELIO_BASE_URL}/open/services/TypeService"
+    headers = {"Content-Type": "text/xml; charset=utf-8", "SOAPAction": "urn:exportAbsenceBalanceTypes"}
+    response = req.post(
+        url, data=body.encode("utf-8"), headers=headers,
+        auth=(config.KELIO_USER, config.KELIO_PASSWORD), timeout=30,
+    )
+    if not response.ok:
+        raise Exception(f"HTTP {response.status_code} — {response.text[:2000]}")
+    import xml.etree.ElementTree as ET
+    root = ET.fromstring(response.text)
+    items = root.findall('.//' + '{' + NS + '}' + 'AbsenceBalanceType')
+    result = []
+    for item in items:
+        def txt(name):
+            t = item.find('{' + NS + '}' + name)
+            return (t.text or '') if t is not None else ''
+        result.append({
+            'abbreviation': txt('typeAbbreviation'),
+            'description': txt('typeDescription'),
+            'key': txt('typeKey'),
+        })
+    return result
 
 
 # =============================================================================
@@ -206,9 +245,35 @@ if __name__ == "__main__":
 
     import xml.etree.ElementTree as ET
 
+    parser = argparse.ArgumentParser(description="Création/MAJ des initialisations de compteurs Kelio depuis Odoo.")
+    parser.add_argument(
+        "--matricule",
+        help="Ne traiter que le salarié ayant ce matricule (filtre sur is_matricule dans Odoo).",
+    )
+    args = parser.parse_args()
+
     print(f"Serveur Kelio : {config.KELIO_BASE_URL}")
     print(f"Mode          : {'CREATION ACTIVE' if CREATION_ACTIVE else 'lecture seule (CREATION_ACTIVE = False)'}")
     print("=" * 60)
+
+    # --- 0. Liste des types de compteurs disponibles dans Kelio ---
+    print("\n[0] Types de compteurs disponibles dans Kelio :")
+    types_compteurs = []
+    try:
+        types_compteurs = lister_types_compteurs()
+        print(f"  {'Abréviation':15s} {'Description':30s} {'Clé'}")
+        print(f"  {'-'*15} {'-'*30} {'-'*5}")
+        for t in sorted(types_compteurs, key=lambda t: t['abbreviation']):
+            print(f"  {t['abbreviation']:15s} {t['description']:30s} {t['key']}")
+    except Exception as e:
+        print(f"  Erreur lecture des types de compteurs : {e}")
+
+    abbreviations = {t['abbreviation'] for t in types_compteurs}
+    if types_compteurs and COMPTEUR_ABBREVIATION not in abbreviations:
+        print(f"\n  /!\\ ATTENTION : l'abréviation configurée '{COMPTEUR_ABBREVIATION}' "
+              f"n'existe pas parmi les types de compteurs ci-dessus.")
+        print(f"  Arrêt du script — corriger COMPTEUR_ABBREVIATION avant de continuer.")
+        sys.exit(1)
 
     def find_all(root, tag):
         items = root.findall('.//' + '{' + NS + '}' + tag)
@@ -264,6 +329,13 @@ if __name__ == "__main__":
             rc_par_matricule.update(data)
         except Exception as e:
             print(f"  Erreur : {e}")
+
+    if args.matricule:
+        matricule_filtre = args.matricule.strip().zfill(10)
+        rc_par_matricule = {
+            mat: info for mat, info in rc_par_matricule.items() if mat == matricule_filtre
+        }
+        print(f"\n  Filtre --matricule={args.matricule} → {len(rc_par_matricule)} employé(s) retenu(s).")
 
     if not rc_par_matricule:
         print("\nAucun compteur RC trouvé dans Odoo.")
@@ -328,7 +400,8 @@ if __name__ == "__main__":
             continue
         try:
             result_xml = importer_initialisations(items_xml)
-            errors = re.findall(r'<(?:ns\d+:)?errorMessage>(.+?)</(?:ns\d+:)?errorMessage>', result_xml)
+            errors = [html.unescape(e) for e in
+                      re.findall(r'<(?:ns\d+:)?errorMessage>(.+?)</(?:ns\d+:)?errorMessage>', result_xml)]
             if errors:
                 print(f"  {matricule:12s}  {info['nom']:30s}  ERREUR : {errors}")
                 err += 1
