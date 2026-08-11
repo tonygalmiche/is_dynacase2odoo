@@ -19,13 +19,13 @@
                         <button name="action_terminer"           string="Terminé"                    type="object" class="oe_highlight" attrs="{'invisible': [('state','=','termine')]}"/>
                         <button name="action_remettre_en_cours"  string="Remettre en cours"           type="object" attrs="{'invisible': [('state','=','en_cours')]}"/>
                         <button name="open_lines_operation_systematique_action" string="Opérations systématiques" type="object" class="btn-secondary" attrs="{'invisible': [('nb_lines_operation_systematique','=',0)]}"/>
-                        <button name="open_lines_operation_particuliere_action" string="Spécifications particulières" type="object" class="btn-secondary" attrs="{'invisible': [('nb_lines_operation_particuliere','=',0)]}"/>
+                        <button name="open_lines_operation_specifique_action" string="Opérations spécifiques" type="object" class="btn-secondary" attrs="{'invisible': [('nb_lines_operation_specifique','=',0)]}"/>
                         <button name="open_lines_circuit_eau_fixe_action"       string="Circuit d'eau partie fixe"  type="object" class="btn-secondary" attrs="{'invisible': [('nb_lines_circuit_eau_fixe','=',0)]}"/>
                         <button name="open_lines_circuit_eau_mobile_action"     string="Circuit d'eau partie mobile" type="object" class="btn-secondary" attrs="{'invisible': [('nb_lines_circuit_eau_mobile','=',0)]}"/>
                         <button name="open_lines_torpille_action"               string="Torpilles"                  type="object" class="btn-secondary" attrs="{'invisible': [('nb_lines_torpille','=',0)]}"/>
                         <button name="open_lines_point_injection_action"        string="Points d'injection"         type="object" class="btn-secondary" attrs="{'invisible': [('nb_lines_point_injection','=',0)]}"/>
                         <field name="nb_lines_operation_systematique" invisible="1"/>
-                        <field name="nb_lines_operation_particuliere" invisible="1"/>
+                        <field name="nb_lines_operation_specifique" invisible="1"/>
                         <field name="nb_lines_circuit_eau_fixe" invisible="1"/>
                         <field name="nb_lines_circuit_eau_mobile" invisible="1"/>
                         <field name="nb_lines_torpille" invisible="1"/>
@@ -56,8 +56,8 @@
                         <notebook>
                             <page string="Infos">
                                 <group>
-                                    <group string="Opérations spécifiques (information)">
-                                        <field name="operations_specifiques_info" nolabel="1" colspan="2" force_save="1"/>
+                                    <group string="Spécifications particulières (information)">
+                                        <field name="specifications_particulieres_info" nolabel="1" colspan="2" force_save="1"/>
                                     </group>
                                     <group string="Articles liés au moule (information)">
                                         <field name="articles_moule_html" nolabel="1" colspan="2"/>
@@ -107,7 +107,7 @@
                     <field name="numero" readonly="1"/>
                     <field name="ok_nok" widget="badge" decoration-success="ok_nok == 'ok'" decoration-danger="ok_nok == 'nok'"/>
                     <field name="commentaire"/>
-                    <field name="historique_html"/>
+                    <field name="historique_html" optional="hide"/>
                 </tree>
             </field>
         </record>
@@ -119,9 +119,11 @@
                 <form>
                     <header>
                         <div style="display:flex;align-items:center;gap:8px;">
-                            <button name="action_precedent" string="◀ Précédent" type="object" class="btn-secondary"/>
+                            <button name="action_retour_maintenance" icon="fa-home" type="object" class="btn-secondary"/>
+                            <button name="action_precedent"          string="◀ Précédent"       type="object" class="btn-secondary"/>
                             <field name="pager_info" nolabel="1" readonly="1" style="margin:0;"/>
-                            <button name="action_suivant"   string="Suivant ▶"   type="object" class="btn-secondary"/>
+                            <button name="action_suivant"            string="Suivant ▶"         type="object" class="btn-secondary"/>
+                            <button name="action_retour_liste"       icon="fa-list"             type="object" class="btn-secondary"/>
                         </div>
                     </header>
                     <sheet>
@@ -130,6 +132,11 @@
                             <field name="nom_controle" required="1"/>
                             <field name="numero" required="1" readonly="1"/>
                             <field name="ok_nok" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <div class="o_td_label" attrs="{'invisible': ['|', ('maintenance_state','=','termine'), ('ok_nok','!=',False)]}"/>
+                            <div style="display:flex;justify-content:space-between;" attrs="{'invisible': ['|', ('maintenance_state','=','termine'), ('ok_nok','!=',False)]}">
+                                <button name="action_set_ok"  string="OK"  type="object" class="btn-success"/>
+                                <button name="action_set_nok" string="nOK" type="object" class="btn-danger"/>
+                            </div>
                             <field name="commentaire" attrs="{'required': [('ok_nok','=','nok')], 'readonly': [('maintenance_state','=','termine')]}"/>
                             <field name="historique_html"/>
                         </group>
@@ -159,9 +166,11 @@
                 <form>
                     <header>
                         <div style="display:flex;align-items:center;gap:8px;">
-                            <button name="action_precedent" string="◀ Précédent" type="object" class="btn-secondary"/>
+                            <button name="action_retour_maintenance" icon="fa-home" type="object" class="btn-secondary"/>
+                            <button name="action_precedent"          string="◀ Précédent"       type="object" class="btn-secondary"/>
                             <field name="pager_info" nolabel="1" readonly="1" style="margin:0;"/>
-                            <button name="action_suivant"   string="Suivant ▶"   type="object" class="btn-secondary"/>
+                            <button name="action_suivant"            string="Suivant ▶"         type="object" class="btn-secondary"/>
+                            <button name="action_retour_liste"       icon="fa-list"             type="object" class="btn-secondary"/>
                         </div>
                     </header>
                     <sheet>
@@ -200,9 +209,11 @@
                 <form>
                     <header>
                         <div style="display:flex;align-items:center;gap:8px;">
-                            <button name="action_precedent" string="◀ Précédent" type="object" class="btn-secondary"/>
+                            <button name="action_retour_maintenance" icon="fa-home" type="object" class="btn-secondary"/>
+                            <button name="action_precedent"          string="◀ Précédent"       type="object" class="btn-secondary"/>
                             <field name="pager_info" nolabel="1" readonly="1" style="margin:0;"/>
-                            <button name="action_suivant"   string="Suivant ▶"   type="object" class="btn-secondary"/>
+                            <button name="action_suivant"            string="Suivant ▶"         type="object" class="btn-secondary"/>
+                            <button name="action_retour_liste"       icon="fa-list"             type="object" class="btn-secondary"/>
                         </div>
                     </header>
                     <sheet>
@@ -242,9 +253,11 @@
                 <form>
                     <header>
                         <div style="display:flex;align-items:center;gap:8px;">
-                            <button name="action_precedent" string="◀ Précédent" type="object" class="btn-secondary"/>
+                            <button name="action_retour_maintenance" icon="fa-home" type="object" class="btn-secondary"/>
+                            <button name="action_precedent"          string="◀ Précédent"       type="object" class="btn-secondary"/>
                             <field name="pager_info" nolabel="1" readonly="1" style="margin:0;"/>
-                            <button name="action_suivant"   string="Suivant ▶"   type="object" class="btn-secondary"/>
+                            <button name="action_suivant"            string="Suivant ▶"         type="object" class="btn-secondary"/>
+                            <button name="action_retour_liste"       icon="fa-list"             type="object" class="btn-secondary"/>
                         </div>
                     </header>
                     <sheet>

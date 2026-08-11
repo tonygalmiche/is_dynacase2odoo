@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError # type: ignore
 
 TYPE_CONTROLE = [
     ("operation_systematique", "Opération systématique"),
-    ("operation_particuliere", "Opération particulière"),
+    ("operation_specifique", "Opération spécifique"),
     ("circuit_eau_fixe",       "Circuit d'eau partie fixe"),
     ("circuit_eau_mobile",     "Circuit d'eau partie mobile"),
     ("torpille",               "Torpille"),
@@ -39,7 +39,7 @@ STATE_MAINTENANCE = [
 
 FORM_VIEW_BY_TYPE_CONTROLE = {
     'operation_systematique': 'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_operation',
-    'operation_particuliere': 'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_operation',
+    'operation_specifique': 'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_operation',
     'circuit_eau_fixe':       'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_circuit',
     'circuit_eau_mobile':     'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_circuit',
     'torpille':               'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_torpille',
@@ -53,8 +53,8 @@ LINES_ACTION_INFO = {
         'is_dynacase2odoo.is_mold_maintenance_preventive_line_tree_operation',
         'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_operation',
     ),
-    'operation_particuliere': (
-        "Spécifications particulières",
+    'operation_specifique': (
+        "Opérations spécifiques",
         'is_dynacase2odoo.is_mold_maintenance_preventive_line_tree_operation',
         'is_dynacase2odoo.is_mold_maintenance_preventive_line_form_operation',
     ),
@@ -93,12 +93,12 @@ class is_mold_maintenance_preventive(models.Model):
     moule_id       = fields.Many2one("is.mold", string="Moule", required=True, tracking=True)
     autres_travaux = fields.Text("Autres travaux réalisés", tracking=True)
     line_ids       = fields.One2many("is.mold.maintenance.preventive.line", "maintenance_id", string="Contrôles")
-    operations_specifiques_info = fields.Text("Opérations spécifiques (information)", readonly=True)
+    specifications_particulieres_info = fields.Text("Spécifications particulières (information)", readonly=True)
     articles_moule_html = fields.Html("Articles liés au moule (information)", compute='_compute_articles_moule_html')
     state          = fields.Selection(STATE_MAINTENANCE, string="État", default="en_cours", required=True, copy=False, tracking=True)
     avancement_ids = fields.One2many("is.mold.maintenance.preventive.avancement", "maintenance_id", string="Avancement")
     nb_lines_operation_systematique = fields.Integer(compute='_compute_nb_lines')
-    nb_lines_operation_particuliere = fields.Integer(compute='_compute_nb_lines')
+    nb_lines_operation_specifique = fields.Integer(compute='_compute_nb_lines')
     nb_lines_circuit_eau_fixe       = fields.Integer(compute='_compute_nb_lines')
     nb_lines_circuit_eau_mobile     = fields.Integer(compute='_compute_nb_lines')
     nb_lines_torpille               = fields.Integer(compute='_compute_nb_lines')
@@ -115,7 +115,7 @@ class is_mold_maintenance_preventive(models.Model):
 
 
     def _line_is_completed(self, line):
-        if line.type_controle in ('operation_systematique', 'operation_particuliere'):
+        if line.type_controle in ('operation_systematique', 'operation_specifique'):
             return bool(line.numero and line.numero > 0 and line.ok_nok)
         if line.type_controle in ('circuit_eau_fixe', 'circuit_eau_mobile'):
             return bool(line.numero and line.numero > 0 and line.valeur and line.ok_nok)
@@ -137,7 +137,7 @@ class is_mold_maintenance_preventive(models.Model):
 
 
     def _line_etat(self, line):
-        if line.type_controle in ('operation_systematique', 'operation_particuliere', 'circuit_eau_fixe', 'circuit_eau_mobile'):
+        if line.type_controle in ('operation_systematique', 'operation_specifique', 'circuit_eau_fixe', 'circuit_eau_mobile'):
             return line.ok_nok or False
         if line.type_controle == 'torpille':
             return {'ok': 'ok', 'remplacee': 'nok'}.get(line.etat_torpille, False)
@@ -242,10 +242,10 @@ class is_mold_maintenance_preventive(models.Model):
                 'nom_controle' : op.operation_systematique_id.name,
                 'numero'       : op.id,
             }))
-        for spec in moule.specification_ids.filtered('activer'):
+        for spec in moule.specifique_ids.filtered('activer'):
             commands.append((0, 0, {
-                'type_controle': 'operation_particuliere',
-                'nom_controle' : spec.specification_particuliere_id.name,
+                'type_controle': 'operation_specifique',
+                'nom_controle' : spec.operation_specifique_id.name,
                 'numero'       : spec.id,
             }))
         for _ in range(int(moule.nb_circuit_eau_fixe or 0)):
@@ -263,8 +263,8 @@ class is_mold_maintenance_preventive(models.Model):
     def _onchange_moule_id(self):
         for obj in self:
             obj.line_ids = obj._get_default_line_commands(obj.moule_id) if obj.moule_id else [(5, 0, 0)]
-            noms = obj.moule_id.specifique_ids.filtered('activer').mapped('operation_specifique_id.name')
-            obj.operations_specifiques_info = '\n'.join(noms) if noms else False
+            noms = obj.moule_id.specification_ids.filtered('activer').mapped('specification_particuliere_id.name')
+            obj.specifications_particulieres_info = '\n'.join(noms) if noms else False
             obj.avancement_ids = obj._build_avancement_commands()
 
 
@@ -292,8 +292,8 @@ class is_mold_maintenance_preventive(models.Model):
     def open_lines_operation_systematique_action(self):
         return self._open_lines_action('operation_systematique')
 
-    def open_lines_operation_particuliere_action(self):
-        return self._open_lines_action('operation_particuliere')
+    def open_lines_operation_specifique_action(self):
+        return self._open_lines_action('operation_specifique')
 
     def open_lines_circuit_eau_fixe_action(self):
         return self._open_lines_action('circuit_eau_fixe')
@@ -400,6 +400,32 @@ class is_mold_maintenance_preventive_line(models.Model):
     def action_suivant(self):
         return self._navigate_action(1)
 
+    def action_retour_liste(self):
+        self.ensure_one()
+        return self.maintenance_id._open_lines_action(self.type_controle)
+
+    def action_retour_maintenance(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'is.mold.maintenance.preventive',
+            'res_id': self.maintenance_id.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+
+    def action_set_ok(self):
+        self.write({'ok_nok': 'ok'})
+        return self._navigate_action(1) or True
+
+    def action_set_nok(self):
+        self.ensure_one()
+        if not self.commentaire:
+            raise ValidationError("Veuillez saisir un commentaire avant de passer en nOK.")
+        self.write({'ok_nok': 'nok'})
+        return self._navigate_action(1) or True
+
 
     def _historique_key_field(self):
         self.ensure_one()
@@ -451,17 +477,17 @@ class is_mold_maintenance_preventive_line(models.Model):
         siblings = siblings.sorted(key=lambda line: (line.maintenance_id.date or date.min, line.id))
         if not siblings:
             return False
-        has_valeur = self.type_controle not in ('operation_systematique', 'operation_particuliere')
+        has_valeur = self.type_controle not in ('operation_systematique', 'operation_specifique')
         has_nouvelle_valeur = self.type_controle in ('torpille', 'point_injection')
-        badge_style = 'display:inline-block;padding:2px 10px;border-radius:10px;color:#fff;font-weight:bold;'
+        badge_style = 'font-weight:bold;'
         rows = []
         nok_label = {'torpille': 'Remplacée', 'point_injection': 'Réparé'}.get(self.type_controle, 'nOK')
         for line in siblings:
             etat = self.maintenance_id._line_etat(line)
             if etat == 'ok':
-                badge = '<span style="%sbackground-color:#28a745;">OK</span>' % badge_style
+                badge = '<span style="%scolor:#28a745;">OK</span>' % badge_style
             elif etat == 'nok':
-                badge = '<span style="%sbackground-color:#dc3545;">%s</span>' % (badge_style, nok_label)
+                badge = '<span style="%scolor:#dc3545;">%s</span>' % (badge_style, nok_label)
             else:
                 badge = ''
             cell_valeur = '<td style="padding:4px 8px;">%s</td>' % line._historique_valeur() if has_valeur else ''
@@ -556,7 +582,7 @@ class is_mold_maintenance_preventive_line(models.Model):
         for obj in self:
             if obj.type_controle in ('circuit_eau_fixe', 'circuit_eau_mobile'):
                 obj._update_ok_nok_circuit()
-            if obj.type_controle in ('operation_systematique', 'operation_particuliere') and obj.numero <= 0:
+            if obj.type_controle in ('operation_systematique', 'operation_specifique') and obj.numero <= 0:
                 raise ValidationError("Le N° doit être supérieur à 0 pour une opération systématique ou particulière.")
             if obj.type_controle in ('circuit_eau_fixe', 'circuit_eau_mobile'):
                 if obj.numero <= 0:
@@ -617,9 +643,9 @@ class is_mold_systematique_array(models.Model):
         return super().unlink()
 
 
-class is_mold_specification_array(models.Model):
-    _inherit = 'is.mold.specification.array'
+class is_mold_specifique_array(models.Model):
+    _inherit = 'is.mold.specifique.array'
 
     def unlink(self):
-        _check_no_preventive_maintenance_line(self, 'operation_particuliere')
+        _check_no_preventive_maintenance_line(self, 'operation_specifique')
         return super().unlink()
