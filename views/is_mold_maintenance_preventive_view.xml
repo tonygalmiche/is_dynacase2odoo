@@ -119,11 +119,11 @@
                 <form>
                     <header>
                         <div style="display:flex;align-items:center;gap:8px;">
-                            <button name="action_retour_maintenance" icon="fa-home" type="object" class="btn-secondary"/>
+                            <button name="action_retour_maintenance" icon="fa-home" title="Retour à la fiche de maintenance" type="object" class="btn-secondary"/>
                             <button name="action_precedent"          string="◀ Précédent"       type="object" class="btn-secondary"/>
                             <field name="pager_info" nolabel="1" readonly="1" style="margin:0;"/>
                             <button name="action_suivant"            string="Suivant ▶"         type="object" class="btn-secondary"/>
-                            <button name="action_retour_liste"       icon="fa-list"             type="object" class="btn-secondary"/>
+                            <button name="action_retour_liste"       icon="fa-list" title="Retour à la liste" type="object" class="btn-secondary"/>
                         </div>
                     </header>
                     <sheet>
@@ -166,11 +166,11 @@
                 <form>
                     <header>
                         <div style="display:flex;align-items:center;gap:8px;">
-                            <button name="action_retour_maintenance" icon="fa-home" type="object" class="btn-secondary"/>
+                            <button name="action_retour_maintenance" icon="fa-home" title="Retour à la fiche de maintenance" type="object" class="btn-secondary"/>
                             <button name="action_precedent"          string="◀ Précédent"       type="object" class="btn-secondary"/>
                             <field name="pager_info" nolabel="1" readonly="1" style="margin:0;"/>
                             <button name="action_suivant"            string="Suivant ▶"         type="object" class="btn-secondary"/>
-                            <button name="action_retour_liste"       icon="fa-list"             type="object" class="btn-secondary"/>
+                            <button name="action_retour_liste"       icon="fa-list" title="Retour à la liste" type="object" class="btn-secondary"/>
                         </div>
                     </header>
                     <sheet>
@@ -209,11 +209,11 @@
                 <form>
                     <header>
                         <div style="display:flex;align-items:center;gap:8px;">
-                            <button name="action_retour_maintenance" icon="fa-home" type="object" class="btn-secondary"/>
+                            <button name="action_retour_maintenance" icon="fa-home" title="Retour à la fiche de maintenance" type="object" class="btn-secondary"/>
                             <button name="action_precedent"          string="◀ Précédent"       type="object" class="btn-secondary"/>
                             <field name="pager_info" nolabel="1" readonly="1" style="margin:0;"/>
                             <button name="action_suivant"            string="Suivant ▶"         type="object" class="btn-secondary"/>
-                            <button name="action_retour_liste"       icon="fa-list"             type="object" class="btn-secondary"/>
+                            <button name="action_retour_liste"       icon="fa-list" title="Retour à la liste" type="object" class="btn-secondary"/>
                         </div>
                     </header>
                     <sheet>
@@ -253,11 +253,11 @@
                 <form>
                     <header>
                         <div style="display:flex;align-items:center;gap:8px;">
-                            <button name="action_retour_maintenance" icon="fa-home" type="object" class="btn-secondary"/>
+                            <button name="action_retour_maintenance" icon="fa-home" title="Retour à la fiche de maintenance" type="object" class="btn-secondary"/>
                             <button name="action_precedent"          string="◀ Précédent"       type="object" class="btn-secondary"/>
                             <field name="pager_info" nolabel="1" readonly="1" style="margin:0;"/>
                             <button name="action_suivant"            string="Suivant ▶"         type="object" class="btn-secondary"/>
-                            <button name="action_retour_liste"       icon="fa-list"             type="object" class="btn-secondary"/>
+                            <button name="action_retour_liste"       icon="fa-list" title="Retour à la liste" type="object" class="btn-secondary"/>
                         </div>
                     </header>
                     <sheet>
