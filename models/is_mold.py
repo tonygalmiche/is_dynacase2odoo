@@ -1,3 +1,4 @@
+from datetime import date # type: ignore
 from odoo import models, fields, api # type: ignore
 from odoo.addons.is_dynacase2odoo.models.is_param_project import GESTION_J, TYPE_DOCUMENT # type: ignore
 from odoo.addons.is_dynacase2odoo.models.is_mold_maintenance_preventive import TYPE_CONTROLE # type: ignore
@@ -44,6 +45,16 @@ class is_mold(models.Model):
     fermeture_id           = fields.Many2one("is.fermeture.gantt", string="Fermeture planning")
     logo_rs                = fields.Char(string="Logo RS"         , compute='_compute_logo_rs'      , store=False, readonly=True)
     j_actuelle_rw          = fields.Boolean(string="J Actuelle rw", compute='_compute_j_actuelle_rw', store=False, readonly=True)
+
+    maintenance_preventive_ids                     = fields.One2many('is.mold.maintenance.preventive', 'moule_id', string="Fiches de maintenance préventive")
+    derniere_maintenance_preventive_id             = fields.Many2one(
+        'is.mold.maintenance.preventive', compute='_compute_derniere_maintenance_preventive_avancement_ids',
+        string="Dernière fiche de maintenance préventive",
+    )
+    derniere_maintenance_preventive_avancement_ids = fields.One2many(
+        'is.mold.maintenance.preventive.avancement', compute='_compute_derniere_maintenance_preventive_avancement_ids',
+        string="Avancement dernière maintenance préventive",
+    )
 
     is_modele              = fields.Boolean("Modèle", default=False, tracking=True,
         help="Cochez cette case pour marquer ce moule comme un modèle.\n"
@@ -147,6 +158,14 @@ class is_mold(models.Model):
             if obj.revue_contrat_id:
                 logo_rs = obj.revue_contrat_id.get_logo_rs()
             obj.logo_rs = logo_rs
+
+
+    @api.depends('maintenance_preventive_ids.date', 'maintenance_preventive_ids.avancement_ids')
+    def _compute_derniere_maintenance_preventive_avancement_ids(self):
+        for obj in self:
+            derniere = obj.maintenance_preventive_ids.sorted(key=lambda m: (m.date or date.min, m.id))[-1:]
+            obj.derniere_maintenance_preventive_id = derniere
+            obj.derniere_maintenance_preventive_avancement_ids = derniere.avancement_ids
 
 
     def creer_fiche_maintenance_preventive_action(self):

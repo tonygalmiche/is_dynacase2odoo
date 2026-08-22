@@ -102,6 +102,23 @@
                         </group>
                     </page>
                 </xpath>
+                <xpath expr="//field[@name='is_preventif_moule']/tree/field[@name='fiche_preventif_ids']" position="after">
+                    <field name="maintenance_preventive_id" widget="many2one_clickable" readonly="1"/>
+                </xpath>
+                <field name="gamme_preventif_ids" position="after">
+                    <field name="derniere_maintenance_preventive_id" widget="many2one_clickable" readonly="1" attrs="{'invisible': [('derniere_maintenance_preventive_id','=',False)]}"/>
+                    <field name="derniere_maintenance_preventive_avancement_ids" nolabel="1" colspan="2" readonly="1" attrs="{'invisible': [('derniere_maintenance_preventive_id','=',False)]}">
+                        <tree create="0" delete="0">
+                            <field name="type_controle"/>
+                            <field name="nb_ok" widget="badge" decoration-success="1" attrs="{'invisible': [('nb_ok','=',0)]}"/>
+                            <field name="nb_nok" widget="badge" decoration-danger="1" attrs="{'invisible': [('nb_nok','=',0)]}"/>
+                            <field name="nb_remplace" widget="badge" decoration-info="1" attrs="{'invisible': [('nb_remplace','=',0)]}"/>
+                            <field name="avancement" widget="badge" decoration-success="is_complete == True" decoration-warning="is_complete == False"/>
+                            <field name="is_complete" invisible="1"/>
+                            <button name="open_lines_action" type="object" string="Voir" icon="fa-arrow-right" class="btn-link"/>
+                        </tree>
+                    </field>
+                </field>
             </field>
         </record>
         <record id="is_mold_tree_view" model="ir.ui.view">

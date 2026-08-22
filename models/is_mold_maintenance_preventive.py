@@ -1,3 +1,4 @@
+import base64 # type: ignore
 from datetime import date # type: ignore
 from odoo import models, fields, api # type: ignore
 from odoo.exceptions import ValidationError # type: ignore
@@ -108,6 +109,23 @@ class is_mold_maintenance_preventive(models.Model):
     def action_terminer(self):
         self._check_lines_completed()
         self.write({'state': 'termine'})
+        for obj in self:
+            preventif = self.env['is.preventif.moule'].create({
+                'moule'                     : obj.moule_id.id,
+                'date_preventif'            : obj.date or fields.Date.context_today(obj),
+                'maintenance_preventive_id' : obj.id,
+            })
+            pdf_content, _ = self.env['ir.actions.report']._render_qweb_pdf(
+                'is_dynacase2odoo.is_mold_maintenance_preventive_historique_report', [obj.moule_id.id],
+            )
+            attachment = self.env['ir.attachment'].create({
+                'name'     : "%s.pdf" % (obj.name or 'maintenance_preventive'),
+                'type'     : 'binary',
+                'res_model': 'is.preventif.moule',
+                'res_id'   : preventif.id,
+                'datas'    : base64.b64encode(pdf_content),
+            })
+            preventif.fiche_preventif_ids = [(4, attachment.id)]
 
 
     def action_remettre_en_cours(self):
@@ -156,11 +174,17 @@ class is_mold_maintenance_preventive(models.Model):
                 continue
             traites = len(lines.filtered(self._line_is_completed))
             nb_ok = len(lines.filtered(lambda line: self._line_etat(line) == 'ok'))
-            nb_nok = len(lines.filtered(lambda line: self._line_etat(line) == 'nok'))
+            if type_value in ('torpille', 'point_injection'):
+                nb_nok = 0
+                nb_remplace = len(lines.filtered(lambda line: self._line_etat(line) == 'nok'))
+            else:
+                nb_nok = len(lines.filtered(lambda line: self._line_etat(line) == 'nok'))
+                nb_remplace = 0
             commands.append((0, 0, {
                 'type_controle': type_value,
                 'nb_ok'        : nb_ok,
                 'nb_nok'       : nb_nok,
+                'nb_remplace'  : nb_remplace,
                 'nb_traites'   : traites,
                 'nb_total'     : total,
             }))
@@ -248,15 +272,30 @@ class is_mold_maintenance_preventive(models.Model):
                 'nom_controle' : spec.operation_specifique_id.name,
                 'numero'       : spec.id,
             }))
-        for _ in range(int(moule.nb_circuit_eau_fixe or 0)):
-            commands.append((0, 0, {'type_controle': 'circuit_eau_fixe'}))
-        for _ in range(int(moule.nb_circuit_eau_mobile or 0)):
-            commands.append((0, 0, {'type_controle': 'circuit_eau_mobile'}))
-        for _ in range(moule.nb_torpilles or 0):
-            commands.append((0, 0, {'type_controle': 'torpille'}))
-        for _ in range(moule.nb_points_injection or 0):
-            commands.append((0, 0, {'type_controle': 'point_injection'}))
+        for numero in self._get_default_numeros(moule, 'circuit_eau_fixe', 'numero', int(moule.nb_circuit_eau_fixe or 0)):
+            commands.append((0, 0, {'type_controle': 'circuit_eau_fixe', 'numero': numero}))
+        for numero in self._get_default_numeros(moule, 'circuit_eau_mobile', 'numero', int(moule.nb_circuit_eau_mobile or 0)):
+            commands.append((0, 0, {'type_controle': 'circuit_eau_mobile', 'numero': numero}))
+        for numero in self._get_default_numeros(moule, 'torpille', 'empreinte_numero', moule.nb_torpilles or 0):
+            commands.append((0, 0, {'type_controle': 'torpille', 'empreinte_numero': numero}))
+        for numero in self._get_default_numeros(moule, 'point_injection', 'empreinte_numero', moule.nb_points_injection or 0):
+            commands.append((0, 0, {'type_controle': 'point_injection', 'empreinte_numero': numero}))
         return commands
+
+
+    def _get_default_numeros(self, moule, type_controle, numero_field, count):
+        if not count:
+            return []
+        lines = self.env['is.mold.maintenance.preventive.line'].search([
+            ('maintenance_id.moule_id', '=', moule.id),
+            ('type_controle', '=', type_controle),
+        ])
+        # Réutilise les N° (ou N° empreinte) déjà saisis sur les fiches précédentes de ce moule
+        # (triés, sans doublon). S'il en manque pour atteindre "count", on laisse 0 (à saisir
+        # manuellement) plutôt que d'inventer un numéro, car la numérotation peut comporter des trous.
+        numeros = sorted(numero for numero in set(lines.mapped(numero_field)) if numero)[:count]
+        numeros += [0] * (count - len(numeros))
+        return numeros
 
 
     @api.onchange('moule_id')
@@ -317,6 +356,7 @@ class is_mold_maintenance_preventive_avancement(models.Model):
     type_controle   = fields.Selection(TYPE_CONTROLE, string="Type de contrôle", readonly=True)
     nb_ok           = fields.Integer("OK", readonly=True)
     nb_nok          = fields.Integer("nOK", readonly=True)
+    nb_remplace     = fields.Integer("R", readonly=True)
     nb_traites      = fields.Integer("Traités", readonly=True)
     nb_total        = fields.Integer("Total", readonly=True)
     avancement      = fields.Char("Avancement", compute='_compute_avancement')
@@ -426,6 +466,28 @@ class is_mold_maintenance_preventive_line(models.Model):
         self.write({'ok_nok': 'nok'})
         return self._navigate_action(1) or True
 
+    def action_set_etat_torpille_ok(self):
+        self.write({'etat_torpille': 'ok'})
+        return self._navigate_action(1) or True
+
+    def action_set_etat_torpille_remplacee(self):
+        self.ensure_one()
+        if not self.hauteur_torpille_remplacee:
+            raise ValidationError("Veuillez saisir la hauteur torpille remplacée avant de passer à l'état 'Remplacée'.")
+        self.write({'etat_torpille': 'remplacee'})
+        return self._navigate_action(1) or True
+
+    def action_set_etat_point_injection_ok(self):
+        self.write({'etat_point_injection': 'ok'})
+        return self._navigate_action(1) or True
+
+    def action_set_etat_point_injection_repare(self):
+        self.ensure_one()
+        if not self.diametre_point_injection_repare:
+            raise ValidationError("Veuillez saisir le diamètre point d'injection réparé avant de passer à l'état 'Réparé'.")
+        self.write({'etat_point_injection': 'repare'})
+        return self._navigate_action(1) or True
+
 
     def _historique_key_field(self):
         self.ensure_one()
@@ -455,7 +517,7 @@ class is_mold_maintenance_preventive_line(models.Model):
     @api.depends(
         'maintenance_id.moule_id', 'maintenance_id.date', 'type_controle', 'numero', 'empreinte_numero',
         'valeur', 'hauteur_torpille', 'diametre_point_injection', 'ok_nok', 'etat_torpille', 'etat_point_injection',
-        'hauteur_torpille_remplacee', 'diametre_point_injection_repare',
+        'hauteur_torpille_remplacee', 'diametre_point_injection_repare', 'commentaire',
     )
     def _compute_historique_html(self):
         for obj in self:
@@ -473,21 +535,22 @@ class is_mold_maintenance_preventive_line(models.Model):
             ('maintenance_id.moule_id', '=', moule.id),
             ('type_controle', '=', self.type_controle),
             (key_field, '=', key_value),
+            ('maintenance_id', '!=', self.maintenance_id.id),
         ])
-        siblings = siblings.sorted(key=lambda line: (line.maintenance_id.date or date.min, line.id))
-        if not siblings:
-            return False
+        lines = list(siblings) + [self]
+        lines.sort(key=lambda line: (line.maintenance_id.date or date.min, line.id))
         has_valeur = self.type_controle not in ('operation_systematique', 'operation_specifique')
         has_nouvelle_valeur = self.type_controle in ('torpille', 'point_injection')
         badge_style = 'font-weight:bold;'
         rows = []
         nok_label = {'torpille': 'Remplacée', 'point_injection': 'Réparé'}.get(self.type_controle, 'nOK')
-        for line in siblings:
+        for line in lines:
             etat = self.maintenance_id._line_etat(line)
             if etat == 'ok':
                 badge = '<span style="%scolor:#28a745;">OK</span>' % badge_style
             elif etat == 'nok':
-                badge = '<span style="%scolor:#dc3545;">%s</span>' % (badge_style, nok_label)
+                nok_color = '#17a2b8' if self.type_controle in ('torpille', 'point_injection') else '#dc3545'
+                badge = '<span style="%scolor:%s;">%s</span>' % (badge_style, nok_color, nok_label)
             else:
                 badge = ''
             cell_valeur = '<td style="padding:4px 8px;">%s</td>' % line._historique_valeur() if has_valeur else ''
@@ -503,7 +566,8 @@ class is_mold_maintenance_preventive_line(models.Model):
                 '%s'
                 '%s'
                 '<td style="padding:4px 8px;">%s</td>'
-                '</tr>' % (date_str, cell_valeur, cell_nouvelle_valeur, badge)
+                '<td style="padding:4px 8px;">%s</td>'
+                '</tr>' % (date_str, cell_valeur, cell_nouvelle_valeur, badge, line.commentaire or '')
             )
         header = (
             '<tr>'
@@ -511,6 +575,7 @@ class is_mold_maintenance_preventive_line(models.Model):
             '%s'
             '%s'
             '<th style="padding:4px 8px;text-align:left;">État</th>'
+            '<th style="padding:4px 8px;text-align:left;">Commentaire</th>'
             '</tr>' % (
                 '<th style="padding:4px 8px;text-align:left;">Valeur</th>' if has_valeur else '',
                 '<th style="padding:4px 8px;text-align:left;">Nouvelle valeur</th>' if has_nouvelle_valeur else '',
@@ -649,3 +714,9 @@ class is_mold_specifique_array(models.Model):
     def unlink(self):
         _check_no_preventive_maintenance_line(self, 'operation_specifique')
         return super().unlink()
+
+
+class is_preventif_moule(models.Model):
+    _inherit = 'is.preventif.moule'
+
+    maintenance_preventive_id = fields.Many2one("is.mold.maintenance.preventive", string="Fiche de maintenance préventive")

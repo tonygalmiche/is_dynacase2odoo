@@ -63,6 +63,15 @@
                                 color: #fff;
                                 font-weight: bold;
                             }
+                            .is_mold_preventive_cell_remplace {
+                                background-color: #17a2b8;
+                                color: #fff;
+                                font-weight: bold;
+                            }
+                            .is_mold_preventive_cell_commentaire {
+                                font-weight: normal;
+                                font-size: 6px;
+                            }
                         </style>
 
                         <t t-set="blocks" t-value="o._get_preventive_matrix()"/>
@@ -84,11 +93,12 @@
                                     <tr t-foreach="block['rows']" t-as="row">
                                         <td class="is_label"><t t-esc="row['label']"/></td>
                                         <td t-foreach="row['cells']" t-as="cell"
-                                            t-attf-class="#{cell and cell['etat'] == 'ok' and 'is_mold_preventive_cell_ok' or cell and cell['etat'] == 'nok' and 'is_mold_preventive_cell_nok' or ''}">
+                                            t-attf-class="#{cell and cell['etat'] == 'ok' and 'is_mold_preventive_cell_ok' or cell and cell['etat'] == 'nok' and block['type_controle'] in ('torpille', 'point_injection') and 'is_mold_preventive_cell_remplace' or cell and cell['etat'] == 'nok' and 'is_mold_preventive_cell_nok' or ''}">
                                             <t t-if="cell">
                                                 <div t-esc="cell['badge_label']"/>
-                                                <div t-if="cell['valeur']"><t t-esc="cell['valeur']"/></div>
-                                                <div t-if="cell['nouvelle_valeur']">→ <t t-esc="cell['nouvelle_valeur']"/></div>
+                                                <div t-if="cell['valeur'] and cell['nouvelle_valeur']"><t t-esc="cell['valeur']"/> → <t t-esc="cell['nouvelle_valeur']"/></div>
+                                                <div t-elif="cell['valeur']"><t t-esc="cell['valeur']"/></div>
+                                                <div t-if="cell['commentaire']" class="is_mold_preventive_cell_commentaire"><t t-esc="cell['commentaire']"/></div>
                                             </t>
                                         </td>
                                     </tr>
