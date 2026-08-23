@@ -538,7 +538,9 @@ class is_mold_maintenance_preventive_line(models.Model):
             ('maintenance_id', '!=', self.maintenance_id.id),
         ])
         lines = list(siblings) + [self]
-        lines.sort(key=lambda line: (line.maintenance_id.date or date.min, line.id))
+        # self.id peut être un NewId (record en cours d'édition, non encore enregistré) : il n'est
+        # pas comparable à un id entier classique, donc on retombe sur son id d'origine pour le tri.
+        lines.sort(key=lambda line: (line.maintenance_id.date or date.min, line.id if isinstance(line.id, int) else (line.id.origin or 0)))
         has_valeur = self.type_controle not in ('operation_systematique', 'operation_specifique')
         has_nouvelle_valeur = self.type_controle in ('torpille', 'point_injection')
         badge_style = 'font-weight:bold;'
