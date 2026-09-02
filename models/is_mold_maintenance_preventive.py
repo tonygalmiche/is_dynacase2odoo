@@ -721,4 +721,4 @@ class is_mold_specifique_array(models.Model):
 class is_preventif_moule(models.Model):
     _inherit = 'is.preventif.moule'
 
-    maintenance_preventive_id = fields.Many2one("is.mold.maintenance.preventive", string="Fiche de maintenance préventive")
+    maintenance_preventive_id = fields.Many2one("is.mold.maintenance.preventive", string="Fiche de maintenance préventive", tracking=True)

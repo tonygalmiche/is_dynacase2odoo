@@ -151,8 +151,8 @@
             <field name="model">is.mold.maintenance.preventive.line</field>
             <field name="arch" type="xml">
                 <tree create="not context.get('readonly_lines')" delete="not context.get('readonly_lines')">
-                    <field name="numero"/>
-                    <field name="valeur"/>
+                    <field name="numero" widget="hide_zero"/>
+                    <field name="valeur" widget="hide_zero"/>
                     <field name="ok_nok" widget="badge" decoration-success="ok_nok == 'ok'" decoration-danger="ok_nok == 'nok'" readonly="1"/>
                     <field name="commentaire" optional="hide"/>
                     <field name="historique_html" optional="hide"/>
@@ -177,8 +177,8 @@
                     <sheet>
                         <field name="maintenance_state" invisible="1"/>
                         <group>
-                            <field name="numero" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
-                            <field name="valeur" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="numero" required="1" widget="hide_zero" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="valeur" required="1" widget="hide_zero" options="{'focus': True}" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
                             <field name="ok_nok" readonly="1" force_save="1"/>
                             <field name="commentaire" attrs="{'required': [('ok_nok','=','nok')], 'readonly': [('maintenance_state','=','termine')]}"/>
                             <field name="historique_html"/>
@@ -193,10 +193,10 @@
             <field name="model">is.mold.maintenance.preventive.line</field>
             <field name="arch" type="xml">
                 <tree create="not context.get('readonly_lines')" delete="not context.get('readonly_lines')">
-                    <field name="empreinte_numero"/>
-                    <field name="hauteur_torpille"/>
+                    <field name="empreinte_numero" widget="hide_zero"/>
+                    <field name="hauteur_torpille" widget="hide_zero"/>
                     <field name="etat_torpille" widget="badge" decoration-success="etat_torpille == 'ok'" decoration-info="etat_torpille == 'remplacee'"/>
-                    <field name="hauteur_torpille_remplacee"/>
+                    <field name="hauteur_torpille_remplacee" widget="hide_zero"/>
                     <field name="commentaire" optional="hide"/>
                     <field name="historique_html" optional="hide"/>
                 </tree>
@@ -220,10 +220,10 @@
                     <sheet>
                         <field name="maintenance_state" invisible="1"/>
                         <group>
-                            <field name="empreinte_numero" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
-                            <field name="hauteur_torpille" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="empreinte_numero" required="1" widget="hide_zero" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="hauteur_torpille" required="1" widget="hide_zero" options="{'focus': True}" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
                             <field name="etat_torpille" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
-                            <field name="hauteur_torpille_remplacee" attrs="{'invisible': [('etat_torpille','=','ok')], 'required': [('etat_torpille','=','remplacee')], 'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="hauteur_torpille_remplacee" widget="hide_zero" attrs="{'invisible': [('etat_torpille','=','ok')], 'required': [('etat_torpille','=','remplacee')], 'readonly': [('maintenance_state','=','termine')]}"/>
                             <div class="o_td_label" attrs="{'invisible': ['|', ('maintenance_state','=','termine'), ('etat_torpille','!=',False)]}"/>
                             <div style="display:flex;justify-content:space-between;" attrs="{'invisible': ['|', ('maintenance_state','=','termine'), ('etat_torpille','!=',False)]}">
                                 <button name="action_set_etat_torpille_ok"        string="OK"        type="object" class="btn-success"/>
@@ -242,10 +242,10 @@
             <field name="model">is.mold.maintenance.preventive.line</field>
             <field name="arch" type="xml">
                 <tree create="not context.get('readonly_lines')" delete="not context.get('readonly_lines')">
-                    <field name="empreinte_numero"/>
-                    <field name="diametre_point_injection"/>
+                    <field name="empreinte_numero" widget="hide_zero"/>
+                    <field name="diametre_point_injection" widget="hide_zero"/>
                     <field name="etat_point_injection" widget="badge" decoration-success="etat_point_injection == 'ok'" decoration-info="etat_point_injection == 'repare'"/>
-                    <field name="diametre_point_injection_repare"/>
+                    <field name="diametre_point_injection_repare" widget="hide_zero"/>
                     <field name="commentaire" optional="hide"/>
                     <field name="historique_html" optional="hide"/>
                 </tree>
@@ -269,10 +269,10 @@
                     <sheet>
                         <field name="maintenance_state" invisible="1"/>
                         <group>
-                            <field name="empreinte_numero" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
-                            <field name="diametre_point_injection" required="1" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="empreinte_numero" required="1" widget="hide_zero" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="diametre_point_injection" required="1" widget="hide_zero" options="{'focus': True}" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
                             <field name="etat_point_injection" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
-                            <field name="diametre_point_injection_repare" attrs="{'invisible': [('etat_point_injection','=','ok')], 'required': [('etat_point_injection','=','repare')], 'readonly': [('maintenance_state','=','termine')]}"/>
+                            <field name="diametre_point_injection_repare" widget="hide_zero" attrs="{'invisible': [('etat_point_injection','=','ok')], 'required': [('etat_point_injection','=','repare')], 'readonly': [('maintenance_state','=','termine')]}"/>
                             <div class="o_td_label" attrs="{'invisible': ['|', ('maintenance_state','=','termine'), ('etat_point_injection','!=',False)]}"/>
                             <div style="display:flex;justify-content:space-between;" attrs="{'invisible': ['|', ('maintenance_state','=','termine'), ('etat_point_injection','!=',False)]}">
                                 <button name="action_set_etat_point_injection_ok"     string="OK"      type="object" class="btn-success"/>
