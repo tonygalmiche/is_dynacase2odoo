@@ -531,6 +531,7 @@ class is_revue_lancement(models.Model):
    
     def get_destinataires_name(self):
         for obj in self:
+            destinataires_name=''
             users = obj.get_users()
             if users:
                 mydict=[]
