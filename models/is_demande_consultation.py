@@ -618,10 +618,23 @@ class IsDemandeConsultation(models.Model):
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
             url = f'{base_url}/web#id={obj.id}&view_type=form&model=is.demande.consultation'
             
+            references_html = ""
+            if obj.dossier_ao_id:
+                references_html += f"<li>Dossier appel d'offre : {obj.dossier_ao_id.display_name}</li>"
+            if obj.dossier_modif_variante_id:
+                references_html += f"<li>Dossier modif/variante : {obj.dossier_modif_variante_id.display_name}</li>"
+            if obj.mold_id:
+                references_html += f"<li>N° moule : {obj.mold_id.display_name}</li>"
+            if obj.dossierf_id:
+                references_html += f"<li>N° de dossier F : {obj.dossierf_id.display_name}</li>"
+            if references_html:
+                references_html = f"<p><strong>Références :</strong></p><ul>{references_html}</ul>"
+
             subject = f'[{obj.name}] Consultation soldée'
             body_html = f"""
                 <p>Bonjour,</p>
                 <p>{nom} vient de solder la demande de consultation <a href='{url}'>{obj.name}</a>.</p>
+                {references_html}
                 <p><strong>Récapitulatif des fournisseurs retenus :</strong></p>
                 {tableau_html}
                 <p>Cordialement,</p>
@@ -632,6 +645,7 @@ class IsDemandeConsultation(models.Model):
             # Logger dans le chatter (même tableau)
             chatter_message = f"""
                 <p><strong>Consultation soldée - Mail envoyé à {obj.demandeur_id.name} ({email_to})</strong></p>
+                {references_html}
                 <p><strong>Récapitulatif des fournisseurs retenus :</strong></p>
                 {tableau_html}
             """
