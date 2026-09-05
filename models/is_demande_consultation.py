@@ -193,7 +193,7 @@ class IsDemandeConsultation(models.Model):
     piece_jointe_ids = fields.One2many('is.demande.consultation.piece.jointe', 'demande_id', string="Pièces jointes fournisseur", copy=True)
     
     # Champs spécifiques DC-EXPORT
-    packaging_list = fields.Text("Packaging list", tracking=True, help="Zone libre pour la liste d'emballage (DC-EXPORT uniquement)")
+    packaging_list = fields.Text("Packinglist", tracking=True, help="Zone libre pour la liste d'emballage (DC-EXPORT uniquement)")
     
     # Champs techniques pour visibilité des boutons
     vers_brouillon_vsb = fields.Boolean('Champ technique vers_brouillon_vsb', compute='_compute_vsb', store=False)
@@ -1224,13 +1224,15 @@ class IsDemandeConsultation(models.Model):
                     # Informations transport (adresses déjà formatées ci-dessus)
                     incoterm = obj.incoterm_id.code if obj.incoterm_id else ''
                     mode_transport_txt = dict(self._fields['mode_transport'].selection).get(obj.mode_transport, '') if obj.mode_transport else ''
+                    packaging_list_html = ""
+                    if obj.packaging_list:
+                        packaging_list_html = f"<p><strong>Packinglist :</strong><br/>{(obj.packaging_list or '').replace(chr(10), '<br/>')}</p>"
                     body_html = f"""
                         <p>Madame, Monsieur,</p>
-                        <p>Dans le cadre d'une consultation, nous vous serions reconnaissant de nous 
+                        <p>Dans le cadre d'une consultation, nous vous serions reconnaissant de nous
                         transmettre votre meilleure offre de prix pour l'export suivant :</p>
                         <p><strong>Adresse d'enlèvement :</strong> {adresse_enlevement}</p>
                         <p><strong>Adresse de livraison :</strong> {adresse_livraison}</p>
-                        <p><strong>Date de livraison maximale souhaitée :</strong> {obj.date_dms.strftime('%d/%m/%Y') if obj.date_dms else ''}</p>
                         <p><strong>Incoterm :</strong> {incoterm}</p>
                         <p><strong>Lieu :</strong> {obj.lieu or ''}</p>
                         <p><strong>Mode de transport :</strong> {mode_transport_txt}</p>
@@ -1243,6 +1245,7 @@ class IsDemandeConsultation(models.Model):
                             </tr>
                             {lignes_html}
                         </table>
+                        {packaging_list_html}
                         <p><strong>Date de livraison souhaitée :</strong> {obj.date_livraison_max_souhaitee.strftime('%d/%m/%Y') if obj.date_livraison_max_souhaitee else ''}</p>
                         <p>Cordialement,</p>
                         <p>{user.name}</p>
