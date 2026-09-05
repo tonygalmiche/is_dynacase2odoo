@@ -39,6 +39,12 @@
                                 <field name="date" attrs="{'readonly': [('state','=','termine')]}"/>
                                 <field name="createur_id" attrs="{'readonly': [('state','=','termine')]}"/>
                                 <field name="moule_id" widget="many2one_clickable" attrs="{'readonly': [('state','=','termine')]}"/>
+                                <field name="moule_logo_rs" invisible="1"/>
+                                <div colspan="2">
+                                    <img attrs="{'invisible': [('moule_logo_rs', '!=', 'S')]}"  alt="Logo S"  src="/is_dynacase2odoo/static/src/img/logo_s.png"  style="max-width:50px"/>
+                                    <img attrs="{'invisible': [('moule_logo_rs', '!=', 'R')]}"  alt="Logo R"  src="/is_dynacase2odoo/static/src/img/logo_r.png"  style="max-width:50px"/>
+                                    <img attrs="{'invisible': [('moule_logo_rs', '!=', 'RS')]}" alt="Logo RS" src="/is_dynacase2odoo/static/src/img/logo_rs.png" style="max-width:50px"/>
+                                </div>
                             </group>
                             <group>
                                 <field name="avancement_ids" nolabel="1" colspan="2">

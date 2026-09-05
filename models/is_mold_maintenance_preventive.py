@@ -92,6 +92,7 @@ class is_mold_maintenance_preventive(models.Model):
     date           = fields.Date("Date", default=fields.Date.context_today, tracking=True)
     createur_id    = fields.Many2one("res.users", string="Créateur", default=lambda self: self.env.user, tracking=True)
     moule_id       = fields.Many2one("is.mold", string="Moule", required=True, tracking=True)
+    moule_logo_rs  = fields.Char("Logo RS moule", related="moule_id.logo_rs")
     autres_travaux = fields.Text("Autres travaux réalisés", tracking=True)
     line_ids       = fields.One2many("is.mold.maintenance.preventive.line", "maintenance_id", string="Contrôles")
     specifications_particulieres_info = fields.Text("Spécifications particulières (information)", readonly=True)
