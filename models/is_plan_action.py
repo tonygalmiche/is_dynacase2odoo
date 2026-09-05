@@ -1,5 +1,10 @@
+import zlib
 from odoo import models, fields, api         # type: ignore
 from odoo.exceptions import ValidationError  # type: ignore
+
+
+# Clé de verrou pour éviter les doublons de num_int lors de créations concurrentes (attente, pas d'erreur)
+_NUM_INT_LOCK_KEY = zlib.crc32(b'is.plan.action.num_int')
 
 
 _STATE_ACTION = ([
@@ -115,7 +120,7 @@ class is_plan_action(models.Model):
     _order='num_int desc'
 
     title               = fields.Char('Libellé', required=True, tracking=True)
-    num_int             = fields.Integer('Numéro interne', tracking=True)
+    num_int             = fields.Integer('Numéro interne', tracking=True, copy=False)
     state               = fields.Selection(_STATE, "Etat", default=_STATE[0][0], tracking=True)
     active              = fields.Boolean('Actif', default=True, tracking=True)
     client_id           = fields.Many2one(
@@ -194,13 +199,16 @@ class is_plan_action(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        for vals in vals_list:
-            if "num_int" not in vals:
-                last = self.env[self._name].search([("num_int", '!=', None)], order="num_int desc", limit=1)
-                if last:
-                    vals["num_int"] = last.num_int + 1
-                else:
-                    vals["num_int"] = 0
+        to_assign = [vals for vals in vals_list if "num_int" not in vals]
+        if to_assign:
+            # Verrou pour éviter que deux créations concurrentes (batch ou transactions différentes)
+            # ne calculent le même numéro interne
+            self.env.cr.execute("SELECT pg_advisory_xact_lock(%s)", (_NUM_INT_LOCK_KEY,))
+            self.env.cr.execute("SELECT COALESCE(MAX(num_int), -1) FROM is_plan_action")
+            next_num = self.env.cr.fetchone()[0] + 1
+            for vals in to_assign:
+                vals["num_int"] = next_num
+                next_num += 1
         return super().create(vals_list)
 
     def copy(self, default=None):
