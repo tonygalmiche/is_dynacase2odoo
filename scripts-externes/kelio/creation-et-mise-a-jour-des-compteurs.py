@@ -24,6 +24,41 @@ Structure WSDL AbsenceBalanceInitialization (hérite AbstractTransferFile + Empl
 
 Prérequis :
   pip install zeep requests
+
+Utilisation :
+  python3 creation-et-mise-a-jour-des-compteurs.py [--matricule MATRICULE]
+
+Paramètres en ligne de commande :
+  --matricule   Optionnel. Ne traiter que le salarié ayant ce matricule
+                (filtre sur is_matricule dans Odoo). Sans ce paramètre,
+                tous les salariés ayant un droit RC dans Odoo sont traités.
+
+Paramètres à modifier en tête de script (section "Paramètres") :
+  CREATION_ACTIVE         True = écriture réelle dans Kelio.
+                          False = mode simulation (lecture seule, aucun
+                          appel importBalanceInitializations).
+  COMPTEUR_ABBREVIATION   Abréviation du compteur Kelio à créer/mettre à jour
+                          (ex: "S_RCt"). Doit exister parmi les types de
+                          compteurs listés à l'étape [0], sinon le script
+                          s'arrête.
+  COMPTEUR_DATE           Date de début de l'entrée à créer ou mettre à jour.
+                          Toujours utilisée : le script écrit uniquement
+                          l'entrée à cette date (création si absente, MAJ en
+                          place si déjà présente) et ne touche à aucune autre
+                          entrée existante à une autre date.
+  ODOO_BASES              Liste des bases Odoo (clés définies dans config.py)
+                          dans lesquelles lire les droits à congés RC.
+  ODOO_TYPE_RC            Valeur du champ `name` dans is.droit.conges
+                          identifiant le type de droit "RC" à synchroniser.
+
+Fonctionnement résumé :
+  1. Lecture des droits RC (is.droit.conges) dans chaque base ODOO_BASES.
+  2. Lecture des initialisations de compteur COMPTEUR_ABBREVIATION déjà
+     présentes dans Kelio pour chaque salarié.
+  3. Pour chaque salarié : création ou mise à jour en place de l'entrée à
+     COMPTEUR_DATE avec la nouvelle valeur. Les autres entrées existantes à
+     d'autres dates ne sont pas modifiées.
+  4. Affichage récapitulatif des initialisations du compteur dans Kelio.
 """
 
 import sys
@@ -46,7 +81,7 @@ NS = "http://echange.service.open.bodet.com"
 # =============================================================================
 CREATION_ACTIVE       = True                # True = écriture réelle, False = lecture seule
 COMPTEUR_ABBREVIATION = "S_RCt"             # Abréviation du compteur à créer
-COMPTEUR_DATE         = date(2026, 7, 6)    # Date de début de l'initialisation (fixe, pour n'avoir qu'un seul compteur par salarié)
+COMPTEUR_DATE         = date(2026, 7, 1)    # Date de début de l'initialisation (fixe, pour n'avoir qu'un seul compteur par salarié)
 ODOO_BASES            = ["odoo1", "odoo4"]  # Bases Odoo source
 ODOO_TYPE_RC          = "RC"                # Valeur du champ `name` dans is.droit.conges
 
@@ -345,9 +380,8 @@ if __name__ == "__main__":
 
     # --- 2. Export de tous les S_RC existants dans Kelio ---
     # Kelio ne retourne pas de clé utilisable (absenceBalanceInitializationKey = nil).
-    # On identifie les entrées existantes par (matricule, date) comme clé naturelle.
-    # Stratégie : 1ère entrée trouvée → MAJ date=aujourd'hui + valeur Odoo
-    #             Autres entrées → mise à zéro (hours=0) pour leur date d'origine
+    # On identifie les entrées existantes par (matricule, date) comme clé naturelle,
+    # afin de savoir si une entrée existe déjà à COMPTEUR_DATE (MAJ) ou non (création).
     print(f"\n[2] Récupération des {COMPTEUR_ABBREVIATION} existants dans Kelio :")
     src_par_matricule = {}  # {matricule: [date_str, ...]}  — toutes les dates S_RC
     try:
@@ -368,32 +402,17 @@ if __name__ == "__main__":
         print(f"  Erreur lecture Kelio : {e}")
 
     # --- 3. Mise à jour / création dans Kelio ---
-    # Stratégie : si une entrée existe → réimporter à sa date la plus récente avec la nouvelle valeur
-    #             (même date = mise à jour en place, pas de nouvelle entrée créée)
-    #             les autres entrées plus anciennes sont mises à zéro
-    #             si aucune entrée → créer avec la date du jour
+    # Stratégie : on écrit uniquement l'entrée à COMPTEUR_DATE avec la nouvelle valeur
+    #             (création si elle n'existe pas encore à cette date, mise à jour en place sinon).
+    #             Les éventuelles autres entrées existantes à d'autres dates ne sont pas touchées.
     print(f"\n[3] {'MAJ/Création' if CREATION_ACTIVE else 'Simulation'} des initialisations "
           f"'{COMPTEUR_ABBREVIATION}' dans Kelio :")
 
     ok = err = 0
     for matricule, info in sorted(rc_par_matricule.items(), key=lambda x: x[1]['nom']):
         dates_existantes = src_par_matricule.get(matricule, [])
-        items_xml = []
-
-        if dates_existantes:
-            dates_triees = sorted(dates_existantes)
-            date_recente = dates_triees[-1]
-            # Réimporter à la date la plus récente avec la nouvelle valeur → mise à jour en place
-            items_xml.append(_balance_init_xml(matricule, date_recente, COMPTEUR_ABBREVIATION, info['nombre']))
-            # Toutes les entrées plus anciennes → valeur 0 (date inchangée)
-            for dt in dates_triees[:-1]:
-                items_xml.append(_balance_init_xml(matricule, dt, COMPTEUR_ABBREVIATION, 0))
-            n_zeroed = len(dates_triees) - 1
-            action = f"MAJ {date_recente}" + (f" ({n_zeroed} ancienne(s) à zéro)" if n_zeroed else "")
-        else:
-            # Aucune entrée → création avec la date du jour
-            items_xml.append(_balance_init_xml(matricule, COMPTEUR_DATE, COMPTEUR_ABBREVIATION, info['nombre']))
-            action = f"NOUVEAU {COMPTEUR_DATE}"
+        items_xml = [_balance_init_xml(matricule, COMPTEUR_DATE, COMPTEUR_ABBREVIATION, info['nombre'])]
+        action = f"MAJ {COMPTEUR_DATE}" if str(COMPTEUR_DATE) in dates_existantes else f"NOUVEAU {COMPTEUR_DATE}"
 
         if not CREATION_ACTIVE:
             print(f"  {matricule:12s}  {info['nom']:30s}  {COMPTEUR_ABBREVIATION} = {info['nombre']:.2f}h  [{action} - simulation]")
