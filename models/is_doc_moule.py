@@ -684,7 +684,7 @@ class IsDocMoule(models.Model):
             if delta:
                 self.move_task_lier(delta)
 
-        if 'etat' in vals:
+        if 'etat' in vals and not self.env.context.get('skip_etat_check'):
             if vals['etat']=='F':
                 reponses=self.get_doc_reponse()
                 type_demande = dict(self._fields['ppr_type_demande'].get_description(self.env).get('selection')).get(self.ppr_type_demande)

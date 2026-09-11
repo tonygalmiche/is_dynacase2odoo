@@ -161,6 +161,7 @@ class is_dossier_modif_variante(models.Model):
             obj.state='plaswinned'
             obj.solde = False
             obj.envoi_mail()
+            obj._update_acceptation_ei()
 
     def vers_perdu_action(self):
         for obj in self:
@@ -240,6 +241,7 @@ class is_dossier_modif_variante(models.Model):
     demao_num                   = fields.Char(string="N° ordre", required=True)
     demao_date                  = fields.Date(string="Date", default=fields.Date.context_today, required=False, tracking=True)
     demao_idmoule               = fields.Many2one("is.mold", string="Moule", tracking=True)
+    j_actuelle                  = fields.Selection(related="demao_idmoule.j_actuelle", string="J Actuelle", readonly=True, store=True)
     dossierf_id                 = fields.Many2one("is.dossierf", string="Dossier F", tracking=True)
     dossier_appel_offre_id      = fields.Many2one("is.dossier.appel.offre", string="Dossier appel d'offre", tracking=True, compute='_compute_dossier_appel_offre_id', readonly=True, store=True)
     demao_idclient              = fields.Many2one("res.partner", string="Client"  , tracking=True, compute='_compute_demao_idcommercial', readonly=False, store=True, domain=[("is_company","=",True), ("customer","=",True)])
@@ -288,6 +290,20 @@ class is_dossier_modif_variante(models.Model):
     destinataires_ids   = fields.Many2many('res.partner', string="destinataires_ids", compute='_compute_destinataires_ids')
     destinataires_name  = fields.Char('Destinataires', compute='_compute_destinataires_name')
     mail_copy           = fields.Char('Mail copy'    , compute='_compute_destinataires_ids')
+    acceptation_ei_vsb  = fields.Boolean(string="Acceptation EI vsb", compute='_compute_acceptation_ei_vsb', readonly=True, store=False)
+
+
+    @api.depends('demao_idmoule')
+    def _compute_acceptation_ei_vsb(self):
+        for obj in self:
+            vsb = False
+            if obj.demao_idmoule:
+                doc = self.env['is.doc.moule'].search([
+                    ('idmoule', '=', obj.demao_idmoule.id),
+                    ('param_project_id.ppr_famille', '=', 'Acceptation EI'),
+                ], limit=1)
+                vsb = bool(doc)
+            obj.acceptation_ei_vsb = vsb
 
 
     @api.depends("state")
@@ -416,9 +432,66 @@ class is_dossier_modif_variante(models.Model):
 
         
 
+    def action_voir_acceptation_ei(self):
+        for obj in self:
+            tree_id = self.env.ref('is_dynacase2odoo.is_doc_moule_edit_tree_view').id
+            return {
+                'name': "Acceptation EI",
+                'view_mode': 'tree,form',
+                "views": [(tree_id, "tree"), (False, "form")],
+                'res_model': 'is.doc.moule',
+                'domain': [
+                    ('idmoule', '=', obj.demao_idmoule.id),
+                    ('param_project_id.ppr_famille', '=', 'Acceptation EI'),
+                ],
+                'type': 'ir.actions.act_window',
+            }
+
+
     def get_doc_url(self):
         for obj in self:
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
             url = base_url + '/web#id=%s' '&view_type=form&model=%s'%(obj.id,self._name)
             return url
+
+
+    def write(self, vals):
+        maj_solde = 'solde' in vals and vals.get('solde')
+        dossiers_a_maj = self.filtered(lambda obj: not obj.solde) if maj_solde else self.browse()
+        res = super().write(vals)
+        if maj_solde:
+            dossiers_a_maj._update_acceptation_ei()
+        return res
+
+
+    def _update_acceptation_ei(self):
+        "Met à jour la famille 'Acceptation EI' du moule suite au passage à 'Gagné' ou au soldage d'un dossier modif/variante"
+        for obj in self:
+            moule = obj.demao_idmoule
+            if not moule:
+                continue
+            doc = self.env['is.doc.moule'].search([
+                ('idmoule', '=', moule.id),
+                ('param_project_id.ppr_famille', '=', 'Acceptation EI'),
+            ], limit=1)
+            if not doc:
+                continue
+            dossiers_en_cours = self.env['is.dossier.modif.variante'].search([
+                ('demao_idmoule', '=', moule.id),
+                ('state', '=', 'plaswinned'),
+                ('solde', '=', False),
+            ])
+            if dossiers_en_cours:
+                if moule.j_actuelle in ('J4', 'J5', 'J6'):
+                    demande = ', '.join(dossiers_en_cours.mapped('demao_num'))
+                    doc.write({'etat': 'AF', 'demande': demande})
+                    liens = ', '.join(
+                        '<a href="/web#id=%s&view_type=form&model=is.dossier.modif.variante">%s</a>' % (d.id, d.demao_num)
+                        for d in dossiers_en_cours
+                    )
+                    doc.message_post(body=_("Dossier(s) modification/variante gagné(s) à traiter pour l'Acceptation EI : %s") % liens)
+            else:
+                doc.with_context(skip_etat_check=True).etat = 'F'
+                lien = '<a href="/web#id=%s&view_type=form&model=is.dossier.modif.variante">%s</a>' % (obj.id, obj.demao_num)
+                doc.message_post(body=_("Passé à l'état 'Fait' car le dossier modification/variante %s est soldé") % lien)
 

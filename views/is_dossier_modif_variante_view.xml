@@ -114,10 +114,17 @@
                             attrs="{'invisible': [('vers_annule_vsb', '!=', True)]}"
                             type="object"
                         />
-                        <button 
+                        <button
                             name="action_creation_fiche_codification"
                             string="Créer une fiche de codification"
                             attrs="{'invisible': [('state', '!=', 'plaswinned')]}"
+                            type="object"
+                        />
+                        <field name="acceptation_ei_vsb" invisible="1"/>
+                        <button
+                            name="action_voir_acceptation_ei"
+                            string="Acceptation EI"
+                            attrs="{'invisible': ['|', ('state', '!=', 'plaswinned'), ('acceptation_ei_vsb', '!=', True)]}"
                             type="object"
                         />
                         <field name="state" widget="statusbar" statusbar_visible="plascreate,plasanalysed,plastransbe,Analyse_BE,plasvalidbe,plasvalidcom,plasdiffusedcli"/>
@@ -132,6 +139,7 @@
                                 <field name="demao_num"            attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                                 <field name="demao_date"           attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                                 <field name="demao_idmoule"        attrs="{'readonly': [('readonly_vsb','=',True)]}" />
+                                <field name="j_actuelle"           attrs="{'invisible': [('demao_idmoule','=',False)]}"/>
                                 <field name="dossierf_id"          attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                                 <field name="demao_idclient"       attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                                 <field name="client_autre"         attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
@@ -230,6 +238,7 @@
                     <field name="client_autre"            optional="show"/>
                     <field name="demao_idcommercial"      optional="show"/>
                     <field name="demao_idmoule"           optional="show" widget="many2one_clickable"/>
+                    <field name="j_actuelle"              optional="show"/>
                     <field name="dossierf_id"             optional="show" widget="many2one_clickable"/>
                     <field name="dossier_appel_offre_id"  optional="hide" widget="many2one_clickable"/>
                     <field name="demao_desig"             optional="show"/>
@@ -266,6 +275,7 @@
                 <search string="Dossier modif/variante">
                     <field name="site_id" />
                     <field name="demao_num" />
+                    <field name="state" />
                     <field name="dossier_appel_offre_id" />
                     <field name="demao_idclient" />
                     <field name="client_autre" />
