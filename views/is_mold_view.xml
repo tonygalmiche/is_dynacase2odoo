@@ -28,6 +28,11 @@
             <field name="code">action = records.archiver_documents_action()</field>
             <field name="groups_id" eval="[(4, ref('is_gestionnaire_projet_group'))]"/>
         </record>
+
+
+
+
+
         <record id="is_mold_form_view" model="ir.ui.view">
             <field name="name">is_mold_form_view</field>
             <field name="model">is.mold</field>
@@ -55,72 +60,272 @@
                         </div>
                     </group>
                 </group>
-                <xpath expr="//notebook" position="inside">
-                    <page string="Gestion des J">
-                        <group>
-                            <group string="Gestion des J">
-                                <field name="fermeture_id"/>
-                                <field name="revue_contrat_id"/>
-                                <field name="revue_lancement_id"/>
-                                <field name="revue_risque_id" readonly="1"/>    
-                                <field name="j_actuelle_rw"   invisible="1"/>
-                                <field name="j_actuelle"      attrs="{'readonly': [('j_actuelle_rw', '=', False)]}"/>
-                                <field name="j_avancement"    readonly="1"/>
-                                <field name="date_fin_be"/>    
-                            </group>
-                            <group string="Articles liés à ce moule">
-                                <field name="article_ids" nolabel="1" colspan="2">
-                                    <tree editable="bottom">
-                                        <field name="article_id" widget="many2one_clickable" required="1"/>
-                                        <field name="planning" style="width:30%"/>
+
+
+                <group name="header" position="after">
+
+
+
+                        <group  string="Dateurs" attrs="{'invisible': [('dateur_ids_vsb', '!=', True)]}"/>
+                        <field name="dateur_ids" nolabel="1" attrs="{'invisible': [('dateur_ids_vsb', '!=', True)]}">
+                            <tree editable="bottom" limit="200">
+                                <field name="type_dateur"/>
+                                <field name="qt_dans_moule"/>
+                                <field name="diametre_dateur"/>
+                                <field name="date_peremption"/>
+                                <field name="commentaire"/>
+                            </tree>
+                        </field>
+                        <field name="is_base_check" invisible="1" />
+                        <notebook colspan="4">
+                            <page string="Préventif Moule" attrs="{'invisible': [('is_base_check','!=',True)]}">
+                                <button 
+                                    name="vers_nouveau_preventif_mold"
+                                    string="Nouveau préventif"
+                                    type="object"
+                                />
+                                <group string="Configuration du préventif">
+                                    <group>
+                                        <field name="nb_cycles_dernier_preventif" readonly="1"/>
+                                        <field name="nb_cycles_actuel"            readonly="1"/>
+                                        <field name="nb_cycles_avant_preventif"   readonly="1"/>
+                                        <field name="garantie_outillage" required="1"/>
+                                        <field name="extension_garantie"/>
+                                    </group>
+                                    <group>
+                                        <field name="periodicite_maintenance_moule"/>
+                                        <field name="date_dernier_preventif"      readonly="1"/>
+                                        <field name="preventif_inactif"/>
+                                    </group>
+                                </group>
+                                <group string="Gamme du préventif">
+                                    <field name="gamme_preventif_ids" widget="many2many_binary"/>
+                                </group>
+
+
+                                <group string="Dernière maintenance préventive" attrs="{'invisible': [('derniere_maintenance_preventive_id','=',False)]}">
+                                    <field name="derniere_maintenance_preventive_avancement_ids" nolabel="1" readonly="1">
+                                        <tree create="0" delete="0">
+                                            <field name="type_controle"/>
+                                            <field name="nb_ok" widget="badge" decoration-success="1" attrs="{'invisible': [('nb_ok','=',0)]}"/>
+                                            <field name="nb_nok" widget="badge" decoration-danger="1" attrs="{'invisible': [('nb_nok','=',0)]}"/>
+                                            <field name="nb_remplace" widget="badge" decoration-info="1" attrs="{'invisible': [('nb_remplace','=',0)]}"/>
+                                            <field name="avancement" widget="badge" decoration-success="is_complete == True" decoration-warning="is_complete == False"/>
+                                            <field name="is_complete" invisible="1"/>
+                                            <button name="open_lines_action" type="object" string="Voir" icon="fa-arrow-right" class="btn-link"/>
+                                        </tree>
+                                    </field>
+                                    <group col="1">
+                                        <field name="derniere_maintenance_preventive_autres_travaux" readonly="1" attrs="{'invisible': [('derniere_maintenance_preventive_autres_travaux','=',False)]}"/>
+                                        <field name="derniere_maintenance_preventive_id" widget="many2one_clickable" readonly="1"/>
+                                    </group>
+                                </group>
+                                <group string="Historique des préventifs"/>
+                                <field name="is_preventif_moule" readonly="1" nolabel="1">
+                                    <tree limit="200">
+                                        <button title="Préventif" name="action_acceder_fiche" type="object" icon="fa-search-plus"/>
+                                        <field name="date_preventif"/>
+                                        <field name="nb_cycles"/>
+                                        <field name="periodicite"/>
+                                        <field name="fiche_preventif_ids"/>
+                                        <field name="maintenance_preventive_id" widget="many2one_clickable" readonly="1"/>
                                     </tree>
                                 </field>
-                            </group>    
-                        </group>
-                    </page>
-                    <page string="Exportation/Importation moule">
-                        <group>
-                            <group string="Exportation moule">
-                                <field name="date_export"/>
-                                <field name="type_export"/>
-                                <field name="marche_ce_export"/>
-                                <field name="valeur_declaree_export"/>
-                                <field name="commentaire_export"/>
-                            </group>
-                            <group string="Pièces jointes exportation">
-                                <field name="pj_export_ids"   widget="many2many_binary"/>
-                            </group>
-                            <group string="Importation moule">
-                                <field name="date_import"/>
-                                <field name="type_import"/>
-                                <field name="date_taxation_import"/>
-                                <field name="commentaire_import"/>
-                            </group>
-                            <group string="Pièces jointes importation">
-                                <field name="pj_import_ids"   widget="many2many_binary"/>
-                            </group>
-                        </group>
-                    </page>
-                </xpath>
-                <xpath expr="//field[@name='is_preventif_moule']/tree/field[@name='fiche_preventif_ids']" position="after">
-                    <field name="maintenance_preventive_id" widget="many2one_clickable" readonly="1"/>
-                </xpath>
-                <field name="gamme_preventif_ids" position="after">
-                    <field name="derniere_maintenance_preventive_id" widget="many2one_clickable" readonly="1" attrs="{'invisible': [('derniere_maintenance_preventive_id','=',False)]}"/>
-                    <field name="derniere_maintenance_preventive_avancement_ids" nolabel="1" colspan="2" readonly="1" attrs="{'invisible': [('derniere_maintenance_preventive_id','=',False)]}">
-                        <tree create="0" delete="0">
-                            <field name="type_controle"/>
-                            <field name="nb_ok" widget="badge" decoration-success="1" attrs="{'invisible': [('nb_ok','=',0)]}"/>
-                            <field name="nb_nok" widget="badge" decoration-danger="1" attrs="{'invisible': [('nb_nok','=',0)]}"/>
-                            <field name="nb_remplace" widget="badge" decoration-info="1" attrs="{'invisible': [('nb_remplace','=',0)]}"/>
-                            <field name="avancement" widget="badge" decoration-success="is_complete == True" decoration-warning="is_complete == False"/>
-                            <field name="is_complete" invisible="1"/>
-                            <button name="open_lines_action" type="object" string="Voir" icon="fa-arrow-right" class="btn-link"/>
-                        </tree>
-                    </field>
-                </field>
+                                <group string="Opérations systématiques"/>
+                                <field name="systematique_ids" nolabel="1">
+                                    <tree editable="bottom" limit="200">
+                                        <field name="operation_systematique_id"/>
+                                        <field name="activer"/>
+                                        <field name="frequence_preventif_id"/>
+                                    </tree>
+                                </field>
+                                <group string="Opérations spécifiques"/>
+                                <field name="specifique_ids" nolabel="1">
+                                    <tree editable="bottom" limit="200">
+                                        <field name="operation_specifique_id"/>
+                                        <field name="activer"/>
+                                        <field name="frequence_preventif_id"/>
+                                    </tree>
+                                </field>
+                                <group string="Spécifications particulières"/>
+                                <field name="specification_ids" nolabel="1">
+                                    <tree editable="bottom" limit="200">
+                                        <field name="specification_particuliere_id"/>
+                                        <field name="activer"/>
+                                        <field name="frequence_preventif_id"/>
+                                    </tree>
+                                </field>
+                                <group>
+                                    <field name="piece_specifique_ids" widget="many2many_tags"/>
+                                </group>
+                                <group>
+                                    <group>
+                                        <field name="surface_aspect_id" />
+                                        <field name="reference_grain" />
+                                        <field name="graineur_id" />
+                                        <field name="diametre_seuil" />
+                                        <field name="fournisseur_bloc_chaud_id" />
+                                        <field name="num_systeme" />
+                                        <field name="indice_creation_fiche" />
+                                        <field name="createur_fiche_id" />
+                                        <field name="date_creation_fiche" />
+                                        <field name="date_modification_fiche" />
+                                    </group>
+                                </group>
+                            </page>
+
+
+                            <page string="Fiche description moule" attrs="{'invisible': [('is_base_check','!=',True)]}">
+                                <group>
+                                    <group string="Dimensions du moule">
+                                        <field name="largeur"/>
+                                        <field name="hauteur"/>
+                                        <field name="epaisseur"/>
+                                        <field name="largeur_hors_tout"/>
+                                        <field name="hauteur_hors_tout"/>
+                                        <field name="epaisseur_hors_tout"/>
+                                        <field name="poids"/>
+                                    </group>
+                                    <group>
+                                        <img 
+                                            src="/is_plastigray16/static/src/img/dimensions-moule.png" 
+                                            style="max-height:350px;max-width:350px"
+                                            alt="dimensions-moule"
+                                        />
+                                    </group>
+                                </group>
+                                <group string="Autres informations">
+                                    <field name="nb_zones_utiles"/>
+                                    <field name="recu_de_buse"/>
+                                    <field name="recu_de_buse_specifique" attrs="{'invisible': [('recu_de_buse', '!=', 'specifique')]}"/>
+
+                                    <field name="diametre_entree_cheminee"/>
+                                    <field name="diametre_entree_cheminee_specifique" attrs="{'invisible': [('diametre_entree_cheminee', '!=', 'specifique')]}"/>
+
+                                    <field name="bridage_ids" widget="many2many_tags"/>
+                                    <field name="bridage_specifique_vsb" invisible="1"/>
+                                    <field name="bridage_specifique" attrs="{'invisible': [('bridage_specifique_vsb', '=', False)]}"/>
+
+                                    <field name="ejection"/>
+                                    <field name="ejection_specifique" attrs="{'invisible': [('ejection', '!=', 'specifique')]}"/>
+                                </group>
+                                <group string="Embout de buse standard 7/8">
+                                    <field name="diametre_passage_matiere"/>
+                                    <field name="type_matiere_transformee"/>
+                                    <field name="embout_buse_longueur"/>
+                                    <field name="type_de_portee"/>
+                                </group>
+                                <group string="Rondelle de centrage">
+                                    <field name="rondelle_centrage_fixe"/>
+                                    <field name="rondelle_centrage_fixe_specifique"   attrs="{'invisible': [('rondelle_centrage_fixe', '!=', 'specifique')]}"/>
+                                    <field name="rondelle_centrage_mobile"/>
+                                    <field name="rondelle_centrage_mobile_specifique" attrs="{'invisible': [('rondelle_centrage_mobile', '!=', 'specifique')]}"/>
+                                </group>
+                                <group string="Presses">
+                                    <field name="presse_ids" widget="many2many_tags"/>
+                                </group>
+                                <group string="Nombre de circuits d'eau">
+                                    <group>
+                                        <field name="nb_circuit_eau_fixe"/>
+                                        <field name="nb_circuit_eau_fixe_commentaire" attrs="{'invisible': [('nb_circuit_eau_fixe', '==', False)]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="nb_circuit_eau_mobile"/>
+                                        <field name="nb_circuit_eau_mobile_commentaire" attrs="{'invisible': [('nb_circuit_eau_mobile', '==', False)]}"/>
+                                    </group>
+                                </group>
+
+                                <group string="Torpilles / Points d'injection">
+                                    <field name="nb_torpilles"/>
+                                    <field name="nb_points_injection"/>
+                                </group>
+
+                                <group string="Nombre de noyaux">
+                                    <group>
+                                        <field name="nb_noyaux_fixe"/>
+                                        <field name="nb_noyaux_fixe_commentaire" attrs="{'invisible': [('nb_noyaux_fixe', 'in', [False,'0'])]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="nb_noyaux_mobile"/>
+                                        <field name="nb_noyaux_mobile_commentaire" attrs="{'invisible': [('nb_noyaux_mobile', 'in', [False,'0'])]}"/>
+                                    </group>
+                                </group>
+
+
+
+
+                                <group string="Cinématique">
+                                    <field name="cinematique"/>
+                                    <field name="cinematique_description" attrs="{'invisible': [('cinematique', '==', 'specifique')]}"/>
+                                    <field name="cinematique_specifique"  attrs="{'invisible': [('cinematique', '!=', 'specifique')]}"/>
+                                </group>
+                                <group string="Commentaire">
+                                    <field name="fiche_description_commentaire"/>
+                                </group>
+                                <group string="Suivi évolution">
+                                    <field name="fiche_description_indice"/>
+                                    <field name="fiche_description_createur_id"/>
+                                    <field name="fiche_description_date_creation"/>
+                                    <field name="fiche_description_date_modif"/>
+                                </group>
+                            </page>
+
+                            <page string="Gestion des J">
+                                <group>
+                                    <group string="Gestion des J">
+                                        <field name="fermeture_id"/>
+                                        <field name="revue_contrat_id"/>
+                                        <field name="revue_lancement_id"/>
+                                        <field name="revue_risque_id" readonly="1"/>    
+                                        <field name="j_actuelle_rw"   invisible="1"/>
+                                        <field name="j_actuelle"      attrs="{'readonly': [('j_actuelle_rw', '=', False)]}"/>
+                                        <field name="j_avancement"    readonly="1"/>
+                                        <field name="date_fin_be"/>    
+                                    </group>
+                                    <group string="Articles liés à ce moule">
+                                        <field name="article_ids" nolabel="1" colspan="2">
+                                            <tree editable="bottom">
+                                                <field name="article_id" widget="many2one_clickable" required="1"/>
+                                                <field name="planning" style="width:30%"/>
+                                            </tree>
+                                        </field>
+                                    </group>    
+                                </group>
+                            </page>
+
+                            <page string="Exportation/Importation moule">
+                                <group>
+                                    <group string="Exportation moule">
+                                        <field name="date_export"/>
+                                        <field name="type_export"/>
+                                        <field name="marche_ce_export"/>
+                                        <field name="valeur_declaree_export"/>
+                                        <field name="commentaire_export"/>
+                                    </group>
+                                    <group string="Pièces jointes exportation">
+                                        <field name="pj_export_ids"   widget="many2many_binary"/>
+                                    </group>
+                                    <group string="Importation moule">
+                                        <field name="date_import"/>
+                                        <field name="type_import"/>
+                                        <field name="date_taxation_import"/>
+                                        <field name="commentaire_import"/>
+                                    </group>
+                                    <group string="Pièces jointes importation">
+                                        <field name="pj_import_ids"   widget="many2many_binary"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                </group>
             </field>
         </record>
+
+
+
+
+
+
         <record id="is_mold_tree_view" model="ir.ui.view">
             <field name="name">is_mold_tree_view</field>
             <field name="model">is.mold</field>

@@ -55,6 +55,10 @@ class is_mold(models.Model):
         'is.mold.maintenance.preventive.avancement', compute='_compute_derniere_maintenance_preventive_avancement_ids',
         string="Avancement dernière maintenance préventive",
     )
+    derniere_maintenance_preventive_autres_travaux = fields.Text(
+        compute='_compute_derniere_maintenance_preventive_avancement_ids',
+        string="Autres travaux réalisés",
+    )
 
     is_modele              = fields.Boolean("Modèle", default=False, tracking=True,
         help="Cochez cette case pour marquer ce moule comme un modèle.\n"
@@ -160,12 +164,13 @@ class is_mold(models.Model):
             obj.logo_rs = logo_rs
 
 
-    @api.depends('maintenance_preventive_ids.date', 'maintenance_preventive_ids.avancement_ids')
+    @api.depends('maintenance_preventive_ids.date', 'maintenance_preventive_ids.avancement_ids', 'maintenance_preventive_ids.autres_travaux')
     def _compute_derniere_maintenance_preventive_avancement_ids(self):
         for obj in self:
             derniere = obj.maintenance_preventive_ids.sorted(key=lambda m: (m.date or date.min, m.id))[-1:]
             obj.derniere_maintenance_preventive_id = derniere
             obj.derniere_maintenance_preventive_avancement_ids = derniere.avancement_ids
+            obj.derniere_maintenance_preventive_autres_travaux = derniere.autres_travaux
 
 
     def creer_fiche_maintenance_preventive_action(self):
