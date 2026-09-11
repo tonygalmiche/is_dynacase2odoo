@@ -115,6 +115,8 @@
                                 <field name="frais_port"/>
                                 <field name="logis"/>
                                 <field name="amt_moule"/>
+                                <field name="amt_interne"/>
+                                <field name="cagnotage"/>
                                 <field name="surcout_pre_serie"/>
                                 <field name="prix_vente"/>
                                 <field name="delta"/>

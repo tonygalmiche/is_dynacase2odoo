@@ -239,15 +239,19 @@ class is_fiche_codification_decomposition_line(models.Model):
     va_ass             = fields.Float("VA ass", digits=(12, 4))
     frais_port         = fields.Float("Frais port", digits=(12, 4))
     logis              = fields.Float("Logis", digits=(12, 4))
-    amt_moule          = fields.Float("Amt moule", digits=(12, 4))
+
+    amt_moule          = fields.Float("Amt client négocié", digits=(12, 4))
+    amt_interne        = fields.Float("Amt interne"        , digits=(12, 4))
+    cagnotage          = fields.Float("Cagnotage"          , digits=(12, 4))
+
     surcout_pre_serie  = fields.Float("Surcôut pré-série", digits=(12, 4))
     prix_vente         = fields.Float("Prix vente", digits=(12, 4))
     delta              = fields.Float("Delta", digits=(12, 4), compute='_compute_delta', store=False)
 
-    @api.depends('part_mat', 'part_comp', 'part_emb', 'va_inj', 'va_ass', 'frais_port', 'logis', 'amt_moule', 'surcout_pre_serie', 'prix_vente')
+    @api.depends('part_mat', 'part_comp', 'part_emb', 'va_inj', 'va_ass', 'frais_port', 'logis', 'amt_moule', 'amt_interne', 'cagnotage', 'surcout_pre_serie', 'prix_vente')
     def _compute_delta(self):
         for obj in self:
-            delta = obj.prix_vente - obj.part_mat - obj.part_comp - obj.part_emb - obj.va_inj - obj.va_ass - obj.frais_port - obj.logis - obj.amt_moule- obj.surcout_pre_serie
+            delta = obj.prix_vente - obj.part_mat - obj.part_comp - obj.part_emb - obj.va_inj - obj.va_ass - obj.frais_port - obj.logis - obj.amt_moule - obj.amt_interne - obj.cagnotage- obj.surcout_pre_serie
             obj.delta = round(delta,4)
 
 
