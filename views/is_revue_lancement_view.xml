@@ -220,24 +220,25 @@
                                         <field name="rl_annee_inv"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />
                                     </group>
                                     <group attrs="{'invisible': [('state', '=', 'rl_brouillon')]}" string="Liens">
-                                        <field name="rl_be01_id"/>
-                                        <field name="rl_be01b_id"/>
-                                        <field name="rl_be01c_id"/>
-                                        <field name="rl_be02_id"/>
-                                        <field name="rl_be03_id"/>
-                                        <field name="rl_be04_id"/>
-                                        <field name="rl_be05_id"/>
-                                        <field name="rl_be06_id"/>
-                                        <field name="rl_be07_id"/>
-                                        <field name="rl_be09_id"/>
-                                        <field name="rl_be10_id"/>
-                                        <field name="rl_be11_id"/>
-                                        <field name="rl_be12_id"/>
-                                        <field name="rl_be13_id"/>
-                                        <field name="rl_be14_id"/>
-                                        <field name="rl_be15_id"/>
-                                        <field name="rl_be16_id"/>
-                                        <field name="rl_be17_id"/>
+                                        <field name="rl_be_links_rw" invisible="1"/>
+                                        <field name="rl_be01_id"  attrs="{'readonly': [('rl_be_links_rw', '=', False)]}"/>
+                                        <field name="rl_be01b_id" attrs="{'readonly': [('rl_be_links_rw', '=', False)]}"/>
+                                        <field name="rl_be01c_id" attrs="{'readonly': [('rl_be_links_rw', '=', False)]}"/>
+                                        <field name="rl_be02_id"  attrs="{'readonly': [('rl_be_links_rw', '=', False)]}"/>
+                                        <field name="rl_be03_id"  attrs="{'readonly': [('rl_be_links_rw', '=', False)]}"/>
+                                        <field name="rl_be04_id"  attrs="{'readonly': [('rl_be_links_rw', '=', False)]}"/>
+                                        <field name="rl_be05_id"  attrs="{'readonly': [('rl_be_links_rw', '=', False)]}"/>
+                                        <field name="rl_be06_id"  attrs="{'readonly': [('rl_be_links_rw', '=', False)]}"/>
+                                        <field name="rl_be07_id"  attrs="{'readonly': [('rl_be_links_rw', '=', False)]}"/>
+                                        <field name="rl_be09_id"  attrs="{'readonly': [('rl_be_links_rw', '=', False)]}"/>
+                                        <field name="rl_be10_id"  attrs="{'readonly': [('rl_be_links_rw', '=', False)]}"/>
+                                        <field name="rl_be11_id"  attrs="{'readonly': [('rl_be_links_rw', '=', False)]}"/>
+                                        <field name="rl_be12_id"  attrs="{'readonly': [('rl_be_links_rw', '=', False)]}"/>
+                                        <field name="rl_be13_id"  attrs="{'readonly': [('rl_be_links_rw', '=', False)]}"/>
+                                        <field name="rl_be14_id"  attrs="{'readonly': [('rl_be_links_rw', '=', False)]}"/>
+                                        <field name="rl_be15_id"  attrs="{'readonly': [('rl_be_links_rw', '=', False)]}"/>
+                                        <field name="rl_be16_id"  attrs="{'readonly': [('rl_be_links_rw', '=', False)]}"/>
+                                        <field name="rl_be17_id"  attrs="{'readonly': [('rl_be_links_rw', '=', False)]}"/>
                                         <field name="rl_be_total"/>
                                         <field name="ecart" attrs="{'invisible':[('ecart','=',0)]}" style="background-color:orange"/>
                                         <field name="rl_annee_inv"  attrs="{'readonly': [('state', '!=', 'rl_brouillon')]}" />

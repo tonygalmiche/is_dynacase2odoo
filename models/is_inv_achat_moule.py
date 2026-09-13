@@ -32,6 +32,7 @@ class is_inv_achat_moule(models.Model):
     _name        = "is.inv.achat.moule"
     _inherit=['mail.thread']
     _description = "Investissement achat moule"
+    _rec_name    = "moule_dossierf"
 
     code_imputation    = fields.Selection(_CODE_IMPUTATION          , string="Code imputation"   , tracking=True, required=True, index=True)
     revue_lancementid  = fields.Many2one("is.revue.lancement"       , string="Revue de lancement", tracking=True)
@@ -152,8 +153,18 @@ class is_inv_achat_moule(models.Model):
         result = []
         for obj in self:
             name = '{0:,.2f}'.format(obj.montant_vendu).replace(',',' ').replace('.',',')
+            if obj.moule_dossierf or obj.code_imputation:
+                name = "%s (%s/%s)"%(name, obj.moule_dossierf, obj.code_imputation)
             result.append((obj.id, name))
         return result
+
+
+    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+        args = args or []
+        if name:
+            domain = [('moule_dossierf', operator, name)] + args
+            return self._search(domain, limit=limit, access_rights_uid=name_get_uid)
+        return super()._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
 
 
