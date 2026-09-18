@@ -112,10 +112,11 @@
 
                     <field
                         name="state" optional="show" widget="badge"
-                        decoration-warning="state in ['annule']"
-                        decoration-info="state in ['actif']"
+                        decoration-info="state in ['do']"
+                        decoration-warning="state in ['check']"
+                        decoration-success="state in ['act']"
+                        decoration-muted="state in ['plan', 'annule']"
                     />
-                    <!--decoration-success="state in ['solde']"-->
                 </tree>
             </field>
         </record>
