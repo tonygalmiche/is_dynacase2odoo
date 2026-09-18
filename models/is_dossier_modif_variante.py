@@ -470,11 +470,13 @@ class is_dossier_modif_variante(models.Model):
             moule = obj.demao_idmoule
             if not moule:
                 continue
-            doc = self.env['is.doc.moule'].search([
+            doc = self.env['is.doc.moule'].sudo().search([
                 ('idmoule', '=', moule.id),
                 ('param_project_id.ppr_famille', '=', 'Acceptation EI'),
             ], limit=1)
             if not doc:
+                continue
+            if moule.j_actuelle not in ('J5', 'J6'):
                 continue
             dossiers_en_cours = self.env['is.dossier.modif.variante'].search([
                 ('demao_idmoule', '=', moule.id),
@@ -482,14 +484,13 @@ class is_dossier_modif_variante(models.Model):
                 ('solde', '=', False),
             ])
             if dossiers_en_cours:
-                if moule.j_actuelle in ('J4', 'J5', 'J6'):
-                    demande = ', '.join(dossiers_en_cours.mapped('demao_num'))
-                    doc.write({'etat': 'AF', 'demande': demande})
-                    liens = ', '.join(
-                        '<a href="/web#id=%s&view_type=form&model=is.dossier.modif.variante">%s</a>' % (d.id, d.demao_num)
-                        for d in dossiers_en_cours
-                    )
-                    doc.message_post(body=_("Dossier(s) modification/variante gagné(s) à traiter pour l'Acceptation EI : %s") % liens)
+                demande = ', '.join(dossiers_en_cours.mapped('demao_num'))
+                doc.write({'etat': 'AF', 'demande': demande})
+                liens = ', '.join(
+                    '<a href="/web#id=%s&view_type=form&model=is.dossier.modif.variante">%s</a>' % (d.id, d.demao_num)
+                    for d in dossiers_en_cours
+                )
+                doc.message_post(body=_("Dossier(s) modification/variante gagné(s) à traiter pour l'Acceptation EI : %s") % liens)
             else:
                 doc.with_context(skip_etat_check=True).etat = 'F'
                 lien = '<a href="/web#id=%s&view_type=form&model=is.dossier.modif.variante">%s</a>' % (obj.id, obj.demao_num)

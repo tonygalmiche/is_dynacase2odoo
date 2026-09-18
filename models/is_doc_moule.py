@@ -711,7 +711,9 @@ class IsDocMoule(models.Model):
                             raise ValidationError("Impossbile de passer à l'état 'Fait' car les champs 'Plan pièce' doivent être sur 'OK' !")
 
         for obj in self:
-            if not obj.acces_chef_projet:
+            # sudo() (ex: mises à jour automatiques comme _update_acceptation_ei) doit pouvoir
+            # modifier ces champs même si l'utilisateur courant n'a pas accès chef de projet
+            if not obj.acces_chef_projet and not self.env.su:
                 champs_interdit=[
                     'section_id',
                     'param_project_id',
