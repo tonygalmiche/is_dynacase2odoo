@@ -186,6 +186,11 @@
                             <field name="numero" required="1" widget="hide_zero" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
                             <field name="valeur" required="1" widget="hide_zero" options="{'focus': True}" attrs="{'readonly': [('maintenance_state','=','termine')]}"/>
                             <field name="ok_nok" readonly="1" force_save="1"/>
+                            <div class="o_td_label" attrs="{'invisible': ['|', ('maintenance_state','=','termine'), ('ok_nok','=',False)]}"/>
+                            <div style="display:flex;justify-content:space-between;" attrs="{'invisible': ['|', ('maintenance_state','=','termine'), ('ok_nok','=',False)]}">
+                                <button name="action_set_ok"  string="OK"  type="object" class="btn-success" attrs="{'invisible': [('ok_nok','!=','ok')]}"/>
+                                <button name="action_set_nok" string="nOK" type="object" class="btn-danger"  attrs="{'invisible': [('ok_nok','!=','nok')]}"/>
+                            </div>
                             <field name="commentaire" attrs="{'required': [('ok_nok','=','nok')], 'readonly': [('maintenance_state','=','termine')]}"/>
                             <field name="historique_html"/>
                         </group>
