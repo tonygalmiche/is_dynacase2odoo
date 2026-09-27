@@ -69,25 +69,8 @@
                                 <td style="width:65%"><span t-field="o.date_detection_defaut"/></td>
                             </tr>
                            <tr>
-                                <th style="width:35%">Type de réclamation</th>
-                                <td style="width:65%"><span t-field="o.type_reclamation"/></td>
-                            </tr>
-                        </table>
-
-                        <h2>Nature de la réclamation</h2>
-                        <table style="width:100%; border:0pt">
-
-                            <tr>
-                                <th style="width:35%">Qualité</th>
-                                <td style="width:65%"><span t-field="o.nature_qualite"/></td>
-                            </tr>
-                            <tr>
-                                <th style="width:35%">Logistique</th>
-                                <td style="width:65%"><span t-field="o.nature_logistique"/></td>
-                            </tr>
-                            <tr>
-                                <th style="width:35%">Administratif</th>
-                                <td style="width:65%"><span t-field="o.nature_administratif"/></td>
+                                <th style="width:35%">Nature de la réclamation</th>
+                                <td style="width:65%"><span t-field="o.nature_reclamation"/></td>
                             </tr>
                         </table>
 
