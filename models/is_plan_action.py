@@ -57,6 +57,31 @@ class is_action(models.Model):
 
     # Champ calculé pour détecter si l'utilisateur peut modifier
     readonly_all        = fields.Boolean(string="Lecture seule", compute="_compute_readonly_all", store=False)
+    indicateur          = fields.Html(string="Indicateur", compute="_compute_indicateur", store=False)
+
+
+    @api.depends('state', 'dateplan')
+    def _compute_indicateur(self):
+        "Indicateur coloré selon l'état (mêmes couleurs que la GED) avec la date de fin prévue"
+        colors = {
+            'plan'  : 'CornflowerBlue',
+            'do'    : 'Yellow',
+            'check' : 'Orange',
+            'act'   : 'SpringGreen',
+            'annule': '#dee2e6',  # Gris standard Odoo ($o-gray-300)
+        }
+        today = fields.Date.context_today(self)
+        for obj in self:
+            color = colors.get(obj.state, '#dee2e6')
+            label = dict(_STATE_ACTION).get(obj.state, '')
+            if obj.state in ('plan', 'do', 'check') and obj.dateplan and obj.dateplan < today:
+                if obj.state == 'plan':
+                    color = 'Red'
+                label += '<br/>%s' % obj.dateplan.strftime('%d/%m/%Y')
+            obj.indicateur = (
+                '<div style="background-color:%s;color:black;text-align:center;padding:2px 6px;">'
+                '%s</div>' % (color, label)
+            )
 
 
     def _compute_readonly_all(self):
