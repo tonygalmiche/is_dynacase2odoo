@@ -197,6 +197,7 @@
                             <group string="Références" attrs="{'invisible': [('type_consultation', 'in', ['dc_chine', 'dc_export'])]}">
                                 <field name="dossier_ao_id" widget="many2one_clickable" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                 <field name="dossier_modif_variante_id" widget="many2one_clickable" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                                <field name="commercial_id" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                 <field name="mold_id" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                 <field name="dossierf_id" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                             </group>
@@ -207,12 +208,21 @@
                                 <field name="prospect" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                 <field name="confidentialite" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                 <field name="industry_id" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                                <field name="nda" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])], 'invisible': [('type_consultation', 'not in', ['dc_mat', 'dc_comp', 'dc_emb'])]}"/>
+                                <field name="oem" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])], 'invisible': [('type_consultation', 'not in', ['dc_mat', 'dc_comp', 'dc_emb'])]}"/>
+                                <field name="projet" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])], 'invisible': [('type_consultation', 'not in', ['dc_mat', 'dc_comp', 'dc_emb'])]}"/>
                             </group>
-                            <group string="Dates" attrs="{'invisible': [('type_consultation', 'in', ['dc_chine', 'dc_export'])]}">
+                            <group string="Dates et lieu de fabrication" attrs="{'invisible': [('type_consultation', 'in', ['dc_chine', 'dc_export'])]}">
                                 <field name="date_retour_consultation" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
-                                <field name="date_reponse_souhaitee" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                 <field name="date_sop" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                 <field name="duree_vie" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                                <field name="lieu_fabrication" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])], 'invisible': [('type_consultation', 'not in', ['dc_mat', 'dc_comp', 'dc_emb'])]}"/>
+                            </group>
+                        </group>
+                        <group attrs="{'invisible': [('type_consultation', 'in', ['dc_chine', 'dc_export'])]}">
+                            <group string="Suivi fournisseur">
+                                <field name="date_reponse_souhaitee" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                                <field name="hypotheses_achat" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])], 'invisible': [('type_consultation', 'not in', ['dc_mat', 'dc_comp', 'dc_emb'])]}"/>
                             </group>
                         </group>
                         <!-- Groupe Conditions pour DC-MAT et DC-EMB -->
@@ -497,10 +507,15 @@
                     <field name="acheteur_id"/>
                     <field name="dossier_ao_id" widget="many2one_clickable" optional="hide"/>
                     <field name="dossier_modif_variante_id" widget="many2one_clickable" optional="hide"/>
+                    <field name="commercial_id" optional="show"/>
                     <field name="mold_id" widget="many2one_clickable" optional="hide"/>
                     <field name="dossierf_id" widget="many2one_clickable" optional="hide"/>
                     <field name="client_id" widget="many2one_clickable" optional="show"/>
                     <field name="prospect" optional="show"/>
+                    <field name="nda" optional="hide"/>
+                    <field name="oem" optional="hide"/>
+                    <field name="projet" optional="hide"/>
+                    <field name="lieu_fabrication" optional="hide"/>
                     <field name="confidentialite" optional="show"/>
                     <field name="date_retour_consultation" optional="show"/>
                     <field name="date_reponse_souhaitee" optional="show"/>
@@ -528,10 +543,13 @@
                     <field name="acheteur_id"/>
                     <field name="dossier_ao_id"/>
                     <field name="dossier_modif_variante_id"/>
+                    <field name="commercial_id"/>
                     <field name="mold_id"/>
                     <field name="dossierf_id"/>
                     <field name="client_id"/>
                     <field name="prospect"/>
+                    <field name="oem"/>
+                    <field name="projet"/>
                     <field name="state"/>
                     <separator/>
                     <filter string="Brouillon" name="brouillon" domain="[('state', '=', 'brouillon')]"/>

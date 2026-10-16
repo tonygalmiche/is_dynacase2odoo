@@ -169,6 +169,21 @@
                             <field name="demao_annex" widget="many2many_binary" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                             <separator string="Commandes BE"/>
                             <field name="demao_cde_be" widget="many2many_binary" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                            <separator string="Fichier de devis des achats"/>
+                            <field name="demao_devis_achat" widget="many2many_binary" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                            <field name="demande_consultation_count" invisible="1"/>
+                            <div style="display:flex; margin-top:8px;" attrs="{'invisible': [('demande_consultation_count', '=', 0)]}">
+                                <button name="demande_consultation_action"
+                                        type="object"
+                                        class="btn btn-primary"
+                                        style="display:inline-flex; flex-direction:row; align-items:center; gap:8px; padding:6px 14px;">
+                                    <i class="fa fa-file-text-o" title="Consultations" style="font-size:1.4em;"/>
+                                    <div style="display:flex; flex-direction:column; align-items:center; line-height:1.2;">
+                                        <strong><field name="demande_consultation_count"/></strong>
+                                        <span>Consultations</span>
+                                    </div>
+                                </button>
+                            </div>
                         </group>
                         <group 
                             string="Fiches de codification" col="4" colspan="4" 

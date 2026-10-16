@@ -130,12 +130,17 @@ class IsDemandeConsultation(models.Model):
     # Références
     dossier_ao_id = fields.Many2one('is.dossier.appel.offre', "Dossier appel d'offre", tracking=True, copy=False)
     dossier_modif_variante_id = fields.Many2one('is.dossier.modif.variante', "Dossier modif/variante", tracking=True, copy=False)
+    commercial_id = fields.Many2one('res.users', "Commercial", tracking=True, compute='_compute_commercial_id', store=True, readonly=False,
+                                    help="Repris du dossier appel d'offre ou du dossier modif/variante")
     mold_id = fields.Many2one('is.mold', 'N° moule', tracking=True)
     dossierf_id = fields.Many2one('is.dossierf', 'N° de dossier F', tracking=True)
     
     # Client / Prospect
     client_id = fields.Many2one('res.partner', 'Client', tracking=True, domain=[("is_company","=",True), ("customer","=",True)])
     prospect = fields.Char("Prospect", tracking=True)
+    nda = fields.Selection([('oui', 'Oui'), ('non', 'Non')], string="NDA", tracking=True)
+    oem = fields.Char("OEM", tracking=True)
+    projet = fields.Char("Projet", tracking=True)
     confidentialite = fields.Selection([
         ('oui', 'Oui'),
         ('non', 'Non'),
@@ -150,6 +155,12 @@ class IsDemandeConsultation(models.Model):
     date_reponse_souhaitee = fields.Date("Date de réponse souhaitée", tracking=True,
                                          help="Complétée par l'acheteur")
     date_sop = fields.Date("SOP", tracking=True, help="Start of Production")
+    hypotheses_achat = fields.Text("Hypothèses retenues par le service achat à transmettre au client", tracking=True)
+    lieu_fabrication = fields.Selection([
+        ('gray', 'Gray'),
+        ('plastika', 'Plasti-ka'),
+        ('st_brice', 'St Brice'),
+    ], string="Lieu de fabrication", tracking=True)
     
     # Autres champs
     duree_vie = fields.Integer("Durée de vie (en années)", tracking=True)
@@ -229,6 +240,15 @@ class IsDemandeConsultation(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code(sequence_code)
         return super().create(vals_list)
 
+    @api.depends('dossier_ao_id', 'dossier_ao_id.commercial_id',
+                 'dossier_modif_variante_id', 'dossier_modif_variante_id.demao_idcommercial')
+    def _compute_commercial_id(self):
+        """Reprend le commercial du dossier appel d'offre ou du dossier modif/variante"""
+        for obj in self:
+            commercial = obj.dossier_ao_id.commercial_id or obj.dossier_modif_variante_id.demao_idcommercial
+            if commercial:
+                obj.commercial_id = commercial
+
     @api.onchange('client_id')
     def _onchange_client_id(self):
         """Remplit le secteur d'activité depuis le client sélectionné"""
@@ -246,6 +266,12 @@ class IsDemandeConsultation(models.Model):
                     obj.client_id = dao.client_id
                 if dao.prospect:
                     obj.prospect = dao.prospect
+                if dao.nda:
+                    obj.nda = dao.nda
+                if dao.oem:
+                    obj.oem = dao.oem
+                if dao.projet:
+                    obj.projet = dao.projet
                 if dao.client_id and dao.client_id.is_secteur_activite:
                     obj.industry_id = dao.client_id.is_secteur_activite
                 if dao.dao_datedms:
@@ -308,7 +334,7 @@ class IsDemandeConsultation(models.Model):
     def vers_validation_technique_action(self):
         """Passage à l'état validation technique"""
         for obj in self:
-            subject = f'[{obj.name}] Validation technique'
+            subject = f'[{obj._get_reference_mail()}] Validation technique'
             email_to = obj.validateur_technique_id.email
             user = self.env['res.users'].browse(self._uid)
             email_from = user.email
@@ -326,7 +352,7 @@ class IsDemandeConsultation(models.Model):
     def vers_transmis_achat_action(self):
         """Passage à l'état transmis achat"""
         for obj in self:
-            subject = f'[{obj.name}] Transmis achat'
+            subject = f'[{obj._get_reference_mail()}] Transmis achat'
             email_to = obj.acheteur_id.email
             user = self.env['res.users'].browse(self._uid)
             email_from = user.email
@@ -610,10 +636,13 @@ class IsDemandeConsultation(models.Model):
                         """
                 tableau_html += "</table>"
 
-            # Envoi du mail au demandeur
+            # Envoi du mail au demandeur (+ commercial s'il est différent du demandeur)
             user = self.env['res.users'].browse(self._uid)
             email_from = user.email
-            email_to = obj.demandeur_id.email
+            destinataires = obj.demandeur_id
+            if obj.commercial_id and obj.commercial_id != obj.demandeur_id:
+                destinataires |= obj.commercial_id
+            email_to = ','.join(set(d.email for d in destinataires if d.email))
             nom = user.name
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
             url = f'{base_url}/web#id={obj.id}&view_type=form&model=is.demande.consultation'
@@ -630,7 +659,7 @@ class IsDemandeConsultation(models.Model):
             if references_html:
                 references_html = f"<p><strong>Références :</strong></p><ul>{references_html}</ul>"
 
-            subject = f'[{obj.name}] Consultation soldée'
+            subject = f'[{obj._get_reference_mail()}] Consultation soldée'
             body_html = f"""
                 <p>Bonjour,</p>
                 <p>{nom} vient de solder la demande de consultation <a href='{url}'>{obj.name}</a>.</p>
@@ -644,7 +673,7 @@ class IsDemandeConsultation(models.Model):
             
             # Logger dans le chatter (même tableau)
             chatter_message = f"""
-                <p><strong>Consultation soldée - Mail envoyé à {obj.demandeur_id.name} ({email_to})</strong></p>
+                <p><strong>Consultation soldée - Mail envoyé à {', '.join(f'{d.name} ({d.email})' for d in destinataires)}</strong></p>
                 {references_html}
                 <p><strong>Récapitulatif des fournisseurs retenus :</strong></p>
                 {tableau_html}
@@ -658,6 +687,12 @@ class IsDemandeConsultation(models.Model):
         for obj in self:
             if obj.demandeur_id.id == self._uid or obj.acheteur_id.id == self._uid or obj.validateur_technique_id.id == self._uid:
                 obj.sudo().state = 'annule'
+
+    def _get_reference_mail(self):
+        """Référence pour l'intitulé des mails : n° de consultation + n° de dossier appel d'offre ou modif/variante"""
+        self.ensure_one()
+        dossier = self.dossier_ao_id.dao_num or self.dossier_modif_variante_id.demao_num
+        return f'{self.name}-{dossier}' if dossier else self.name
 
     def envoi_mail(self, email_from, email_to, subject, body_html):
         """Envoi d'un email de notification"""
@@ -1030,6 +1065,8 @@ class IsDemandeConsultation(models.Model):
                         </table>
                         <p><strong>En conformité avec REACH/ROHS</strong></p>
                         <p><strong>Secteur d'activité :</strong> {obj.industry_id.name if obj.industry_id else ''}</p>
+                        <p><strong>OEM :</strong> {obj.oem or ''}</p>
+                        <p><strong>Projet :</strong> {obj.projet or ''}</p>
                         <p><strong>Date de réponse souhaitée :</strong> {obj.date_reponse_souhaitee.strftime('%d/%m/%Y') if obj.date_reponse_souhaitee else ''}</p>
                         <p><strong>SOP :</strong> {obj.date_sop.strftime('%d/%m/%Y') if obj.date_sop else ''}</p>
                         <p><strong>Durée de vie :</strong> {obj.duree_vie or ''} {' années' if obj.duree_vie else ''}</p>
@@ -1085,6 +1122,8 @@ class IsDemandeConsultation(models.Model):
                             {lignes_html}
                         </table>
                         <p><strong>Secteur d'activité :</strong> {obj.industry_id.name if obj.industry_id else ''}</p>
+                        <p><strong>OEM :</strong> {obj.oem or ''}</p>
+                        <p><strong>Projet :</strong> {obj.projet or ''}</p>
                         <p><strong>Date de réponse souhaitée :</strong> {obj.date_reponse_souhaitee.strftime('%d/%m/%Y') if obj.date_reponse_souhaitee else ''}</p>
                         <p><strong>SOP :</strong> {obj.date_sop.strftime('%d/%m/%Y') if obj.date_sop else ''}</p>
                         <p><strong>Durée de vie :</strong> {obj.duree_vie or ''} {' années' if obj.duree_vie else ''}</p>
@@ -1130,6 +1169,8 @@ class IsDemandeConsultation(models.Model):
                             {lignes_html}
                         </table>
                         <p><strong>Secteur d'activité :</strong> {obj.industry_id.name if obj.industry_id else ''}</p>
+                        <p><strong>OEM :</strong> {obj.oem or ''}</p>
+                        <p><strong>Projet :</strong> {obj.projet or ''}</p>
                         <p><strong>Date de réponse souhaitée :</strong> {obj.date_reponse_souhaitee.strftime('%d/%m/%Y') if obj.date_reponse_souhaitee else ''}</p>
                         <p><strong>SOP :</strong> {obj.date_sop.strftime('%d/%m/%Y') if obj.date_sop else ''}</p>
                         <p><strong>Durée de vie :</strong> {obj.duree_vie or ''} {' années' if obj.duree_vie else ''}</p>

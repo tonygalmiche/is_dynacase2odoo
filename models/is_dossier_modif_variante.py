@@ -174,6 +174,24 @@ class is_dossier_modif_variante(models.Model):
             obj.solde = False
 
 
+    @api.depends()
+    def _compute_demande_consultation_count(self):
+        for obj in self:
+            obj.demande_consultation_count = self.env['is.demande.consultation'].search_count([
+                ('dossier_modif_variante_id', '=', obj.id)
+            ])
+
+    def demande_consultation_action(self):
+        for obj in self:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Demandes de consultation',
+                'res_model': 'is.demande.consultation',
+                'view_mode': 'tree,form',
+                'domain': [('dossier_modif_variante_id', '=', obj.id)],
+                'context': {'default_dossier_modif_variante_id': obj.id},
+            }
+
     def envoi_mail(self, destinataires_ids=False):
         template = self.env.ref('is_dynacase2odoo.is_dossier_modif_variante_mail_template').sudo()     
         recipient_ids = destinataires_ids or self.destinataires_ids
@@ -269,6 +287,8 @@ class is_dossier_modif_variante(models.Model):
     demao_annexcom              = fields.Many2many("ir.attachment", "is_dmv_annexcom_rel", "annexcom_id", "att_id", string="Fichiers commerciaux", tracking=True)
     demao_annex                 = fields.Many2many("ir.attachment", "is_dmv_annex_rel", "annex_id", "att_id", string="Fichiers BE", tracking=True)
     demao_cde_be                = fields.Many2many("ir.attachment", "is_dmv_cde_be_rel", "cde_be_id", "att_id", string="Commandes BE", tracking=True)
+    demao_devis_achat           = fields.Many2many("ir.attachment", "is_dmv_devis_achat_rel", "devis_achat_id", "att_id", string="Fichier de devis des achats", tracking=True)
+    demande_consultation_count  = fields.Integer("Nb consultations", compute='_compute_demande_consultation_count', store=False)
     state                       = fields.Selection(_STATE, string="Etat", default="plascreate", tracking=True)
     vers_analyse_vsb            = fields.Boolean(string="Vers Cree", compute='_compute_vsb', readonly=True, store=False)
     vers_transmis_be_vsb        = fields.Boolean(string="Vers Transmis BE", compute='_compute_vsb', readonly=True, store=False)

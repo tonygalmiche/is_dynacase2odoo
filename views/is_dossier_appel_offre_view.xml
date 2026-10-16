@@ -128,6 +128,9 @@
                                 <field name="dao_annee" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                                 <field name="client_id" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                                 <field name="prospect" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                                <field name="nda" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                                <field name="oem" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
+                                <field name="projet" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
                                 <field name="dao_typeclient" />
                                 <field name="dao_typeprojet" />
                                 <field name="secteur_activite" attrs="{'readonly': [('readonly_vsb','=',True)]}"/>
@@ -203,6 +206,9 @@
                     <field name="dao_annee" optional="hide"/>
                     <field name="client_id" optional="show" widget="many2one_clickable"/>
                     <field name="prospect" optional="show"/>
+                    <field name="nda" optional="hide"/>
+                    <field name="oem" optional="show"/>
+                    <field name="projet" optional="show"/>
                     <field name="dao_typeclient" optional="show"/>
                     <field name="dao_typeprojet" optional="show"/>
                     <field name="secteur_activite" optional="show"/>
@@ -250,6 +256,8 @@
                     <field name="dao_annee"/>
                     <field name="client_id"/>
                     <field name="prospect"/>
+                    <field name="oem"/>
+                    <field name="projet"/>
                     <field name="dao_typeclient"/>
                     <field name="dao_typeprojet"/>
                     <field name="secteur_activite"/>
