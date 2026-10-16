@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name"     : "Module Odoo 16 pour Plastigray pour migrer les développements de Dynacase dans Odoo",
-    "version"  : "0.1",
+    "version"  : "16.0.1.0.0",
     "author"   : "InfoSaône",
     "category" : "InfoSaône",
     "description": """

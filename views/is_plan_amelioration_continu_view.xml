@@ -51,7 +51,6 @@
                                     <field name="obj"              optional="hide"/>
                                     <field name="date_beg"         optional="show"/>
                                     <field name="date_end"         optional="show"/>
-                                    <field name="action_prev"      optional="hide"/>
                                     <field name="create_date"      optional="hide" string="Créé le"/>
                                     <field name="create_uid"       optional="hide" string="Créé par"/>
                                     <field name="write_date"       optional="hide" string="Modifié le"/>

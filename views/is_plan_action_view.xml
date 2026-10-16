@@ -13,25 +13,19 @@
                             name="vers_plan_action"
                             string="vers Plan"
                             type="object"
-                            attrs="{'invisible': [('state', '!=', 'do')]}"
+                            attrs="{'invisible': [('state', 'not in', ['do', 'check'])]}"
                         />
                         <button
                             name="vers_do_action"
                             string="vers Do"
                             type="object"
-                            attrs="{'invisible': [('state', 'not in', ['plan', 'check'])]}"
+                            attrs="{'invisible': [('state', '!=', 'plan')]}"
                         />
                         <button
                             name="vers_check_action"
                             string="vers Check"
                             type="object"
-                            attrs="{'invisible': [('state', 'not in', ['do', 'act'])]}"
-                        />
-                        <button
-                            name="vers_act_action"
-                            string="vers Act"
-                            type="object"
-                            attrs="{'invisible': [('state', 'not in', ['check', 'do', 'plan'])]}"
+                            attrs="{'invisible': [('state', '!=', 'do')]}"
                         />
                         <button
                             name="vers_annule_action"
@@ -39,37 +33,34 @@
                             type="object"
                             attrs="{'invisible': [('state', '==', 'annule')]}"
                         />
-                        <field name="state" widget="statusbar"/>
+                        <field name="state" widget="statusbar" statusbar_visible="plan,do,check"/>
                     </header>
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
                         <field name="readonly_all" invisible="1"/>
+                        <group attrs="{'invisible': [('plan_action_id', '=', False)]}">
+                            <field name="plan_action_id" readonly="1"/>
+                        </group>
                         <group col="2">
-                            <group string="Caractéristiques">
+                            <group string="Description de l'action">
                                 <field name="title"    attrs="{'readonly': [('readonly_all','=',True)]}"/>
                                 <field name="resp_id"  attrs="{'readonly': [('readonly_all','=',True)]}"/>
-                                <field name="risque"   attrs="{'readonly': [('readonly_all','=',True)]}"/>
                                 <field name="comment"  attrs="{'readonly': [('readonly_all','=',True)]}"/>
                             </group>
-                            <group string="Dates">
+                            <group string="Analyse 8D simplifiée">
+                                <field name="risque"             attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="constat"            attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="causes_retenues"    attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="preuves_efficacite" attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                            </group>
+                        </group>
+                        <group col="2">
+                            <group string="État d'avancement">
                                 <field name="date" readonly="1"/>
                                 <field name="dateplan" attrs="{'readonly': [('readonly_all','=',True)]}" required="1"/>
                                 <field name="datedo" readonly="1"/>
                                 <field name="datecheck" readonly="1"/>
-                            </group>
-                        </group>
-                        <group string="Informations sur le plan d'action" attrs="{'invisible': [('plan_action_id', '=', False)]}" col="2">
-                            <group>
-                                <field name="plan_action_id" readonly="1"/>
-                                <field name="pilot_id"/>
-                                <field name="num_moule"/>
-                                <field name="num_dossierf"/>
-                                <field name="client"/>
-                            </group>
-                            <group>
-                                <field name="date_beg"/>
-                                <field name="date_end"/>
                             </group>
                         </group>
                         <group string="Fichiers">
@@ -95,6 +86,9 @@
                     <field name="resp_id"          optional="show"/>
                     <field name="risque"           optional="show"/>
                     <field name="comment"          optional="show"/>
+                    <field name="constat"            optional="hide"/>
+                    <field name="causes_retenues"    optional="hide"/>
+                    <field name="preuves_efficacite" optional="hide"/>
                     <field name="date"             optional="hide"/>
                     <field name="dateplan"         optional="hide"/>
                     <field name="datedo"           optional="hide"/>
@@ -113,11 +107,11 @@
                     <field
                         name="state" optional="show" widget="badge"
                         decoration-info="state in ['do']"
-                        decoration-warning="state in ['check']"
-                        decoration-success="state in ['act']"
-                        decoration-muted="state in ['plan', 'annule']"
+                        decoration-success="state in ['check']"
+                        decoration-danger="state == 'plan' and dateplan and dateplan &lt; current_date"
+                        decoration-muted="state == 'annule' or (state == 'plan' and not (dateplan and dateplan &lt; current_date))"
                     />
-                    <field name="indicateur"       optional="show"/>
+                    <field name="indicateur"       optional="hide"/>
                 </tree>
             </field>
         </record>
@@ -194,34 +188,37 @@
                             type="object"
                             attrs="{'invisible': [('state', '==', 'annule')]}"
                         />
-                        <field name="state" widget="statusbar"/>
+                        <field name="state" widget="statusbar" statusbar_visible="actif,solde"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_actions" type="object" class="oe_stat_button" icon="fa-tasks">
+                                <field name="nb_actions" widget="statinfo" string="Actions"/>
+                            </button>
+                        </div>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
                         <field name="readonly_all" invisible="1"/>
                         <group>
-                            <group string="Caractéristiques">
-                                <field name="num_int"     readonly="1"/>
-                                <field name="title"   attrs="{'readonly': [('readonly_all','=',True)]}"/>
-                                <field name="client_id"   attrs="{'readonly': [('readonly_all','=',True)]}"/>
-                                <field name="moule_id"    attrs="{'readonly': [('readonly_all','=',True)]}"/>
-                                <field name="dossierf_id"    attrs="{'readonly': [('readonly_all','=',True)]}"/>
-                                <field name="designation"/>
-                            </group>
-                            <group string="Pilote">
-                                <field name="pilot_id"    attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                            <group>
+                                <field name="num_int"  readonly="1" string="Numéro du plan d'action"/>
+                                <field name="date_beg" readonly="1"/>
                             </group>
                         </group>
                         <group>
-                            <group string="Accès en consultation">
+                            <group string="Description du plan d'action">
+                                <field name="title"       attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="pilot_id"    attrs="{'readonly': [('readonly_all','=',True)]}"/>
                                 <field name="group_id"    attrs="{'readonly': [('readonly_all','=',True)]}"/>
-                            </group>
-                            <group string="Plan d'action">
-                                <field name="obj"         attrs="{'readonly': [('readonly_all','=',True)]}"/>
-                                <field name="date_beg"    attrs="{'readonly': [('readonly_all','=',True)]}"/>
                                 <field name="date_end"    attrs="{'readonly': [('readonly_all','=',True)]}"/>
-                                <field name="action_prev" attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="obj"         attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                            </group>
+                            <group string="Précision sur le périmètre">
+                                <field name="processus_id" attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="client_id"    attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="moule_id"     attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="dossierf_id"  attrs="{'readonly': [('readonly_all','=',True)]}"/>
+                                <field name="designation"/>
                             </group>
                         </group>
                         <group string="Liste des actions">
@@ -233,6 +230,9 @@
                                     <field name="resp_id"          optional="show"/>
                                     <field name="risque"           optional="show"/>
                                     <field name="comment"          optional="show"/>
+                                    <field name="constat"            optional="hide"/>
+                                    <field name="causes_retenues"    optional="hide"/>
+                                    <field name="preuves_efficacite" optional="hide"/>
                                     <field name="date"             optional="show"/>
                                     <field name="dateplan"         optional="show"/>
                                     <field name="datedo"           optional="show"/>
@@ -249,13 +249,14 @@
                                     <field name="write_uid"        optional="hide" string="Modifié par"/>
                                     <field
                                         name="state" optional="show" widget="badge"
-                                        decoration-warning="state in ['annule']"
-                                        decoration-info="state in ['actif']"
+                                        decoration-info="state in ['do']"
+                                        decoration-success="state in ['check']"
+                                        decoration-danger="state == 'plan' and dateplan and dateplan &lt; current_date"
+                                        decoration-muted="state == 'annule' or (state == 'plan' and not (dateplan and dateplan &lt; current_date))"
                                     />
-                                    <field name="indicateur"       optional="show"/>
+                                    <field name="indicateur"       optional="hide"/>
                                 </tree>
                             </field>
-                            <field name="responsables_ids" widget="many2many_tags"/>
                         </group>
                         <group string="Pièces jointes">
                             <field name="piece_jointe_ids"   widget="many2many_binary" attrs="{'readonly': [('readonly_all','=',True)]}"/>
@@ -277,6 +278,7 @@
                 <tree>
                     <field name="num_int"          optional="show"/>
                     <field name="title"            optional="show"/>
+                    <field name="processus_id"     optional="show" widget="many2one_clickable"/>
                     <field name="client_id"        optional="show" widget="many2one_clickable"/>
                     <field name="moule_id"         optional="show" widget="many2one_clickable"/>
                     <field name="dossierf_id"      optional="show" widget="many2one_clickable"/>
@@ -286,7 +288,6 @@
                     <field name="obj"              optional="show"/>
                     <field name="date_beg"         optional="show"/>
                     <field name="date_end"         optional="show"/>
-                    <field name="action_prev"      optional="show"/>
                     <field name="create_date"      optional="hide" string="Créé le"/>
                     <field name="create_uid"       optional="hide" string="Créé par"/>
                     <field name="write_date"       optional="hide" string="Modifié le"/>
@@ -307,6 +308,7 @@
                 <search>
                     <field name="num_int"    />
                     <field name="title"      />
+                    <field name="processus_id"/>
                     <field name="client_id"  />
                     <field name="moule_id"   />
                     <field name="dossierf_id"/>
@@ -316,7 +318,6 @@
                     <field name="obj"        />
                     <field name="date_beg"   />
                     <field name="date_end"   />
-                    <field name="action_prev"/>
                 </search>
             </field>
         </record>
