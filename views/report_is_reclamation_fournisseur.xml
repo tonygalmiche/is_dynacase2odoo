@@ -162,9 +162,17 @@
                                 <td style="width:65%"><span t-field="o.couts_produits"/></td>
                             </tr> 
                             <tr>
-                                <th style="width:35%">Coûts des tris</th>
+                                <th style="width:35%">Coût horaire sécurisation</th>
+                                <td style="width:65%"><span t-field="o.cout_ctrl_qualite_vendu_fournisseur"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:35%">Coût de la sécurisation</th>
                                 <td style="width:65%"><span t-field="o.couts_tris"/></td>
-                            </tr> 
+                            </tr>
+                            <tr>
+                                <th style="width:35%">Forfait qualité</th>
+                                <td style="width:65%"><span t-field="o.forfait_qualite"/></td>
+                            </tr>
                         </table>
                         <t t-if="o.autre_cout_ids">
                             <h2>Autres coûts</h2>
