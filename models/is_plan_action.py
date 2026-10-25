@@ -53,7 +53,7 @@ class is_action(models.Model):
     num_moule        = fields.Many2one(related='plan_action_id.moule_id')
     num_dossierf     = fields.Many2one(related='plan_action_id.dossierf_id')
     client           = fields.Many2one(related='plan_action_id.client_id')
-    date_beg         = fields.Date(related='plan_action_id.date_beg')
+    date_beg         = fields.Date(related='plan_action_id.date_beg', string="Date création plan")
     date_end         = fields.Date(related='plan_action_id.date_end')
     dynacase_id      = fields.Integer(string="Id Dynacase", index=True, copy=False)
 
