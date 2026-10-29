@@ -334,6 +334,11 @@
                                 <group>
                                     <field name="packaging_list" attrs="{'invisible': [('type_consultation', '!=', 'dc_export')], 'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
                                 </group>
+                                <separator string="Informations complémentaires" attrs="{'invisible': [('type_consultation', 'not in', ['dc_chine', 'dc_export'])]}"/>
+                                <group attrs="{'invisible': [('type_consultation', 'not in', ['dc_chine', 'dc_export'])]}">
+                                    <field name="infos_complementaires_fournisseur" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                                    <field name="infos_complementaires_demandeur" attrs="{'readonly': [('state', 'in', ['solde', 'annule'])]}"/>
+                                </group>
                                 <separator string="Pièce jointe transmise au fournisseur" attrs="{'invisible': [('type_consultation', 'not in', ['dc_mat', 'dc_comp', 'dc_emb'])]}"/>
                                 <field name="piece_jointe_ids" nolabel="1"
                                        attrs="{'invisible': [('type_consultation', 'not in', ['dc_mat', 'dc_comp', 'dc_emb'])], 'readonly': [('state', 'in', ['solde', 'annule'])]}">

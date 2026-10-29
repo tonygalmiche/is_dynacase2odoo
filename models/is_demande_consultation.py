@@ -205,7 +205,13 @@ class IsDemandeConsultation(models.Model):
     
     # Champs spécifiques DC-EXPORT
     packaging_list = fields.Text("Packinglist", tracking=True, help="Zone libre pour la liste d'emballage (DC-EXPORT uniquement)")
-    
+
+    # Champs spécifiques DC-CHINE et DC-EXPORT
+    infos_complementaires_fournisseur = fields.Text("Informations complémentaires à transmettre au fournisseur", tracking=True,
+                                                    help="Ajoutées sous le tableau dans le mail de consultation envoyé au fournisseur")
+    infos_complementaires_demandeur = fields.Text("Informations complémentaires à transmettre au demandeur", tracking=True,
+                                                  help="Ajoutées sous le tableau dans le mail envoyé au demandeur quand la consultation est soldée")
+
     # Champs techniques pour visibilité des boutons
     vers_brouillon_vsb = fields.Boolean('Champ technique vers_brouillon_vsb', compute='_compute_vsb', store=False)
     vers_validation_technique_vsb = fields.Boolean('Champ technique vers_validation_technique_vsb', compute='_compute_vsb', store=False)
@@ -648,6 +654,8 @@ class IsDemandeConsultation(models.Model):
                             </tr>
                         """
                 tableau_html += "</table>"
+            if obj.type_consultation in ['dc_chine', 'dc_export'] and obj.infos_complementaires_demandeur:
+                tableau_html += f"<p><strong>Informations complémentaires :</strong><br/>{obj.infos_complementaires_demandeur.replace(chr(10), '<br/>')}</p>"
 
             # Envoi du mail au demandeur (+ commercial s'il est différent du demandeur)
             user = self.env['res.users'].browse(self._uid)
@@ -1239,6 +1247,9 @@ class IsDemandeConsultation(models.Model):
                         """
                      # Informations import Chine (adresses déjà formatées ci-dessus)
                     incoterm = obj.incoterm_id.code if obj.incoterm_id else ''
+                    infos_complementaires_html = ""
+                    if obj.infos_complementaires_fournisseur:
+                        infos_complementaires_html = f"<p><strong>Informations complémentaires :</strong><br/>{obj.infos_complementaires_fournisseur.replace(chr(10), '<br/>')}</p>"
                     body_html = f"""
                         <p>Madame, Monsieur,</p>
                         <p>Dans le cadre d'une consultation, nous vous serions reconnaissant de nous 
@@ -1259,6 +1270,7 @@ class IsDemandeConsultation(models.Model):
                             </tr>
                             {lignes_html}
                         </table>
+                        {infos_complementaires_html}
                         <p><strong>Date de réponse souhaitée :</strong> {obj.date_reponse_souhaitee.strftime('%d/%m/%Y') if obj.date_reponse_souhaitee else ''}</p>
                         <p>Cordialement,</p>
                         <p>{user.name}</p>
@@ -1280,6 +1292,9 @@ class IsDemandeConsultation(models.Model):
                     packaging_list_html = ""
                     if obj.packaging_list:
                         packaging_list_html = f"<p><strong>Packinglist :</strong><br/>{(obj.packaging_list or '').replace(chr(10), '<br/>')}</p>"
+                    infos_complementaires_html = ""
+                    if obj.infos_complementaires_fournisseur:
+                        infos_complementaires_html = f"<p><strong>Informations complémentaires :</strong><br/>{obj.infos_complementaires_fournisseur.replace(chr(10), '<br/>')}</p>"
                     body_html = f"""
                         <p>Madame, Monsieur,</p>
                         <p>Dans le cadre d'une consultation, nous vous serions reconnaissant de nous
@@ -1299,6 +1314,7 @@ class IsDemandeConsultation(models.Model):
                             {lignes_html}
                         </table>
                         {packaging_list_html}
+                        {infos_complementaires_html}
                         <p><strong>Date de livraison souhaitée :</strong> {obj.date_livraison_max_souhaitee.strftime('%d/%m/%Y') if obj.date_livraison_max_souhaitee else ''}</p>
                         <p>Cordialement,</p>
                         <p>{user.name}</p>
