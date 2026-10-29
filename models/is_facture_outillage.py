@@ -150,62 +150,100 @@ class is_facture_outillage(models.Model):
         today = date.today()
         if today.weekday() == 6:
             return
-        users = self.env['is.liste.diffusion.mail'].get_users('is.facture.outillage', 'reglement-depasse')
-        if not users:
-            _logger.warning("cron_mail_reglement_depasse : aucun destinataire dans la liste de diffusion 'reglement-depasse'")
-            return
         lignes = self.env['is.facture.outillage.ligne'].with_context(active_test=False).search([
             ('date_reglement', '=', False),
             ('date_echeance', '<', today),
             ('facture_id.client_id', '!=', False),
         ]).sorted(key=lambda l: l.facture_id.create_date, reverse=True)
+        titre = "Liste des règlements des factures d'outillages dépassés (<%s) (%s)" % (today.strftime('%d/%m/%Y'), len(lignes))
+        colonnes = ['type', 'dossier', 'client', 'cial', 'type_facture', 'num_facture', 'montant_ht', 'montant_ttc',
+                    'date_facture', 'date_echeance', 'commentaire']
+        self._envoi_mail_lignes('reglement-depasse', titre, lignes, colonnes)
+
+
+    def cron_mail_facture_a_faire(self):
+        "Mail du jeudi des factures d'outillage à faire : date prévisionnelle atteinte et pas encore facturées"
+        today = date.today()
+        if today.weekday() != 3:
+            return
+        lignes = self.env['is.facture.outillage.ligne'].search([
+            ('date_facture_prev', '<=', today),
+            ('date_facture', '=', False),
+            ('num_facture', 'in', [False, '']),
+            ('facture_id.active', '=', True),
+        ]).sorted(key=lambda l: (l.date_facture_prev, l.id))
+        titre = "Liste des factures d'outillages à faire (date prévisionnelle <= %s) (%s)" % (today.strftime('%d/%m/%Y'), len(lignes))
+        # Montants des lignes saisis seulement à la facturation : montant du dossier, sans total (plusieurs lignes par dossier)
+        colonnes = ['type', 'dossier', 'client', 'cial', 'montant_dossier', 'date_facture_prev', 'commentaire']
+        self._envoi_mail_lignes('facture-a-faire', titre, lignes, colonnes)
+
+
+    def _envoi_mail_lignes(self, code, titre, lignes, colonnes):
+        "Envoi du tableau des lignes de factures aux destinataires de la liste de diffusion 'code' (total si colonnes montant HT et TTC consécutives)"
+        users = self.env['is.liste.diffusion.mail'].get_users('is.facture.outillage', code)
+        if not users:
+            _logger.warning("_envoi_mail_lignes : aucun destinataire dans la liste de diffusion '%s' (à renseigner dans le menu "
+                            "Gestion des projets > Paramétrage > Liste de diffusion des mails : Facture outillage / %s)"%(code, code))
+            return
 
         def montant(val):
             return '{0:,.2f}'.format(val).replace(',', ' ').replace('.', ',')
 
+        def date_fr(val):
+            return val.strftime('%d/%m/%Y') if val else ''
+
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        # Retour à la ligne seulement dans les colonnes Client et Commentaire
+        def lien(l):
+            url = f"{base_url}/web#id={l.facture_id.id}&model=is.facture.outillage&view_type=form"
+            return f"<a href='{url}'>{l.facture_id.type_dossier or ''}</a>"
+
+        def client(l):
+            c = l.facture_id.client_id
+            return html.escape(f"{c.name or ''} ({c.is_code or ''}/{c.is_adr_code or ''})")
+
+        # Colonne : (entête, alignement, retour à la ligne, valeur) ; retour à la ligne seulement pour Client et Commentaire
+        definitions = {
+            'type'             : ('Type'         , 'left'  , 'nowrap', lien),
+            'dossier'          : ('Dossier'      , 'left'  , 'nowrap', lambda l: html.escape(l.facture_id.designation or '')),
+            'client'           : ('Client'       , 'left'  , 'normal', client),
+            'cial'             : ('Cial'         , 'left'  , 'nowrap', lambda l: html.escape(l.facture_id.commercial_id.name or '')),
+            'type_facture'     : ('Type facture' , 'center', 'nowrap', lambda l: l.type_facture or ''),
+            'num_facture'      : ('N° facture'   , 'center', 'nowrap', lambda l: html.escape(l.num_facture or '')),
+            'montant_ht'       : ('Montant HT'   , 'right' , 'nowrap', lambda l: montant(l.montant_ht)),
+            'montant_ttc'      : ('Montant TTC'  , 'right' , 'nowrap', lambda l: montant(l.montant_ttc)),
+            'montant_dossier'  : ('Montant dossier', 'right', 'nowrap', lambda l: montant(l.facture_id.montant_dossier)),
+            'date_facture_prev': ('Date prév.'   , 'center', 'nowrap', lambda l: date_fr(l.date_facture_prev)),
+            'date_facture'     : ('Date facture' , 'center', 'nowrap', lambda l: date_fr(l.date_facture)),
+            'date_echeance'    : ('Date échéance', 'center', 'nowrap', lambda l: date_fr(l.date_echeance)),
+            'commentaire'      : ('Commentaire'  , 'left'  , 'normal', lambda l: html.escape(l.commentaire or '')),
+        }
         td = 'style="border:1px solid black; padding:2pt 5pt; font-size:10pt; white-space:%s; text-align:%s"'
         th = 'style="border:1px solid black; padding:2pt 5pt; font-size:10pt; font-weight:bold; text-align:%s"'
         trs = []
         for ligne in lignes:
-            facture = ligne.facture_id
-            client  = facture.client_id
-            url = f"{base_url}/web#id={facture.id}&model=is.facture.outillage&view_type=form"
-            cellules = [
-                ('left'  , 'nowrap', f"<a href='{url}'>{facture.type_dossier or ''}</a>"),
-                ('left'  , 'nowrap', html.escape(facture.designation or '')),
-                ('left'  , 'normal', html.escape(f"{client.name or ''} ({client.is_code or ''}/{client.is_adr_code or ''})")),
-                ('left'  , 'nowrap', html.escape(facture.commercial_id.name or '')),
-                ('center', 'nowrap', ligne.type_facture or ''),
-                ('center', 'nowrap', html.escape(ligne.num_facture or '')),
-                ('right' , 'nowrap', montant(ligne.montant_ht)),
-                ('right' , 'nowrap', montant(ligne.montant_ttc)),
-                ('center', 'nowrap', ligne.date_facture.strftime('%d/%m/%Y') if ligne.date_facture else ''),
-                ('center', 'nowrap', ligne.date_echeance.strftime('%d/%m/%Y')),
-                ('left'  , 'normal', html.escape(ligne.commentaire or '')),
-            ]
-            trs.append("<tr>%s</tr>" % "".join(f"<td {td % (wrap, align)}>{val}</td>" for align, wrap, val in cellules))
-        trs.append(f"""
-            <tr>
-                <th colspan="6" {th % 'right'}>Total : </th>
-                <th {th % 'right'}>{montant(sum(lignes.mapped('montant_ht')))}</th>
-                <th {th % 'right'}>{montant(sum(lignes.mapped('montant_ttc')))}</th>
-                <th colspan="3" {th % 'left'}></th>
-            </tr>
-        """)
-        entetes = ['Type', 'Dossier', 'Client', 'Cial', 'Type facture', 'N° facture', 'Montant HT', 'Montant TTC',
-                   'Date facture', 'Date échéance', 'Commentaire']
-        titre = "Liste des règlements des factures d'outillages dépassés (<%s) (%s)" % (today.strftime('%d/%m/%Y'), len(lignes))
+            cellules = [definitions[c] for c in colonnes]
+            trs.append("<tr>%s</tr>" % "".join(f"<td {td % (wrap, align)}>{valeur(ligne)}</td>" for entete, align, wrap, valeur in cellules))
+        if 'montant_ht' in colonnes:
+            avant = colonnes.index('montant_ht')
+            apres = len(colonnes) - avant - 2
+            trs.append(f"""
+                <tr>
+                    <th colspan="{avant}" {th % 'right'}>Total : </th>
+                    <th {th % 'right'}>{montant(sum(lignes.mapped('montant_ht')))}</th>
+                    <th {th % 'right'}>{montant(sum(lignes.mapped('montant_ttc')))}</th>
+                    {f'<th colspan="{apres}" {th % "left"}></th>' if apres else ''}
+                </tr>
+            """)
+        entetes = "".join(f"<th {th % 'center'}>{definitions[c][0]}</th>" for c in colonnes)
         body_html = f"""
             <h2>{titre}</h2>
             <table style="width:100%; border:1px solid black; border-collapse:collapse;">
-                <thead><tr>{"".join(f"<th {th % 'center'}>{e}</th>" for e in entetes)}</tr></thead>
+                <thead><tr>{entetes}</tr></thead>
                 <tbody>{"".join(trs)}</tbody>
             </table>
             <p style="font-size:8pt; color:#888888;">
                 Destinataires de ce mail à modifier dans Odoo : Gestion des projets > Paramétrage > Liste de diffusion des mails
-                (Facture outillage / reglement-depasse)
+                (Facture outillage / {code})
             </p>
         """
         mail = self.env['mail.mail'].sudo().create({
