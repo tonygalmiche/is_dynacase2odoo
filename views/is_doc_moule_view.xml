@@ -951,10 +951,25 @@
                     </tree>
                 </field>
             </record>
-    
-    
-    
 
 
+
+
+
+    </data>
+    <data noupdate="1">
+        <!-- Tâche cron pour actualiser les documents des dossiers non terminés (ancien script dynacase/010) -->
+        <record id="ir_cron_actualisation_documents" model="ir.cron">
+            <field name="name">Actualiser les documents des moules, dossiers F et dossiers modif non terminés</field>
+            <field name="model_id" ref="model_is_doc_moule"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_actualisation_documents()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 06:14:00')"/>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
     </data>
 </odoo>

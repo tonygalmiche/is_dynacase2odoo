@@ -224,6 +224,21 @@ class IsDocMoule(models.Model):
 
 
 
+    def cron_actualisation_documents(self):
+        "Actualisation des documents des moules, dossiers F et dossiers modif non terminés (ancien script dynacase/010)"
+        dossiers = [
+            ('idmoule'                  , self.env['is.mold'].search([('date_fin_be', '=', False)])),
+            ('dossierf_id'              , self.env['is.dossierf'].search([('date_fin_be', '=', False)])),
+            ('dossier_modif_variante_id', self.env['is.dossier.modif.variante'].search([('solde', '=', False)])),
+        ]
+        for champ, records in dossiers:
+            docs = self.search([(champ, 'in', records.ids), ('etat', '!=', 'F')])
+            _logger.info("cron_actualisation_documents : %s : nb_dossiers=%s : nb_docs=%s"%(champ, len(records), len(docs)))
+            docs.actualisation_famille_automatique_action()
+            docs.actualisation_champ_suivi_projet_action()
+            docs.actualisation_indicateur_action()
+
+
     def actualisation_famille_automatique_action(self):
         nb=len(self)
         ct=1
