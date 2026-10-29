@@ -198,10 +198,10 @@ class IsDemandeConsultation(models.Model):
     line_ids = fields.One2many('is.demande.consultation.line', 'demande_id', string="Lignes", copy=False)
     
     # Lignes saisie commerciale (onglet Demande)
-    demande_line_ids = fields.One2many('is.demande.consultation.demande.line', 'demande_id', string="Lignes demande", copy=True)
+    demande_line_ids = fields.One2many('is.demande.consultation.demande.line', 'demande_id', string="Lignes demande", copy=False)
 
     # Pièces jointes à transmettre au fournisseur (dc_mat, dc_comp, dc_emb)
-    piece_jointe_ids = fields.One2many('is.demande.consultation.piece.jointe', 'demande_id', string="Pièces jointes fournisseur", copy=True)
+    piece_jointe_ids = fields.One2many('is.demande.consultation.piece.jointe', 'demande_id', string="Pièces jointes fournisseur", copy=False)
     
     # Champs spécifiques DC-EXPORT
     packaging_list = fields.Text("Packinglist", tracking=True, help="Zone libre pour la liste d'emballage (DC-EXPORT uniquement)")
@@ -239,6 +239,19 @@ class IsDemandeConsultation(models.Model):
             sequence_code = f'is.demande.consultation.{seq_type}'
             vals['name'] = self.env['ir.sequence'].next_by_code(sequence_code)
         return super().create(vals_list)
+
+    def copy(self, default=None):
+        new = super().copy(default)
+        # Lignes et pièces jointes copiées ici pour rattacher les pièces jointes aux lignes copiées
+        lignes = {}
+        for line in self.demande_line_ids:
+            lignes[line.id] = line.copy({'demande_id': new.id}).id
+        for pj in self.piece_jointe_ids:
+            pj.copy({
+                'demande_id': new.id,
+                'demande_line_ids': [(6, 0, [lignes[l.id] for l in pj.demande_line_ids if l.id in lignes])],
+            })
+        return new
 
     @api.depends('dossier_ao_id', 'dossier_ao_id.commercial_id',
                  'dossier_modif_variante_id', 'dossier_modif_variante_id.demao_idcommercial')
@@ -729,16 +742,7 @@ class IsDemandeConsultation(models.Model):
             erreurs_fournisseur = []
             erreurs_email = []
             for dl in obj.demande_line_ids:
-                if obj.type_consultation in ['dc_comp', 'dc_emb']:
-                    label_ligne = dl.type_produit or f"Ligne {dl.sequence or ''}"
-                elif obj.type_consultation == 'dc_port':
-                    label_ligne = dl.colisage or f"Ligne {dl.sequence or ''}"
-                elif obj.type_consultation == 'dc_chine':
-                    label_ligne = (dl.mold_id.name if dl.mold_id else '') or f"Ligne {dl.sequence or ''}"
-                elif obj.type_consultation == 'dc_export':
-                    label_ligne = (dl.mold_id.name if dl.mold_id else '') or f"Ligne {dl.sequence or ''}"
-                else:
-                    label_ligne = dl.designation or f"Ligne {dl.sequence or ''}"
+                label_ligne = dl.display_name
                 autres = [l.strip() for l in (dl.autres_fournisseurs or '').splitlines() if l.strip()]
                 if not dl.fournisseur_ids and not autres:
                     erreurs_fournisseur.append(f"Ligne '{label_ligne}' : aucun fournisseur renseigné")
@@ -865,6 +869,7 @@ class IsDemandeConsultation(models.Model):
                             'lot': int(lot_val) if lot_val.isdigit() else 0,
                             'fournisseur_ids': fournisseur_vals,
                         }
+                    line_vals['demande_line_id'] = dl.id
                     self.env['is.demande.consultation.line'].sudo().create(line_vals)
                     seq += 1
 
@@ -1008,7 +1013,14 @@ class IsDemandeConsultation(models.Model):
                 # Pièces jointes à transmettre (dc_mat, dc_comp, dc_emb)
                 pieces_jointes_html = ""
                 attachment_ids_to_send = []
-                if obj.type_consultation in ['dc_mat', 'dc_comp', 'dc_emb'] and obj.piece_jointe_ids:
+                # Seulement les pièces jointes des lignes envoyées à ce fournisseur (sans ligne indiquée : envoyée à tous).
+                # Lignes générées avant le lien avec la demande : toutes les pièces jointes sont envoyées.
+                demande_lines = sum(lignes, self.env['is.demande.consultation.line']).demande_line_id
+                lignes_sans_lien = not all(line.demande_line_id for line in lignes)
+                pieces_jointes = obj.piece_jointe_ids.filtered(
+                    lambda pj: lignes_sans_lien or not pj.demande_line_ids or pj.demande_line_ids & demande_lines
+                )
+                if obj.type_consultation in ['dc_mat', 'dc_comp', 'dc_emb'] and pieces_jointes:
                     pieces_jointes_html = """
                         <p><strong>Pièce jointe transmise au fournisseur :</strong></p>
                         <table style="border-collapse: collapse; margin: 10px 0;">
@@ -1016,7 +1028,7 @@ class IsDemandeConsultation(models.Model):
                                 <th style="border: 1px solid #ccc; padding: 5px;">Nom</th>
                                 <th style="border: 1px solid #ccc; padding: 5px;">Fichier</th>
                             </tr>"""
-                    for pj in obj.piece_jointe_ids:
+                    for pj in pieces_jointes:
                         attachment_ids_to_send += pj.attachment_ids.ids
                         for att in pj.attachment_ids:
                             pieces_jointes_html += f"""
@@ -1446,6 +1458,20 @@ class IsDemandeConsultationDemandeLine(models.Model):
     autres_fournisseurs = fields.Text("Autres fournisseurs", help="Fournisseurs hors panel, un par ligne")
     mails_autres_fournisseurs = fields.Text("Mails autres fournisseurs", help="Un email par ligne, dans le même ordre que les autres fournisseurs")
 
+    def name_get(self):
+        result = []
+        for obj in self:
+            if obj.type_consultation in ['dc_comp', 'dc_emb']:
+                name = obj.type_produit
+            elif obj.type_consultation == 'dc_port':
+                name = obj.colisage
+            elif obj.type_consultation in ['dc_chine', 'dc_export']:
+                name = obj.mold_id.name if obj.mold_id else ''
+            else:
+                name = obj.designation
+            result.append((obj.id, name or f"Ligne {obj.sequence or ''}"))
+        return result
+
     @api.model
     def default_get(self, fields_list):
         defaults = super().default_get(fields_list)
@@ -1570,7 +1596,9 @@ class IsDemandeConsultationLine(models.Model):
     quantite_annuelle = fields.Float("Quantité annuelle", digits=(14, 2))
     uom_id = fields.Many2one('uom.uom', "Unité")
     lot = fields.Integer("Lot", help="Lots à consulter (un par ligne)")
-    
+    demande_line_id = fields.Many2one('is.demande.consultation.demande.line', "Ligne de la demande",
+                                      ondelete='set null', readonly=True)
+
     # Fournisseurs
     fournisseur_ids = fields.One2many('is.demande.consultation.line.fournisseur', 'line_id', 
                                       string="Fournisseurs consultés", copy=True)
@@ -1680,5 +1708,10 @@ class IsDemandeConsultationPieceJointe(models.Model):
     demande_id = fields.Many2one('is.demande.consultation', string="Demande", ondelete='cascade')
     sequence = fields.Integer("Séquence", default=10)
     nom = fields.Char("Nom de la pièce jointe", required=True)
+    demande_line_ids = fields.Many2many('is.demande.consultation.demande.line',
+                                        'is_demande_cons_piece_jointe_demande_line_rel',
+                                        'piece_jointe_id', 'demande_line_id',
+                                        string="Lignes concernées", copy=False,
+                                        help="Fichiers envoyés seulement aux fournisseurs de ces lignes (vide : envoyés à tous)")
     attachment_ids = fields.Many2many('ir.attachment', string="Fichiers")
 

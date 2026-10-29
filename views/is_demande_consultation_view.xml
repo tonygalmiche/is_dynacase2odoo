@@ -185,6 +185,7 @@
                     <sheet>
                         <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
+                        <field name="id" invisible="1"/>
                         <group>
                             <group string="Identification">
                                 <field name="name" readonly="1"/>
@@ -339,6 +340,8 @@
                                     <tree editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="nom" string="Nom de la pièce jointe"/>
+                                        <field name="demande_line_ids" widget="many2many_tags"
+                                               domain="[('demande_id', '=', parent.id)]" options="{'no_create': True}"/>
                                         <field name="attachment_ids" widget="many2many_binary" string="Fichiers"/>
                                     </tree>
                                 </field>
