@@ -181,4 +181,26 @@
             <field name="view_mode">tree,form,pivot,graph</field>
         </record>
     </data>
+    <data noupdate="1">
+        <!-- Liste de diffusion du mail des règlements dépassés (destinataires à ajouter dans Odoo) -->
+        <record id="liste_diffusion_mail_reglement_depasse" model="is.liste.diffusion.mail">
+            <field name="model_id" ref="model_is_facture_outillage"/>
+            <field name="code">reglement-depasse</field>
+            <field name="commentaire">Mail des règlements des factures d'outillage dépassés</field>
+        </record>
+
+        <!-- Tâche cron pour le mail des règlements dépassés (ancien script dynacase/020) -->
+        <record id="ir_cron_mail_reglement_depasse" model="ir.cron">
+            <field name="name">Mail des règlements des factures d'outillage dépassés</field>
+            <field name="model_id" ref="model_is_facture_outillage"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_mail_reglement_depasse()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 06:15:00')"/>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+    </data>
 </odoo>

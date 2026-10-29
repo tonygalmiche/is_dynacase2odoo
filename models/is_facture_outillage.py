@@ -4,6 +4,7 @@ from odoo.exceptions import ValidationError  # type: ignore
 from datetime import datetime, timedelta, date
 from subprocess import PIPE, Popen
 import sys
+import html
 import psycopg2        # type: ignore
 import psycopg2.extras # type: ignore
 import pyodbc          # type: ignore
@@ -142,6 +143,78 @@ class is_facture_outillage(models.Model):
     def actualiser_action(self):
         for obj in self:
             obj.ligne_ids.actualiser_ligne_action()
+
+
+    def cron_mail_reglement_depasse(self):
+        "Mail des règlements des factures d'outillage dépassés, du lundi au samedi (ancien script dynacase/020)"
+        today = date.today()
+        if today.weekday() == 6:
+            return
+        users = self.env['is.liste.diffusion.mail'].get_users('is.facture.outillage', 'reglement-depasse')
+        if not users:
+            _logger.warning("cron_mail_reglement_depasse : aucun destinataire dans la liste de diffusion 'reglement-depasse'")
+            return
+        lignes = self.env['is.facture.outillage.ligne'].with_context(active_test=False).search([
+            ('date_reglement', '=', False),
+            ('date_echeance', '<', today),
+            ('facture_id.client_id', '!=', False),
+        ]).sorted(key=lambda l: l.facture_id.create_date, reverse=True)
+
+        def montant(val):
+            return '{0:,.2f}'.format(val).replace(',', ' ').replace('.', ',')
+
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        # Retour à la ligne seulement dans les colonnes Client et Commentaire
+        td = 'style="border:1px solid black; padding:2pt 5pt; font-size:10pt; white-space:%s; text-align:%s"'
+        th = 'style="border:1px solid black; padding:2pt 5pt; font-size:10pt; font-weight:bold; text-align:%s"'
+        trs = []
+        for ligne in lignes:
+            facture = ligne.facture_id
+            client  = facture.client_id
+            url = f"{base_url}/web#id={facture.id}&model=is.facture.outillage&view_type=form"
+            cellules = [
+                ('left'  , 'nowrap', f"<a href='{url}'>{facture.type_dossier or ''}</a>"),
+                ('left'  , 'nowrap', html.escape(facture.designation or '')),
+                ('left'  , 'normal', html.escape(f"{client.name or ''} ({client.is_code or ''}/{client.is_adr_code or ''})")),
+                ('left'  , 'nowrap', html.escape(facture.commercial_id.name or '')),
+                ('center', 'nowrap', ligne.type_facture or ''),
+                ('center', 'nowrap', html.escape(ligne.num_facture or '')),
+                ('right' , 'nowrap', montant(ligne.montant_ht)),
+                ('right' , 'nowrap', montant(ligne.montant_ttc)),
+                ('center', 'nowrap', ligne.date_facture.strftime('%d/%m/%Y') if ligne.date_facture else ''),
+                ('center', 'nowrap', ligne.date_echeance.strftime('%d/%m/%Y')),
+                ('left'  , 'normal', html.escape(ligne.commentaire or '')),
+            ]
+            trs.append("<tr>%s</tr>" % "".join(f"<td {td % (wrap, align)}>{val}</td>" for align, wrap, val in cellules))
+        trs.append(f"""
+            <tr>
+                <th colspan="6" {th % 'right'}>Total : </th>
+                <th {th % 'right'}>{montant(sum(lignes.mapped('montant_ht')))}</th>
+                <th {th % 'right'}>{montant(sum(lignes.mapped('montant_ttc')))}</th>
+                <th colspan="3" {th % 'left'}></th>
+            </tr>
+        """)
+        entetes = ['Type', 'Dossier', 'Client', 'Cial', 'Type facture', 'N° facture', 'Montant HT', 'Montant TTC',
+                   'Date facture', 'Date échéance', 'Commentaire']
+        titre = "Liste des règlements des factures d'outillages dépassés (<%s) (%s)" % (today.strftime('%d/%m/%Y'), len(lignes))
+        body_html = f"""
+            <h2>{titre}</h2>
+            <table style="width:100%; border:1px solid black; border-collapse:collapse;">
+                <thead><tr>{"".join(f"<th {th % 'center'}>{e}</th>" for e in entetes)}</tr></thead>
+                <tbody>{"".join(trs)}</tbody>
+            </table>
+            <p style="font-size:8pt; color:#888888;">
+                Destinataires de ce mail à modifier dans Odoo : Gestion des projets > Paramétrage > Liste de diffusion des mails
+                (Facture outillage / reglement-depasse)
+            </p>
+        """
+        mail = self.env['mail.mail'].sudo().create({
+            'email_from': 'robot@plastigray.com',
+            'email_to'  : self.env['is.liste.diffusion.mail'].users2mail(users),
+            'subject'   : titre,
+            'body_html' : body_html,
+        })
+        mail.send()
 
 
 class is_facture_outillage_ligne(models.Model):
