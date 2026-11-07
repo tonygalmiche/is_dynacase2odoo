@@ -675,6 +675,11 @@ class IsDocMoule(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             self._check_idmoule_modele(vals)
+            # Pas de jalon pour ces types de document => pas de passage automatique à 'A Faire'
+            # par actualisation_indicateur_action : 'A Faire' par défaut (y compris copie de Gantt et duplication de tâche)
+            type_document = vals.get('type_document') or self.env.context.get('default_type_document')
+            if type_document in ('Dossier Modif Variante', 'dossier_appel_offre') and not vals.get('etat'):
+                vals['etat'] = 'AF'
         return super().create(vals_list)
 
     def write(self,vals):
