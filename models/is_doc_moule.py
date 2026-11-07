@@ -465,7 +465,7 @@ class IsDocMoule(models.Model):
     def onchange_etat(self):
         for obj in self:
             type_demande = obj.param_project_id.ppr_type_demande
-            if type_demande in ['DATE','PJ_DATE']:
+            if type_demande in ['DATE','PJ_DATE','PJ_DATE_TEXTE']:
                 rsp_date = False
                 if obj.etat=='F':
                     if obj.param_project_id.date_reponse_auto:
@@ -710,6 +710,8 @@ class IsDocMoule(models.Model):
                     raise ValidationError("Impossbile de passer à l'état 'Fait' car il faut fournir une pièce jointe et renseigner le champ 'Texte réponse' !")
                 if self.ppr_type_demande=='PJ_DATE' and (not reponses[0] or not reponses[1]):
                     raise ValidationError("Impossbile de passer à l'état 'Fait' car il faut fournir une pièce jointe et renseigner le champ 'Date réponse' !")
+                if self.ppr_type_demande=='PJ_DATE_TEXTE' and (not reponses[0] or not reponses[1] or not reponses[2]):
+                    raise ValidationError("Impossible de passer à l'état 'Fait' car il faut fournir une pièce jointe et renseigner les champs 'Date réponse' et 'Texte réponse' !")
 
                 if self.suivi_du_temps and (not self.temps_passe or  self.temps_passe==0):
                     raise ValidationError("Impossbile de passer à l'état 'Fait'. Il faut renseigner le champ 'Suivi du temps' !")

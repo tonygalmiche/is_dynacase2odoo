@@ -128,6 +128,7 @@ class IsParamProject(models.Model):
         ("TEXTE",    "Texte"),
         ("PJ_TEXTE", "Pièce-jointe et texte"),
         ("PJ_DATE",  "Pièce-jointe et date"),
+        ("PJ_DATE_TEXTE", "Pièce-jointe, date et texte"),
         ("AUTO",     "Automatique"),
     ], string="Type de demande", required=True, default='PJ', tracking=True)
     date_reponse_auto = fields.Boolean(string="Date réponse automatique", tracking=True, default=True, 
