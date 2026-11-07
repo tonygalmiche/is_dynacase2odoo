@@ -508,6 +508,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
+                    <field name="moules" optional="show"/>
                     <field name="type_consultation"/>
                     <field name="demandeur_id" optional="show"/>
                     <field name="date_creation" optional="show"/>
@@ -516,8 +517,6 @@
                     <field name="dossier_ao_id" widget="many2one_clickable" optional="hide"/>
                     <field name="dossier_modif_variante_id" widget="many2one_clickable" optional="hide"/>
                     <field name="commercial_id" optional="show"/>
-                    <field name="mold_id" widget="many2one_clickable" optional="hide"/>
-                    <field name="dossierf_id" widget="many2one_clickable" optional="hide"/>
                     <field name="client_id" widget="many2one_clickable" optional="show"/>
                     <field name="prospect" optional="show"/>
                     <field name="nda" optional="hide"/>
@@ -552,7 +551,7 @@
                     <field name="dossier_ao_id"/>
                     <field name="dossier_modif_variante_id"/>
                     <field name="commercial_id"/>
-                    <field name="mold_id"/>
+                    <field name="moules"/>
                     <field name="dossierf_id"/>
                     <field name="client_id"/>
                     <field name="prospect"/>

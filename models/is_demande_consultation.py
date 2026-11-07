@@ -134,7 +134,9 @@ class IsDemandeConsultation(models.Model):
                                     help="Repris du dossier appel d'offre ou du dossier modif/variante")
     mold_id = fields.Many2one('is.mold', 'N° moule', tracking=True)
     dossierf_id = fields.Many2one('is.dossierf', 'N° de dossier F', tracking=True)
-    
+    moules = fields.Char("Moules", compute='_compute_moules', store=True,
+                         help="Liste des moules (en-tête et lignes de la demande) et du dossier F de l'en-tête")
+
     # Client / Prospect
     client_id = fields.Many2one('res.partner', 'Client', tracking=True, domain=[("is_company","=",True), ("customer","=",True)])
     prospect = fields.Char("Prospect", tracking=True)
@@ -227,6 +229,13 @@ class IsDemandeConsultation(models.Model):
     def _compute_lignes_generees(self):
         for obj in self:
             obj.lignes_generees = bool(obj.demande_line_ids and obj.line_ids)
+
+    @api.depends('mold_id', 'dossierf_id', 'demande_line_ids.mold_id')
+    def _compute_moules(self):
+        for obj in self:
+            molds = obj.mold_id | obj.demande_line_ids.mapped('mold_id')
+            noms = set(molds.mapped('name')) | set(obj.dossierf_id.mapped('name'))
+            obj.moules = ', '.join(sorted(noms)) or False
 
     def _default_validateur_technique(self):
         """Récupère le validateur technique par défaut depuis la société"""
